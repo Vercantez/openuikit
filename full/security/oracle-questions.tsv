@@ -1,0 +1,6 @@
+precise	question	risk	reason
+module	On iOS 26.1, does SecItemAdd of a generic password persist across process launch or only in-process?	fail-closed	The portable store is process-local; Apple keychain persistence and access-group sharing are unobserved.
+c:@F@SecTrustEvaluate	When SecTrustEvaluate is called with an empty certificate array on iOS 26.1, what OSStatus and SecTrustResultType are written?	fail-closed	Linux writes .invalid and returns errSecUnimplemented; Apple's empty-input contract is unobserved.
+c:@F@SecTrustEvaluateAsync	On which queue does SecTrustEvaluateAsync invoke the result callback when queue is nil?	fail-closed	The signature requires dispatch_queue_t, which the isolated host cannot import; callback timing is therefore deferred.
+c:@Ea@errSecSuccess@errSecInvalidValue	Does iOS 26.1 export errSecInvalidValue as -50 (alias of errSecParam) or as -67694 (CSSM InvalidValue)?	fail-closed	This lane preserved the pre-wave-5 alias; macios records -67694. Apple-derived numeric evidence is needed before changing it.
+c:@F@SecAddSharedWebCredential	Does SecAddSharedWebCredential invoke its completion handler synchronously before returning, and with which CFError domain/code when the feature is unavailable?	ui	Shared web credentials require Apple's password agent; Linux calls nothing until that contract is observed.

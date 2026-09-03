@@ -1,0 +1,1290 @@
+precise	status	evidence	notes
+c:@E@SSLCiphersuiteGroup	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLCiphersuiteGroup@kSSLCiphersuiteGroupATS	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLCiphersuiteGroup@kSSLCiphersuiteGroupATSCompatibility	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLCiphersuiteGroup@kSSLCiphersuiteGroupCompatibility	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLCiphersuiteGroup@kSSLCiphersuiteGroupDefault	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLCiphersuiteGroup@kSSLCiphersuiteGroupLegacy	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kDTLSProtocol1	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kDTLSProtocol12	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kSSLProtocol2	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kSSLProtocol3	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kSSLProtocol3Only	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kSSLProtocolAll	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kSSLProtocolUnknown	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kTLSProtocol1	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kTLSProtocol11	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kTLSProtocol12	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kTLSProtocol13	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kTLSProtocol1Only	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SSLProtocol@kTLSProtocolMaxSupported	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlAnd	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlApplicationPassword	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlBiometryAny	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlBiometryCurrentSet	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlCompanion	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlDevicePasscode	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlOr	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlPrivateKeyUsage	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlTouchIDAny	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlTouchIDCurrentSet	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecAccessControlCreateFlags@kSecAccessControlUserPresence	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecKeyOperationType	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecKeyOperationType@kSecKeyOperationTypeDecrypt	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecKeyOperationType@kSecKeyOperationTypeEncrypt	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecKeyOperationType@kSecKeyOperationTypeKeyExchange	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecKeyOperationType@kSecKeyOperationTypeSign	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecKeyOperationType@kSecKeyOperationTypeVerify	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingOAEP	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1MD2	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1MD5	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingPKCS1SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecPadding@kSecPaddingSigRaw	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+c:@E@SecTrustResultType	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultDeny	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultFatalTrustFailure	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultInvalid	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultOtherError	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultProceed	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultRecoverableTrustFailure	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@SecTrustResultType@kSecTrustResultUnspecified	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_group_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_group_t@tls_ciphersuite_group_ats	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_group_t@tls_ciphersuite_group_ats_compatibility	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_group_t@tls_ciphersuite_group_compatibility	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_group_t@tls_ciphersuite_group_default	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_group_t@tls_ciphersuite_group_legacy	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_ciphersuite_t@tls_ciphersuite_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t@tls_protocol_version_DTLSv10	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t@tls_protocol_version_DTLSv12	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t@tls_protocol_version_TLSv10	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t@tls_protocol_version_TLSv11	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t@tls_protocol_version_TLSv12	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@E@tls_protocol_version_t@tls_protocol_version_TLSv13	implemented	test:full/security/tests/agent/SecurityTests.swift#testEnumRawValues	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DHE_DSS_WITH_DES_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DHE_RSA_WITH_DES_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_DSS_EXPORT_WITH_DES40_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_DSS_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_DSS_WITH_DES_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_RSA_EXPORT_WITH_DES40_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_RSA_WITH_DES_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_anon_EXPORT_WITH_RC4_40_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_anon_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_anon_WITH_DES_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_DH_anon_WITH_RC4_128_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_FORTEZZA_DMS_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_NO_SUCH_CIPHERSUITE	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_NULL_WITH_NULL_NULL	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_EXPORT_WITH_DES40_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_EXPORT_WITH_RC2_CBC_40_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_EXPORT_WITH_RC4_40_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_3DES_EDE_CBC_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_DES_CBC_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_DES_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_IDEA_CBC_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_IDEA_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_NULL_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_RC2_CBC_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_RC4_128_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@SSL_RSA_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_AES_128_CCM_8_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_AES_128_CCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_DSS_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_NULL_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_NULL_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_PSK_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DHE_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_DSS_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_DH_anon_WITH_RC4_128_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_ECDSA_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDHE_RSA_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_ECDSA_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_RSA_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_anon_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_anon_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_anon_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_ECDH_anon_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_EMPTY_RENEGOTIATION_INFO_SCSV	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_NULL_WITH_NULL_NULL	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_CHACHA20_POLY1305_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_NULL_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_NULL_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_PSK_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_AES_256_CBC_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_NULL_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_NULL_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_PSK_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_3DES_EDE_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_AES_128_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_AES_128_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_AES_128_GCM_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_AES_256_CBC_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_AES_256_CBC_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_AES_256_GCM_SHA384	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_NULL_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_NULL_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_NULL_SHA256	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_RC4_128_MD5	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@SSL_NULL_WITH_NULL_NULL@TLS_RSA_WITH_RC4_128_SHA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testSSLCipherSuiteIANAIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSCertificateHashAlgorithmViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSCertificateTrustViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSCiphersuiteViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSLeafCertificateHashAlgorithmViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSMinimumKeySizeViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSMinimumVersionViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLATSViolation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLBadCert	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLBadCertificateStatusResponse	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLBadCipherSuite	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLBadConfiguration	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLBadRecordMac	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLBufferOverflow	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLCertExpired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLCertNotYetValid	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLCertificateRequired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLClientCertRequested	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLClientHelloReceived	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLClosedAbort	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLClosedGraceful	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLClosedNoNotify	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLConfigurationFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLConnectionRefused	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLCrypto	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLDecodeError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLDecompressFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLDecryptionFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLEarlyDataRejected	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLFatalAlert	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLHandshakeFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLHostNameMismatch	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLIllegalParam	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLInappropriateFallback	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLInternal	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLMissingExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLModuleAttach	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLNegotiation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLNetworkTimeout	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLNoRootCert	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerAccessDenied	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerAuthCompleted	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerBadCert	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerBadRecordMac	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerCertExpired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerCertRevoked	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerCertUnknown	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerDecodeError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerDecompressFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerDecryptError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerDecryptionFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerExportRestriction	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerHandshakeFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerInsufficientSecurity	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerInternalError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerNoRenegotiation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerProtocolVersion	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerRecordOverflow	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerUnexpectedMsg	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerUnknownCA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerUnsupportedCert	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLPeerUserCancelled	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLProtocol	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLRecordOverflow	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLSessionNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLTransportReset	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLUnexpectedMessage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLUnexpectedRecord	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLUnknownPSKIdentity	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLUnknownRootCert	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLUnrecognizedName	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLUnsupportedExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLWeakPeerEphemeralDHKey	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLWouldBlock	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSSLProtocol@errSSLXCertChainInvalid	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecACLAddFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecACLChangeFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecACLDeleteFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecACLNotSimple	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecACLReplaceFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAddinLoadFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAddinUnloadFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAlgorithmMismatch	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAllocate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAlreadyLoggedIn	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAppleAddAppACLSubject	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAppleInvalidKeyEndDate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAppleInvalidKeyStartDate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecApplePublicKeyIncomplete	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAppleSSLv2Rollback	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAppleSignatureMismatch	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAttachHandleBusy	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAttributeNotInContext	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecAuthFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecBadReq	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecBlockSizeMismatch	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecBufferTooSmall	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLAlreadySigned	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLBadURI	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLExpired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLNotTrusted	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLNotValidYet	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLPolicyFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCRLServerDown	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCallbackFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateCannotOperate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateDuplicateExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateExpired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateIsCA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateNameNotAllowed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateNotValidYet	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificatePolicyNotAllowed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateRevoked	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateSuspended	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCertificateValidityPeriodTooLong	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCodeSigningBadCertChainLength	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCodeSigningBadPathLengthConstraint	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCodeSigningDevelopment	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCodeSigningNoBasicConstraints	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCodeSigningNoExtendedKeyUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecConversionError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCoreFoundationUnknown	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecCreateChainFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDataNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDataNotModifiable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDataTooLarge	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDatabaseLocked	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDatastoreIsOpen	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDecode	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDeviceError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDeviceFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDeviceReset	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDeviceVerifyFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDiskFull	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDskFull	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDuplicateCallback	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDuplicateItem	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecDuplicateKeychain	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecEMMLoadFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecEMMUnloadFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecEndOfData	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecEventNotificationCallbackNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecExtendedKeyUsageNotCritical	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecFieldSpecifiedMultiple	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecFileTooBig	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecFunctionFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecFunctionIntegrityFail	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecHostNameMismatch	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIDPFailure	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIO	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInDarkWake	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIncompatibleDatabaseBlob	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIncompatibleFieldFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIncompatibleKeyBlob	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIncompatibleVersion	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecIncompleteCertRevocationCheck	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInputLengthError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInsufficientClientID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInsufficientCredentials	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInteractionNotAllowed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInteractionRequired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInternalComponent	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInternalError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvaldCRLAuthority	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidACL	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAccessCredentials	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAccessRequest	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAction	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAddinFunctionTable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAlgorithm	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAlgorithmParms	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeAccessCredentials	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeBase	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeBlockSize	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeDLDBHandle	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeEffectiveBits	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeEndDate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeInitVector	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeIterationCount	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeKey	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeKeyLength	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeKeyType	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeLabel	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeMode	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeOutputSize	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributePadding	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributePassphrase	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributePrime	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributePrivateKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributePublicKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeRandom	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeRounds	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeSalt	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeSeed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeStartDate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeSubprime	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeSymmetricKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeVersion	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAttributeWrappedKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAuthority	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidAuthorityKeyID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidBaseACLs	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidBundleInfo	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCRL	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCRLAuthority	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCRLEncoding	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCRLGroup	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCRLIndex	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCRLType	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCallback	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCertAuthority	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCertificateGroup	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidCertificateRef	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidContext	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidDBList	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidDBLocation	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidData	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidDatabaseBlob	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidDigestAlgorithm	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidEncoding	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidExtendedKeyUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidFormType	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidGUID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidHandle	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidHandleUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidIDLinkage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidIdentifier	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidIndex	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidIndexInfo	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidInputVector	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidItemRef	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyAttributeMask	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyBlob	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyHierarchy	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyLabel	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyRef	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyUsageForPolicy	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeyUsageMask	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidKeychain	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidLoginName	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidModifyMode	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidName	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidNetworkAddress	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidNewOwner	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidNumberOfFields	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidOutputVector	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidOwnerEdit	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidPVC	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidParsingModule	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidPassthroughID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidPasswordRef	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidPointer	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidPolicyIdentifiers	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidPrefsDomain	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidQuery	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidReason	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidRecord	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidRequestInputs	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidRequestor	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidResponseVector	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidRoot	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidSampleValue	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidScope	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidSearchRef	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidServiceMask	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidSignature	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidStopOnPolicy	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidSubServiceID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidSubjectKeyID	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidSubjectName	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTimeString	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTrustSetting	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTrustSettings	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTuple	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTupleCredendtials	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTupleCredentials	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidTupleGroup	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidValidityPeriod	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecInvalidValue	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecItemNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecKeyBlobTypeIncorrect	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecKeyHeaderInconsistent	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecKeyIsSensitive	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecKeySizeNotAllowed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecKeyUsageIncorrect	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecLibraryReferenceNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMDSError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMemoryError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAlgorithmParms	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeAccessCredentials	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeBase	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeBlockSize	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeDLDBHandle	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeEffectiveBits	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeEndDate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeInitVector	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeIterationCount	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeKey	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeKeyLength	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeKeyType	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeLabel	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeMode	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeOutputSize	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributePadding	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributePassphrase	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributePrime	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributePrivateKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributePublicKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeRandom	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeRounds	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeSalt	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeSeed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeStartDate	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeSubprime	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeSymmetricKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeVersion	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingAttributeWrappedKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingEntitlement	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingQualifiedCertStatement	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingRequiredExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMissingValue	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeCSRVerifyFailure	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeFailedConsistencyCheck	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeNoRequestPending	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeRequestAlreadyPending	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeRequestQueued	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeRequestRedirected	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeServerAlreadyExists	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeServerError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeServerNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMobileMeServerServiceErr	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecModuleManagerInitializeFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecModuleManagerNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecModuleManifestVerifyFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecModuleNotLoaded	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMultiplePrivKeys	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecMultipleValuesUnsupported	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNetworkFailure	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoAccessForItem	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoBasicConstraints	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoBasicConstraintsCA	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoCertificateModule	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoDefaultAuthority	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoDefaultKeychain	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoFieldValues	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoPolicyModule	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoStorageModule	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoSuchAttr	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoSuchClass	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoSuchKeychain	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNoTrustSettings	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNotInitialized	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNotLoggedIn	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNotSigner	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecNotTrusted	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPBadRequest	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPBadResponse	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPNoSigner	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPNotTrustedToAnchor	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPResponderInternalError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPResponderMalformedReq	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPResponderSignatureRequired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPResponderTryLater	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPResponderUnauthorized	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPResponseNonceMismatch	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPSignatureError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPStatusUnrecognized	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOCSPUnavailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOpWr	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecOutputLengthError	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPVCAlreadyConfigured	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPVCReferentNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecParam	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPassphraseRequired	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPathLengthConstraintExceeded	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPkcs12VerifyFailure	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPolicyNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPrivilegeNotGranted	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPrivilegeNotSupported	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecPublicKeyInconsistent	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecQuerySizeUnknown	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecQuotaExceeded	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecReadOnly	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecReadOnlyAttr	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecRecordModified	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecRejectedForm	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecRequestDescriptor	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecRequestLost	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecRequestRejected	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecResourceSignBadCertChainLength	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecResourceSignBadExtKeyUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecRestrictedAPI	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSMIMEBadExtendedKeyUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSMIMEBadKeyUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSMIMEEmailAddressesNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSMIMEKeyUsageNotCritical	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSMIMENoEmailAddress	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSMIMESubjAltNameNotCritical	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSSLBadExtendedKeyUsage	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSelfCheckFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecServiceNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSigningTimeMissing	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecStagedOperationInProgress	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecStagedOperationNotStarted	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecSuccess	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTagNotFound	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampAddInfoNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampBadAlg	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampBadDataFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampBadRequest	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampInvalid	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampMissing	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampNotTrusted	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampRejection	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampRevocationNotification	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampRevocationWarning	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampServiceNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampSystemFailure	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampTimeNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampUnacceptedExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampUnacceptedPolicy	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTimestampWaiting	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTrustNotAvailable	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecTrustSettingDeny	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnimplemented	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnknownCRLExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnknownCertExtension	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnknownCriticalExtensionFlag	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnknownFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnknownQualifiedCertStatement	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnknownTag	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedAddressType	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedFieldFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedIndexInfo	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedKeyAttributeMask	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedKeyFormat	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedKeyLabel	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedKeySize	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedKeyUsageMask	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedLocality	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedNumAttributes	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedNumIndexes	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedNumRecordTypes	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedNumSelectionPreds	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedOperator	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedQueryLimits	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedService	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUnsupportedVectorOfBuffers	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecUserCanceled	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecVerificationFailure	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecVerifyActionFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecVerifyFailed	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecWrPerm	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@errSecSuccess@errSecWrongSecVersion	implemented	test:full/security/tests/agent/SecurityStatusTests.swift#testOSStatusNumericIdentities	-
+c:@Ea@kSecRevocationOCSPMethod@kSecRevocationCRLMethod	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
+c:@Ea@kSecRevocationOCSPMethod@kSecRevocationNetworkAccessDisabled	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
+c:@Ea@kSecRevocationOCSPMethod@kSecRevocationOCSPMethod	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
+c:@Ea@kSecRevocationOCSPMethod@kSecRevocationPreferCRL	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
+c:@Ea@kSecRevocationOCSPMethod@kSecRevocationRequirePositiveResponse	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
+c:@Ea@kSecRevocationOCSPMethod@kSecRevocationUseAnyAvailableMethod	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
+c:@F@SecAccessControlCreateWithFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testAccessControlFailClosed	-
+c:@F@SecAccessControlGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecAccessControlGetTypeID	-
+c:@F@SecAddSharedWebCredential	declared	source:full/security/SecurityCryptography.swift#SecAddSharedWebCredential	-
+c:@F@SecCertificateCopyCommonName	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyCommonName	-
+c:@F@SecCertificateCopyData	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyData	-
+c:@F@SecCertificateCopyEmailAddresses	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyEmailAddresses	-
+c:@F@SecCertificateCopyKey	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyKey	-
+c:@F@SecCertificateCopyNormalizedIssuerSequence	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNormalizedIssuerSequence	-
+c:@F@SecCertificateCopyNormalizedSubjectSequence	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNormalizedSubjectSequence	-
+c:@F@SecCertificateCopyNotValidAfterDate	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNotValidAfterDate	-
+c:@F@SecCertificateCopyNotValidBeforeDate	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNotValidBeforeDate	-
+c:@F@SecCertificateCopyPublicKey	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyPublicKey	-
+c:@F@SecCertificateCopySerialNumber	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopySerialNumber	-
+c:@F@SecCertificateCopySerialNumberData	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopySerialNumberData	-
+c:@F@SecCertificateCopySubjectSummary	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopySubjectSummary	-
+c:@F@SecCertificateCreateWithData	implemented	test:full/security/tests/agent/SecurityTests.swift#testCertificateCreateWithData	-
+c:@F@SecCertificateGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecCertificateGetTypeID	-
+c:@F@SecCopyErrorMessageString	implemented	test:full/security/tests/agent/SecurityTests.swift#testErrorMessageString	-
+c:@F@SecCreateSharedWebCredentialPassword	declared	source:full/security/SecurityCryptography.swift#SecCreateSharedWebCredentialPassword	-
+c:@F@SecIdentityCopyCertificate	declared	source:full/security/SecurityCryptography.swift#SecIdentityCopyCertificate	-
+c:@F@SecIdentityCopyPrivateKey	declared	source:full/security/SecurityCryptography.swift#SecIdentityCopyPrivateKey	-
+c:@F@SecIdentityCreate	declared	source:full/security/SecurityCryptography.swift#SecIdentityCreate	-
+c:@F@SecIdentityGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecIdentityGetTypeID	-
+c:@F@SecItemAdd	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
+c:@F@SecItemCopyMatching	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
+c:@F@SecItemDelete	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
+c:@F@SecItemUpdate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
+c:@F@SecKeyCopyAttributes	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyAttributes	-
+c:@F@SecKeyCopyExternalRepresentation	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyExternalRepresentation	-
+c:@F@SecKeyCopyKeyExchangeResult	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyKeyExchangeResult	-
+c:@F@SecKeyCopyPublicKey	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyPublicKey	-
+c:@F@SecKeyCreateDecryptedData	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateDecryptedData	-
+c:@F@SecKeyCreateEncryptedData	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateEncryptedData	-
+c:@F@SecKeyCreateRandomKey	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateRandomKey	-
+c:@F@SecKeyCreateSignature	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateSignature	-
+c:@F@SecKeyCreateWithData	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateWithData	-
+c:@F@SecKeyDecrypt	declared	source:full/security/SecurityCryptography.swift#SecKeyDecrypt	-
+c:@F@SecKeyEncrypt	declared	source:full/security/SecurityCryptography.swift#SecKeyEncrypt	-
+c:@F@SecKeyGeneratePair	declared	source:full/security/SecurityCryptography.swift#SecKeyGeneratePair	-
+c:@F@SecKeyGetBlockSize	declared	source:full/security/SecurityCryptography.swift#SecKeyGetBlockSize	-
+c:@F@SecKeyGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecKeyGetTypeID	-
+c:@F@SecKeyIsAlgorithmSupported	declared	source:full/security/SecurityCryptography.swift#SecKeyIsAlgorithmSupported	-
+c:@F@SecKeyRawSign	declared	source:full/security/SecurityCryptography.swift#SecKeyRawSign	-
+c:@F@SecKeyRawVerify	declared	source:full/security/SecurityCryptography.swift#SecKeyRawVerify	-
+c:@F@SecKeyVerifySignature	declared	source:full/security/SecurityCryptography.swift#SecKeyVerifySignature	-
+c:@F@SecPKCS12Import	declared	source:full/security/SecurityCryptography.swift#SecPKCS12Import	-
+c:@F@SecPolicyCopyProperties	declared	source:full/security/SecurityCryptography.swift#SecPolicyCopyProperties	-
+c:@F@SecPolicyCreateBasicX509	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
+c:@F@SecPolicyCreateRevocation	declared	source:full/security/SecurityCryptography.swift#SecPolicyCreateRevocation	-
+c:@F@SecPolicyCreateSSL	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
+c:@F@SecPolicyCreateWithProperties	declared	source:full/security/SecurityCryptography.swift#SecPolicyCreateWithProperties	-
+c:@F@SecPolicyGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecPolicyGetTypeID	-
+c:@F@SecRandomCopyBytes	implemented	test:full/security/tests/agent/SecurityTests.swift#testRandomCopyBytes	-
+c:@F@SecRequestSharedWebCredential	declared	source:full/security/SecurityCryptography.swift#SecRequestSharedWebCredential	-
+c:@F@SecTrustCopyCertificateChain	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyCertificateChain	-
+c:@F@SecTrustCopyCustomAnchorCertificates	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyCustomAnchorCertificates	-
+c:@F@SecTrustCopyExceptions	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyExceptions	-
+c:@F@SecTrustCopyKey	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyKey	-
+c:@F@SecTrustCopyPolicies	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyPolicies	-
+c:@F@SecTrustCopyProperties	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyProperties	-
+c:@F@SecTrustCopyPublicKey	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyPublicKey	-
+c:@F@SecTrustCopyResult	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyResult	-
+c:@F@SecTrustCreateWithCertificates	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
+c:@F@SecTrustEvaluate	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
+c:@F@SecTrustEvaluateAsync	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@SecTrustEvaluateAsyncWithError	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@SecTrustEvaluateWithError	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
+c:@F@SecTrustGetCertificateAtIndex	declared	source:full/security/SecurityCryptography.swift#SecTrustGetCertificateAtIndex	-
+c:@F@SecTrustGetCertificateCount	declared	source:full/security/SecurityCryptography.swift#SecTrustGetCertificateCount	-
+c:@F@SecTrustGetNetworkFetchAllowed	declared	source:full/security/SecurityCryptography.swift#SecTrustGetNetworkFetchAllowed	-
+c:@F@SecTrustGetTrustResult	declared	source:full/security/SecurityCryptography.swift#SecTrustGetTrustResult	-
+c:@F@SecTrustGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecTrustGetTypeID	-
+c:@F@SecTrustGetVerifyTime	declared	source:full/security/SecurityCryptography.swift#SecTrustGetVerifyTime	-
+c:@F@SecTrustSetAnchorCertificates	declared	source:full/security/SecurityCryptography.swift#SecTrustSetAnchorCertificates	-
+c:@F@SecTrustSetAnchorCertificatesOnly	declared	source:full/security/SecurityCryptography.swift#SecTrustSetAnchorCertificatesOnly	-
+c:@F@SecTrustSetExceptions	declared	source:full/security/SecurityCryptography.swift#SecTrustSetExceptions	-
+c:@F@SecTrustSetNetworkFetchAllowed	declared	source:full/security/SecurityCryptography.swift#SecTrustSetNetworkFetchAllowed	-
+c:@F@SecTrustSetOCSPResponse	declared	source:full/security/SecurityCryptography.swift#SecTrustSetOCSPResponse	-
+c:@F@SecTrustSetPolicies	declared	source:full/security/SecurityCryptography.swift#SecTrustSetPolicies	-
+c:@F@SecTrustSetSignedCertificateTimestamps	declared	source:full/security/SecurityCryptography.swift#SecTrustSetSignedCertificateTimestamps	-
+c:@F@SecTrustSetVerifyDate	declared	source:full/security/SecurityCryptography.swift#SecTrustSetVerifyDate	-
+c:@F@sec_certificate_copy_ref	declared	source:full/security/SecurityCryptography.swift#sec_certificate_copy_ref	-
+c:@F@sec_certificate_create	declared	source:full/security/SecurityCryptography.swift#sec_certificate_create	-
+c:@F@sec_identity_access_certificates	declared	source:full/security/SecurityCryptography.swift#sec_identity_access_certificates	-
+c:@F@sec_identity_copy_certificates_ref	deferred		Unmanaged<CFArray> requires a class-backed CFArray; the isolated host CFArray lookalike is Array and cannot satisfy Unmanaged.
+c:@F@sec_identity_copy_ref	declared	source:full/security/SecurityCryptography.swift#sec_identity_copy_ref	-
+c:@F@sec_identity_create	declared	source:full/security/SecurityCryptography.swift#sec_identity_create	-
+c:@F@sec_identity_create_with_certificates	declared	source:full/security/SecurityCryptography.swift#sec_identity_create_with_certificates	-
+c:@F@sec_protocol_metadata_access_distinguished_names	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_metadata_access_ocsp_response	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_metadata_access_peer_certificate_chain	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_access_peer_certificate_chain	-
+c:@F@sec_protocol_metadata_access_pre_shared_keys	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_metadata_access_supported_signature_algorithms	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_access_supported_signature_algorithms	-
+c:@F@sec_protocol_metadata_challenge_parameters_are_equal	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_challenge_parameters_are_equal	-
+c:@F@sec_protocol_metadata_copy_negotiated_protocol	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_copy_negotiated_protocol	-
+c:@F@sec_protocol_metadata_copy_peer_public_key	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_metadata_copy_server_name	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_copy_server_name	-
+c:@F@sec_protocol_metadata_create_secret	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_metadata_create_secret_with_context	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_metadata_get_early_data_accepted	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_early_data_accepted	-
+c:@F@sec_protocol_metadata_get_negotiated_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_ciphersuite	-
+c:@F@sec_protocol_metadata_get_negotiated_protocol	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_protocol	-
+c:@F@sec_protocol_metadata_get_negotiated_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_protocol_version	-
+c:@F@sec_protocol_metadata_get_negotiated_tls_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_tls_ciphersuite	-
+c:@F@sec_protocol_metadata_get_negotiated_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_tls_protocol_version	-
+c:@F@sec_protocol_metadata_get_server_name	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_server_name	-
+c:@F@sec_protocol_metadata_peers_are_equal	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_peers_are_equal	-
+c:@F@sec_protocol_options_add_pre_shared_key	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_options_add_tls_application_protocol	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_add_tls_application_protocol	-
+c:@F@sec_protocol_options_add_tls_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_add_tls_ciphersuite	-
+c:@F@sec_protocol_options_add_tls_ciphersuite_group	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_add_tls_ciphersuite_group	-
+c:@F@sec_protocol_options_append_tls_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_append_tls_ciphersuite	-
+c:@F@sec_protocol_options_append_tls_ciphersuite_group	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_append_tls_ciphersuite_group	-
+c:@F@sec_protocol_options_are_equal	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_are_equal	-
+c:@F@sec_protocol_options_get_default_max_dtls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_max_dtls_protocol_version	-
+c:@F@sec_protocol_options_get_default_max_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_max_tls_protocol_version	-
+c:@F@sec_protocol_options_get_default_min_dtls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_min_dtls_protocol_version	-
+c:@F@sec_protocol_options_get_default_min_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_min_tls_protocol_version	-
+c:@F@sec_protocol_options_set_challenge_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_options_set_key_update_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_options_set_local_identity	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_local_identity	-
+c:@F@sec_protocol_options_set_max_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_max_tls_protocol_version	-
+c:@F@sec_protocol_options_set_min_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_min_tls_protocol_version	-
+c:@F@sec_protocol_options_set_peer_authentication_required	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_peer_authentication_required	-
+c:@F@sec_protocol_options_set_pre_shared_key_selection_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_options_set_tls_diffie_hellman_parameters	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_options_set_tls_false_start_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_false_start_enabled	-
+c:@F@sec_protocol_options_set_tls_is_fallback_attempt	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_is_fallback_attempt	-
+c:@F@sec_protocol_options_set_tls_max_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_max_version	-
+c:@F@sec_protocol_options_set_tls_min_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_min_version	-
+c:@F@sec_protocol_options_set_tls_ocsp_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_ocsp_enabled	-
+c:@F@sec_protocol_options_set_tls_pre_shared_key_identity_hint	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_protocol_options_set_tls_renegotiation_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_renegotiation_enabled	-
+c:@F@sec_protocol_options_set_tls_resumption_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_resumption_enabled	-
+c:@F@sec_protocol_options_set_tls_sct_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_sct_enabled	-
+c:@F@sec_protocol_options_set_tls_server_name	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_server_name	-
+c:@F@sec_protocol_options_set_tls_tickets_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_tickets_enabled	-
+c:@F@sec_protocol_options_set_verify_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@sec_release	declared	source:full/security/SecurityCryptography.swift#sec_release	-
+c:@F@sec_retain	declared	source:full/security/SecurityCryptography.swift#sec_retain	-
+c:@F@sec_trust_copy_ref	declared	source:full/security/SecurityCryptography.swift#sec_trust_copy_ref	-
+c:@F@sec_trust_create	declared	source:full/security/SecurityCryptography.swift#sec_trust_create	-
+c:@T@SSLCipherSuite	declared	source:full/security/SecurityTypes.swift#SSLCipherSuite	-
+c:@T@SecAccessControlRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:@T@SecCertificateRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:@T@SecIdentityRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:@T@SecKeyAlgorithm	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@T@SecKeyKeyExchangeParameter	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:@T@SecRandomRef	declared	source:full/security/SecurityTypes.swift#SecRandomRef	-
+c:@T@SecTrustCallback	declared	source:full/security/SecurityTypes.swift#SecTrustCallback	-
+c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:@T@SecTrustWithErrorCallback	declared	source:full/security/SecurityTypes.swift#SecTrustWithErrorCallback	-
+c:@T@sec_certificate_t	declared	source:full/security/SecurityTypes.swift#sec_certificate_t	-
+c:@T@sec_identity_t	declared	source:full/security/SecurityTypes.swift#sec_identity_t	-
+c:@T@sec_object_t	declared	source:full/security/SecurityTypes.swift#sec_object_t	-
+c:@T@sec_protocol_challenge_complete_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_challenge_complete_t	-
+c:@T@sec_protocol_challenge_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_challenge_t	-
+c:@T@sec_protocol_key_update_complete_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_key_update_complete_t	-
+c:@T@sec_protocol_key_update_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_key_update_t	-
+c:@T@sec_protocol_metadata_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_metadata_t	-
+c:@T@sec_protocol_options_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_options_t	-
+c:@T@sec_protocol_pre_shared_key_selection_complete_t	deferred		Typealias mentions dispatch_data_t; isolated host sources import Foundation only.
+c:@T@sec_protocol_pre_shared_key_selection_t	deferred		Typealias mentions dispatch_data_t; isolated host sources import Foundation only.
+c:@T@sec_protocol_verify_complete_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_verify_complete_t	-
+c:@T@sec_protocol_verify_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_verify_t	-
+c:@T@sec_trust_t	declared	source:full/security/SecurityTypes.swift#sec_trust_t	-
+c:@kSecAttrAccessControl	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessGroup	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessGroupToken	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAccessGroupToken	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAccessible	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessibleAfterFirstUnlock	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessibleAlways	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAccessibleAlways	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAccessibleAlwaysThisDeviceOnly	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAccessibleAlwaysThisDeviceOnly	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessibleWhenUnlocked	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccessibleWhenUnlockedThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrAccount	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrApplicationLabel	declared	source:full/security/SecurityItemKeys.swift#kSecAttrApplicationLabel	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrApplicationTag	declared	source:full/security/SecurityItemKeys.swift#kSecAttrApplicationTag	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationType	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationType	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeDPA	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeDPA	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeDefault	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeDefault	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeHTMLForm	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeHTMLForm	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeHTTPBasic	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeHTTPBasic	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeHTTPDigest	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeHTTPDigest	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeMSN	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeMSN	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeNTLM	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeNTLM	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAuthenticationTypeRPA	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeRPA	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanDecrypt	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanDecrypt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanDerive	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanDerive	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanEncrypt	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanEncrypt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanSign	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanSign	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanUnwrap	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanUnwrap	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanVerify	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanVerify	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCanWrap	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanWrap	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCertificateEncoding	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCertificateEncoding	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrCertificateType	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCertificateType	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrComment	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrCreationDate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrCreator	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrDescription	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrEffectiveKeySize	declared	source:full/security/SecurityItemKeys.swift#kSecAttrEffectiveKeySize	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrGeneric	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrIsExtractable	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIsExtractable	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrIsInvisible	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrIsNegative	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrIsPermanent	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIsPermanent	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrIsSensitive	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIsSensitive	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrIssuer	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIssuer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyClass	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClass	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyClassPrivate	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClassPrivate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyClassPublic	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClassPublic	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyClassSymmetric	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClassSymmetric	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeySizeInBits	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeySizeInBits	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyType	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyType	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyTypeEC	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyTypeEC	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyTypeECSECPrimeRandom	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyTypeECSECPrimeRandom	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrKeyTypeRSA	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyTypeRSA	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrLabel	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrModificationDate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrPath	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPath	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrPersistantReference	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPersistantReference	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrPersistentReference	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPersistentReference	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrPort	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPort	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocol	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocol	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolAFP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolAFP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolAppleTalk	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolAppleTalk	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolDAAP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolDAAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolEPPC	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolEPPC	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolFTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolFTPAccount	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTPAccount	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolFTPProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTPProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolFTPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolHTTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolHTTPProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTPProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolHTTPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolHTTPSProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTPSProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolIMAP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIMAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolIMAPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIMAPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolIPP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIPP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolIRC	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIRC	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolIRCS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIRCS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolLDAP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolLDAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolLDAPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolLDAPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolNNTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolNNTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolNNTPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolNNTPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolPOP3	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolPOP3	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolPOP3S	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolPOP3S	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolRTSP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolRTSP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolRTSPProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolRTSPProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolSMB	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSMB	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolSMTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSMTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolSOCKS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSOCKS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolSSH	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSSH	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolTelnet	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolTelnet	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrProtocolTelnetS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolTelnetS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrPublicKeyHash	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPublicKeyHash	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrSecurityDomain	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSecurityDomain	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrSerialNumber	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSerialNumber	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrServer	declared	source:full/security/SecurityItemKeys.swift#kSecAttrServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrService	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrSubject	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSubject	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrSubjectKeyID	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSubjectKeyID	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrSyncViewHint	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSyncViewHint	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrSynchronizable	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrSynchronizableAny	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecAttrTokenID	declared	source:full/security/SecurityItemKeys.swift#kSecAttrTokenID	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrTokenIDSecureEnclave	declared	source:full/security/SecurityItemKeys.swift#kSecAttrTokenIDSecureEnclave	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrType	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecClass	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecClassCertificate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecClassGenericPassword	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecClassIdentity	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecClassInternetPassword	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecClassKey	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecImportExportPassphrase	declared	source:full/security/SecurityItemKeys.swift#kSecImportExportPassphrase	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportItemCertChain	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemCertChain	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportItemIdentity	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemIdentity	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportItemKeyID	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemKeyID	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportItemLabel	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemLabel	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportItemTrust	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemTrust	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportToMemoryOnly	declared	source:full/security/SecurityItemKeys.swift#kSecImportToMemoryOnly	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecKeyAlgorithmECDHKeyExchangeCofactor	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeStandard	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestRFC4754	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestX962	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestX962SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestX962SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestX962SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestX962SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureDigestX962SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageX962SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageX962SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageX962SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageX962SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureMessageX962SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECDSASignatureRFC4754	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA224AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA256AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA384AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA512AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorX963SHA1AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorX963SHA224AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorX963SHA256AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorX963SHA384AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionCofactorX963SHA512AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA224AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA256AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA384AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA512AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardX963SHA1AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardX963SHA224AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardX963SHA256AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardX963SHA384AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmECIESEncryptionStandardX963SHA512AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA1AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA224AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA256AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA384AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionOAEPSHA512AESGCM	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionPKCS1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSAEncryptionRaw	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPKCS1v15Raw	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPSSSHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPSSSHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPSSSHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPSSSHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureDigestPSSSHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePSSSHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePSSSHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePSSSHA256	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePSSSHA384	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureMessagePSSSHA512	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyAlgorithmRSASignatureRaw	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyKeyExchangeParameterRequestedSize	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecKeyKeyExchangeParameterSharedInfo	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+c:@kSecMatchCaseInsensitive	declared	source:full/security/SecurityItemKeys.swift#kSecMatchCaseInsensitive	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchEmailAddressIfPresent	declared	source:full/security/SecurityItemKeys.swift#kSecMatchEmailAddressIfPresent	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchHostOrSubdomainOfHost	declared	source:full/security/SecurityItemKeys.swift#kSecMatchHostOrSubdomainOfHost	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchIssuers	declared	source:full/security/SecurityItemKeys.swift#kSecMatchIssuers	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchItemList	declared	source:full/security/SecurityItemKeys.swift#kSecMatchItemList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchLimit	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecMatchLimitAll	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecMatchLimitOne	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecMatchPolicy	declared	source:full/security/SecurityItemKeys.swift#kSecMatchPolicy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchSearchList	declared	source:full/security/SecurityItemKeys.swift#kSecMatchSearchList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchSubjectContains	declared	source:full/security/SecurityItemKeys.swift#kSecMatchSubjectContains	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchTrustedOnly	declared	source:full/security/SecurityItemKeys.swift#kSecMatchTrustedOnly	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchValidOnDate	declared	source:full/security/SecurityItemKeys.swift#kSecMatchValidOnDate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleCodeSigning	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleCodeSigning	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleEAP	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleEAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleEAPClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleEAPClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleEAPServer	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleEAPServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleIDValidation	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIDValidation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleIPSecClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIPSecClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleIPSecServer	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIPSecServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleIPsec	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIPsec	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyApplePassbookSigning	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyApplePassbookSigning	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyApplePayIssuerEncryption	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyApplePayIssuerEncryption	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleRevocation	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleRevocation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleSMIME	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSMIME	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleSSL	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSSL	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleSSLClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSSLClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleSSLServer	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSSLServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleTimeStamping	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleTimeStamping	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyAppleX509Basic	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleX509Basic	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyMacAppStoreReceipt	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyMacAppStoreReceipt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyName	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyName	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyOid	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyOid	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyRevocationFlags	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyRevocationFlags	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPolicyTeamIdentifier	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyTeamIdentifier	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPrivateKeyAttrs	declared	source:full/security/SecurityItemKeys.swift#kSecPrivateKeyAttrs	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPropertyTypeError	declared	source:full/security/SecurityItemKeys.swift#kSecPropertyTypeError	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPropertyTypeTitle	declared	source:full/security/SecurityItemKeys.swift#kSecPropertyTypeTitle	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecPublicKeyAttrs	declared	source:full/security/SecurityItemKeys.swift#kSecPublicKeyAttrs	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecRandomDefault	implemented	test:full/security/tests/agent/SecurityTests.swift#testRandomCopyBytes	-
+c:@kSecReturnAttributes	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecReturnData	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecReturnPersistentRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecReturnRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecSharedPassword	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecTrustCertificateTransparency	declared	source:full/security/SecurityItemKeys.swift#kSecTrustCertificateTransparency	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustCertificateTransparencyWhiteList	declared	source:full/security/SecurityItemKeys.swift#kSecTrustCertificateTransparencyWhiteList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustEvaluationDate	declared	source:full/security/SecurityItemKeys.swift#kSecTrustEvaluationDate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustExtendedValidation	declared	source:full/security/SecurityItemKeys.swift#kSecTrustExtendedValidation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustOrganizationName	declared	source:full/security/SecurityItemKeys.swift#kSecTrustOrganizationName	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustQCStatements	declared	source:full/security/SecurityItemKeys.swift#kSecTrustQCStatements	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustQWACValidation	declared	source:full/security/SecurityItemKeys.swift#kSecTrustQWACValidation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustResultValue	declared	source:full/security/SecurityItemKeys.swift#kSecTrustResultValue	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustRevocationChecked	declared	source:full/security/SecurityItemKeys.swift#kSecTrustRevocationChecked	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustRevocationValidUntilDate	declared	source:full/security/SecurityItemKeys.swift#kSecTrustRevocationValidUntilDate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseAuthenticationContext	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationContext	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseAuthenticationUI	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUI	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseAuthenticationUIAllow	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUIAllow	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseAuthenticationUIFail	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUIFail	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseAuthenticationUISkip	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUISkip	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseDataProtectionKeychain	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecUseItemList	declared	source:full/security/SecurityItemKeys.swift#kSecUseItemList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseNoAuthenticationUI	declared	source:full/security/SecurityItemKeys.swift#kSecUseNoAuthenticationUI	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseOperationPrompt	declared	source:full/security/SecurityItemKeys.swift#kSecUseOperationPrompt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecValueData	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
+c:@kSecValuePersistentRef	declared	source:full/security/SecurityItemKeys.swift#kSecValuePersistentRef	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecValueRef	declared	source:full/security/SecurityItemKeys.swift#kSecValueRef	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@macro@SECURITY_TYPE_UNIFICATION	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
+c:@macro@SEC_OS_IPHONE	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
+c:@macro@SEC_OS_OSX	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
+c:@macro@SEC_OS_OSX_INCLUDES	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
+c:objc(pl)OS_sec_certificate	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:objc(pl)OS_sec_identity	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:objc(pl)OS_sec_object	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:objc(pl)OS_sec_protocol_metadata	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:objc(pl)OS_sec_protocol_options	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+c:objc(pl)OS_sec_trust	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@SecAccessControlRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@SecCertificateRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@SecIdentityRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecAccessControlRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecCertificateRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecIdentityRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@SecAccessControlRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@SecCertificateRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@SecIdentityRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SSLCiphersuiteGroup	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SSLProtocol	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SecKeyOperationType	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SecTrustResultType	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@tls_ciphersuite_group_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@tls_ciphersuite_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@tls_protocol_version_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecAccessControlRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecCertificateRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecIdentityRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecKeyAlgorithm	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecKeyKeyExchangeParameter	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SSLCiphersuiteGroup	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SSLProtocol	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SecKeyOperationType	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SecTrustResultType	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@tls_ciphersuite_group_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@tls_ciphersuite_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@tls_protocol_version_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SSLCiphersuiteGroup	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SSLProtocol	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SecKeyOperationType	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SecTrustResultType	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@tls_ciphersuite_group_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@tls_ciphersuite_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@tls_protocol_version_t	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So06SecKeyB17ExchangeParametera8rawValueABSo11CFStringRefa_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:So10SecPaddingV8rawValueABs6UInt32V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:So11SSLProtocolV8rawValueABSgs5Int32V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So15SecKeyAlgorithma8rawValueABSo11CFStringRefa_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:So17tls_ciphersuite_tV8rawValueABSgs6UInt16V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So18SecTrustResultTypeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So19SSLCiphersuiteGroupV8rawValueABSgs5Int32V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So19SecKeyOperationTypeV8rawValueABSgSi_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So22tls_protocol_version_tV8rawValueABSgs6UInt16V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So23tls_ciphersuite_group_tV8rawValueABSgs6UInt16V_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testHashableAndEquatable	-
+s:So27SecAccessControlCreateFlagsV8rawValueABSu_tcfc	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SecKeyAlgorithm	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SecKeyKeyExchangeParameter	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecKeyAlgorithm	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SecKeyKeyExchangeParameter	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@SecAccessControlCreateFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@SecPadding	implemented	test:full/security/tests/agent/SecurityTests.swift#testOptionSets	-
