@@ -93,6 +93,18 @@ emits `LC_DYLD_INFO(_ONLY)` or `LC_DYLD_CHAINED_FIXUPS` even when every
 size is zero (`libCombine.dylib` from the Focus guest gate;
 `cache_layout_emptyfix` is that shape and must load).
 
+On x86_64 the instruction-stream analogue of ARM64 ADRP+LDR is RIP-relative
+displacement: clang/ld64 emit `lea`/`mov … (%rip)` and 6-byte
+`jmpq *got(%rip)` stubs with a signed 32-bit disp32. `scripts/pack_macho.py`
+rewrites those disp32s when it moves DATA relative to `__TEXT` (the same
+reason the ARM64 rewriter patches ADRP page immediates). Keeping the
+original relative distance was rejected: `--sparse` is Apple's measured
+TEXT-to-DATA gap `0x22256720`, which the linker did not emit, so an
+unrewritten disp32 would still point at the hole. A shape the decoder
+does not handle (`VEX`/`EVEX`/`moffs`/67h address-size) is a named
+`CANNOT_*` rather than a packed image whose stubs still target the
+pre-pack GOT.
+
 ### `__PAGEZERO`
 
 `vmsize = 0x100000000` (4 GiB), `filesize = 0`, `maxprot = initprot = 0`. It is

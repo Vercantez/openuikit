@@ -1,0 +1,49 @@
+{
+  "module": "VideoToolbox",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 12,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 97,
+    "iphoneos_runtime_focus_launch_build_rank": 128,
+    "module": "VideoToolbox",
+    "occurrence_count": 12,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "aabb9f15f83f36717c2349584e1a73f9dd2b28120b45f0944780ee4eb8f9c251",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "submodules/Camera/Sources/CameraOutput.swift",
+          "submodules/LegacyComponents/Sources/TGMediaVideoConverter.m",
+          "submodules/MediaPlayer/Sources/ChunkMediaPlayerV2.swift",
+          "submodules/MediaPlayer/Sources/MediaDataReader.swift",
+          "submodules/MediaPlayer/Sources/MediaPlayerFramePreview.swift",
+          "submodules/TelegramUI/Components/MediaEditor/ImageObjectSeparation/Sources/ImageObjectSeparation.swift",
+          "submodules/TelegramUI/Components/MediaEditor/Sources/ImageObjectClassification.swift",
+          "submodules/TelegramUI/Components/MediaEditor/Sources/MediaEditorValues.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 97,
+    "byFocusLaunchBuildRelevance": 128
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

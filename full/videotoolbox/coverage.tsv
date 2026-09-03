@@ -1,0 +1,483 @@
+precise	status	evidence	notes
+c:@F@VTCompressionSessionBeginPass	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionCompleteFrames	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionEncodeFrame	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionEncodeMultiImageFrame	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTCompressionSessionEncodeMultiImageFrameWithOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTCompressionSessionEndPass	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionGetPixelBufferPool	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionGetTimeRangesForNextPass	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCompressionSessionPrepareToEncodeFrames	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCopyRAWProcessorExtensionProperties	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTCopySupportedPropertyDictionaryForEncoder	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCopyVideoDecoderExtensionProperties	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTCopyVideoEncoderList	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTCreateCGImageFromCVPixelBuffer	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTDecompressionSessionCanAcceptFormatDescription	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTDecompressionSessionCopyBlackPixelBuffer	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrame	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionDecodeFrameWithOptions	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionDecodeFrameWithOptionsAndOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionDecodeFrameWithOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionFinishDelayedFrames	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTDecompressionSessionSetMultiImageCallback	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTDecompressionSessionWaitForAsynchronousFrames	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTFrameSiloAddSampleBuffer	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTFrameSiloCallFunctionForEachSampleBuffer	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTFrameSiloCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTFrameSiloGetProgressOfCurrentPass	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTFrameSiloSetTimeRangesForNextPass	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTHDRPerFrameMetadataGenerationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTHDRPerFrameMetadataGenerationSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTHDRPerFrameMetadataGenerationSessionInvalidate	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTIsHardwareDecodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTIsStereoMVHEVCDecodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTIsStereoMVHEVCEncodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTMotionEstimationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTMotionEstimationSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTMotionEstimationSessionInvalidate	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTMultiPassStorageClose	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTMultiPassStorageCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTPixelRotationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTPixelRotationSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTPixelRotationSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTPixelRotationSessionRotateImage	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTPixelTransferSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTPixelTransferSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTPixelTransferSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTPixelTransferSessionTransferImage	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTRAWProcessingSessionCompleteFrames	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionCopyProcessingParameters	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTRAWProcessingSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionInvalidate	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionProcessFrame	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionSetParameterChangedHander	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionSetParameterChangedHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRAWProcessingSessionSetProcessingParameters	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRegisterProfessionalVideoWorkflowVideoDecoders	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRegisterProfessionalVideoWorkflowVideoEncoders	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTRegisterSupplementalVideoDecoderIfAvailable	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
+c:@F@VTSessionCopyProperty	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTSessionCopySerializableProperties	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTSessionCopySupportedPropertyDictionary	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTSessionSetProperties	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@F@VTSessionSetProperty	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
+c:@S@VTCompressionSessionOptionFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTCompressionSessionOptionFlags@beginFinalPass	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTCompressionSessionOptionFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTCompressionSessionOptionFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags@doNotOutputFrame	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags@enableAsynchronousDecompression	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags@enableTemporalProcessing	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags@oneXRealTimePlayback	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeFrameFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@frameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@frameInterrupted	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@imageBufferModifiable	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTDecodeInfoFlags@skippedLeadingFrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTEncodeInfoFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTEncodeInfoFlags@asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTEncodeInfoFlags@frameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTEncodeInfoFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@S@VTEncodeInfoFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTAllocationFailedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTAlphaChannelMode_PremultipliedAlpha	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTAlphaChannelMode_StraightAlpha	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCameraCalibrationExtrinsicOriginSource_StereoCameraSystemBaseline	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCameraCalibrationLensAlgorithmKind_ParametricLens	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCameraCalibrationLensDomain_Color	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCameraCalibrationLensRole_Left	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCameraCalibrationLensRole_Mono	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCameraCalibrationLensRole_Right	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTColorCorrectionImageRotationFailedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTColorCorrectionPixelTransferFailedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTColorSyncTransformConvertFailedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTCompressionPreset_Balanced	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPreset_HighQuality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPreset_HighSpeed	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPreset_VideoConferencing	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_ExtrinsicOrientationQuaternion	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_ExtrinsicOriginSource	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrix	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrixProjectionOffset	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrixReferenceDimensions	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensAlgorithmKind	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensDistortions	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensDomain	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensFrameAdjustmentsPolynomialX	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensFrameAdjustmentsPolynomialY	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensIdentifier	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_LensRole	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyCameraCalibrationKey_RadialAngleLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_AllowFrameReordering	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_AllowOpenGOP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_AllowTemporalCompression	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_AlphaChannelMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_AspectRatio16x9	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_AverageBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_BaseLayerBitRateFraction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_BaseLayerFrameRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_BaseLayerFrameRateFraction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_CalculateMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
+c:@kVTCompressionPropertyKey_CameraCalibrationDataLensCollection	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_CleanAperture	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ColorPrimaries	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ConstantBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ContentLightLevelInfo	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_DataRateLimits	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_Depth	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_EnableLTR	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_EncoderID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_EstimatedAverageBytesPerFrame	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ExpectedDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ExpectedFrameRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_FieldCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_FieldDetail	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_GammaLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_H264EntropyMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_HDRMetadataInsertionMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_HasLeftStereoEyeView	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_HasRightStereoEyeView	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_HeroEye	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_HorizontalDisparityAdjustment	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_HorizontalFieldOfView	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ICCProfile	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MVHEVCLeftAndRightViewIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MVHEVCVideoLayerIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MVHEVCViewIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MasteringDisplayColorVolume	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaxAllowedFrameQP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaxFrameDelayCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaxH264SliceBytes	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaxKeyFrameInterval	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaximizePowerEfficiency	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MaximumRealTimeFrameRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MinAllowedFrameQP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MoreFramesAfterEnd	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MoreFramesBeforeStart	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_MultiPassStorage	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_NumberOfPendingFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_OutputBitDepth	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_PixelAspectRatio	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_PixelBufferPoolIsShared	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_PixelTransferProperties	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_PreserveAlphaChannel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_PreserveDynamicHDRMetadata	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ProfileLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ProgressiveScan	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ProjectionKind	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_Quality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_RealTime	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_RecommendedParallelizationLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_RecommendedParallelizedSubdivisionMinimumDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_RecommendedParallelizedSubdivisionMinimumFrameCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ReferenceBufferCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_SourceFrameCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_SpatialAdaptiveQPLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_StereoCameraBaseline	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_SuggestedLookAheadFrameCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_SupportedPresetDictionaries	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_SupportsBaseFrameQP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_TargetQualityForAlpha	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_TransferFunction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_UsingGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_VBVBufferDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_VBVInitialDelayPercentage	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_VBVMaxBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_VariableBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_VideoEncoderPixelBufferAttributes	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_ViewPackingKind	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionPropertyKey_YCbCrMatrix	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTCompressionSessionBeginFinalPass	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTCouldNotCreateColorCorrectionDataErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTCouldNotCreateInstanceErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTCouldNotFindExtensionErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTCouldNotFindTemporalFilterErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTCouldNotFindVideoDecoderErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTCouldNotFindVideoEncoderErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTCouldNotOutputTaggedBufferGroupErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTDecodeFrameOptionKey_ContentAnalyzerCropRectangle	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeFrameOptionKey_ContentAnalyzerRotation	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeFrame_1xRealTimePlayback	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeFrame_DoNotOutputFrame	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeFrame_EnableAsynchronousDecompression	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeFrame_EnableTemporalProcessing	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeInfo_Asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeInfo_FrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeInfo_FrameInterrupted	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeInfo_ImageBufferModifiable	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecodeInfo_SkippedLeadingFrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTDecompressionPropertyKey_AllowBitstreamToChangeFrameDimensions	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_ContentHasInterframeDependencies	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_DecoderProducesRAWOutput	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_DeinterlaceMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_FieldMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_GeneratePerFrameHDRDisplayMetadata	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_MaxOutputPresentationTimeStampOfFramesBeingDecoded	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_MaximizePowerEfficiency	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_MinOutputPresentationTimeStampOfFramesBeingDecoded	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_NumberOfFramesBeingDecoded	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_OnlyTheseFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_OutputPoolRequestedMinimumBufferCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_PixelBufferPool	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_PixelBufferPoolIsShared	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_PixelFormatsWithReducedResolutionSupport	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_PixelTransferProperties	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_RealTime	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_ReducedCoefficientDecode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_ReducedFrameDelivery	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_ReducedResolutionDecode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_RequestRAWOutput	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_RequestedMVHEVCVideoLayerIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_SuggestedQualityOfServiceTiers	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_SupportedPixelFormatsOrderedByPerformance	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_SupportedPixelFormatsOrderedByQuality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_ThreadCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_UsingGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_DeinterlaceMode_Temporal	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_DeinterlaceMode_VerticalFilter	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_FieldMode_BothFields	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_FieldMode_BottomFieldOnly	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_FieldMode_DeinterlaceFields	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_FieldMode_SingleField	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_FieldMode_TopFieldOnly	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_OnlyTheseFrames_AllFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_OnlyTheseFrames_IFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_OnlyTheseFrames_KeyFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_OnlyTheseFrames_NonDroppableFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionProperty_TemporalLevelLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionResolutionKey_Height	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDecompressionResolutionKey_Width	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDownsamplingMode_Average	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTDownsamplingMode_Decimate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTEncodeFrameOptionKey_AcknowledgedLTRTokens	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTEncodeFrameOptionKey_BaseFrameQP	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTEncodeFrameOptionKey_ForceKeyFrame	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTEncodeFrameOptionKey_ForceLTRRefresh	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTEncodeInfo_Asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTEncodeInfo_FrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@kVTExtensionConflictErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTExtensionDisabledErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTExtensionProperties_CodecNameKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTExtensionProperties_ContainingBundleNameKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTExtensionProperties_ContainingBundleURLKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTExtensionProperties_ExtensionIdentifierKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTExtensionProperties_ExtensionNameKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTExtensionProperties_ExtensionURLKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTFormatDescriptionChangeNotSupportedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTFrameSiloInvalidTimeRangeErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTFrameSiloInvalidTimeStampErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTH264EntropyMode_CABAC	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTH264EntropyMode_CAVLC	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHDRMetadataInsertionMode_Auto	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHDRMetadataInsertionMode_None	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHDRMetadataInsertionMode_RequestSDRRangePreservation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHDRPerFrameMetadataGenerationHDRFormatType_DolbyVision	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHDRPerFrameMetadataGenerationOptionsKey_HDRFormats	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHeroEye_Left	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTHeroEye_Right	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTImageRotationNotSupportedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTInsufficientSourceColorDataErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTInvalidSessionErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTMotionEstimationSessionCreationOption_Label	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTMotionEstimationSessionCreationOption_MotionVectorSize	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTMotionEstimationSessionCreationOption_UseMultiPassSearch	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTMultiPassStorageCreationOption_DoNotDelete	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTMultiPassStorageIdentifierMismatchErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTMultiPassStorageInvalidErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTParameterErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTPixelRotationNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTPixelRotationPropertyKey_FlipHorizontalOrientation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelRotationPropertyKey_FlipVerticalOrientation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelRotationPropertyKey_Rotation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferNotPermittedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTPixelTransferNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationCleanAperture	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_DestinationColorPrimaries	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_DestinationICCProfile	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_DestinationPixelAspectRatio	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_DestinationTransferFunction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_DestinationYCbCrMatrix	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_DownsamplingMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_RealTime	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPixelTransferPropertyKey_ScalingMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H263_Profile0_Level10	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H263_Profile0_Level45	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H263_Profile3_Level45	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_1_3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_3_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_3_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_3_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_4_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_4_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_4_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_5_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_5_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Baseline_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_ConstrainedBaseline_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_ConstrainedHigh_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Extended_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Extended_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_3_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_3_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_3_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_4_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_4_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_4_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_5_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_5_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_High_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_3_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_3_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_3_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_4_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_4_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_4_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_5_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_5_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_H264_Main_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_HEVC_Main10_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_HEVC_Main42210_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_HEVC_Main_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_HEVC_Monochrome10_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_HEVC_Monochrome_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L4	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Main_L2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Main_L3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Main_L4	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Simple_L0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Simple_L1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Simple_L2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProfileLevel_MP4V_Simple_L3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProjectionKind_Equirectangular	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProjectionKind_HalfEquirectangular	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProjectionKind_ParametricImmersive	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTProjectionKind_Rectilinear	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyDocumentationKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
+c:@kVTPropertyReadOnlyErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTPropertyReadWriteStatusKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyReadWriteStatus_ReadOnly	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyReadWriteStatus_ReadWrite	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyShouldBeSerializedKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertySupportedValueListKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertySupportedValueMaximumKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertySupportedValueMinimumKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyTypeKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyType_Boolean	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyType_Enumeration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTPropertyType_Number	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterListElement_Description	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterListElement_Label	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterListElement_ListElementID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterValueType_Boolean	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterValueType_Float	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterValueType_Integer	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterValueType_List	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameterValueType_SubGroup	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_CameraValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_CurrentValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_Description	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_Enabled	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_InitialValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_Key	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_ListArray	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_MaximumValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_MinimumValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_Name	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_NeutralValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_SubGroup	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingParameter_ValueType	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingPropertyKey_MetadataForSidecarFile	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingPropertyKey_MetalDeviceRegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRAWProcessingPropertyKey_OutputColorAttachments	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRotation_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRotation_180	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRotation_CCW90	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTRotation_CW90	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTSampleAttachmentKey_QualityMetrics	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTSampleAttachmentKey_RequireLTRAcknowledgementToken	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTSampleAttachmentQualityMetricsKey_ChromaBlueMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
+c:@kVTSampleAttachmentQualityMetricsKey_ChromaRedMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
+c:@kVTSampleAttachmentQualityMetricsKey_LumaMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
+c:@kVTScalingMode_CropSourceToCleanAperture	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTScalingMode_Letterbox	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTScalingMode_Normal	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTScalingMode_Trim	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTSessionMalfunctionErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderAuthorizationErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderBadDataErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderCallbackMessagingErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderMalfunctionErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderNeedsRosettaErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderNotAvailableNowErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderReferenceMissingErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderRemovedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoDecoderUnknownErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoDecoderUnsupportedDataFormatErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderAuthorizationErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderAutoWhiteBalanceNotLockedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_CodecName	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_CodecType	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_DisplayName	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_EncoderID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_EncoderName	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_GPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_InstanceLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_IsHardwareAccelerated	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_PerformanceRating	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_QualityRating	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_SupportedSelectionProperties	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderList_SupportsFrameReordering	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderMVHEVCVideoLayerIDsMismatchErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderMalfunctionErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderNeedsRosettaErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderNotAvailableNowErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
+c:@kVTVideoEncoderSpecification_EnableHardwareAcceleratedVideoEncoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderSpecification_EnableLowLatencyRateControl	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderSpecification_EncoderID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderSpecification_RequireHardwareAcceleratedVideoEncoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTViewPackingKind_OverUnder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+c:@kVTViewPackingKind_SideBySide	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
+s:12VideoToolbox12VTSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox14VTFrameSiloRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox21VTMultiPassStorageRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox23VTCompressionSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox25VTDecompressionSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox25VTPixelRotationSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox25VTPixelTransferSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox25VTRAWProcessingSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox28VTMotionEstimationSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox41VTHDRPerFrameMetadataGenerationSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+s:12VideoToolbox8OSStatusa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib

@@ -1,0 +1,7 @@
+full/mediaplayer/MPConstants.swift
+full/mediaplayer/MPEnums.swift
+full/mediaplayer/MPMedia.swift
+full/mediaplayer/MPPlayableContent.swift
+full/mediaplayer/MPPlayback.swift
+full/mediaplayer/MPRemoteCommand.swift
+full/mediaplayer/MediaPlayer.swift

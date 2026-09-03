@@ -1,0 +1,8 @@
+full/corenfc/CardSession.swift
+full/corenfc/CoreNFC.swift
+full/corenfc/NFCConfiguration.swift
+full/corenfc/NFCISO7816.swift
+full/corenfc/NFCNDEF.swift
+full/corenfc/NFCSessions.swift
+full/corenfc/NFCTags.swift
+full/corenfc/NFCValueTypes.swift

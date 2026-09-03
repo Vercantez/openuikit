@@ -1,0 +1,62 @@
+precise	status	evidence	notes
+c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayAllCalendars	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayWritableCalendarsOnly	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleMultiple	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleSingle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventEditViewAction@EKEventEditViewActionCanceled	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventEditViewAction@EKEventEditViewActionCancelled	implemented	tests/agent/EventKitUIRuntime.swift	British-spelling alias of canceled
+c:@E@EKEventEditViewAction@EKEventEditViewActionDeleted	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventEditViewAction@EKEventEditViewActionSaved	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventViewAction@EKEventViewActionDeleted	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventViewAction@EKEventViewActionDone	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@E@EKEventViewAction@EKEventViewActionResponded	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:@F@EventKitUIBundle	implemented	tests/agent/EventKitUIRuntime.swift	returns nil; no Apple framework bundle on Linux
+c:@macro@EKUI_IS_IOS	implemented	tests/agent/EventKitUIRuntime.swift	0; this compile is not iPhone OS
+c:@macro@EKUI_IS_SIMULATOR	implemented	tests/agent/EventKitUIRuntime.swift	0; this compile is not the iOS Simulator
+c:objc(cs)EKCalendarChooser	implemented	tests/agent/EventKitUIRuntime.swift	NSObject, not UIViewController; configuration and host SPI
+c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:entityType:eventStore:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:eventStore:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKCalendarChooser(py)delegate	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKCalendarChooser(py)selectedCalendars	implemented	tests/agent/EventKitUIRuntime.swift	stored as assigned; no store-backed population
+c:objc(cs)EKCalendarChooser(py)selectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKCalendarChooser(py)showsCancelButton	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKCalendarChooser(py)showsDoneButton	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventEditViewController	implemented	tests/agent/EventKitUIRuntime.swift	NSObject, not UINavigationController; cancelEditing notifies .canceled
+c:objc(cs)EKEventEditViewController(im)cancelEditing	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventEditViewController(py)editViewDelegate	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventEditViewController(py)event	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventEditViewController(py)eventStore	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventViewController	implemented	tests/agent/EventKitUIRuntime.swift	NSObject, not UIViewController; configuration and host SPI
+c:objc(cs)EKEventViewController(py)allowsCalendarPreview	implemented	tests/agent/EventKitUIRuntime.swift	Linux default false (fail-closed); Darwin default is an oracle question
+c:objc(cs)EKEventViewController(py)allowsEditing	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventViewController(py)delegate	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(cs)EKEventViewController(py)event	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKCalendarChooserDelegate	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidCancel:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidFinish:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserSelectionDidChange:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKEventEditViewDelegate	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKEventEditViewDelegate(im)eventEditViewController:didCompleteWithAction:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKEventEditViewDelegate(im)eventEditViewControllerDefaultCalendarForNewEvents:	implemented	tests/agent/EventKitUIRuntime.swift	optional Swift default returns inert marker calendar
+c:objc(pl)EKEventViewDelegate	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+c:objc(pl)EKEventViewDelegate(im)eventViewController:didCompleteWithAction:	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:So17EKEventViewActionV8rawValueABSgSi_tcfc	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:So21EKEventEditViewActionV8rawValueABSgSi_tcfc	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:So29EKCalendarChooserDisplayStyleV8rawValueABSgSi_tcfc	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
+s:So31EKCalendarChooserSelectionStyleV8rawValueABSgSi_tcfc	implemented	tests/agent/EventKitUIRuntime.swift	exercised by EventKitUIRuntime.swift
