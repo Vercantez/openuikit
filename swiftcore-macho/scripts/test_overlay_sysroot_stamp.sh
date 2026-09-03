@@ -460,6 +460,9 @@ printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -Eq -- '(^|[[:space
   || echo "  OK  rewritten has no -soname"
 printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-install_name' \
   && echo "  OK  rewritten has -install_name" || { echo "  FAIL rewritten missing install_name"; fail=1; }
+printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: linker=ld64.lld' \
+  && echo "  OK  Darwin overlay link printed linker=ld64.lld" \
+  || { echo "  FAIL missing linker=ld64.lld"; fail=1; }
 
 echo
 echo "=== cmake : && clang++ && : wrapper is stripped before rewrite ==="
