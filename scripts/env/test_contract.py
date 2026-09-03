@@ -68,7 +68,7 @@ class ContractLockTests(unittest.TestCase):
         )
         self.assertEqual(
             checkouts["machorun-inrepo"]["tree"],
-            "26205ab554b10c02af525a28a8422b04e5685b60",
+            "70066eb2f34788e542fc70f30854c7f40b14c274",
         )
 
     def test_focus_widget_gate_still_locks_all_attestation_pins(self) -> None:
