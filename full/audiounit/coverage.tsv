@@ -1,0 +1,2 @@
+precise	status	evidence	notes
+c:@macro@AUDIO_UNIT_VERSION	implemented	tests/agent/AudioUnitRuntime.swift	Imported C macro getter; Linux returns 1070 (modern Audio Component-era public value). Exact iPhoneOS 26.1 integer is an oracle question.
