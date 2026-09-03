@@ -23,6 +23,8 @@ FOUNDATION_RUNTIME_LINK_CONTRACT = (
     "-lswiftSynchronization",
     "/usr/lib/swift/libswift_StringProcessing.dylib",
     "/usr/lib/swift/libswiftSynchronization.dylib",
+    "/usr/lib/swift/libswiftDarwin.dylib",
+    "/usr/lib/swift/libswift_Concurrency.dylib",
 )
 FOUNDATION_RUNTIME_UNDEFINED_CONTRACT = (
     ("EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS", 19, "17_StringProcessing"),
@@ -140,6 +142,83 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )[0]
         self.assertIn("-lFoundationEssentials", foundation_link)
         self.assertNotIn("-reexport_library", foundation_link)
+
+    def test_foundation_umbrella_link_names_the_four_missing_input_classes(self) -> None:
+        build = BUILD.read_text()
+        foundation_link = build.split("run_link libFoundation ", 1)[1].split(
+            "run_link libSwiftUI ", 1
+        )[0]
+        self.assertIn("libswift_Concurrency.tbd", foundation_link)
+        self.assertIn("libswiftDarwin.tbd", foundation_link)
+        self.assertIn("libOpenCoreGraphics.dylib", foundation_link)
+        self.assertIn("$RELATIVE_TIME_DARWIN", foundation_link)
+        self.assertIn('"$SYS/usr/lib/swift/libswiftDarwin.tbd"', foundation_link)
+        self.assertIn('"$SYS/usr/lib/swift/libswift_Concurrency.tbd"', foundation_link)
+        self.assertIn('"$PACKAGE/libOpenCoreGraphics.dylib"', foundation_link)
+        self.assertNotIn("-lswift_Concurrency", foundation_link)
+        self.assertNotIn("-lswiftDarwin", foundation_link)
+        self.assertEqual(build.count("-lswift_StringProcessing"), 1)
+        self.assertEqual(build.count("-lswiftSynchronization"), 1)
+
+    def test_dylib_links_print_argv_and_record_contributing_input_maps(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn("run_link()", text)
+        self.assertIn("printf '%s-link'", text)
+        self.assertIn("link_map_inputs()", text)
+        self.assertIn('assert_exact_text "libFoundation linker inputs"', text)
+        self.assertIn("expected_foundation_inputs", text)
+        self.assertIn("expected_foundationessentials_inputs", text)
+        self.assertIn("expected_widget_inputs", text)
+        self.assertIn("expected_onboarding_inputs", text)
+        self.assertIn('-map "$AUDIT/libFoundation.link-map"', text)
+        self.assertIn("run_link libFoundation ", text)
+        self.assertIn("run_link libFoundationEssentials ", text)
+        self.assertIn("run_link libWidget ", text)
+        self.assertIn("run_link libOnboarding ", text)
+        foundation_expected = text.split("expected_foundation_inputs=", 1)[1].split(
+            "expected_widget_inputs=", 1
+        )[0]
+        for required in (
+            "libswift_Concurrency.tbd",
+            "libswiftDarwin.tbd",
+            "libOpenCoreGraphics.dylib",
+            "$RELATIVE_TIME_DARWIN",
+        ):
+            self.assertIn(required, foundation_expected)
+        self.assertIn(
+            'grep -Fq "$required" "$AUDIT/libFoundation.link-map"',
+            text,
+        )
+
+    def test_relative_time_bridge_is_built_and_preloaded_like_frameworks(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn(
+            "== build the OpenRelativeTime Darwin bridge and Linux host helper",
+            text,
+        )
+        self.assertIn("full/relativetime/OpenRelativeTimeBridge.c", text)
+        self.assertIn("full/relativetime/OpenRelativeTimeHost.c", text)
+        self.assertIn("full/relativetime/OpenRelativeTimeHostTests.c", text)
+        self.assertIn("run_link libOpenRelativeTime ", text)
+        self.assertIn("RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib", text)
+        self.assertIn(
+            "RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so",
+            text,
+        )
+        self.assertIn(
+            "OPEN_RELATIVE_TIME_HOST_OK icu=real locale=en,fr,de,ja styles=4 bounds=hard",
+            text,
+        )
+        self.assertIn("_glibc_openui_relative_time_v1_format", text)
+        self.assertIn(
+            "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$RELATIVE_TIME_HOST",
+            text,
+        )
+        self.assertIn("@rpath/libOpenRelativeTime.dylib", text)
+        self.assertNotIn(
+            "-install_name /usr/lib/libOpenRelativeTime.dylib",
+            text,
+        )
 
     def test_foundation_runtime_closure_is_exact_and_mutation_sensitive(self) -> None:
         source = BUILD.read_text()
