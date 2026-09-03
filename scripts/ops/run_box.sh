@@ -75,7 +75,7 @@ EOF
 set -eu
 cd $TREE
 aws s3 cp '$bundle_s3' /tmp/openuikit-$SHA.bundle --region $REGION
-git fetch /tmp/openuikit-$SHA.bundle '$SHA'
+git fetch /tmp/openuikit-$SHA.bundle refs/ops/bundle && [ "$(git rev-parse FETCH_HEAD)" = '$SHA' ]
 git checkout --force '$SHA'
 python3 scripts/env/prepare.py
 sh machorun/scripts/build.sh
@@ -94,7 +94,7 @@ EOF
 set -eu
 cd $TREE
 aws s3 cp '$bundle_s3' /tmp/openuikit-$SHA.bundle --region $REGION
-git fetch /tmp/openuikit-$SHA.bundle '$SHA'
+git fetch /tmp/openuikit-$SHA.bundle refs/ops/bundle && [ "$(git rev-parse FETCH_HEAD)" = '$SHA' ]
 git checkout --force '$SHA'
 python3 scripts/env/prepare.py
 if bash full/swiftui/build_focus_onboarding_guest.sh; then
