@@ -1,1 +1,7 @@
 full/photosui/PhotosUI.swift
+full/photosui/PhotosUIContentEditing.swift
+full/photosui/PhotosUILivePhoto.swift
+full/photosui/PhotosUILookalikes.swift
+full/photosui/PhotosUIPicker.swift
+full/photosui/PhotosUISwiftOverlay.swift
+full/photosui/PhotosUIViewSurface.swift
