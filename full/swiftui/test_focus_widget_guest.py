@@ -31,7 +31,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         pins = (ROOT / "scripts/vendor_pins.sh").read_text()
         self.assertIn(
             "EXPECTED_INREPO_UIKIT_TREE="
-            "ceab561281de3ecd3acfd75aba57d13cb0ea1575",
+            "e737cdd02e89f8aa7446ee69a6464ac1c2108335",
             pins,
         )
         self.assertNotIn(
@@ -53,7 +53,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         ).strip()
         self.assertEqual(
             actual_tree,
-            "ceab561281de3ecd3acfd75aba57d13cb0ea1575",
+            "e737cdd02e89f8aa7446ee69a6464ac1c2108335",
         )
         self.assertIn("efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e", text)
         self.assertIn("721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2", text)
