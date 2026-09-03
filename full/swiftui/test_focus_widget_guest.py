@@ -734,7 +734,7 @@ _ARM64_WIDGET_INPUT_SHA256 = {
 }
 _ARM64_ONBOARDING_INPUT_SHA256 = {
     "combine": "2fb8cf23b974cfc6272337e5992a6273ddbcfe8f7b3748b82e3a4868c2fac00e",
-    "foundation": "aeda8311f2404b181030892be67d698cffe1e0444f7e7b14ac37e608b2f5db34",
+    "foundation": "1e6cea82ea90116a7271f6027eca4f294513ae3c9430bfad4047741ac170300c",
     "foundationessentials": "f39d87645cb95b700727ac4c2eeb484f347bd0bb1e2723dfe1e65d7d843a0f43",
     "onboarding": "3f9f79428632bbf02dd3be042c9f3aa36bc0a1e41df9e179d0334cc1188248d2",
     "opencombine": "1759c45b9efb1161ab8fda800dd89285d13aa8393ade080ff1a1fc70fa8b3f7c",

@@ -78,6 +78,11 @@ def lipo_create(output: str, inputs: list[str]) -> int:
     dest_dir = os.path.dirname(output)
     if dest_dir:
         os.makedirs(dest_dir, exist_ok=True)
+    if os.path.exists(output) and os.path.realpath(output) == os.path.realpath(src):
+        # overlay_satisfy_core already pointed the unarch path at this
+        # per-arch product; copying a file onto itself is SameFileError.
+        print(f'lipo_single_arch: {output} already is {src}')
+        return 0
     shutil.copy2(src, output)
     return 0
 

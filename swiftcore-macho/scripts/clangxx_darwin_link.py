@@ -339,6 +339,11 @@ def _strip_host_cxx_libdirs(argv: list[str]) -> list[str]:
             parts = a.split(",")
             # -Wl,-L,/usr/lib/llvm-18/lib  or -Wl,-rpath-link,/usr/lib/llvm-18/lib
             skip = False
+            # ld64.lld has no -rpath-link at all (ELF-only); measured 2026-09-03:
+            # swiftObservation's link died "unknown argument '-rpath-link'" on a
+            # non-llvm-18 path. Drop it regardless of the directory.
+            if "-rpath-link" in parts:
+                skip = True
             for j, p in enumerate(parts):
                 if p in ("-L", "-rpath-link", "-rpath") and j + 1 < len(parts):
                     if _host_elf_cxx_libdir(parts[j + 1]):

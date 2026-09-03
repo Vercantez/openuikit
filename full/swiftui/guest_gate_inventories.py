@@ -449,7 +449,6 @@ ONBOARDING_INPUTS_ARM64: dict[str, tuple[str, ...]] = {
         "{FE_OUT}/uuid_compat.o",
         "{SYS}/usr/lib/swift/libswiftCore.tbd",
         "{SYS}/usr/lib/swift/libswiftObjectiveC.tbd",
-        "{MRROOT}/darwin/usr/lib/libswiftcompat.dylib",
         "{PACKAGE}/libOpenUIKit.dylib",
         "{PACKAGE}/libCombine.dylib",
         "{PACKAGE}/libOpenCoreGraphics.dylib",

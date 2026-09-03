@@ -137,7 +137,7 @@ if [ ! -f "$MANIFEST" ]; then
             else
                 printf 'local\t%s\t-\tno upstream counterpart (assumed by DEFAULT, not declared)\n' "$rel"
             fi
-        done < <(find "$TARGET/darwin/usr/lib" -name '*.dylib' -type f 2>/dev/null | LC_ALL=C sort)
+        done < <(find "$TARGET/darwin/usr/lib" -name '*.dylib' ! -name '.*' -type f 2>/dev/null | LC_ALL=C sort)
     } > "$MANIFEST"
 fi
 
@@ -269,7 +269,7 @@ while IFS= read -r up; do
     n_upstream=$((n_upstream+1))
     case " $accounted " in *" $rel "*) continue ;; esac
     absent="$absent $rel"
-done < <({ find "$MACHORUN/darwin/usr/lib" -name '*.dylib' -type f 2>/dev/null
+done < <({ find "$MACHORUN/darwin/usr/lib" -name '*.dylib' ! -name '.*' -type f 2>/dev/null
            [ -f "$MACHORUN/build/machorun" ] && echo "$MACHORUN/build/machorun"; } | LC_ALL=C sort)
 
 graded=$((n_copy + n_renamed + n_umbrella + n_staged))
