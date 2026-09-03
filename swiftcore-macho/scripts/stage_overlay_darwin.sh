@@ -225,6 +225,16 @@ if [ "${SWIFTCORE_DARWIN_ARCH}" = x86_64 ]; then
       Libm "$LIBM_TAG" "$LIBM_COMMIT" Source/Intel/math.h
   fi
 fi
+if [ ! -f "$SDK/usr/include/MacTypes.h" ]; then
+  echo "stage_overlay_darwin: MacTypes.h absent; staging CarbonHeaders pin"
+  stage_file usr/include/MacTypes.h "$SRC/MacTypes.h" replace \
+    CarbonHeaders "$CARBON_TAG" "$CARBON_COMMIT" MacTypes.h
+fi
+if [ ! -f "$SDK/usr/include/ConditionalMacros.h" ]; then
+  echo "stage_overlay_darwin: ConditionalMacros.h absent; staging CarbonHeaders pin"
+  stage_file usr/include/ConditionalMacros.h "$SRC/ConditionalMacros.h" replace \
+    CarbonHeaders "$CARBON_TAG" "$CARBON_COMMIT" ConditionalMacros.h
+fi
 PROC_PIN=$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h
 if [ -f "$PROC_PIN" ]; then
   if [ ! -f "$SDK/usr/include/sys/proc.h" ] \
