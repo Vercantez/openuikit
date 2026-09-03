@@ -1,36 +1,78 @@
 @_exported import Foundation
+import Dispatch
 
 /// The public error domain used by web-authentication sessions.
+/// Matches the pinned `dotnet/macios` `[ErrorDomain ("ASWebAuthenticationSessionErrorDomain")]`.
 public let ASWebAuthenticationSessionErrorDomain =
     "com.apple.AuthenticationServices.WebAuthenticationSession"
 
-/// Portable counterpart of AuthenticationServices' typed NSError overlay.
+/// Bridged web-authentication session error.
+///
+/// `Code` raw values are the pinned macios / existing IceCubes host-oracle
+/// values: `canceledLogin = 1`, `presentationContextNotProvided = 2`,
+/// `presentationContextInvalid = 3`. Linux Foundation's
+/// `_BridgedStoredNSError` hash witnesses trap, so `hash(into:)` is provided
+/// here. The portable `reason` convenience stores
+/// `NSLocalizedDescriptionKey`; it is extra Linux API, not an Apple selector.
+@frozen
 public struct ASWebAuthenticationSessionError:
-    Error, Equatable, Sendable, CustomStringConvertible
+    Foundation._BridgedStoredNSError,
+    CustomStringConvertible,
+    @unchecked Sendable
 {
-    public struct Code: RawRepresentable, Equatable, Hashable, Sendable {
-        public let rawValue: Int
+    public enum Code: Int, Foundation._ErrorCodeProtocol, Sendable {
+        public typealias _ErrorType = ASWebAuthenticationSessionError
 
-        public init(rawValue: Int) {
-            self.rawValue = rawValue
-        }
-
-        public static let canceledLogin = Code(rawValue: 1)
-        public static let presentationContextNotProvided = Code(rawValue: 2)
-        public static let presentationContextInvalid = Code(rawValue: 3)
+        case canceledLogin = 1
+        case presentationContextNotProvided = 2
+        case presentationContextInvalid = 3
     }
 
-    public let code: Code
-    public let reason: String
+    public let _nsError: NSError
 
-    public init(_ code: Code, reason: String? = nil) {
-        self.code = code
-        self.reason = reason ?? Self.defaultReason(for: code)
+    public init(_nsError: NSError) {
+        self._nsError = _nsError
+    }
+
+    public static var _nsErrorDomain: String { ASWebAuthenticationSessionErrorDomain }
+
+    public static var errorDomain: String { ASWebAuthenticationSessionErrorDomain }
+    public static var canceledLogin: Code { .canceledLogin }
+    public static var presentationContextNotProvided: Code { .presentationContextNotProvided }
+    public static var presentationContextInvalid: Code { .presentationContextInvalid }
+
+    public var reason: String {
+        if let description = userInfo[NSLocalizedDescriptionKey] as? String,
+           !description.isEmpty
+        {
+            return description
+        }
+        return Self.defaultReason(for: code)
     }
 
     public var description: String { reason }
 
-    private static func defaultReason(for code: Code) -> String {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(_nsError.domain)
+        hasher.combine(_nsError.code)
+    }
+
+    public var hashValue: Int {
+        var hasher = Hasher()
+        hash(into: &hasher)
+        return hasher.finalize()
+    }
+
+    /// Portable labeled reason used by the host-driven web-auth boundary.
+    public init(_ code: Code, reason: String) {
+        var info: [String: Any] = [:]
+        if !reason.isEmpty {
+            info[NSLocalizedDescriptionKey] = reason
+        }
+        self.init(code, userInfo: info)
+    }
+
+    fileprivate static func defaultReason(for code: Code) -> String {
         switch code {
         case .canceledLogin:
             return "The web authentication session was canceled"
@@ -38,8 +80,6 @@ public struct ASWebAuthenticationSessionError:
             return "No web authentication host was configured at startup"
         case .presentationContextInvalid:
             return "The web authentication request or callback was invalid"
-        default:
-            return "The web authentication session failed"
         }
     }
 }
@@ -110,6 +150,13 @@ public enum AuthenticationServicesPortable {
 
     public static var isHostConfigured: Bool { eventHandler != nil }
     public static var hasActiveRequest: Bool { activeRequest != nil }
+
+    /// Cancel the live portable request, if any, without clearing the host handler.
+    @_spi(OpenUIKitHost)
+    public static func _cancelActiveIfAny() {
+        guard let active = activeRequest else { return }
+        cancel(requestID: active.request.id)
+    }
 
     /// Install the browser boundary before the first authentication request.
     /// Returning false means startup configuration is already frozen.
@@ -259,13 +306,13 @@ public enum AuthenticationServicesPortable {
         }
     }
 
-    private static func isValidInitialURL(_ url: URL) -> Bool {
+    fileprivate static func isValidInitialURL(_ url: URL) -> Bool {
         guard let scheme = url.scheme?.lowercased(),
               scheme == "http" || scheme == "https" else { return false }
         return url.host?.isEmpty == false
     }
 
-    private static func isValidCallbackScheme(_ scheme: String) -> Bool {
+    fileprivate static func isValidCallbackScheme(_ scheme: String) -> Bool {
         guard let first = scheme.utf8.first,
               (first >= 65 && first <= 90) || (first >= 97 && first <= 122)
         else { return false }
@@ -276,4 +323,79 @@ public enum AuthenticationServicesPortable {
                 || byte == 43 || byte == 45 || byte == 46
         }
     }
+}
+
+/// SwiftUI overlay `WebAuthenticationSession` type, hosted in the isolated
+/// `AuthenticationServices` module so Linux can compile it without SwiftUI.
+/// The Darwin `_AuthenticationServices_SwiftUI` overlay re-exports the
+/// `EnvironmentValues` key; the session value itself lives here.
+@available(iOS 16.4, macOS 13.3, watchOS 9.4, tvOS 16.4, *)
+@MainActor
+public struct WebAuthenticationSession: Sendable {
+    public struct BrowserSession: Sendable, Equatable {
+        fileprivate enum Storage: UInt8, Sendable {
+            case shared
+            case ephemeral
+        }
+
+        fileprivate let storage: Storage
+
+        public static var ephemeral: BrowserSession {
+            BrowserSession(storage: .ephemeral)
+        }
+
+        public static var shared: BrowserSession {
+            BrowserSession(storage: .shared)
+        }
+    }
+
+    nonisolated public init() {}
+
+    public func authenticate(
+        using url: URL,
+        callbackURLScheme: String,
+        preferredBrowserSession: BrowserSession? = nil
+    ) async throws -> URL {
+        try await AuthenticationServicesPortable._authenticate(
+            using: url,
+            callbackURLScheme: callbackURLScheme,
+            prefersEphemeralBrowserSession:
+                preferredBrowserSession?.storage == .ephemeral
+        )
+    }
+
+    public func authenticate(
+        using url: URL,
+        callback: ASWebAuthenticationSession.Callback,
+        preferredBrowserSession: BrowserSession? = nil,
+        additionalHeaderFields: [String: String]
+    ) async throws -> URL {
+        _ = additionalHeaderFields
+        guard let scheme = callback.customSchemeValue else {
+            throw ASWebAuthenticationSessionError(
+                .presentationContextInvalid,
+                reason: "HTTPS callback matching is host-driven and has no Apple-oracle scheme mapping on Linux"
+            )
+        }
+        let result = try await authenticate(
+            using: url,
+            callbackURLScheme: scheme,
+            preferredBrowserSession: preferredBrowserSession
+        )
+        guard callback.matchesURL(result) else {
+            throw ASWebAuthenticationSessionError(
+                .presentationContextInvalid,
+                reason: "The callback URL did not match the requested callback"
+            )
+        }
+        return result
+    }
+}
+
+/// Serial queue used by fail-closed Apple-service completions on Linux.
+/// This is a host control, not Apple's daemon queue.
+public enum AuthenticationServicesHostCallback {
+    public static let queue = DispatchQueue(
+        label: "org.openuikit.AuthenticationServices.host-callback"
+    )
 }
