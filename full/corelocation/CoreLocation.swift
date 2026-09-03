@@ -1,5 +1,4 @@
 @_exported import Foundation
-@preconcurrency import Dispatch
 
 public typealias CLLocationDegrees = Double
 public typealias CLLocationDistance = Double
@@ -9,9 +8,12 @@ public typealias CLLocationDirection = Double
 public typealias CLTimeInterval = Double
 public typealias CLBeaconMajorValue = UInt16
 public typealias CLBeaconMinorValue = UInt16
+public typealias CLHeadingComponentValue = Double
+public typealias CLGeocodeCompletionHandler = ([CLPlacemark]?, (any Error)?) -> Void
 
 public let CLLocationDistanceMax = Double.greatestFiniteMagnitude
 public let kCLDistanceFilterNone: CLLocationDistance = -1
+public let kCLHeadingFilterNone: CLLocationDegrees = -1
 public let kCLLocationAccuracyBestForNavigation: CLLocationAccuracy = -2
 public let kCLLocationAccuracyBest: CLLocationAccuracy = -1
 public let kCLLocationAccuracyNearestTenMeters: CLLocationAccuracy = 10
@@ -20,6 +22,9 @@ public let kCLLocationAccuracyKilometer: CLLocationAccuracy = 1_000
 public let kCLLocationAccuracyThreeKilometers: CLLocationAccuracy = 3_000
 public let kCLLocationAccuracyReduced: CLLocationAccuracy = 6_380_000
 public let kCLErrorDomain = "kCLErrorDomain"
+public let kCLErrorUserInfoAlternateRegionKey = "kCLErrorUserInfoAlternateRegionKey"
+public let CLLocationPushServiceErrorDomain = "CLLocationPushServiceErrorDomain"
+public var CL_TARGET_SUPPORTS_CONDITIONS: Int32 { 1 }
 
 public struct CLLocationCoordinate2D: Hashable, Sendable {
   public var latitude: CLLocationDegrees
@@ -52,20 +57,32 @@ public func CLLocationCoordinate2DIsValid(
     && (-180.0...180.0).contains(coordinate.longitude)
 }
 
-@objc public enum CLAuthorizationStatus: Int, Sendable {
+#if canImport(ObjectiveC)
+@objc
+#endif
+public enum CLAuthorizationStatus: Int, Sendable {
   case notDetermined = 0
   case restricted = 1
   case denied = 2
   case authorizedAlways = 3
   case authorizedWhenInUse = 4
+
+  /// Deprecated alias of `authorizedAlways` (raw value 3).
+  public static var authorized: CLAuthorizationStatus { .authorizedAlways }
 }
 
-@objc public enum CLAccuracyAuthorization: Int, Sendable {
+#if canImport(ObjectiveC)
+@objc
+#endif
+public enum CLAccuracyAuthorization: Int, Sendable {
   case fullAccuracy = 0
   case reducedAccuracy = 1
 }
 
-@objc public enum CLActivityType: Int, Sendable {
+#if canImport(ObjectiveC)
+@objc
+#endif
+public enum CLActivityType: Int, Sendable {
   case other = 1
   case automotiveNavigation = 2
   case fitness = 3
@@ -73,7 +90,10 @@ public func CLLocationCoordinate2DIsValid(
   case airborne = 5
 }
 
-@objc public enum CLDeviceOrientation: Int, Sendable {
+#if canImport(ObjectiveC)
+@objc
+#endif
+public enum CLDeviceOrientation: Int, Sendable {
   case unknown = 0
   case portrait = 1
   case portraitUpsideDown = 2
@@ -83,23 +103,36 @@ public func CLLocationCoordinate2DIsValid(
   case faceDown = 6
 }
 
-@objc public enum CLRegionState: Int, Sendable {
+#if canImport(ObjectiveC)
+@objc
+#endif
+public enum CLRegionState: Int, Sendable {
   case unknown = 0
   case inside = 1
   case outside = 2
 }
 
-@objc public enum CLProximity: Int, Sendable {
+#if canImport(ObjectiveC)
+@objc
+#endif
+public enum CLProximity: Int, Sendable {
   case unknown = 0
   case immediate = 1
   case near = 2
   case far = 3
 }
 
-public struct CLError: Error, Equatable, Sendable, CustomNSError,
-  LocalizedError
+/// Bridged CoreLocation error.
+///
+/// Linux Foundation exposes `Foundation._BridgedStoredNSError`. Typed
+/// `NSError as? CLError` round-trips are not claimed: Linux Foundation
+/// special-cases Cocoa/POSIX/URL errors and does not wrap arbitrary domains.
+public struct CLError: Foundation._BridgedStoredNSError, LocalizedError,
+  @unchecked Sendable
 {
-  public enum Code: Int, Sendable {
+  public enum Code: Int, Foundation._ErrorCodeProtocol, Sendable {
+    public typealias _ErrorType = CLError
+
     case locationUnknown = 0
     case denied = 1
     case network = 2
@@ -122,33 +155,49 @@ public struct CLError: Error, Equatable, Sendable, CustomNSError,
     case historicalLocationError = 19
   }
 
-  public static let locationUnknown: Code = .locationUnknown
-  public static let denied: Code = .denied
-  public static let network: Code = .network
-  public static let headingFailure: Code = .headingFailure
-  public static let regionMonitoringDenied: Code = .regionMonitoringDenied
-  public static let regionMonitoringFailure: Code = .regionMonitoringFailure
-  public static let regionMonitoringSetupDelayed: Code = .regionMonitoringSetupDelayed
-  public static let regionMonitoringResponseDelayed: Code = .regionMonitoringResponseDelayed
-  public static let geocodeFoundNoResult: Code = .geocodeFoundNoResult
-  public static let geocodeFoundPartialResult: Code = .geocodeFoundPartialResult
-  public static let geocodeCanceled: Code = .geocodeCanceled
-  public static let deferredFailed: Code = .deferredFailed
-  public static let deferredNotUpdatingLocation: Code = .deferredNotUpdatingLocation
-  public static let deferredAccuracyTooLow: Code = .deferredAccuracyTooLow
-  public static let deferredDistanceFiltered: Code = .deferredDistanceFiltered
-  public static let deferredCanceled: Code = .deferredCanceled
-  public static let rangingUnavailable: Code = .rangingUnavailable
-  public static let rangingFailure: Code = .rangingFailure
+  public let _nsError: NSError
 
-  public let code: Code
-
-  public init(_ code: Code) {
-    self.code = code
+  public init(_nsError: NSError) {
+    self._nsError = _nsError
   }
 
+  public static var _nsErrorDomain: String { kCLErrorDomain }
   public static var errorDomain: String { kCLErrorDomain }
-  public var errorCode: Int { code.rawValue }
+
+  public static var locationUnknown: Code { .locationUnknown }
+  public static var denied: Code { .denied }
+  public static var network: Code { .network }
+  public static var headingFailure: Code { .headingFailure }
+  public static var regionMonitoringDenied: Code { .regionMonitoringDenied }
+  public static var regionMonitoringFailure: Code { .regionMonitoringFailure }
+  public static var regionMonitoringSetupDelayed: Code { .regionMonitoringSetupDelayed }
+  public static var regionMonitoringResponseDelayed: Code { .regionMonitoringResponseDelayed }
+  public static var geocodeFoundNoResult: Code { .geocodeFoundNoResult }
+  public static var geocodeFoundPartialResult: Code { .geocodeFoundPartialResult }
+  public static var geocodeCanceled: Code { .geocodeCanceled }
+  public static var deferredFailed: Code { .deferredFailed }
+  public static var deferredNotUpdatingLocation: Code { .deferredNotUpdatingLocation }
+  public static var deferredAccuracyTooLow: Code { .deferredAccuracyTooLow }
+  public static var deferredDistanceFiltered: Code { .deferredDistanceFiltered }
+  public static var deferredCanceled: Code { .deferredCanceled }
+  public static var rangingUnavailable: Code { .rangingUnavailable }
+  public static var rangingFailure: Code { .rangingFailure }
+  public static var promptDeclined: Code { .promptDeclined }
+  public static var historicalLocationError: Code { .historicalLocationError }
+
+  public var code: Code {
+    Code(rawValue: _nsError.code) ?? .locationUnknown
+  }
+
+  public var userInfo: [String: Any] { _nsError.userInfo }
+  public var errorUserInfo: [String: Any] { _nsError.userInfo }
+  public var errorCode: Int { _nsError.code }
+  public var localizedDescription: String { _nsError.localizedDescription }
+
+  public var alternateRegion: CLRegion? {
+    userInfo[kCLErrorUserInfoAlternateRegionKey] as? CLRegion
+  }
+
   public var errorDescription: String? {
     switch code {
     case .locationUnknown: "The location is currently unknown"
@@ -160,11 +209,81 @@ public struct CLError: Error, Equatable, Sendable, CustomNSError,
     default: "CoreLocation error \(code.rawValue)"
     }
   }
+
+  /// Foundation's `_BridgedStoredNSError` hash witnesses trap on Linux.
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(_nsError.domain)
+    hasher.combine(_nsError.code)
+  }
+
+  public var hashValue: Int {
+    var hasher = Hasher()
+    hash(into: &hasher)
+    return hasher.finalize()
+  }
 }
 
+public struct CLLocationPushServiceError: Foundation._BridgedStoredNSError,
+  LocalizedError, @unchecked Sendable
+{
+  public enum Code: Int, Foundation._ErrorCodeProtocol, Sendable {
+    public typealias _ErrorType = CLLocationPushServiceError
+
+    case unknown = 0
+    case missingPushExtension = 1
+    case missingPushServerEnvironment = 2
+    case missingEntitlement = 3
+    case unsupportedPlatform = 4
+  }
+
+  public let _nsError: NSError
+
+  public init(_nsError: NSError) {
+    self._nsError = _nsError
+  }
+
+  public static var _nsErrorDomain: String { CLLocationPushServiceErrorDomain }
+  public static var errorDomain: String { CLLocationPushServiceErrorDomain }
+
+  public static var unknown: Code { .unknown }
+  public static var missingPushExtension: Code { .missingPushExtension }
+  public static var missingPushServerEnvironment: Code { .missingPushServerEnvironment }
+  public static var missingEntitlement: Code { .missingEntitlement }
+  public static var unsupportedPlatform: Code { .unsupportedPlatform }
+
+  public var code: Code {
+    Code(rawValue: _nsError.code) ?? .unknown
+  }
+
+  public var userInfo: [String: Any] { _nsError.userInfo }
+  public var errorUserInfo: [String: Any] { _nsError.userInfo }
+  public var errorCode: Int { _nsError.code }
+  public var localizedDescription: String { _nsError.localizedDescription }
+
+  public var errorDescription: String? {
+    "CLLocationPushServiceError \(code.rawValue)"
+  }
+
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(_nsError.domain)
+    hasher.combine(_nsError.code)
+  }
+
+  public var hashValue: Int {
+    var hasher = Hasher()
+    hash(into: &hasher)
+    return hasher.finalize()
+  }
+}
+
+#if canImport(ObjectiveC)
 @objc(CLFloor)
+#endif
 open class CLFloor: NSObject, @unchecked Sendable {
-  @objc public let level: Int
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let level: Int
 
   @_spi(OpenUIKitHost)
   public init(level: Int) {
@@ -173,20 +292,52 @@ open class CLFloor: NSObject, @unchecked Sendable {
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLLocation)
+#endif
 open class CLLocation: NSObject, NSCopying, @unchecked Sendable {
   public let coordinate: CLLocationCoordinate2D
-  @objc public let altitude: CLLocationDistance
-  @objc public let horizontalAccuracy: CLLocationAccuracy
-  @objc public let verticalAccuracy: CLLocationAccuracy
-  @objc public let course: CLLocationDirection
-  @objc public let courseAccuracy: CLLocationDirection
-  @objc public let speed: CLLocationSpeed
-  @objc public let speedAccuracy: CLLocationSpeed
-  @objc public let timestamp: Date
-  @objc public let floor: CLFloor?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let altitude: CLLocationDistance
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let horizontalAccuracy: CLLocationAccuracy
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let verticalAccuracy: CLLocationAccuracy
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let course: CLLocationDirection
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let courseAccuracy: CLLocationDirection
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let speed: CLLocationSpeed
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let speedAccuracy: CLLocationSpeed
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let timestamp: Date
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let floor: CLFloor?
 
-  @objc public convenience init(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public convenience init(
     latitude: CLLocationDegrees,
     longitude: CLLocationDegrees
   ) {
@@ -269,7 +420,9 @@ open class CLLocation: NSObject, NSCopying, @unchecked Sendable {
     super.init()
   }
 
+  #if canImport(ObjectiveC)
   @objc(distanceFromLocation:)
+  #endif
   open func distance(from location: CLLocation) -> CLLocationDistance {
     guard CLLocationCoordinate2DIsValid(coordinate),
       CLLocationCoordinate2DIsValid(location.coordinate)
@@ -314,10 +467,14 @@ open class CLLocation: NSObject, NSCopying, @unchecked Sendable {
     "<CLLocation \(coordinate.latitude),\(coordinate.longitude) ±\(horizontalAccuracy)m>"
   }
 
+  #if canImport(ObjectiveC)
   @objc(_openLatitude)
+  #endif
   public var _openLatitude: CLLocationDegrees { coordinate.latitude }
 
+  #if canImport(ObjectiveC)
   @objc(_openLongitude)
+  #endif
   public var _openLongitude: CLLocationDegrees { coordinate.longitude }
 }
 
@@ -405,15 +562,38 @@ private func _openGeodesicDistance(
   return minorAxis * aCoefficient * (sigma - deltaSigma)
 }
 
+#if canImport(ObjectiveC)
 @objc(CLHeading)
+#endif
 open class CLHeading: NSObject, NSCopying, @unchecked Sendable {
-  @objc public let magneticHeading: CLLocationDirection
-  @objc public let trueHeading: CLLocationDirection
-  @objc public let headingAccuracy: CLLocationDirection
-  @objc public let x: Double
-  @objc public let y: Double
-  @objc public let z: Double
-  @objc public let timestamp: Date
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let magneticHeading: CLLocationDirection
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let trueHeading: CLLocationDirection
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let headingAccuracy: CLLocationDirection
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let x: Double
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let y: Double
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let z: Double
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let timestamp: Date
 
   @_spi(OpenUIKitHost)
   public init(
@@ -441,13 +621,27 @@ open class CLHeading: NSObject, NSCopying, @unchecked Sendable {
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLRegion)
+#endif
 open class CLRegion: NSObject, NSCopying, @unchecked Sendable {
-  @objc public let identifier: String
-  @objc open var notifyOnEntry: Bool = true
-  @objc open var notifyOnExit: Bool = true
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let identifier: String
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var notifyOnEntry: Bool = true
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var notifyOnExit: Bool = true
 
-  @objc public init(identifier: String) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(identifier: String) {
     self.identifier = identifier
     super.init()
   }
@@ -470,10 +664,15 @@ open class CLRegion: NSObject, NSCopying, @unchecked Sendable {
   open override var hash: Int { identifier.hashValue }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLCircularRegion)
+#endif
 open class CLCircularRegion: CLRegion, @unchecked Sendable {
   public let center: CLLocationCoordinate2D
-  @objc public let radius: CLLocationDistance
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let radius: CLLocationDistance
 
   public init(
     center: CLLocationCoordinate2D,
@@ -504,13 +703,19 @@ open class CLCircularRegion: CLRegion, @unchecked Sendable {
     return hasher.finalize()
   }
 
+  #if canImport(ObjectiveC)
   @objc(_openCenterLatitude)
+  #endif
   public var _openCenterLatitude: CLLocationDegrees { center.latitude }
 
+  #if canImport(ObjectiveC)
   @objc(_openCenterLongitude)
+  #endif
   public var _openCenterLongitude: CLLocationDegrees { center.longitude }
 
+  #if canImport(ObjectiveC)
   @objc(_openContainsLatitude:longitude:)
+  #endif
   public func _openContains(
     latitude: CLLocationDegrees,
     longitude: CLLocationDegrees
@@ -519,29 +724,49 @@ open class CLCircularRegion: CLRegion, @unchecked Sendable {
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLBeaconIdentityConstraint)
+#endif
 open class CLBeaconIdentityConstraint: NSObject, NSCopying,
   @unchecked Sendable
 {
-  @objc public let uuid: UUID
-  @objc public let major: NSNumber?
-  @objc public let minor: NSNumber?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let uuid: UUID
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let major: NSNumber?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let minor: NSNumber?
 
-  @objc public init(uuid: UUID) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(uuid: UUID) {
     self.uuid = uuid
     major = nil
     minor = nil
     super.init()
   }
 
-  @objc public init(uuid: UUID, major: CLBeaconMajorValue) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(uuid: UUID, major: CLBeaconMajorValue) {
     self.uuid = uuid
     self.major = NSNumber(value: major)
     minor = nil
     super.init()
   }
 
-  @objc public init(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(
     uuid: UUID,
     major: CLBeaconMajorValue,
     minor: CLBeaconMinorValue
@@ -558,21 +783,41 @@ open class CLBeaconIdentityConstraint: NSObject, NSCopying,
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLBeaconRegion)
+#endif
 open class CLBeaconRegion: CLRegion, @unchecked Sendable {
-  @objc public let uuid: UUID
-  @objc public let major: NSNumber?
-  @objc public let minor: NSNumber?
-  @objc open var notifyEntryStateOnDisplay = false
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let uuid: UUID
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let major: NSNumber?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let minor: NSNumber?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var notifyEntryStateOnDisplay = false
 
-  @objc public init(uuid: UUID, identifier: String) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(uuid: UUID, identifier: String) {
     self.uuid = uuid
     major = nil
     minor = nil
     super.init(identifier: identifier)
   }
 
-  @objc public init(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(
     uuid: UUID,
     major: CLBeaconMajorValue,
     identifier: String
@@ -583,7 +828,10 @@ open class CLBeaconRegion: CLRegion, @unchecked Sendable {
     super.init(identifier: identifier)
   }
 
-  @objc public init(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public init(
     uuid: UUID,
     major: CLBeaconMajorValue,
     minor: CLBeaconMinorValue,
@@ -595,7 +843,10 @@ open class CLBeaconRegion: CLRegion, @unchecked Sendable {
     super.init(identifier: identifier)
   }
 
-  @objc public convenience init(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public convenience init(
     beaconIdentityConstraint: CLBeaconIdentityConstraint,
     identifier: String
   ) {
@@ -619,7 +870,97 @@ open class CLBeaconRegion: CLRegion, @unchecked Sendable {
     }
   }
 
-  @objc public var beaconIdentityConstraint: CLBeaconIdentityConstraint {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public convenience init(
+    proximityUUID: UUID,
+    identifier: String
+  ) {
+    self.init(uuid: proximityUUID, identifier: identifier)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public convenience init(
+    proximityUUID: UUID,
+    major: CLBeaconMajorValue,
+    identifier: String
+  ) {
+    self.init(uuid: proximityUUID, major: major, identifier: identifier)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public convenience init(
+    proximityUUID: UUID,
+    major: CLBeaconMajorValue,
+    minor: CLBeaconMinorValue,
+    identifier: String
+  ) {
+    self.init(
+      uuid: proximityUUID,
+      major: major,
+      minor: minor,
+      identifier: identifier
+    )
+  }
+
+  #if canImport(ObjectiveC)
+  @objc(initWithUUID:identifier:)
+  #endif
+  public convenience init(UUID uuid: UUID, identifier: String) {
+    self.init(uuid: uuid, identifier: identifier)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc(initWithUUID:major:identifier:)
+  #endif
+  public convenience init(
+    UUID uuid: UUID,
+    major: CLBeaconMajorValue,
+    identifier: String
+  ) {
+    self.init(uuid: uuid, major: major, identifier: identifier)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc(initWithUUID:major:minor:identifier:)
+  #endif
+  public convenience init(
+    UUID uuid: UUID,
+    major: CLBeaconMajorValue,
+    minor: CLBeaconMinorValue,
+    identifier: String
+  ) {
+    self.init(uuid: uuid, major: major, minor: minor, identifier: identifier)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public var proximityUUID: UUID { uuid }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public func peripheralData(withMeasuredPower measuredPower: NSNumber?)
+    -> NSMutableDictionary
+  {
+    let payload = NSMutableDictionary()
+    payload["uuid"] = uuid.uuidString
+    if let major { payload["major"] = major }
+    if let minor { payload["minor"] = minor }
+    if let measuredPower { payload["measuredPower"] = measuredPower }
+    return payload
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public var beaconIdentityConstraint: CLBeaconIdentityConstraint {
     if let major, let minor {
       return CLBeaconIdentityConstraint(
         uuid: uuid,
@@ -634,15 +975,42 @@ open class CLBeaconRegion: CLRegion, @unchecked Sendable {
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLBeacon)
+#endif
 open class CLBeacon: NSObject, @unchecked Sendable {
-  @objc public let uuid: UUID
-  @objc public let major: NSNumber
-  @objc public let minor: NSNumber
-  @objc public let proximity: CLProximity
-  @objc public let accuracy: CLLocationAccuracy
-  @objc public let rssi: Int
-  @objc public let timestamp: Date
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let uuid: UUID
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let major: NSNumber
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let minor: NSNumber
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let proximity: CLProximity
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let accuracy: CLLocationAccuracy
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let rssi: Int
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let timestamp: Date
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public var proximityUUID: UUID { uuid }
 
   @_spi(OpenUIKitHost)
   public init(
@@ -665,12 +1033,23 @@ open class CLBeacon: NSObject, @unchecked Sendable {
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLVisit)
+#endif
 open class CLVisit: NSObject, @unchecked Sendable {
   public let coordinate: CLLocationCoordinate2D
-  @objc public let horizontalAccuracy: CLLocationAccuracy
-  @objc public let arrivalDate: Date
-  @objc public let departureDate: Date
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let horizontalAccuracy: CLLocationAccuracy
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let arrivalDate: Date
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let departureDate: Date
 
   @_spi(OpenUIKitHost)
   public init(
@@ -686,31 +1065,85 @@ open class CLVisit: NSObject, @unchecked Sendable {
     super.init()
   }
 
+  #if canImport(ObjectiveC)
   @objc(_openLatitude)
+  #endif
   public var _openLatitude: CLLocationDegrees { coordinate.latitude }
 
+  #if canImport(ObjectiveC)
   @objc(_openLongitude)
+  #endif
   public var _openLongitude: CLLocationDegrees { coordinate.longitude }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLPlacemark)
+#endif
 open class CLPlacemark: NSObject, NSCopying, @unchecked Sendable {
-  @objc public let location: CLLocation?
-  @objc public let region: CLRegion?
-  @objc public let timeZone: TimeZone?
-  @objc public let name: String?
-  @objc public let thoroughfare: String?
-  @objc public let subThoroughfare: String?
-  @objc public let locality: String?
-  @objc public let subLocality: String?
-  @objc public let administrativeArea: String?
-  @objc public let subAdministrativeArea: String?
-  @objc public let postalCode: String?
-  @objc public let isoCountryCode: String?
-  @objc public let country: String?
-  @objc public let inlandWater: String?
-  @objc public let ocean: String?
-  @objc public let areasOfInterest: [String]?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let location: CLLocation?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let region: CLRegion?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let timeZone: TimeZone?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let name: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let thoroughfare: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let subThoroughfare: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let locality: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let subLocality: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let administrativeArea: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let subAdministrativeArea: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let postalCode: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let isoCountryCode: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let country: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let inlandWater: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let ocean: String?
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public let areasOfInterest: [String]?
 
   @_spi(OpenUIKitHost)
   public init(
@@ -750,67 +1183,348 @@ open class CLPlacemark: NSObject, NSCopying, @unchecked Sendable {
     super.init()
   }
 
+  public convenience init(placemark: CLPlacemark) {
+    self.init(
+      location: placemark.location,
+      region: placemark.region,
+      timeZone: placemark.timeZone,
+      name: placemark.name,
+      thoroughfare: placemark.thoroughfare,
+      subThoroughfare: placemark.subThoroughfare,
+      locality: placemark.locality,
+      subLocality: placemark.subLocality,
+      administrativeArea: placemark.administrativeArea,
+      subAdministrativeArea: placemark.subAdministrativeArea,
+      postalCode: placemark.postalCode,
+      isoCountryCode: placemark.isoCountryCode,
+      country: placemark.country,
+      inlandWater: placemark.inlandWater,
+      ocean: placemark.ocean,
+      areasOfInterest: placemark.areasOfInterest
+    )
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  public var addressDictionary: [AnyHashable: Any]? {
+    var payload: [AnyHashable: Any] = [:]
+    if let name { payload["Name"] = name }
+    if let thoroughfare { payload["Thoroughfare"] = thoroughfare }
+    if let subThoroughfare { payload["SubThoroughfare"] = subThoroughfare }
+    if let locality { payload["City"] = locality }
+    if let subLocality { payload["SubLocality"] = subLocality }
+    if let administrativeArea { payload["State"] = administrativeArea }
+    if let subAdministrativeArea { payload["SubAdministrativeArea"] = subAdministrativeArea }
+    if let postalCode { payload["ZIP"] = postalCode }
+    if let isoCountryCode { payload["CountryCode"] = isoCountryCode }
+    if let country { payload["Country"] = country }
+    return payload.isEmpty ? nil : payload
+  }
+
   public func copy(with zone: NSZone? = nil) -> Any {
     _ = zone
     return self
   }
 }
 
-@objc public protocol CLLocationManagerDelegate: NSObjectProtocol {
-  @objc optional func locationManager(
+#if canImport(ObjectiveC)
+@objc
+#endif
+public protocol CLLocationManagerDelegate: NSObjectProtocol {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didUpdateLocations locations: [CLLocation]
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didUpdateHeading newHeading: CLHeading
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didFailWithError error: Error
   )
-  @objc optional func locationManagerDidChangeAuthorization(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManagerDidChangeAuthorization(
     _ manager: CLLocationManager
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didChangeAuthorization status: CLAuthorizationStatus
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didEnterRegion region: CLRegion
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didExitRegion region: CLRegion
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didDetermineState state: CLRegionState,
     for region: CLRegion
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     monitoringDidFailFor region: CLRegion?,
     withError error: Error
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didStartMonitoringFor region: CLRegion
   )
-  @objc optional func locationManagerDidPauseLocationUpdates(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManagerDidPauseLocationUpdates(
     _ manager: CLLocationManager
   )
-  @objc optional func locationManagerDidResumeLocationUpdates(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManagerDidResumeLocationUpdates(
     _ manager: CLLocationManager
   )
-  @objc optional func locationManager(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
     _ manager: CLLocationManager,
     didVisit visit: CLVisit
   )
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
+    _ manager: CLLocationManager,
+    didRangeBeacons beacons: [CLBeacon],
+    in region: CLBeaconRegion
+  )
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
+    _ manager: CLLocationManager,
+    didRange beacons: [CLBeacon],
+    satisfying beaconConstraint: CLBeaconIdentityConstraint
+  )
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
+    _ manager: CLLocationManager,
+    rangingBeaconsDidFailFor region: CLBeaconRegion,
+    withError error: any Error
+  )
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
+    _ manager: CLLocationManager,
+    didFailRangingFor beaconConstraint: CLBeaconIdentityConstraint,
+    error: any Error
+  )
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManager(
+    _ manager: CLLocationManager,
+    didFinishDeferredUpdatesWithError error: (any Error)?
+  )
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func locationManagerShouldDisplayHeadingCalibration(
+    _ manager: CLLocationManager
+  ) -> Bool
 }
 
+extension CLLocationManagerDelegate {
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didUpdateLocations locations: [CLLocation]
+  ) {
+    _ = manager
+    _ = locations
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didUpdateHeading newHeading: CLHeading
+  ) {
+    _ = manager
+    _ = newHeading
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didFailWithError error: Error
+  ) {
+    _ = manager
+    _ = error
+  }
+
+  public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    _ = manager
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didChangeAuthorization status: CLAuthorizationStatus
+  ) {
+    _ = manager
+    _ = status
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didEnterRegion region: CLRegion
+  ) {
+    _ = manager
+    _ = region
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didExitRegion region: CLRegion
+  ) {
+    _ = manager
+    _ = region
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didDetermineState state: CLRegionState,
+    for region: CLRegion
+  ) {
+    _ = manager
+    _ = state
+    _ = region
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    monitoringDidFailFor region: CLRegion?,
+    withError error: Error
+  ) {
+    _ = manager
+    _ = region
+    _ = error
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didStartMonitoringFor region: CLRegion
+  ) {
+    _ = manager
+    _ = region
+  }
+
+  public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+    _ = manager
+  }
+
+  public func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
+    _ = manager
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didVisit visit: CLVisit
+  ) {
+    _ = manager
+    _ = visit
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didRangeBeacons beacons: [CLBeacon],
+    in region: CLBeaconRegion
+  ) {
+    _ = manager
+    _ = beacons
+    _ = region
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didRange beacons: [CLBeacon],
+    satisfying beaconConstraint: CLBeaconIdentityConstraint
+  ) {
+    _ = manager
+    _ = beacons
+    _ = beaconConstraint
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    rangingBeaconsDidFailFor region: CLBeaconRegion,
+    withError error: any Error
+  ) {
+    _ = manager
+    _ = region
+    _ = error
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didFailRangingFor beaconConstraint: CLBeaconIdentityConstraint,
+    error: any Error
+  ) {
+    _ = manager
+    _ = beaconConstraint
+    _ = error
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didFinishDeferredUpdatesWithError error: (any Error)?
+  ) {
+    _ = manager
+    _ = error
+  }
+
+  public func locationManagerShouldDisplayHeadingCalibration(
+    _ manager: CLLocationManager
+  ) -> Bool {
+    _ = manager
+    return false
+  }
+}
+
+#if canImport(ObjectiveC)
 @objc(CLLocationManager)
+#endif
 open class CLLocationManager: NSObject, @unchecked Sendable {
   private let portableLock = NSLock()
   private weak var portableDelegate: CLLocationManagerDelegate?
@@ -821,9 +1535,15 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   private var portableUpdatingLocation = false
   private var portableUpdatingHeading = false
   private var portableMonitoringSignificantChanges = false
+  private var portableMonitoringVisits = false
   private var portableMonitoredRegions: Set<CLRegion> = []
+  private var portableRangedRegions: Set<CLRegion> = []
+  private var portableRangedBeaconConstraints: Set<CLBeaconIdentityConstraint> = []
 
-  @objc open weak var delegate: CLLocationManagerDelegate? {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open weak var delegate: CLLocationManagerDelegate? {
     get {
       portableLock.lock()
       defer { portableLock.unlock() }
@@ -836,109 +1556,227 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     }
   }
 
-  @objc open var location: CLLocation? {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var location: CLLocation? {
     portableLock.lock()
     defer { portableLock.unlock() }
     return portableLocation
   }
 
-  @objc open var heading: CLHeading? {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var heading: CLHeading? {
     portableLock.lock()
     defer { portableLock.unlock() }
     return portableHeading
   }
 
-  @objc open var authorizationStatus: CLAuthorizationStatus {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var authorizationStatus: CLAuthorizationStatus {
     portableLock.lock()
     defer { portableLock.unlock() }
     return portableAuthorizationStatus
   }
 
-  @objc open var accuracyAuthorization: CLAccuracyAuthorization {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var accuracyAuthorization: CLAccuracyAuthorization {
     portableLock.lock()
     defer { portableLock.unlock() }
     return portableAccuracyAuthorization
   }
 
-  @objc open var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
-  @objc open var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
-  @objc open var activityType: CLActivityType = .other
-  @objc open var pausesLocationUpdatesAutomatically = true
-  @objc open var allowsBackgroundLocationUpdates = false
-  @objc open var showsBackgroundLocationIndicator = false
-  @objc open var headingFilter: CLLocationDegrees = 1
-  @objc open var headingOrientation: CLDeviceOrientation = .portrait
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var activityType: CLActivityType = .other
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var pausesLocationUpdatesAutomatically = true
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var allowsBackgroundLocationUpdates = false
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var showsBackgroundLocationIndicator = false
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var headingFilter: CLLocationDegrees = 1
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var headingOrientation: CLDeviceOrientation = .portrait
 
-  @objc open var monitoredRegions: Set<CLRegion> {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var monitoredRegions: Set<CLRegion> {
     portableLock.lock()
     defer { portableLock.unlock() }
     return portableMonitoredRegions
   }
 
-  @objc open class func locationServicesEnabled() -> Bool { true }
-  @objc open class func headingAvailable() -> Bool { true }
-  @objc open class func significantLocationChangeMonitoringAvailable() -> Bool { true }
-  @objc open class func regionMonitoringAvailable() -> Bool { true }
-  @objc open class func regionMonitoringEnabled() -> Bool { true }
-  @objc open class func isMonitoringAvailable(for regionClass: AnyClass) -> Bool {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func locationServicesEnabled() -> Bool { true }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func headingAvailable() -> Bool { true }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func significantLocationChangeMonitoringAvailable() -> Bool { true }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func regionMonitoringAvailable() -> Bool { true }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func regionMonitoringEnabled() -> Bool { true }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func isMonitoringAvailable(for regionClass: AnyClass) -> Bool {
     regionClass is CLRegion.Type
   }
-  @objc open class func authorizationStatus() -> CLAuthorizationStatus {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func authorizationStatus() -> CLAuthorizationStatus {
     .notDetermined
   }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func isRangingAvailable() -> Bool { false }
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open class func deferredLocationUpdatesAvailable() -> Bool { false }
 
-  @objc open var maximumRegionMonitoringDistance: CLLocationDistance {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var isAuthorizedForWidgetUpdates: Bool { false }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var rangedRegions: Set<CLRegion> {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableRangedRegions
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var rangedBeaconConstraints: Set<CLBeaconIdentityConstraint> {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableRangedBeaconConstraints
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var maximumRegionMonitoringDistance: CLLocationDistance {
     CLLocationDistanceMax
   }
 
-  @objc open func startUpdatingLocation() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startUpdatingLocation() {
     portableLock.lock()
     portableUpdatingLocation = true
     portableLock.unlock()
   }
 
-  @objc open func stopUpdatingLocation() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopUpdatingLocation() {
     portableLock.lock()
     portableUpdatingLocation = false
     portableLock.unlock()
   }
 
-  @objc open func requestLocation() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func requestLocation() {
     portableLock.lock()
     let delegate = portableDelegate
     let status = portableAuthorizationStatus
     let location = portableLocation
     portableLock.unlock()
     guard status == .authorizedAlways || status == .authorizedWhenInUse else {
-      delegate?.locationManager?(self, didFailWithError: CLError(.denied))
+      delegate?.locationManager(self, didFailWithError: CLError(.denied))
       return
     }
     guard let location else {
-      delegate?.locationManager?(self, didFailWithError: CLError(.locationUnknown))
+      delegate?.locationManager(self, didFailWithError: CLError(.locationUnknown))
       return
     }
-    delegate?.locationManager?(self, didUpdateLocations: [location])
+    delegate?.locationManager(self, didUpdateLocations: [location])
   }
 
-  @objc open func startUpdatingHeading() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startUpdatingHeading() {
     portableLock.lock()
     portableUpdatingHeading = true
     portableLock.unlock()
   }
 
-  @objc open func stopUpdatingHeading() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopUpdatingHeading() {
     portableLock.lock()
     portableUpdatingHeading = false
     portableLock.unlock()
   }
 
-  @objc open func dismissHeadingCalibrationDisplay() {}
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func dismissHeadingCalibrationDisplay() {}
 
-  @objc open func requestWhenInUseAuthorization() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func requestWhenInUseAuthorization() {
     portableRequestAuthorization()
   }
 
-  @objc open func requestAlwaysAuthorization() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func requestAlwaysAuthorization() {
     portableRequestAuthorization()
   }
 
@@ -950,37 +1788,52 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let status = portableAuthorizationStatus
     let delegate = portableDelegate
     portableLock.unlock()
-    delegate?.locationManager?(self, didChangeAuthorization: status)
-    delegate?.locationManagerDidChangeAuthorization?(self)
+    delegate?.locationManager(self, didChangeAuthorization: status)
+    delegate?.locationManagerDidChangeAuthorization(self)
   }
 
-  @objc open func startMonitoringSignificantLocationChanges() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startMonitoringSignificantLocationChanges() {
     portableLock.lock()
     portableMonitoringSignificantChanges = true
     portableLock.unlock()
   }
 
-  @objc open func stopMonitoringSignificantLocationChanges() {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopMonitoringSignificantLocationChanges() {
     portableLock.lock()
     portableMonitoringSignificantChanges = false
     portableLock.unlock()
   }
 
-  @objc open func startMonitoring(for region: CLRegion) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startMonitoring(for region: CLRegion) {
     portableLock.lock()
     portableMonitoredRegions.insert(region)
     let delegate = portableDelegate
     portableLock.unlock()
-    delegate?.locationManager?(self, didStartMonitoringFor: region)
+    delegate?.locationManager(self, didStartMonitoringFor: region)
   }
 
-  @objc open func stopMonitoring(for region: CLRegion) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopMonitoring(for region: CLRegion) {
     portableLock.lock()
     portableMonitoredRegions.remove(region)
     portableLock.unlock()
   }
 
-  @objc open func requestState(for region: CLRegion) {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func requestState(for region: CLRegion) {
     portableLock.lock()
     let delegate = portableDelegate
     let location = portableLocation
@@ -991,8 +1844,129 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     } else {
       state = .unknown
     }
-    delegate?.locationManager?(self, didDetermineState: state, for: region)
+    delegate?.locationManager(self, didDetermineState: state, for: region)
   }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startMonitoringVisits() {
+    portableLock.lock()
+    portableMonitoringVisits = true
+    portableLock.unlock()
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopMonitoringVisits() {
+    portableLock.lock()
+    portableMonitoringVisits = false
+    portableLock.unlock()
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startRangingBeacons(in region: CLBeaconRegion) {
+    portableLock.lock()
+    portableRangedRegions.insert(region)
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager(
+      self,
+      rangingBeaconsDidFailFor: region,
+      withError: CLError(.rangingUnavailable)
+    )
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopRangingBeacons(in region: CLBeaconRegion) {
+    portableLock.lock()
+    portableRangedRegions.remove(region)
+    portableLock.unlock()
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startRangingBeacons(satisfying constraint: CLBeaconIdentityConstraint) {
+    portableLock.lock()
+    portableRangedBeaconConstraints.insert(constraint)
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager(
+      self,
+      didFailRangingFor: constraint,
+      error: CLError(.rangingUnavailable)
+    )
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopRangingBeacons(satisfying constraint: CLBeaconIdentityConstraint) {
+    portableLock.lock()
+    portableRangedBeaconConstraints.remove(constraint)
+    portableLock.unlock()
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func allowDeferredLocationUpdates(
+    untilTraveled distance: CLLocationDistance,
+    timeout: TimeInterval
+  ) {
+    _ = distance
+    _ = timeout
+    portableLock.lock()
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager(
+      self,
+      didFinishDeferredUpdatesWithError: CLError(.deferredFailed)
+    )
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func disallowDeferredLocationUpdates() {}
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
+    _ = purposeKey
+    portableLock.lock()
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager(self, didFailWithError: CLError(.promptDeclined))
+  }
+
+  open func requestTemporaryFullAccuracyAuthorization(
+    withPurposeKey purposeKey: String
+  ) async throws {
+    _ = purposeKey
+    throw CLError(.promptDeclined)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func startMonitoringLocationPushes(
+    completion: ((Data?, (any Error)?) -> Void)? = nil
+  ) {
+    completion?(nil, CLLocationPushServiceError(.unsupportedPlatform))
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func stopMonitoringLocationPushes() {}
 
   @_spi(OpenUIKitHost)
   public func _portableSetAuthorization(
@@ -1007,8 +1981,8 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let delegate = portableDelegate
     portableLock.unlock()
     guard changed else { return }
-    delegate?.locationManager?(self, didChangeAuthorization: status)
-    delegate?.locationManagerDidChangeAuthorization?(self)
+    delegate?.locationManager(self, didChangeAuthorization: status)
+    delegate?.locationManagerDidChangeAuthorization(self)
   }
 
   @_spi(OpenUIKitHost)
@@ -1024,11 +1998,11 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let regions = portableMonitoredRegions
     portableLock.unlock()
     guard deliver else { return }
-    delegate?.locationManager?(self, didUpdateLocations: locations)
+    delegate?.locationManager(self, didUpdateLocations: locations)
     for region in regions {
       guard let circular = region as? CLCircularRegion else { continue }
       let state: CLRegionState = circular.contains(latest.coordinate) ? .inside : .outside
-      delegate?.locationManager?(self, didDetermineState: state, for: region)
+      delegate?.locationManager(self, didDetermineState: state, for: region)
     }
   }
 
@@ -1040,7 +2014,7 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let deliver = portableUpdatingHeading
     portableLock.unlock()
     if deliver {
-      delegate?.locationManager?(self, didUpdateHeading: heading)
+      delegate?.locationManager(self, didUpdateHeading: heading)
     }
   }
 
@@ -1049,11 +2023,13 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     portableLock.lock()
     let delegate = portableDelegate
     portableLock.unlock()
-    delegate?.locationManager?(self, didFailWithError: error)
+    delegate?.locationManager(self, didFailWithError: error)
   }
 }
 
+#if canImport(ObjectiveC)
 @objc(CLGeocoder)
+#endif
 open class CLGeocoder: NSObject, @unchecked Sendable {
   public typealias PortableReverseGeocodeHandler = @Sendable (
     CLLocation
@@ -1067,13 +2043,19 @@ open class CLGeocoder: NSObject, @unchecked Sendable {
   private var reverseHandler: PortableReverseGeocodeHandler?
   private var forwardHandler: PortableForwardGeocodeHandler?
 
-  @objc open var isGeocoding: Bool {
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open var isGeocoding: Bool {
     portableLock.lock()
     defer { portableLock.unlock() }
     return false
   }
 
-  @objc open func reverseGeocodeLocation(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func reverseGeocodeLocation(
     _ location: CLLocation,
     completionHandler: @escaping ([CLPlacemark]?, Error?) -> Void
   ) {
@@ -1092,7 +2074,10 @@ open class CLGeocoder: NSObject, @unchecked Sendable {
     }
   }
 
-  @objc open func geocodeAddressString(
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func geocodeAddressString(
     _ addressString: String,
     completionHandler: @escaping ([CLPlacemark]?, Error?) -> Void
   ) {
@@ -1133,7 +2118,55 @@ open class CLGeocoder: NSObject, @unchecked Sendable {
     }
   }
 
-  @objc open func cancelGeocode() {
+  open func geocodeAddressString(
+    _ addressString: String,
+    in region: CLRegion?
+  ) async throws -> [CLPlacemark] {
+    _ = region
+    return try await geocodeAddressString(addressString)
+  }
+
+  open func geocodeAddressString(
+    _ addressString: String,
+    in region: CLRegion?,
+    preferredLocale locale: Locale?
+  ) async throws -> [CLPlacemark] {
+    _ = region
+    _ = locale
+    return try await geocodeAddressString(addressString)
+  }
+
+  open func reverseGeocodeLocation(
+    _ location: CLLocation,
+    preferredLocale locale: Locale?
+  ) async throws -> [CLPlacemark] {
+    _ = locale
+    return try await reverseGeocodeLocation(location)
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func geocodeAddressDictionary(
+    _ addressDictionary: [AnyHashable: Any],
+    completionHandler: @escaping CLGeocodeCompletionHandler
+  ) {
+    _ = addressDictionary
+    portableLock.lock()
+    let canceled = portableCanceled
+    portableCanceled = false
+    portableLock.unlock()
+    if canceled {
+      completionHandler(nil, CLError(.geocodeCanceled))
+      return
+    }
+    completionHandler(nil, CLError(.geocodeFoundNoResult))
+  }
+
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  open func cancelGeocode() {
     portableLock.lock()
     portableCanceled = true
     portableLock.unlock()
@@ -1156,4 +2189,54 @@ open class CLGeocoder: NSObject, @unchecked Sendable {
     forwardHandler = handler
     portableLock.unlock()
   }
+}
+
+extension CLBeacon {
+  public convenience init?(coder: NSCoder) {
+    _ = coder
+    return nil
+  }
+}
+
+extension CLHeading {
+  public convenience init?(coder: NSCoder) {
+    _ = coder
+    return nil
+  }
+}
+
+extension CLPlacemark {
+  public convenience init?(coder: NSCoder) {
+    _ = coder
+    return nil
+  }
+}
+
+extension CLRegion {
+  public convenience init?(coder: NSCoder) {
+    _ = coder
+    return nil
+  }
+}
+
+extension CLVisit {
+  public convenience init?(coder: NSCoder) {
+    _ = coder
+    return nil
+  }
+}
+
+#if canImport(ObjectiveC)
+@objc
+#endif
+public protocol CLLocationPushServiceExtension: NSObjectProtocol {
+  func didReceiveLocationPushPayload(_ payload: [String: Any]) async
+  #if canImport(ObjectiveC)
+  @objc
+  #endif
+  func serviceExtensionWillTerminate()
+}
+
+extension CLLocationPushServiceExtension {
+  public func serviceExtensionWillTerminate() {}
 }
