@@ -232,6 +232,89 @@ case "$nogit" in
     *) die_test "non-repo ERROR expected, got: $nogit" ;;
 esac
 
+echo "== sysroot: input-keyed restage, Darwin modulemaps, Swift into usr/lib/swift"
+expect_grep 'gen_darwin_modulemap.py' "$STAGE" \
+    "stager runs gen_darwin_modulemap.py against the x86 sysroot"
+expect_grep 'usr/lib/swift/libswiftCore.dylib' "$STAGE" \
+    "stager copies libswiftCore into usr/lib/swift"
+expect_grep '_Builtin_float.swiftmodule' "$STAGE" \
+    "stager copies _Builtin_float into usr/lib/swift"
+expect_grep 'phase2_write_sysroot_stamp' "$STAGE" \
+    "stager writes an input stamp"
+expect_grep 're-stage sysroot-fe4-x86 (input changed:' "$PHASE2" \
+    "phase2 restages when input shas change and prints which"
+expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
+    "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
+expect_grep 'SWIFT_TOOLCHAIN' "$PHASE2" \
+    "phase2 exports SWIFT_TOOLCHAIN for overlay scripts"
+expect_grep 'SWIFT_TOOLCHAIN' "$ROOT/swiftcore-macho/scripts/guest_arch.inc" \
+    "guest_arch honors SWIFT_TOOLCHAIN"
+expect_not_grep 'no swiftc at /opt/swift624/usr/bin or /usr/bin' \
+    "$ROOT/swiftcore-macho/scripts/guest_arch.inc" \
+    "guest_arch no longer refuses solely on hardcoded toolchain paths"
+
+STAMPWORK=$(mktemp -d /tmp/phase2-stamp.XXXXXX)
+echo a > "$STAMPWORK/core-a"
+echo b > "$STAMPWORK/core-b"
+echo m > "$STAMPWORK/mod"
+echo f > "$STAMPWORK/bf"
+echo g > "$STAMPWORK/gen"
+echo o > "$STAMPWORK/overlay"
+echo d > "$STAMPWORK/dmap"
+phase2_write_sysroot_stamp "$STAMPWORK/stamp" \
+    "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap"
+match=$(phase2_sysroot_stamp_diff "$STAMPWORK/stamp" \
+    "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" && echo MATCH || echo FAIL)
+if [ "$match" = MATCH ]; then
+    ok "stamp matches when inputs are unchanged"
+else
+    die_test "unchanged inputs should match stamp, got $match"
+fi
+diff=$(phase2_sysroot_stamp_diff "$STAMPWORK/stamp" \
+    "$STAMPWORK/core-b" "$STAMPWORK/mod" "$STAMPWORK/bf" \
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" || true)
+case "$diff" in
+    *"libswiftCore "*) ok "stamp names libswiftCore when the artifact sha changes ($diff)" ;;
+    *) die_test "expected libswiftCore old->new, got: $diff" ;;
+esac
+missing_stamp=$(phase2_sysroot_stamp_diff "$STAMPWORK/absent" \
+    "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" || true)
+case "$missing_stamp" in
+    stamp=ABSENT) ok "missing stamp is stamp=ABSENT (restage, do not reuse)" ;;
+    *) die_test "missing stamp expected stamp=ABSENT, got: $missing_stamp" ;;
+esac
+rm -rf "$STAMPWORK"
+
+MMWORK=$(mktemp -d /tmp/phase2-modulemap.XXXXXX)
+mkdir -p "$MMWORK/arm/usr/include" "$MMWORK/sys/usr/include"
+cat > "$MMWORK/sys/usr/include/module.modulemap" <<'EOF'
+module ObjectiveC [system] { header "objc/objc.h" export * }
+EOF
+cat > "$MMWORK/arm/usr/include/Darwin.modulemap" <<'EOF'
+module Darwin [system] { header "stdio.h" export * }
+EOF
+cat > "$MMWORK/arm/usr/include/DarwinFoundation1.modulemap" <<'EOF'
+module _DarwinFoundation1 [system] { header "errno.h" export * }
+EOF
+printf 'module ObjectiveC [system] { header "objc/objc.h" export * }\nextern module Darwin "Darwin.modulemap"\nextern module _DarwinFoundation1 "DarwinFoundation1.modulemap"\n' \
+    > "$MMWORK/arm/usr/include/module.modulemap"
+# Generator is not Xcode; copy path must still produce Darwin.modulemap.
+if phase2_install_darwin_modulemaps "$MMWORK/sys" "$MMWORK/arm" "$MMWORK/no-such-gen.py"; then
+    if [ -f "$MMWORK/sys/usr/include/Darwin.modulemap" ] \
+        && [ -f "$MMWORK/sys/usr/include/DarwinFoundation1.modulemap" ] \
+        && grep -q 'extern module Darwin' "$MMWORK/sys/usr/include/module.modulemap"; then
+        ok "Darwin family maps copied from arm64 sysroot when generator cannot run"
+    else
+        die_test "copy path did not install Darwin.modulemap + extern module lines"
+    fi
+else
+    die_test "install_darwin_modulemaps failed on a fixture that has pruned maps"
+fi
+rm -rf "$MMWORK"
+
 echo
 echo "test_phase2: pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]

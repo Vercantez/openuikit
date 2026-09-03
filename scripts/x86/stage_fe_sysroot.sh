@@ -99,27 +99,10 @@ if [ -d "$MACHORUN/sdk/usr/lib" ]; then
     fi
 fi
 
-echo "== Swift.swiftmodule: only an x86_64-apple-macos slice, never the arm64 one under this name"
 artifacts=$W/swiftcore-macho/artifacts
 x86_core=$artifacts/swift-macosx/x86_64/libswiftCore.dylib
 x86_mod=$artifacts/swift-macosx/Swift.swiftmodule/x86_64-apple-macos.swiftmodule
-if [ -f "$x86_core" ] && phase2_is_x86_macho "$x86_core"; then
-    mkdir -p "$SYS/usr/lib/swift"
-    cp -f "$x86_core" "$SYS/usr/lib/swift/libswiftCore.dylib"
-    echo "  + libswiftCore.dylib (x86_64)"
-else
-    echo "  no x86_64 libswiftCore.dylib in swiftcore-macho/artifacts (measured wall)"
-fi
-if [ -f "$x86_mod" ]; then
-    mkdir -p "$SYS/usr/lib/swift/Swift.swiftmodule"
-    for f in "$artifacts/swift-macosx/Swift.swiftmodule"/x86_64-apple-macos.*; do
-        [ -f "$f" ] || continue
-        cp -f "$f" "$SYS/usr/lib/swift/Swift.swiftmodule/$(basename "$f")"
-    done
-    echo "  + Swift.swiftmodule/x86_64-apple-macos.*"
-else
-    echo "  no x86_64-apple-macos.swiftmodule (arm64 slice is not a substitute)"
-fi
+x86_bf_mod=$artifacts/swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftmodule
 
 echo "== ObjectiveC Clang module"
 mkdir -p "$SYS/usr/include/objc"
@@ -152,6 +135,26 @@ if [ -d "$gaps" ]; then
     done < <(find "$gaps" -type f -print0)
 fi
 
+if ! grep -q 'vm_copy' "$SYS/usr/include/mach/vm_map.h" 2>/dev/null; then
+    cat >> "$SYS/usr/include/mach/vm_map.h" <<'EOF'
+/* APPENDED by scripts/x86/stage_fe_sysroot.sh -- MEASUREMENT ONLY. */
+extern kern_return_t vm_copy(vm_map_t target_task, vm_address_t source_address,
+                             vm_size_t size, vm_address_t dest_address);
+EOF
+fi
+
+if [ -f "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" ]; then
+    cp "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" \
+        "$SYS/usr/include/_DarwinFoundation2.apinotes"
+fi
+
+# ORDER: base module.modulemap (ObjectiveC) then the Darwin family. The
+# generator appends extern module lines; running it first would lose Darwin.
+echo "== Darwin family Clang modulemaps (underlying Objective-C module Darwin)"
+phase2_install_darwin_modulemaps \
+    "$SYS" "$ARM_SYS" "$MACHORUN/scripts/gen_darwin_modulemap.py" \
+    || echo "  (Darwin.modulemap still absent; FE will fail with 'underlying Objective-C module Darwin not found')"
+
 echo "== textual Darwin overlays from the arm64 sysroot, if any (no dylibs, no arm64 .swiftmodule slices)"
 OVERLAYS_COPIED=0
 if [ -d "$ARM_SYS/usr/lib/swift" ]; then
@@ -171,18 +174,34 @@ if [ -d "$ARM_SYS/usr/lib/swift" ]; then
         OVERLAYS_COPIED=$((OVERLAYS_COPIED + 1))
     done < <(find "$ARM_SYS/usr/lib/swift" -type f -print0)
 fi
-if [ -f "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" ]; then
-    cp "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" \
-        "$SYS/usr/include/_DarwinFoundation2.apinotes"
-    OVERLAYS_COPIED=$((OVERLAYS_COPIED + 1))
-fi
 
-if ! grep -q 'vm_copy' "$SYS/usr/include/mach/vm_map.h" 2>/dev/null; then
-    cat >> "$SYS/usr/include/mach/vm_map.h" <<'EOF'
-/* APPENDED by scripts/x86/stage_fe_sysroot.sh -- MEASUREMENT ONLY. */
-extern kern_return_t vm_copy(vm_map_t target_task, vm_address_t source_address,
-                             vm_size_t size, vm_address_t dest_address);
-EOF
+echo "== x86 Swift runtime into $SYS/usr/lib/swift (toolchain layout; not left only in artifacts/)"
+mkdir -p "$SYS/usr/lib/swift"
+if [ -f "$x86_core" ] && phase2_is_x86_macho "$x86_core"; then
+    cp -f "$x86_core" "$SYS/usr/lib/swift/libswiftCore.dylib"
+    echo "  + usr/lib/swift/libswiftCore.dylib (x86_64)"
+else
+    echo "  no x86_64 libswiftCore.dylib in swiftcore-macho/artifacts (measured wall)"
+fi
+if [ -f "$x86_mod" ]; then
+    mkdir -p "$SYS/usr/lib/swift/Swift.swiftmodule"
+    for f in "$artifacts/swift-macosx/Swift.swiftmodule"/x86_64-apple-macos.*; do
+        [ -f "$f" ] || continue
+        cp -f "$f" "$SYS/usr/lib/swift/Swift.swiftmodule/$(basename "$f")"
+    done
+    echo "  + usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.*"
+else
+    echo "  no x86_64-apple-macos Swift.swiftmodule (arm64 slice is not a substitute)"
+fi
+if [ -f "$x86_bf_mod" ]; then
+    mkdir -p "$SYS/usr/lib/swift/_Builtin_float.swiftmodule"
+    for f in "$artifacts/swift-macosx/_Builtin_float.swiftmodule"/x86_64-apple-macos.*; do
+        [ -f "$f" ] || continue
+        cp -f "$f" "$SYS/usr/lib/swift/_Builtin_float.swiftmodule/$(basename "$f")"
+    done
+    echo "  + usr/lib/swift/_Builtin_float.swiftmodule/x86_64-apple-macos.*"
+else
+    echo "  no x86_64-apple-macos _Builtin_float.swiftmodule"
 fi
 
 empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
@@ -191,8 +210,17 @@ empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
     exit 2
 }
 
+overlay_if=$(phase2_arm_overlay_interface "$ARM_SYS" || true)
+phase2_write_sysroot_stamp "$SYS/$PHASE2_SYSROOT_STAMP" \
+    "$x86_core" "$x86_mod" "$x86_bf_mod" \
+    "$MACHORUN/scripts/gen_darwin_modulemap.py" \
+    "${overlay_if:-}" \
+    "$ARM_SYS/usr/include/Darwin.modulemap"
+echo "  wrote $SYS/$PHASE2_SYSROOT_STAMP (input-keyed; restage when these shas change)"
+
 echo "== $SYS"
 echo "  usr/include : $(find "$SYS/usr/include" -type f | wc -l | tr -d ' ') headers"
+echo "  modulemaps  : $(find "$SYS/usr/include" -maxdepth 1 -name '*.modulemap' | wc -l | tr -d ' ')"
 echo "  textual overlays copied from arm64 sysroot: $OVERLAYS_COPIED"
 if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
@@ -200,3 +228,11 @@ if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     exit 3
 fi
 echo "  Darwin overlays: present (textual, from $ARM_SYS)"
+if [ -f "$SYS/usr/include/Darwin.modulemap" ]; then
+    echo "  Darwin.modulemap: present"
+else
+    echo "  Darwin.modulemap: ABSENT (underlying Objective-C module Darwin will not be found)"
+fi
+if [ -f "$SYS/usr/lib/swift/libswiftCore.dylib" ]; then
+    echo "  libswiftCore: $(phase2_macho_cpu "$SYS/usr/lib/swift/libswiftCore.dylib") at usr/lib/swift/libswiftCore.dylib"
+fi
