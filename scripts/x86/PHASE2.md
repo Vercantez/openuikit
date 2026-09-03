@@ -76,8 +76,8 @@ NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
 | measure libswiftCore-x86 | yes — reports the wall | same measurement; pass only if an x86 slice is present |
 | `build.sh` loader + darwin + tbd | yes | same |
 | `build_objc4.sh` / `build_quartz.sh` | yes — unblocks the `objc` fixture | same |
-| `scripts/x86/stage_fe_sysroot.sh` | headers + x86 dylibs; `CANNOT_STAGE_XCODE_DARWIN_OVERLAYS` unless textual Darwin overlays exist in the arm64 `sysroot_fe4` | same |
-| FoundationEssentials / collections / OpenCombine / `build_full.sh` | x86 `libswiftCore` + `Swift.swiftmodule` are in artifacts; `_Concurrency` overlay is not (libdispatch wall). Darwin overlays still `CANNOT_STAGE_XCODE_DARWIN_OVERLAYS` | needs x86 libswiftCore + `_Concurrency` + Darwin overlays |
+| `scripts/x86/stage_fe_sysroot.sh` | headers + x86 dylibs + Darwin family modulemaps + x86 `libswiftCore`/`Swift.swiftmodule`/`_Builtin_float` into `usr/lib/swift`; restages when input shas change; `CANNOT_STAGE_XCODE_DARWIN_OVERLAYS` unless textual Darwin overlays exist in the arm64 `sysroot_fe4` | same |
+| FoundationEssentials / collections / OpenCombine / `build_full.sh` | x86 `libswiftCore` + `Swift.swiftmodule` are in artifacts; `_Concurrency` overlay is not (libdispatch wall). `os-module-x86` is built into `build/full-x86_64/foundation/os` before `build_fe.sh`. `fe-imports` names missing `_Concurrency`/`_StringProcessing`/… instead of compiling 202 files | needs x86 libswiftCore + `_Concurrency` + `_StringProcessing` + Darwin overlays + os-module |
 | rung a `run_ud_guest.sh` | cannot run a real FE guest without x86 libswiftCore + named MACHORUN_ROOT + `ud_guest` binary | smoke 14/14 + persist under the ported loader |
 | rung b Focus widget + onboarding | scripts retargeted; `NEEDS_X86_OPENCOMBINE` resolved by `export-x86_64/` (arm64 SHA untouched) | same gates under the ported loader |
 | rung c Reminder scene | inner script no longer refuses x86-on-x86; still needs Reminder 22-source inventory | one `UIWindow` + three paced turns |
@@ -88,7 +88,16 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
 
 1. Linux sysroot sibling: `scripts/x86/stage_fe_sysroot.sh` writes
    `scratch/sysroot_fe4-x86_64` only. Copies textual Darwin overlays from the
-   arm64 sysroot when present; refuses arm64 dylibs.
+   arm64 sysroot when present; refuses arm64 dylibs. After the ObjectiveC
+   `module.modulemap` it runs `machorun/scripts/gen_darwin_modulemap.py` against
+   the x86 sysroot (Linux fallback: copy the pruned Darwin-family maps from the
+   arm64 sysroot) and stages `libswiftCore.dylib`, `Swift.swiftmodule/x86_64-apple-macos.*`,
+   and `_Builtin_float.swiftmodule/x86_64-apple-macos.*` into
+   `usr/lib/swift`. Idempotency keys on input shas (artifact, generator,
+   overlay text) written to `.phase2-stage-inputs`; a sysroot staged before
+   those inputs existed is restaged, and the CANNOT/cold-built line names
+   which input changed. Apple's `os.swiftmodule` is not copied (FE uses
+   `full/foundation/os-module`).
 2. OpenCombine: `scripts/x86/build_opencombine.sh` writes `export-x86_64/`.
    Source hashes from `policy.json` still apply. Object SHAs stay the arm64
    durable pin in `export/`. Focus/core-package scripts hash those objects
@@ -103,6 +112,13 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    `onboarding_resources_proof.py` or `FOCUS_WIDGET_BUNDLE`.
 4. `build_full.sh` / mrroot refuse to copy an arm64 `libswiftCore.dylib` into
    an x86-named root (`require_macho_cpu`).
-5. Guest harness fonts still open `/w/build/swiftui-guest/fonts`. The widget
+5. `os-module-x86` runs `full/foundation/build_os_module.sh` with
+   `TARGET=x86_64-apple-macos15.0` and `OUT=build/full-x86_64/foundation/os`
+   (beside arm64 `scratch/fe4_os`). `build_fe.sh` gets `OSMOD` so
+   `Calendar.swift:14 import os` resolves. Before that compile, `ENV_PREPARE
+   fe-imports` probes Darwin/os/Swift/_Builtin_float/_StringProcessing/_Concurrency
+   (required) and Synchronization (optional/`canImport`) in the x86 sysroot
+   and refuses in one line if any required module is absent.
+6. Guest harness fonts still open `/w/build/swiftui-guest/fonts`. The widget
    script stages fonts there and under `$W/build/swiftui-guest/fonts`; phase2
    tries `ln -sfn $W /w` and CANNOT if it cannot.
