@@ -56,13 +56,16 @@ CURSOR_ENV_X86_FIXTURES_OK built=...
 CURSOR_ENV_UD_PRODUCTS_OK ...
 CURSOR_ENV_PHASE2_REUSE_LINES=N        # N>=1 after a snapshotted install
 RUNG_SCOREBOARD a=... b=SKIPPED/... c=SKIPPED/...
-CURSOR_ENV_RUNG_A=PASS                 # or CANNOT with the quoted scoreboard
+CURSOR_ENV_RUNG_A=PASS                 # or CANNOT (guest exit 71) with products present
 CURSOR_ENV_OK=1 ...
 CURSOR_ENVIRONMENT_METRICS ...
 ```
 
 A `PHASE2_RUNGS=a` rerun after install must show compile/link stages as
-`reused=1 stamp=`, not a cold CF rebuild.
+`reused=1 stamp=`, not a cold CF rebuild. The guest smoke may still be
+`CURSOR_ENV_RUNG_A=CANNOT` (`run_ud_guest.sh` exit 71, foreign malloc
+zone) until that abort is fixed; cfobjc/obj, libCFTest, and the UD
+binaries stay in the snapshot so the expensive work is not repeated.
 
 ## One command that reruns rung a
 

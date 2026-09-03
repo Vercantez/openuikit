@@ -409,9 +409,10 @@ if [ "$host_arch" = x86_64 ] && [ "$can_execute" -eq 1 ]; then
     phase2_start_ns=$(date +%s%N)
     set +e
     PHASE2_RUNGS=a bash "$repo_root/scripts/x86/phase2.sh" "$repo_root" \
-        | tee "$repo_root/scratch/phase2-verify-rung-a.log"
-    phase2_rc=${PIPESTATUS[0]}
+        > "$repo_root/scratch/phase2-verify-rung-a.log" 2>&1
+    phase2_rc=$?
     set -e
+    cat "$repo_root/scratch/phase2-verify-rung-a.log"
     phase2_ms=$(( ( $(date +%s%N) - phase2_start_ns ) / 1000000 ))
     grep -E 'ENV_PREPARE_SUMMARY|RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_|reused=1 stamp=' \
         "$repo_root/scratch/phase2-verify-rung-a.log" || true
