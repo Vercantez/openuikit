@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AudioUnit.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "7e4ee3781d726070c8288512ecd9d812d854a43db3545d5bbbd7ae6c67b81564",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AudioUnit",
+  "relationshipCount": 0,
+  "schema": 1,
+  "symbolCount": 1,
+  "target": "arm64-apple-ios26.0"
+}
