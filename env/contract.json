@@ -137,7 +137,7 @@
       "tree": "823a4a2a13f60a0fd2715db85a754dda11d5fd39",
       "destination": "scratch/swift-foundation-icu",
       "lock": "full/frameworks/build_core_guest_package.sh",
-      "demanded_by": ["core-guest-package", "focus-onboarding"]
+      "demanded_by": ["core-guest-package", "focus-onboarding", "ud-guest-x86"]
     },
     {
       "id": "swift-corelibs-foundation",

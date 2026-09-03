@@ -939,7 +939,7 @@ ud_report=$(phase2_try_ud_guest \
     "$MACHORUN/darwin/usr/lib" \
     "$MACHORUN/build/machorun" \
     || true)
-case "$ud_report" in
+    case "$ud_report" in
     OK\ bin=*)
         UD_GUEST_BIN=${ud_report#*bin=}
         UD_GUEST_BIN=${UD_GUEST_BIN%% *}
@@ -948,6 +948,15 @@ case "$ud_report" in
         note ud-guest-x86 cold-built "$ud_report"
         UD_GUEST_ITEM_OK=1
         echo "  $ud_report"
+        if [ -f "$UD_GUEST_W/stub-func-active.txt" ]; then
+            stub_n=$(grep -c . "$UD_GUEST_W/stub-func-active.txt" || true)
+            note cftest-stubs satisfied "count=$stub_n"
+        fi
+        ;;
+    CANNOT_CFTEST_STUBS*)
+        cannot cftest-stubs CFTEST_STUBS "${ud_report#CANNOT_CFTEST_STUBS }"
+        cannot ud-guest-x86 UD_GUEST_CFTEST_STUBS \
+            "libCFTest stub set refused; see ENV_PREPARE cftest-stubs. Will not link ud_guest against it."
         ;;
     CANNOT_UD_GUEST_*)
         ud_marker=${ud_report#CANNOT_UD_GUEST_}
