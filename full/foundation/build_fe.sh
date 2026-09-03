@@ -29,8 +29,10 @@
 # constant dragged in the entire JSON subsystem (102 errors).
 set -euo pipefail
 W=${W:-/w}
+W=$(cd "$W" && pwd -P)
 SF=${SF:-$W/scratch/swift-foundation}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
+MC=${MC:-$W/scratch/modcache_fe4}
 PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
 URL_RESOURCE_KEY_PATCH=${URL_RESOURCE_KEY_PATCH:-$W/full/foundation/patches/FoundationEssentials-URLResourceKey.patch}
 PREDICATE_KEYPATH_PATCH=${PREDICATE_KEYPATH_PATCH:-$W/full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch}
@@ -44,6 +46,13 @@ EXPECTED_IOS_HOME_DIRECTORY_PATCH_SHA=37ec5f335225bb8ae6860d50305975827f9b4228ab
 [ -f "$URL_RESOURCE_KEY_PATCH" ] || { echo "no URLResourceKey patch $URL_RESOURCE_KEY_PATCH" >&2; exit 1; }
 [ -f "$PREDICATE_KEYPATH_PATCH" ] || { echo "no Predicate key-path patch $PREDICATE_KEYPATH_PATCH" >&2; exit 1; }
 [ -f "$IOS_HOME_DIRECTORY_PATCH" ] || { echo "no iOS home-directory patch $IOS_HOME_DIRECTORY_PATCH" >&2; exit 1; }
+mkdir -p "$MC"
+[ -d "$SYS" ] && SYS=$(realpath -P "$SYS")
+[ -d "$SF" ] && SF=$(realpath -P "$SF")
+MC=$(realpath -P "$MC" 2>/dev/null || readlink -f "$MC")
+OSMOD=${OSMOD:-$W/scratch/fe4_os}
+[ -d "$OSMOD" ] && OSMOD=$(realpath -P "$OSMOD")
+[ -n "${COLLECTIONS:-}" ] && [ -d "$COLLECTIONS" ] && COLLECTIONS=$(realpath -P "$COLLECTIONS")
 
 # ALL 202 FILES.  The old recipe filtered out five by name --
 # URL_Bridge / URL_ObjC / URL_Swift / URLComponents_ObjC / String+Bridging --
@@ -211,11 +220,11 @@ for f in InferSendableFromCaptures MemberImportVisibility; do
 done
 
 swiftc -target "${TARGET:-arm64-apple-macos15.0}" -sdk "$SYS" \
-    -module-cache-path "$W/scratch/modcache_fe4" \
+    -module-cache-path "$MC" \
     -module-name FoundationEssentials -wmo \
     -runtime-compatibility-version none \
     -package-name SwiftFoundation \
-    -I "${OSMOD:-$W/scratch/fe4_os}" \
+    -I "$OSMOD" \
     ${COLLECTIONS:+-I "$COLLECTIONS"} \
     -Xcc -fmodule-map-file="$SF/Sources/_FoundationCShims/include/module.modulemap" \
     -Xcc -I"$SF/Sources/_FoundationCShims/include" \
