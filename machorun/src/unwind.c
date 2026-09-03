@@ -86,7 +86,7 @@ int _dyld_find_unwind_sections(void *addr, struct dyld_unwind_sections *info)
     for (int i = 0; i < MR.nimages; i++) {
         mr_image *im = MR.images[i];
 
-        if (a < im->span_lo || a >= im->span_hi) continue;
+        if (!mr_image_contains_va(im, a)) continue;
 
         info->mh = (const void *)(uintptr_t)im->load_base;
         fill_section(im, "__eh_frame",   &info->dwarf_section,

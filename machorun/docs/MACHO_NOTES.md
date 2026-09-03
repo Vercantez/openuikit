@@ -79,7 +79,8 @@ the cache's packing. `libswiftObjectiveC.dylib` `__DATA_CONST vmaddr
 0x7ff843287720` — not page-aligned, and the TEXT-to-DATA gap is tens of
 megabytes. Apple's `dsc_extractor.bundle` SIGBUSes on macOS 26.5.2 caches, so
 these files cannot be rebuilt as standalone dylibs. machorun maps them by
-copy (`src/map.c`); the fixture is `cache_layout_packed` (FIXTURES.md g′).
+copy (`src/map.c`); the fixtures are `cache_layout_packed` (contiguous
+stand-in) and `cache_layout_sparse` (TEXT-to-DATA 0x22256720) — FIXTURES.md g′.
 
 ### `__PAGEZERO`
 
