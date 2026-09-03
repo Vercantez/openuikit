@@ -969,6 +969,56 @@ ud_report=$(phase2_try_ud_guest \
         ;;
 esac
 
+# Carried-golden scoreboard guest. Same objects as ud_guest; committed
+# recipe is foundation-macho/scripts/build_ud_score_guest.sh. Stamp reuse
+# is bin/ud_score_guest.inputs (objects + libCFTest sha + link argv).
+echo "==== ud-score-guest (committed foundation-macho/scripts/build_ud_score_guest.sh) ===="
+if [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
+    score_report=$(phase2_try_ud_score_guest \
+        "$W" \
+        "${UD_GUEST_W:-$W/scratch/ud-guest-x86_64}" \
+        "$SYS" \
+        "$MC" \
+        "$FE_OUT" \
+        || true)
+    case "$score_report" in
+        OK\ bin=*status=satisfied*)
+            UD_SCORE_BIN=${score_report#*bin=}
+            UD_SCORE_BIN=${UD_SCORE_BIN%% *}
+            export UD_SCORE_BIN
+            note ud-score-guest satisfied "$score_report"
+            echo "  $score_report"
+            ;;
+        OK\ bin=*status=cold-built*)
+            UD_SCORE_BIN=${score_report#*bin=}
+            UD_SCORE_BIN=${UD_SCORE_BIN%% *}
+            export UD_SCORE_BIN
+            note ud-score-guest cold-built "$score_report"
+            echo "  $score_report"
+            ;;
+        OK\ bin=*)
+            UD_SCORE_BIN=${score_report#*bin=}
+            UD_SCORE_BIN=${UD_SCORE_BIN%% *}
+            export UD_SCORE_BIN
+            note ud-score-guest cold-built "$score_report"
+            echo "  $score_report"
+            ;;
+        CANNOT_UD_GUEST_*)
+            score_marker=${score_report#CANNOT_UD_GUEST_}
+            score_marker=${score_marker%% *}
+            score_rest=${score_report#CANNOT_UD_GUEST_${score_marker} }
+            cannot ud-score-guest "UD_GUEST_$score_marker" "$score_rest"
+            ;;
+        *)
+            cannot ud-score-guest UD_SCORE_UNKNOWN \
+                "ud-score-guest produced: ${score_report:-empty}"
+            ;;
+    esac
+else
+    cannot ud-score-guest UD_SCORE_INPUTS \
+        "ud-guest-x86 did not produce FE/libCFTest/port objects. Committed recipe is foundation-macho/scripts/build_ud_score_guest.sh; persist not faked."
+fi
+
 # Stage libCFTest into the run root after link, before run. Arm64
 # build_cftest_harness.sh copies into $W/root; x86 W is the ud-guest work
 # tree, so this is the analogue for scratch/mrroot_full-x86_64. Not a
@@ -1133,12 +1183,19 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
                     2>&1 | tee "$W/scratch/phase2-rung-a-persist.log"
                 persist_rc=${PIPESTATUS[0]}
                 set -e
+                persist_board=$(grep 'GUEST SCOREBOARD' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
+                persist_port=$(grep 'PORT: scored' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
+                persist_presence=$(grep 'presence:' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
+                if [ -n "$persist_board" ]; then
+                    RUNG_A_DETAIL="smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS ($smoke_pass); persist $persist_board"
+                fi
                 if [ "$persist_rc" -eq 0 ]; then
                     RUNG_A=PASS
-                    note rung-a-ud_guest cold-built
+                    note rung-a-ud_guest cold-built "${persist_board:+$persist_board }${persist_port:+$persist_port }${persist_presence:+$persist_presence}"
                 else
                     RUNG_A=FAIL
-                    cannot rung-a-ud_guest UD_PERSIST "run_ud_persist.sh exit $persist_rc"
+                    cannot rung-a-ud_guest UD_PERSIST \
+                        "run_ud_persist.sh exit $persist_rc${persist_board:+; $persist_board}${persist_port:+; $persist_port}. Success bar unchanged: persist-read exit 0 and control must fail (committed run_ud_persist.sh)."
                 fi
             else
                 cannot rung-a-ud_guest UD_SCOREBOARD "smoke passed; ud_score_guest binary absent (committed build_ud_score_guest.sh). persist not faked."

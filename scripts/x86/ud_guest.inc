@@ -21,6 +21,13 @@
 #   link via foundation-macho/scripts/link_ud_guest.sh  (no second linker)
 #   binary at $W/scratch/ud-guest-x86_64/bin/ud_guest, handed to rung a as
 #   UD_GUEST_BIN.
+#   scoreboard binary at $W/scratch/ud-guest-x86_64/bin/ud_score_guest via
+#   the committed foundation-macho/scripts/build_ud_score_guest.sh (same
+#   objects, libCFTest, libswiftcompat, x86 tbds, clang-18, -nostdlib, one
+#   rope). Golden is the carried darwin-golden-2026-08-28.txt embedded by
+#   gen_guest_golden.py. Stamp is bin/ud_score_guest.inputs (objects +
+#   libCFTest sha + link argv); reuse only on match. ENV_PREPARE
+#   ud-score-guest cold-built|satisfied.
 #
 # FE objects are reused from build/full-x86_64/foundation (the same
 # build_fe.sh / build_collections.sh / build_os_module.sh / build_cshims.sh
@@ -781,16 +788,18 @@ phase2_ud_guest_write_otool_evidence() {
 
 phase2_ud_guest_check_loads() {
     local evid=$1
+    local marker=${2:-UD_GUEST}
+    local file=${3:-ud_guest}
     local name
     for name in "${PHASE2_UD_GUEST_EXPECTED_LOADS[@]}"; do
         if ! grep -q "$name" "$evid"; then
-            phase2_ud_guest_cannot UD_GUEST ud_guest \
+            phase2_ud_guest_cannot "$marker" "$file" \
                 "otool -L missing expected load $name (evidence $evid)"
             return 1
         fi
     done
     if ! grep -q 'MH_MAGIC_64[[:space:]]\+X86_64' "$evid"; then
-        phase2_ud_guest_cannot UD_GUEST ud_guest \
+        phase2_ud_guest_cannot "$marker" "$file" \
             "otool -hv missing MH_MAGIC_64 X86_64 (evidence $evid)"
         return 1
     fi
@@ -1020,4 +1029,111 @@ phase2_try_ud_guest() {
         return 1
     fi
     printf 'OK bin=%s evid=%s linker=%s\n' "$out" "$evid" "$PHASE2_UD_GUEST_LINKER"
+}
+
+# Carried-golden scoreboard guest. Same inputs as ud_guest; the committed
+# recipe is foundation-macho/scripts/build_ud_score_guest.sh. Prints:
+#   OK bin=... evid=... status=cold-built|satisfied
+#   CANNOT_UD_GUEST_<MARKER> file=... ...
+phase2_try_ud_score_guest() {
+    local repo=$1 ud_w=$2 sys=$3 mc=$4
+    local fe_out=${5:-}
+    local recipe=$repo/foundation-macho/scripts/build_ud_score_guest.sh
+    local golden_txt=$repo/full/oracle-userdefaults/darwin-golden-2026-08-28.txt
+    local genpy=$repo/foundation-macho/scripts/gen_guest_golden.py
+    local gen=$ud_w/oracle/GuestGolden.swift
+    local out=$ud_w/bin/ud_score_guest
+    local evid=$ud_w/bin/ud_score_guest.otool.txt
+    local log=$ud_w/build_ud_score_guest.log
+    local report st status cshims extra
+    local compile_triple
+
+    report=$(phase2_ud_guest_refuse_unsuffixed "$ud_w" || true)
+    case "$report" in
+        CANNOT_*) printf '%s\n' "$report"; return 1 ;;
+    esac
+
+    if [ ! -f "$recipe" ]; then
+        phase2_ud_guest_cannot SCORE_GUEST ud_score_guest \
+            "missing committed recipe $recipe"
+        return 1
+    fi
+    if [ ! -f "$golden_txt" ]; then
+        phase2_ud_guest_cannot GOLDEN GuestGolden.swift \
+            "missing carried golden $golden_txt (full/oracle-userdefaults/darwin-golden-2026-08-28.txt)"
+        return 1
+    fi
+    if [ ! -f "$genpy" ]; then
+        phase2_ud_guest_cannot GOLDEN GuestGolden.swift \
+            "missing $genpy; will not compile a scoreboard without the embedded golden"
+        return 1
+    fi
+
+    mkdir -p "$ud_w/oracle" "$ud_w/bin" "$ud_w/fe"
+    if ! command -v python3 >/dev/null 2>&1; then
+        phase2_ud_guest_cannot GOLDEN GuestGolden.swift \
+            "python3 missing; cannot embed $golden_txt into $gen"
+        return 1
+    fi
+    set +e
+    python3 "$genpy" "$golden_txt" "$gen" >"$ud_w/oracle/gen_guest_golden.log" 2>&1
+    st=$?
+    set -e
+    if [ "$st" -ne 0 ] || [ ! -f "$gen" ]; then
+        phase2_ud_guest_cannot GOLDEN GuestGolden.swift \
+            "gen_guest_golden.py exit $st log=$ud_w/oracle/gen_guest_golden.log"
+        return 1
+    fi
+
+    compile_triple=$(
+        # shellcheck disable=SC1091
+        . "$repo/foundation-macho/scripts/guest_arch.inc"
+        printf '%s\n' "${COMPILE_TRIPLE:-x86_64-apple-macos15.0}"
+    )
+
+    extra="-runtime-compatibility-version none"
+    cshims=$repo/scratch/swift-foundation/Sources/_FoundationCShims/include
+    if [ -f "$cshims/module.modulemap" ]; then
+        extra="$extra -Xcc -fmodule-map-file=$cshims/module.modulemap -Xcc -I$cshims"
+    fi
+    if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
+        extra="$extra -I $fe_out/collections"
+    fi
+
+    set +e
+    W="$ud_w" \
+        R="$repo/foundation-macho" \
+        SDK="$sys" \
+        OUT="$out" \
+        GEN="$gen" \
+        MODULE_CACHE="$mc" \
+        SWIFTC_EXTRA="$extra" \
+        TRIPLE=x86_64-apple-macos13.0 \
+        COMPILE_TRIPLE="$compile_triple" \
+        LLD_BIN=/usr/lib/llvm-18/bin \
+        bash "$recipe" >"$log" 2>&1
+    st=$?
+    set -e
+    if [ "$st" -ne 0 ] || [ ! -f "$out" ]; then
+        phase2_ud_guest_cannot SCORE_GUEST ud_score_guest \
+            "build_ud_score_guest.sh exit $st log=$log"
+        return 1
+    fi
+    if ! phase2_is_x86_macho "$out"; then
+        phase2_ud_guest_cannot SCORE_GUEST ud_score_guest \
+            "linked file is not X86_64 Mach-O: $out log=$log"
+        return 1
+    fi
+    phase2_ud_guest_write_otool_evidence "$out" "$evid"
+    if ! phase2_ud_guest_check_loads "$evid" SCORE_GUEST ud_score_guest; then
+        return 1
+    fi
+    status=$(grep '^UD_SCORE_STATUS=' "$log" | tail -1 || true)
+    status=${status#UD_SCORE_STATUS=}
+    case "$status" in
+        satisfied|cold-built) ;;
+        *) status=cold-built ;;
+    esac
+    printf 'OK bin=%s evid=%s status=%s recipe=%s\n' \
+        "$out" "$evid" "$status" "foundation-macho/scripts/build_ud_score_guest.sh"
 }

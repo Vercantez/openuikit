@@ -72,10 +72,12 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
     "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/build_ud_score_guest.sh" \
     "$ROOT/foundation-macho/scripts/run_ud_guest.sh" \
     "$ROOT/foundation-macho/scripts/run_ud_persist.sh" \
     "$ROOT/foundation-macho/scripts/ud_dispatch_run.inc" \
     "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/test_build_ud_score_guest.sh" \
     "$ROOT/foundation-macho/scripts/test_run_ud_guest.sh" \
     "$ROOT/foundation-macho/scripts/check_cftest_stubs.sh" \
     "$ROOT/foundation-macho/scripts/test_build_cftest_harness.sh" \
@@ -1636,6 +1638,19 @@ expect_grep 'phase2_ensure_sdk_settings' "$STAGE" "x86 sysroot stager writes SDK
 expect_grep 'SDKSettings.json' "$COMMON" "SDKSettings.json helper is shared"
 expect_grep 'RUNNER runner.o' "$UDINC" "runner hole names file=runner.o"
 expect_grep 'build_ud_score_guest.sh' "$UDINC" "port/runner argv follows the committed scoreboard compile"
+expect_grep 'phase2_try_ud_score_guest' "$UDINC" \
+    "ud_guest.inc produces bin/ud_score_guest through the committed recipe"
+expect_grep 'phase2_try_ud_score_guest' "$PHASE2" \
+    "phase2 invokes the ud-score-guest producer"
+expect_grep 'ud-score-guest' "$PHASE2" "ENV_PREPARE item names ud-score-guest"
+expect_grep 'bin/ud_score_guest' "$UDINC" "scoreboard output is scratch/ud-guest-x86_64/bin/ud_score_guest"
+expect_grep 'ud_score_guest.otool.txt' "$UDINC" "otool evidence sits beside ud_score_guest"
+expect_grep 'darwin-golden-2026-08-28.txt' "$UDINC" \
+    "scoreboard embeds the carried darwin golden"
+expect_grep 'GUEST SCOREBOARD' "$PHASE2" \
+    "phase2 reports run_ud_persist.sh GUEST SCOREBOARD denominators"
+expect_grep 'Success bar unchanged' "$PHASE2" \
+    "persist success bar is still committed run_ud_persist.sh"
 expect_grep 'OrderedCollections.swiftmodule' "$UDINC" \
     "ud-guest stages OrderedCollections.swiftmodule next to the .o"
 expect_grep '_RopeModule.swiftmodule' "$UDINC" \
@@ -1713,6 +1728,19 @@ if [ "$wt" = "$UDWORK/scratch/ud-guest-x86_64" ]; then
     ok "worktree helper is scratch/ud-guest-x86_64"
 else
     die_test "worktree helper got $wt"
+fi
+
+score_env=$(phase2_prepare ud-score-guest "cold-built bin=$wt/bin/ud_score_guest")
+if echo "$score_env" | grep -q "^ENV_PREPARE ud-score-guest cold-built bin=$wt/bin/ud_score_guest$"; then
+    ok "ENV_PREPARE ud-score-guest cold-built line"
+else
+    die_test "ud-score-guest ENV_PREPARE got: $score_env"
+fi
+score_ok=$(phase2_prepare ud-score-guest "satisfied bin=$wt/bin/ud_score_guest")
+if echo "$score_ok" | grep -q "^ENV_PREPARE ud-score-guest satisfied bin=$wt/bin/ud_score_guest$"; then
+    ok "ENV_PREPARE ud-score-guest satisfied line"
+else
+    die_test "ud-score-guest satisfied ENV_PREPARE got: $score_ok"
 fi
 
 echo "== CANNOT_CFTEST_STUBS ENV_PREPARE payload is count= + first five names"
@@ -1978,6 +2006,13 @@ if bash "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh"; then
     ok "test_link_ud_guest.sh"
 else
     die_test "test_link_ud_guest.sh"
+fi
+
+echo "== build_ud_score_guest.sh arm64 argv, x86 -l set, stamp reuse"
+if bash "$ROOT/foundation-macho/scripts/test_build_ud_score_guest.sh"; then
+    ok "test_build_ud_score_guest.sh"
+else
+    die_test "test_build_ud_score_guest.sh"
 fi
 
 echo "== run_ud_guest.sh dispatch argv (preload, runroot, loader sha256)"
