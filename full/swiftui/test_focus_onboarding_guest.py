@@ -200,6 +200,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("full/relativetime/OpenRelativeTimeHost.c", text)
         self.assertIn("full/relativetime/OpenRelativeTimeHostTests.c", text)
         self.assertIn("run_link libOpenRelativeTime ", text)
+        self.assertIn("full/relativetime/build_host_helper.sh", text)
         self.assertIn("RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib", text)
         self.assertIn(
             "RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so",
@@ -278,6 +279,54 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn(
             "runtime-closure inventory omitted package/libOpenFoundationInternationalization.dylib",
             text,
+        )
+
+    def test_run_step_preloads_every_built_host_helper(self) -> None:
+        text = BUILD.read_text()
+        run = text.split(
+            "== run exact Focus interaction path on Linux/machorun", 1
+        )[1]
+        helpers = sorted(set(re.findall(r"libOpen[A-Za-z]+Host\.so", text)))
+        self.assertEqual(
+            helpers,
+            [
+                "libOpenDispatchHost.so",
+                "libOpenFoundationInternationalizationHost.so",
+                "libOpenRelativeTimeHost.so",
+            ],
+        )
+        self.assertNotIn("libOpenURLTransportHost.so", text)
+        assignments = dict(
+            re.findall(
+                r"^([A-Z0-9_]+)=\$HOST_BRIDGE_DIR/(libOpen[A-Za-z]+Host\.so)$",
+                text,
+                re.MULTILINE,
+            )
+        )
+        inverse = {name: var for var, name in assignments.items()}
+        preload_lines = [
+            line
+            for line in run.splitlines()
+            if line.startswith("EARLY_PLATFORM_HOST_PRELOAD=")
+        ]
+        self.assertEqual(len(preload_lines), 1, preload_lines)
+        preload_line = preload_lines[0]
+        self.assertEqual(
+            preload_line,
+            "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST",
+        )
+        for helper in helpers:
+            self.assertIn(helper, inverse)
+            self.assertIn(f"${inverse[helper]}", preload_line)
+        self.assertIn("== compose Linux host preload", run)
+        self.assertIn("printf 'LD_PRELOAD=%s\\n'", run)
+        self.assertLess(
+            run.index('bash "$W/full/dispatch/build_host_bridge.sh"'),
+            run.index("EARLY_PLATFORM_HOST_PRELOAD="),
+        )
+        self.assertLess(
+            run.index("EARLY_PLATFORM_HOST_PRELOAD="),
+            run.index('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'),
         )
 
     def test_foundation_runtime_closure_is_exact_and_mutation_sensitive(self) -> None:
