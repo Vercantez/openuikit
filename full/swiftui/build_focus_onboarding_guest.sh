@@ -371,6 +371,9 @@ PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
 HOST_BRIDGE_DIR=$OUT/host
 RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib
 RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so
+FOUNDATION_INTL_DARWIN=$PACKAGE/libOpenFoundationInternationalization.dylib
+FOUNDATION_INTL_HOST=$HOST_BRIDGE_DIR/libOpenFoundationInternationalizationHost.so
+MACHO_DEPENDENCY_REWRITER=$W/full/xcodeplan/rewrite_macho_dependency.py
 FE_OUT=$FULL/foundation/essentials
 FE_COLLECTIONS=$FULL/foundation/collections
 FE_OS=$FULL/foundation/os
@@ -559,6 +562,84 @@ env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
 [ -f "$PACKAGE/libFoundationInternationalization.dylib" ] && \
     [ ! -L "$PACKAGE/libFoundationInternationalization.dylib" ] \
     || die 'libFoundationInternationalization.dylib is missing after build'
+[ -f "$PACKAGE/lib_FoundationICU.dylib" ] && \
+    [ ! -L "$PACKAGE/lib_FoundationICU.dylib" ] \
+    || die 'lib_FoundationICU.dylib is missing after build'
+
+echo '== build the OpenFoundationInternationalization Darwin bridge and Linux host helper'
+[ -f "$MACHO_DEPENDENCY_REWRITER" ] && [ ! -L "$MACHO_DEPENDENCY_REWRITER" ] \
+    || die "Mach-O dependency rewriter is missing: $MACHO_DEPENDENCY_REWRITER"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/foundationinternationalization/include" \
+    -c "$W/full/foundationinternationalization/OpenFoundationInternationalizationBridge.c" \
+    -o "$OUT/open-foundation-internationalization-bridge.o"
+run_link libOpenFoundationInternationalization "${LD[@]}" -dylib -dead_strip \
+    -undefined dynamic_lookup \
+    -install_name @rpath/libOpenFoundationInternationalization.dylib \
+    -rpath @loader_path \
+    -map "$AUDIT/libOpenFoundationInternationalization.link-map" \
+    -o "$FOUNDATION_INTL_DARWIN" \
+    "$OUT/open-foundation-internationalization-bridge.o"
+bash "$W/full/foundationinternationalization/build_host_helper.sh" \
+    --repo "$W" --host-dir "$HOST_BRIDGE_DIR" \
+    --include-dir "$W/full/foundationinternationalization/include"
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$W/full/foundationinternationalization/include" \
+    "$W/full/foundationinternationalization/OpenFoundationInternationalizationHost.c" \
+    "$W/full/foundationinternationalization/OpenFoundationInternationalizationHostTests.c" \
+    -o "$OUT/open-foundation-internationalization-host-tests"
+"$OUT/open-foundation-internationalization-host-tests" \
+    > "$OUT/open-foundation-internationalization-host-test.log"
+grep -Fx \
+    'OPEN_FOUNDATION_INTERNATIONALIZATION_HOST_OK realpath=bounded,versioned' \
+    "$OUT/open-foundation-internationalization-host-test.log" >/dev/null \
+    || die 'FoundationInternationalization host marker is missing'
+[ -f "$FOUNDATION_INTL_DARWIN" ] && [ ! -L "$FOUNDATION_INTL_DARWIN" ] \
+    || die 'libOpenFoundationInternationalization.dylib is missing after build'
+[ -f "$FOUNDATION_INTL_HOST" ] && [ ! -L "$FOUNDATION_INTL_HOST" ] \
+    || die 'libOpenFoundationInternationalizationHost.so is missing after build'
+printf 'openui_foundation_intl_v1_realpath\n' \
+    > "$AUDIT/foundation-intl-expected-elf.txt"
+printf '_realpath\n' > "$AUDIT/foundation-intl-expected-mach-exports.txt"
+printf '_glibc_openui_foundation_intl_v1_realpath\n' \
+    > "$AUDIT/foundation-intl-expected-mach-imports.txt"
+readelf --wide --syms "$FOUNDATION_INTL_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_foundation_intl_v1_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$AUDIT/foundation-intl-elf-exports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$FOUNDATION_INTL_DARWIN" | LC_ALL=C sort -u \
+    > "$AUDIT/foundation-intl-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$FOUNDATION_INTL_DARWIN" | LC_ALL=C sort -u \
+    > "$AUDIT/foundation-intl-mach-imports.txt"
+cmp "$AUDIT/foundation-intl-expected-elf.txt" \
+    "$AUDIT/foundation-intl-elf-exports.txt" \
+    || die 'FoundationInternationalization Linux helper exports drifted'
+cmp "$AUDIT/foundation-intl-expected-mach-exports.txt" \
+    "$AUDIT/foundation-intl-mach-exports.txt" \
+    || die 'FoundationInternationalization Mach-O bridge exports drifted'
+cmp "$AUDIT/foundation-intl-expected-mach-imports.txt" \
+    "$AUDIT/foundation-intl-mach-imports.txt" \
+    || die 'FoundationInternationalization Mach-O bridge host import drifted'
+[ "$(llvm-otool-18 -D "$FOUNDATION_INTL_DARWIN" | tail -n 1)" = \
+    @rpath/libOpenFoundationInternationalization.dylib ] \
+    || die 'packaged FoundationInternationalization Mach-O bridge ID drifted'
+icu_bridge_old=$(llvm-otool-18 -L "$PACKAGE/lib_FoundationICU.dylib" \
+    | awk '$1 == "/usr/lib/libOpenFoundationInternationalization.dylib" { count++ } END { print count + 0 }')
+icu_bridge_new=$(llvm-otool-18 -L "$PACKAGE/lib_FoundationICU.dylib" \
+    | awk '$1 == "@rpath/libOpenFoundationInternationalization.dylib" { count++ } END { print count + 0 }')
+[ "$icu_bridge_old" -eq 1 ] && [ "$icu_bridge_new" -eq 0 ] \
+    || die "Foundation ICU runtime bridge load input drifted: old=$icu_bridge_old new=$icu_bridge_new"
+python3 -B "$MACHO_DEPENDENCY_REWRITER" "$PACKAGE/lib_FoundationICU.dylib" \
+    /usr/lib/libOpenFoundationInternationalization.dylib \
+    @rpath/libOpenFoundationInternationalization.dylib
+icu_bridge_old=$(llvm-otool-18 -L "$PACKAGE/lib_FoundationICU.dylib" \
+    | awk '$1 == "/usr/lib/libOpenFoundationInternationalization.dylib" { count++ } END { print count + 0 }')
+icu_bridge_new=$(llvm-otool-18 -L "$PACKAGE/lib_FoundationICU.dylib" \
+    | awk '$1 == "@rpath/libOpenFoundationInternationalization.dylib" { count++ } END { print count + 0 }')
+[ "$icu_bridge_old" -eq 0 ] && [ "$icu_bridge_new" -eq 1 ] \
+    || die "Foundation ICU runtime bridge load rewrite drifted: old=$icu_bridge_old new=$icu_bridge_new"
 PACKAGE_CINC+=(
     -Xcc -fmodule-map-file="$FINTL_STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
     -Xcc -I"$FINTL_STAGE/include/FoundationICU"
@@ -1016,7 +1097,8 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-    FoundationInternationalization Dispatch OpenRelativeTime OpenCombine Combine \
+    FoundationInternationalization _FoundationICU OpenFoundationInternationalization \
+    Dispatch OpenRelativeTime OpenCombine Combine \
     Symbols SwiftUI Widget Onboarding; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
         | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
@@ -1033,11 +1115,27 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$OUT/focus_onboarding_guest" \
     --package "$PACKAGE" --guest-root "$MRROOT" \
     > "$AUDIT/runtime-closure.manifest"
+awk -F '\t' '
+    $1 == "file" && $2 == "package/libOpenFoundationInternationalization.dylib" {
+        files++
+    }
+    END { exit files == 1 ? 0 : 1 }
+' "$AUDIT/runtime-closure.manifest" \
+    || die 'runtime-closure inventory omitted package/libOpenFoundationInternationalization.dylib'
+awk -F '\t' '
+    $1 == "edge" && $2 == "package/lib_FoundationICU.dylib" \
+        && $4 == "@rpath/libOpenFoundationInternationalization.dylib" \
+        && $5 == "package/libOpenFoundationInternationalization.dylib" {
+        edges++
+    }
+    END { exit edges == 1 ? 0 : 1 }
+' "$AUDIT/runtime-closure.manifest" \
+    || die 'runtime-closure omitted the Foundation ICU @rpath OpenFoundationInternationalization edge'
 
 echo '== run exact Focus interaction path on Linux/machorun'
 echo '== build Linux Dispatch host bridge'
 DISPATCH_HOST=$HOST_BRIDGE_DIR/libOpenDispatchHost.so
-EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$RELATIVE_TIME_HOST
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST
 host_bridge_args=(
     --repo "$W"
     --host-dir "$HOST_BRIDGE_DIR"
@@ -1094,6 +1192,7 @@ validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
     printf 'widget-bundle-accessor\t%s\n' \
         "$(hash_file "$W/full/swiftui/FocusWidgetBundle.generated.swift")"
     for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
+        FoundationInternationalization _FoundationICU OpenFoundationInternationalization \
         Dispatch OpenRelativeTime OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
         printf 'lib%s\t%s\n' "$dylib" "$(hash_file "$PACKAGE/lib$dylib.dylib")"
     done
