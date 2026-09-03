@@ -8,8 +8,7 @@
  * countable) and leaves ~/machorun read-only.
  *
  * Symbols are grouped by how real the implementation is:
- *   REAL     — a correct implementation (the arithmetic builtins, getline,
- *              getsectiondata, the locale strtod family).
+ *   REAL     — a correct implementation (the arithmetic builtins).
  *   BENIGN   — correct for our purposes, where the Darwin behaviour is either
  *              trivially reproducible or genuinely unused off Apple hardware
  *              (availability checks, malloc zones).
@@ -82,102 +81,22 @@ s128 __modti3(s128 a, s128 b) {
     return neg ? -(s128)r : (s128)r;
 }
 
-/* ---------------------------------------------------------------- REAL ----
- * getline(3). POSIX; machorun's libSystem carries getdelim's siblings but not
- * this one.
- */
-ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
-    if (!lineptr || !n || !stream) return -1;
-    size_t cap = *n, len = 0;
-    char *buf = *lineptr;
-    if (!buf || cap == 0) { cap = 128; buf = (char *)malloc(cap); if (!buf) return -1; }
-    for (;;) {
-        int c = fgetc(stream);
-        if (c == EOF) { if (len == 0) { *lineptr = buf; *n = cap; return -1; } break; }
-        if (len + 2 > cap) {
-            size_t ncap = cap * 2;
-            char *nb = (char *)realloc(buf, ncap);
-            if (!nb) { *lineptr = buf; *n = cap; return -1; }
-            buf = nb; cap = ncap;
-        }
-        buf[len++] = (char)c;
-        if (c == '\n') break;
-    }
-    buf[len] = '\0';
-    *lineptr = buf; *n = cap;
-    return (ssize_t)len;
-}
-
-/* ---------------------------------------------------------------- REAL ----
- * getsectiondata(3): walk the Mach-O load commands of an already-loaded image.
- * Layout constants are from the Mach-O format, not from an Apple header.
- */
-struct mh { uint32_t magic, cputype, cpusubtype, filetype, ncmds, sizeofcmds, flags, reserved; };
-struct lc { uint32_t cmd, cmdsize; };
-struct seg64 {
-    uint32_t cmd, cmdsize; char segname[16];
-    uint64_t vmaddr, vmsize, fileoff, filesize;
-    uint32_t maxprot, initprot, nsects, flags;
-};
-struct sect64 {
-    char sectname[16], segname[16];
-    uint64_t addr, size;
-    uint32_t offset, align, reloff, nreloc, flags, reserved1, reserved2, reserved3;
-};
-#define LC_SEGMENT_64 0x19
-
-uint8_t *getsectiondata(const struct mh *header, const char *segname,
-                        const char *sectname, unsigned long *size) {
-    if (!header) return NULL;
-    const uint8_t *p = (const uint8_t *)header + sizeof(struct mh);
-    /* Slide: vmaddr in the file vs where the image actually landed. */
-    intptr_t slide = 0;
-    int have_slide = 0;
-    for (uint32_t i = 0; i < header->ncmds; i++) {
-        const struct lc *c = (const struct lc *)p;
-        if (c->cmd == LC_SEGMENT_64) {
-            const struct seg64 *s = (const struct seg64 *)c;
-            if (!have_slide && strncmp(s->segname, "__TEXT", 16) == 0) {
-                slide = (intptr_t)header - (intptr_t)s->vmaddr;
-                have_slide = 1;
-            }
-        }
-        p += c->cmdsize;
-    }
-    p = (const uint8_t *)header + sizeof(struct mh);
-    for (uint32_t i = 0; i < header->ncmds; i++) {
-        const struct lc *c = (const struct lc *)p;
-        if (c->cmd == LC_SEGMENT_64) {
-            const struct seg64 *s = (const struct seg64 *)c;
-            if (strncmp(s->segname, segname, 16) == 0) {
-                const struct sect64 *sec = (const struct sect64 *)(s + 1);
-                for (uint32_t j = 0; j < s->nsects; j++, sec++) {
-                    if (strncmp(sec->sectname, sectname, 16) == 0) {
-                        if (size) *size = (unsigned long)sec->size;
-                        return (uint8_t *)(sec->addr + slide);
-                    }
-                }
-            }
-        }
-        p += c->cmdsize;
-    }
-    if (size) *size = 0;
-    return NULL;
-}
-
 /* _NSGetMachExecuteHeader, dispatch_once_f, _dyld_is_objc_constant,
  * flockfile/funlockfile, and the three libc++ overlay symbols moved into
  * machorun's libSystem / libc++. DELETED here so they cannot beat .real
  * (CHECK 4 / two-level bind). */
 
+/* Removed 2026-09-03: getline, getsectiondata, strtod_l, strtof_l, strtold_l,
+ * os_system_version_get_current_version, malloc_zone_from_ptr,
+ * pthread_get_stackaddr_np, pthread_get_stacksize_np -- machorun's libSystem
+ * defines all nine (build_compat.sh CHECK 4: "libswiftcompat defines 9
+ * symbol(s) machorun's userland already defines"). A definition here beats
+ * .real by link order, which is how FoundationEssentials on arm64 bound
+ * strtod_l from this shim while x86_64 bound it from libSystem. */
 /* ---------------------------------------------------------------- REAL ----
  * The locale-aware strtod family. The stdlib calls these with the C locale
  * only (_swift_stdlib_strtod_clocale and friends), which is what strtod does.
  */
-double      strtod_l (const char *s, char **e, void *loc) { (void)loc; return strtod(s, e); }
-float       strtof_l (const char *s, char **e, void *loc) { (void)loc; return strtof(s, e); }
-long double strtold_l(const char *s, char **e, void *loc) { (void)loc; return strtold(s, e); }
-
 /* -------------------------------------------------------------- BENIGN ----
  * Availability. Every check is against the deployment target of a system we
  * are emulating in full, so "yes" is the honest answer here.
@@ -190,34 +109,18 @@ int32_t __isPlatformOrVariantPlatformVersionAtLeast(uint32_t p, uint32_t ma, uin
                                                     uint32_t mi2, uint32_t su2) {
     (void)p; (void)ma; (void)mi; (void)su; (void)p2; (void)ma2; (void)mi2; (void)su2; return 1;
 }
-typedef struct { uint32_t major, minor, patch; } os_sysver_t;
 /* Mach-O adds the leading underscore; the C name carries none. */
-os_sysver_t os_system_version_get_current_version(void) {
-    os_sysver_t v = { 15, 0, 0 };
-    return v;
-}
-
 /* -------------------------------------------------------------- BENIGN ----
  * Malloc zones. machorun's allocator is a single flat heap with no zone
  * concept; NULL is what Darwin returns for a pointer it does not own, and it
  * is the answer the one caller (-[_TtCs12_SwiftObject zone]) handles.
  */
-void *malloc_zone_from_ptr(const void *p) { (void)p; return NULL; }
-
 /* pthread stack introspection. Darwin's pthread.h has no pthread_getattr_np
  * (that is a glibc extension), and we are compiling against Darwin headers, so
  * this is derived from the caller's own frame: Darwin's _np accessors return
  * the stack *base* (highest address) and its size. The stdlib uses these only
  * to decide whether a pointer looks stack-allocated, so a conservative window
  * around the current frame is the right shape of answer. */
-#define SHIM_DEFAULT_STACK (8u * 1024u * 1024u)
-void *pthread_get_stackaddr_np(pthread_t t) {
-    (void)t;
-    uintptr_t here = (uintptr_t)__builtin_frame_address(0);
-    return (void *)((here + SHIM_DEFAULT_STACK) & ~(uintptr_t)(SHIM_DEFAULT_STACK - 1));
-}
-size_t pthread_get_stacksize_np(pthread_t t) { (void)t; return SHIM_DEFAULT_STACK; }
-
 /* libc++ overlay symbols (__libcpp_verbose_abort, hardware_concurrency,
  * operator+(const char*, string)) moved to machorun darwin/src/libcxx_std.cpp. */
 
