@@ -16,6 +16,10 @@
  *     - the packed-style gap +0x4008 AND a mid-cache hole are unmapped
  *     - no single VMA covers the ~546 MB union (per-segment reservation)
  *
+ *   dsc-nofix: a dylib with DATA_CONST bytes and no chained/classic bind
+ *   or rebase stream is refused (Apple cache extracts). The predicate is
+ *   checked here; the loader _exit(74)s before mapping.
+ *
  * The 2026-09-03 packed-fixture SIGSEGV was pc at imageoff 0x5e0, fault
  * at slide+0x4008: that address is the packed gap. The Reminder guest then
  * died at exit 139 after copy-mapping Apple's extract: the union of those
@@ -34,6 +38,53 @@
 #include <sys/stat.h>
 
 #define CACHE_SPARSE_DELTA 0x22256720ull
+
+static void fill_seg(mr_segment *s, const char *name,
+                     uint64_t vm, uint64_t vmsz, uint64_t fo, uint64_t fsz,
+                     uint32_t prot, uint32_t flags);
+
+static void expect_dsc(const char *what, const mr_image *im, int want)
+{
+    int got = mr_image_is_cache_extract_without_fixups(im);
+    if (got != want) {
+        fprintf(stderr, "test_copy_map: %s: dsc-nofix predicate %d, want %d\n",
+                what, got, want);
+        exit(1);
+    }
+}
+
+static void test_dsc_nofix_predicate(void)
+{
+    mr_image im;
+    memset(&im, 0, sizeof(im));
+    im.filetype = MH_DYLIB;
+    im.nsegs = 2;
+    fill_seg(&im.segs[0], "__TEXT", 0, 0x4000, 0, 0x1000,
+             VM_PROT_READ | VM_PROT_EXECUTE, 0);
+    fill_seg(&im.segs[1], "__DATA_CONST", 0x4000, 0x1000, 0x1000, 0x20,
+             VM_PROT_READ | VM_PROT_WRITE, SG_READ_ONLY);
+    expect_dsc("dylib DATA_CONST, no fixups", &im, 1);
+
+    im.chained_size = 64;
+    expect_dsc("dylib with chained fixups", &im, 0);
+    im.chained_size = 0;
+
+    im.filetype = MH_EXECUTE;
+    expect_dsc("executable without fixups", &im, 0);
+    im.filetype = MH_DYLIB;
+
+    im.segs[1].filesize = 0;
+    expect_dsc("dylib with empty DATA_CONST", &im, 0);
+    im.segs[1].filesize = 0x20;
+
+    struct dyld_info_command di;
+    memset(&di, 0, sizeof(di));
+    di.bind_size = 16;
+    im.dyld_info = &di;
+    expect_dsc("dylib with classic binds", &im, 0);
+    di.bind_size = 0;
+    expect_dsc("dylib with export-only LC_DYLD_INFO", &im, 1);
+}
 
 static int can_read(const void *p)
 {
@@ -124,6 +175,7 @@ int main(void)
     int cover;
 
     fill_blob(blob);
+    test_dsc_nofix_predicate();
     pfd = write_blob(packed_tmpl, blob, sizeof(blob));
     if (pfd < 0) return 1;
     sfd = write_blob(sparse_tmpl, blob, sizeof(blob));
@@ -294,7 +346,8 @@ int main(void)
     printf("test_copy_map ok  packed load_base=0x%llx DATA_CONST +0x14720  "
            "gap +0x4008 PROT_NONE  shared page rw; "
            "sparse load_base=0x%llx DATA_CONST +0x22256720  "
-           "hole unmapped  no union VMA\n",
+           "hole unmapped  no union VMA; "
+           "dsc-nofix predicate ok\n",
            (unsigned long long)packed.load_base,
            (unsigned long long)sparse.load_base);
     return 0;

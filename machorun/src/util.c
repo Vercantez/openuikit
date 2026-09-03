@@ -134,6 +134,30 @@ int mr_file_exists(const char *path)
     return stat(path, &st) == 0 && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode));
 }
 
+int mr_image_is_cache_extract_without_fixups(const mr_image *im)
+{
+    int has_data = 0;
+    if (!im) return 0;
+    if (im->filetype != MH_DYLIB && im->filetype != MH_BUNDLE)
+        return 0;
+    if (im->chained_size)
+        return 0;
+    if (im->dyld_info &&
+        (im->dyld_info->rebase_size || im->dyld_info->bind_size ||
+         im->dyld_info->weak_bind_size || im->dyld_info->lazy_bind_size))
+        return 0;
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        if (s->filesize == 0) continue;
+        if (strcmp(s->name, "__DATA") == 0 ||
+            strcmp(s->name, "__DATA_CONST") == 0 ||
+            strcmp(s->name, "__DATA_DIRTY") == 0 ||
+            strcmp(s->name, "__AUTH_CONST") == 0)
+            has_data = 1;
+    }
+    return has_data;
+}
+
 uint64_t mr_uleb(const uint8_t **p, const uint8_t *end)
 {
     uint64_t r = 0;
