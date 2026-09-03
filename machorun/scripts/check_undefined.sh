@@ -38,6 +38,10 @@
 #
 # Depth 4 matches src/resolve.c's lookup_in(), deliberately: a checker that
 # searches further than the loader would report clean about binds that fail.
+#
+# Directories named `*-park` (phase2 / build_stdlib `usr/lib-arm64-park`) are
+# parking spots for a foreign-arch slice, not a library path. The loader does
+# not search them; CHECK 5 must not grade them as if they were in the x86 root.
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -128,8 +132,11 @@ grade_root() { # grade_root <root-dir> <depth>
     while IFS= read -r f; do
         CAND+=("$f")
         is_macho "$f" && IMG+=("$f")
-    done < <(find -L "$root" -type f \
-                ! -name '*.txt' ! -name '*.md' ! -name '*.tbd' ! -name '*.json' \
+    done < <(find -L "$root" \
+                \( -type d -name '*-park' \) -prune \
+                -o -type f \
+                    ! -name '*.txt' ! -name '*.md' ! -name '*.tbd' ! -name '*.json' \
+                    -print \
                 2>/dev/null | LC_ALL=C sort)
 
     # AN EMPTY SCOPE IS NEVER A PASS. "0 unresolved out of 0 images" is what a
@@ -412,8 +419,28 @@ PROBE
     fi
     STRICT=0
 
+    # (5) `*-park` is a parking spot, not a library path. A copy of the probe
+    #     under usr/lib-arm64-park must not change the image count or the
+    #     findings -- CHECK 5 grades what the loader would search.
+    mkdir -p "$W/root/usr/lib-arm64-park/swift"
+    cp "$W/root/usr/lib/libselftest.dylib" \
+       "$W/root/usr/lib-arm64-park/swift/libswiftCore.dylib"
+    out_park=$(grade_root "$W/root" 4) || die "selftest: parked copy made the root ungradable"
+    n4=$(printf '%s\n' "$out4" | awk '/Mach-O images/{print $1; exit}')
+    np=$(printf '%s\n' "$out_park" | awk '/Mach-O images/{print $1; exit}')
+    if [ "$n4" = "$np" ] && [ -n "$n4" ]; then
+        echo "   ok   usr/lib-arm64-park does not add a Mach-O image ($n4 both times)"
+    else
+        echo "   FAIL parked dylib counted: $n4 images without park, $np with"; fail=1
+    fi
+    if printf '%s\n' "$out_park" | grep -q 'lib-arm64-park'; then
+        echo "   FAIL findings name lib-arm64-park"; fail=1
+    else
+        echo "   ok   findings do not name the parking directory"
+    fi
+
     rm -rf "$W"
-    [ "$fail" = 0 ] && { echo "selftest: ok -- 4/4"; exit 0; }
+    [ "$fail" = 0 ] && { echo "selftest: ok -- 5/5"; exit 0; }
     echo "selftest: FAILED" >&2; exit 1
 fi
 

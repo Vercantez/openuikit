@@ -84,5 +84,10 @@ long double probe_fmal(long double x, long double y, long double z) { return fma
 
 /* The property the l-forwarders rest on. If Darwin's long double ever stops
  * being a double, darwin/src/math.c is passing the wrong width to glibc. */
+#if defined(__x86_64__)
+_Static_assert(sizeof(long double) == 16,
+               "x86_64-apple-macos long double must be 16 bytes");
+#else
 _Static_assert(sizeof(long double) == sizeof(double),
                "arm64-apple-macos long double must be 8 bytes");
+#endif

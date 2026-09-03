@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "swiftcore-macho artifact slice manifest",
+  "type": "object",
+  "required": ["schema", "arch", "moduleTriple", "source", "toolchain", "host", "fileCount", "files"],
+  "properties": {
+    "schema": { "type": "string" },
+    "arch": { "enum": ["arm64", "x86_64"] },
+    "moduleTriple": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["repository", "tag", "commit"],
+      "properties": {
+        "repository": { "type": "string" },
+        "tag": { "type": "string" },
+        "commit": { "type": "string", "minLength": 40, "maxLength": 40 }
+      }
+    },
+    "siblings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["repository", "tag", "commit"],
+        "properties": {
+          "repository": { "type": "string" },
+          "tag": { "type": "string" },
+          "commit": { "type": "string", "minLength": 40, "maxLength": 40 }
+        }
+      }
+    },
+    "toolchain": { "type": "string" },
+    "host": { "type": "string" },
+    "generatedAtUtc": { "type": "string" },
+    "fileCount": { "type": "integer", "minimum": 1 },
+    "files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["sha256", "bytes"],
+        "properties": {
+          "sha256": { "type": "string", "minLength": 64, "maxLength": 64 },
+          "bytes": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}

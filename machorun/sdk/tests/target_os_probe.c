@@ -156,22 +156,27 @@ _Static_assert(TARGET_OS_MACCATALYST == 0, "a macos target is not Catalyst");
 
 /* macOS arm64: 128 TiB minus the last 32 MiB. The embedded value is
  * 0x0000000FFFFFF000 (64 GiB), and confusing the two is the bug above. */
+#if defined(__x86_64__)
+_Static_assert(MACH_VM_MAX_ADDRESS == 0x00007FFFFFE00000ULL,
+               "MACH_VM_MAX_ADDRESS must be macOS x86_64's 128 TiB-ish value "
+               "(0x00007FFFFFE00000), not the arm64 0x00007ffffe000000");
+_Static_assert(__DARWIN_ONLY_UNIX_CONFORMANCE == 1,
+               "macOS x86_64 is UNIX03-only; 0 renames every __DARWIN_ALIAS'd libc function");
+_Static_assert(__DARWIN_ONLY_64_BIT_INO_T == 0,
+               "macOS x86_64 is NOT 64-bit-ino_t-only; 1 would hide the $INODE64 variants");
+_Static_assert(TARGET_CPU_X86_64 == 1, "x86_64-apple-macos must set TARGET_CPU_X86_64");
+_Static_assert(TARGET_CPU_ARM64 == 0, "TARGET_CPU_ARM64 must be 0 on x86_64");
+#else
 _Static_assert(MACH_VM_MAX_ADDRESS == 0x00007ffffe000000ULL,
                "MACH_VM_MAX_ADDRESS must be macOS's 128 TiB value, not the embedded 64 GiB one "
                "-- objc4 sizes its isa masks against this");
-
-/* Selects the $UNIX2003 / $INODE64 symbol variants. Wrong here means every
- * __DARWIN_ALIAS'd libc symbol is renamed, and the failure appears as
- * undefined symbols in an unrelated library. */
 _Static_assert(__DARWIN_ONLY_UNIX_CONFORMANCE == 1,
                "macOS arm64 is UNIX03-only; 0 renames every __DARWIN_ALIAS'd libc function");
 _Static_assert(__DARWIN_ONLY_64_BIT_INO_T == 1,
                "macOS arm64 is 64-bit-ino_t-only; 0 selects the $INODE64 variants");
-
-/* The CPU and runtime halves of TargetConditionals.h, which pick struct layouts
- * in vendored headers rather than merely gating declarations. */
 _Static_assert(TARGET_CPU_ARM64 == 1, "we only build this sysroot for arm64");
 _Static_assert(TARGET_CPU_X86_64 == 0, "TARGET_CPU_X86_64 must be 0 on arm64");
+#endif
 _Static_assert(TARGET_RT_64_BIT == 1, "arm64 Darwin is LP64");
 _Static_assert(TARGET_RT_LITTLE_ENDIAN == 1, "arm64 Darwin is little-endian");
 _Static_assert(TARGET_RT_MAC_MACHO == 1, "the object format is Mach-O");

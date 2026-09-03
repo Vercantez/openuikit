@@ -48,15 +48,17 @@
 set -eu
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+# shellcheck disable=SC1091
+. "$ROOT/scripts/guest_arch.inc"
 SDK="${QUARTZ_SDK:-${OBJC4_SDK:-$ROOT/sdk}}"
 LIBCXX_INC="${LIBCXX_INC:-/usr/lib/llvm-18/include/c++/v1}"
 VENDOR="$ROOT/vendor/quartz"
 SRC="$ROOT/build/quartz-macho-src"
 OBJ="$ROOT/build/quartz-macho-obj"
 OUT="$ROOT/darwin/usr/lib"
-TARGET="${DARWIN_TARGET:-arm64-apple-macos11}"
+TARGET="$DARWIN_TARGET"
 
-CLANG="${DARWIN_CLANG:-clang}"
+CLANG="$DARWIN_CLANG"
 LD64="${LD64:-ld64.lld-18}"
 command -v "$LD64" >/dev/null 2>&1 || {
     if command -v ld64.lld >/dev/null 2>&1; then LD64=ld64.lld; else
@@ -146,7 +148,7 @@ echo "== linking $OUT/libquartz.dylib"
 # link line. libc++.1.dylib now re-exports /usr/lib/libc++abi.dylib, and without
 # the mapping ld64 says "unable to locate re-export with install name" even
 # though the file is right there next to it.
-$LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+$LD64 -dylib -arch "$LD64_ARCH" -platform_version macos 11.0 11.0 \
       -syslibroot "$ROOT/darwin" \
       -install_name /usr/lib/libquartz.dylib \
       -undefined dynamic_lookup \

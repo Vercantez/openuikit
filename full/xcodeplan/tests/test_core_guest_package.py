@@ -16,6 +16,15 @@ sys.path.insert(0, os.fspath(TOOL_DIR))
 
 import core_guest_package  # noqa: E402
 
+SCRIPTS = TOOL_DIR.parent / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+from guest_arch import guest_arch, macos15_target, swift_module_triple  # noqa: E402
+
+GUEST_ARCH = guest_arch()
+MACOS15_TARGET = macos15_target()
+SWIFT_MODULE_TRIPLE = swift_module_triple()
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -103,23 +112,23 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
             "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
             "frameworks/CoreLocation.framework/Modules/module.modulemap",
-            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json",
-            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface",
-            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc",
-            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface",
-            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
-            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            f"frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.abi.json",
+            f"frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.private.swiftinterface",
+            f"frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftdoc",
+            f"frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftinterface",
+            f"frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftmodule",
+            f"frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftsourceinfo",
             "frameworks/CoreLocation.framework/CoreLocation",
             "guest-root/darwin/System/Library/Frameworks/CoreLocation.framework/CoreLocation",
             "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.abi.json",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.private.swiftinterface",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftdoc",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftinterface",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftmodule",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftsourceinfo",
             "frameworks/AppKit.framework/Versions/C/AppKit",
             "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
             "host-tools/swift/host/plugins/libObservationMacros.so",
@@ -523,7 +532,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "classification": "open-uikit-core-guest-package",
             "executable_link_arguments": [
                 "-arch",
-                "arm64",
+                GUEST_ARCH,
                 "-syslibroot",
                 "sdk",
                 "-rpath",
@@ -637,7 +646,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             },
             "swift_compile_arguments": [
                 "-target",
-                "arm64-apple-macos15.0",
+                MACOS15_TARGET,
                 "-sdk",
                 "sdk",
                 "-F",
@@ -681,7 +690,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-Xcc",
                 "-Iinclude/zlib",
             ],
-            "target": {"triple": "arm64-apple-macos15.0"},
+            "target": {"triple": MACOS15_TARGET},
         }
         self.write_manifest(self.manifest)
 
@@ -847,17 +856,17 @@ class CoreGuestPackageTests(unittest.TestCase):
     def test_refuses_missing_or_unattested_versioned_appkit_framework(self) -> None:
         for relative in (
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.abi.json",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.abi.json",
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.private.swiftinterface",
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftdoc",
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftinterface",
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftmodule",
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftsourceinfo",
             "frameworks/AppKit.framework/Versions/C/AppKit",
             "guest-root/darwin/System/Library/Frameworks/"
             "AppKit.framework/Versions/C/AppKit",
@@ -992,7 +1001,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
             "frameworks/CoreLocation.framework/Modules/module.modulemap",
             "frameworks/CoreLocation.framework/Modules/"
-            "CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftmodule",
             "frameworks/CoreLocation.framework/CoreLocation",
             "guest-root/darwin/System/Library/Frameworks/"
             "CoreLocation.framework/CoreLocation",

@@ -10,9 +10,47 @@
 #
 # Output: ~/work/sdk/MacOSX.sdk
 set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/guest_arch.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_sysroot.inc"
 W=${W:-$HOME/work}
+SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
+OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
 SDK=$W/sdk/MacOSX.sdk
-rm -rf "$W/sdk"
+mkdir -p "$W"
+
+# Fill the work-dir inputs from the in-repo trees when the operator has not
+# already populated ~/work. Never overwrite a real checkout.
+[ -d "$W/machorun-sdk" ] || ln -sfn "$OPENUIKIT_ROOT/machorun/sdk" "$W/machorun-sdk"
+[ -d "$W/objc4-runtime" ] || ln -sfn "$OPENUIKIT_ROOT/machorun/vendor/objc4/runtime" "$W/objc4-runtime"
+[ -d "$W/objc4-priv" ] || {
+  if [ -d "$OPENUIKIT_ROOT/machorun/vendor/objc4-priv" ]; then
+    ln -sfn "$OPENUIKIT_ROOT/machorun/vendor/objc4-priv" "$W/objc4-priv"
+  fi
+}
+[ -d "$W/foundation" ] || ln -sfn "$SWIFTCORE_ROOT/sdk/foundation" "$W/foundation"
+[ -d "$W/libc" ] || ln -sfn "$SWIFTCORE_ROOT/sdk/libc" "$W/libc"
+
+# Input-keyed: reuse MacOSX.sdk when the overlay-darwin header stamp matches.
+# Mismatch (or a pre-existing tree with no stamp) → stage into a fresh
+# directory. Never rm -rf $W/sdk — that is how an operator-owned Apple SDK
+# or an older clean-room tree got silently replaced, and a refuse-overwrite
+# over the leftover is the stale artefact every gate missed.
+overlay_sysroot_begin "$W/sdk"
+if [ "${OVERLAY_SYSROOT_REUSE:-0}" = 1 ]; then
+  SDK=$OVERLAY_SYSROOT_DEST
+  echo "staged: $W/sdk/MacOSX.sdk (reused, overlay stamp MATCH)"
+  overlay_sysroot_copy_tbds "$W/sdk/MacOSX.sdk"
+  overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
+  overlay_sysroot_refuse_incomplete "$W/sdk/MacOSX.sdk" || exit 2
+  overlay_sysroot_refuse_empty_tbds "$W/sdk/MacOSX.sdk" || exit 2
+  find "$W/sdk/MacOSX.sdk" -name '*.h' | wc -l | sed 's/^/headers: /'
+  find "$W/sdk/MacOSX.sdk" -name '*.tbd' | wc -l | sed 's/^/tbds:    /'
+  exit 0
+fi
+SDK=$OVERLAY_SYSROOT_DEST
 mkdir -p "$SDK"
 
 # 1. machorun's SDK is the base: usr/include + usr/lib/*.tbd
@@ -38,7 +76,7 @@ fi
   cp -f "$W/machorun-sdk/local/TargetConditionals.h" "$SDK/usr/include/TargetConditionals.h"
 
 # 3b. Clean-room libc headers machorun's SDK does not carry because objc4 never
-#     reached them (setjmp.h, MacTypes.h). See sdk/libc/.
+#     reached them (setjmp.h). See sdk/libc/.
 #
 # THIS USED TO BE A BARE `cp -f` AND IT COST A DAY. The premise -- "machorun's
 # SDK does not carry these" -- is true when written and decays silently. It
@@ -53,7 +91,11 @@ fi
 # consumer instead of at the copy. So the copy now REFUSES rather than
 # overwrites: if machorun's SDK has grown a real version of one of these, that
 # is good news and the right response is to delete ours, not to bury it.
+#
+# 2026-09-03: MacTypes.h was that case (machorun 201 lines, ours 54). Deleted
+# from sdk/libc/; only setjmp.h remains here.
 for h in "$W/libc/"*.h; do
+  [ -e "$h" ] || continue
   b=${h##*/}
   if [ -e "$SDK/usr/include/$b" ]; then
     echo "stage_sdk: REFUSING to overwrite $SDK/usr/include/$b" >&2
@@ -66,11 +108,25 @@ for h in "$W/libc/"*.h; do
   cp "$h" "$SDK/usr/include/$b"
 done
 
-# 3c. libc++. A real macOS SDK ships Apple's libc++ at usr/include/c++/v1; the
+# 3c. POSIX overlay headers LibcOverlayShims.h needs (semaphore.h, sys/ioctl.h
+#     and the ioctl closure). Copied from the same apple-oss-distributions
+#     pins as machorun/sdk/SOURCES.tsv — not stand-ins. Refuse-overwrite lives
+#     in stage_overlay_posix.sh.
+bash "$SCRIPT_DIR/stage_overlay_posix.sh" "$SDK"
+
+# 3c2. Darwin overlay: Clang module Darwin + Apple math.h / MacTypes.h
+#     (Libm-2026 Intel / CarbonHeaders-18.1), or the phase-2 FE sysroot
+#     when scratch/sysroot_fe4-x86_64 is present. Refuse-overwrite for
+#     new files; replace only the known clean-room stand-ins in this
+#     staged tree. Never writes machorun/sdk/.
+bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$SDK"
+
+# 3d. libc++. A real macOS SDK ships Apple's libc++ at usr/include/c++/v1; the
 #     stdlib's C++ half needs <new>, <atomic>, <type_traits>, ... machorun's
 #     SDK_SURVEY §2.5 measured stock LLVM 18 libc++ as a drop-in for Apple's
 #     (objc4 scored the same 41/44 and produced a byte-identical binary), so we
 #     use Ubuntu's libc++-18 headers rather than fabricating 734 of our own.
+#     (Numbering: overlay POSIX headers are 3c; this is 3d.)
 mkdir -p "$SDK/usr/include/c++"
 cp -a /usr/lib/llvm-18/include/c++/v1 "$SDK/usr/include/c++/v1"
 
@@ -111,7 +167,7 @@ mkdir -p "$SDK/usr/share"
 # configure_sdk_darwin hard-requires SDKSettings.plist to exist before it will
 # accept a path; the JSON is what our patched version actually reads (Linux has
 # no `defaults`).
-cat > "$SDK/SDKSettings.plist" <<'EOF'
+cat > "$SDK/SDKSettings.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -122,7 +178,7 @@ cat > "$SDK/SDKSettings.plist" <<'EOF'
   <key>MaximumDeploymentTarget</key><string>15.0.99</string>
   <key>SupportedTargets</key>
   <dict><key>macosx</key><dict>
-    <key>Archs</key><array><string>arm64</string></array>
+    <key>Archs</key><array><string>${SWIFTCORE_DARWIN_ARCH}</string></array>
     <key>LLVMTargetTripleSys</key><string>macos</string>
     <key>LLVMTargetTripleVendor</key><string>apple</string>
   </dict></dict>
@@ -136,6 +192,7 @@ cat > "$SDK/SDKSettings.json" <<'EOF'
   "CanonicalName": "macosx15.0" }
 EOF
 
-echo "staged: $SDK"
-find "$SDK" -name '*.h' | wc -l | sed 's/^/headers: /'
-find "$SDK" -name '*.tbd' | wc -l | sed 's/^/tbds:    /'
+echo "staged: $W/sdk/MacOSX.sdk"
+overlay_sysroot_finish "$W/sdk" "$SDK" || exit 2
+find "$W/sdk/MacOSX.sdk" -name '*.h' | wc -l | sed 's/^/headers: /'
+find "$W/sdk/MacOSX.sdk" -name '*.tbd' | wc -l | sed 's/^/tbds:    /'

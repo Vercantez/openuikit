@@ -176,9 +176,9 @@ static uint64_t select_slice(mr_image *im)
 
     if (magic == MH_MAGIC_64) return 0;
     if (magic == MH_CIGAM_64)
-        mr_die("%s: big-endian Mach-O (magic cffaedfe); only little-endian arm64 is supported", im->path);
+        mr_die("%s: big-endian Mach-O (magic cffaedfe); only little-endian 64-bit is supported", im->path);
     if (magic == MH_MAGIC_32 || magic == 0xcefaedfeu)
-        mr_die("%s: 32-bit Mach-O; only 64-bit arm64 is supported", im->path);
+        mr_die("%s: 32-bit Mach-O; only 64-bit is supported", im->path);
 
     if (magic == FAT_CIGAM || magic == FAT_CIGAM_64 || magic == FAT_MAGIC || magic == FAT_MAGIC_64) {
         /* fat headers are always big-endian on disk. FAT_CIGAM is what a
@@ -202,16 +202,16 @@ static uint64_t select_slice(mr_image *im)
                 off = be32(a->offset); size = be32(a->size);
                 p += sizeof(*a);
             }
-            if (ct != CPU_TYPE_ARM64) continue;
-            if ((cs & ~CPU_SUBTYPE_MASK) == CPU_SUBTYPE_ARM64E) continue;
+            if (ct != MR_HOST_CPU_TYPE) continue;
+            if (ct == CPU_TYPE_ARM64 && (cs & ~CPU_SUBTYPE_MASK) == CPU_SUBTYPE_ARM64E) continue;
             if (off + size > im->raw_len)
                 mr_die("%s: fat slice %u runs past the end of the file", im->path, i);
-            mr_log("%s: fat binary, taking arm64 slice at file offset 0x%llx",
-                   im->path, (unsigned long long)off);
+            mr_log("%s: fat binary, taking %s slice at file offset 0x%llx",
+                   im->path, MR_HOST_CPU_NAME, (unsigned long long)off);
             return off;
         }
-        mr_die("%s: fat binary with %u slices but no arm64 (CPU_TYPE_ARM64, non-arm64e) slice",
-               im->path, n);
+        mr_die("%s: fat binary with %u slices but no %s (CPU type 0x%x) slice",
+               im->path, n, MR_HOST_CPU_NAME, MR_HOST_CPU_TYPE);
     }
     mr_die("%s: not a Mach-O -- magic is 0x%08x", im->path, magic);
 }
@@ -288,18 +288,28 @@ static void parse_load_commands(mr_image *im)
             break;
         }
         case LC_UNIXTHREAD: {
-            /* flavor ARM_THREAD_STATE64 = 6; state is x[29], fp, lr, sp, pc, cpsr */
+            /* arm64: flavor 6, state is x[29], fp, lr, sp, pc, cpsr; pc at uint64 index 32.
+             * x86_64: flavor 4, state is rax..gs (21 uint64s); rip at index 16. */
             const uint32_t *w = (const uint32_t *)(c + 1);
             uint32_t flavor = w[0], count = w[1];
             const uint64_t *st = (const uint64_t *)(w + 2);
-            if (flavor != 6)
+            if (flavor == ARM_THREAD_STATE64) {
+                if (count < 34)
+                    mr_die("%s: ARM_THREAD_STATE64 count %u is too small", im->path, count);
+                im->has_unixthread = 1;
+                im->unixthread_pc = st[32];   /* x0..x28, fp, lr, sp, pc */
+            } else if (flavor == x86_THREAD_STATE64) {
+                /* count is uint32s (42) or uint64s (21); either is enough for rip. */
+                if (count < 21)
+                    mr_die("%s: x86_THREAD_STATE64 count %u is too small", im->path, count);
+                im->has_unixthread = 1;
+                im->unixthread_pc = st[16];   /* rax..r15, rip */
+            } else {
                 mr_unimplemented("LC_UNIXTHREAD flavor",
-                                 "%s: thread state flavor %u, only ARM_THREAD_STATE64 (6) is handled",
+                                 "%s: thread state flavor %u, only ARM_THREAD_STATE64 (6) "
+                                 "and x86_THREAD_STATE64 (4) are handled",
                                  im->path, flavor);
-            if (count < 34)
-                mr_die("%s: ARM_THREAD_STATE64 count %u is too small", im->path, count);
-            im->has_unixthread = 1;
-            im->unixthread_pc = st[32];   /* x0..x28, fp, lr, sp, pc */
+            }
             break;
         }
         case LC_DYLD_CHAINED_FIXUPS: {
@@ -432,8 +442,10 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
     im->slice_off = select_slice(im);
     im->mh = (const struct mach_header_64 *)mr_file_at(im, 0, sizeof(struct mach_header_64), "mach header");
 
-    if (im->mh->cputype != CPU_TYPE_ARM64)
-        mr_die("%s: cputype 0x%x is not CPU_TYPE_ARM64 (0x%x)", path, im->mh->cputype, CPU_TYPE_ARM64);
+    if (im->mh->cputype != MR_HOST_CPU_TYPE)
+        mr_die("%s: cputype 0x%x is not this host's %s (CPU type 0x%x). "
+               "machorun does not emulate; rebuild the guest for %s.",
+               path, im->mh->cputype, MR_HOST_CPU_NAME, MR_HOST_CPU_TYPE, MR_HOST_CPU_NAME);
     if ((im->mh->cpusubtype & ~CPU_SUBTYPE_MASK) == CPU_SUBTYPE_ARM64E)
         mr_unimplemented("arm64e",
                          "%s: cpusubtype 2 means pointer authentication and chained pointer "

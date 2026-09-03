@@ -69,8 +69,13 @@ void mr_dispatch_once_f(long *pred, void *ctx, void (*fn)(void *))
         fn(ctx);
         __atomic_store_n(pred, ~0l, __ATOMIC_RELEASE);
     } else {
-        while (__atomic_load_n(pred, __ATOMIC_ACQUIRE) != ~0l)
+        while (__atomic_load_n(pred, __ATOMIC_ACQUIRE) != ~0l) {
+#if defined(__aarch64__)
             __asm__ __volatile__("yield");
+#elif defined(__x86_64__)
+            __asm__ __volatile__("pause");
+#endif
+        }
     }
 }
 

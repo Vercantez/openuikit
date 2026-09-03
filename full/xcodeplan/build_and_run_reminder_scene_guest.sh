@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # Build and run the unchanged Reminder AppDelegate + SceneDelegate as a real
-# arm64 Mach-O guest. The outer (macOS) half generates an attested build input
-# and mounts every subject read-only. The inner (Linux/arm64) half reuses the
-# exact modules and guest root produced by full/scripts/build_full.sh.
+# Mach-O guest for the host triple (full/scripts/guest_arch.inc). The outer
+# half generates an attested build input and mounts every subject read-only.
+# The inner half reuses the modules and guest root from full/scripts/build_full.sh.
+# x86_64 writes beside the arm64 tree (build/full-x86_64/scene-guest).
 set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 W=$(cd -- "$SCRIPT_DIR/../.." && pwd)
-SCENE_OUT="$W/build/full/scene-guest"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/../scripts/guest_arch.inc"
+SCENE_OUT="$W/build/full${FULL_OUT_SUFFIX}/scene-guest"
 
 die() {
     echo "reminder-scene-guest: $*" >&2
@@ -17,10 +20,11 @@ die() {
 prepare() {
     [ "$#" -eq 2 ] || die "usage: $0 INVENTORY_JSON REMINDER_SOURCE_ROOT"
     command -v python3 >/dev/null || die "python3 is required on the host"
-    if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    # Arm64 guests cannot execute on this x86 VM (CURSOR_ENV_CANNOT_EXECUTE_ARM64).
+    # x86_64 guests on an x86_64 host are the phase-2 path: do not refuse them.
+    if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
         bash "$W/.cursor/refuse-arm64-execution.sh" || exit $?
     fi
-    command -v docker >/dev/null || die "docker is required on the host"
 
     local inventory source_root uikit_checkout machorun_checkout turns
     inventory=$(realpath "$1")
@@ -98,7 +102,28 @@ PY
             >prepared-inputs.sha256
     )
 
-    docker run --rm --platform linux/arm64 \
+    case "$ARCH" in
+        x86_64) DOCKER_PLATFORM=linux/amd64 ;;
+        *)      DOCKER_PLATFORM=linux/arm64 ;;
+    esac
+    # Native host with the pinned toolchain: skip docker. The inner half
+    # already follows $TARGET / suffixed build/full. This holds for the arm64
+    # EC2 authority (no swift-macho-spike:noble image there) exactly as for the
+    # x86_64 box; docker remains the fallback when the toolchain is absent.
+    case "$(uname -m)" in
+        x86_64)        host_arch=x86_64 ;;
+        aarch64|arm64) host_arch=arm64 ;;
+        *)             host_arch=$(uname -m) ;;
+    esac
+    if [ "$ARCH" = "$host_arch" ] \
+        && command -v swiftc >/dev/null && command -v ld64.lld-18 >/dev/null; then
+        UIKIT="$uikit_checkout" MACHORUN="$machorun_checkout" \
+            OPENUIKIT_HOST_TURNS="$turns" \
+            bash "$SCRIPT_DIR/build_and_run_reminder_scene_guest.sh" --inside "$source_root"
+        return
+    fi
+    command -v docker >/dev/null || die "docker is required on the host"
+    docker run --rm --platform "$DOCKER_PLATFORM" \
         -e OPENUIKIT_HOST_TURNS="$turns" \
         -v "$W:/w" \
         -v "$uikit_checkout:/uikit:ro" \
@@ -120,12 +145,13 @@ build_inside() {
 
     bash "$W/full/scripts/build_full.sh"
 
-    local full="$W/build/full"
-    local sys="$W/scratch/sysroot_fe4"
-    local rootdir="$W/scratch/mrroot_full"
+    local full="$W/build/full${FULL_OUT_SUFFIX}"
+    local sys="$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}"
+    local rootdir="$W/scratch/mrroot_full${FULL_OUT_SUFFIX}"
     local module turns expected_subject actual_subject
+    local uikit=${UIKIT:-/uikit}
     [ -s "$full/uihelpers-subject.sha256" ] || die "build_full success marker is missing"
-    expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" /uikit)
+    expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$uikit")
     actual_subject=$(tr -d '\n' <"$full/uihelpers-subject.sha256")
     [ "$expected_subject" = "$actual_subject" ] || die "build_full subject marker does not match mounted sources"
     module=$(tr -d '\n' <"$SCENE_OUT/module-name.txt")
@@ -147,28 +173,28 @@ build_inside() {
     local mc="$SCENE_OUT/module-cache"
     mkdir -p "$mc"
     local -a swiftc_flags c_flags fe_flags link_flags
-    swiftc_flags=(swiftc -target arm64-apple-macos15.0 -sdk "$sys"
+    swiftc_flags=(swiftc -target "$TARGET" -sdk "$sys"
         -module-cache-path "$mc" -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
     c_flags=(-Xcc -I"$full/inc/CPortableIO" -Xcc -I"$full/inc/CSTBTrueType"
-        -Xcc -I"$W/full/hostclock/include" -Xcc -I"/uikit/Sources/CQuartz/include")
+        -Xcc -I"$W/full/hostclock/include" -Xcc -I"$uikit/Sources/CQuartz/include")
     fe_flags=(-I "$full/foundation/essentials"
         -I "$full/foundation/collections" -I "$full/foundation/os"
         -Xcc -fmodule-map-file="$W/scratch/swift-foundation/Sources/_FoundationCShims/include/module.modulemap"
         -Xcc -I"$W/scratch/swift-foundation/Sources/_FoundationCShims/include")
-    link_flags=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
+    link_flags=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
         -syslibroot "$sys" -rpath /usr/lib/swift)
 
     # PortableUIKitApplicationHost now enforces the same relocatable resource
     # contract as complete application bundles. Keep this older 2/22 proof
     # honest by staging its semantic data and fonts beside the standalone
     # executable; Bundle.main resolves to SCENE_OUT for a non-bundled image.
-    if find /uikit/Sources/OpenUIKit/Resources -type l -print -quit | grep -q .; then
+    if find "$uikit/Sources/OpenUIKit/Resources" -type l -print -quit | grep -q .; then
         die "OpenUIKit runtime resources contain a symlink"
     fi
     mkdir -p "$SCENE_OUT/OpenUIKit/fonts"
-    cp -R "/uikit/Sources/OpenUIKit/Resources/." "$SCENE_OUT/OpenUIKit/"
+    cp -R "$uikit/Sources/OpenUIKit/Resources/." "$SCENE_OUT/OpenUIKit/"
     install -m 0644 /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
         "$SCENE_OUT/OpenUIKit/fonts/DejaVuSans.ttf"
     install -m 0644 /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf \
@@ -179,8 +205,35 @@ build_inside() {
             >open-uikit-runtime-resources.sha256
     )
 
+    # The host driver depends on PortableUIKitLiveTransport (646a9285), whose
+    # C half is the COpenUIKitLiveTransport clang module: same module map,
+    # sources and flags as build_portable_application_guest.sh.
+    local live_transport_root="$W/full/live-transport"
+    local live_transport_include="$live_transport_root/include"
+    [ -f "$live_transport_include/module.modulemap" ] \
+        || die "live transport Clang module map is missing: $live_transport_include/module.modulemap"
+    local live_transport_build="$SCENE_OUT/live-transport-build"
+    rm -rf "$live_transport_build" && mkdir -p "$live_transport_build"
+    local -a live_transport_objects=()
+    local live_transport_index=0 live_transport_source
+    for live_transport_source in \
+        "$live_transport_root/OpenUIKitLiveTransportCommon.c" \
+        "$live_transport_root/OpenUIKitLiveTransportGuest.c"; do
+        echo "== compile platform live transport [$live_transport_index]"
+        clang-18 -target "$TARGET" -isysroot "$sys" -std=c11 -O2 \
+            -Wall -Wextra -Werror -fvisibility=hidden -fno-common \
+            -I "$live_transport_include" -I "$live_transport_root" \
+            -c "$live_transport_source" -o "$live_transport_build/$live_transport_index.o" \
+            || die "live transport C compiler failed on $live_transport_source"
+        live_transport_objects+=("$live_transport_build/$live_transport_index.o")
+        live_transport_index=$((live_transport_index + 1))
+    done
+    [ "${#live_transport_objects[@]}" -eq 2 ] || die "live transport object count drifted"
+
     echo "== unchanged Reminder scene slice (2 app sources; generated entry point; FE-backed production host loop)"
     "${swiftc_flags[@]}" "${c_flags[@]}" "${fe_flags[@]}" \
+        -Xcc -fmodule-map-file="$live_transport_include/module.modulemap" \
+        -Xcc -I"$live_transport_include" \
         -I "$full" -I "$full/uikitinc" -I "$full/appinc" \
         -default-isolation MainActor -module-name "$module" \
         -emit-object -o "$SCENE_OUT/reminder-scene-guest.o" \
@@ -188,6 +241,7 @@ build_inside() {
         "$SCENE_OUT/GeneratedSceneBootstrap.swift" \
         "$W/full/xcodeplan/ReminderSceneRuntimeSupport.swift" \
         "$W/full/xcodeplan/PortableUIKitApplicationHost.swift" \
+        "$W/full/xcodeplan/PortableUIKitLiveTransport.swift" \
         "$W/full/driver/RunLoop.swift"
 
     "${link_flags[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
@@ -197,6 +251,7 @@ build_inside() {
         "$rootdir/darwin/usr/lib/libSystem.B.dylib" \
         -o "$SCENE_OUT/reminder-scene-guest" \
         "$SCENE_OUT/reminder-scene-guest.o" \
+        "${live_transport_objects[@]}" \
         "$full/uikitshim.o" "$full/foundation.o" "$full/openuikit.o" \
         "$full/opencoregraphics.o" "$full/cportableio.o" "$full/cstbtruetype.o" \
         "$full/hostclock.o" "$full/swiftcorepatch.o" \
@@ -211,8 +266,32 @@ build_inside() {
         "$full/foundation/essentials/uuid_compat.o" \
         "$full/foundation/essentials/fm_unimplemented.o"
 
+    # The libSystem.B umbrella (concpatch) imports the _glibc_openui_dispatch_host_v1_*
+    # host bridge; build it with the shared script and preload it, exactly as
+    # the Focus widget gate does (Gate B, main fa4d8647).
+    echo "== build Linux Dispatch host bridge"
+    local host_bridge_dir="$SCENE_OUT/host" dispatch_host
+    dispatch_host="$SCENE_OUT/host/libOpenDispatchHost.so"
+    mkdir -p "$SCENE_OUT/host-audit"
+    local -a host_bridge_args=(
+        --repo "$W"
+        --host-dir "$host_bridge_dir"
+        --work-dir "$SCENE_OUT/host-work"
+        --attestation-dir "$SCENE_OUT/host-audit"
+        --refuse-prefix 'reminder_scene_guest: '
+    )
+    case "$(uname -m)" in
+        aarch64|arm64) host_bridge_args+=(--host-abi ELF64-AArch64) ;;
+        *)             host_bridge_args+=(--skip-runtime-pin --host-abi "ELF64-$(uname -m)") ;;
+    esac
+    bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
+    [ -f "$dispatch_host" ] && [ ! -L "$dispatch_host" ] \
+        || die "Linux Dispatch host helper is missing: $dispatch_host"
+
     (
         cd "$SCENE_OUT"
+        LD_PRELOAD="$dispatch_host${LD_PRELOAD:+:$LD_PRELOAD}" \
+        LD_LIBRARY_PATH="$host_bridge_dir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
         MACHORUN_ROOT="$rootdir" OPENUIKIT_HOST_TURNS="$turns" \
             "$rootdir/machorun" ./reminder-scene-guest
     ) | tee "$SCENE_OUT/runtime.log"

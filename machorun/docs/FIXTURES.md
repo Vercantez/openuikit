@@ -1121,6 +1121,47 @@ over the full reserved block, and thread-exit destructors for it.
 Measured 2026-08-26: stdout byte-identical (318 bytes), stderr empty on both
 sides, exit 0 / 0, in both link orders.
 
+### `statfs` — Darwin 2168 vs Linux 120, and `f_mntonname` is the field Linux lacks
+`tests/src/statfs.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`**
+
+The agreeing surface is ABI: `sizeof(struct statfs)` is 2168, `f_mntonname`
+sits at offset 88, `f_mntfromname` at 1112, and the `MNT_*` flag values are
+the ones in `sdk/usr/include/sys/mount.h`. A missing path is `ENOENT`. Path
+and descriptor forms of the same file agree.
+
+The divergent hazard is that Linux's `struct statfs` is 120 bytes and has
+**no** `f_mntonname` at all — `FileManager.attributesOfFileSystem` reads
+that field and hands it to `quotactl`. machorun fills it from
+`/proc/self/mounts` by longest-prefix match. The fixture does not print
+the mount-point text (it differs across hosts). The `"/"` line grades
+that `f_mntonname` is an absolute prefix of `"/"`, which holds on both
+oracles. A `/tmp` path is a property of the host's mount topology — on
+macOS `/tmp` → `/private/tmp` lives on `/System/Volumes/Data`, so the
+name is never a prefix of the queried path — and is graded instead by
+self-consistency: `statfs(f_mntonname)` returns the same name and fsid.
+
+No Mach-O and no `tests/expected/statfs.*` are committed: those can only
+be recorded on Darwin. Flip the manifest cell to `run` after
+`tests/build_fixtures.sh statfs` and `harness/run_macos.sh --record statfs`.
+
+### `copyfile` — Darwin-only, and the xattr is the tell
+`tests/src/copyfile.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`**
+
+The agreeing surface is the transcribed `COPYFILE_*` flag values from
+copyfile-240, `COPYFILE_ALL` of a regular file, `COPYFILE_EXCL` →
+`EEXIST`, `fcopyfile(-1,-1)` → `EINVAL`, and `fcopyfile` from a pipe →
+`ENOTSUP`.
+
+The divergent hazard is a source file that carries an extended attribute.
+xattr translation already exists (`user.` prefix, flag rotation); a
+`copyfile` that only did `read`/`write` would pass the data check and fail
+the xattr check. `COPYFILE_CLONE` is success-or-fallback (`FICLONE`, then
+a regular copy) and the fixture does not print whether a clone happened —
+that is a filesystem property, not an ABI one. Lives in `/tmp` because
+the repository bind-mount often has no xattrs (see `tests/src/xattr.c`).
+
+Same Darwin-baseline rule as `statfs`.
+
 ## What the harness guarantees
 
 `tests/expected/` is the oracle's output and nothing else may write it.

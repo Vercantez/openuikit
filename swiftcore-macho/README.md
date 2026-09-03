@@ -57,6 +57,19 @@ links no Foundation and no CoreFoundation, so the wall that killed the
 Linux-target experiment in `~/uikit/docs/OBJC_RUNTIME.md` does not apply to the
 Darwin target at all.
 
+## Result (2026-09-03) — x86_64 slice beside arm64
+
+Same recipe, `SWIFTCORE_DARWIN_ARCH=x86_64`, on an x86_64 Linux host.
+`artifacts/swift-macosx/x86_64/libswiftCore.dylib` is Mach-O 64-bit **x86_64**,
+10 123 624 bytes, install name `/usr/lib/swift/libswiftCore.dylib`, sha256
+`8de09dbae55b672287985812c64fe859029197aaf70458aa3097bbbdce4c39fb`. The arm64
+dylib is untouched (`dd01686e…12708cb`). Compile+link of a hello-world against
+`x86_64-apple-macos15.0` succeeds in-VM. Execution is a **positive probe** for
+a machorun loader that can run an x86_64 Mach-O on this host (operator path
+`/opt/openuikit/x86-verify/openuikit/machorun`); `CURSOR_ENV_CANNOT_EXECUTE_X86_SWIFT_GUEST`
+is printed only when that probe finds nothing. `_Concurrency` is still the
+§16 libdispatch wall. Recipe: `docs/X86_64.md` / `scripts/build_stdlib.sh`.
+
 Known-open, both on the loader side rather than ours:
 * machorun's TLS cannot register pthread-key destructors, so anything reaching
   `SwiftTLSContext` (classes, generics) aborts before `main`.

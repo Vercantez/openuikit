@@ -31,7 +31,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         pins = (ROOT / "scripts/vendor_pins.sh").read_text()
         self.assertIn(
             "EXPECTED_INREPO_UIKIT_TREE="
-            "bd3eef4d230903199edc6e8aa62538177b25785f",
+            "e737cdd02e89f8aa7446ee69a6464ac1c2108335",
             pins,
         )
         self.assertNotIn(
@@ -53,7 +53,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         ).strip()
         self.assertEqual(
             actual_tree,
-            "bd3eef4d230903199edc6e8aa62538177b25785f",
+            "e737cdd02e89f8aa7446ee69a6464ac1c2108335",
         )
         self.assertIn("efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e", text)
         self.assertIn("721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2", text)
@@ -85,32 +85,110 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("FocusWidgetResourceProof.exerciseUnchangedAssets()", harness)
         self.assertNotIn("OpenUIKitRuntime.imageSearchPaths", harness)
 
+    def test_gate_consumes_env_preparer_before_vendor_attestation(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn('PREPARE_TOOL=$W/scripts/env/prepare.py', text)
+        self.assertIn('LEDGER_TOOL=$W/scripts/env/ledger.py', text)
+        self.assertIn(
+            'python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W"',
+            text,
+        )
+        self.assertLess(
+            text.index('export FULL_OUT_SUFFIX'),
+            text.index('--gate focus-widget'),
+        )
+        self.assertIn('--gate focus-widget', text)
+        self.assertIn(
+            'python3 "$LEDGER_TOOL" --style focus-widget require-hash "$1" "$2" "$3"',
+            text,
+        )
+        self.assertLess(
+            text.index('--gate focus-widget'),
+            text.index('assert_vendor_tree "$W" uikit'),
+        )
+        self.assertIn("EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE", text)
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
+        self.assertIn(
+            "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+            text,
+        )
+        self.assertIn(
+            "721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2",
+            text,
+        )
+
     def test_foundation_hidden_and_mach_o_runtime_gates_exist(self) -> None:
         text = BUILD.read_text()
         self.assertIn("foundationessentials_import_guard.swift", text)
-        self.assertIn('SYS=$W/scratch/sysroot_fe4', text)
-        self.assertIn('-target arm64-apple-macos15.0', text)
+        self.assertIn('SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}', text)
+        self.assertIn('-target "$TARGET"', text)
         self.assertIn('"${FE_FLAGS[@]}"', text)
         self.assertIn("llvm-otool-18 -hv", text)
-        self.assertIn("MH_MAGIC_64[[:space:]]+ARM64", text)
+        self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('scripts/require_fresh_root.sh" "$MRROOT"', text)
         self.assertIn('"$MRROOT/machorun" ./focus_widget_guest', text)
         for forbidden in ("Foundation.framework", "SwiftUI.framework", "SwiftUICore.framework"):
             self.assertIn(forbidden.replace(".", r"\."), text)
 
+    def test_run_step_preloads_shared_dispatch_host_bridge(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn('bash "$W/full/dispatch/build_host_bridge.sh"', text)
+        self.assertIn("EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST", text)
+        preload = (
+            'LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}"'
+        )
+        self.assertIn(preload, text)
+        self.assertEqual(text.count(preload), 5)
+        self.assertEqual(text.count('"$MRROOT/machorun" ./focus_widget_guest'), 5)
+        self.assertIn(
+            'LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"',
+            text,
+        )
+        self.assertIn("host-libOpenDispatchHost.so", text)
+        helper = (ROOT / "full/dispatch/build_host_bridge.sh").read_text()
+        self.assertIn("OPEN_DISPATCH_HOST_OK", helper)
+        self.assertIn("openui_dispatch_host_v1_get_global_queue", helper)
+        self.assertIn("GLIBC_2.38", helper)
+        self.assertIn("libBlocksRuntime.so", helper)
+        builder = (
+            ROOT / "full/frameworks/build_core_guest_package.sh"
+        ).read_text()
+        self.assertIn('bash "$W/full/dispatch/build_host_bridge.sh"', builder)
+        self.assertIn("GLIBC_2.38", builder)
+
     def test_frameworks_are_real_dylibs_with_exact_identity_and_rpaths(self) -> None:
         text = BUILD.read_text()
         self.assertIn("-dylib -install_name @rpath/libOpenUIKit.dylib", text)
         self.assertIn("-dylib -install_name @rpath/libSwiftUI.dylib", text)
+        self.assertIn("-dylib -install_name @rpath/libSymbols.dylib", text)
         self.assertIn('"$PACKAGE/libOpenUIKit.dylib"', text)
         self.assertIn('"$PACKAGE/libSwiftUI.dylib"', text)
+        self.assertIn('"$PACKAGE/libSymbols.dylib"', text)
         self.assertIn('"libOpenUIKit LC_ID_DYLIB"', text)
         self.assertIn('"libSwiftUI LC_ID_DYLIB"', text)
+        self.assertIn('"libSymbols LC_ID_DYLIB"', text)
         self.assertIn('"guest LC_RPATH set"', text)
         self.assertIn("expected_openuikit_loads", text)
         self.assertIn("expected_swiftui_loads", text)
+        self.assertIn("expected_swiftui_inputs", text)
+        self.assertIn("expected_symbols_loads", text)
         self.assertIn("expected_guest_loads", text)
-        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=96", text)
+        swiftui_loads = text.split("expected_swiftui_loads=", 1)[1].split(
+            "expected_opencombine_loads=", 1
+        )[0]
+        self.assertIn("@rpath/libFoundationEssentials.dylib", swiftui_loads)
+        # FE's own Darwin/StringProcessing/Synchronization/errno loads stay on
+        # libFoundationEssentials, matching OpenUIKit's existing -lFoundationEssentials
+        # edge. The recursive runtime-closure manifest walks those at runtime.
+        self.assertNotIn("libswiftDarwin.dylib", swiftui_loads)
+        self.assertNotIn("libswift_StringProcessing.dylib", swiftui_loads)
+        self.assertNotIn("libswiftSynchronization.dylib", swiftui_loads)
+        self.assertNotIn("libswift_errno.dylib", swiftui_loads)
+        swiftui_inputs = text.split("expected_swiftui_inputs=", 1)[1].split(
+            "expected_opencombine_inputs=", 1
+        )[0]
+        self.assertIn('"$PACKAGE/libFoundationEssentials.dylib"', swiftui_inputs)
+        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=101", text)
         self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=12", text)
         self.assertIn('assert_exact_text "package top-level inventory"', text)
         self.assertIn('assert_exact_text "package directory inventory"', text)
@@ -134,7 +212,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
             self.assertNotIn('"${CINC[@]}"', compile_step)
         self.assertIn('-I "$PACKAGE/modules/FoundationEssentials"', text)
         self.assertNotIn('FE_FLAGS=(-I "$FE_OUT"', text)
-        link = text.split('echo "== link arm64 Mach-O against packaged dylibs', 1)[1]
+        link = text.split('echo "== link Mach-O against packaged dylibs', 1)[1]
         link = link.split("llvm-otool-18 -hv", 1)[0]
         self.assertIn('-L"$PACKAGE" -lSwiftUI -lOpenUIKit', link)
         self.assertNotIn('"$OUT/swiftui.o"', link)
@@ -144,6 +222,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("executable link map contains framework object", text)
         self.assertIn("expected_openuikit_inputs", text)
         self.assertIn("expected_swiftui_inputs", text)
+        self.assertIn("expected_symbols_inputs", text)
         self.assertIn("expected_guest_inputs", text)
         self.assertIn('assert_exact_text "guest linker inputs"', text)
 
@@ -163,6 +242,12 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn('"${SWIFTUI_SOURCES[@]}"', text)
         self.assertIn('unsupported SwiftUI source node', text)
         self.assertIn("[ \"$uikit/Sources/SwiftUI\", 'openuikit/Sources/SwiftUI' ]", helper)
+        self.assertIn('SYMBOLS_SOURCE_DIR=$UIKIT/Sources/Symbols', text)
+        self.assertIn('SYMBOLS_SOURCES=("$SYMBOLS_SOURCE_DIR"/*.swift)', text)
+        self.assertIn("EXPECTED_SYMBOLS_SWIFT_COUNT=1", text)
+        self.assertIn('"${SYMBOLS_SOURCES[@]}"', text)
+        self.assertIn('unsupported Symbols source node', text)
+        self.assertIn("[ \"$uikit/Sources/Symbols\", 'openuikit/Sources/Symbols' ]", helper)
 
     def test_observation_closes_over_sibling_combine_dylibs(self) -> None:
         text = BUILD.read_text()
@@ -170,6 +255,13 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         for dylib in ("libCombine.dylib", "libOpenCombine.dylib"):
             self.assertIn(dylib, text)
         self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine", text)
+        self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols", text)
+        self.assertIn(
+            "-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols "
+            "-lFoundationEssentials",
+            text,
+        )
+        self.assertIn("libSymbols Apple Symbols load count", text)
         self.assertIn("OPENCOMBINE_ROOT", text)
         self.assertIn("OpenCombine.o", helper)
         self.assertIn("COpenCombineHelpers.cpp", helper)
@@ -187,6 +279,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("framework-providers.tsv", text)
         self.assertIn('perl "$ATTEST" providers', text)
         self.assertIn('--opencoregraphics "$PACKAGE/libOpenCoreGraphics.dylib"', text)
+        self.assertIn('--foundationessentials "$PACKAGE/libFoundationEssentials.dylib"', text)
         self.assertIn("--demangle swift-demangle", text)
         self.assertIn("Universal, non-vacuous two-level provider gate", text)
         self.assertIn("_$sxSg7SwiftUI9_OpenViewA2bCRzlMc", text)
@@ -202,7 +295,13 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("missing-libOpenUIKit requester changed", text)
         self.assertIn("run_missing_observation_control combine libCombine.dylib", text)
         self.assertIn("run_missing_observation_control opencombine libOpenCombine.dylib", text)
+        self.assertIn("run_missing_observation_control symbols libSymbols.dylib", text)
         self.assertIn("missing-$missing_name requester changed", text)
+        # Sibling copy lists already include FoundationEssentials (OpenUIKit and
+        # the guest load it too). A missing-FE control would be required-by
+        # libOpenUIKit, not libSwiftUI, so this change does not add one.
+        missing = text.split("run_missing_observation_control combine", 1)[1]
+        self.assertGreaterEqual(missing.count("libFoundationEssentials.dylib"), 3)
 
     def test_cross_process_pixels_and_packaged_artifacts_are_bracketed(self) -> None:
         text = BUILD.read_text()
@@ -211,12 +310,14 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("separate guest processes emitted different proof logs", text)
         self.assertIn("printf 'libSwiftUI\\t%s\\n'", text)
         self.assertIn("printf 'libOpenUIKit\\t%s\\n'", text)
+        self.assertIn("printf 'libSymbols\\t%s\\n'", text)
         self.assertIn("printf 'SwiftUI-module\\t%s\\n'", text)
         self.assertIn("printf 'package-tree\\t%s\\n'", text)
         self.assertIn("printf 'FocusWidgetBundle.generated.swift\\t%s\\n'", text)
         self.assertIn("printf 'SwiftUI-package/per-run-tree\\t%s\\n'", text)
         self.assertIn("printf 'libSwiftUI.dylib\\t%s\\n'", text)
         self.assertIn("printf 'libOpenUIKit.dylib\\t%s\\n'", text)
+        self.assertIn("printf 'libSymbols.dylib\\t%s\\n'", text)
 
     def test_normalized_bundle_is_hash_pinned(self) -> None:
         text = BUILD.read_text()
@@ -430,7 +531,14 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
 
     def test_provider_gate_is_universal_and_rejects_reverse_ownership(self) -> None:
         helper = ATTEST.read_text()
-        for module in ("SwiftUI", "OpenUIKit", "OpenCoreGraphics", "Combine", "OpenCombine"):
+        for module in (
+            "SwiftUI",
+            "OpenUIKit",
+            "OpenCoreGraphics",
+            "FoundationEssentials",
+            "Combine",
+            "OpenCombine",
+        ):
             self.assertIn(module, helper)
         self.assertIn("no two-level bind", helper)
         self.assertIn("expected exactly", helper)
@@ -441,6 +549,11 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         self.assertIn("unclassified framework-bearing symbol", helper)
         self.assertIn("associated type descriptor", helper)
         self.assertIn("extension in", helper)
+        self.assertIn("protocol conformance descriptor", helper)
+        self.assertIn("protocol witness table", helper)
+        self.assertIn("owning_module_from_demangle", helper)
+        self.assertNotIn("conformance_protocol_module", helper)
+        self.assertNotIn("/^\\(extension in", helper)
         self.assertIn("^_OBJC_(?:CLASS|METACLASS)_\\$__TtC", helper)
         self.assertIn("^_OBJC_IVAR_\\$__TtC", helper)
         self.assertIn("for (1 .. $nested_count + 2)", helper)
@@ -459,6 +572,44 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
             result.stdout,
             "OBJC_CLASSIFIER_SELFTEST_OK positives=7 negatives=13\n",
         )
+
+    def test_conformance_descriptors_are_owned_by_the_protocol_module(self) -> None:
+        helper = ATTEST.read_text()
+        exact = (
+            "_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc"
+        )
+        self.assertIn(exact, helper)
+        self.assertIn(
+            "_$s16OpenCoreGraphics7CGFloatV7SwiftUIE16magnitudeSquaredSdvpMV",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvpMV",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvg",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials22AttributeDynamicLookupO7SwiftUIEyxqd__cluig",
+            helper,
+        )
+        self.assertIn("_$s16OpenCoreGraphics7CGFloatVMn", helper)
+        self.assertIn("_$s20FoundationEssentials15AttributeScopesOMn", helper)
+        self.assertIn("conformance-classifier-selftest", helper)
+        self.assertIn("owning_module_from_demangle", helper)
+        result = subprocess.run(
+            ["perl", str(ATTEST), "conformance-classifier-selftest"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            result.stdout,
+            "CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=7 negatives=2\n",
+        )
+        self.assertEqual(result.stderr, "")
 
     def test_adversarial_resume_matrix_covers_reviewed_tamper_classes(self) -> None:
         text = ADVERSARIAL.read_text()
@@ -484,6 +635,60 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         helper = ATTEST.read_text()
         self.assertIn("require_regular_beneath_no_links", helper)
         self.assertIn("path component is a symlink", helper)
+
+    def test_x86_suffix_env_prepare_resolves_only_suffixed_trees(self) -> None:
+        import re
+        import shutil
+
+        text = BUILD.read_text()
+        self.assertIn("export FULL_OUT_SUFFIX", text)
+        self.assertIn(
+            'OPENCOMBINE_RESULT=$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/RESULT.txt',
+            text,
+        )
+        self.assertIn("export-x86_64/RESULT.txt", ATTEST.read_text())
+        unsuffixed = re.compile(
+            r"/scratch/(mrroot_full|mrroot_fe|sysroot_fe4|mrroot)(?!-x86_64)(?=/|\s|$)"
+        )
+        with tempfile.TemporaryDirectory(prefix="widget-x86-suffix.") as tmp:
+            fixture = Path(tmp)
+            (fixture / "env").mkdir()
+            shutil.copy2(ROOT / "env/contract.json", fixture / "env/contract.json")
+            for trap in (
+                "scratch/sysroot_fe4/usr/include",
+                "scratch/mrroot/darwin/usr/lib/swift",
+                "scratch/mrroot_full/darwin/usr/lib",
+                "scratch/mrroot_fe/darwin/usr/lib/swift",
+            ):
+                path = fixture / trap
+                path.mkdir(parents=True)
+                (path / ".trap").write_text("arm64-only\n", encoding="utf-8")
+            proc = subprocess.run(
+                [
+                    "python3",
+                    str(ROOT / "scripts/env/prepare.py"),
+                    "--root",
+                    str(fixture),
+                    "--gate",
+                    "focus-widget",
+                    "--verify-only",
+                    "--no-fetch",
+                ],
+                env={**os.environ, "FULL_OUT_SUFFIX": "-x86_64"},
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+            for line in proc.stdout.splitlines():
+                if line.startswith("ENV_PREPARE_"):
+                    self.assertIsNone(unsuffixed.search(line), line)
+            self.assertRegex(proc.stdout, r"id=sysroot_fe4 .*sysroot_fe4-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot_full .*mrroot_full-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot-base-runtime .*mrroot-x86_64")
+            self.assertNotRegex(
+                proc.stdout,
+                r"id=sysroot_fe4 .*scratch/sysroot_fe4(?:/|\s)",
+            )
 
 
 if __name__ == "__main__":

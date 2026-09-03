@@ -65,15 +65,16 @@ diff -ru a/runtime/isa.h b/runtime/isa.h
 diff -ru a/runtime/objc-object.h b/runtime/objc-object.h
 --- a/runtime/objc-object.h	2026-08-25 22:19:53.245433152 -0500
 +++ b/runtime/objc-object.h	2026-08-25 22:19:53.246079944 -0500
-@@ -180,7 +180,10 @@
+@@ -180,7 +180,11 @@
  #endif
  
      // Match the conditional in isa.h.
 -#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR
-+    // machorun: OBJC_MACHORUN selects the same 52-bit shiftcls_and_sig
-+    // layout as arm64e/simulator, so this must match. Apple's own comment
-+    // above is the instruction; this is obeying it.
-+#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR || OBJC_MACHORUN
++    // machorun: on arm64, OBJC_MACHORUN selects the 52-bit shiftcls_and_sig
++    // layout (same as arm64e/simulator). x86_64 keeps Apple's own 44-bit
++    // shiftcls field in isa.h; this #if must match that, or setClass
++    // assigns a field that does not exist.
++#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR || (OBJC_MACHORUN && __arm64__)
  #   if ISA_SIGNING_SIGN_MODE == ISA_SIGNING_SIGN_NONE
      // No signing, just use the raw pointer.
      uintptr_t signedCls = (uintptr_t)newCls;

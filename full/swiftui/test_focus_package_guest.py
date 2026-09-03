@@ -370,7 +370,12 @@ class FocusPackageGuestProofTests(unittest.TestCase):
             "UIKit", "SnapKit", "DesignSystem", "Widget", "Onboarding", "Licenses"
         ):
             self.assertIn(f"lib{name}.dylib", text)
-        self.assertIn("MH_MAGIC_64[[:space:]]+ARM64", text)
+        self.assertIn("-lSymbols", text)
+        # Package copies the onboarding SwiftUI dylib; it does not relink it.
+        # Every SwiftUI-consuming link already passes -lFoundationEssentials.
+        self.assertNotIn("-install_name @rpath/libSwiftUI.dylib", text)
+        self.assertGreaterEqual(text.count("-lFoundationEssentials"), 6)
+        self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('PROBE_APP=$OUT/FocusPackageProbe.app', text)
         self.assertIn('"$PROBE_APP/Contents/MacOS/FocusPackageProbe"', text)
         self.assertIn("FocusLicensesGuest.app/Contents/MacOS", text)

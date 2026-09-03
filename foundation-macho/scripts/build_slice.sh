@@ -1,5 +1,6 @@
 #!/bin/bash
-# Build the minimal Foundation slice as a Darwin Mach-O arm64 dylib, on Linux.
+# Build the minimal Foundation slice as a Darwin Mach-O dylib, on Linux.
+# The TRIPLE follows the host (foundation-macho/scripts/guest_arch.inc).
 #
 #   scripts/build_slice.sh
 #
@@ -10,9 +11,10 @@
 set -euo pipefail
 W=${W:-/work}
 R=${R:-/repo}
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 SDK=$W/sdk/MacOSX.sdk
 LLD=${LLD_BIN:-/usr/lib/llvm-18/bin}
-TRIPLE=arm64-apple-macos13.0
 
 mkdir -p "$W/obj" "$W/root/darwin/usr/lib"
 

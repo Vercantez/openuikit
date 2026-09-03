@@ -2,9 +2,10 @@
  *
  * Nothing about ELF TLS carries over. Each _Thread_local variable has a
  * 24-byte descriptor in __DATA,__thread_vars; generated code loads word 0 and
- * calls it with the descriptor in x0, expecting this thread's address for that
- * variable back in x0 -- with every other register preserved, which is why the
- * entry point is hand-written assembly in tlv_asm.S.
+ * calls it with the descriptor in the first argument (x0 / rdi), expecting this
+ * thread's address for that variable back in the return register -- with every
+ * other register preserved, which is why the entry point is hand-written
+ * assembly in tlv_asm.S.
  *
  * The loader patches thunk and key directly rather than implementing dyld's
  * self-installing __tlv_bootstrap. offset comes from the file untouched.

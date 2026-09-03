@@ -21,13 +21,19 @@
 # the exact tracked compiler inputs.
 set -euo pipefail
 W=${W:-/w}
+W=$(cd "$W" && pwd -P)
 SC=${SC:-$W/scratch/swift-collections}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
 OUT=${OUT:-$W/scratch/fe4_collections}
+MC=${MC:-$W/scratch/modcache_fe4}
 TARGET=${TARGET:-arm64-apple-macos15.0}
 PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
 [ -f "$PINNED_INPUTS_TOOL" ] || { echo "no pinned-input tool $PINNED_INPUTS_TOOL" >&2; exit 1; }
-mkdir -p "$OUT"
+mkdir -p "$OUT" "$MC"
+[ -d "$SYS" ] && SYS=$(realpath -P "$SYS")
+[ -d "$SC" ] && SC=$(realpath -P "$SC")
+OUT=$(realpath -P "$OUT")
+MC=$(realpath -P "$MC" 2>/dev/null || readlink -f "$MC")
 
 build_one() {   # build_one <module-name> <manifest-group> <expected-count>
     local mod=$1 group=$2 expected=$3
@@ -44,7 +50,7 @@ build_one() {   # build_one <module-name> <manifest-group> <expected-count>
     }
     echo "== $mod: ${#srcs[@]} files"
     swiftc -target "$TARGET" -sdk "$SYS" \
-        -module-cache-path "$W/scratch/modcache_fe4" \
+        -module-cache-path "$MC" \
         -module-name "$mod" -wmo -parse-as-library \
         -runtime-compatibility-version none \
         -I "$OUT" \

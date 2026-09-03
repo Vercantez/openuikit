@@ -992,7 +992,8 @@ never uses `fts_children` or `fts_compar`; both are nevertheless implemented
 and differentially graded so the platform surface is reusable beyond that one
 caller.
 
-### `copyfile` / `removefile` — NOT IMPLEMENTED; **measured and handed over**
+<a id="copyfile-removefile"></a>
+### `copyfile` / `removefile` — `copyfile`/`fcopyfile` **DONE 2026-09-02**; `removefile` still unimplemented
 
 Darwin-only APIs with no glibc counterpart. Measured 2026-08-27 against Apple's
 headers and against what FoundationEssentials actually calls, because the
@@ -1000,21 +1001,32 @@ header surface and the used surface are very different sizes.
 
 **`copyfile.h`**: 143 lines, **28 `COPYFILE_*` flags**, **18
 `COPYFILE_STATE_*` keys**, an opaque `copyfile_state_t`, and a callback
-protocol (`copyfile_callback_t`).
-**What FE uses**: `copyfile` and `fcopyfile` only, with `state` always `nil`,
-no callbacks, and **7 flags** — `COPYFILE_DATA`, `COPYFILE_METADATA`,
-`COPYFILE_ALL`, `COPYFILE_EXCL`, `COPYFILE_NOFOLLOW`, `COPYFILE_CLONE`,
-`COPYFILE_RUN_IN_PLACE`.
+protocol (`copyfile_callback_t`). The header is now staged from
+`copyfile-240` (`sdk/SOURCES.tsv`). Every `COPYFILE_*` value in
+`darwin/src/posix.c` is transcribed from that header, never inferred.
 
-**But the used subset has prerequisites that are themselves missing.**
-`COPYFILE_METADATA` means times, mode, owner, BSD file flags *and* extended
-attributes. Checked by `nm` against `libSystem.B.dylib`: `chmod`, `chown`,
-`readlink`, `symlink`, `mkstemp`, `mkdtemp` are exported; **`utimes`,
-`futimes`, `chflags`, `fchflags`, `fchmod`, `fchown`, `link`, `clonefile`,
-`statfs`, `fstatfs` are not**. `xattr` landed with this task, so that piece is
-now in place. `COPYFILE_CLONE` is APFS copy-on-write — Linux's closest thing is
-`FICLONE` on btrfs/XFS, and the honest answer elsewhere is to fail and let the
-caller fall back (FE has a non-clone branch two lines away).
+**What FE uses, and what is implemented.** `copyfile` and `fcopyfile` with
+`state` always `nil`, no callbacks, and **7 flags** — `COPYFILE_DATA`,
+`COPYFILE_METADATA`, `COPYFILE_ALL`, `COPYFILE_EXCL`, `COPYFILE_NOFOLLOW`,
+`COPYFILE_CLONE`, `COPYFILE_RUN_IN_PLACE`. Those two functions live in
+`darwin/src/posix.c`. A non-nil state, the 18 `COPYFILE_STATE_*` keys, the
+callback protocol, and every flag outside that subset (`COPYFILE_RECURSIVE`,
+`PACK`/`UNPACK`, `MOVE`/`UNLINK`/`CHECK`, `CLONE_FORCE`, `NOCACHE`,
+`DATA_SPARSE`, `VERBOSE`, …) abort by name.
+
+**How the used subset is actually done.**
+`COPYFILE_METADATA` copies times, mode, owner and xattrs. xattr translation
+already existed. `utimes`/`futimes`/`fchmod`/`fchown` are still **not**
+re-exported; `copyfile` calls glibc `utimensat`/`futimens`/`fchmod`/`fchown`
+on this side of the seam. `chflags` has no Linux equivalent and is skipped
+(a Linux file has no BSD flags to copy). ACLs are skipped the same way:
+Darwin `copyfile` treats "none" as success, and Linux has no Darwin ACL.
+`COPYFILE_CLONE` tries `ioctl(FICLONE)` and falls back to a regular copy —
+matching Darwin's own `copyfile.c` unless `COPYFILE_CLONE_FORCE` is set
+(FORCE is outside FE's subset and aborts). `COPYFILE_RUN_IN_PLACE` is a
+CoW-avoidance hint; a full copy already satisfies it. `fcopyfile` with a
+negative fd is `EINVAL`; a source that is not a regular file, symlink or
+directory is `ENOTSUP`.
 
 **`removefile.h`**: 79 lines, **12 `REMOVEFILE_*` flags**, 5 state keys, an
 opaque `removefile_state_t`, and a callback protocol with
@@ -1022,22 +1034,24 @@ opaque `removefile_state_t`, and a callback protocol with
 **What FE uses**: `removefile(path, state, REMOVEFILE_RECURSIVE)` plus
 `removefile_state_alloc`/`_free`/`_get(REMOVEFILE_STATE_ERRNO)`/`_set` of
 `CONFIRM_CALLBACK`, `CONFIRM_CONTEXT`, `ERROR_CALLBACK`, `ERROR_CONTEXT`.
+All five entry points abort by name. The used subset *requires* the state
+object and the callback protocol. The confirm callback is how
+`FileManager`'s delegate says "skip this one" and the error callback is how
+it decides to continue or stop — that is `FileManager.removeItem`'s
+semantics, not decoration. **~250–350 lines still to build**: a depth-first
+walker, a state object holding two callbacks, two contexts and an errno,
+and correct `PROCEED`/`SKIP`/`STOP` handling. The secure-overwrite passes
+(1/3/7/35) are unused and must keep refusing loudly rather than silently
+doing an ordinary unlink.
 
-**So removefile is bigger than "implement it over `unlink`", and the reason is
-worth stating**: the used subset *requires* the state object and the callback
-protocol. The confirm callback is how `FileManager`'s delegate says "skip this
-one" and the error callback is how it decides to continue or stop — that is
-`FileManager.removeItem`'s semantics, not decoration. **~250–350 lines**: a
-depth-first walker, a state object holding two callbacks, two contexts and an
-errno, and correct `PROCEED`/`SKIP`/`STOP` handling. The secure-overwrite
-passes (1/3/7/35) are unused and should refuse loudly rather than silently
-doing an ordinary unlink — a "secure delete" that is not one is the worst kind
-of quiet wrong answer.
-
-**Total for the three: roughly 900–1100 lines plus three differential
-fixtures, and `copyfile` is additionally blocked on `utimes`, `chflags`,
-`fchmod`, `fchown` and `link`.** That is why they are handed over measured
-rather than started: this is a project, not the tail of a task.
+**Gate.** `tests/src/copyfile.c` prints the transcribed flag values, copies
+a `/tmp` file that carries an xattr (`COPYFILE_ALL`), grades `COPYFILE_EXCL`
+→ `EEXIST`, `COPYFILE_CLONE` as success-or-fallback, `fcopyfile(-1,-1)` →
+`EINVAL`, and `fcopyfile` from a pipe → `ENOTSUP`. Mach-O + expected
+outputs need a Darwin host (`norun:NEEDS_DARWIN_BASELINE` in
+`tests/manifest.tsv`). `sdk/tests/fm_link_probe.c` calls `copyfile`/
+`fcopyfile` and takes the address of the state functions so a missing
+export is a link failure.
 
 ### `quotactl` — **DONE 2026-08-27**, and the measurement made the wrapper unnecessary
 
@@ -1094,21 +1108,62 @@ volume that has quotas turned on would answer differently.
 `harness/run_macos.sh` re-runs every fixture natively on every gate run and
 reports BASELINE-DRIFT rather than passing quietly, so that would be caught.
 
-### `statfs` — NOT IMPLEMENTED, and it surfaced from the quota work
+<a id="statfs"></a>
+### `statfs` — **DONE 2026-09-02**; Linux's 120-byte struct translated into Darwin's 2168
 
-`FileManager.attributesOfFileSystem` calls `statfs` before it calls `quotactl`,
-and libSystem exports no `statfs`. It is **not on #69's list** — it was
-surfaced by `gen_tbd.sh` CHECK 3 refusing to emit a stub when the quota fixture
-first passed `statfs("/").f_mntonname`, which is the check doing exactly its
-job. The fixture was rewritten to use `"/"` directly rather than to grow a
-second subject.
+`FileManager.attributesOfFileSystem` calls `statfs` before it calls `quotactl`.
+It is **not on #69's list** — it was surfaced by `gen_tbd.sh` CHECK 3 refusing
+to emit a stub when the quota fixture first passed `statfs("/").f_mntonname`,
+which is the check doing exactly its job. The quota fixture was rewritten to
+use `"/"` directly rather than to grow a second subject; `statfs` itself is
+now a first-class export.
 
-The groundwork is already in place: `struct statfs` is **2168 bytes** on Darwin
-and every field offset is already pinned by `sdk/tests/abi_probe.c` (it is the
-`$INODE64` variant, so a wrong `__DARWIN_ONLY_64_BIT_INO_T` yields a differently
-shaped struct that still compiles). Linux's `struct statfs` is a different
-shape again and `statvfs` a third. This is a translation of the `struct stat`
-kind and is not started.
+**Implemented** in `darwin/src/posix.c`: Linux `statfs(2)` / `fstatfs(2)` is
+translated into Darwin INODE64 `struct statfs` (2168 bytes). Offsets stay
+pinned in `sdk/tests/abi_probe.c` / `abi_probe.expected.txt` and are
+`_Static_assert`ed in `posix.c`:
+
+```
+f_bsize 0, f_iosize 4, f_blocks 8, f_bfree 16, f_bavail 24,
+f_files 32, f_ffree 40, f_fsid 48, f_owner 56, f_type 60,
+f_flags 64, f_fssubtype 68, f_fstypename 72, f_mntonname 88,
+f_mntfromname 1112
+```
+
+The layout is transcribed from `sdk/usr/include/sys/mount.h`
+`__DARWIN_STRUCT_STATFS64`, not guessed. Linux aarch64 `struct statfs` is
+120 bytes (pinned in `sdk/tests/glibc_abi_probe.c`) and has **no**
+`f_mntonname`. Mount identity (`f_mntonname` / `f_mntfromname` /
+`f_fstypename`) is resolved by longest-prefix match of the canonical path
+against `/proc/self/mounts` (octal escapes unescaped). `fstatfs` gets that
+path from `/proc/self/fd/N`. `f_flags` are rotated Linux `ST_*` → Darwin
+`MNT_*` (`ST_NOSUID=2` is Darwin `MNT_SYNCHRONOUS`, not `MNT_NOSUID` — a
+forward names a different mount option). `f_type` (Darwin vfsconf index)
+and `f_owner`/`f_fssubtype` are left 0 — Linux has no Darwin vfstable.
+`f_bsize` is Linux `f_frsize` (fragment / fundamental block) falling back
+to `f_bsize`; Darwin `f_iosize` is Linux `f_bsize` (optimal transfer).
+errno is translated on the way back. Public names are unsuffixed
+(`__DARWIN_ONLY_64_BIT_INO_T`); `_statfs$INODE64` / `_fstatfs$INODE64`
+aliases exist for the same reason `_stat$INODE64` does.
+
+**Still unimplemented.** `getmntinfo` / `getfsstat` (enumerate every
+mount). Darwin `MNT_*` bits with no Linux `ST_*` counterpart (`MNT_UNION`,
+`MNT_JOURNALED`, …) cannot be recovered from `statfs(2)` and stay 0.
+
+**Gate.** `tests/src/statfs.c` pins the 2168-byte layout and the `MNT_*`
+values, checks `statfs` vs `fstatfs` agree, `ENOENT` on a missing path,
+and that `f_mntonname` is absolute. The `"/"` line grades that the name is
+a prefix of the queried path — that holds on both oracles. A `/tmp` path
+must not: on macOS `/tmp` → `/private/tmp` lives on the
+`/System/Volumes/Data` firmlink, so `f_mntonname` is never a string prefix
+of the queried path, while Linux's `/proc/self/mounts` longest-prefix
+resolution legitimately is. The `/tmp` lines instead grade that a mount
+point names itself (`statfs(f_mntonname)` returns the same `f_mntonname`
+and `f_fsid`). It does **not** print host-specific mount names. Mach-O +
+expected outputs need a Darwin host (`norun:NEEDS_DARWIN_BASELINE`). Linux
+glibc layout/flag rotation is pinned in `sdk/tests/glibc_abi_probe.c`.
+`sdk/tests/fm_link_probe.c` calls `statfs`/`fstatfs` so the TBD surface
+cannot drop them without failing the link probe.
 
 ### `xattr` — **DONE 2026-08-27**; four hazards, and only one of them is a struct
 
@@ -1801,7 +1856,9 @@ equivalent, `pthread_attr_getstack`, returns the stack's LOW address; Darwin's
 returns the HIGH one. Measured on macOS: `stackaddr` `0x16b79c000` with a local
 at `0x16b799fd8`, i.e. below it, and `stackaddr - stacksize` giving the low
 bound. An alias would be off by exactly the stack size — a pointer that looks
-entirely reasonable and is at the wrong end of the right region.
+entirely reasonable and is at the wrong end of the right region. Implemented
+in `darwin/src/posix.c`: `pthread_getattr_np` + `pthread_attr_getstack`, then
+HIGH = lo + size. The names themselves are absent from glibc.
 
 **The general point, since this is the second census to arrive mis-sorted:**
 "exists in glibc under the same name" is not the same claim as "has the same
@@ -2096,12 +2153,19 @@ dylib orders and requires both to pass, which is what stops this regressing.
 
 ### `swift-compat` — a guest must link `libswiftcompat.dylib` by hand
 The `libswiftCore.dylib` we run (cross-built on Linux by `~/swiftcore-macho`)
-imports 29 symbols machorun's self-hosted Darwin userland does not carry:
-compiler-rt's 128-bit division, `getline` / `flockfile` / `strtod_l` and
-friends, `getsectiondata`, `_NSGetMachExecuteHeader`, the availability checks,
-and four `__cxxabiv1` `type_info` vtables. They are supplied by a separate
-`libswiftcompat.dylib` which **the guest** has to name on its link line —
-libswiftCore carries no `LC_LOAD_DYLIB` for it.
+imports symbols machorun's self-hosted Darwin userland did not carry. Nine of
+those -- `getline`, `getsectiondata`, `malloc_zone_from_ptr`,
+`os_system_version_get_current_version`, `pthread_get_stackaddr_np`,
+`pthread_get_stacksize_np`, `strtod_l`, `strtof_l`, `strtold_l` -- now live in
+`darwin/src/` (libSystem). They are no longer a CHECK 5 host-bind and no longer
+need `libswiftcompat.dylib` to define them; that dylib must drop the overlap
+(its own rule: never define a symbol machorun already does).
+
+What remains of the 29-symbol gap is compiler-rt's 128-bit division (`__*ti3`),
+`flockfile` / `funlockfile`, `_NSGetMachExecuteHeader`, the availability
+checks, and C++ pieces still only in the compat dylib. They are supplied by a
+separate `libswiftcompat.dylib` which **the guest** has to name on its link
+line — libswiftCore carries no `LC_LOAD_DYLIB` for it.
 
 The measured consequence: a Swift binary built by **Apple's own toolchain** does
 not run here, even though its three dependencies (`libSystem.B`, `libobjc.A`,
@@ -2117,10 +2181,11 @@ because nothing pulled the compat dylib in. That is why rung (q) is the one
 fixture whose two sides run two binaries built from one source rather than the
 same committed bytes; `scripts/swift_gate.sh`'s header says so in place.
 
-Two ways to close it, neither done: give libswiftCore an `LC_LOAD_DYLIB` on
-libswiftcompat at link time (a `~/swiftcore-macho` change), or fold the 29 into
-`darwin/src/` so machorun's own libSystem carries them (a machorun change, and
-the one that would make Apple-built Swift binaries simply work).
+Two ways to close the remainder, neither done: give libswiftCore an
+`LC_LOAD_DYLIB` on libswiftcompat at link time (a `~/swiftcore-macho` change),
+or fold the rest into `darwin/src/` so machorun's own libSystem / libc++abi
+carry them (a machorun change, and the one that would make Apple-built Swift
+binaries simply work).
 
 ### `tsd-direct-dynamic-key`
 `_pthread_getspecific_direct` / `_pthread_setspecific_direct` serve the reserved
@@ -2161,8 +2226,11 @@ per invalidation, and a swizzling workload costing macOS 4.7 MB peak RSS costs
 
 ### `malloc-zones-are-one-heap`
 `malloc_default_zone()` returns a token, and every `malloc_zone_*` call routes
-to glibc's single heap. A program that treats a zone as a separate arena --
-mass-free by zone, zone introspection, `malloc_zone_from_ptr` -- would notice;
+to glibc's single heap. `malloc_zone_from_ptr` now exists
+(`darwin/src/objcsupport.c`): it returns that token when `malloc_size` says we
+own the pointer, and NULL otherwise -- Darwin's contract (malloc.h:367-369),
+not libswiftcompat's "always NULL". A program that treats a zone as a
+separate arena -- mass-free by zone, zone introspection -- would still notice;
 objc4 only ever uses the default zone. `malloc_zone_malloc` aborts if handed a
 zone pointer we did not mint, so "someone created a zone" is visible rather
 than silent.

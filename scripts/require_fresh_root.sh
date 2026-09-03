@@ -224,8 +224,16 @@ while IFS=$'\t' read -r kind rel up rest; do
             defs=$(nm_defined "$f")
             if [ -z "$defs" ]; then
                 why="could not read defined symbols with ${NM:-no nm found} -- refusing to grade"
-            elif ! printf '%s\n' "$defs" | grep -qx "$sym"; then
-                why="does not define $sym -- it is not an umbrella, it is a plain copy"
+            else
+                # The column is a comma-separated list (8f6fe979 added _nan and
+                # _remquo beside __NSGetMachExecuteHeader); every name must be
+                # defined, and the first absent one is named.
+                for one in $(printf '%s' "$sym" | tr ',' ' '); do
+                    if ! printf '%s\n' "$defs" | grep -qx "$one"; then
+                        why="does not define $one (of $sym) -- it is not an umbrella, it is a plain copy"
+                        break
+                    fi
+                done
             fi
         fi
         # (c) actually re-exports its .real

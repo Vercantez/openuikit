@@ -542,6 +542,19 @@ want quota               && build quota               "$CHAINED_TARGET" quota   
 # not accidentally promoted into an ABI promise.
 want fts                 && build fts                 "$CHAINED_TARGET" fts                 fts.c --
 
+# statfs. Darwin's struct is 2168 bytes; Linux's is 120 and has no
+# f_mntonname -- FileManager.attributesOfFileSystem reads that field at
+# offset 88. The fixture pins the layout. "/" grades the prefix property
+# (it holds on both oracles). A /tmp path does not -- that is the host's
+# mount topology -- and is graded by "a mount point names itself".
+want statfs              && build statfs              "$CHAINED_TARGET" statfs              statfs.c --
+
+# copyfile. Darwin-only; no glibc counterpart. Grades the transcribed
+# COPYFILE_* values, COPYFILE_ALL of a file with an xattr (a data-only copy
+# would pass the bytes and fail the attribute), EXCL -> EEXIST, CLONE as
+# success-or-fallback, and fcopyfile's EINVAL / ENOTSUP errno paths.
+want copyfile            && build copyfile            "$CHAINED_TARGET" copyfile            copyfile.c --
+
 # pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
 # the signature word IS the type -- a constant nothing at any call site names,
 # because the guest's compiler laid it down. CoreFoundation's CFLockInit is the
@@ -560,6 +573,17 @@ want pthread_mutex_variants && build pthread_mutex_variants "$CHAINED_TARGET" pt
 # mean C. pthread_threadid_np is graded for a REAL id -- the cross-thread line
 # is the one an implementation returning a constant cannot pass.
 want cflog_surface       && build cflog_surface       "$CHAINED_TARGET" cflog_surface       cflog_surface.c --
+
+# hostbound_surface. Eight of the nine CHECK 5 names. Darwin's oracle printed
+# strtod through stacksize byte-identically and then SIGSEGV'd on a by-value
+# os_system_version call; these eight stay covered on their own. No expected
+# files -- norun:NEEDS_DARWIN_BASELINE until recorded on macOS.
+want hostbound_surface   && build hostbound_surface   "$CHAINED_TARGET" hostbound_surface   hostbound_surface.c --
+
+# hostbound_osver. The ninth name, split out. libswiftCore passes an
+# out-pointer in x0 and reads the 12-byte slot after the call; a by-value
+# struct return is the guess that crashed Darwin.
+want hostbound_osver     && build hostbound_osver     "$CHAINED_TARGET" hostbound_osver     hostbound_osver.c --
 
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why

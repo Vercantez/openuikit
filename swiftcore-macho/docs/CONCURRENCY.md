@@ -19,6 +19,18 @@
 >
 > **Superseded claims, explicitly struck:**
 >
+> * *The `Concurrency/dispatch` ninja node dissolves by `-DSWIFT_ENABLE_DISPATCH=OFF`*
+>   (the closing note of this document) — **NO LONGER THE DARWIN-TARGET ANSWER.**
+>   That flag turns the dispatch executor off. A Darwin stdlib target must keep
+>   `SWIFT_ENABLE_DISPATCH=ON` (CMake default; `StdlibOptions.cmake:217-241`) so
+>   `DispatchGlobalExecutor.cpp` / `DispatchExecutor.swift` still compile, and
+>   skip the CMake `LINK_LIBRARIES dispatch` append when
+>   `SWIFT_PRIMARY_VARIANT_SDK` is in `SWIFT_DARWIN_PLATFORMS` — the same path a
+>   Darwin *host* takes, because `Libdispatch.cmake:49-56` does not build
+>   libdispatch for Darwin SDKs and Darwin `libSystem` re-exports it. That is
+>   swiftcore-macho `apply_patches.py` patch 8. `-DSWIFT_ENABLE_DISPATCH=OFF` +
+>   `singlethreaded` remains a recorded Linux-target / investigation recipe only.
+>
 > * *Part 5, "blocked on making Mach headers opt-in in machorun's sysroot"* —
 >   **NO LONGER TRUE.** Patch 3 superseded it by including the real Mach headers
 >   rather than restubbing them, with `HAVE_MACH 0` still governing whether IPC

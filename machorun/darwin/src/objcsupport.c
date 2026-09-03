@@ -388,6 +388,21 @@ static unsigned long default_zone_token[16];   /* an address to hand out */
 
 EXPORT void *malloc_default_zone(void) { return default_zone_token; }
 
+/* malloc_zone_from_ptr. Darwin-only (sdk/usr/include/malloc/malloc.h:367);
+ * aarch64 libc.so.6 has no such dynsym. Returns the zone that owns `ptr`, or
+ * NULL. machorun has one heap, so "owns" is malloc_size's ownership test
+ * (0 for image data / not-ours; non-zero for glibc heap and mmap chunks)
+ * and the zone is the default token. A host-bind would be a link error, not
+ * an unrelated allocator; returning NULL for every pointer (libswiftcompat's
+ * previous answer) is the one caller that only wanted "not a zone" -- and
+ * a lie for every heap pointer. */
+extern size_t malloc_size(const void *p);
+EXPORT void *malloc_zone_from_ptr(const void *ptr)
+{
+    if (!ptr) return 0;
+    return malloc_size(ptr) ? malloc_default_zone() : 0;
+}
+
 EXPORT void *malloc_zone_malloc(void *zone, size_t size)
 {
     if (zone != (void *)default_zone_token)
@@ -1227,6 +1242,29 @@ EXPORT int __vsnprintf_chk(char *dst, size_t maxlen, int flag, size_t slen,
  * the guard and land in unrelated memory. Linux has the same hazard and the
  * same fix, so this is a real probe loop and not a bare `ret`: touch one word
  * every 4 KiB down from sp, the smaller of the two systems' page sizes. */
+#if defined(__x86_64__)
+/* x86_64: size in rax. Probe 4 KiB pages down from rsp. Preserve every register
+ * except r11 (scratch). rax is the size on entry and is not required after. */
+__asm__(
+"    .text\n"
+"    .p2align 4\n"
+"    .globl ___chkstk_darwin\n"
+"___chkstk_darwin:\n"
+"    pushq %rcx\n"
+"    movq  %rax, %rcx\n"
+"    leaq  8(%rsp), %rax\n"
+"0:  cmpq  $4096, %rcx\n"
+"    jb    1f\n"
+"    subq  $4096, %rax\n"
+"    testq %rax, (%rax)\n"
+"    subq  $4096, %rcx\n"
+"    jmp   0b\n"
+"1:  subq  %rcx, %rax\n"
+"    testq %rax, (%rax)\n"
+"    popq  %rcx\n"
+"    ret\n"
+);
+#elif defined(__arm64__) || defined(__aarch64__)
 __asm__(
 "    .text\n"
 "    .p2align 2\n"
@@ -1241,6 +1279,9 @@ __asm__(
 "    b.ne 0b\n"
 "1:  ret\n"
 );
+#else
+#error ___chkstk_darwin: guest is neither x86_64 nor arm64
+#endif
 
 EXPORT int vm_remap(unsigned target, void **addr, size_t size, unsigned mask,
                     int flags, unsigned src_task, void *src_addr,

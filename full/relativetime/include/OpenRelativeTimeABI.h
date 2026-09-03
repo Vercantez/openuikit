@@ -57,6 +57,4 @@ OPENUI_RELATIVE_TIME_API int32_t openui_relative_time_v1_format(
 }
 #endif
 
-#undef OPENUI_RELATIVE_TIME_API
-
 #endif

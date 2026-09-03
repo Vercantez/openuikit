@@ -23,6 +23,7 @@ cctools	cctools-1035.1.102	APSL-2.0	mach-o/{loader,nlist,fat,getsect,ldsyms}.h
 libunwind	libunwind-201	Apache-2.0-with-LLVM-exception	libunwind.h, __libunwind_config.h
 Libm	Libm-2026	APSL-2.0	math.h
 Libinfo	Libinfo-600	APSL-2.0	pwd.h, grp.h -- the user/group database surface, which is NOT in Libc
+copyfile	copyfile-240	APSL-2.0	copyfile.h -- 143 lines, 28 COPYFILE_* flags, 18 COPYFILE_STATE_* keys; the header UNIMPLEMENTED.md measured
 #
 # The libmalloc pin is the one that is not "newest", and the reason is worth
 # writing down because docs/SDK_SURVEY.md §6.2 predicted exactly this shape of

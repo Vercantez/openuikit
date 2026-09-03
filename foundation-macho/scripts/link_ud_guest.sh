@@ -30,6 +30,8 @@
 set -euo pipefail
 
 W=${W:-/work}
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 # The FE sysroot, NOT $W/sdk/MacOSX.sdk. This is the one carrying .tbd stubs
 # for the Swift overlays (libswiftDarwin, libswift_StringProcessing,
 # libswiftSynchronization, libswift_errno); linking against the CF sysroot
@@ -38,7 +40,6 @@ W=${W:-/work}
 SDK=${SDK:-$W/fe/sysroot}
 LLD=${LLD_BIN:-/usr/lib/llvm-18/bin}
 OUT=${OUT:-$W/bin/ud_guest}
-TRIPLE=${TRIPLE:-arm64-apple-macos13.0}
 
 OBJS=(
   "${RUNNER:-$W/fe/runner.o}"

@@ -60,7 +60,7 @@ sub inventory_tree {
 
 sub inventory_command {
     my (@args) = @_;
-    my ($w, $uikit, $full, $sysroot, $opencombine_root);
+    my ($w, $uikit, $full, $sysroot, $opencombine_root, $opencombine_artifacts);
     GetOptionsFromArray(
         \@args,
         'w=s'       => \$w,
@@ -68,6 +68,7 @@ sub inventory_command {
         'full=s'    => \$full,
         'sysroot=s' => \$sysroot,
         'opencombine-root=s' => \$opencombine_root,
+        'opencombine-artifacts=s' => \$opencombine_artifacts,
     ) or fail('invalid inventory options');
     fail('inventory takes no positional arguments') if @args;
     fail('inventory requires --w, --uikit, --full, --sysroot, and --opencombine-root')
@@ -80,12 +81,25 @@ sub inventory_command {
     fail("OpenCombine root is outside project root $w: $opencombine_root")
         unless beneath($opencombine_root, $w);
 
+    $opencombine_artifacts //= "$opencombine_root/export/artifacts";
+    fail('OpenCombine artifacts must be an absolute canonical path')
+        unless $opencombine_artifacts =~ m{^/}
+            && normalize_absolute($opencombine_artifacts) eq $opencombine_artifacts;
+    fail("OpenCombine artifacts are outside project root $w: $opencombine_artifacts")
+        unless beneath($opencombine_artifacts, $w);
+
     my @records;
+    my $oc_art_logical = ($opencombine_artifacts =~ m{/export-x86_64/artifacts$})
+        ? 'opencombine/export-x86_64/artifacts'
+        : 'opencombine/export/artifacts';
+    my ($oc_result, $oc_result_logical) = ($opencombine_artifacts =~ m{/export-x86_64/artifacts$})
+        ? ("$opencombine_root/export-x86_64/RESULT.txt", 'opencombine/export-x86_64/RESULT.txt')
+        : ("$opencombine_root/export/RESULT.txt", 'opencombine/export/RESULT.txt');
     my @opencombine_files = (
-        [ "$opencombine_root/export/RESULT.txt", 'opencombine/export/RESULT.txt' ],
-        [ "$opencombine_root/export/artifacts/OpenCombine.o", 'opencombine/export/artifacts/OpenCombine.o' ],
-        [ "$opencombine_root/export/artifacts/OpenCombine.swiftmodule", 'opencombine/export/artifacts/OpenCombine.swiftmodule' ],
-        [ "$opencombine_root/export/artifacts/OpenCombine.swiftdoc", 'opencombine/export/artifacts/OpenCombine.swiftdoc' ],
+        [ $oc_result, $oc_result_logical ],
+        [ "$opencombine_artifacts/OpenCombine.o", "$oc_art_logical/OpenCombine.o" ],
+        [ "$opencombine_artifacts/OpenCombine.swiftmodule", "$oc_art_logical/OpenCombine.swiftmodule" ],
+        [ "$opencombine_artifacts/OpenCombine.swiftdoc", "$oc_art_logical/OpenCombine.swiftdoc" ],
         [ "$opencombine_root/source/Sources/COpenCombineHelpers/COpenCombineHelpers.cpp", 'opencombine/source/Sources/COpenCombineHelpers/COpenCombineHelpers.cpp' ],
         [ "$opencombine_root/source/Sources/COpenCombineHelpers/include/COpenCombineHelpers.h", 'opencombine/source/Sources/COpenCombineHelpers/include/COpenCombineHelpers.h' ],
         [ "$opencombine_root/source/Sources/COpenCombineHelpers/include/module.modulemap", 'opencombine/source/Sources/COpenCombineHelpers/include/module.modulemap' ],
@@ -121,6 +135,7 @@ sub inventory_command {
         [ "$full/inc/CSTBTrueType", 'build-full/inc/CSTBTrueType' ],
         [ "$w/full/hostclock/include", 'project/full/hostclock/include' ],
         [ "$uikit/Sources/CQuartz/include", 'openuikit/Sources/CQuartz/include' ],
+        [ "$uikit/Sources/Symbols", 'openuikit/Sources/Symbols' ],
         [ "$uikit/Sources/SwiftUI", 'openuikit/Sources/SwiftUI' ],
         [ "$w/scratch/swift-foundation/Sources/_FoundationCShims/include", 'upstream/swift-foundation/_FoundationCShims/include' ],
         [ "$full/foundation/essentials", 'build-full/foundation/essentials' ],
@@ -387,6 +402,7 @@ my @FRAMEWORK_MODULES = (
     [ 'SwiftUI', 7 ],
     [ 'OpenUIKit', 9 ],
     [ 'OpenCoreGraphics', 16 ],
+    [ 'FoundationEssentials', 20 ],
     [ 'Combine', 7 ],
     [ 'OpenCombine', 11 ],
 );
@@ -477,11 +493,110 @@ sub objc_classifier_selftest {
         ' negatives=', scalar(@negative), "\n";
 }
 
+sub conformance_classifier_selftest {
+    my (@args) = @_;
+    my $demangle = 'swift-demangle';
+    GetOptionsFromArray(\@args, 'demangle=s' => \$demangle)
+        or fail('invalid conformance-classifier-selftest options');
+    fail('conformance-classifier-selftest takes no positional arguments') if @args;
+    fail('conformance-classifier-selftest requires --demangle')
+        unless defined($demangle) && length $demangle;
+
+    my %definition_owner = (
+        SwiftUI => 'libSwiftUI',
+        OpenUIKit => 'libOpenUIKit',
+        OpenCoreGraphics => 'libOpenCoreGraphics',
+        FoundationEssentials => 'libFoundationEssentials',
+        Combine => 'libCombine',
+        OpenCombine => 'libOpenCombine',
+    );
+
+    # Authority reverse-ownership failures on the same SwiftUI extension of
+    # OpenCoreGraphics.CGFloat: Mc/WP/Wp for `_OpenVectorArithmetic` (main
+    # 8e12b714) and the property descriptor `MV` for `magnitudeSquared`
+    # (main 473b3860). Extension members are SwiftUI's, not the type's.
+    my @positive = (
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADWP',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADWp',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUIE16magnitudeSquaredSdvpMV',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        # TextAttributes.swift `extension AttributeScopes { var swiftUI }`.
+        # Compact demangle uses Double as a parseable value encoding; ARM64
+        # may emit the nested SwiftUIAttributes metatype. Owner is the
+        # `(extension in SwiftUI):` clause either way.
+        [
+            '_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvpMV',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvg',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s20FoundationEssentials22AttributeDynamicLookupO7SwiftUIEyxqd__cluig',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+    );
+    for my $fixture (@positive) {
+        my ($symbol, $expected_module, $defining_image) = @$fixture;
+        my ($actual) = classify_framework_symbol($demangle, $symbol);
+        fail("conformance classifier expected $expected_module for $symbol, got "
+            . (defined $actual ? $actual : 'undef'))
+            unless defined($actual) && $actual eq $expected_module;
+        fail("reverse ownership rejected defining image $defining_image for $symbol")
+            unless $definition_owner{$actual} eq $defining_image;
+    }
+
+    # Nominal type descriptors for the foreign CGFloat / AttributeScopes types:
+    # still owned by OpenCoreGraphics / FoundationEssentials. libSwiftUI
+    # defining them must keep failing.
+    my @negative = (
+        [ '_$s16OpenCoreGraphics7CGFloatVMn', 'OpenCoreGraphics', 'libSwiftUI' ],
+        [
+            '_$s20FoundationEssentials15AttributeScopesOMn',
+            'FoundationEssentials',
+            'libSwiftUI',
+        ],
+    );
+    for my $fixture (@negative) {
+        my ($symbol, $expected_module, $wrong_image) = @$fixture;
+        my ($actual) = classify_framework_symbol($demangle, $symbol);
+        fail("foreign classifier expected $expected_module for $symbol, got "
+            . (defined $actual ? $actual : 'undef'))
+            unless defined($actual) && $actual eq $expected_module;
+        fail("reverse ownership failed to reject $wrong_image defining $actual symbol $symbol")
+            if $definition_owner{$actual} eq $wrong_image;
+    }
+
+    print 'CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=', scalar(@positive),
+        ' negatives=', scalar(@negative), "\n";
+}
+
 sub prefixed_swift_module {
     my ($symbol) = @_;
     return 'SwiftUI' if $symbol =~ /^_?\$s7SwiftUI/;
     return 'OpenUIKit' if $symbol =~ /^_?\$s9OpenUIKit/;
     return 'OpenCoreGraphics' if $symbol =~ /^_?\$s16OpenCoreGraphics/;
+    return 'FoundationEssentials' if $symbol =~ /^_?\$s20FoundationEssentials/;
     return 'Combine' if $symbol =~ /^_?\$s7Combine/;
     return 'OpenCombine' if $symbol =~ /^_?\$s11OpenCombine/;
     my $objc_module = objc_swift_module($symbol);
@@ -492,24 +607,48 @@ sub prefixed_swift_module {
 sub framework_tokens {
     my ($symbol) = @_;
     return grep { index($symbol, length($_) . $_) >= 0 }
-        qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine);
+        qw(SwiftUI OpenUIKit OpenCoreGraphics FoundationEssentials Combine OpenCombine);
+}
+
+sub demangle_compact {
+    my ($demangle, $symbol) = @_;
+    my $expanded = capture_command($demangle, '--compact', $symbol);
+    $expanded =~ s/[\r\n]+\z//;
+    fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
+    return $expanded;
+}
+
+# Owning module from compact demangle, in this order:
+#   1. `(extension in M):` anywhere → M (SwiftUI's CGFloat.magnitudeSquared MV,
+#      AttributeScopes.swiftUI, AttributeDynamicLookup subscript; compact form
+#      is often `property descriptor for (extension in SwiftUI):…`, not leading)
+#   2. `… : M.Protocol in M2` conformance/witness (Mc/WP/Wp) → protocol module M
+#   3. otherwise undef (caller falls back to the leading nominal-type module)
+sub owning_module_from_demangle {
+    my ($expanded) = @_;
+    return undef unless defined $expanded && length $expanded;
+    my $modules = join('|', map { quotemeta($_->[0]) } @FRAMEWORK_MODULES);
+    return $1 if $expanded =~ /\(extension in ($modules)\):/;
+    return $1 if $expanded =~
+        /^(?:protocol conformance descriptor|protocol witness table(?: pattern)?) for .+ : ($modules)\./;
+    return undef;
 }
 
 sub classify_framework_symbol {
     my ($demangle, $symbol) = @_;
     my $prefix = prefixed_swift_module($symbol);
-    return ($prefix, undef) if defined $prefix;
-
     my @mentioned = framework_tokens($symbol);
-    return (undef, undef) unless @mentioned;
-    my $expanded = capture_command($demangle, '--compact', $symbol);
-    $expanded =~ s/[\r\n]+\z//;
-    fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
+    return (undef, undef) unless defined $prefix || @mentioned;
+
+    my $expanded = demangle_compact($demangle, $symbol);
+    my $from_demangle = owning_module_from_demangle($expanded);
+    return ($from_demangle, $expanded) if defined $from_demangle;
+    return ($prefix, $expanded) if defined $prefix;
+
     my @owners;
-    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
+    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics FoundationEssentials Combine OpenCombine)) {
         push @owners, $module
-            if $expanded =~ /\(extension in \Q$module\E\):/
-            || $expanded =~ /^associated type descriptor for \Q$module\E\./
+            if $expanded =~ /^associated type descriptor for \Q$module\E\./
             || $expanded =~ /\bin \Q$module\E\z/;
     }
     fail("ambiguous framework owner [@owners] for $symbol ($expanded)") if @owners > 1;
@@ -533,7 +672,7 @@ sub symbol_records {
 sub provider_command {
     my (@args) = @_;
     my ($nm, $objdump, $demangle, $openuikit, $opencoregraphics, $swiftui,
-        $combine, $opencombine, $executable);
+        $foundationessentials, $combine, $opencombine, $executable);
     GetOptionsFromArray(
         \@args,
         'nm=s'         => \$nm,
@@ -542,14 +681,16 @@ sub provider_command {
         'openuikit=s'  => \$openuikit,
         'opencoregraphics=s' => \$opencoregraphics,
         'swiftui=s'    => \$swiftui,
+        'foundationessentials=s' => \$foundationessentials,
         'combine=s'    => \$combine,
         'opencombine=s' => \$opencombine,
         'executable=s' => \$executable,
     ) or fail('invalid provider options');
     fail('providers takes no positional arguments') if @args;
-    fail('providers requires --nm, --objdump, --demangle, --openuikit, --opencoregraphics, --swiftui, --combine, --opencombine, and --executable')
+    fail('providers requires --nm, --objdump, --demangle, --openuikit, --opencoregraphics, --swiftui, --foundationessentials, --combine, --opencombine, and --executable')
         unless defined($nm) && defined($objdump) && defined($demangle) && defined($openuikit)
             && defined($opencoregraphics) && defined($swiftui)
+            && defined($foundationessentials)
             && defined($combine) && defined($opencombine)
             && defined($executable);
 
@@ -557,6 +698,7 @@ sub provider_command {
         libOpenUIKit => $openuikit,
         libOpenCoreGraphics => $opencoregraphics,
         libSwiftUI => $swiftui,
+        libFoundationEssentials => $foundationessentials,
         libCombine => $combine,
         libOpenCombine => $opencombine,
         executable => $executable,
@@ -569,6 +711,7 @@ sub provider_command {
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenCoreGraphics',
+        FoundationEssentials => 'libFoundationEssentials',
         Combine => 'libCombine',
         OpenCombine => 'libCombine',
     );
@@ -576,6 +719,7 @@ sub provider_command {
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenCoreGraphics',
+        FoundationEssentials => 'libFoundationEssentials',
         Combine => 'libCombine',
         OpenCombine => 'libOpenCombine',
     );
@@ -586,17 +730,6 @@ sub provider_command {
         my @undefined = symbol_records($demangle, capture_command($nm, '-u', $paths{$image}));
         for my $record (@defined) {
             my ($symbol, $module) = @$record;
-            # A method declared in one framework as an extension of a type
-            # owned by another begins with the extended type's module.  Only
-            # definitions outside that default owner need the more expensive
-            # demangle; require an explicit `(extension in Module):` result.
-            if ($definition_owner{$module} ne $image) {
-                my $expanded = capture_command($demangle, '--compact', $symbol);
-                $expanded =~ s/[\r\n]+\z//;
-                if ($expanded =~ /^\(extension in (SwiftUI|OpenUIKit|OpenCoreGraphics|Combine|OpenCombine)\):/) {
-                    $module = $1;
-                }
-            }
             $definitions{$image}{$symbol} = 1;
             $symbol_module{$symbol} = $module;
             $counts{$image}{defined}{$module}++;
@@ -660,6 +793,8 @@ sub provider_command {
         [ 'libOpenCombine', 'defined', 'OpenCombine' ],
         [ 'libSwiftUI', 'undefined', 'OpenUIKit' ],
         [ 'libSwiftUI', 'undefined', 'OpenCoreGraphics' ],
+        [ 'libFoundationEssentials', 'defined', 'FoundationEssentials' ],
+        [ 'libSwiftUI', 'undefined', 'FoundationEssentials' ],
         [ 'libSwiftUI', 'undefined', 'OpenCombine' ],
         [ 'executable', 'undefined', 'SwiftUI' ],
         [ 'executable', 'undefined', 'OpenUIKit' ],
@@ -672,7 +807,7 @@ sub provider_command {
     print "format\tfocus-widget-framework-providers-v2\n";
     for my $image (sort keys %paths) {
         for my $kind (qw(defined undefined)) {
-            for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
+            for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics FoundationEssentials Combine OpenCombine)) {
                 printf "count\t%s\t%s\t%s\t%d\n", $image, $kind, $module,
                     ($counts{$image}{$kind}{$module} || 0);
             }
@@ -696,6 +831,8 @@ if ($command eq 'inventory') {
     provider_command(@ARGV);
 } elsif ($command eq 'objc-classifier-selftest') {
     objc_classifier_selftest(@ARGV);
+} elsif ($command eq 'conformance-classifier-selftest') {
+    conformance_classifier_selftest(@ARGV);
 } else {
-    fail('usage: focus_widget_guest_attest.pl inventory|closure|providers|objc-classifier-selftest [options]');
+    fail('usage: focus_widget_guest_attest.pl inventory|closure|providers|objc-classifier-selftest|conformance-classifier-selftest [options]');
 }

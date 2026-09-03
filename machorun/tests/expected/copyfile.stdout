@@ -1,0 +1,20 @@
+COPYFILE_DATA           0x8
+COPYFILE_METADATA       0x7
+COPYFILE_ALL            0xf
+COPYFILE_EXCL           0x20000
+COPYFILE_NOFOLLOW       0xc0000
+COPYFILE_CLONE          0x1000000
+COPYFILE_RUN_IN_PLACE   0x4000000
+setxattr src            rc 0 errno 0
+copyfile ALL            rc 0 errno 0
+dest bytes              17 [copyfile-payload
+]
+dest xattr              12 [copied-xattr] is match 1
+dest mode               0644
+copyfile EXCL exists    rc -1 errno 17 is EEXIST 1
+copyfile CLONE          rc 0 errno 0
+clone dest bytes        17 match 1
+fcopyfile bad fd        rc -1 errno 22 is EINVAL 1
+fcopyfile from pipe     rc -1 errno 45 is ENOTSUP 1
+fcopyfile DATA          rc 0 errno 0
+done

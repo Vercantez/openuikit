@@ -2,6 +2,9 @@
 # stage_fe_sysroot.sh -- MACOS ONLY.  Build scratch/sysroot_fe4, the sysroot the
 # FoundationEssentials port compiles against, with canImport(Darwin) TRUE.
 #
+# Linux x86_64 sibling (does not read Xcode; writes scratch/sysroot_fe4-x86_64
+# beside this tree, never overwrites it): scripts/x86/stage_fe_sysroot.sh.
+#
 # RESTAGE, NEVER REUSE.  scratch/sysroot was staged 2026-08-27 12:22:24 and
 # machorun's sdk/ was last touched at 12:26:30 -- four minutes of skew that
 # every git-level check reports as "current", because the staleness lives in a
@@ -22,6 +25,8 @@
 set -euo pipefail
 [ "$(uname -s)" = "Darwin" ] || { echo "macOS only (reads Xcode + machorun)" >&2; exit 1; }
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+# shellcheck source=fe_sysroot_measurement.inc
+. "$ROOT/full/foundation/fe_sysroot_measurement.inc"
 MACHORUN=${MACHORUN:-$HOME/machorun}
 SDK=$(xcrun --show-sdk-path --sdk macosx)
 SYS=${SYS:-$ROOT/scratch/sysroot_fe4}
@@ -56,37 +61,40 @@ rm -rf "$SYS/usr/lib/swift/os.swiftmodule"
 # what lets the port be measured at all; it is not a fix, and each one belongs
 # on full/sdk-gaps/README.md's list.
 echo "== gaps staged for measurement (each is a real machorun sdk/ gap):"
-stage_absent complex.h "$ROOT/full/sdk-gaps/usr/include" "clean-room stub; clang's own tgmath.h includes it unconditionally"
-stage_absent sysdir.h  "$SDK/usr/include" "79 lines; libSystem ALREADY exports _sysdir_start/_get_next_search_path_enumeration -- the implementation is there and only the declaration is missing"
-
-# THE FILEMANAGER SET.  108 of the errors in the first correctly-configured
-# whole-module run were ONE class -- eight absent headers -- confined to nine
-# files (FileOperations, Platform, FileManager+*, ProcessInfo, Data+Reading/
-# Writing).  Unlike sysdir.h these are NOT declaration-only gaps: libSystem
-# exports none of copyfile/fcopyfile, removefile*, fts_*, {get,set,list,fget,
-# fset}xattr, getgrnam_r/getgrgid_r, uname or quotactl.  (It DOES export
-# getpwnam_r and getpwuid_r, so pwd.h alone is declaration-only.)  Staging them
-# lets the rest of the module be measured; it does not make FileManager work,
-# and a build using them will fail at the LINK with those symbols undefined.
-for h in sys/xattr.h copyfile.h removefile.h fts.h pwd.h grp.h sys/utsname.h sys/quota.h; do
-    stage_absent "$h" "$SDK/usr/include" "FileManager set -- header AND libSystem implementation both absent (pwd.h: header only)"
-done
+# THE FILEMANAGER SET (plus complex.h / sysdir.h). Shared list:
+# full/foundation/fe_sysroot_measurement_headers.txt. 108 of the errors in the
+# first correctly-configured whole-module run were ONE class -- eight absent
+# headers -- confined to nine files (FileOperations, Platform, FileManager+*,
+# ProcessInfo, Data+Reading/Writing). Unlike sysdir.h these are NOT
+# declaration-only gaps: libSystem exports none of copyfile/fcopyfile,
+# removefile*, fts_*, {get,set,list,fget,fset}xattr, getgrnam_r/getgrgid_r,
+# uname or quotactl. (It DOES export getpwnam_r and getpwuid_r, so pwd.h alone
+# is declaration-only.) Staging them lets the rest of the module be measured;
+# it does not make FileManager work, and a build using them will fail at the
+# LINK with those symbols undefined.
+while IFS= read -r h; do
+    [ -n "$h" ] || continue
+    case "$h" in
+        complex.h)
+            stage_absent "$h" "$ROOT/full/sdk-gaps/usr/include" \
+                "clean-room stub; clang's own tgmath.h includes it unconditionally"
+            ;;
+        sysdir.h)
+            stage_absent "$h" "$SDK/usr/include" \
+                "79 lines; libSystem ALREADY exports _sysdir_start/_get_next_search_path_enumeration -- the implementation is there and only the declaration is missing"
+            ;;
+        *)
+            stage_absent "$h" "$SDK/usr/include" \
+                "FileManager set -- header AND libSystem implementation both absent (pwd.h: header only)"
+            ;;
+    esac
+done < <(fe_sysroot_measurement_headers)
 
 # vm_copy: machorun's mach/vm_map.h declares vm_allocate/deallocate/protect/
-# remap and NOT vm_copy, and libSystem exports none either.  Appended rather
-# than shadowed -- replacing the whole header with Apple's would silently swap
-# a clean-room file for an Xcode one.  Platform.swift:63 has a `memmove`
-# fallback for exactly this call, so the cheapest real fix in machorun is a
-# vm_copy that reports failure, or one that memmoves.
-if ! grep -q 'vm_copy' "$SYS/usr/include/mach/vm_map.h"; then
-    cat >> "$SYS/usr/include/mach/vm_map.h" <<'EOF'
-/* APPENDED by full/foundation/stage_fe_sysroot.sh -- MEASUREMENT ONLY.
-   Not in machorun's sdk/ and not exported by libSystem; see that script. */
-extern kern_return_t vm_copy(vm_map_t target_task, vm_address_t source_address,
-                             vm_size_t size, vm_address_t dest_address);
-EOF
-    echo "  ~ mach/vm_map.h  [appended vm_copy decl -- MEASUREMENT ONLY, no implementation exists]"
-fi
+# remap and NOT vm_copy. Appended rather than shadowed -- replacing the whole
+# header with Apple's would silently swap a clean-room file for an Xcode one.
+# Platform.swift:63 has a `memmove` fallback for exactly this call.
+fe_sysroot_append_vm_copy "$SYS/usr/include/mach/vm_map.h"
 
 # ---- the ObjectiveC Clang module (must precede the generator) ---------------
 for h in NSObject.h NSObjCRuntime.h Protocol.h; do cp "$OBJC4/$h" "$SYS/usr/include/objc/$h"; done

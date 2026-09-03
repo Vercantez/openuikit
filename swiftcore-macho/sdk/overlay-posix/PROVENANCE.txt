@@ -1,0 +1,29 @@
+overlay-posix — Darwin Platform overlay headers missing from machorun's SDK
+
+These are Apple's published headers, copied verbatim from the same
+apple-oss-distributions pins machorun/sdk/SOURCES.tsv already uses for the
+arm64 overlay sysroot. They are NOT clean-room stand-ins. stage_sdk.sh copies
+them into $W/sdk/MacOSX.sdk with refuse-overwrite (same rule as sdk/libc/).
+
+They are NOT copied into machorun/sdk/. POSIX <semaphore.h> staying out of
+machorun's SDK is the CONCURRENCY.md standing agreement (libdispatch
+USE_POSIX_SEM vs Darwin's 4-byte sem_t). The Swift overlay sysroot is a
+different tree.
+
+Libc  tag=Libc-1752.120.2  commit=4e34d0559e3a1b081afeb8604d9e204a1f31321d
+  include/semaphore.h  -> usr/include/semaphore.h
+  sha256=203aef4191a0bb7283892baa28f3b5e668a580c4ce6dcdc4e6cb64690a25b31f
+  Apple's POSIX wrapper: #include <sys/types.h>, <sys/fcntl.h>, <sys/semaphore.h>
+  (Darwin sem_t is typedef int in the already-staged xnu sys/semaphore.h).
+
+xnu   tag=xnu-12377.121.6  commit=ac9718fb1af618d5ce8678d0dc6e8a58f252216f
+  bsd/sys/ioctl.h   -> usr/include/sys/ioctl.h
+  bsd/sys/ioccom.h  -> usr/include/sys/ioccom.h
+  bsd/sys/ttycom.h  -> usr/include/sys/ttycom.h
+  bsd/sys/filio.h   -> usr/include/sys/filio.h
+  bsd/sys/sockio.h  -> usr/include/sys/sockio.h
+
+Consumer: stdlib/public/SwiftShims/swift/shims/LibcOverlayShims.h
+  #include <semaphore.h>
+  #include <sys/ioctl.h>
+and the Platform overlay (swiftDarwin) that imports SwiftOverlayShims.

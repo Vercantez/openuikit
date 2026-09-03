@@ -1,4 +1,4 @@
-/* main.c -- machorun: run a precompiled Mach-O binary on Linux/arm64.
+/* main.c -- machorun: run a precompiled Mach-O binary on Linux (x86_64 or arm64).
  *
  *   machorun [-v] <mach-o> [args...]
  *
@@ -74,11 +74,19 @@ static void check_host(void)
     if (ps <= 0) mr_die("sysconf(_SC_PAGESIZE) failed");
     MR.page.v = (uint64_t)ps;
 
+#if defined(__x86_64__)
+    if (MR.page.v > 4096)
+        mr_die("this kernel has %ld-byte pages. Darwin x86_64 segments are 4 KiB apart, so "
+               "__TEXT (r-x) and __DATA_CONST (rw-) share one page here and cannot be given "
+               "distinct protections. See docs/PLAN.md §I.4 for the copy-in fallback that "
+               "would fix it; it is not implemented.", ps);
+#else
     if (MR.page.v > 0x4000)
         mr_die("this kernel has %ld-byte pages. Apple's arm64 segments are 16 KiB apart, so "
                "__TEXT (r-x) and __DATA_CONST (rw-) share one page here and cannot be given "
                "distinct protections. See docs/PLAN.md §I.4 for the copy-in fallback that "
                "would fix it; it is not implemented.", ps);
+#endif
 
     /* The loader's own text has to clear the guest's __PAGEZERO below it and
      * Swift's isa mask above it, and scripts/build.sh links it at
@@ -237,11 +245,21 @@ int main(int argc, char **argv)
         }
         mr_log("entry: LC_UNIXTHREAD pc=0x%llx",
                (unsigned long long)(im->load_base + im->unixthread_pc - im->preferred_base));
+#if defined(__x86_64__)
+        __asm__ volatile("movq %0, %%rsp\n\tjmpq *%1"
+                         :
+                         : "r"(sp),
+                           "r"(im->load_base + im->unixthread_pc - im->preferred_base)
+                         : "memory");
+#elif defined(__aarch64__)
         __asm__ volatile("mov sp, %0\n\tbr %1"
                          :
                          : "r"(sp),
                            "r"(im->load_base + im->unixthread_pc - im->preferred_base)
                          : "memory");
+#else
+#error LC_UNIXTHREAD entry: host is neither x86_64 nor aarch64
+#endif
         __builtin_unreachable();
     } else {
         mr_die("%s: no LC_MAIN and no LC_UNIXTHREAD -- nothing to call", im->path);

@@ -1,8 +1,9 @@
 #!/bin/bash
 # build_full.sh -- build the FULL OpenUIKit module (not the vendored slice) as
-# arm64-apple-macos Mach-O on Linux, plus a Foundation-umbrella-free scene
-# renderer. FoundationEssentials is a real production dependency: it owns the
-# app-facing IndexPath identity exported by literal UIKit.
+# Darwin Mach-O on Linux (arm64-apple-macos or x86_64-apple-macos), plus a
+# Foundation-umbrella-free scene renderer. FoundationEssentials is a real
+# production dependency: it owns the app-facing IndexPath identity exported
+# by literal UIKit.
 #
 # ~/uikit IS NEVER EDITED AND NEVER COPIED. It is bind-mounted read-only at
 # /uikit and compiled in place. The project-owned inputs are explicit:
@@ -32,20 +33,21 @@ die() {
     echo "build_full: $*" >&2
     exit 2
 }
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 UIKIT=${UIKIT:-$W/uikit}
-TARGET=${TARGET:-arm64-apple-macos15.0}
 MINOS=${MINOS:-15.0}
 LINK_PLATFORM=${LINK_PLATFORM:-macos}
 LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MINOS}
-SYS=${SYS:-$W/scratch/sysroot_fe4}     # Darwin + FE compile sysroot
+SYS=${SYS:-$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}}     # Darwin + FE compile sysroot; x86_64 writes beside
 APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}
-OUT=$W/build/full
-ROOTDIR=$W/scratch/mrroot_full         # guest root for this renderer
-MC=$W/scratch/modcache_full
+OUT=${OUT:-$W/build/full${FULL_OUT_SUFFIX}}
+ROOTDIR=${ROOTDIR:-$W/scratch/mrroot_full${FULL_OUT_SUFFIX}}
+MC=${MC:-$W/scratch/modcache_full${FULL_OUT_SUFFIX}}
 SF=${SF:-$W/scratch/swift-foundation}
 SC=${SC:-$W/scratch/swift-collections}
-BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot}
-FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe}
+BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot${FULL_OUT_SUFFIX}}
+FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe${FULL_OUT_SUFFIX}}
 SWIFT_CORE_RUNTIME_STAGER=$W/full/scripts/stage_swift_core_runtime.py
 FE_BUILD=$OUT/foundation
 FE_OUT=$FE_BUILD/essentials
@@ -66,7 +68,7 @@ BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER=${BUILD_FULL_DEVELOPER_TOOLS_S
 # enough because ignored .build* directories can contain Swift files that an
 # unrestricted recursive walk would consume.
 [ -d "$SYS/usr/include" ] || {
-    echo "build_full: no FE sysroot at $SYS; run full/foundation/stage_fe_sysroot.sh" >&2
+    echo "build_full: no FE sysroot at $SYS; run full/foundation/stage_fe_sysroot.sh (Darwin) or scripts/x86/stage_fe_sysroot.sh (Linux x86_64 sibling)" >&2
     exit 2
 }
 [ -f "$PINNED_INPUTS_TOOL" ] || {
@@ -115,7 +117,7 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" "${APPLE_SWIFT_OVERLAY_FLAGS[@]}" -
         -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$SYS" -rpath /usr/lib/swift)
+LD=(ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$SYS" -rpath /usr/lib/swift)
 CC=(clang-18 -target "$TARGET" -isysroot "$SYS" -O2)
 
 # The DTS route is explicit and fail-closed. Standalone mode builds the
@@ -307,6 +309,8 @@ python3 -B "$SWIFT_CORE_RUNTIME_STAGER" \
     --destination "$swift_core_target" \
     --expected-sha256 "$SWIFT_CORE_RUNTIME_EXPECTED_SHA256" \
     --report "$OUT/swift-core-runtime-stage.json"
+require_macho_cpu "$swift_core_target" "staged libswiftCore.dylib" \
+    || die "refusing to keep a libswiftCore.dylib whose Mach-O CPU is not $OTOOL_CPU (would mix $ARCH guests with a foreign slice)"
 SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 
 # FoundationEssentials pulls this nine-dylib Swift overlay closure. The source
@@ -337,6 +341,8 @@ for name in "${FE_OVERLAYS[@]}"; do
         cp "$source" "$target"
         echo "   staged $name"
     fi
+    require_macho_cpu "$target" "FE overlay $name" \
+        || die "FE overlay $name is not $OTOOL_CPU Mach-O (arm64 simruntime dylibs cannot be copied into an x86 mrroot)"
 done
 
 # The Darwin dispatch bridge deliberately crosses into a small, versioned
@@ -466,11 +472,11 @@ done
         -fno-exceptions -fno-rtti -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/conccxx.o" "$W/full/shims/conccxx.cpp"
 
-    ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
-    ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
         -o "$LIB/libc++.1.dylib" "$OUT/cxxpatch.o" "$OUT/conccxx.o" \
         "$LIB/libSystem.B.dylib" -reexport_library "$LIB/libc++.real.dylib"
@@ -479,7 +485,7 @@ done
     # rather than installed. See that file's header: it is a FAILED experiment,
     # retained so the next person does not repeat it.
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
-    ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
@@ -587,7 +593,7 @@ done
 # -syslibroot the GUEST root: our libSystem.B/libc++.1 are umbrellas that
 # LC_REEXPORT_DYLIB /usr/lib/*.real.dylib, and the linker has to be able to
 # resolve those install names to files.
-ld64.lld-18 -dylib -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" \
+ld64.lld-18 -dylib -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" \
     -syslibroot "$ROOTDIR/darwin" \
     -install_name /usr/lib/libquartz.dylib -undefined dynamic_lookup \
     -o "$ROOTDIR/darwin/usr/lib/libquartz.dylib" "${QOBJS[@]}" \

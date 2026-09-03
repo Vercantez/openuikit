@@ -11,6 +11,8 @@ set -euo pipefail
 W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
 # shellcheck source=../../scripts/vendor_tree.sh
 . "$W/scripts/vendor_tree.sh"
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
 UIKIT=${UIKIT:-$W/uikit}
 MACHORUN=${MACHORUN:-$W/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_package_guest.sh <normalized-bundles-directory>}
@@ -19,14 +21,14 @@ FOCUS_ROOT=$W/scratch/ladder-corpus/focus-ios
 FOCUS_REPO=$FOCUS_ROOT/focus-ios
 FOCUS_SOURCES=$FOCUS_REPO/BlockzillaPackage/Sources
 SNAPKIT_ROOT=$W/scratch/xcodeplan-deps/SnapKit
-BASE=$W/build/focus-onboarding-guest
-OUT=$W/build/focus-package-guest
+BASE=$W/build/focus-onboarding-guest${FULL_OUT_SUFFIX}
+OUT=$W/build/focus-package-guest${FULL_OUT_SUFFIX}
 PACKAGE=$OUT/package
 MODULE_CACHE=$OUT/module-cache
 AUDIT=$OUT/audit
-FULL=$W/build/full
-SYS=$W/scratch/sysroot_fe4
-MRROOT=$W/scratch/mrroot_full
+FULL=$W/build/full${FULL_OUT_SUFFIX}
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
+MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
@@ -222,11 +224,11 @@ bash "$W/full/swiftui/build_focus_onboarding_guest.sh" "$RESOURCE_INPUT"
 mkdir -p "$PACKAGE"
 cp -a "$BASE/package/." "$PACKAGE/"
 
-SWIFTC=(swiftc -target arm64-apple-macos15.0 -sdk "$SYS"
+SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
+LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
     -syslibroot "$SYS")
 PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -I"$PACKAGE/include/CSTBTrueType"
@@ -246,7 +248,7 @@ COMMON_LINK=(-rpath @loader_path -L"$PACKAGE"
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib")
 
 echo '== prewarm the package Darwin Swift module cache'
-swiftc -target arm64-apple-macos15.0 -sdk "$SYS" \
+swiftc -target "$TARGET" -sdk "$SYS" \
     -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck \
     -e 'import Swift'
 
@@ -311,22 +313,22 @@ echo '== link reusable package dylibs'
     -install_name @rpath/libDesignSystem.dylib -o "$PACKAGE/libDesignSystem.dylib" \
     "$OUT/designsystem.o" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libWidget.dylib -o "$PACKAGE/libWidget.dylib" \
     "$OUT/widget.o" "${COMMON_LINK[@]}" \
     -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libOnboarding.dylib -o "$PACKAGE/libOnboarding.dylib" \
     "$OUT/onboarding.o" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lWidget \
-    -lSnapKit -lDesignSystem -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lSnapKit -lDesignSystem -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libLicenses.dylib -o "$PACKAGE/libLicenses.dylib" \
     "$OUT/licenses.o" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 
 echo '== link and run Bundle/Published/SnapKit lifecycle probe'
 PROBE_APP=$OUT/FocusPackageProbe.app
@@ -365,7 +367,7 @@ require_hash "$SNAPKIT_BUNDLE/PrivacyInfo.xcprivacy" \
     "$OUT/package-probe.o" "$PROVIDER/FocusPackageProbe" \
     "${COMMON_LINK[@]}" -lOnboarding -lWidget -lSnapKit -lDesignSystem \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$PROBE_APP/Contents/MacOS/FocusPackageProbe" \
@@ -375,8 +377,8 @@ grep -Fqx $'file\tpackage/FocusPackageProbe.framework/FocusPackageProbe\t'\
 "$(hash_file "$PROVIDER/FocusPackageProbe")" \
     "$AUDIT/package-runtime-closure.manifest" \
     || die "dynamic Bundle provider is absent from recursive runtime closure"
-if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
-    echo "focus_package_guest: compile/link may proceed on this VM; execution cannot" >&2
+if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_package_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
         || exit $?
 fi
@@ -423,7 +425,7 @@ require_hash "$LICENSES_BUNDLE/license-list.plist" \
     -o "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest" \
     "$OUT/licenses-main.o" "${COMMON_LINK[@]}" \
     -lLicenses -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
-    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest" \
@@ -500,8 +502,8 @@ require_hash "$OUT/license-list.plist" "$EXPECTED_LIBRARY_LICENSES" \
 
 for dylib in UIKit SnapKit DesignSystem Widget Onboarding Licenses; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
-        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
-        || die "lib$dylib is not an ARM64 Mach-O dylib"
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
+        || die "lib$dylib is not a $ARCH Mach-O dylib"
     actual_id=$(llvm-otool-18 -D "$PACKAGE/lib$dylib.dylib" | tail -n 1)
     [ "$actual_id" = "@rpath/lib$dylib.dylib" ] \
         || die "lib$dylib install name changed: $actual_id"
@@ -509,8 +511,8 @@ done
 for executable in "$PROBE_APP/Contents/MacOS/FocusPackageProbe" \
     "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest"; do
     llvm-otool-18 -hv "$executable" \
-        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
-        || die "guest is not an ARM64 Mach-O executable: $executable"
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]EXECUTE" \
+        || die "guest is not a $ARCH Mach-O executable: $executable"
 done
 
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \

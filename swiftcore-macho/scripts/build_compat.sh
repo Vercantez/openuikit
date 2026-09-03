@@ -21,10 +21,13 @@
 # eventually produces (a jump through a zerofill vtable during exception
 # dispatch, say) is nowhere near the cause.
 set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/guest_arch.inc"
 
 W=${W:-$HOME/work}
 SDK=${SDK:-$W/sdk/MacOSX.sdk}
-TC=${TC:-/opt/swift624/usr}
+# TC already set by guest_arch.inc (SWIFT_TOOLCHAIN, PATH, /opt/swift624/usr, or /usr).
 SRC=${SRC:-$W/compat}
 # machorun's built userland -- the thing we must not collide with.
 MRLIB=${MRLIB:-$W/machorun/darwin/usr/lib}
@@ -85,15 +88,36 @@ fi
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$(dirname "$OUT")"
 
-"$CC" -target arm64-apple-macos13.0 -isysroot "$SDK" -O1 -fPIC \
+"$CC" -target "$SWIFTCORE_CLANG_TARGET" -isysroot "$SDK" -O1 -fPIC \
   -Wno-incompatible-library-redeclaration -Wno-builtin-requires-header \
   -c "$SRC/swiftcompat.c" -o "$tmp/swiftcompat.o"
 
-"$CXX" -target arm64-apple-macos13.0 -isysroot "$SDK" -O1 -fPIC -std=c++17 \
+"$CXX" -target "$SWIFTCORE_CLANG_TARGET" -isysroot "$SDK" -O1 -fPIC -std=c++17 \
   -fno-exceptions -fno-rtti \
   -c "$SRC/shim.cpp" -o "$tmp/shim.o"
 
-"$CXX" -target arm64-apple-macos13.0 -isysroot "$SDK" \
+# x86-only: unexport the nine symbols x86 libSystem already defines. The
+# arm64 staged libSystem (scratch/mrroot_full, scratch/sysroot_fe4) exports
+# none of them, so the committed arm64 artifacts/libswiftcompat.dylib must
+# keep them. Do not delete them from swiftcompat.c. List:
+# sdk/compat/x86_unexported_symbols.txt
+unexport=()
+case "$SWIFTCORE_CLANG_TARGET" in
+  x86_64-*)
+    unexport_list=$SCRIPT_DIR/../sdk/compat/x86_unexported_symbols.txt
+    [ -f "$unexport_list" ] || {
+      echo "build_compat: missing $unexport_list" >&2
+      exit 2
+    }
+    while IFS= read -r s; do
+      [ -n "$s" ] || continue
+      case "$s" in \#*) continue ;; esac
+      unexport+=(-Wl,-unexported_symbol,"$s")
+    done < "$unexport_list"
+    ;;
+esac
+
+"$CXX" -target "$SWIFTCORE_CLANG_TARGET" -isysroot "$SDK" \
   -fuse-ld=lld -B "$LLD_BIN" \
   -dynamiclib -install_name /usr/lib/libswiftcompat.dylib \
   -compatibility_version 1 -current_version 1 \
@@ -101,6 +125,7 @@ mkdir -p "$(dirname "$OUT")"
   "$tmp/swiftcompat.o" "$tmp/shim.o" \
   -lSystem -lc++ \
   -Wl,-undefined,dynamic_lookup \
+  "${unexport[@]}" \
   -o "$tmp/libswiftcompat.dylib"
 
 "$NM" --defined-only --extern-only "$tmp/libswiftcompat.dylib" \

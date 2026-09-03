@@ -2,9 +2,10 @@
 
 Built on Ubuntu 24.04 aarch64 with the stock swift.org `swift-6.2.4-RELEASE`
 Linux toolchain. **No Xcode, no Apple toolchain, no macOS.** Reproduce with the
-sequence in `../docs/BUILD_LOG.md` §7.
+sequence in `../docs/BUILD_LOG.md` §7. The x86_64 retarget of that recipe is
+`../docs/X86_64.md` / `scripts/build_stdlib.sh`.
 
-## THERE ARE EXACTLY TWO STAGING SOURCES HERE, AND THIS IS THE LIST
+## THERE ARE EXACTLY THREE STAGING SOURCES HERE, AND THIS IS THE LIST
 
 `machorun scripts/stage_swiftcore.sh <dir>` will install from any directory
 shaped like the table below. **Nothing gates what sits in one.** On 2026-08-27 a
@@ -16,8 +17,9 @@ a third without adding a row is the mistake this list exists to prevent.
 
 | directory | stageable | contents |
 |---|---|---|
-| `.` (this one) | **yes** — the canonical source; matches what machorun has staged | `swift-macosx/`, `libswiftcompat.dylib` |
-| `concurrency/` | **yes** | the same, plus `libswift_Concurrency.dylib` |
+| `.` (this one) | **yes** — the canonical **arm64** source; matches what machorun has staged | `swift-macosx/arm64/`, `libswiftcompat.dylib` |
+| `concurrency/` | **yes** (arm64) | the same, plus `libswift_Concurrency.dylib` |
+| `swift-macosx/x86_64/` | **yes** — x86_64 slice beside arm64; never a rename of the arm64 file | `libswiftCore.dylib` (10 123 624 bytes, sha256 `8de09dbae55b672287985812c64fe859029197aaf70458aa3097bbbdce4c39fb`) + `Swift.swiftmodule/x86_64-apple-macos.*`. Manifest: `x86_64.manifest.json` (12 files). `_Concurrency` is still absent (BUILD_LOG §16). |
 
 `libswiftCore.dylib` is **byte-identical in both** and its export set is
 identical to every earlier build (30,723 symbols, 0 differing), so which one you
@@ -30,8 +32,10 @@ one-off with the isa mask rewritten, kept for the §8 analysis.
 
 | file | what |
 |---|---|
-| `swift-macosx/arm64/libswiftCore.dylib` | the Swift standard library, Mach-O 64-bit **arm64**, install name `/usr/lib/swift/libswiftCore.dylib`, 30,723 exported symbols |
+| `swift-macosx/arm64/libswiftCore.dylib` | the Swift standard library, Mach-O 64-bit **arm64**, install name `/usr/lib/swift/libswiftCore.dylib`, 30,723 exported symbols, sha256 `dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb` (see `arm64.manifest.json`, 33 files) |
 | `swift-macosx/Swift.swiftmodule/arm64-apple-macos.*` | the matching module / interface, so `swiftc -target arm64-apple-macos` can compile against it |
+| `swift-macosx/x86_64/libswiftCore.dylib` | **x86_64 sibling**, same install name. Produced by `scripts/build_stdlib.sh` on x86_64 Linux / Swift 6.2.4 / source `ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b`. `MH_MAGIC_64 X86_64`, 10 123 624 bytes, sha256 `8de09dbae55b672287985812c64fe859029197aaf70458aa3097bbbdce4c39fb`. Not a copy of the arm64 dylib. |
+| `swift-macosx/Swift.swiftmodule/x86_64-apple-macos.*` | module triple for `swiftc -target x86_64-apple-macos`. Sits *beside* the arm64 files in the same directory. |
 | `libswiftcompat.dylib` | **34 symbols** — the gap between libswiftCore/libswift_Concurrency's imports and machorun's self-hosted Darwin userland (see `../sdk/compat/swiftcompat.c`). It is asserted **disjoint** from that userland at build time; ten symbols were deleted on 2026-08-27 when they stopped being a gap and became duplicates |
 | `concurrency/.../libswift_Concurrency.dylib` | still linked against the **old** `.tbd`s — three `__cxxabiv1` vtables are flat (`dynamically looked up`) rather than `from libc++`. Latent, not live: it is not staged. See §16 |
 

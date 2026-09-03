@@ -49,12 +49,13 @@ set -euo pipefail
 
 W=${W:-/work}
 R=${R:-/repo}
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 ROOT=${1:-$W/root}
 SDK=${SDK:-$W/sdk/MacOSX.sdk}
 LLD=${LLD_BIN:-/usr/lib/llvm-18/bin}
 NM=${NM:-llvm-nm-18}
 OTOOL=${OTOOL:-llvm-otool-18}
-TRIPLE=${TRIPLE:-arm64-apple-macos13.0}
 REPLACE=${REPLACE:-0}
 
 # Images CHECK 1 must sweep that do not live in the root. The guest EXECUTABLE

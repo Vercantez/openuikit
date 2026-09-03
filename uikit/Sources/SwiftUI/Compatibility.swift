@@ -1,3 +1,8 @@
+// Preview is app-side machinery: DeveloperToolsSupport is built against the
+// app-facing Foundation facade. In a Foundation-hidden (FoundationEssentials-
+// only) SwiftUI build the module is absent or unloadable, so the whole #Preview
+// slice is conditional — same contract as UIKitShim (target-15).
+#if canImport(DeveloperToolsSupport) && canImport(Foundation)
 @_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 import OpenUIKit
 import OpenCoreGraphics
@@ -30,6 +35,11 @@ public macro Preview(
     module: "OpenUIKitPreviewMacros",
     type: "UIKitPreviewMacro"
 )
+#endif
+
+// Everything below is arch- and Foundation-independent SwiftUI surface
+// (LocalizedStringKey, StrokeStyle, AnyView, Animatable, GeometryEffect, …)
+// and must compile in the Foundation-hidden guest build.
 
 /// The source-facing key retained by SwiftUI controls until their strings are
 /// resolved in the active bundle/locale. The portable renderer currently uses
@@ -310,6 +320,9 @@ public extension _OpenText {
     }
 }
 
+// ImageResource is a DeveloperToolsSupport type: the Image/Label resource
+// initializers are app-side surface, hidden with the Preview slice above.
+#if canImport(DeveloperToolsSupport) && canImport(Foundation)
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 public extension _OpenImage {
     nonisolated init(_ resource: ImageResource) {
@@ -348,3 +361,4 @@ public extension _OpenLabel where Title == _OpenText, Icon == _OpenImage {
         self.init(LocalizedStringKey(String(title)), image: resource)
     }
 }
+#endif

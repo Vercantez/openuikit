@@ -1,0 +1,20 @@
+sizeof struct statfs    2168
+offset f_bsize          0
+offset f_iosize         4
+offset f_blocks         8
+offset f_mntonname      88
+offset f_mntfromname    1112
+MNT_RDONLY              0x1
+MNT_NOSUID              0x8
+MNT_NOEXEC              0x4
+MNT_SYNCHRONOUS         0x2
+MNT_NODEV               0x10
+statfs /                rc 0 errno 0
+statfs / rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-prefix 1 fstype-named 1 flags-word-nonzero-or-ro 1
+statfs tmp              rc 0
+statfs tmp rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-self 1 fstype-named 1 flags-word-nonzero-or-ro 1
+fstatfs tmp             rc 0 errno 0
+fstatfs tmp rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-self 1 fstype-named 1 flags-word-nonzero-or-ro 1
+path-fd agree           mnton 1 bsize 1 blocks 1 fstype 1
+statfs missing          rc -1 errno 2 is ENOENT 1
+done

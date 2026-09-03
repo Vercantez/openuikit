@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# Build a cold, relocatable ARM64 Mach-O core-framework package for unchanged
-# application sources. Run inside the pinned Linux/arm64 production image with
-# fresh build/cache/root paths. The production host wrapper gates publication
-# on exact pre/post content manifests for every other replay input.
+# Build a cold, relocatable Mach-O core-framework package for unchanged
+# application sources. The TARGET triple follows the host (arm64-apple-macos15.0
+# or x86_64-apple-macos15.0); x86_64 output roots use a -x86_64 suffix so an
+# arm64 package is never overwritten. Run inside the pinned Linux production
+# image with fresh build/cache/root paths. The production host wrapper gates
+# publication on exact pre/post content manifests for every other replay input.
 
 set -euo pipefail
 export GIT_OPTIONAL_LOCKS=0
@@ -10,23 +12,25 @@ export GIT_OPTIONAL_LOCKS=0
 W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
 # shellcheck source=../../scripts/vendor_tree.sh
 . "$W/scripts/vendor_tree.sh"
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
 MACHORUN=${MACHORUN:-$W/machorun}
-TARGET=arm64-apple-macos15.0
 MIN_OS=15.0
-SYS=$W/scratch/sysroot_fe4
-FULL=$W/build/full
-WORK=$W/build/core-guest-work
-MRROOT=$W/scratch/mrroot_full
-BUILD_FULL_CACHE=$W/scratch/modcache_full
-BUILD_FE_CACHE=$W/scratch/modcache_fe4
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
+FULL=$W/build/full${FULL_OUT_SUFFIX}
+WORK=$W/build/core-guest-work${FULL_OUT_SUFFIX}
+MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
+BUILD_FULL_CACHE=$W/scratch/modcache_full${FULL_OUT_SUFFIX}
+BUILD_FE_CACHE=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 SWIFT_FOUNDATION_ICU=$W/scratch/swift-foundation-icu
 SWIFT_COLLECTIONS=$W/scratch/swift-collections
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
-OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
+OPENCOMBINE_ARTIFACTS=${OPENCOMBINE_ARTIFACTS:-$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/artifacts}
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
+LEDGER_TOOL=$W/scripts/env/ledger.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 COPEN_FOUNDATION_CORE_INCLUDE=$W/full/foundation/include/COpenFoundationCore
 FOUNDATION_CACHE_ORACLE=$W/full/foundation/tests/FoundationCacheOracle.swift
@@ -571,6 +575,8 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
 [ -x "$MANIFEST_TOOL" ] || die "manifest tool is missing or not executable: $MANIFEST_TOOL"
+[ -f "$LEDGER_TOOL" ] && [ ! -L "$LEDGER_TOOL" ] \
+    || die "env ledger tool is missing or linked: $LEDGER_TOOL"
 [ -x "$WEBKIT_PROVENANCE_TOOL" ] \
     || die "WebKit provenance tool is missing or not executable: $WEBKIT_PROVENANCE_TOOL"
 [ -f "$WEBKIT_PROVENANCE_POLICY" ] && [ ! -L "$WEBKIT_PROVENANCE_POLICY" ] \
@@ -627,7 +633,7 @@ trap quarantine_on_exit EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-hash_file() { sha256sum "$1" | awk '{print $1}'; }
+hash_file() { python3 "$LEDGER_TOOL" --style core hash-file "$1"; }
 
 nm_symbol_count() {
     local mode=$1 path=$2 symbol=$3
@@ -642,24 +648,11 @@ nm_developer_tools_support_count() {
 }
 
 require_hash() {
-    local path=$1 expected=$2 label=$3 actual
-    [ -f "$path" ] && [ ! -L "$path" ] || die "missing regular $label: $path"
-    actual=$(hash_file "$path")
-    [ "$actual" = "$expected" ] || die "$label hash $actual, expected $expected"
+    python3 "$LEDGER_TOOL" --style core require-hash "$1" "$2" "$3" || exit $?
 }
 
 assert_clean_commit() {
-    local repo=$1 expected_commit=$2 expected_tree=$3 label=$4
-    local actual_commit actual_tree status
-    [ -d "$repo/.git" ] || die "$label is not a Git checkout: $repo"
-    actual_commit=$(git -C "$repo" rev-parse --verify HEAD^{commit})
-    actual_tree=$(git -C "$repo" rev-parse --verify HEAD^{tree})
-    status=$(git -C "$repo" status --porcelain=v1 --untracked-files=all)
-    [ "$actual_commit" = "$expected_commit" ] \
-        || die "$label commit $actual_commit, expected $expected_commit"
-    [ "$actual_tree" = "$expected_tree" ] \
-        || die "$label tree $actual_tree, expected $expected_tree"
-    [ -z "$status" ] || die "$label checkout is dirty: $status"
+    python3 "$LEDGER_TOOL" --style core assert-clean-commit "$1" "$2" "$3" "$4" || exit $?
 }
 
 assert_exact_swift_set() {
@@ -1492,9 +1485,16 @@ python3 "$MANIFEST_TOOL" dangling-symlinks \
     --output "$WORK/sdk-dangling.pre.tsv"
 
 require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" "$EXPECTED_OPENCOMBINE_RESULT" OpenCombine-result
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$EXPECTED_OPENCOMBINE_DOC" OpenCombine-doc
+if [ "$ARCH" = arm64 ]; then
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$EXPECTED_OPENCOMBINE_DOC" OpenCombine-doc
+else
+    if ! llvm-otool-18 -hv "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" 2>/dev/null \
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}"; then
+        die "NEEDS_X86_OPENCOMBINE: OpenCombine.o is not $ARCH (arm64 durable SHA $EXPECTED_OPENCOMBINE_OBJECT still stands; rebuild for $TARGET beside that tree)"
+    fi
+fi
 require_hash "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$EXPECTED_OPENCOMBINE_HELPER" OpenCombine-helper
 require_hash "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" "$EXPECTED_OPENCOMBINE_HEADER" OpenCombine-header
 require_hash "$OPENCOMBINE_HELPERS/include/module.modulemap" "$EXPECTED_OPENCOMBINE_MODULEMAP" OpenCombine-modulemap
@@ -1841,7 +1841,7 @@ APP_CONSUMER_SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS"
+LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos "$MIN_OS" "$MIN_OS"
     -syslibroot "$STAGE/sdk")
 C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/CSTBTrueType"
@@ -2256,10 +2256,10 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
 "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
     -install_name /usr/lib/libOpenURLTransport.dylib \
     -o "$URL_TRANSPORT_DARWIN" "$WORK/open-url-transport-bridge.o"
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$STAGE/include/COpenURLTransport" -shared \
-    "$W/full/urltransport/OpenURLTransportHost.c" \
-    -o "$URL_TRANSPORT_HOST" -lcurl -pthread
+bash "$W/full/urltransport/build_host_helper.sh" \
+    --repo "$W" \
+    --host-dir "$RUNTIME/host" \
+    --include-dir "$STAGE/include/COpenURLTransport"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
     -I "$STAGE/include/COpenURLTransport" \
     "$W/full/urltransport/OpenURLTransportHost.c" \
@@ -2375,10 +2375,10 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
 "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
     -install_name /usr/lib/libOpenRelativeTime.dylib \
     -o "$RELATIVE_TIME_DARWIN" "$WORK/open-relative-time-bridge.o"
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$STAGE/include/COpenRelativeTime" -shared \
-    "$W/full/relativetime/OpenRelativeTimeHost.c" \
-    -o "$RELATIVE_TIME_HOST" -licui18n -licuuc -lm
+bash "$W/full/relativetime/build_host_helper.sh" \
+    --repo "$W" \
+    --host-dir "$RUNTIME/host" \
+    --include-dir "$STAGE/include/COpenRelativeTime"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
     -I "$STAGE/include/COpenRelativeTime" \
     "$W/full/relativetime/OpenRelativeTimeHost.c" \
@@ -2450,97 +2450,19 @@ ldd "$RELATIVE_TIME_HOST" \
 } >> "$RUNTIME/.manifest"
 
 echo '== build and pin the Linux libdispatch scheduling boundary'
-for host_runtime_input in "$HOST_DISPATCH_SOURCE" "$HOST_BLOCKS_RUNTIME_SOURCE"; do
-    [ -f "$host_runtime_input" ] && [ ! -L "$host_runtime_input" ] \
-        || die "host Dispatch runtime input is not a regular file: $host_runtime_input"
-done
-require_hash "$HOST_DISPATCH_SOURCE" "$EXPECTED_HOST_DISPATCH_SHA256" \
-    host-libdispatch
-require_hash "$HOST_BLOCKS_RUNTIME_SOURCE" \
-    "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256" host-BlocksRuntime
-cp "$HOST_DISPATCH_SOURCE" "$RUNTIME/host/libdispatch.so"
-cp "$HOST_BLOCKS_RUNTIME_SOURCE" "$RUNTIME/host/libBlocksRuntime.so"
-
 DISPATCH_HOST=$RUNTIME/host/libOpenDispatchHost.so
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift -shared \
-    "$W/full/dispatch/OpenDispatchHost.c" \
-    -L "$RUNTIME/host" -Wl,-rpath,'$ORIGIN' \
-    -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
-    -o "$DISPATCH_HOST"
-clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift \
-    "$W/full/dispatch/OpenDispatchHost.c" \
-    "$W/full/dispatch/OpenDispatchHostTests.c" \
-    -L "$RUNTIME/host" -Wl,-rpath,"$RUNTIME/host" \
-    -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
-    -o "$WORK/open-dispatch-host-tests"
-LD_LIBRARY_PATH="$RUNTIME/host" "$WORK/open-dispatch-host-tests" \
-    > "$WORK/open-dispatch-host-test.log" 2>&1
-grep -Fx \
-    'OPEN_DISPATCH_HOST_OK global=minted private=serial specific=typed semaphore=signal,timeout async=worker after=timer tokens=contained glibc>=2.38' \
-    "$WORK/open-dispatch-host-test.log" >/dev/null \
-    || die 'native Dispatch host semantic marker is missing'
-
-DISPATCH_HOST_EXPECTED_EXPORTS=$WORK/open-dispatch-host-expected-exports.txt
-{
-    printf '%s\n' \
-        openui_dispatch_host_v1_after \
-        openui_dispatch_host_v1_async \
-        openui_dispatch_host_v1_create_queue \
-        openui_dispatch_host_v1_get_global_queue \
-        openui_dispatch_host_v1_get_specific \
-        openui_dispatch_host_v1_main \
-        openui_dispatch_host_v1_monotonic_nanoseconds \
-        openui_dispatch_host_v1_queue_set_specific \
-        openui_dispatch_host_v1_release_queue \
-        openui_dispatch_host_v1_runtime_check \
-        openui_dispatch_host_v1_semaphore_create \
-        openui_dispatch_host_v1_semaphore_release \
-        openui_dispatch_host_v1_semaphore_signal \
-        openui_dispatch_host_v1_semaphore_wait
-} > "$DISPATCH_HOST_EXPECTED_EXPORTS"
-readelf --wide --syms "$DISPATCH_HOST" \
-    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_dispatch_host_v1_/ { print $8 }' \
-    | LC_ALL=C sort -u > "$WORK/open-dispatch-host-exports.txt"
-cmp "$DISPATCH_HOST_EXPECTED_EXPORTS" "$WORK/open-dispatch-host-exports.txt" \
-    || die 'Linux Dispatch helper exports drifted'
-
-dispatch_glibc_max=$(readelf --version-info "$RUNTIME/host/libdispatch.so" \
-    | grep -o 'GLIBC_[0-9][0-9.]*' | sort -Vu | tail -n 1)
-blocks_glibc_max=$(readelf --version-info "$RUNTIME/host/libBlocksRuntime.so" \
-    | grep -o 'GLIBC_[0-9][0-9.]*' | sort -Vu | tail -n 1)
-[ "$dispatch_glibc_max" = GLIBC_2.38 ] \
-    || die "staged libdispatch maximum glibc requirement is $dispatch_glibc_max, expected GLIBC_2.38"
-[ "$blocks_glibc_max" = GLIBC_2.17 ] \
-    || die "staged BlocksRuntime maximum glibc requirement is $blocks_glibc_max, expected GLIBC_2.17"
-readelf --wide --dynamic "$DISPATCH_HOST" \
-    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
-    | LC_ALL=C sort -u > "$WORK/open-dispatch-host-sonames.txt"
-for required_soname in libdispatch.so libBlocksRuntime.so; do
-    grep -Fx "$required_soname" "$WORK/open-dispatch-host-sonames.txt" >/dev/null \
-        || die "Linux Dispatch helper does not pin $required_soname"
-done
-{
-    printf 'format\topen-dispatch-host-v1\n'
-    printf 'host-abi\tELF64-AArch64\n'
-    printf 'glibc-minimum\t2.38\tsource=staged-libdispatch-version-needs\n'
-    printf 'runtime\tlibdispatch.so\t%s\tmax-version=%s\n' \
-        "$(hash_file "$RUNTIME/host/libdispatch.so")" "$dispatch_glibc_max"
-    printf 'runtime\tlibBlocksRuntime.so\t%s\tmax-version=%s\n' \
-        "$(hash_file "$RUNTIME/host/libBlocksRuntime.so")" "$blocks_glibc_max"
-    printf 'helper\tlibOpenDispatchHost.so\t%s\trpath=$ORIGIN\n' \
-        "$(hash_file "$DISPATCH_HOST")"
-    while IFS= read -r soname; do
-        printf 'direct-soname\t%s\n' "$soname"
-    done < "$WORK/open-dispatch-host-sonames.txt"
-    printf 'queue-policy\tmain=kind-only\tglobal=helper-minted-only\tprivate=helper-minted,serial-or-concurrent\n'
-    printf 'specific-policy\tkey=opaque\tvalue=retained\tdestructor=guest-callback\n'
-    printf 'semaphore-policy\thandle=helper-minted\twait=bounded-or-forever\n'
-    printf 'job-policy\tguest-callback=opaque\thost-dispatch=dispatch_async_f\n'
-} > "$STAGE/attestation/open-dispatch-host.tsv"
-cp "$WORK/open-dispatch-host-test.log" \
-    "$STAGE/attestation/open-dispatch-host-test.log"
+bash "$W/full/dispatch/build_host_bridge.sh" \
+    --repo "$W" \
+    --host-dir "$RUNTIME/host" \
+    --work-dir "$WORK" \
+    --attestation-dir "$STAGE/attestation" \
+    --ledger-style core \
+    --refuse-prefix 'core_guest_package: REFUSING -- ' \
+    --host-dispatch-source "$HOST_DISPATCH_SOURCE" \
+    --host-blocks-runtime-source "$HOST_BLOCKS_RUNTIME_SOURCE" \
+    --expected-libdispatch-sha256 "$EXPECTED_HOST_DISPATCH_SHA256" \
+    --expected-blocks-sha256 "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256"
+# Shared host-libdispatch verifies staged libdispatch max-version is GLIBC_2.38.
 
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
@@ -3434,9 +3356,9 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
     -enable-library-evolution -no-verify-emitted-module-interface \
     -emit-module \
     -emit-module-path \
-        "$CORELOCATION_MODULE_DIR/arm64-apple-macos.swiftmodule" \
+        "$CORELOCATION_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftmodule" \
     -emit-module-interface-path \
-        "$CORELOCATION_MODULE_DIR/arm64-apple-macos.swiftinterface" \
+        "$CORELOCATION_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftinterface" \
     -emit-object -o "$WORK/corelocation.o" \
     "$W/full/corelocation/CoreLocation.swift"
 
@@ -3450,9 +3372,9 @@ done
     -enable-library-evolution -no-verify-emitted-module-interface \
     -emit-module \
     -emit-module-path \
-        "$APPKIT_MODULE_DIR/arm64-apple-macos.swiftmodule" \
+        "$APPKIT_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftmodule" \
     -emit-module-interface-path \
-        "$APPKIT_MODULE_DIR/arm64-apple-macos.swiftinterface" \
+        "$APPKIT_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftinterface" \
     -emit-object -o "$WORK/appkit.o" "${APPKIT_SOURCE_PATHS[@]}"
 ln -s C "$APPKIT_FRAMEWORK/Versions/Current"
 ln -s Versions/Current/AppKit "$APPKIT_FRAMEWORK/AppKit"
@@ -6201,7 +6123,7 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/_FoundationCShims
 )
 LINK_ARGUMENTS=(
-    -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
+    -arch "$ARCH" -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
     -F frameworks -framework AppKit -framework IOKit \
     -framework SystemConfiguration -framework CoreLocation
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
@@ -6552,17 +6474,17 @@ for framework in FoundationEssentials FoundationInternationalization \
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
 record_artifact framework AppKit abi-json \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.abi.json
 record_artifact framework AppKit private-swiftinterface \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.private.swiftinterface
 record_artifact framework AppKit swiftdoc \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftdoc
 record_artifact framework AppKit swiftinterface \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftinterface
 record_artifact framework AppKit swiftmodule \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftmodule
 record_artifact framework AppKit swiftsourceinfo \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftsourceinfo
 record_artifact framework AppKit dylib \
     frameworks/AppKit.framework/Versions/C/AppKit
 record_artifact module-metadata QuickLook cross-import-overlay \
@@ -6644,17 +6566,17 @@ record_artifact include CoreLocation framework-header \
 record_artifact include CoreLocation framework-module-map \
     frameworks/CoreLocation.framework/Modules/module.modulemap
 record_artifact framework CoreLocation abi-json \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.abi.json
 record_artifact framework CoreLocation private-swiftinterface \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.private.swiftinterface
 record_artifact framework CoreLocation swiftdoc \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftdoc
 record_artifact framework CoreLocation swiftinterface \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftinterface
 record_artifact framework CoreLocation swiftmodule \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftmodule
 record_artifact framework CoreLocation swiftsourceinfo \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftsourceinfo
 record_artifact framework CoreLocation mixed-dylib \
     frameworks/CoreLocation.framework/CoreLocation
 record_artifact include COpenFoundationCore opaque-header \

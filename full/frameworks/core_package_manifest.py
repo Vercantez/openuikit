@@ -12,6 +12,11 @@ import stat
 import sys
 from typing import Iterable
 
+_SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
+from guest_arch import guest_arch, macos15_target, swift_module_triple  # noqa: E402
+
 
 CLASSIFICATION = "open-uikit-core-guest-package"
 FORMAT_VERSION = 1
@@ -848,32 +853,32 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         (
             "framework",
             "abi-json",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.abi.json",
         ),
         (
             "framework",
             "private-swiftinterface",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.private.swiftinterface",
         ),
         (
             "framework",
             "swiftdoc",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftdoc",
         ),
         (
             "framework",
             "swiftinterface",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftinterface",
         ),
         (
             "framework",
             "swiftmodule",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftmodule",
         ),
         (
             "framework",
             "swiftsourceinfo",
-            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            f"frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftsourceinfo",
         ),
         (
             "framework",
@@ -977,7 +982,7 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
                 "framework",
                 role,
                 "frameworks/CoreLocation.framework/Modules/"
-                "CoreLocation.swiftmodule/arm64-apple-macos." + suffix,
+                f"CoreLocation.swiftmodule/{swift_module_triple()}." + suffix,
             )
             for role, suffix in (
                 ("abi-json", "abi.json"),
@@ -1466,7 +1471,7 @@ def validate_document(
     if document.get("format_version") != FORMAT_VERSION:
         refuse("core package format version drifted")
     if document.get("target") != {
-        "triple": "arm64-apple-macos15.0",
+        "triple": macos15_target(),
         "minimum_os": "15.0",
     }:
         refuse("core package target drifted")
@@ -1720,11 +1725,11 @@ def write_command(args: argparse.Namespace) -> None:
     require_framework_boundary(artifacts)
     compile_tokens = read_nul_tokens(package, args.compile_rsp, "compile flags")
     link_tokens = read_nul_tokens(package, args.link_rsp, "link inputs")
-    if compile_tokens[:2] != ["-target", "arm64-apple-macos15.0"]:
+    if compile_tokens[:2] != ["-target", macos15_target()]:
         refuse("compile flags do not begin with the exact target")
     if link_tokens[:8] != [
         "-arch",
-        "arm64",
+        guest_arch(),
         "-platform_version",
         "macos",
         "15.0",
@@ -1732,7 +1737,9 @@ def write_command(args: argparse.Namespace) -> None:
         "-syslibroot",
         "sdk",
     ]:
-        refuse("link inputs do not begin with the exact ARM64 platform/SDK contract")
+        refuse(
+            f"link inputs do not begin with the exact {guest_arch()} platform/SDK contract"
+        )
     for required in ("-sdk", "sdk", "-I", "modules"):
         if required not in compile_tokens:
             refuse(f"compile flags omit required token: {required}")
@@ -1782,7 +1789,7 @@ def write_command(args: argparse.Namespace) -> None:
         "classification": CLASSIFICATION,
         "format_version": FORMAT_VERSION,
         "target": {
-            "triple": "arm64-apple-macos15.0",
+            "triple": macos15_target(),
             "minimum_os": "15.0",
         },
         "paths": PATHS,
