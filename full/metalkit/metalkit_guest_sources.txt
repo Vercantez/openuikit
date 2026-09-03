@@ -1,0 +1,4 @@
+full/metalkit/MTKTextureLoader.swift
+full/metalkit/MTKView.swift
+full/metalkit/MetalKit.swift
+full/metalkit/MetalKitLinuxSupport.swift
