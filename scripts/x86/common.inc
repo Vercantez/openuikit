@@ -570,9 +570,15 @@ phase2_fe_overlay_names() {
         libswift_errno.dylib
 }
 
+# scratch/apple-x86-overlays is operator-staged (never committed): Apple's
+# x86_64 overlays extracted from the operator Mac's dyld shared cache with a
+# PROVENANCE.txt (macOS build, tool, sha256s). It is the only source for the
+# four Apple-SDK overlays the open-source stdlib cannot build on Linux
+# (_DarwinFoundation1/2/3, _errno; PR #24). The cross-build stays first.
 phase2_x86_overlay_search_dirs() {
     printf '%s\n' \
         "${W:?}/swiftcore-macho/artifacts/swift-macosx/x86_64" \
+        "${W:?}/scratch/apple-x86-overlays" \
         "${HOME}/work/build/lib/swift/macosx/x86_64" \
         "${HOME}/work/build/lib/swift/macosx"
 }

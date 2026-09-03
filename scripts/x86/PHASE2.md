@@ -210,3 +210,15 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    binary is exported as `UD_GUEST_BIN` for rung a, with
    `bin/ud_guest.otool.txt` (`MH_MAGIC_64 X86_64` + expected loads). Overlay
    dylibs are not required at link time; rung a still needs them at load.
+
+## Operator-staged Apple x86_64 overlays
+
+`scratch/apple-x86-overlays/` (never committed) holds Apple's own x86_64
+Swift overlays extracted on the operator Mac from
+`/System/Volumes/Preboot/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64`
+with `ipsw dyld extract`, plus a `PROVENANCE.txt` (macOS build, tool, sha256
+per file). phase2 searches it after the swiftcore-macho cross-build dir, so a
+cross-built overlay wins when present and the Apple copy fills the four
+Apple-SDK overlays (`_DarwinFoundation1/2/3`, `_errno`) that
+`stdlib/public/CMakeLists.txt` never builds on Linux. Same standing as the
+arm64 CoreSimulator overlays staged by `scripts/stage_swift_runtime.sh`.
