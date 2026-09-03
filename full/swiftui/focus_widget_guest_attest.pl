@@ -109,6 +109,8 @@ sub inventory_command {
     my @files = (
         [ "$w/full/swiftui/build_focus_widget_guest.sh", 'project/full/swiftui/build_focus_widget_guest.sh' ],
         [ "$w/full/swiftui/focus_widget_guest_attest.pl", 'project/full/swiftui/focus_widget_guest_attest.pl' ],
+        [ "$w/full/swiftui/guest_gate_inventories.py", 'project/full/swiftui/guest_gate_inventories.py' ],
+        [ "$w/full/swiftui/guest_gate_inventories.inc", 'project/full/swiftui/guest_gate_inventories.inc' ],
         [ "$w/full/swiftui/FocusWidgetBundle.generated.swift", 'project/full/swiftui/FocusWidgetBundle.generated.swift' ],
         [ "$w/full/swiftui/FocusWidgetGuestMain.swift", 'project/full/swiftui/FocusWidgetGuestMain.swift' ],
         [ "$w/full/scripts/build_full.sh", 'project/full/scripts/build_full.sh' ],
