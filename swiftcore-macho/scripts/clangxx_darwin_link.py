@@ -26,6 +26,7 @@ dropped -platform_version/-arch).
 from __future__ import annotations
 
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -466,6 +467,60 @@ def darwin_reexport_link_flags(argv: list[str]) -> list[str]:
     return flags
 
 
+# lld honours Apple's `$ld$previous$<name>$$<compat>$<start>$<end>$$` symbols:
+# our built libswift_Builtin_float carries
+# `$ld$previous$/usr/lib/swift/libswiftDarwin.dylib$$1$10.14.4$15.0$$`, so a
+# libswiftDarwin link at the CMake deployment target (macosx13.0) records the
+# Builtin_float re-export under the PREVIOUS name -- a self LC_REEXPORT of
+# libswiftDarwin and no Builtin_float (measured on the x86_64 box 2026-09-03:
+# target 13.0 -> [libswiftDarwin, DF1, DF2, DF3]; 15.0 -> Apple's four).
+# Link libswiftDarwin at the platform floor every guest links against.
+DARWIN_REEXPORT_MIN_DEPLOYMENT = "15.0"
+
+
+def raise_darwin_deployment_target(argv: list[str]) -> list[str]:
+    """When linking libswiftDarwin with the four shells, lift `-target
+    <arch>-apple-macosx<ver>` to macosx15.0 so `$ld$previous` ranges ending at
+    15.0 cannot rename the Builtin_float re-export. Other links untouched."""
+    if not find_darwin_reexport_shells(argv):
+        return argv
+    out: list[str] = []
+    i = 0
+    changed = None
+    pat = re.compile(r"^((?:--target=)?[^-]+-apple-macosx)(\d+(?:\.\d+)*)$")
+    while i < len(argv):
+        a = argv[i]
+        if a in ("-target", "--target") and i + 1 < len(argv):
+            m = pat.match(argv[i + 1])
+            if m and _version_lt(m.group(2), DARWIN_REEXPORT_MIN_DEPLOYMENT):
+                changed = (argv[i + 1], m.group(1) + DARWIN_REEXPORT_MIN_DEPLOYMENT)
+                out.extend([a, changed[1]])
+                i += 2
+                continue
+        m = pat.match(a)
+        if m and a.startswith("--target=") and _version_lt(m.group(2), DARWIN_REEXPORT_MIN_DEPLOYMENT):
+            changed = (a, m.group(1) + DARWIN_REEXPORT_MIN_DEPLOYMENT)
+            out.append(changed[1])
+            i += 1
+            continue
+        out.append(a)
+        i += 1
+    if changed:
+        sys.stderr.write(
+            f"clangxx_darwin_link: libswiftDarwin deployment {changed[0]} -> {changed[1]} "
+            "(so $ld$previous cannot rename the Builtin_float re-export)\n"
+        )
+    return out
+
+
+def _version_lt(a: str, b: str) -> bool:
+    pa = [int(x) for x in a.split(".")]
+    pb = [int(x) for x in b.split(".")]
+    n = max(len(pa), len(pb))
+    pa += [0] * (n - len(pa)); pb += [0] * (n - len(pb))
+    return pa < pb
+
+
 def darwin_compiler_rt_osx_path() -> str:
     """Darwin-target compiler-rt builtins archive (generic C + os_version_check)."""
     env = os.environ.get("SWIFTCORE_COMPILER_RT_OSX")
@@ -558,6 +613,7 @@ def darwin_driver_argv(argv: list[str]) -> list[str]:
         kept.append(t)
     kept.extend(darwin_compiler_rt_link_flags(kept))
     kept.extend(darwin_reexport_link_flags(kept))
+    kept = raise_darwin_deployment_target(kept)
     # clang ignores argv after -###; keep diagnostics last.
     diag = [a for a in kept if a in ("-###", "-v", "--verbose")]
     if diag:

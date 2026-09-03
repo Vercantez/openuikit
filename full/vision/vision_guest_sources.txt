@@ -1,0 +1,8 @@
+full/vision/Vision.swift
+full/vision/VisionContour.swift
+full/vision/VisionEnums.swift
+full/vision/VisionError.swift
+full/vision/VisionGeometry.swift
+full/vision/VisionIdentifiers.swift
+full/vision/VisionObservation.swift
+full/vision/VisionRequest.swift

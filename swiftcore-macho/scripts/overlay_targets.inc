@@ -616,7 +616,7 @@ overlay_ensure_darwin_reexports() {
     fi
     echo "overlay_ensure_darwin_reexports: relink $darwin with -reexport_library of four shells"
     set +e
-    python3 - "$py" "$cmds_file" <<'PY'
+    python3 - "$py" "$cmds_file" "$build_dir" <<'PY'
 import os, pathlib, shlex, subprocess, sys
 
 def compiler_args(line):
@@ -635,7 +635,7 @@ def compiler_args(line):
             break
     return argv[i + 1 :]
 
-py, cmds_path = sys.argv[1], sys.argv[2]
+py, cmds_path, build_dir = sys.argv[1], sys.argv[2], sys.argv[3]
 text = pathlib.Path(cmds_path).read_text(errors="replace")
 line = None
 for raw in text.splitlines():
@@ -648,7 +648,9 @@ if line is None:
     sys.stderr.write("CANNOT_DARWIN_REEXPORT reason=no clang++ Darwin link line\n")
     sys.exit(2)
 args = compiler_args(line)
-proc = subprocess.run([sys.executable, py, *args])
+# ninja command lines are relative to the build dir (measured 2026-09-03: "no such
+# file or directory: stdlib/public/Platform/OSX/x86_64/Darwin.o" from elsewhere).
+proc = subprocess.run([sys.executable, py, *args], cwd=build_dir)
 sys.exit(proc.returncode)
 PY
     local st=$?

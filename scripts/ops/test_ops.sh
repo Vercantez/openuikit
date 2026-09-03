@@ -179,12 +179,14 @@ text = pathlib.Path(sys.argv[1]).read_text()
 start = text.index("run_logged()")
 end = text.index("emit_stage()", start)
 body = text[start:end]
-assert "set +e" in body, body
-assert "rc=$?" in body, body
+assert 'local rc=0' in body, body
+assert '"$@" >"$log" 2>&1 || rc=$?' in body, body
 assert 'if "$@" >"$log" 2>&1; then' not in body, body
+# The old mask: capture $? after the if, which is always 0.
+assert "set +e" not in body, body
 print("run_logged ok")
 PY
-ok "run_logged saves rc under set +e (failed child is a failure)"
+ok "run_logged saves rc via || rc=$? (failed child is a failure)"
 
 echo "== SKIP_PHASE2 / SKIP_OVERLAYS / ensure_machorun / real roots"
 grep -q 'OPENUIKIT_CYCLE_SKIP_PHASE2' "$ROOT/scripts/ops/x86_cycle.sh" \

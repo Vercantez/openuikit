@@ -68,16 +68,15 @@ if [ "$DRY" -eq 1 ]; then
 fi
 
 run_logged() {
-    # Capture the child's rc BEFORE restoring set -e. `if cmd; then; fi` leaves
-    # $? = 0 even when cmd failed, so a failed tbd used to print "failed rc=0"
-    # and look like success to callers that inspect rc.
-    local name=$1 log=$2 rc
+    local name=$1 log=$2
     shift 2
     echo "== $name: $*" >&2
-    set +e
-    "$@" >"$log" 2>&1
-    rc=$?
-    set -e
+    # $? after `if cmd; then ...; fi` is the if's status (0), not cmd's:
+    # every failed stage printed "failed rc=0" and was reported rebuilt
+    # (measured 2026-09-03: sysroot, overlays and phase2 all "failed rc=0").
+    # Do not capture rc=$? after the if; that reintroduces the mask.
+    local rc=0
+    "$@" >"$log" 2>&1 || rc=$?
     if [ "$rc" -eq 0 ]; then
         return 0
     fi
@@ -237,7 +236,7 @@ fi
 
 # 5. stage sysroot
 if run_logged sysroot "$LOGDIR/sysroot.log" \
-    bash "$TREE/scripts/x86/stage_fe_sysroot.sh"; then
+    env W="$TREE" bash "$TREE/scripts/x86/stage_fe_sysroot.sh"; then
     emit_stage sysroot "$(status_from_log "$LOGDIR/sysroot.log")" "$TREE/scratch/sysroot_fe4-x86_64"
 else
     emit_stage sysroot cannot "$TREE/scratch/sysroot_fe4-x86_64"
@@ -284,9 +283,13 @@ core_src=$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
 core_dst=$TREE/machorun/darwin/usr/lib/swift/libswiftCore.dylib
 if [ -f "$core_src" ]; then
     mkdir -p "$(dirname "$core_dst")"
-    if [ -f "$core_dst" ] && [ "$(sha256sum "$core_src" | cut -c1-64)" = "$(sha256sum "$core_dst" | cut -c1-64)" ]; then
+    # A symlink here (verify_hello.sh left one into /root/work/build at the
+    # 44152400 cycle) reads as the same bytes but stage_swift_core_runtime.py
+    # refuses "not a regular non-symlink file"; only a regular file is reuse.
+    if [ -f "$core_dst" ] && [ ! -L "$core_dst" ] && [ "$(sha256sum "$core_src" | cut -c1-64)" = "$(sha256sum "$core_dst" | cut -c1-64)" ]; then
         emit_stage libswiftcore-darwin reused "$core_dst"
     else
+        rm -f "$core_dst"
         cp -f "$core_src" "$core_dst"
         emit_stage libswiftcore-darwin rebuilt "$core_dst"
     fi

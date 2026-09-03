@@ -101,8 +101,11 @@ if [ -e "$dst_dir/libswiftCore.dylib" ]; then
     mv "$dst_dir/libswiftCore.dylib" "$dst_dir/libswiftCore.dylib.park-$$"
   fi
 fi
-ln -sfn "$LIBDIR/libswiftCore.dylib" "$dst_dir/libswiftCore.dylib"
-echo "probe: staged $dst_dir/libswiftCore.dylib -> $LIBDIR/libswiftCore.dylib"
+# A regular copy, not a symlink: this is the shared machorun root, and the
+# guest gates (stage_swift_core_runtime.py) refuse a symlinked canonical core
+# (measured 2026-09-03: rung b and c CANNOT after the overlays stage).
+cp -f "$LIBDIR/libswiftCore.dylib" "$dst_dir/libswiftCore.dylib"
+echo "probe: staged $dst_dir/libswiftCore.dylib (copy of $LIBDIR/libswiftCore.dylib)"
 
 echo "=== hello under machorun ==="
 set +e
