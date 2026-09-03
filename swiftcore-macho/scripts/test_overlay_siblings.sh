@@ -67,6 +67,9 @@ printf '%s\n' "$dump" | grep -F -- "-DSWIFT_PATH_TO_STRING_PROCESSING_SOURCE=$fa
 printf '%s\n' "$dump" | grep -F -- "-DSWIFT_PATH_TO_LIBDISPATCH_SOURCE=$fake/libdispatch" >/dev/null \
   && echo "  OK  LIBDISPATCH_SOURCE path" \
   || { echo "  FAIL missing LIBDISPATCH -D"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_DISPATCH=ON" >/dev/null \
+  && echo "  OK  ENABLE_DISPATCH=ON with BUILD_DISPATCH" \
+  || { echo "  FAIL missing SWIFT_ENABLE_DISPATCH=ON"; fail=1; }
 printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_EXPERIMENTAL_STRING_PROCESSING=ON" >/dev/null \
   && echo "  OK  STRING_PROCESSING=ON" \
   || { echo "  FAIL STRING_PROCESSING not ON"; fail=1; }

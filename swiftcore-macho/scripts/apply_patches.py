@@ -262,4 +262,62 @@ edit("stdlib/public/Concurrency/CMakeLists.txt",
   )""",
      "Darwin executor moves into the dispatch branch")
 
+# ---------------------------------------------------------------------------
+# 8. Darwin *target* must not CMake-link a `dispatch` target that Linux-host
+#    libdispatch never creates.
+#
+# SWIFT_ENABLE_DISPATCH defaults TRUE (CMakeLists.txt:767-769). That sets
+# SWIFT_CONCURRENCY_USES_DISPATCH and SWIFT_CONCURRENCY_GLOBAL_EXECUTOR=dispatch
+# (stdlib/cmake/modules/StdlibOptions.cmake:217-241). The concurrency sources
+# that need that executor (DispatchGlobalExecutor.cpp, DispatchExecutor.swift,
+# CFExecutor.swift, PlatformExecutorDarwin.swift) must stay compiled.
+#
+# cmake/modules/Libdispatch.cmake:49-56 does **not** ExternalProject-build
+# dispatch for SWIFT_DARWIN_PLATFORMS ("Darwin targets have libdispatch
+# available, do not build it"). The IMPORTED `dispatch-<subdir>-<arch>`
+# target and the `dispatch` ALIAS (Libdispatch.cmake:157-168, 258-261) exist
+# only for non-Darwin SDKs, and only when sdk == SWIFT_HOST_VARIANT_SDK.
+#
+# Concurrency/CMakeLists.txt:26-36 keys off CMAKE_SYSTEM_NAME STREQUAL
+# Darwin (the *host*). On a Linux host it appends LINK_LIBRARIES `dispatch`
+# (line 256). add_swift_target_library then passes that name through
+# handle_swift_sources DEPENDS (AddSwiftStdlib.cmake:1058-1072). CMake treats
+# a non-target DEPENDS name as a path relative to the current source dir, so
+# ninja wants stdlib/public/Concurrency/dispatch with no rule — the operator
+# wall on x86_64. A Darwin *host* skips the block: SDK headers + libSystem
+# re-exports. A Darwin *target* on Linux must do the same; do not stub a
+# dispatch dylib and do not force OSX into DISPATCH_SDKS.
+# ---------------------------------------------------------------------------
+edit("stdlib/public/Concurrency/CMakeLists.txt",
+"""if("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "dispatch")
+  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    include_directories(AFTER
+                          ${SWIFT_PATH_TO_LIBDISPATCH_SOURCE})
+
+    # FIXME: we can't rely on libdispatch having been built for the
+    # target at this point in the process.  Currently, we're relying
+    # on soft-linking.
+    list(APPEND swift_concurrency_link_libraries
+      dispatch)
+  endif()
+""",
+"""if("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "dispatch")
+  # Darwin host: SDK <dispatch.h> + libSystem re-exports. Linux host + Darwin
+  # *target* (SWIFT_PRIMARY_VARIANT_SDK in SWIFT_DARWIN_PLATFORMS): same —
+  # Libdispatch.cmake will not create a `dispatch` CMake target for OSX.
+  # Keep SWIFT_ENABLE_DISPATCH ON so the dispatch executor sources compile.
+  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND
+     NOT "${SWIFT_PRIMARY_VARIANT_SDK}" IN_LIST SWIFT_DARWIN_PLATFORMS)
+    include_directories(AFTER
+                          ${SWIFT_PATH_TO_LIBDISPATCH_SOURCE})
+
+    # FIXME: we can't rely on libdispatch having been built for the
+    # target at this point in the process.  Currently, we're relying
+    # on soft-linking.
+    list(APPEND swift_concurrency_link_libraries
+      dispatch)
+  endif()
+""",
+     "Darwin target does not CMake-link a missing dispatch target")
+
 print("patches applied")

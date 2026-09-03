@@ -116,7 +116,14 @@ if [ "$OVERLAY_STRING" = ON ]; then
   STRING_FLAG=(-DSWIFT_PATH_TO_STRING_PROCESSING_SOURCE="$STRING_PROCESSING_SRC")
 fi
 if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ]; then
-  DISPATCH_FLAG=(-DSWIFT_PATH_TO_LIBDISPATCH_SOURCE="$LIBDISPATCH_SRC")
+  # Path satisfies StdlibOptions.cmake:224-226 on a non-Darwin host.
+  # ENABLE_DISPATCH stays ON (CMake default TRUE) so the Darwin concurrency
+  # overlay still compiles the dispatch executor; patch 8 stops CMake from
+  # linking a `dispatch` target that Libdispatch.cmake never creates for OSX.
+  DISPATCH_FLAG=(
+    -DSWIFT_PATH_TO_LIBDISPATCH_SOURCE="$LIBDISPATCH_SRC"
+    -DSWIFT_ENABLE_DISPATCH=ON
+  )
 fi
 
 CMAKE_ARGS=(
