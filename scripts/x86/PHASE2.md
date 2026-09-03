@@ -61,8 +61,13 @@ cshims).
 
 The configure hardcoding is gone: `swiftcore-macho/scripts/guest_arch.inc`
 keeps the arm64 argv as `SWIFTCORE_DARWIN_ARCH=arm64` and selects x86_64 on
-this host. One-command recipe: `docs/X86_64.md` §3 /
-`bash swiftcore-macho/scripts/build_stdlib.sh`.
+this host. One-command recipe: `docs/X86_64.md` §3:
+
+```bash
+NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
+  SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \
+  bash swiftcore-macho/scripts/build_stdlib.sh
+```
 
 ## In-VM (this Cursor x86_64 VM) vs operator host
 

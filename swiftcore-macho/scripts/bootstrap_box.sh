@@ -73,11 +73,20 @@ clone_tag "$W/swift" https://github.com/swiftlang/swift.git "$SWIFT_PIN_COMMIT"
 echo "=== corelibs-foundation (CoreFoundation headers for the sysroot) ==="
 clone_tag "$W/scf" https://github.com/swiftlang/swift-corelibs-foundation.git
 
-echo "=== swift-corelibs-libdispatch (the Linux-ported tree, NOT apple-oss-distributions) ==="
+echo "=== swift-corelibs-libdispatch (pin $LIBDISPATCH_PIN_COMMIT tag $SWIFT_PIN_TAG) ==="
 # apple-oss-distributions/libdispatch needs DISPATCH_USE_KEVENT_WORKQUEUE + HAVE_MACH.
 # corelibs has the completed Linux port with event_epoll.c in the SAME tree,
 # selected by configuration -- so this is a config choice, not a fork.
-clone_tag "$W/libdispatch" https://github.com/swiftlang/swift-corelibs-libdispatch.git
+# Always pin-fetch: SWIFTCORE_OVERLAYS=1 / SWIFTCORE_BUILD_DISPATCH=1 pass this
+# path into CMake. A missing tree must fail in configure.sh *before* cmake,
+# not 40 lines into a CMake diagnostic.
+clone_tag "$W/libdispatch" "$LIBDISPATCH_REPO" "$LIBDISPATCH_PIN_COMMIT"
+
+if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
+  echo "=== swift-experimental-string-processing (pin $STRING_PROCESSING_PIN_COMMIT tag $SWIFT_PIN_TAG) ==="
+  clone_tag "$W/swift-experimental-string-processing" \
+    "$STRING_PROCESSING_REPO" "$STRING_PROCESSING_PIN_COMMIT"
+fi
 
 mkdir -p "$W/shims"
 echo "bootstrap complete host=$(uname -m) darwin_arch=$SWIFTCORE_DARWIN_ARCH tc=$TC"

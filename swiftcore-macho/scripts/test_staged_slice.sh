@@ -62,6 +62,17 @@ for rel, meta in man["files"].items():
         print(f"  FAIL {rel} sha/size mismatch"); bad += 1
 if man["source"]["commit"] != "ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b":
     print("  FAIL source commit is not the 6.2.4 pin"); bad += 1
+sib = man.get("siblings") or {}
+want = {
+    "swift-experimental-string-processing": "91177e6225c63e885872b83d48e254b1270fa15a",
+    "swift-corelibs-libdispatch": "2df91f94651f2d924d7506c9d14685929386d779",
+}
+for name, commit in want.items():
+    got = (sib.get(name) or {}).get("commit")
+    if got != commit:
+        print(f"  FAIL sibling {name} commit {got} != {commit}"); bad += 1
+    else:
+        print(f"  OK  sibling {name} @{commit}")
 print(f"  {'OK' if bad==0 else 'FAIL'}  {n} files in x86_64.manifest.json, mismatches={bad}")
 sys.exit(1 if bad else 0)
 PY

@@ -16,6 +16,18 @@
         "commit": { "type": "string", "minLength": 40, "maxLength": 40 }
       }
     },
+    "siblings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["repository", "tag", "commit"],
+        "properties": {
+          "repository": { "type": "string" },
+          "tag": { "type": "string" },
+          "commit": { "type": "string", "minLength": 40, "maxLength": 40 }
+        }
+      }
+    },
     "toolchain": { "type": "string" },
     "host": { "type": "string" },
     "generatedAtUtc": { "type": "string" },

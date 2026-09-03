@@ -54,6 +54,8 @@
   "flags": {
     "SWIFTCORE_DARWIN_ARCH": "x86_64",
     "SWIFTCORE_MACHO_LEGACY_IMAGE_REG": "1",
+    "SWIFT_PATH_TO_LIBDISPATCH_SOURCE": "pinned sibling 2df91f94651f2d924d7506c9d14685929386d779",
+    "SWIFT_PATH_TO_STRING_PROCESSING_SOURCE": "pinned sibling 91177e6225c63e885872b83d48e254b1270fa15a",
     "SWIFT_BUILD_SDK_OVERLAY": "OFF",
     "SWIFT_BUILD_STDLIB": "ON",
     "SWIFT_ENABLE_EXPERIMENTAL_CONCURRENCY": "ON",
@@ -70,6 +72,18 @@
     "commit": "ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b",
     "repository": "https://github.com/swiftlang/swift.git",
     "tag": "swift-6.2.4-RELEASE"
+  },
+  "siblings": {
+    "swift-corelibs-libdispatch": {
+      "commit": "2df91f94651f2d924d7506c9d14685929386d779",
+      "repository": "https://github.com/swiftlang/swift-corelibs-libdispatch.git",
+      "tag": "swift-6.2.4-RELEASE"
+    },
+    "swift-experimental-string-processing": {
+      "commit": "91177e6225c63e885872b83d48e254b1270fa15a",
+      "repository": "https://github.com/swiftlang/swift-experimental-string-processing.git",
+      "tag": "swift-6.2.4-RELEASE"
+    }
   },
   "toolchain": "Swift version 6.2.4 (swift-6.2.4-RELEASE)"
 }

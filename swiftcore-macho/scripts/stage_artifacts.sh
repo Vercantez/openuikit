@@ -97,11 +97,13 @@ done < <(find "$SRC_DIR/macosx" -maxdepth 1 -type d -name '*.swiftmodule' -print
 }
 
 python3 - "$MANIFEST" "$SWIFTCORE_DARWIN_ARCH" "$SWIFTCORE_MODULE_TRIPLE" \
-  "$SWIFT_PIN_COMMIT" "$SWIFT_PIN_TAG" "$DEST_ROOT" "$DEST_LIB" <<'PY'
+  "$SWIFT_PIN_COMMIT" "$SWIFT_PIN_TAG" "$DEST_ROOT" "$DEST_LIB" \
+  "$STRING_PROCESSING_PIN_COMMIT" "$LIBDISPATCH_PIN_COMMIT" <<'PY'
 import hashlib, json, os, sys, time
 from pathlib import Path
 
-manifest, arch, module_triple, commit, tag, dest_root, dest_lib = sys.argv[1:]
+(manifest, arch, module_triple, commit, tag, dest_root, dest_lib,
+ sp_commit, dispatch_commit) = sys.argv[1:]
 
 def sha256(p: Path):
     h = hashlib.sha256()
@@ -129,6 +131,18 @@ payload = {
         "tag": tag,
         "commit": commit,
     },
+    "siblings": {
+        "swift-experimental-string-processing": {
+            "repository": "https://github.com/swiftlang/swift-experimental-string-processing.git",
+            "tag": tag,
+            "commit": sp_commit,
+        },
+        "swift-corelibs-libdispatch": {
+            "repository": "https://github.com/swiftlang/swift-corelibs-libdispatch.git",
+            "tag": tag,
+            "commit": dispatch_commit,
+        },
+    },
     "patches": "scripts/apply_patches.py 1-5+7; patch 5 via SWIFTCORE_MACHO_LEGACY_IMAGE_REG=1; patch 6 (isa widen) off",
     "flags": {
         "SWIFTCORE_DARWIN_ARCH": arch,
@@ -139,6 +153,8 @@ payload = {
         "SWIFT_ENABLE_EXPERIMENTAL_CONCURRENCY": "ON",
         "SWIFT_BUILD_SDK_OVERLAY": "OFF",
         "SWIFTCORE_MACHO_LEGACY_IMAGE_REG": "1",
+        "SWIFT_PATH_TO_STRING_PROCESSING_SOURCE": "pinned sibling",
+        "SWIFT_PATH_TO_LIBDISPATCH_SOURCE": "pinned sibling",
     },
     "toolchain": "Swift version 6.2.4 (swift-6.2.4-RELEASE)",
     "host": os.uname().machine + "-unknown-linux-gnu",
