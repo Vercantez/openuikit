@@ -21,7 +21,7 @@
 # compile as far as RAM/time allow; it will not fake a dylib. Execution of the
 # linked guest is a positive machorun-loader probe in verify_hello.sh, not a
 # VM assumption.
-set -euo pipefail
+set -Eeuo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
@@ -49,6 +49,66 @@ export W B TC SWIFTCORE_DARWIN_ARCH SWIFT_HOST_VARIANT_ARCH
 export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH MACHORUN
 export SWIFT_TOOLCHAIN SWIFT_PATH_TO_STRING_PROCESSING_SOURCE SWIFT_PATH_TO_LIBDISPATCH_SOURCE
 
+# rc=126 is bash "found but not executable" (EACCES/ENOEXEC). The operator
+# rerun of PR #43 exited 126 with no CANNOT_NOT_EXECUTABLE because that
+# string was only printed when ninja_checked itself returned 126. A helper
+# after ninja (overlay flatten / print / a $W/shims/* that lost +x on stamp
+# restage) aborts under set -e without that line. ERR + errtrace names the
+# command and ls -l of what it tried to exec.
+_cannot_not_executable() {
+  local cmd=${1:-unknown}
+  local first expanded path
+  echo "CANNOT_NOT_EXECUTABLE rc=126 cmd=$cmd" >&2
+  first=${cmd%%[[:space:]]*}
+  first=${first#\"}
+  first=${first%\"}
+  first=${first#\'}
+  first=${first%\'}
+  expanded=$first
+  if [[ "$first" == *'$'* ]]; then
+    eval "expanded=$first" 2>/dev/null || expanded=$first
+  fi
+  path=$expanded
+  if [[ "$path" != /* ]] && command -v "$path" >/dev/null 2>&1; then
+    path=$(command -v "$path")
+  fi
+  echo "CANNOT_NOT_EXECUTABLE tried-exec=$path" >&2
+  if [ -e "$path" ] || [ -L "$path" ]; then
+    ls -l "$path" 2>&1 | sed 's/^/  tried-exec ls -l: /' || true
+  else
+    echo "  tried-exec: not a path on disk (function or missing): $path" >&2
+  fi
+  echo "CANNOT_NOT_EXECUTABLE compiler shims:" >&2
+  ls -l "$W/shims/clang++" "$W/shims/clang" "$W/shims/lipo" \
+    "$SCRIPT_DIR/clangxx_darwin_link.py" 2>&1 | sed 's/^/  /' || true
+}
+
+_on_err() {
+  local rc=$?
+  trap - ERR
+  if [ "$rc" -eq 126 ]; then
+    _cannot_not_executable "${BASH_COMMAND:-unknown}"
+  fi
+  exit "$rc"
+}
+trap '_on_err' ERR
+
+# Stamp restage can rewrite $W/shims without +x. chmod before every ninja
+# so the driver wrap is executable; still ls -l so a leftover 126 is obvious.
+ensure_compiler_shims() {
+  local s
+  mkdir -p "$W/shims"
+  for s in "$W/shims/clang++" "$W/shims/clang" "$W/shims/lipo"; do
+    if [ -e "$s" ]; then
+      chmod +x "$s" || true
+    fi
+  done
+  chmod +x "$SCRIPT_DIR/clangxx_darwin_link.py" 2>/dev/null || true
+  echo "build_stdlib: compiler shims (ls -l):"
+  ls -l "$W/shims/clang++" "$W/shims/clang" "$W/shims/lipo" \
+    "$SCRIPT_DIR/clangxx_darwin_link.py" 2>&1 | sed 's/^/  /' || true
+}
+
 # Dry path: dump cmake argv and exit. Does not touch MACHORUN/darwin, does not
 # run check_undefined. Operator overlay runs still go through ninja + scoreboard.
 if [ "${1:-}" = --print-flags ] || [ "${STOP_AFTER:-}" = print-flags ]; then
@@ -67,14 +127,16 @@ step() { printf '\n==== %s ====\n' "$*"; }
 # lets that edge succeed).
 run_stdlib_ninja() {
   local core_st=0 overlay_rc=0
+  ensure_compiler_shims
   step "ninja $SWIFTCORE_NINJA_CORE -j$NINJA_JOBS"
   ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" \
     "$SWIFTCORE_NINJA_CORE" || core_st=$?
   echo "build_stdlib: ninja-core rc=$core_st"
   if [ "$core_st" -eq 126 ]; then
     echo "CANNOT_NOT_EXECUTABLE step=ninja-core rc=126 means a command was found but not executable (EACCES/ENOEXEC), not a link error." >&2
-    ls -l "$W/shims/clang++" "$W/shims/clang" "$(command -v python3)" \
-      "${LD_LLD:-}" "${LD64_LLD:-}" "${TC}/bin/clang++" 2>&1 | sed 's/^/  /' >&2
+    _cannot_not_executable "ninja -C $B $SWIFTCORE_NINJA_CORE"
+    ls -l "$(command -v python3 2>/dev/null || true)" "${LD_LLD:-/}" \
+      "${LD64_LLD:-/}" "${TC:-/}/bin/clang++" 2>&1 | sed 's/^/  /' || true
   fi
   obj_n=$(find "$B" -name '*.o' 2>/dev/null | wc -l)
   echo "objects=$obj_n"
@@ -95,7 +157,7 @@ run_stdlib_ninja() {
       echo "staged ninja .so from $dylib"
     fi
     if [ ! -e "$so" ]; then
-      echo "CANNOT_ELF_SO_LINUX_SHARED: ninja $SWIFTCORE_NINJA_CORE rc=$core_st did not produce $so. Linker is lld (not gold). Linux CMake still emits -shared/-soname; Darwin objects need the clang++ shim (-dynamiclib -nostdlib -lSystem) or link_macho_dylib.sh." >&2
+      echo "CANNOT_ELF_SO_LINUX_SHARED: ninja $SWIFTCORE_NINJA_CORE rc=$core_st did not produce $so. Linker is lld (not gold). Linux CMake still emits -shared/-soname and names the Darwin dylib .so; apple -target must keep the Darwin driver flags and resolve ld64.lld via --ld-path (not rewrite -dynamiclib/-nostdlib)." >&2
     fi
   fi
   if [ "$STOP_AFTER" = ninja-first ]; then
@@ -111,6 +173,10 @@ run_stdlib_ninja() {
     # operator run measures the nine FE dylibs plus _Concurrency / Observation.
     # ninja itself rebuilds real deps of the requested target; we do not skip
     # later names because an earlier ninja failed.
+    # Test hook: exec a non-+x helper after ninja so rc=126 is not ninja's.
+    if [ -n "${SWIFTCORE_TEST_RC126_EXEC:-}" ]; then
+      "${SWIFTCORE_TEST_RC126_EXEC}"
+    fi
     overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
     overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
     python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B" || true
@@ -133,10 +199,12 @@ run_stdlib_ninja() {
         ninja_st=0
         tlog=$W/overlay.${t}.log
         : > "$tlog"
+        ensure_compiler_shims
         ninja_checked "$tlog" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
         echo "build_stdlib: ninja-overlay $t rc=$ninja_st"
         if [ "$ninja_st" -eq 126 ]; then
           echo "CANNOT_NOT_EXECUTABLE step=ninja-overlay target=$t rc=126" >&2
+          _cannot_not_executable "ninja -C $B $t"
         fi
         if [ -f "$tlog" ]; then
           cat "$tlog" >> "$W/build.log" 2>/dev/null || true
