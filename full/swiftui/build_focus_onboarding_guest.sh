@@ -507,6 +507,7 @@ done
 env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
     SWIFT_FOUNDATION_ICU="$SWIFT_FOUNDATION_ICU" STAGE="$FINTL_STAGE" \
     WORK="$FINTL_WORK" TARGET="$TARGET" MIN_OS=15.0 \
+    COLLECTIONS="$FE_COLLECTIONS" OSMOD="$FE_OS" CSHIMS="$FE_CSHIMS" \
     FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
     bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
 [ -f "$PACKAGE/FoundationInternationalization.swiftmodule" ] && \
@@ -627,6 +628,7 @@ echo '== package ten reusable guest dylibs'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
     -o "$PACKAGE/libFoundation.dylib" "$OUT/foundation.o" "$OUT/corefoundation.o" \
+    "${FE_OBJECTS[@]}" \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L"$PACKAGE" -lFoundationEssentials -lFoundationInternationalization \
