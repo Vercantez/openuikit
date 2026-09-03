@@ -233,6 +233,9 @@ runtime_fingerprint() {
 # (the 14 measured sequential refusals). Denominators print as
 # ENV_PREPARE_SUMMARY. The only artifacts.sha256 field that includes this
 # file's own bytes is SwiftUI-build-support-subject.
+# FULL_OUT_SUFFIX is already exported by guest_arch.inc; re-export here so
+# prepare.py resolves scratch/*-x86_64, never the unsuffixed arm64 trees.
+export FULL_OUT_SUFFIX
 python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W" \
     --gate focus-widget || exit $?
 
@@ -263,8 +266,16 @@ require_hash "$RESOURCE_INPUT/Media.xcassets/GradientSecond.colorset/Contents.js
     "$EXPECTED_SECOND_SHA" GradientSecond.colorset
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT_SHA" DejaVuSans.ttf
 require_hash "$MEDIUM_FONT" "$EXPECTED_MEDIUM_FONT_SHA" DejaVuSans-Bold.ttf
-require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" \
-    "$EXPECTED_OPENCOMBINE_RESULT_SHA" OpenCombine-RESULT.txt
+# Arm64 pins export/RESULT.txt. x86 uses export-x86_64/RESULT.txt from the
+# real phase2 OpenCombine build (scripts/x86/build_opencombine.sh); do not
+# hash-pin the arm64 RESULT SHA and do not invent a RESULT.txt.
+OPENCOMBINE_RESULT=$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/RESULT.txt
+if [ -z "$FULL_OUT_SUFFIX" ]; then
+    require_hash "$OPENCOMBINE_RESULT" \
+        "$EXPECTED_OPENCOMBINE_RESULT_SHA" OpenCombine-RESULT.txt
+else
+    [ -s "$OPENCOMBINE_RESULT" ] || die "NEEDS_X86_OPENCOMBINE: missing $OPENCOMBINE_RESULT (phase2 writes export-x86_64/RESULT.txt from the real x86 build; arm64 export/RESULT.txt SHA $EXPECTED_OPENCOMBINE_RESULT_SHA still stands)"
+fi
 # Object/module SHAs pin the arm64 durable OpenCombine tree. Source hashes
 # above/below still apply on every arch. On x86_64 the durable .o cannot be
 # linked; refuse until OpenCombine is rebuilt for $TARGET beside the arm64

@@ -48,6 +48,7 @@ WIDGET=$ROOT/full/swiftui/build_focus_widget_guest.sh
 ONBOARD=$ROOT/full/swiftui/build_focus_onboarding_guest.sh
 REMINDER=$ROOT/full/xcodeplan/build_and_run_reminder_scene_guest.sh
 UD_RUNNER=$ROOT/foundation-macho/tests/ud_guest_runner.swift
+PREPARE=$ROOT/scripts/env/prepare.py
 BUILD_FULL=$ROOT/full/scripts/build_full.sh
 
 expect_file "$PHASE2"
@@ -121,6 +122,14 @@ expect_grep 'require_macho_cpu "$swift_core_target"' "$BUILD_FULL" \
 expect_grep 'NEEDS_X86_OPENCOMBINE' "$WIDGET" "widget keeps NEEDS_X86_OPENCOMBINE"
 expect_grep 'export${FULL_OUT_SUFFIX}/artifacts' "$WIDGET" "widget OpenCombine suffix"
 expect_grep 'export${FULL_OUT_SUFFIX}/artifacts' "$ONBOARD" "onboarding OpenCombine suffix"
+expect_grep 'export${FULL_OUT_SUFFIX}/RESULT.txt' "$WIDGET" "widget OpenCombine RESULT suffix"
+expect_grep 'export${FULL_OUT_SUFFIX}/RESULT.txt' "$ONBOARD" "onboarding OpenCombine RESULT suffix"
+expect_grep 'export FULL_OUT_SUFFIX' "$GUEST" "guest_arch exports FULL_OUT_SUFFIX for prepare.py"
+expect_grep 'export FULL_OUT_SUFFIX' "$WIDGET" "widget re-exports FULL_OUT_SUFFIX before prepare"
+expect_grep 'BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot${FULL_OUT_SUFFIX}}' \
+    "$BUILD_FULL" "build_full BASE_RUNTIME_SOURCE honours FULL_OUT_SUFFIX"
+expect_grep 'FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe${FULL_OUT_SUFFIX}}' \
+    "$BUILD_FULL" "build_full FE_RUNTIME_SOURCE honours FULL_OUT_SUFFIX"
 expect_grep 'EXPECTED_OPENCOMBINE_OBJECT_SHA=96558e7d31c10c4bc769e9774977b74c58dc6ee83cfbd4fca8bf17229424a914' \
     "$WIDGET" "arm64 OpenCombine object SHA still stands"
 expect_grep 'if \[ "$ARCH" = arm64 \]; then' "$WIDGET" \
@@ -679,6 +688,88 @@ case "$armonly" in
     *) die_test "arm64-only _Concurrency should be absent, got: $armonly" ;;
 esac
 rm -rf "$FEWORK"
+
+echo "== base runtime suffix + x86 overlay CANNOT lists the nine FE dylibs"
+expect_file "$PREPARE"
+expect_grep 'scratch/mrroot${FULL_OUT_SUFFIX}' "$BUILD_FULL" "BASE default uses suffix"
+expect_grep 'scratch/mrroot_fe${FULL_OUT_SUFFIX}' "$BUILD_FULL" "FE default uses suffix"
+expect_grep 'phase2_stage_x86_base_mrroot' "$PHASE2" "phase2 stages scratch/mrroot-x86_64"
+expect_grep 'scratch/mrroot${FULL_OUT_SUFFIX}' "$PHASE2" "phase2 BASE_MRROOT is suffixed"
+expect_grep 'CANNOT_X86_OVERLAYS_NOT_BUILT' "$PHASE2" "phase2 overlay hole is not the macOS marker"
+expect_grep 'CANNOT_X86_OVERLAYS_NOT_BUILT' "$PREPARE" "widget env-prepare overlay hole is not the macOS marker"
+expect_grep 'try_generate_tbd' "$PREPARE" "tbd-stubs tries gen_tbd instead of host=x86_64"
+expect_not_grep 'CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS' "$PHASE2" \
+    "phase2 overlay staging does not use the macOS CoreSimulator marker"
+for overlay in libswiftDarwin.dylib libswiftSynchronization.dylib \
+    libswift_Builtin_float.dylib libswift_DarwinFoundation1.dylib \
+    libswift_DarwinFoundation2.dylib libswift_DarwinFoundation3.dylib \
+    libswift_RegexParser.dylib libswift_StringProcessing.dylib libswift_errno.dylib
+do
+    expect_grep "$overlay" "$COMMON" "overlay $overlay named in common.inc"
+    expect_grep "$overlay" "$PREPARE" "overlay $overlay named in prepare.py"
+    expect_grep "$overlay" "$BUILD_FULL" "overlay $overlay named in build_full.sh"
+done
+
+# Isolate $HOME so a leftover operator stdlib tree cannot satisfy the miss case.
+OVERLAY_HOME=$(mktemp -d /tmp/phase2-overlay-home.XXXXXX)
+OVERLAY_DEST=$(mktemp -d /tmp/phase2-overlay-dest.XXXXXX)
+W=$ROOT
+HOME=$OVERLAY_HOME
+# shellcheck source=common.inc
+. "$COMMON"
+overlay_report=$(phase2_stage_x86_fe_overlays "$OVERLAY_DEST/mrroot_fe-x86_64" || true)
+expected_missing='MISSING=libswiftDarwin.dylib,libswiftSynchronization.dylib,libswift_Builtin_float.dylib,libswift_DarwinFoundation1.dylib,libswift_DarwinFoundation2.dylib,libswift_DarwinFoundation3.dylib,libswift_RegexParser.dylib,libswift_StringProcessing.dylib,libswift_errno.dylib'
+if [ "$overlay_report" = "$expected_missing" ]; then
+    ok "overlay stage lists every missing FE dylib ($overlay_report)"
+else
+    die_test "overlay MISSING list expected $expected_missing got: $overlay_report"
+fi
+
+BASE_DEST=$(mktemp -d /tmp/phase2-base-mrroot.XXXXXX)
+x86_core=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
+phase2_stage_x86_base_mrroot \
+    "$BASE_DEST/mrroot-x86_64" \
+    "$ROOT/machorun/build/machorun" \
+    "$ROOT/machorun/darwin" \
+    "$x86_core"
+if [ -x "$BASE_DEST/mrroot-x86_64/machorun" ] \
+    && [ -f "$BASE_DEST/mrroot-x86_64/darwin/usr/lib/swift/libswiftCore.dylib" ] \
+    && phase2_is_x86_macho "$BASE_DEST/mrroot-x86_64/darwin/usr/lib/swift/libswiftCore.dylib" \
+    && phase2_is_elf_x86_loader "$BASE_DEST/mrroot-x86_64/machorun"; then
+    ok "base mrroot-x86_64 stages loader + x86 libswiftCore beside, not into, scratch/mrroot"
+else
+    die_test "base mrroot-x86_64 stage did not produce loader+x86 libswiftCore"
+fi
+rm -rf "$BASE_DEST" "$OVERLAY_HOME" "$OVERLAY_DEST"
+
+echo "== env-prepare with FULL_OUT_SUFFIX=-x86_64 never resolves unsuffixed arm64 trees"
+PREP_FIX=$(mktemp -d /tmp/phase2-prepare-suffix.XXXXXX)
+mkdir -p "$PREP_FIX/env" \
+    "$PREP_FIX/scratch/sysroot_fe4/usr/include" \
+    "$PREP_FIX/scratch/mrroot/darwin/usr/lib/swift" \
+    "$PREP_FIX/scratch/mrroot_full/darwin/usr/lib" \
+    "$PREP_FIX/scratch/mrroot_fe/darwin/usr/lib/swift"
+cp "$ROOT/env/contract.json" "$PREP_FIX/env/contract.json"
+echo trap > "$PREP_FIX/scratch/sysroot_fe4/usr/include/.trap"
+prep_out=$(FULL_OUT_SUFFIX=-x86_64 python3 "$PREPARE" \
+    --root "$PREP_FIX" --gate focus-widget --verify-only --no-fetch)
+if echo "$prep_out" | grep -E 'id=sysroot_fe4 .*sysroot_fe4-x86_64' >/dev/null \
+    && echo "$prep_out" | grep -E 'id=mrroot-base-runtime .*mrroot-x86_64' >/dev/null \
+    && echo "$prep_out" | grep -E 'id=mrroot_full .*mrroot_full-x86_64' >/dev/null \
+    && ! echo "$prep_out" | grep ENV_PREPARE_ | grep -E '/scratch/(mrroot_full|mrroot_fe|sysroot_fe4|mrroot)(/| |$)' | grep -v -- '-x86_64' >/dev/null; then
+    ok "prepare.py FULL_OUT_SUFFIX=-x86_64 resolves only suffixed trees"
+else
+    die_test "prepare.py suffix resolution leaked unsuffixed trees: $(echo "$prep_out" | grep ENV_PREPARE_ | grep -E 'sysroot_fe4|mrroot' | head -20)"
+fi
+echo "$prep_out" | grep -q 'CANNOT_X86_OVERLAYS_NOT_BUILT' \
+    && ok "prepare.py x86 overlays emit CANNOT_X86_OVERLAYS_NOT_BUILT" \
+    || die_test "prepare.py missing CANNOT_X86_OVERLAYS_NOT_BUILT"
+if echo "$prep_out" | grep 'id=tbd-stubs' | grep -q 'CURSOR_ENV_CANNOT_GENERATE_TBD'; then
+    die_test "tbd-stubs still refused by host=x86_64"
+else
+    ok "tbd-stubs is not host=x86_64 CANNOT_GENERATE_TBD"
+fi
+rm -rf "$PREP_FIX"
 
 echo
 echo "test_phase2: pass=$pass fail=$fail"

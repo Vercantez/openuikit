@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import re
 import subprocess
+import tempfile
 import unittest
 import sys
 
@@ -13,7 +15,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts" / "env"))
 
 from ledger import sha256_file  # noqa: E402
-from prepare import prepare, summarize, host_arch, expected_cannot_for_host  # noqa: E402
+from prepare import (  # noqa: E402
+    expected_cannot_for_host,
+    guest_out_suffix,
+    host_arch,
+    prepare,
+    resolve_row_path,
+    summarize,
+)
 from contract import load_contract  # noqa: E402
 
 PREPARE = ROOT / "scripts" / "env" / "prepare.py"
@@ -95,7 +104,13 @@ class PrepareTests(unittest.TestCase):
             "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb",
         )
         self.assertRegex(proc.stdout, r"ENV_PREPARE_(STAGED|SATISFIED) id=libswiftCore")
-        self.assertIn("CURSOR_ENV_CANNOT_BUILD_LOADER", proc.stdout)
+        # x86 cannot compile the arm64 Linux-native loader; if this host already
+        # has an x86 ELF loader (phase2 substrate), the row is satisfied instead.
+        self.assertTrue(
+            "CURSOR_ENV_CANNOT_BUILD_LOADER" in proc.stdout
+            or "ENV_PREPARE_SATISFIED id=machorun-loader" in proc.stdout,
+            proc.stdout,
+        )
         summary = [ln for ln in proc.stdout.splitlines() if ln.startswith("ENV_PREPARE_SUMMARY ")][0]
         print(summary)
 
@@ -131,7 +146,99 @@ class PrepareTests(unittest.TestCase):
         )
         self.assertTrue(SUMMARY.match(line), line)
         cannot_rows = [o for o in outcomes if o.status == "cannot"]
-        self.assertTrue(any(o.marker == "CURSOR_ENV_CANNOT_BUILD_LOADER" for o in cannot_rows) or host_arch() in ("aarch64", "arm64"))
+        self.assertTrue(
+            any(o.marker == "CURSOR_ENV_CANNOT_BUILD_LOADER" for o in cannot_rows)
+            or any(o.id == "machorun-loader" and o.status == "satisfied" for o in outcomes)
+            or host_arch() in ("aarch64", "arm64")
+        )
+
+
+UNSUFFIXED_TREE = re.compile(
+    r"/scratch/(mrroot_full|mrroot_fe|sysroot_fe4|mrroot)(?!-x86_64)(?=/|\s|$)"
+)
+
+
+class SuffixPathPrepareTests(unittest.TestCase):
+    def test_empty_suffix_keeps_contract_spellings(self) -> None:
+        old = os.environ.pop("FULL_OUT_SUFFIX", None)
+        try:
+            self.assertEqual(guest_out_suffix(), "")
+            self.assertEqual(
+                resolve_row_path(ROOT, {"id": "sysroot_fe4", "path": "scratch/sysroot_fe4"}),
+                ROOT / "scratch/sysroot_fe4",
+            )
+            self.assertEqual(
+                resolve_row_path(ROOT, {"id": "mrroot-base-runtime", "path": "scratch/mrroot"}),
+                ROOT / "scratch/mrroot",
+            )
+            self.assertEqual(
+                resolve_row_path(
+                    ROOT,
+                    {
+                        "id": "opencombine-export",
+                        "path": "scratch/oc/export/artifacts",
+                    },
+                ),
+                ROOT / "scratch/oc/export/artifacts",
+            )
+        finally:
+            if old is not None:
+                os.environ["FULL_OUT_SUFFIX"] = old
+            else:
+                os.environ.pop("FULL_OUT_SUFFIX", None)
+
+    def test_x86_suffix_prepare_never_touches_unsuffixed_arm64_trees(self) -> None:
+        import shutil
+
+        with tempfile.TemporaryDirectory(prefix="env-prepare-x86-suffix.") as tmp:
+            fixture = Path(tmp)
+            (fixture / "env").mkdir()
+            shutil.copy2(ROOT / "env/contract.json", fixture / "env/contract.json")
+            for trap in (
+                "scratch/sysroot_fe4/usr/include",
+                "scratch/mrroot/darwin/usr/lib/swift",
+                "scratch/mrroot_full/darwin/usr/lib",
+                "scratch/mrroot_fe/darwin/usr/lib/swift",
+            ):
+                path = fixture / trap
+                path.mkdir(parents=True)
+                (path / ".trap").write_text("arm64-only\n", encoding="utf-8")
+            proc = subprocess.run(
+                [
+                    "python3",
+                    str(PREPARE),
+                    "--root",
+                    str(fixture),
+                    "--gate",
+                    "focus-widget",
+                    "--verify-only",
+                    "--no-fetch",
+                ],
+                env={**os.environ, "FULL_OUT_SUFFIX": "-x86_64"},
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+            for line in proc.stdout.splitlines():
+                if line.startswith("ENV_PREPARE_"):
+                    self.assertIsNone(UNSUFFIXED_TREE.search(line), line)
+            self.assertRegex(proc.stdout, r"id=sysroot_fe4 .*sysroot_fe4-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot_full .*mrroot_full-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot-base-runtime .*mrroot-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot_fe-overlays .*mrroot_fe-x86_64")
+            self.assertIn("CANNOT_X86_OVERLAYS_NOT_BUILT", proc.stdout)
+            self.assertIn("missing=libswiftDarwin.dylib", proc.stdout)
+            self.assertNotIn(
+                "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS", proc.stdout
+            )
+            tbd = [ln for ln in proc.stdout.splitlines() if "id=tbd-stubs" in ln]
+            self.assertEqual(len(tbd), 1, proc.stdout)
+            self.assertNotIn("CURSOR_ENV_CANNOT_GENERATE_TBD", tbd[0])
+            self.assertNotIn("host=x86_64", tbd[0])
+            oc = [ln for ln in proc.stdout.splitlines() if "id=opencombine-export" in ln]
+            self.assertEqual(len(oc), 1, proc.stdout)
+            self.assertNotIn("CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT", oc[0])
+            self.assertIn("export-x86_64", oc[0])
 
 
 if __name__ == "__main__":

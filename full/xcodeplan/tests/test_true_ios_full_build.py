@@ -87,13 +87,14 @@ class TrueIOSFullBuildContractTests(unittest.TestCase):
     def test_full_builder_parameterizes_target_and_link_platform(self) -> None:
         source = BUILD_FULL_PATH.read_text(encoding="utf-8")
         for required in (
-            'TARGET=${TARGET:-arm64-apple-macos15.0}',
+            'guest_arch.inc',
             'LINK_PLATFORM=${LINK_PLATFORM:-macos}',
             'LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MINOS}',
             'APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}',
             'SF=${SF:-$W/scratch/swift-foundation}',
             'SC=${SC:-$W/scratch/swift-collections}',
-            'BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot}',
+            'BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot${FULL_OUT_SUFFIX}}',
+            'FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe${FULL_OUT_SUFFIX}}',
             '-platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION"',
             '--platform 7 --minimum-os "$MINOS" --sdk "$LINK_SDK_VERSION"',
         ):

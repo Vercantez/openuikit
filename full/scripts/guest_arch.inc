@@ -35,6 +35,11 @@ esac
 SYSROOT_SUFFIX=$FULL_OUT_SUFFIX
 # Durable OpenCombine export/ is arm64. x86 cold-builds land in export-x86_64/.
 OPENCOMBINE_EXPORT_SUFFIX=$FULL_OUT_SUFFIX
+# Child processes (widget env-prepare / scripts/env/prepare.py) must inherit
+# the suffix; otherwise they resolve unsuffixed arm64 trees on an x86 host.
+export FULL_OUT_SUFFIX
+export TARGET ARCH SYSROOT_SUFFIX OPENCOMBINE_EXPORT_SUFFIX
+export LD64_ARCH SWIFT_MODULE_TRIPLE OTOOL_CPU
 
 require_macho_cpu() {
     local f=$1 label=${2:-$1}

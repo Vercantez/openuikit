@@ -552,3 +552,109 @@ phase2_probe_fe_imports() {
     printf 'MATCH present=%s optional_absent=%s\n' "$present" "${opt_absent:--}"
     return 0
 }
+
+# Nine FE overlay dylibs. Keep in lockstep with full/scripts/build_full.sh FE_OVERLAYS
+# and scripts/env/prepare.py FE_OVERLAY_DYLIBS. x86 copies come from the
+# swiftcore-macho stdlib cross-build (artifacts/swift-macosx/x86_64/), never
+# from CoreSimulator (those overlay files are arm64-only non-fat).
+phase2_fe_overlay_names() {
+    printf '%s\n' \
+        libswiftDarwin.dylib \
+        libswiftSynchronization.dylib \
+        libswift_Builtin_float.dylib \
+        libswift_DarwinFoundation1.dylib \
+        libswift_DarwinFoundation2.dylib \
+        libswift_DarwinFoundation3.dylib \
+        libswift_RegexParser.dylib \
+        libswift_StringProcessing.dylib \
+        libswift_errno.dylib
+}
+
+phase2_x86_overlay_search_dirs() {
+    printf '%s\n' \
+        "${W:?}/swiftcore-macho/artifacts/swift-macosx/x86_64" \
+        "${HOME}/work/build/lib/swift/macosx/x86_64" \
+        "${HOME}/work/build/lib/swift/macosx"
+}
+
+# Print the first x86 Mach-O overlay path for $1, or return 1.
+phase2_find_x86_overlay() {
+    local name=$1 dir
+    while IFS= read -r dir; do
+        [ -n "$dir" ] || continue
+        if [ -f "$dir/$name" ] && phase2_is_x86_macho "$dir/$name"; then
+            printf '%s\n' "$dir/$name"
+            return 0
+        fi
+    done < <(phase2_x86_overlay_search_dirs)
+    return 1
+}
+
+# Stage FE overlays into $1/darwin/usr/lib/swift/. Prints OK or MISSING=a,b,c.
+# Missing overlays are a named CANNOT_X86_OVERLAYS_NOT_BUILT, not the macOS
+# CoreSimulator marker.
+phase2_stage_x86_fe_overlays() {
+    local dest=$1
+    local swift=$dest/darwin/usr/lib/swift
+    mkdir -p "$swift"
+    local missing=() name src
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        if src=$(phase2_find_x86_overlay "$name"); then
+            cp -f "$src" "$swift/$name"
+        else
+            missing+=("$name")
+        fi
+    done < <(phase2_fe_overlay_names)
+    if [ "${#missing[@]}" -eq 0 ]; then
+        printf 'OK\n'
+        return 0
+    fi
+    local IFS=,
+    printf 'MISSING=%s\n' "${missing[*]}"
+    return 1
+}
+
+# Assemble scratch/mrroot${FULL_OUT_SUFFIX}: x86 ELF loader + x86 darwin
+# userland + x86 libswiftCore. Analog of macOS-only scripts/stage_swift_runtime.sh,
+# whose Swift OVERLAYS are arm64-only; those belong in mrroot_fe-x86_64 from
+# the stdlib cross-build instead.
+#   phase2_stage_x86_base_mrroot <dest> <loader> <darwin-root> <x86-libswiftCore>
+phase2_stage_x86_base_mrroot() {
+    local dest=$1 loader=$2 darwin_root=$3 x86_core=$4
+    local rel d name src
+    mkdir -p "$dest/darwin/usr/lib/swift" "$dest/host"
+    if [ -x "$loader" ]; then
+        cp -f "$loader" "$dest/machorun"
+        chmod a+x "$dest/machorun"
+    fi
+    if [ -d "$darwin_root/usr/lib" ]; then
+        while IFS= read -r -d '' d; do
+            rel=${d#"$darwin_root/usr/lib/"}
+            case "$rel" in
+                swift/libswiftCore.dylib) continue ;;
+            esac
+            if phase2_is_x86_macho "$d"; then
+                mkdir -p "$dest/darwin/usr/lib/$(dirname "$rel")"
+                cp -a "$d" "$dest/darwin/usr/lib/$rel"
+            fi
+        done < <(find "$darwin_root/usr/lib" -type f -name '*.dylib' -print0 2>/dev/null)
+    fi
+    if [ -d "$darwin_root/System" ]; then
+        mkdir -p "$dest/darwin/System"
+        cp -a "$darwin_root/System/." "$dest/darwin/System/"
+    fi
+    if [ -f "$x86_core" ] && phase2_is_x86_macho "$x86_core"; then
+        cp -f "$x86_core" "$dest/darwin/usr/lib/swift/libswiftCore.dylib"
+    fi
+    # Host Linux boundary: copy when present. Do not invent missing names.
+    for name in libdispatch.so libBlocksRuntime.so \
+        libOpenDispatchHost.so libOpenFoundationInternationalizationHost.so \
+        libOpenURLTransportHost.so libOpenRelativeTimeHost.so; do
+        src=/usr/lib/swift/linux/$name
+        if [ -f "$src" ] && [ ! -L "$src" ]; then
+            cp -f "$src" "$dest/host/$name"
+        fi
+    done
+}
+
