@@ -570,10 +570,12 @@ internal final class _UNContentStorage: NSObject {
     result.threadIdentifier =
       coder.decodeObject(of: NSString.self, forKey: "threadIdentifier") as String? ?? ""
     result.title = coder.decodeObject(of: NSString.self, forKey: "title") as String? ?? ""
-    if let dictionary = coder.decodeObject(of: NSDictionary.self, forKey: "userInfo")
-      as [AnyHashable: Any]?
-    {
-      result.userInfo = dictionary
+    if let dictionary = coder.decodeObject(of: NSDictionary.self, forKey: "userInfo") {
+      var restored: [AnyHashable: Any] = [:]
+      dictionary.enumerateKeysAndObjects { key, value, _ in
+        restored[key as! AnyHashable] = value
+      }
+      result.userInfo = restored
     }
     result.summaryArgument =
       coder.decodeObject(of: NSString.self, forKey: "summaryArgument") as String? ?? ""
@@ -910,7 +912,7 @@ public final class UNCalendarNotificationTrigger: UNNotificationTrigger {
 /// volatile stand-in for in-process tests.
 public final class UNPushNotificationTrigger: UNNotificationTrigger {
   @_spi(OpenUIKitHost)
-  public init(repeats: Bool = false) {
+  public override init(repeats: Bool = false) {
     super.init(repeats: repeats)
   }
 
@@ -934,7 +936,7 @@ public final class UNPushNotificationTrigger: UNNotificationTrigger {
 /// rather than replaced with a module-local lookalike.
 public final class UNLocationNotificationTrigger: UNNotificationTrigger {
   @_spi(OpenUIKitHost)
-  public init(repeats: Bool = false) {
+  public override init(repeats: Bool = false) {
     super.init(repeats: repeats)
   }
 
@@ -1502,16 +1504,11 @@ extension NSString {
   ) -> String {
     let localized = Bundle.main.localizedString(forKey: key, value: key, table: nil)
     guard let arguments, !arguments.isEmpty else { return localized }
-    let vars: [CVarArg] = arguments.compactMap { value in
-      if let number = value as? NSNumber {
-        return number
-      }
-      if let string = value as? String {
-        return string
-      }
-      if let string = value as? NSString {
-        return string
-      }
+    let vars: [CVarArg] = arguments.map { value -> CVarArg in
+      if let int = value as? Int { return int }
+      if let number = value as? NSNumber { return number.intValue }
+      if let string = value as? String { return string }
+      if let string = value as? NSString { return string as String }
       return String(describing: value)
     }
     return String(format: localized, arguments: vars)
