@@ -33,11 +33,16 @@ Operator restage of real inputs (Focus_Widget.bundle + Reminder inventory)
 then this runner:
 
 ```bash
-bash x86_stage_inputs_phase2.sh
+bash scripts/ops/x86_cycle.sh /opt/openuikit/x86-verify/openuikit
 ```
 
-(`x86_stage_inputs_phase2.sh` lives on the operator box; it sets
-`FOCUS_WIDGET_BUNDLE` and invokes `bash scripts/x86/phase2.sh`.)
+(`scripts/ops/x86_cycle.sh` is the committed replacement for the operator
+files `/tmp/x86_stage_inputs_phase2.sh` and `/tmp/x86_overlays_phase2.sh`.
+Order: fetch → checkout → prepare.py → `build.sh tbd` clean → sysroot →
+overlays (`SWIFTCORE_OVERLAYS=1` argv from PR #64) → roots → phase2 rungs.
+Overlays after tbd, because overlay-before-tbd left a machorun surface
+change undefined for one more cycle. From the operator Mac:
+`scripts/ops/run_box.sh x86 cycle`.)
 
 Do not edit `machorun/` in this phase: `EXPECTED_INREPO_MACHORUN_TREE` is a
 Focus/full-build attestation pin.
@@ -308,7 +313,8 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    `MRUN=/stage/machorun-bin`). The `== binary` line prints
    `loader=$MRUN sha256=…` of the file about to be exec'd. Before rung a,
    phase2 copies `$MACHORUN/build/machorun` onto `$MRROOT/machorun` when
-   newer (the same `-nt` rule `build_full.sh` uses for rungs b/c); the
+   the stamp key (loader content) mismatches — the same `stamp.inc` rule
+   `build_full.sh` uses for rungs b/c; the
    mrroot-x86 "satisfied" path otherwise leaves a stale loader in place.
    `link_ud_guest.sh` stays the only ud_guest linker. Any other
    missing piece is `CANNOT_UD_GUEST_<FILE> file=<basename>`. On success the

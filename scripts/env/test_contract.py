@@ -79,7 +79,28 @@ class ContractLockTests(unittest.TestCase):
             "69f4fe8214a22a06ec841d425e443d51f8646b6b",
         )
 
-    def test_ud_guest_x86_demands_pinned_corelibs_foundation(self) -> None:
+    def test_execution_hosts_name_instance_and_tree(self) -> None:
+        hosts = load_contract(ROOT)["hosts"]
+        self.assertEqual(
+            hosts["ec2-aarch64"]["instance_id"], "i-00da4d9ca172eb1ff"
+        )
+        self.assertEqual(
+            hosts["ec2-aarch64"]["tree"],
+            "/opt/openuikit/verify-20260902/openuikit",
+        )
+        self.assertEqual(
+            hosts["ec2-x86_64"]["instance_id"], "i-0a2e25f3895c819b3"
+        )
+        self.assertEqual(
+            hosts["ec2-x86_64"]["tree"],
+            "/opt/openuikit/x86-verify/openuikit",
+        )
+        transfer = load_contract(ROOT)["transfer"]
+        self.assertEqual(
+            transfer["s3_bucket"],
+            "openuikit-linux-builder-transfer-00da4d9ca172eb1ff",
+        )
+        self.assertEqual(transfer["s3_prefix"], "git-bundles")
         row = checkouts_by_id(load_contract(ROOT))["swift-corelibs-foundation"]
         self.assertEqual(row["commit"], "f3a7a34302317a95665bf4ff1a62ee1b459c1695")
         self.assertEqual(row["tree"], "2f9136f253a51406f2bcb0a612bcb6a9eba03570")

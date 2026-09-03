@@ -49,6 +49,12 @@
     "execution": "arm64-ec2-authority",
     "macos_oracle": "local-only"
   },
+  "transfer": {
+    "s3_bucket": "openuikit-linux-builder-transfer-00da4d9ca172eb1ff",
+    "s3_prefix": "git-bundles",
+    "s3_region": "us-west-2",
+    "notes": "Operator git bundles for SSM. Bucket measured from ops/campaigns/2026-09-01-fwseed-r1 sourceInfo URLs."
+  },
   "hosts": {
     "cursor-x86_64": {
       "arch": ["x86_64"],
@@ -69,6 +75,19 @@
       "arch": ["aarch64", "arm64"],
       "os": "Linux",
       "role": "execution-authority",
+      "instance_id": "i-00da4d9ca172eb1ff",
+      "tree": "/opt/openuikit/verify-20260902/openuikit",
+      "expected_cannot": [
+        "CURSOR_ENV_CANNOT_STAGE_XCODE_DARWIN_OVERLAYS",
+        "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS"
+      ]
+    },
+    "ec2-x86_64": {
+      "arch": ["x86_64"],
+      "os": "Linux",
+      "role": "x86-verify",
+      "instance_id": "i-0a2e25f3895c819b3",
+      "tree": "/opt/openuikit/x86-verify/openuikit",
       "expected_cannot": [
         "CURSOR_ENV_CANNOT_STAGE_XCODE_DARWIN_OVERLAYS",
         "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS"
