@@ -42,6 +42,7 @@ expect_not_grep() {
 PHASE2=$ROOT/scripts/x86/phase2.sh
 COMMON=$ROOT/scripts/x86/common.inc
 STAGE=$ROOT/scripts/x86/stage_fe_sysroot.sh
+UDINC=$ROOT/scripts/x86/ud_guest.inc
 OC=$ROOT/scripts/x86/build_opencombine.sh
 GUEST=$ROOT/full/scripts/guest_arch.inc
 WIDGET=$ROOT/full/swiftui/build_focus_widget_guest.sh
@@ -101,6 +102,14 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
         die_test "bash -n $(basename "$s")"
     fi
 done
+
+echo "== patch_cf_system_allocator.py"
+if python3 "$ROOT/scripts/x86/test_patch_cf_system_allocator.py" >/tmp/test_patch_cf_system_allocator.out 2>&1; then
+    ok "patch_cf_system_allocator unit tests"
+else
+    die_test "patch_cf_system_allocator unit tests"
+    cat /tmp/test_patch_cf_system_allocator.out >&2 || true
+fi
 
 echo "== operator command + marker grammar"
 expect_grep 'bash scripts/x86/phase2.sh /opt/openuikit/x86-verify/openuikit' "$PHASE2" \
@@ -318,8 +327,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.16' "$COMMON" \
-    "recipe bump restages malloc_zone_memalign mapping"
+expect_grep 'stage_fe_sysroot_x86.17' "$COMMON" \
+    "recipe bump restages a clean malloc.h without global zone macros"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -354,9 +363,15 @@ expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/buil
     "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
 expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
     "rung a drops a stale runroot clone so libCFTest content is fresh"
-expect_file "$ROOT/scripts/x86/fe_malloc_zone_as_malloc.h"
+expect_file "$ROOT/scripts/x86/patch_cf_system_allocator.py"
+expect_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
+    "ud-guest copies CF and rewrites only the Mac system-allocator callbacks"
+expect_grep 'CFOBJC_FORCE_COPY=1' "$UDINC" \
+    "cfobjc recopies the patched CF tree (existence of OUT/src is not freshness)"
+expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
+    "sysroot does not globally map malloc_zone_* (that skipped CFAllocator-as-zone)"
 expect_grep 'stamp_key "$cfbase"' "$UDINC" \
-    "cfobjc objects rebuild when malloc/malloc.h changes; existence is not freshness"
+    "cfobjc objects rebuild when malloc/malloc.h or the allocator patcher changes; existence is not freshness"
 expect_file "$ROOT/scripts/x86/Darwin.apinotes"
 expect_grep 'Darwin.apinotes' "$STAGE" \
     "x86 stager stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
@@ -1456,6 +1471,14 @@ expect_grep 'artifacts/libswiftcompat.dylib is arm64' "$COMMON" \
 expect_grep 'phase2_base_layout_macho_names' "$COMMON" \
     "layout inventory is a closed BASE Mach-O list"
 expect_grep 'LAYOUT_OK' "$PHASE2" "rungs b/c wait on LAYOUT_OK"
+expect_grep 'phase2_rung_selected_quiet b' "$PHASE2" \
+    "host-w-layout / focus-pin / SWIFTUI_SUBSTRATE only cannot when rung b is selected"
+expect_grep 'Rung b would CANNOT_HOST_W_LAYOUT' "$PHASE2" \
+    "PHASE2_RUNGS=a notes the /w mount instead of failing host-w-layout"
+expect_grep 'Rung b would CANNOT_FOCUS_PIN' "$PHASE2" \
+    "PHASE2_RUNGS=a notes a missing Focus pin instead of failing focus-pin"
+expect_grep 'elif phase2_rung_selected_quiet c' "$PHASE2" \
+    "unselected rung c does not cannot REMINDER_INVENTORY"
 awk '
     /cannot mrroot-layout-x86 X86_MRROOT_LAYOUT/ { l=NR }
     /build_focus_widget_guest.sh/ { if (!w) w=NR }
@@ -1611,7 +1634,6 @@ fi
 rm -rf "$PREP_FIX"
 
 echo "== ud-guest-x86 uses committed linker, suffixed tree, reused FE objects"
-UDINC=$ROOT/scripts/x86/ud_guest.inc
 expect_file "$UDINC"
 expect_grep 'ud-guest-x86' "$PHASE2" "phase2 item ud-guest-x86"
 expect_grep 'phase2_try_ud_guest' "$PHASE2" "phase2 invokes the ud-guest producer"
@@ -2099,8 +2121,16 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     mkdir -p "$STAMPW/cfobjc/obj" "$STAMPW/nscfobj" "$STAMPW/lib"
     echo 'int cfobjc_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
         -c -o "$STAMPW/cfobjc/obj/CFString.o" -x c -
+    echo 'int cfbase_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
+        -c -o "$STAMPW/cfobjc/obj/CFBase.o" -x c -
     echo 'int nscf_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
         -c -o "$STAMPW/nscfobj/NSCFConstantString.o" -x c -
+    stamp_write "$STAMPW/cfobjc/obj/CFBase.o" "$(stamp_key \
+        "$STAMPW/cfobjc/obj/CFBase.o" \
+        "$ROOT/foundation-macho/scripts/build_cfobjc.sh" \
+        "$SYS/usr/include/malloc/malloc.h" \
+        "$PHASE2_UD_GUEST_CF_COMMIT" \
+        "$ROOT/scripts/x86/patch_cf_system_allocator.py")"
     : > "$STAMPW/expect-func.txt"
     : > "$STAMPW/expect-data.txt"
     set +e

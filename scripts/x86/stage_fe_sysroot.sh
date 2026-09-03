@@ -180,19 +180,6 @@ if [ -f "$ioctl_stub" ]; then
     fi
 fi
 
-# machorun libSystem aborts malloc_zone_malloc on a non-default zone (exit 71
-# in __CFRuntimeCreateInstance). Map zone APIs to malloc/free like CF's
-# portable branch, without mutating foundation-macho or the CF checkout.
-malloc_h=$SYS/usr/include/malloc/malloc.h
-zone_map=$W/scripts/x86/fe_malloc_zone_as_malloc.h
-if [ -f "$malloc_h" ] && [ -f "$zone_map" ]; then
-    if ! grep -q OPENUIKIT_FE_MALLOC_ZONE_AS_MALLOC "$malloc_h"; then
-        printf '\n' >> "$malloc_h"
-        cat "$zone_map" >> "$malloc_h"
-        echo "  malloc/malloc.h maps malloc_zone_* to malloc/free (one-zone libSystem)"
-    fi
-fi
-
 echo "== CLOCK_REALTIME as clockid_t (Clang modules hide Darwin clock ids)"
 cp -f "$W/scripts/x86/fe_clock_realtime.h" "$SYS/usr/include/fe_clock_realtime.h"
 if [ -f "$SYS/usr/include/Darwin.modulemap" ] \

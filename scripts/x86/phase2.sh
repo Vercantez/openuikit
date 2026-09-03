@@ -105,6 +105,22 @@ cannot() {
     phase2_cannot "$1" "$2" "$3"
 }
 
+# PHASE2_RUNGS (default abc): which rungs to run. A rung that is not selected is
+# reported as SKIP on the scoreboard -- never as a pass -- so a sharded cycle
+# (run_box.sh x86 cycle --only b) stays honest about what it did not measure.
+# Defined before host-w-layout / focus-pin so those items only CANNOT when
+# the rung that needs them is selected.
+PHASE2_RUNGS=${PHASE2_RUNGS:-abc}
+phase2_rung_selected_quiet() {
+    case "$PHASE2_RUNGS" in *"$1"*) return 0 ;; esac
+    return 1
+}
+phase2_rung_selected() {
+    phase2_rung_selected_quiet "$1" && return 0
+    echo "== rung $1: SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
+    return 1
+}
+
 have() { [ -e "$1" ]; }
 
 # ---------------------------------------------------------------------------
@@ -971,7 +987,9 @@ if [ -d "$MRROOT" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts)
+# 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts). Rung a does
+#     not open /w. Cursor cloud already mounts /w, so ln -sfn $W /w fails.
+#     Only CANNOT when rung b is selected; otherwise note the fact.
 echo "==== /w layout (guest-visible fonts path) ===="
 W_LAYOUT=0
 w_resolved=$(readlink -f /w 2>/dev/null || true)
@@ -981,9 +999,12 @@ if [ -d /w ] && [ "$w_resolved" = "$W" ]; then
 elif [ ! -e /w ] && ln -sfn "$W" /w 2>/dev/null; then
     note host-w-layout cold-built
     W_LAYOUT=1
-else
+elif phase2_rung_selected_quiet b; then
     cannot host-w-layout HOST_W_LAYOUT \
         "FocusWidgetGuestMain.swift opens /w/build/swiftui-guest/fonts; cannot ln -s $W /w (resolved=$(readlink -f /w 2>/dev/null || echo missing)). Widget argv already uses \$OUT; fonts still need this docker-era path. Operator: ln -sfn $W /w"
+else
+    note host-w-layout skipped \
+        "PHASE2_RUNGS=$PHASE2_RUNGS; /w resolved=${w_resolved:-missing} is not $W (Cursor mounts /w). Rung b would CANNOT_HOST_W_LAYOUT; do not fake /w."
 fi
 
 # ---------------------------------------------------------------------------
@@ -1239,19 +1260,7 @@ find_existing_file() {
 }
 
 
-# PHASE2_RUNGS (default abc): which rungs to run. A rung that is not selected is
-# reported as SKIP on the scoreboard -- never as a pass -- so a sharded cycle
-# (run_box.sh x86 cycle --only b) stays honest about what it did not measure.
-PHASE2_RUNGS=${PHASE2_RUNGS:-abc}
-phase2_rung_selected_quiet() {
-    case "$PHASE2_RUNGS" in *"$1"*) return 0 ;; esac
-    return 1
-}
-phase2_rung_selected() {
-    phase2_rung_selected_quiet "$1" && return 0
-    echo "== rung $1: SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
-    return 1
-}
+
 # Rung a: ud_guest smoke (14) + scoreboard + persist
 if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]; then
     echo "== rung a: foundation-macho run_ud_guest.sh + run_ud_persist.sh"
@@ -1332,9 +1341,9 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
         RUNG_A_DETAIL="no ud_guest binary"
     fi
 else
-    cannot rung-a-ud_guest UD_GUEST_SUBSTRATE \
-        "needs x86 FE (fe=$FE_OK) + x86 mrroot with libswiftCore (mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86). Committed runners: run_ud_guest.sh smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS in tests/ud_guest_runner.swift; run_ud_persist.sh persist board. Denominators unchanged."
     if phase2_rung_selected_quiet a; then
+        cannot rung-a-ud_guest UD_GUEST_SUBSTRATE \
+            "needs x86 FE (fe=$FE_OK) + x86 mrroot with libswiftCore (mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86). Committed runners: run_ud_guest.sh smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS in tests/ud_guest_runner.swift; run_ud_persist.sh persist board. Denominators unchanged."
         RUNG_A_DETAIL="blocked by substrate"
     else
         RUNG_A_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
@@ -1350,7 +1359,14 @@ FOCUS_PIN=a2832521c1daa0c23419c73705ae043ed60c9791
 focus_pin_probe=$(phase2_probe_focus_pin "$FOCUS_REPO" "$FOCUS_PIN" || true)
 case "$focus_pin_probe" in
     MATCH*) note focus-pin satisfied ;;
-    *) cannot focus-pin FOCUS_PIN "$focus_pin_probe" ;;
+    *)
+        if phase2_rung_selected_quiet b; then
+            cannot focus-pin FOCUS_PIN "$focus_pin_probe"
+        else
+            note focus-pin skipped \
+                "PHASE2_RUNGS=$PHASE2_RUNGS; $focus_pin_probe. Rung b would CANNOT_FOCUS_PIN."
+        fi
+        ;;
 esac
 
 find_widget_bundle() {
@@ -1483,9 +1499,9 @@ if phase2_rung_selected b && [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRR
         fi
     fi
 else
-            cannot rung-b-focus SWIFTUI_SUBSTRATE \
-        "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), x86 sysroot tbds (tbds=$SYSROOT_TBDS_OK; else CANNOT_X86_SYSROOT_TBDS), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
     if phase2_rung_selected_quiet b; then
+        cannot rung-b-focus SWIFTUI_SUBSTRATE \
+            "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), x86 sysroot tbds (tbds=$SYSROOT_TBDS_OK; else CANNOT_X86_SYSROOT_TBDS), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
         RUNG_B_DETAIL="blocked by substrate"
     else
         RUNG_B_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
@@ -1530,20 +1546,19 @@ if phase2_rung_selected c && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
             "build_and_run_reminder_scene_guest.sh exit $rem_rc; success bar is REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true (committed inner script, not invented here)"
         RUNG_C_DETAIL="scene guest failed"
     fi
-elif [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
+elif phase2_rung_selected_quiet c \
+    && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
     && [ "$HOST_RUNTIME_OK" -eq 1 ] && [ "$LAYOUT_OK" -eq 1 ] \
     && [ "$SYSROOT_TBDS_OK" -eq 1 ]; then
     cannot rung-c-reminder REMINDER_INVENTORY \
         "substrate ready enough to invoke full/xcodeplan/build_and_run_reminder_scene_guest.sh, but Reminder 22-source inventory + source root are absent. Looked at scratch/ladder-corpus/reminder and REMINDER_INVENTORY/REMINDER_SOURCE_ROOT. Success bar remains: REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true."
     RUNG_C_DETAIL="needs Reminder inventory json + source root"
-else
+elif phase2_rung_selected_quiet c; then
     cannot rung-c-reminder REMINDER_SUBSTRATE \
         "needs x86 FE+mrroot+libswiftCore+host runtime+layout+sysroot tbds (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86 host=$HOST_RUNTIME_OK layout=$LAYOUT_OK tbds=$SYSROOT_TBDS_OK) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
-    if phase2_rung_selected_quiet c; then
-        RUNG_C_DETAIL="blocked by substrate"
-    else
-        RUNG_C_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
-    fi
+    RUNG_C_DETAIL="blocked by substrate"
+else
+    RUNG_C_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
 fi
 
 # ---------------------------------------------------------------------------
