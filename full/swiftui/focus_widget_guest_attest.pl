@@ -489,6 +489,71 @@ sub objc_classifier_selftest {
         ' negatives=', scalar(@negative), "\n";
 }
 
+sub conformance_classifier_selftest {
+    my (@args) = @_;
+    my $demangle = 'swift-demangle';
+    GetOptionsFromArray(\@args, 'demangle=s' => \$demangle)
+        or fail('invalid conformance-classifier-selftest options');
+    fail('conformance-classifier-selftest takes no positional arguments') if @args;
+    fail('conformance-classifier-selftest requires --demangle')
+        unless defined($demangle) && length $demangle;
+
+    my %definition_owner = (
+        SwiftUI => 'libSwiftUI',
+        OpenUIKit => 'libOpenUIKit',
+        OpenCoreGraphics => 'libOpenCoreGraphics',
+        Combine => 'libCombine',
+        OpenCombine => 'libOpenCombine',
+    );
+
+    # Authority reverse-ownership failure on main 8e12b714: libSwiftUI
+    # defines this Mc for `extension CGFloat: _OpenVectorArithmetic`.
+    my @positive = (
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADWP',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADWp',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+    );
+    for my $fixture (@positive) {
+        my ($symbol, $expected_module, $defining_image) = @$fixture;
+        my ($actual) = classify_framework_symbol($demangle, $symbol);
+        fail("conformance classifier expected $expected_module for $symbol, got "
+            . (defined $actual ? $actual : 'undef'))
+            unless defined($actual) && $actual eq $expected_module;
+        fail("reverse ownership rejected defining image $defining_image for $symbol")
+            unless $definition_owner{$actual} eq $defining_image;
+    }
+
+    # Nominal type descriptor for the same foreign CGFloat: still owned by
+    # OpenCoreGraphics. libSwiftUI defining it must keep failing.
+    my @negative = (
+        [ '_$s16OpenCoreGraphics7CGFloatVMn', 'OpenCoreGraphics', 'libSwiftUI' ],
+    );
+    for my $fixture (@negative) {
+        my ($symbol, $expected_module, $wrong_image) = @$fixture;
+        my ($actual) = classify_framework_symbol($demangle, $symbol);
+        fail("foreign classifier expected $expected_module for $symbol, got "
+            . (defined $actual ? $actual : 'undef'))
+            unless defined($actual) && $actual eq $expected_module;
+        fail("reverse ownership failed to reject $wrong_image defining $actual symbol $symbol")
+            if $definition_owner{$actual} eq $wrong_image;
+    }
+
+    print 'CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=', scalar(@positive),
+        ' negatives=', scalar(@negative), "\n";
+}
+
 sub prefixed_swift_module {
     my ($symbol) = @_;
     return 'SwiftUI' if $symbol =~ /^_?\$s7SwiftUI/;
@@ -507,8 +572,33 @@ sub framework_tokens {
         qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine);
 }
 
+# Protocol-conformance descriptors (`Mc`) and witness tables (`WP` / `Wp`)
+# mangle the conforming TYPE's module first. The module that emitted the
+# symbol is the one that declared the conformance; classify by the PROTOCOL
+# module from swift-demangle, not by slicing the mangled name. Reverse
+# ownership then treats a matching defining dylib as the symbol's owner.
+sub conformance_protocol_module {
+    my ($demangle, $symbol) = @_;
+    return (undef, undef) unless $symbol =~ /(?:Mc|WP|Wp)\z/;
+    my $expanded = capture_command($demangle, '--compact', $symbol);
+    $expanded =~ s/[\r\n]+\z//;
+    fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
+    my $modules = join('|', map { quotemeta($_->[0]) } @FRAMEWORK_MODULES);
+    if ($expanded =~
+        /^(?:protocol conformance descriptor|protocol witness table(?: pattern)?) for .+ : ($modules)\./)
+    {
+        return ($1, $expanded);
+    }
+    return (undef, $expanded);
+}
+
 sub classify_framework_symbol {
     my ($demangle, $symbol) = @_;
+    my ($conformance_module, $conformance_expanded) =
+        conformance_protocol_module($demangle, $symbol);
+    return ($conformance_module, $conformance_expanded)
+        if defined $conformance_module;
+
     my $prefix = prefixed_swift_module($symbol);
     return ($prefix, undef) if defined $prefix;
 
@@ -708,6 +798,8 @@ if ($command eq 'inventory') {
     provider_command(@ARGV);
 } elsif ($command eq 'objc-classifier-selftest') {
     objc_classifier_selftest(@ARGV);
+} elsif ($command eq 'conformance-classifier-selftest') {
+    conformance_classifier_selftest(@ARGV);
 } else {
-    fail('usage: focus_widget_guest_attest.pl inventory|closure|providers|objc-classifier-selftest [options]');
+    fail('usage: focus_widget_guest_attest.pl inventory|closure|providers|objc-classifier-selftest|conformance-classifier-selftest [options]');
 }

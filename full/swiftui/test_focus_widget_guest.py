@@ -511,6 +511,9 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         self.assertIn("unclassified framework-bearing symbol", helper)
         self.assertIn("associated type descriptor", helper)
         self.assertIn("extension in", helper)
+        self.assertIn("protocol conformance descriptor", helper)
+        self.assertIn("protocol witness table", helper)
+        self.assertIn("conformance_protocol_module", helper)
         self.assertIn("^_OBJC_(?:CLASS|METACLASS)_\\$__TtC", helper)
         self.assertIn("^_OBJC_IVAR_\\$__TtC", helper)
         self.assertIn("for (1 .. $nested_count + 2)", helper)
@@ -529,6 +532,26 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
             result.stdout,
             "OBJC_CLASSIFIER_SELFTEST_OK positives=7 negatives=13\n",
         )
+
+    def test_conformance_descriptors_are_owned_by_the_protocol_module(self) -> None:
+        helper = ATTEST.read_text()
+        exact = (
+            "_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc"
+        )
+        self.assertIn(exact, helper)
+        self.assertIn("_$s16OpenCoreGraphics7CGFloatVMn", helper)
+        self.assertIn("conformance-classifier-selftest", helper)
+        result = subprocess.run(
+            ["perl", str(ATTEST), "conformance-classifier-selftest"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            result.stdout,
+            "CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=3 negatives=1\n",
+        )
+        self.assertEqual(result.stderr, "")
 
     def test_adversarial_resume_matrix_covers_reviewed_tamper_classes(self) -> None:
         text = ADVERSARIAL.read_text()
