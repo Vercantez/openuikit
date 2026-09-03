@@ -1,0 +1,151 @@
+precise	status	evidence	notes
+c:@F@UTTypeConformsTo	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertConformance	Walks the local declared-type parent graph; a type conforms to itself.
+c:@F@UTTypeCopyAllTagsWithClass	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTagLookup	Returns every stored filename extension or MIME tag, or nil if none.
+c:@F@UTTypeCopyDeclaration	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertDeclarationAndDynamic	Builds an Info.plist-shaped dictionary from the local registry.
+c:@F@UTTypeCopyDeclaringBundleURL	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertDeclarationAndDynamic	Always nil: Linux has no Apple declaring bundle.
+c:@F@UTTypeCopyDescription	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTypeConstants	English description from the local registry.
+c:@F@UTTypeCopyPreferredTagWithClass	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTagLookup	First stored tag for the class, or nil.
+c:@F@UTTypeCreateAllIdentifiersForTag	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTagLookup	Declared matches only; unknown tags return nil (no dyn.* minting).
+c:@F@UTTypeCreatePreferredIdentifierForTag	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTagLookup	Preferred declared match, or nil for unknown tags.
+c:@F@UTTypeEqual	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTypeConstants	Identifier string equality.
+c:@F@UTTypeIsDeclared	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertTypeConstants	True iff the identifier is in the local registry.
+c:@F@UTTypeIsDynamic	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertDeclarationAndDynamic	True iff the identifier has the dyn. prefix.
+c:@kUTExportedTypeDeclarationsKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTExportedTypeDeclarations.
+c:@kUTImportedTypeDeclarationsKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTImportedTypeDeclarations.
+c:@kUTTagClassFilenameExtension	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Tag class public.filename-extension.
+c:@kUTTagClassMIMEType	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Tag class public.mime-type.
+c:@kUTType3DContent	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTType3DContent.
+c:@kUTTypeAVIMovie	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAVIMovie.
+c:@kUTTypeAliasFile	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAliasFile.
+c:@kUTTypeAliasRecord	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAliasRecord.
+c:@kUTTypeAppleICNS	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAppleICNS.
+c:@kUTTypeAppleProtectedMPEG4Audio	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAppleProtectedMPEG4Audio.
+c:@kUTTypeAppleProtectedMPEG4Video	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAppleProtectedMPEG4Video.
+c:@kUTTypeAppleScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAppleScript.
+c:@kUTTypeApplication	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeApplication.
+c:@kUTTypeApplicationBundle	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeApplicationBundle.
+c:@kUTTypeApplicationFile	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeApplicationFile.
+c:@kUTTypeArchive	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeArchive.
+c:@kUTTypeAssemblyLanguageSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAssemblyLanguageSource.
+c:@kUTTypeAudio	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAudio.
+c:@kUTTypeAudioInterchangeFileFormat	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAudioInterchangeFileFormat.
+c:@kUTTypeAudiovisualContent	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeAudiovisualContent.
+c:@kUTTypeBMP	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeBMP.
+c:@kUTTypeBinaryPropertyList	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeBinaryPropertyList.
+c:@kUTTypeBookmark	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeBookmark.
+c:@kUTTypeBundle	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeBundle.
+c:@kUTTypeBzip2Archive	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeBzip2Archive.
+c:@kUTTypeCHeader	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCHeader.
+c:@kUTTypeCPlusPlusHeader	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCPlusPlusHeader.
+c:@kUTTypeCPlusPlusSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCPlusPlusSource.
+c:@kUTTypeCSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCSource.
+c:@kUTTypeCalendarEvent	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCalendarEvent.
+c:@kUTTypeCommaSeparatedText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCommaSeparatedText.
+c:@kUTTypeCompositeContent	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeCompositeContent.
+c:@kUTTypeConformsToKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeConformsTo.
+c:@kUTTypeContact	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeContact.
+c:@kUTTypeContent	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeContent.
+c:@kUTTypeData	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeData.
+c:@kUTTypeDatabase	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeDatabase.
+c:@kUTTypeDelimitedText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeDelimitedText.
+c:@kUTTypeDescriptionKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeDescription.
+c:@kUTTypeDirectory	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeDirectory.
+c:@kUTTypeDiskImage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeDiskImage.
+c:@kUTTypeElectronicPublication	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeElectronicPublication.
+c:@kUTTypeEmailMessage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeEmailMessage.
+c:@kUTTypeExecutable	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeExecutable.
+c:@kUTTypeFileURL	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeFileURL.
+c:@kUTTypeFlatRTFD	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeFlatRTFD.
+c:@kUTTypeFolder	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeFolder.
+c:@kUTTypeFont	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeFont.
+c:@kUTTypeFramework	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeFramework.
+c:@kUTTypeGIF	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeGIF.
+c:@kUTTypeGNUZipArchive	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeGNUZipArchive.
+c:@kUTTypeHTML	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeHTML.
+c:@kUTTypeICO	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeICO.
+c:@kUTTypeIconFileKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeIconFile; not populated in local declarations.
+c:@kUTTypeIdentifierKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeIdentifier.
+c:@kUTTypeImage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeImage.
+c:@kUTTypeInkText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeInkText.
+c:@kUTTypeInternetLocation	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeInternetLocation.
+c:@kUTTypeItem	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeItem.
+c:@kUTTypeJPEG	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJPEG.
+c:@kUTTypeJPEG2000	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJPEG2000.
+c:@kUTTypeJSON	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJSON.
+c:@kUTTypeJavaArchive	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJavaArchive.
+c:@kUTTypeJavaClass	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJavaClass.
+c:@kUTTypeJavaScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJavaScript.
+c:@kUTTypeJavaSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeJavaSource.
+c:@kUTTypeLivePhoto	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeLivePhoto.
+c:@kUTTypeLog	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeLog.
+c:@kUTTypeM3UPlaylist	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeM3UPlaylist.
+c:@kUTTypeMIDIAudio	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMIDIAudio.
+c:@kUTTypeMP3	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMP3.
+c:@kUTTypeMPEG	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMPEG.
+c:@kUTTypeMPEG2TransportStream	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMPEG2TransportStream.
+c:@kUTTypeMPEG2Video	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMPEG2Video.
+c:@kUTTypeMPEG4	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMPEG4.
+c:@kUTTypeMPEG4Audio	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMPEG4Audio.
+c:@kUTTypeMessage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMessage.
+c:@kUTTypeMountPoint	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMountPoint.
+c:@kUTTypeMovie	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeMovie.
+c:@kUTTypeOSAScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeOSAScript.
+c:@kUTTypeOSAScriptBundle	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeOSAScriptBundle.
+c:@kUTTypeObjectiveCPlusPlusSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeObjectiveCPlusPlusSource.
+c:@kUTTypeObjectiveCSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeObjectiveCSource.
+c:@kUTTypePDF	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePDF.
+c:@kUTTypePHPScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePHPScript.
+c:@kUTTypePICT	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePICT.
+c:@kUTTypePKCS12	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePKCS12.
+c:@kUTTypePNG	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePNG.
+c:@kUTTypePackage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePackage.
+c:@kUTTypePerlScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePerlScript.
+c:@kUTTypePlainText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePlainText.
+c:@kUTTypePlaylist	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePlaylist.
+c:@kUTTypePluginBundle	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePluginBundle.
+c:@kUTTypePresentation	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePresentation.
+c:@kUTTypePropertyList	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePropertyList.
+c:@kUTTypePythonScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypePythonScript.
+c:@kUTTypeQuickLookGenerator	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeQuickLookGenerator.
+c:@kUTTypeQuickTimeImage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeQuickTimeImage.
+c:@kUTTypeQuickTimeMovie	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeQuickTimeMovie.
+c:@kUTTypeRTF	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeRTF.
+c:@kUTTypeRTFD	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeRTFD.
+c:@kUTTypeRawImage	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeRawImage.
+c:@kUTTypeReferenceURLKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeReferenceURL; not populated in local declarations.
+c:@kUTTypeResolvable	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeResolvable.
+c:@kUTTypeRubyScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeRubyScript.
+c:@kUTTypeScalableVectorGraphics	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeScalableVectorGraphics.
+c:@kUTTypeScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeScript.
+c:@kUTTypeShellScript	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeShellScript.
+c:@kUTTypeSourceCode	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeSourceCode.
+c:@kUTTypeSpotlightImporter	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeSpotlightImporter.
+c:@kUTTypeSpreadsheet	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeSpreadsheet.
+c:@kUTTypeSwiftSource	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeSwiftSource.
+c:@kUTTypeSymLink	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeSymLink.
+c:@kUTTypeSystemPreferencesPane	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeSystemPreferencesPane.
+c:@kUTTypeTIFF	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeTIFF.
+c:@kUTTypeTXNTextAndMultimediaData	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeTXNTextAndMultimediaData.
+c:@kUTTypeTabSeparatedText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeTabSeparatedText.
+c:@kUTTypeTagSpecificationKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeTagSpecification.
+c:@kUTTypeText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeText.
+c:@kUTTypeToDoItem	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeToDoItem.
+c:@kUTTypeURL	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeURL.
+c:@kUTTypeURLBookmarkData	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeURLBookmarkData.
+c:@kUTTypeUTF16ExternalPlainText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeUTF16ExternalPlainText.
+c:@kUTTypeUTF16PlainText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeUTF16PlainText.
+c:@kUTTypeUTF8PlainText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeUTF8PlainText.
+c:@kUTTypeUTF8TabSeparatedText	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeUTF8TabSeparatedText.
+c:@kUTTypeUnixExecutable	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeUnixExecutable.
+c:@kUTTypeVCard	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeVCard.
+c:@kUTTypeVersionKey	implemented	CoreServices.swift;CoreServicesRuntime.swift:assertKeys	Public Info.plist key UTTypeVersion; not populated in local declarations.
+c:@kUTTypeVideo	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeVideo.
+c:@kUTTypeVolume	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeVolume.
+c:@kUTTypeWaveformAudio	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeWaveformAudio.
+c:@kUTTypeWebArchive	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeWebArchive.
+c:@kUTTypeWindowsExecutable	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeWindowsExecutable.
+c:@kUTTypeX509Certificate	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeX509Certificate.
+c:@kUTTypeXML	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeXML.
+c:@kUTTypeXMLPropertyList	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeXMLPropertyList.
+c:@kUTTypeXPCService	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeXPCService.
+c:@kUTTypeZipArchive	implemented	UTCoreTypes.swift;CoreServicesRuntime.swift:assertTypeConstants	Public UTI string kUTTypeZipArchive.
