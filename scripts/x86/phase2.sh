@@ -645,11 +645,15 @@ fi
 
 # Rung b: Focus widget + onboarding. Same source-preservation contracts.
 FOCUS_PIN=a2832521c1daa0c23419c73705ae043ed60c9791
-if [ -d "$FOCUS_REPO/.git" ] && [ "$(git -C "$FOCUS_REPO" rev-parse HEAD)" = "$FOCUS_PIN" ]; then
-    note focus-pin satisfied
-else
-    cannot focus-pin FOCUS_PIN "Focus checkout is not $FOCUS_PIN at $FOCUS_REPO"
-fi
+# Do not require a .git directory on the app subtree. The corpus git root is
+# the parent (scratch/ladder-corpus/focus-ios); focus-ios/focus-ios is the
+# application checkout inside it.
+# Probe names expected and observed on every refusal (including git errors).
+focus_pin_probe=$(phase2_probe_focus_pin "$FOCUS_REPO" "$FOCUS_PIN" || true)
+case "$focus_pin_probe" in
+    MATCH*) note focus-pin satisfied ;;
+    *) cannot focus-pin FOCUS_PIN "$focus_pin_probe" ;;
+esac
 
 find_widget_bundle() {
     local c recorded

@@ -162,6 +162,76 @@ else
     die_test "phase2 no-args rc=$rc out=$(echo "$out" | head -2)"
 fi
 
+echo "== focus-pin probe (nested git root + expected/observed + git_error)"
+if grep -F '[ -d "$FOCUS_REPO/.git" ]' "$PHASE2" >/dev/null; then
+    die_test "phase2 still gates on FOCUS_REPO/.git (app subtree is not the git root)"
+else
+    ok "phase2 does not require a .git directory on the Focus app subtree"
+fi
+expect_grep 'rev-parse --show-toplevel' "$COMMON" \
+    "probe resolves git toplevel before comparing HEAD"
+expect_grep 'safe.directory=' "$COMMON" \
+    "probe sets explicit safe.directory"
+expect_grep 'expected=%s observed=' "$COMMON" \
+    "ERROR line names expected and observed"
+expect_grep 'expected=%s observed=%s' "$COMMON" \
+    "MISMATCH line names expected and observed"
+
+# shellcheck source=common.inc
+. "$COMMON"
+
+PIN=a2832521c1daa0c23419c73705ae043ed60c9791
+WORK=$(mktemp -d /tmp/phase2-focus-pin.XXXXXX)
+cleanup_focus_pin() { rm -rf "$WORK"; }
+trap cleanup_focus_pin EXIT
+mkdir -p "$WORK/focus-ios/focus-ios"
+# Empty global config: simulate the host where $HOME-driven safe.directory
+# was never set. The probe's -c safe.directory=*parents must still work.
+export GIT_CONFIG_GLOBAL=/dev/null
+export GIT_CONFIG_NOSYSTEM=1
+git -c safe.directory="$WORK/focus-ios" -c init.defaultBranch=main init "$WORK/focus-ios" >/dev/null 2>&1
+git -C "$WORK/focus-ios" \
+    -c safe.directory="$WORK/focus-ios" \
+    -c user.email=phase2@test -c user.name=phase2 \
+    commit --allow-empty -m pin >/dev/null 2>&1
+git -C "$WORK/focus-ios" \
+    -c safe.directory="$WORK/focus-ios" \
+    commit --allow-empty --amend --no-edit \
+    --date=1970-01-01T00:00:00Z >/dev/null 2>&1 || true
+# Nested app subtree has no .git of its own.
+[ ! -e "$WORK/focus-ios/focus-ios/.git" ] || die_test "fixture child unexpectedly has .git"
+HEAD=$(git -c safe.directory="$WORK/focus-ios" -C "$WORK/focus-ios" rev-parse HEAD)
+
+report=$(phase2_probe_focus_pin "$WORK/focus-ios/focus-ios" "$HEAD" || true)
+case "$report" in
+    MATCH*"observed=$HEAD"*) ok "nested git root MATCH observed=$HEAD" ;;
+    *) die_test "nested MATCH expected, got: $report" ;;
+esac
+
+mismatch=$(phase2_probe_focus_pin "$WORK/focus-ios/focus-ios" "$PIN" || true)
+case "$mismatch" in
+    MISMATCH*"expected=$PIN"*"observed=$HEAD"*)
+        ok "nested MISMATCH names expected=$PIN observed=$HEAD"
+        ;;
+    *) die_test "nested MISMATCH expected, got: $mismatch" ;;
+esac
+
+missing=$(phase2_probe_focus_pin "$WORK/absent" "$PIN" || true)
+case "$missing" in
+    ERROR*"expected=$PIN"*"observed=ABSENT"*)
+        ok "missing dir ERROR names expected and observed=ABSENT"
+        ;;
+    *) die_test "missing ERROR expected, got: $missing" ;;
+esac
+
+nogit=$(phase2_probe_focus_pin "$WORK" "$PIN" || true)
+case "$nogit" in
+    ERROR*"expected=$PIN"*"observed=ERROR"*"git_error="*)
+        ok "non-repo ERROR includes git_error instead of folding into not-at-pin"
+        ;;
+    *) die_test "non-repo ERROR expected, got: $nogit" ;;
+esac
+
 echo
 echo "test_phase2: pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]
