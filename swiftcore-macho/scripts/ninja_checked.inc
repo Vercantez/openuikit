@@ -38,6 +38,9 @@ ninja_checked() {
     local st=${PIPESTATUS[0]}
     if [ "$errexit_was_on" = 1 ]; then set -e; fi
     echo "ninja $* exit=$st"
+    if [ "$st" -eq 126 ]; then
+        echo "ninja_checked: rc=126 means ninja could not execute a command (not a compile/link diagnostic). Check that CMAKE_CXX_COMPILER / the clang++ shim / python3 / ld.lld are +x ELF binaries." >&2
+    fi
     if [ "$st" -eq 0 ]; then
         rm -f "$chunk"
         return 0

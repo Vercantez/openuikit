@@ -86,6 +86,11 @@ if [ "$rc" -ne 0 ]; then
 else
   echo "  FAIL expected nonzero"; fail=1
 fi
+if [ "$rc" -eq 126 ]; then
+  echo "  FAIL core ninja exit 1 must not become build_stdlib rc=126 (not-executable)"; fail=1
+else
+  echo "  OK  rc is not 126"
+fi
 printf '%s\n' "$out" | grep -q 'ninja: FAILED rc=' \
   && echo "  OK  ninja_checked reported failure" \
   || { echo "  FAIL missing ninja: FAILED"; fail=1; }
