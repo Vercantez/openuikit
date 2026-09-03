@@ -95,6 +95,13 @@ done
 #     in stage_overlay_posix.sh.
 bash "$SCRIPT_DIR/stage_overlay_posix.sh" "$SDK"
 
+# 3c2. Darwin overlay: Clang module Darwin + Apple math.h / MacTypes.h
+#     (Libm-2026 Intel / CarbonHeaders-18.1), or the phase-2 FE sysroot
+#     when scratch/sysroot_fe4-x86_64 is present. Refuse-overwrite for
+#     new files; replace only the known clean-room stand-ins in this
+#     staged tree. Never writes machorun/sdk/.
+bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$SDK"
+
 # 3d. libc++. A real macOS SDK ships Apple's libc++ at usr/include/c++/v1; the
 #     stdlib's C++ half needs <new>, <atomic>, <type_traits>, ... machorun's
 #     SDK_SURVEY §2.5 measured stock LLVM 18 libc++ as a drop-in for Apple's

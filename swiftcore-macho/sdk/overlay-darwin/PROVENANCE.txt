@@ -1,0 +1,43 @@
+overlay-darwin — Darwin Platform overlay headers missing from, or
+incomplete in, machorun's clean-room SDK
+
+These are Apple's published headers, copied verbatim. They are NOT
+clean-room stand-ins. stage_overlay_darwin.sh copies them into
+$W/sdk/MacOSX.sdk. math.h and MacTypes.h REPLACE machorun's category-(c)
+stand-ins in the staged tree only — never in machorun/sdk/.
+
+Enumerated from the operator Darwin.o log (overlays3.log), not by hand:
+  sig_t          — already in machorun sys/signal.h (Libc/xnu); Darwin.modulemap
+                   must export it
+  FILE           — already in machorun _stdio.h; Darwin.modulemap must export it
+  OSStatus       — CarbonHeaders MacTypes.h (replaces machorun's 201-line
+                   clean-room MacTypes.h)
+  extern_proc    — already in machorun sys/proc.h (xnu); Darwin.modulemap
+  MAP_FAILED     — already in machorun sys/mman.h; Darwin.modulemap
+  acosf/acosl…   — Libm Intel math.h (explicit f/l prototypes, not macros)
+
+Libm  tag=Libm-2026  commit=17a5f9daa3f5679f7536b26f133b40cc078753c3
+  Source/Intel/math.h -> usr/include/math.h
+    (Libm's Source/math.h is a 2002 dispatcher to architecture/{ppc,i386,arm}/
+     math.h. The x86_64 content is Source/Intel/math.h; that is what we stage
+     as usr/include/math.h so ClangImporter sees acosf/ilogb/remquo as real
+     declarations. architecture/i386/math.h is the same file, the path the
+     dispatcher would include.)
+  sha256(math.h)=64c43951eaec1da94cf266b02ca0d43de37eb673a37c83c824cca4066848f2aa
+
+CarbonHeaders  tag=CarbonHeaders-18.1  commit=214a9ae7ab3c0c78ddb50328ca226e6313c4c782
+  MacTypes.h            -> usr/include/MacTypes.h
+  ConditionalMacros.h   -> usr/include/ConditionalMacros.h
+    (MacTypes.h #includes <ConditionalMacros.h>; that file is not in
+     machorun's SDK. AvailabilityMacros.h and TargetConditionals.h already
+     are.)
+  sha256(MacTypes.h)=2427ccecb33e33fdd202bf46a6dc9ec635bb50f713bb80c2c457c97edf0c0530
+  sha256(ConditionalMacros.h)=e013d893073dd55a84d1efded171234f2f387fc6f06cde5bedbc8a199548d8cc
+
+When scratch/sysroot_fe4-x86_64 exists (operator phase-2 FE sysroot),
+stage_overlay_darwin.sh copies Apple's SDK headers + the generated Darwin
+family modulemaps from THAT tree instead of (or on top of) these pins.
+The FE sysroot is where FoundationEssentials already builds for x86.
+
+Do not hand-write prototypes. Darwin.modulemap names only headers the
+sysroot actually stages.
