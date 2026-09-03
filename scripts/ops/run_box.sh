@@ -147,7 +147,10 @@ sys.exit(0 if not cmds else 2)' <<<"$in_progress" || {
 
 BUNDLE=${OPENUIKIT_BUNDLE_FILE:-$ROOT/scratch/openuikit-$SHA.bundle}
 mkdir -p "$(dirname "$BUNDLE")"
-git -C "$ROOT" bundle create "$BUNDLE" "$SHA"
+# git bundle wants a ref, not a raw sha (git 2.53: rc=128 for a bare
+# object id). Pin a temporary ref at the sha; the box fetches refs/ops/bundle.
+git -C "$ROOT" update-ref refs/ops/bundle "$SHA"
+git -C "$ROOT" bundle create "$BUNDLE" refs/ops/bundle
 ops_aws s3 cp "$BUNDLE" "$bundle_s3" --region "$REGION"
 
 cmd_id=$(ops_aws ssm send-command \

@@ -146,7 +146,13 @@ fi
 if [ -n "$SHA" ]; then
     if [ -n "${bundle:-}" ] && [ -f "${bundle:-}" ]; then
         git bundle verify "$bundle" >/dev/null
-        git fetch "$bundle" "$SHA"
+        # run_box.sh pins the sha at refs/ops/bundle (git bundle needs a ref);
+        # fetch that ref and insist it is the sha the operator named.
+        git fetch "$bundle" refs/ops/bundle
+        [ "$(git rev-parse FETCH_HEAD)" = "$SHA" ] || {
+            echo "x86_cycle: bundle ref is $(git rev-parse FETCH_HEAD), expected $SHA" >&2
+            exit 2
+        }
     fi
     if git checkout --force "$SHA"; then
         emit_stage checkout rebuilt "$TREE"
