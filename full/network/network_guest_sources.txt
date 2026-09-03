@@ -1,1 +1,3 @@
 full/network/Network.swift
+full/network/NetworkCAPI.swift
+full/network/NetworkCTypes.swift
