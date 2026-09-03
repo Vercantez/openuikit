@@ -437,7 +437,7 @@ while [ $i -lt ${#args[@]} ]; do
   esac
 done
 if [ "$tool" = commands ]; then
-  echo "clang++ -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o"
+  echo "clang++ -target x86_64-apple-macosx13.0 -isysroot /root/work/sdk/MacOSX.sdk -L/usr/lib/llvm-18/lib -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o"
   exit 0
 fi
 exit 0
@@ -470,6 +470,12 @@ printf '%s\n' "$out" | grep -q 'rewritten argv:' \
 printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: -o lib/swift/macosx/x86_64/libswiftDarwin.so decision=darwin linker=ld64.lld' \
   && echo "  OK  apple-target .so printed decision=darwin linker=ld64.lld" \
   || { echo "  FAIL missing -o decision=darwin line"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q '/usr/lib/llvm-18/lib' \
+  && { echo "  FAIL driver argv kept host /usr/lib/llvm-18/lib"; fail=1; } \
+  || echo "  OK  dropped host -L/usr/lib/llvm-18/lib"
+printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: cxx_runtime=/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' \
+  && echo "  OK  cxx_runtime= sysroot libc++.tbd" \
+  || { echo "  FAIL missing cxx_runtime tbd"; fail=1; }
 
 echo
 echo "=== cmake : && clang++ && : wrapper is stripped before rewrite ==="
@@ -488,7 +494,7 @@ while [ $i -lt ${#args[@]} ]; do
   esac
 done
 if [ "$tool" = commands ]; then
-  echo ": && /root/work/shims/clang++ -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o && :"
+  echo ": && /root/work/shims/clang++ -target x86_64-apple-macosx13.0 -isysroot /root/work/sdk/MacOSX.sdk -L/usr/lib/llvm-18/lib -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o && :"
   exit 0
 fi
 exit 0
@@ -506,6 +512,9 @@ printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q '&&' \
 printf '%s\n' "$out" | grep -q 'decision=darwin linker=ld64.lld' \
   && echo "  OK  wrapper line classifies apple-target .so as darwin" \
   || { echo "  FAIL wrapper rewrite"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q '/usr/lib/llvm-18/lib' \
+  && { echo "  FAIL wrapper driver argv kept host llvm-18/lib"; fail=1; } \
+  || echo "  OK  wrapper dropped host -L/usr/lib/llvm-18/lib"
 
 echo
 echo "=== ninja -t commands >2MB is not passed as python argv (E2BIG→126) ==="
@@ -527,7 +536,7 @@ while [ $i -lt ${#args[@]} ]; do
 done
 if [ "$tool" = commands ]; then
   python3 -c 'import sys; sys.stdout.write("padding " * 400000); sys.stdout.write("\n")'
-  echo "clang++ -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o"
+  echo "clang++ -target x86_64-apple-macosx13.0 -isysroot /root/work/sdk/MacOSX.sdk -L/usr/lib/llvm-18/lib -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o"
   exit 0
 fi
 exit 0

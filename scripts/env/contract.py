@@ -142,6 +142,22 @@ def validate_against_locks(root: Path | None = None) -> list[str]:
         raise ContractError("dotnet-macios disagrees with external-evidence-sources.json")
     notes.append("checkout dotnet-macios agrees with external-evidence-sources.json")
 
+    scf = checkouts["swift-corelibs-foundation"]
+    udinc = _read(root, "scripts/x86/ud_guest.inc")
+    for token, value in (
+        ("PHASE2_UD_GUEST_CF_COMMIT", scf["commit"]),
+        ("PHASE2_UD_GUEST_CF_TREE", scf["tree"]),
+        ("PHASE2_UD_GUEST_CF_REPO", scf["repository"]),
+        ("PHASE2_UD_GUEST_CF_DEST_REL", scf["destination"]),
+    ):
+        if f"{token}={value}" not in udinc:
+            raise ContractError(
+                f"swift-corelibs-foundation {token}={value} missing from scripts/x86/ud_guest.inc"
+            )
+    if "ud-guest-x86" not in scf["demanded_by"]:
+        raise ContractError("swift-corelibs-foundation is not demanded_by ud-guest-x86")
+    notes.append("checkout swift-corelibs-foundation agrees with scripts/x86/ud_guest.inc")
+
     swiftcore = next(
         item for item in contract["staged_externals"] if item["id"] == "libswiftCore"
     )

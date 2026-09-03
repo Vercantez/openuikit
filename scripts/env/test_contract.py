@@ -71,6 +71,19 @@ class ContractLockTests(unittest.TestCase):
             "eccd2940f67f5f7db8d54819953d4ebc3de8e8e5",
         )
 
+    def test_ud_guest_x86_demands_pinned_corelibs_foundation(self) -> None:
+        row = checkouts_by_id(load_contract(ROOT))["swift-corelibs-foundation"]
+        self.assertEqual(row["commit"], "f3a7a34302317a95665bf4ff1a62ee1b459c1695")
+        self.assertEqual(row["tree"], "2f9136f253a51406f2bcb0a612bcb6a9eba03570")
+        self.assertEqual(row["destination"], "scratch/ud-guest-x86_64/cf")
+        self.assertIn("ud-guest-x86", row["demanded_by"])
+        self.assertEqual(
+            row["repository"],
+            "https://github.com/swiftlang/swift-corelibs-foundation.git",
+        )
+        self.assertEqual(row["lock"], "scripts/x86/ud_guest.inc")
+        self.assertEqual(row["kind"], "git")
+
     def test_focus_widget_gate_still_locks_all_attestation_pins(self) -> None:
         notes = validate_against_locks(ROOT)
         pin_notes = [n for n in notes if n.startswith("focus_widget_attestation_pins ")]
