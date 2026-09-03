@@ -15,6 +15,11 @@
 # the dest tree: input-sha MATCH of the pin is not completeness. .tbd stubs
 # from machorun gen_tbd / the displaced tree are copied into the fresh dest
 # before the live MacOSX.sdk is moved aside.
+#
+# Staged Darwin*.modulemap files name headers (complex.h, …). Those files must
+# resolve under usr/include before cmake — the same closure phase2 already
+# checks (phase2_darwin_modulemap_missing_headers). Source them from the FE
+# sysroot / full/sdk-gaps / machorun / overlay-darwin pins.
 
 if [ -n "${SWIFTCORE_OVERLAY_SYSROOT_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -25,9 +30,14 @@ _overlay_sysroot_inc_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 SWIFTCORE_ROOT=${SWIFTCORE_ROOT:-$(cd "$_overlay_sysroot_inc_dir/.." && pwd)}
 OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 
-# Bump when staging steps, the Darwin.modulemap header list, or the
-# required staged-header / tbd completeness gate change.
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.2
+# Reuse phase2's modulemap quoted-header enumeration (scripts/x86/test_phase2.sh
+# maps-only restage). Do not reimplement the grep/sed.
+# shellcheck disable=SC1091
+. "$OPENUIKIT_ROOT/scripts/x86/common.inc"
+
+# Bump when staging steps, the Darwin.modulemap header list, modulemap
+# header closure, or the required staged-header / tbd completeness gate change.
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.3
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -102,6 +112,7 @@ overlay_sysroot_input_lines() {
         "$(printf '%s\n' "${OVERLAY_DARWIN_MODULE_HEADERS[@]}" | sha256sum | awk '{print $1}')"
     printf 'required.headers=%s\n' \
         "$(printf '%s\n' "${OVERLAY_SYSROOT_REQUIRED_HEADERS[@]}" | sha256sum | awk '{print $1}')"
+    printf 'modulemap.closure=phase2_darwin_modulemap_missing_headers\n'
     printf 'machorun.sys/proc.h=%s\n' "$(overlay_sysroot_sha_or_absent "${proc:-}")"
 }
 
@@ -189,6 +200,7 @@ overlay_sysroot_print_headers() {
             echo "overlay_sysroot: header $rel ABSENT"
         fi
     done
+    overlay_sysroot_print_modulemap_closure "$sdk"
     overlay_sysroot_print_tbds "$sdk"
     if [ -f "$sdk/$OVERLAY_SYSROOT_STAMP" ]; then
         echo "overlay_sysroot: stamp=$sdk/$OVERLAY_SYSROOT_STAMP"
@@ -219,6 +231,96 @@ overlay_sysroot_headers_ok() {
         overlay_sysroot_has_fmaxl "$sdk/usr/include/math.h" || return 1
     fi
     overlay_sysroot_has_extern_proc "$sdk/usr/include/sys/proc.h" || return 1
+    phase2_darwin_modulemap_headers_ok "$sdk" || return 1
+}
+
+# usr/include search roots for headers named by staged modulemaps. Same
+# places the FE sysroot stages from (full/sdk-gaps for complex.h, then
+# FE / machorun / overlay-darwin pins).
+overlay_sysroot_header_search_roots() {
+    local dest=${1:-}
+    local dest_inc="" cand root seen=""
+    if [ -n "$dest" ]; then
+        dest_inc=$(realpath "$dest/usr/include" 2>/dev/null || true)
+    fi
+    for cand in \
+        ${SWIFTCORE_FE_SYSROOT:+$SWIFTCORE_FE_SYSROOT/usr/include} \
+        ${W:+$W/scratch/sysroot_fe4-${SWIFTCORE_DARWIN_ARCH:-x86_64}/usr/include} \
+        ${W:+$W/scratch/sysroot_fe4-x86_64/usr/include} \
+        "$OPENUIKIT_ROOT/scratch/sysroot_fe4-x86_64/usr/include" \
+        "$OPENUIKIT_ROOT/full/sdk-gaps/usr/include" \
+        ${W:+$W/machorun-sdk/usr/include} \
+        ${MACHORUN:+$MACHORUN/sdk/usr/include} \
+        ${W:+$W/machorun/sdk/usr/include} \
+        "$OPENUIKIT_ROOT/machorun/sdk/usr/include" \
+        "$SWIFTCORE_ROOT/sdk/overlay-darwin"
+    do
+        [ -n "$cand" ] || continue
+        [ -d "$cand" ] || continue
+        root=$(realpath "$cand" 2>/dev/null || printf '%s' "$cand")
+        [ -n "$dest_inc" ] && [ "$root" = "$dest_inc" ] && continue
+        case " $seen " in *" $root "*) continue ;; esac
+        seen="$seen $root"
+        printf '%s\n' "$root"
+    done
+}
+
+# Copy every `header "…"` named by staged *.modulemap that is not yet
+# under dest/usr/include. overlay_sysroot_fill_modulemap_headers <dest>
+overlay_sysroot_fill_modulemap_headers() {
+    local dest=${1:?overlay_sysroot_fill_modulemap_headers: dest}
+    local inc=$dest/usr/include
+    local miss_csv rel src_root src n=0
+    mkdir -p "$inc"
+    miss_csv=$(phase2_darwin_modulemap_missing_headers "$dest" || true)
+    if [ -z "$miss_csv" ]; then
+        echo "overlay_sysroot: modulemap headers complete tree=$dest"
+        return 0
+    fi
+    echo "overlay_sysroot: modulemap missing=$miss_csv tree=$dest"
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        [ -f "$inc/$rel" ] && continue
+        src=
+        while IFS= read -r src_root; do
+            [ -n "$src_root" ] || continue
+            if [ -f "$src_root/$rel" ]; then
+                src=$src_root/$rel
+                break
+            fi
+        done < <(overlay_sysroot_header_search_roots "$dest")
+        if [ -n "$src" ]; then
+            mkdir -p "$(dirname "$inc/$rel")"
+            cp -a "$src" "$inc/$rel"
+            echo "overlay_sysroot: staged modulemap header $rel from $src"
+            n=$((n + 1))
+        fi
+    done < <(printf '%s\n' "$miss_csv" | tr ',' '\n')
+    echo "overlay_sysroot: filled $n modulemap headers into $inc"
+}
+
+overlay_sysroot_print_modulemap_closure() {
+    local sdk=${1:?overlay_sysroot_print_modulemap_closure: sdk}
+    local miss
+    miss=$(phase2_darwin_modulemap_missing_headers "$sdk" || true)
+    if [ -n "$miss" ]; then
+        echo "overlay_sysroot: modulemap missing=$miss"
+    else
+        echo "overlay_sysroot: modulemap headers complete"
+    fi
+}
+
+# Named CANNOT. Exit 2. overlay_sysroot_refuse_modulemap_headers <sdk>
+overlay_sysroot_refuse_modulemap_headers() {
+    local sdk=${1:?overlay_sysroot_refuse_modulemap_headers: sdk}
+    local miss resolved
+    miss=$(phase2_darwin_modulemap_missing_headers "$sdk" || true)
+    if [ -z "$miss" ]; then
+        return 0
+    fi
+    resolved=$(realpath "$sdk" 2>/dev/null || printf '%s' "$sdk")
+    echo "CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER tree=$sdk realpath=$resolved missing=$miss reason=staged modulemaps name these headers; overlay sysroot must stage the same header set the modulemaps reference (phase2_darwin_modulemap_missing_headers; complex.h comes from full/sdk-gaps)" >&2
+    return 2
 }
 
 overlay_sysroot_tbd_count() {
@@ -346,6 +448,9 @@ overlay_sysroot_refuse_incomplete() {
         echo "CANNOT_OVERLAY_SYSROOT_PROC_H path=$proc tree=$sdk realpath=$resolved reason=sys/proc.h lacks extern_proc (stale SDK; Darwin.swift.gyb:74)" >&2
         rc=2
     fi
+    if ! overlay_sysroot_refuse_modulemap_headers "$sdk"; then
+        rc=2
+    fi
     return "$rc"
 }
 
@@ -453,6 +558,7 @@ overlay_sysroot_finish() {
     local fresh=${2:?overlay_sysroot_finish: fresh}
     local live=$parent/MacOSX.sdk
     overlay_sysroot_copy_tbds "$fresh" "$live"
+    overlay_sysroot_fill_modulemap_headers "$fresh"
     overlay_sysroot_write_stamp "$fresh"
     overlay_sysroot_commit_live "$live" "$fresh"
     overlay_sysroot_print_headers "$live"

@@ -114,6 +114,38 @@ grep -q fmaxl "$tmp/sdk4/usr/include/math.h" \
   || { echo "  FAIL FE ConditionalMacros.h still absent"; fail=1; }
 
 echo
+echo "=== FE DarwinFoundation1.modulemap names complex.h; staged from sdk-gaps ==="
+mkdir -p "$tmp/fe3/usr/include" "$tmp/sdk6/usr/include" "$tmp/work3/scratch"
+echo 'module Darwin [system] { header "math.h" export * }' \
+  > "$tmp/fe3/usr/include/Darwin.modulemap"
+cat > "$tmp/fe3/usr/include/DarwinFoundation1.modulemap" <<'EOF'
+module _DarwinFoundation1 [system] {
+  header "complex.h"
+  export *
+}
+EOF
+echo 'extern module Darwin "Darwin.modulemap"' > "$tmp/fe3/usr/include/module.modulemap"
+echo 'extern float acosf(float);' > "$tmp/fe3/usr/include/math.h"
+echo 'extern long double fmaxl(long double, long double);' >> "$tmp/fe3/usr/include/math.h"
+ln -sfn "$tmp/fe3" "$tmp/work3/scratch/sysroot_fe4-x86_64"
+set +e
+out=$(W="$tmp/work3" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk6" 2>&1)
+rc=$?
+set -e
+printf '%s\n' "$out" | tail -25
+[ "$rc" -eq 0 ] && echo "  OK  FE-complex rc=0" || { echo "  FAIL FE-complex rc=$rc"; fail=1; }
+grep -q 'header "complex.h"' "$tmp/sdk6/usr/include/DarwinFoundation1.modulemap" \
+  && echo "  OK  FE DarwinFoundation1.modulemap copied" \
+  || { echo "  FAIL Foundation1 map missing"; fail=1; }
+[ -f "$tmp/sdk6/usr/include/complex.h" ] \
+  && echo "  OK  complex.h staged" || { echo "  FAIL complex.h absent after FE maps"; fail=1; }
+cmp -s "$ROOT/../full/sdk-gaps/usr/include/complex.h" "$tmp/sdk6/usr/include/complex.h" \
+  && echo "  OK  complex.h is full/sdk-gaps stub" || { echo "  FAIL complex.h not sdk-gaps"; fail=1; }
+printf '%s\n' "$out" | grep -q 'staged modulemap header complex.h' \
+  && echo "  OK  fill named complex.h" || { echo "  FAIL no fill log for complex.h"; fail=1; }
+
+echo
 echo "=== FE math.h without fmaxl is repaired from overlay-darwin Intel pin ==="
 mkdir -p "$tmp/fe2/usr/include" "$tmp/sdk5/usr/include" "$tmp/work2/scratch"
 echo 'module Darwin [system] { header "math.h" export * }' \

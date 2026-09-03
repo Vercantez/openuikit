@@ -95,6 +95,57 @@ else
 fi
 
 echo
+echo "=== overlay Darwin -soname spellings rewrite to -install_name ==="
+assert_no_soname() {
+  local got=$1
+  if printf '%s\n' "$got" | grep -Eq -- '(^|[[:space:]])(-Wl,)?-?-soname'; then
+    echo "  FAIL leftover -soname in: $got"
+    fail=1
+    return 1
+  fi
+  echo "  OK  no -soname"
+}
+
+got=$(rewrite -target x86_64-apple-macosx13.0 -shared \
+  -Wl,-soname,libswiftDarwin.so -o libswiftDarwin.so Darwin.o)
+printf '%s\n' "$got"
+assert_no_soname "$got"
+printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftDarwin.dylib' >/dev/null \
+  && echo "  OK  -Wl,-soname,libswiftDarwin.so -> Darwin install_name" \
+  || { echo "  FAIL concatenated -Wl,-soname,"; fail=1; }
+
+got=$(rewrite -target x86_64-apple-macosx13.0 -shared \
+  -soname,libswiftDarwin.so -o libswiftDarwin.so Darwin.o)
+printf '%s\n' "$got"
+assert_no_soname "$got"
+printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftDarwin.dylib' >/dev/null \
+  && echo "  OK  -soname,libswiftDarwin.so -> Darwin install_name" \
+  || { echo "  FAIL bare -soname,"; fail=1; }
+
+got=$(rewrite -target x86_64-apple-macosx13.0 -shared \
+  -Xlinker -soname -Xlinker libswiftDarwin.so -o libswiftDarwin.so Darwin.o)
+printf '%s\n' "$got"
+assert_no_soname "$got"
+printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftDarwin.dylib' >/dev/null \
+  && echo "  OK  -Xlinker -soname -> Darwin install_name" \
+  || { echo "  FAIL -Xlinker -soname"; fail=1; }
+
+got=$(rewrite -isysroot /root/work/sdk/MacOSX.sdk -shared \
+  --as-needed -Wl,-rpath-link,/usr/lib -Wl,-soname,libswiftCore.so \
+  -o libswiftCore.so foo.o)
+printf '%s\n' "$got"
+assert_no_soname "$got"
+printf '%s\n' "$got" | grep -F -- '--as-needed' >/dev/null \
+  && { echo "  FAIL --as-needed survived"; fail=1; } \
+  || echo "  OK  --as-needed dropped"
+printf '%s\n' "$got" | grep -F -- '-rpath-link' >/dev/null \
+  && { echo "  FAIL -rpath-link survived"; fail=1; } \
+  || echo "  OK  -rpath-link dropped"
+printf '%s\n' "$got" | grep -F -- '-dynamiclib' >/dev/null \
+  && echo "  OK  MacOSX.sdk -shared rewritten without -target" \
+  || { echo "  FAIL MacOSX.sdk path not treated as Darwin"; fail=1; }
+
+echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- Darwin shared link rewrite (lld, not gold; no host ELF libc++)"
   exit 0
