@@ -31,6 +31,11 @@
 // to parse SystemVersion.plist under machorun, leave GlobalMajor=0, and
 // hide @available APIs. Not a CHECK 5 host-bind.
 //
+// dispatch_once_f is not in gen_tbd libSystem.tbd (it lives in libdispatch
+// on Apple). This TU uses a local once so overlay NOUNDEFS links do not
+// grow that undefined. Remaining libc symbols (fopen, malloc, …) are in
+// the tbd and are only used on the unused plist fallback path.
+//
 //===----------------------------------------------------------------------===//
 
 #ifdef __APPLE__
