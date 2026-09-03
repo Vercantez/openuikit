@@ -838,6 +838,7 @@ expected_openuikit_inputs=$(printf '%s\n' \
     "$PACKAGE/libFoundationEssentials.dylib" \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
     "$MRROOT/darwin/usr/lib/libquartz.dylib" \
@@ -847,8 +848,7 @@ expected_openuikit_inputs=$(printf '%s\n' \
     "$FULL/cstbtruetype.o" \
     "$FULL/hostclock.o" \
     "$FULL/swiftcorepatch.o" \
-    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
-    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd")
 # removefile_compat.o is in FE_OBJECTS for the onboarding FE/umbrella
 # command lines, but the widget FE map omits inputs that contribute no
 # symbols (lld lists contributors, not the argv). Keep that object off the
@@ -868,6 +868,7 @@ expected_foundationessentials_inputs=$(printf '%s\n' \
     "$FE_CSHIMS/string_shims.o" \
     "$FE_CSHIMS/uuid.o" \
     "$FE_OUT/fm_unimplemented.o" \
+    "$FE_OUT/removefile_compat.o" \
     "$FE_OUT/uuid_compat.o" \
     "$FULL/swiftcorepatch.o" \
     "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
@@ -932,16 +933,13 @@ expected_foundation_inputs=$(printf '%s\n' \
     "$FE_CSHIMS/string_shims.o" \
     "$FE_CSHIMS/uuid.o" \
     "$FE_OUT/fm_unimplemented.o" \
+    "$FE_OUT/removefile_compat.o" \
     "$FE_OUT/uuid_compat.o" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
-    "$PACKAGE/libFoundationEssentials.dylib" \
-    "$PACKAGE/libFoundationInternationalization.dylib" \
-    "$PACKAGE/libDispatch.dylib" \
     "$PACKAGE/libOpenUIKit.dylib" \
     "$PACKAGE/libCombine.dylib" \
-    "$PACKAGE/libOpenCombine.dylib" \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$RELATIVE_TIME_DARWIN" \
     "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
@@ -949,9 +947,7 @@ expected_foundation_inputs=$(printf '%s\n' \
     "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
-    "$SYS/usr/lib/libobjc.tbd" \
-    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
-    "$MRROOT/darwin/usr/lib/libSystem.B.dylib")
+    "$SYS/usr/lib/libobjc.tbd")
 expected_widget_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$PACKAGE/libSwiftUI.dylib" \
@@ -959,13 +955,12 @@ expected_widget_inputs=$(printf '%s\n' \
     "$PACKAGE/libFoundationEssentials.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
-    "$SYS/usr/lib/libobjc.tbd" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$OUT/widget.o")
+    "$OUT/widget.o" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
 expected_onboarding_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$PACKAGE/libFoundation.dylib" \
-    "$PACKAGE/libFoundationEssentials.dylib" \
     "$PACKAGE/libSwiftUI.dylib" \
     "$PACKAGE/libWidget.dylib" \
     "$PACKAGE/libOpenUIKit.dylib" \
@@ -974,7 +969,8 @@ expected_onboarding_inputs=$(printf '%s\n' \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$OUT/onboarding.o")
+    "$OUT/onboarding.o" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
 assert_exact_text "libOpenUIKit linker inputs" \
     "$(link_map_inputs "$AUDIT/libOpenUIKit.link-map")" "$expected_openuikit_inputs"
 assert_exact_text "libFoundationEssentials linker inputs" \
