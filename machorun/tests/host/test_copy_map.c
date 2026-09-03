@@ -2,16 +2,24 @@
  *
  * The loader is an aarch64 ELF; this file is a Linux host program that
  * links only map.c+util.c so the copy-map can run on x86_64 as well as
- * arm64. It builds a synthetic image whose DATA_CONST vmaddr is 0x14720
- * (the packed-fixture shape) and checks:
- *   - file bytes land at vmaddr+slide, not at the pre-pack DATA page 0x4000
- *   - the TEXT-to-DATA gap (slide+0x4008) is not readable (PROT_NONE)
- *   - DATA_CONST and DATA sharing page 0x14000 stay writable after the
- *     SG_READ_ONLY pass (union of protections)
+ * arm64. It maps two synthetic images:
+ *
+ *   packed: DATA_CONST vmaddr 0x14720 (cache_layout_packed). Checks:
+ *     - file bytes land at vmaddr+slide, not at the pre-pack DATA page 0x4000
+ *     - the TEXT-to-DATA gap (slide+0x4008) is not readable
+ *     - DATA_CONST and DATA sharing page 0x14000 stay writable after the
+ *       SG_READ_ONLY pass (union of protections)
+ *
+ *   sparse: DATA_CONST vmaddr 0x22256720 (libswiftObjectiveC TEXT-to-DATA
+ *   delta, measured 2026-09-03). Checks:
+ *     - bytes land at +0x22256720
+ *     - the packed-style gap +0x4008 AND a mid-cache hole are unmapped
+ *     - no single VMA covers the ~546 MB union (per-segment reservation)
  *
  * The 2026-09-03 packed-fixture SIGSEGV was pc at imageoff 0x5e0, fault
- * at slide+0x4008: that address is this gap. The mapper must leave it
- * unmapped; the rewriter must point ADRP at 0x14720 instead.
+ * at slide+0x4008: that address is the packed gap. The Reminder guest then
+ * died at exit 139 after copy-mapping Apple's extract: the union of those
+ * segments is hundreds of MB and must not be mmap'd or walked.
  */
 #define _GNU_SOURCE
 #include "machorun.h"
@@ -25,6 +33,8 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
+#define CACHE_SPARSE_DELTA 0x22256720ull
+
 static int can_read(const void *p)
 {
     int fds[2];
@@ -34,6 +44,25 @@ static int can_read(const void *p)
     close(fds[0]);
     close(fds[1]);
     return n == 1;
+}
+
+/* 1 if some VMA fully covers [lo, hi). 0 if none does. -1 if maps unreadable. */
+static int vma_covers(uint64_t lo, uint64_t hi)
+{
+    FILE *f = fopen("/proc/self/maps", "r");
+    char line[512];
+    int covered = 0;
+    if (!f) return -1;
+    while (fgets(line, sizeof line, f)) {
+        unsigned long a, b;
+        if (sscanf(line, "%lx-%lx", &a, &b) != 2) continue;
+        if (a <= lo && b >= hi) {
+            covered = 1;
+            break;
+        }
+    }
+    fclose(f);
+    return covered;
 }
 
 static void fill_seg(mr_segment *s, const char *name,
@@ -51,17 +80,26 @@ static void fill_seg(mr_segment *s, const char *name,
     s->flags = flags;
 }
 
-int main(void)
-{
-    enum { TEXT_USED = 0x100, DC_USED = 0x20, DATA_USED = 4 };
-    uint8_t blob[TEXT_USED + DC_USED + DATA_USED];
-    char tmpl[] = "/tmp/mr-copy-map-XXXXXX";
-    int fd;
-    mr_image im;
-    uint8_t *got;
-    uint64_t gap, dc, data;
+enum { TEXT_USED = 0x100, DC_USED = 0x20, DATA_USED = 4 };
 
-    memset(blob, 0, sizeof(blob));
+static int write_blob(char *tmpl, uint8_t *blob, size_t n)
+{
+    int fd = mkstemp(tmpl);
+    if (fd < 0) {
+        perror("mkstemp");
+        return -1;
+    }
+    if (write(fd, blob, n) != (ssize_t)n) {
+        perror("write");
+        close(fd);
+        return -1;
+    }
+    return fd;
+}
+
+static void fill_blob(uint8_t *blob)
+{
+    memset(blob, 0, TEXT_USED + DC_USED + DATA_USED);
     memset(blob, 'T', TEXT_USED);
     blob[0] = 0xCF;
     blob[1] = 0xFA;
@@ -72,90 +110,192 @@ int main(void)
     blob[TEXT_USED + DC_USED + 1] = 0x22;
     blob[TEXT_USED + DC_USED + 2] = 0x33;
     blob[TEXT_USED + DC_USED + 3] = 0x44;
+}
 
-    fd = mkstemp(tmpl);
-    if (fd < 0) {
-        perror("mkstemp");
-        return 1;
-    }
-    if (write(fd, blob, sizeof(blob)) != (ssize_t)sizeof(blob)) {
-        perror("write");
-        return 1;
-    }
+int main(void)
+{
+    uint8_t blob[TEXT_USED + DC_USED + DATA_USED];
+    char packed_tmpl[] = "/tmp/mr-copy-map-packed-XXXXXX";
+    char sparse_tmpl[] = "/tmp/mr-copy-map-sparse-XXXXXX";
+    int pfd, sfd;
+    mr_image packed, sparse;
+    uint8_t *got;
+    uint64_t gap, dc, data, mid;
+    int cover;
 
-    memset(&im, 0, sizeof(im));
-    im.path = tmpl;
-    im.fd = fd;
-    im.raw_len = sizeof(blob);
-    im.filetype = MH_DYLIB;
-    im.preferred_base = 0;
-    im.nsegs = 3;
-    /* TEXT 0..0x4000, DATA_CONST at the packed fixture's 0x14720, DATA
-     * packed against it so they share host page 0x14000. */
-    fill_seg(&im.segs[0], "__TEXT", 0, 0x4000, 0, TEXT_USED,
-             VM_PROT_READ | VM_PROT_EXECUTE, 0);
-    fill_seg(&im.segs[1], "__DATA_CONST", 0x14720, 0x20, TEXT_USED, DC_USED,
-             VM_PROT_READ | VM_PROT_WRITE, SG_READ_ONLY);
-    fill_seg(&im.segs[2], "__DATA", 0x14740, 0x10, TEXT_USED + DC_USED, DATA_USED,
-             VM_PROT_READ | VM_PROT_WRITE, 0);
+    fill_blob(blob);
+    pfd = write_blob(packed_tmpl, blob, sizeof(blob));
+    if (pfd < 0) return 1;
+    sfd = write_blob(sparse_tmpl, blob, sizeof(blob));
+    if (sfd < 0) return 1;
 
     MR.page.v = 4096;
     MR.verbose = 0;
-    mr_map_image(&im);
 
-    if (!im.mapped_by_copy) {
-        fprintf(stderr, "test_copy_map: expected copy path, got mmap path\n");
+    /* ---- packed-contiguous: DATA at +0x14720, shared page 0x14000 ---- */
+    memset(&packed, 0, sizeof(packed));
+    packed.path = packed_tmpl;
+    packed.fd = pfd;
+    packed.raw_len = sizeof(blob);
+    packed.filetype = MH_DYLIB;
+    packed.preferred_base = 0;
+    packed.nsegs = 3;
+    fill_seg(&packed.segs[0], "__TEXT", 0, 0x4000, 0, TEXT_USED,
+             VM_PROT_READ | VM_PROT_EXECUTE, 0);
+    fill_seg(&packed.segs[1], "__DATA_CONST", 0x14720, 0x20, TEXT_USED, DC_USED,
+             VM_PROT_READ | VM_PROT_WRITE, SG_READ_ONLY);
+    fill_seg(&packed.segs[2], "__DATA", 0x14740, 0x10, TEXT_USED + DC_USED, DATA_USED,
+             VM_PROT_READ | VM_PROT_WRITE, 0);
+
+    mr_map_image(&packed);
+
+    if (!packed.mapped_by_copy) {
+        fprintf(stderr, "test_copy_map: packed: expected copy path, got mmap path\n");
         return 1;
     }
 
-    got = (uint8_t *)(uintptr_t)im.load_base;
+    got = (uint8_t *)(uintptr_t)packed.load_base;
     if (got[0] != 0xCF || got[TEXT_USED - 1] != 'T') {
-        fprintf(stderr, "test_copy_map: TEXT bytes missing at load_base\n");
+        fprintf(stderr, "test_copy_map: packed: TEXT bytes missing at load_base\n");
         return 1;
     }
 
-    dc = im.load_base + 0x14720;
-    data = im.load_base + 0x14740;
-    gap = im.load_base + 0x4008;
+    dc = packed.load_base + 0x14720;
+    data = packed.load_base + 0x14740;
+    gap = packed.load_base + 0x4008;
 
     if (memcmp((void *)(uintptr_t)dc, blob + TEXT_USED, DC_USED) != 0) {
-        fprintf(stderr, "test_copy_map: DATA_CONST bytes not at vmaddr+slide "
+        fprintf(stderr, "test_copy_map: packed: DATA_CONST bytes not at vmaddr+slide "
                         "(0x%llx)\n", (unsigned long long)dc);
         return 1;
     }
     if (memcmp((void *)(uintptr_t)data, blob + TEXT_USED + DC_USED, DATA_USED) != 0) {
-        fprintf(stderr, "test_copy_map: DATA bytes not at vmaddr+slide "
+        fprintf(stderr, "test_copy_map: packed: DATA bytes not at vmaddr+slide "
                         "(0x%llx)\n", (unsigned long long)data);
         return 1;
     }
-
-    /* The pre-pack GOT page must NOT have been populated. That is the
-     * address the unfixed stubs ADRP'd to. */
     if (can_read((void *)(uintptr_t)gap)) {
-        fprintf(stderr, "test_copy_map: gap at slide+0x4008 is readable; "
-                        "it must stay PROT_NONE (packed DATA is at +0x14720)\n");
+        fprintf(stderr, "test_copy_map: packed: gap at slide+0x4008 is readable; "
+                        "it must stay unmapped (packed DATA is at +0x14720)\n");
         return 1;
     }
 
-    mr_protect_readonly_segments(&im);
+    mr_protect_readonly_segments(&packed);
 
-    /* Shared page 0x14000: DATA_CONST wants r after fixups, DATA wants rw.
-     * Union is rw — a write through the DATA address must succeed. */
     *(volatile uint8_t *)(uintptr_t)data = 0x55;
     if (*(volatile uint8_t *)(uintptr_t)data != 0x55) {
-        fprintf(stderr, "test_copy_map: DATA page not writable after "
+        fprintf(stderr, "test_copy_map: packed: DATA page not writable after "
                         "SG_READ_ONLY pass (union of prots failed)\n");
         return 1;
     }
     if (*(volatile uint8_t *)(uintptr_t)dc != blob[TEXT_USED]) {
-        fprintf(stderr, "test_copy_map: DATA_CONST prefix lost on the shared page\n");
+        fprintf(stderr, "test_copy_map: packed: DATA_CONST prefix lost on the shared page\n");
         return 1;
     }
 
-    close(fd);
-    unlink(tmpl);
-    printf("test_copy_map ok  load_base=0x%llx  DATA_CONST at +0x14720  "
-           "gap +0x4008 PROT_NONE  shared page rw\n",
-           (unsigned long long)im.load_base);
+    close(pfd);
+    unlink(packed_tmpl);
+
+    /* ---- sparse cache-wide: DATA at +0x22256720 ---- */
+    memset(&sparse, 0, sizeof(sparse));
+    sparse.path = sparse_tmpl;
+    sparse.fd = sfd;
+    sparse.raw_len = sizeof(blob);
+    sparse.filetype = MH_DYLIB;
+    sparse.preferred_base = 0;
+    sparse.nsegs = 3;
+    fill_seg(&sparse.segs[0], "__TEXT", 0, 0x4000, 0, TEXT_USED,
+             VM_PROT_READ | VM_PROT_EXECUTE, 0);
+    fill_seg(&sparse.segs[1], "__DATA_CONST", CACHE_SPARSE_DELTA, 0x20,
+             TEXT_USED, DC_USED, VM_PROT_READ | VM_PROT_WRITE, SG_READ_ONLY);
+    fill_seg(&sparse.segs[2], "__DATA", CACHE_SPARSE_DELTA + 0x20, 0x10,
+             TEXT_USED + DC_USED, DATA_USED, VM_PROT_READ | VM_PROT_WRITE, 0);
+
+    mr_map_image(&sparse);
+
+    if (!sparse.mapped_by_copy) {
+        fprintf(stderr, "test_copy_map: sparse: expected copy path, got mmap path\n");
+        return 1;
+    }
+
+    got = (uint8_t *)(uintptr_t)sparse.load_base;
+    if (got[0] != 0xCF || got[TEXT_USED - 1] != 'T') {
+        fprintf(stderr, "test_copy_map: sparse: TEXT bytes missing at load_base\n");
+        return 1;
+    }
+
+    dc = sparse.load_base + CACHE_SPARSE_DELTA;
+    data = sparse.load_base + CACHE_SPARSE_DELTA + 0x20;
+    gap = sparse.load_base + 0x4008;
+    mid = sparse.load_base + (CACHE_SPARSE_DELTA / 2);
+
+    if (memcmp((void *)(uintptr_t)dc, blob + TEXT_USED, DC_USED) != 0) {
+        fprintf(stderr, "test_copy_map: sparse: DATA_CONST bytes not at +0x%llx "
+                        "(0x%llx)\n",
+                (unsigned long long)CACHE_SPARSE_DELTA, (unsigned long long)dc);
+        return 1;
+    }
+    if (memcmp((void *)(uintptr_t)data, blob + TEXT_USED + DC_USED, DATA_USED) != 0) {
+        fprintf(stderr, "test_copy_map: sparse: DATA bytes not at vmaddr+slide "
+                        "(0x%llx)\n", (unsigned long long)data);
+        return 1;
+    }
+    if (can_read((void *)(uintptr_t)gap)) {
+        fprintf(stderr, "test_copy_map: sparse: +0x4008 is readable; packed-style "
+                        "gap must stay unmapped when DATA is at +0x22256720\n");
+        return 1;
+    }
+    if (can_read((void *)(uintptr_t)mid)) {
+        fprintf(stderr, "test_copy_map: sparse: mid-gap +0x%llx is readable; "
+                        "the cache-wide hole must not be reserved\n",
+                (unsigned long long)(CACHE_SPARSE_DELTA / 2));
+        return 1;
+    }
+
+    cover = vma_covers(sparse.load_base, sparse.load_base + CACHE_SPARSE_DELTA);
+    if (cover < 0) {
+        fprintf(stderr, "test_copy_map: sparse: /proc/self/maps unreadable\n");
+        return 1;
+    }
+    if (cover) {
+        fprintf(stderr, "test_copy_map: sparse: a VMA covers [load_base, "
+                        "load_base+0x22256720); copy-map reserved the union "
+                        "instead of per-segment page-runs\n");
+        return 1;
+    }
+
+    {
+        FILE *mf = fopen("/proc/self/maps", "r");
+        char line[512];
+        uint64_t slo = sparse.load_base, shi = sparse.load_base + CACHE_SPARSE_DELTA + 0x1000;
+        if (mf) {
+            printf("sparse VMAs in [0x%llx, 0x%llx):\n",
+                   (unsigned long long)slo, (unsigned long long)shi);
+            while (fgets(line, sizeof line, mf)) {
+                unsigned long a, b;
+                if (sscanf(line, "%lx-%lx", &a, &b) != 2) continue;
+                if (b <= slo || a >= shi) continue;
+                printf("  %s", line);
+            }
+            fclose(mf);
+        }
+    }
+
+    mr_protect_readonly_segments(&sparse);
+    *(volatile uint8_t *)(uintptr_t)data = 0x55;
+    if (*(volatile uint8_t *)(uintptr_t)data != 0x55) {
+        fprintf(stderr, "test_copy_map: sparse: DATA page not writable after "
+                        "SG_READ_ONLY pass\n");
+        return 1;
+    }
+
+    close(sfd);
+    unlink(sparse_tmpl);
+    printf("test_copy_map ok  packed load_base=0x%llx DATA_CONST +0x14720  "
+           "gap +0x4008 PROT_NONE  shared page rw; "
+           "sparse load_base=0x%llx DATA_CONST +0x22256720  "
+           "hole unmapped  no union VMA\n",
+           (unsigned long long)packed.load_base,
+           (unsigned long long)sparse.load_base);
     return 0;
 }

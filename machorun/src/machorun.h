@@ -63,7 +63,9 @@ struct mr_image {
     uint64_t preferred_base;   /* __TEXT.vmaddr */
     uint64_t load_base;        /* where the mach header actually landed */
     int64_t  slide;
-    uint64_t span_lo, span_hi; /* reserved VA range, absolute */
+    uint64_t span_lo, span_hi; /* bounding box of mapped segments, absolute.
+                                * A cache-extracted dylib's TEXT-to-DATA hole
+                                * is not reserved and is not inside this image. */
 
     /* linkedit blobs, file offsets within the slice */
     uint32_t chained_off, chained_size;
@@ -165,6 +167,7 @@ void      mr_image_append(mr_image *im);
 mr_image *mr_image_find_loaded(const char *install_name);
 int       mr_image_is_loaded(const char *install_name_or_path);
 int       mr_addr_in_image(const void *p);
+int       mr_image_contains_va(const mr_image *im, uint64_t addr);
 const mr_segment *mr_image_segment(const mr_image *im, const char *name);
 const struct section_64 *mr_image_section(const mr_image *im, const char *seg, const char *sect);
 /* file offset (within the slice) -> parse-mapping pointer, bounds checked */

@@ -49,6 +49,22 @@ const struct section_64 *mr_image_section(const mr_image *im, const char *seg, c
     return NULL;
 }
 
+int mr_image_contains_va(const mr_image *im, uint64_t a)
+{
+    uint64_t page = MR.page.v ? MR.page.v : 4096ull;
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        uint64_t lo, hi;
+        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+        if (s->vmsize == 0) continue;
+        lo = mr_round_dn(s->vmaddr + (uint64_t)im->slide, page);
+        hi = mr_round_up(s->vmaddr + (uint64_t)im->slide + s->vmsize, page);
+        if (hi < lo) continue;
+        if (a >= lo && a < hi) return 1;
+    }
+    return 0;
+}
+
 /* Is this address inside a mapped guest image (any segment of any image)?
  *
  * Exists for one caller with a sharp requirement: Darwin's malloc_size(p)
@@ -57,14 +73,17 @@ const struct section_64 *mr_image_section(const mr_image *im, const char *seg, c
  * which is how it tells a class_ro_t the compiler put in __DATA_CONST from one
  * it allocated itself. glibc's malloc_usable_size does no such validation: it
  * reads the word before the pointer and returns whatever is there. So machorun
- * has to answer "is this image data?" itself. See darwin/src/libsystem.c. */
+ * has to answer "is this image data?" itself. See darwin/src/libsystem.c.
+ *
+ * Cache-extracted dylibs have a hundreds-of-MB hole between __TEXT and
+ * __DATA_CONST. That hole is not a segment: it must not count as image data,
+ * or a pointer that lands in it (or in another image placed there) is
+ * mis-attributed. Test the mapped segments, not the vmaddr union. */
 int mr_addr_in_image(const void *p)
 {
     uint64_t a = (uint64_t)(uintptr_t)p;
-    for (int i = 0; i < MR.nimages; i++) {
-        const mr_image *im = MR.images[i];
-        if (a >= im->span_lo && a < im->span_hi) return 1;
-    }
+    for (int i = 0; i < MR.nimages; i++)
+        if (mr_image_contains_va(MR.images[i], a)) return 1;
     return 0;
 }
 
@@ -717,7 +736,10 @@ int mr_dladdr(const void *addr, mr_dl_info *out)
  * a copy that drifted to `<= span_hi` would put an address one byte past an
  * image inside it: a wrong image name in a backtrace, a wrong answer from
  * dladdr, and a dlsym scope starting one image too early. None of those looks
- * like a bug at the call site.
+ * like a bug at the call site. Cache-extracted dylibs make the other
+ * direction equally wrong: testing the vmaddr union (`span_lo`..`span_hi`)
+ * would claim the hundreds-of-MB hole between __TEXT and __DATA_CONST, so
+ * the predicate walks mapped segments (mr_image_contains_va).
  *
  * It also IS "the calling image" -- the notion whose absence kept dlsym's
  * RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY unimplemented and dlopen's
@@ -767,7 +789,7 @@ mr_image *mr_image_containing(const void *addr)
 {
     uint64_t a = (uint64_t)(uintptr_t)addr;
     for (int i = 0; i < MR.nimages; i++)
-        if (a >= MR.images[i]->span_lo && a < MR.images[i]->span_hi) return MR.images[i];
+        if (mr_image_contains_va(MR.images[i], a)) return MR.images[i];
     return NULL;
 }
 
