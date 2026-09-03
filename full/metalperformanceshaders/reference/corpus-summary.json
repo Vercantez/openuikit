@@ -1,0 +1,47 @@
+{
+  "module": "MetalPerformanceShaders",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 6,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 103,
+    "iphoneos_runtime_focus_launch_build_rank": 122,
+    "module": "MetalPerformanceShaders",
+    "occurrence_count": 6,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "9eb2af078052e2cc450882bb98f4dc3c50735ef4dd4284c1c58d92ba2f447b18",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "submodules/TelegramCallsUI/Sources/MetalVideoRenderingView.swift",
+          "submodules/TelegramUI/Components/Calls/CallScreen/Sources/Components/PrivateCallVideoLayer.swift",
+          "submodules/TelegramUI/Components/CameraScreen/Sources/CameraVideoLayer.swift",
+          "submodules/TelegramUI/Components/MediaEditor/Sources/BlurRenderPass.swift",
+          "submodules/TelegramUI/Components/MediaEditor/Sources/EnhanceRenderPass.swift",
+          "submodules/TelegramUI/Components/MediaEditor/Sources/HistogramCalculationPass.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 103,
+    "byFocusLaunchBuildRelevance": 122
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
