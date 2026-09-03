@@ -140,8 +140,24 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn('"guest LC_RPATH set"', text)
         self.assertIn("expected_openuikit_loads", text)
         self.assertIn("expected_swiftui_loads", text)
+        self.assertIn("expected_swiftui_inputs", text)
         self.assertIn("expected_symbols_loads", text)
         self.assertIn("expected_guest_loads", text)
+        swiftui_loads = text.split("expected_swiftui_loads=", 1)[1].split(
+            "expected_opencombine_loads=", 1
+        )[0]
+        self.assertIn("@rpath/libFoundationEssentials.dylib", swiftui_loads)
+        # FE's own Darwin/StringProcessing/Synchronization/errno loads stay on
+        # libFoundationEssentials, matching OpenUIKit's existing -lFoundationEssentials
+        # edge. The recursive runtime-closure manifest walks those at runtime.
+        self.assertNotIn("libswiftDarwin.dylib", swiftui_loads)
+        self.assertNotIn("libswift_StringProcessing.dylib", swiftui_loads)
+        self.assertNotIn("libswiftSynchronization.dylib", swiftui_loads)
+        self.assertNotIn("libswift_errno.dylib", swiftui_loads)
+        swiftui_inputs = text.split("expected_swiftui_inputs=", 1)[1].split(
+            "expected_opencombine_inputs=", 1
+        )[0]
+        self.assertIn('"$PACKAGE/libFoundationEssentials.dylib"', swiftui_inputs)
         self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=101", text)
         self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=12", text)
         self.assertIn('assert_exact_text "package top-level inventory"', text)
@@ -210,6 +226,11 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
             self.assertIn(dylib, text)
         self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine", text)
         self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols", text)
+        self.assertIn(
+            "-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols "
+            "-lFoundationEssentials",
+            text,
+        )
         self.assertIn("libSymbols Apple Symbols load count", text)
         self.assertIn("OPENCOMBINE_ROOT", text)
         self.assertIn("OpenCombine.o", helper)
@@ -245,6 +266,11 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("run_missing_observation_control opencombine libOpenCombine.dylib", text)
         self.assertIn("run_missing_observation_control symbols libSymbols.dylib", text)
         self.assertIn("missing-$missing_name requester changed", text)
+        # Sibling copy lists already include FoundationEssentials (OpenUIKit and
+        # the guest load it too). A missing-FE control would be required-by
+        # libOpenUIKit, not libSwiftUI, so this change does not add one.
+        missing = text.split("run_missing_observation_control combine", 1)[1]
+        self.assertGreaterEqual(missing.count("libFoundationEssentials.dylib"), 3)
 
     def test_cross_process_pixels_and_packaged_artifacts_are_bracketed(self) -> None:
         text = BUILD.read_text()

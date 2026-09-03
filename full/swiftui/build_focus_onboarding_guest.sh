@@ -525,7 +525,7 @@ for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
 done
 "${LD[@]}" -dylib -dead_strip -install_name @rpath/libSwiftUI.dylib \
     -rpath @loader_path -L"$PACKAGE" \
-    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
+    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols -lFoundationEssentials \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
