@@ -446,6 +446,9 @@ want hostbound_surface   && build hostbound_surface   "$CHAINED_TARGET" hostboun
 want hostbound_osver     && build hostbound_osver     "$CHAINED_TARGET" hostbound_osver     hostbound_osver.c --
 want fmal                && build fmal                "$CHAINED_TARGET" fmal                fmal.c -- -fno-builtin
 want dyld_objc_constant  && build dyld_objc_constant  "$CHAINED_TARGET" dyld_objc_constant  dyld_objc_constant.c --
+want overlay_libsystem   && build overlay_libsystem   "$CHAINED_TARGET" overlay_libsystem   overlay_libsystem.c --
+want sem_open            && build sem_open            "$CHAINED_TARGET" sem_open            sem_open.c --
+want remquol             && build remquol             "$CHAINED_TARGET" remquol             remquol.c -- -fno-builtin
 want dirent              && build dirent              "$CHAINED_TARGET" dirent              dirent.c --
 
 # quartz / objc_quartz / objc_shapes live in tests/draw_manifest.tsv, not the

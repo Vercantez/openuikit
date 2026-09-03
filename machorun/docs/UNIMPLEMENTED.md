@@ -105,15 +105,21 @@ symbols host-bound**, and the three classes are very different in kind.
 | **plain C names** | **8** | arrived by accident, with nobody's assertion behind them. |
 
 The eight: `_nanf` `_openat` `_remquo` `_remquof` `_sem_open` `_strtof`
-`_strtold` `_vdprintf`. **Four are ABI-divergent** and are now denied in
-`src/host_deny.c` — they bind to a stub that names itself and stops the process
-on first call, rather than refusing at load (all four are dormant in the root
-that found them; a load failure over a call that never happens trades a silent
-hazard for a loud regression). The other four are genuinely compatible and
-still host-bind.
+`_strtold` `_vdprintf`. Four were ABI-divergent. **`openat`, `sem_open`,
+and `vdprintf` are now implemented in `darwin/src`** (AT_FDCWD / O_*
+translation; Darwin `sem_t` is an `int` handle wrapping a heap glibc
+`sem_t`; `vdprintf` uses machorun's formatter because the allow-list is
+not arch-split). They are no longer deny-list rows. **`strtold` stays
+denied** (Darwin arm64 `long double` == `double`; glibc aarch64 is
+binary128). The other four are genuinely compatible and still host-bind
+(`_nanf` / `_remquof` also have machorun wrappers so the overlay tbd
+exports them even when this root does not import them; `_remquo` /
+`_nan` are umbrella own-defs with Apple 7-bit quotient when `full/` is
+loaded).
 
-Measured live by removing the deny hook and calling each one — this is what the
-denial prevents, not what it is feared to prevent:
+Measured live by removing the deny hook and calling each one — this is what
+the remaining `strtold` denial (and the old openat/sem_open/vdprintf
+rows) prevent, not what they are feared to prevent:
 
     openat(AT_FDCWD=-2, ...)  -> -1 EBADF  Darwin's AT_FDCWD is an ordinary bad fd to Linux
     sem_open(...)             -> 0x0       which is Darwin's SUCCESS: SEM_FAILED is
@@ -126,7 +132,7 @@ and the flag rotation, which is worse than any of them because it *succeeds*:
 Darwin's `O_CREAT` (0x200) is Linux's `O_TRUNC`, so a guest creating a file
 truncates one. `tests/host_deny/witness.c` demonstrates it on a 24-byte file —
 `openat(..., O_WRONLY|O_CREAT)` returns a valid fd and the file is 0 bytes
-afterwards.
+afterwards. `posix.c`'s `openat` wrapper is what stops that now.
 
 **`vdprintf` was on the "fine" pile.** #73 classified it with `nanf`/`remquo`
 as compatible stdio; the measurement above is what moved it. Nothing about the
@@ -144,9 +150,10 @@ return correct values, the verbose log distinguishes the two paths, and the
 built loader is checked to contain the table the source declares; the
 denominator is `n_denied + n_control + 3`, read out of the table so a new
 row cannot pass by being skipped). The table has two families: ABI-divergent
-Darwin C names (`openat`, `sem_open`, `vdprintf`, `strtold`) and compiler-rt
-builtins (`__divti3`, `__modti3`, `__udivti3`, `__umodti3`, `__truncsfhf2`,
-`__isPlatformVersionAtLeast`, `__isPlatformOrVariantPlatformVersionAtLeast`).
+Darwin C names (`strtold` only; `openat`/`sem_open`/`vdprintf` moved into
+`darwin/src`) and compiler-rt builtins (`__divti3`, `__modti3`, `__udivti3`,
+`__umodti3`, `__truncsfhf2`, `__isPlatformVersionAtLeast`,
+`__isPlatformOrVariantPlatformVersionAtLeast`).
 A compiler-rt name reaching glibc means a dylib was linked without
 `libclang_rt.osx.a` (PR #64) — those rows name the archive and must not be
 copied into `darwin/host-bound-allowed.txt`. Teeth shown

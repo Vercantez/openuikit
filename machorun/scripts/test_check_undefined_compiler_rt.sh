@@ -98,6 +98,16 @@ extern void g_funlockfile(void) __asm("_funlockfile");
 extern void g_dispatch(void) __asm("_dispatch_once_f");
 extern void g_objc(void) __asm("__dyld_is_objc_constant");
 extern void g_mh(void) __asm("__NSGetMachExecuteHeader");
+extern void g_vdprintf(void) __asm("_vdprintf");
+extern void g_openat(void) __asm("_openat");
+extern void g_sem_open(void) __asm("_sem_open");
+extern void g_remquof(void) __asm("_remquof");
+extern void g_nanf(void) __asm("_nanf");
+extern void g_memset_s(void) __asm("_memset_s");
+extern void g_clock_getres(void) __asm("_clock_getres");
+extern void g_qos(void) __asm("_qos_class_self");
+extern void g_os_release(void) __asm("_os_release");
+extern void g_voucher_copy(void) __asm("_voucher_copy");
 extern void g_abort(void) __asm("__ZNSt3__122__libcpp_verbose_abortEPKcz");
 extern void g_hw(void) __asm("__ZNSt3__16thread20hardware_concurrencyEv");
 extern void g_pl(void) __asm("__ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EEPKS6_RKS9_");
@@ -107,6 +117,8 @@ void *overlay_touch(void)
     rt_divti3(); rt_modti3(); rt_udivti3(); rt_umodti3(); rt_truncsfhf2();
     rt_plat(); rt_platv();
     g_fmal(); g_flockfile(); g_funlockfile(); g_dispatch(); g_objc(); g_mh();
+    g_vdprintf(); g_openat(); g_sem_open(); g_remquof(); g_nanf();
+    g_memset_s(); g_clock_getres(); g_qos(); g_os_release(); g_voucher_copy();
     g_abort(); g_hw(); g_pl();
     return 0;
 }
@@ -165,6 +177,8 @@ EOF
 # should not appear as a plain missing name at all.
 for s in _fmal _flockfile _funlockfile _dispatch_once_f __dyld_is_objc_constant \
          __NSGetMachExecuteHeader \
+         _vdprintf _openat _sem_open _remquof _nanf _memset_s _clock_getres \
+         _qos_class_self _os_release _voucher_copy \
          __ZNSt3__122__libcpp_verbose_abortEPKcz \
          __ZNSt3__16thread20hardware_concurrencyEv \
          __ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EEPKS6_RKS9_; do

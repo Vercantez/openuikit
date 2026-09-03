@@ -122,6 +122,16 @@ trie reexports), adding only the missing symbols.
     preoptimized data"* — which is the **truth** under machorun, so Swift falls
     back to scanning the sections `getsectiondata` hands it. `_dyld_is_objc_constant`
     and `_NSGetMachExecuteHeader` are in machorun's libSystem.
+  - **Overlay libSystem surface (x86 `_Concurrency` / Darwin.o NOUNDEFS).**
+    `qos_class_self`, `os_release`, `voucher_copy`/`voucher_adopt`, `memset_s`,
+    `clock_getres`, `vdprintf`, `openat`, named `sem_*`, `remquof`/`nanf`/
+    `remquol`/`nanl` live in machorun. **`dispatch_async_f` and the rest of
+    the `_dispatch_*` names the overlay links remain umbrella own-defs**
+    (`full/shims/concpatch.c`). Do not grow them in machorun: a second
+    definition loses to the umbrella (umbrella-shadows-reexport).
+    `gen_tbd.sh` merges `darwin/umbrella-own-defs.txt` into `libSystem.tbd`
+    so the overlay LINK sees the same names the arm64 guest loads. `_nan`
+    and `_remquo` stay umbrella (Apple 7-bit quotient discriminator).
 
 ## 5. One wall left, and the workaround
 
