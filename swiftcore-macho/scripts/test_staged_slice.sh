@@ -107,6 +107,15 @@ sys.exit(1 if bad else 0)
 PY
 
 echo
+echo "=== libswiftcompat source pin matches the staged arm64 artifact ==="
+if bash "$ROOT/scripts/test_compat_source.sh"; then
+  echo "  OK  swiftcompat.c sha matches artifacts/libswiftcompat.source.json"
+else
+  echo "  FAIL swiftcompat.c / staged artifact pin"
+  fail=1
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- arm64 pin intact, x86_64 is MH_MAGIC_64 X86_64 beside it"
   exit 0

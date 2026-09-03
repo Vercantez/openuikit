@@ -65,7 +65,8 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/relativetime/build_host_helper.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
-    "$ROOT/scripts/build_runtime_shims.sh"; do
+    "$ROOT/scripts/build_runtime_shims.sh" \
+    "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; do
     if bash -n "$s"; then
         ok "bash -n $(basename "$s")"
     else
@@ -1060,6 +1061,35 @@ if [ -d "$SYS/usr/lib" ]; then
 else
     die_test "x86 sysroot missing; cannot build loud-abort stubs"
 fi
+
+expect_grep 'x86_unexported_symbols.txt' \
+    "$ROOT/swiftcore-macho/scripts/build_compat.sh" \
+    "x86 compat omits overlap via the committed unexport list"
+expect_file "$ROOT/swiftcore-macho/sdk/compat/x86_unexported_symbols.txt"
+expect_file "$ROOT/swiftcore-macho/artifacts/libswiftcompat.source.json"
+expect_file "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"
+if bash "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; then
+    ok "swiftcompat.c sha matches the pin beside artifacts/libswiftcompat.dylib"
+else
+    die_test "swiftcompat.c sha disagrees with artifacts/libswiftcompat.source.json"
+fi
+# The source-pin test must fail when the recorded sha is not the file's sha.
+PIN_FIX=$(mktemp -d /tmp/phase2-compat-pin.XXXXXX)
+python3 - "$ROOT/swiftcore-macho/artifacts/libswiftcompat.source.json" \
+    "$PIN_FIX/bad.json" <<'PY'
+import json, sys
+from pathlib import Path
+pin = json.loads(Path(sys.argv[1]).read_text())
+pin["swiftcompat.c"]["sha256"] = "0" * 64
+Path(sys.argv[2]).write_text(json.dumps(pin))
+PY
+if COMPAT_SOURCE_PIN=$PIN_FIX/bad.json \
+    bash "$ROOT/swiftcore-macho/scripts/test_compat_source.sh" >/dev/null 2>&1; then
+    die_test "test_compat_source.sh passed with a mismatched swiftcompat.c sha"
+else
+    ok "test_compat_source.sh fails when swiftcompat.c sha disagrees with the pin"
+fi
+rm -rf "$PIN_FIX"
 
 echo "== env-prepare with FULL_OUT_SUFFIX=-x86_64 never resolves unsuffixed arm64 trees"
 PREP_FIX=$(mktemp -d /tmp/phase2-prepare-suffix.XXXXXX)

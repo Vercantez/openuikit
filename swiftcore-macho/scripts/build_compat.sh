@@ -96,6 +96,27 @@ mkdir -p "$(dirname "$OUT")"
   -fno-exceptions -fno-rtti \
   -c "$SRC/shim.cpp" -o "$tmp/shim.o"
 
+# x86-only: unexport the nine symbols x86 libSystem already defines. The
+# arm64 staged libSystem (scratch/mrroot_full, scratch/sysroot_fe4) exports
+# none of them, so the committed arm64 artifacts/libswiftcompat.dylib must
+# keep them. Do not delete them from swiftcompat.c. List:
+# sdk/compat/x86_unexported_symbols.txt
+unexport=()
+case "$SWIFTCORE_CLANG_TARGET" in
+  x86_64-*)
+    unexport_list=$SCRIPT_DIR/../sdk/compat/x86_unexported_symbols.txt
+    [ -f "$unexport_list" ] || {
+      echo "build_compat: missing $unexport_list" >&2
+      exit 2
+    }
+    while IFS= read -r s; do
+      [ -n "$s" ] || continue
+      case "$s" in \#*) continue ;; esac
+      unexport+=(-Wl,-unexported_symbol,"$s")
+    done < "$unexport_list"
+    ;;
+esac
+
 "$CXX" -target "$SWIFTCORE_CLANG_TARGET" -isysroot "$SDK" \
   -fuse-ld=lld -B "$LLD_BIN" \
   -dynamiclib -install_name /usr/lib/libswiftcompat.dylib \
@@ -104,6 +125,7 @@ mkdir -p "$(dirname "$OUT")"
   "$tmp/swiftcompat.o" "$tmp/shim.o" \
   -lSystem -lc++ \
   -Wl,-undefined,dynamic_lookup \
+  "${unexport[@]}" \
   -o "$tmp/libswiftcompat.dylib"
 
 "$NM" --defined-only --extern-only "$tmp/libswiftcompat.dylib" \

@@ -1,0 +1,17 @@
+# Mach-O names (leading underscore). build_compat.sh passes
+# -Wl,-unexported_symbol for each when SWIFTCORE_CLANG_TARGET is x86_64-*.
+# nm --defined-only --extern-only on this tree (2026-09-03):
+#   x86_64  machorun/darwin/usr/lib/libSystem.B.dylib          all nine present
+#   arm64   scratch/mrroot_full/darwin/usr/lib/libSystem.B.dylib  none present
+#   arm64   scratch/sysroot_fe4/usr/lib/libSystem.B.dylib         none present
+# The committed arm64 artifacts/libswiftcompat.dylib must keep exporting
+# these; dropping them from swiftcompat.c would starve the arm64 guest.
+_getline
+_getsectiondata
+_malloc_zone_from_ptr
+_os_system_version_get_current_version
+_pthread_get_stackaddr_np
+_pthread_get_stacksize_np
+_strtod_l
+_strtof_l
+_strtold_l
