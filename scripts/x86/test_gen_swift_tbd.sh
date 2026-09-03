@@ -34,21 +34,21 @@ else
     ok "skip arm64 refuse (no arm64 libswiftCore in artifacts)"
 fi
 
-x86=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64
+W=$ROOT
+# shellcheck source=common.inc
+. "$HERE/common.inc"
+
+# Core + the twelve (artifacts first, scratch/apple-x86-overlays second).
 n_checked=0
-for dylib in \
-    "$x86/libswiftCore.dylib" \
-    "$x86/libswiftDarwin.dylib" \
-    "$x86/libswift_Concurrency.dylib" \
-    "$x86/libswiftObjectiveC.dylib" \
-    "$x86/libswiftObservation.dylib" \
-    "$x86/libswiftSynchronization.dylib" \
-    "$x86/libswift_Builtin_float.dylib" \
-    "$x86/libswift_RegexParser.dylib" \
-    "$x86/libswift_StringProcessing.dylib"
-do
-    [ -f "$dylib" ] || continue
-    llvm-otool-18 -hv "$dylib" 2>/dev/null | grep -Eq 'MH_MAGIC_64[[:space:]]+X86_64' || continue
+n_want=0
+while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    n_want=$((n_want + 1))
+    dylib=$(phase2_find_x86_overlay "$name" || true)
+    if [ -z "$dylib" ]; then
+        ok "skip $name (no x86 dylib in overlay search; Apple-only live under scratch/apple-x86-overlays)"
+        continue
+    fi
     base=$(basename "$dylib" .dylib)
     dest=$WORK/$base.tbd
     if ! bash "$GEN" "$dylib" "$dest"; then
@@ -67,14 +67,17 @@ do
         die_test "$base round-trip --check failed"
     fi
     n_checked=$((n_checked + 1))
-done
+done < <({ printf 'libswiftCore.dylib\n'; phase2_twelve_overlay_names; })
 
+[ "$n_want" -eq 13 ] \
+    && ok "round-trip inventory is libswiftCore + twelve overlays" \
+    || die_test "inventory count=$n_want want 13 (Core + twelve)"
 [ "$n_checked" -ge 1 ] \
-    && ok "round-trip covered $n_checked x86 Swift dylibs" \
+    && ok "round-trip covered $n_checked/$n_want x86 Swift dylibs" \
     || die_test "no x86 Swift dylibs to round-trip"
 
 # Concurrency acceptance: operator's next undefs after -lobjc.
-if [ -f "$x86/libswift_Concurrency.dylib" ] && [ -f "$WORK/libswift_Concurrency.tbd" ]; then
+if [ -f "$WORK/libswift_Concurrency.tbd" ]; then
     conc_ok=1
     for s in _swift_task_create _swift_task_alloc '$sScP'; do
         if grep -q "$s" "$WORK/libswift_Concurrency.tbd"; then
