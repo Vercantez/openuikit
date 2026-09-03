@@ -56,6 +56,6 @@ ops_comment() {
 
 ops_extract_result_lines() {
     grep -E \
-        'BUILD_OK|GATE_B|GATE_ONBOARDING|RUNG_SCOREBOARD|STAGE |CANNOT_|pass [0-9]+ fail|difftest|PREMERGE |GUEST SCOREBOARD' \
+        'BUILD_OK|BUILD_FAIL|TBD_CHECK_|^!!|run_linux rc=|build_full rc=|^build_full:|checked out|GATE_B|GATE_ONBOARDING|RUNG_SCOREBOARD|STAGE |CANNOT_|pass [0-9]+ fail|difftest|PREMERGE |GUEST SCOREBOARD' \
         || true
 }
