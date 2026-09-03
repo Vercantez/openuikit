@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "duplicateRelationshipOccurrenceCount": 10,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/UniformTypeIdentifiers.symbols.json",
+      "relationshipCount": 255,
+      "sha256": "ec1ef782bfffa282c3b5b9a859fbf8851ac46fa9d1295adcffbdb59e2b47a284",
+      "symbolCount": 219
+    },
+    {
+      "path": "reference/symbol-graphs/UniformTypeIdentifiers@Foundation.symbols.json",
+      "relationshipCount": 17,
+      "sha256": "d58dc690249ec3fb03add19fb4cbf7b02221630fa2fd3c0c44850495e8514f23",
+      "symbolCount": 17
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "UniformTypeIdentifiers",
+  "relationshipCount": 272,
+  "relationshipMultisetSHA256": "c2aa70bf86515e0053256fc820209e8906c2f74e2c10e7e43c2d7c87f33fc8fd",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 235,
+  "symbolMultisetSHA256": "2fe2ae7249465f2ece5dd5e1b4f5534277bfda8a874c1ae19a8cf614a700d7c6",
+  "target": "arm64-apple-ios26.0"
+}

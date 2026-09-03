@@ -1,0 +1,161 @@
+{
+  "module": "MessageUI",
+  "moduleRecord": {
+    "app_coverage_count": 13,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 39,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 17,
+    "iphoneos_runtime_focus_launch_build_rank": 23,
+    "module": "MessageUI",
+    "occurrence_count": 39,
+    "per_app": {
+      "Hackers": {
+        "evidence_sha256": "b58759572c02ff361c9014146af0a0915789264d29a9b438f7e114785a36f86e",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "DesignSystem/Sources/DesignSystem/Components/MailView.swift",
+          "Features/Settings/Sources/Settings/SettingsView.swift"
+        ]
+      },
+      "NetNewsWire": {
+        "evidence_sha256": "368876ca88d81093ff19b734cbf730b2d8766d71d562f8445ef45bbe2be6b99f",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOS/Article/WebViewController.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "967c37f41db5af9bac3361a93ea1c1e59a4dafc5a4f55df16c804ede2b369867",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "Signal/ConversationView/ConversationViewController+BodyTextItems.swift",
+          "Signal/src/ViewControllers/AppSettings/ComposeSupportEmailOperation.swift",
+          "Signal/src/ViewControllers/ContactShareViewHelper.swift",
+          "Signal/src/ViewControllers/ContactViewController.swift",
+          "SignalUI/RecipientPickers/InviteFlow.swift",
+          "SignalUI/RecipientPickers/RecipientPickerViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "23af8aa30fbe52af78e869caa8c89828b447bc196fbc3b8e786ebc138cb589ff",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "submodules/AuthorizationUI/Sources/AuthorizationSequenceController.swift",
+          "submodules/AuthorizationUI/Sources/AuthorizationSequencePaymentScreen.swift",
+          "submodules/AuthorizationUI/Sources/AuthorizationSequencePhoneEntryController.swift",
+          "submodules/ContactListUI/Sources/InviteContactsController.swift",
+          "submodules/DebugSettingsUI/Sources/DebugController.swift",
+          "submodules/PeerInfoUI/Sources/DeviceContactInfoController.swift",
+          "submodules/SettingsUI/Sources/ChangePhoneNumberController.swift",
+          "submodules/TelegramUI/Components/Contacts/NewContactScreen/Sources/NewContactScreen.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "247abc11b7d41ab7b916901c5581ecb6aa3b8952996a44ac35e75dc05df20c5f",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WordPress/Classes/ViewRelated/Blog/Site Management/StartOverViewController.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "527ab05d0f968c451fd35c8caccb0ebdb0f78d0336d964fa501653594c0cca91",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "DuckDuckGo/AutoClearSettingsViewController.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "9ba202538099b46cf43bbeccbb40eb215cd0b821eff4350f721669a3d1e7f582",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/View_Controllers/Auction/AuctionInformationViewController.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "913d01253cb01a14839dde7d839d5f0d0ca53cdda04c6ded029ef50c3a34831a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Managers/BugReport/RageShakeManager.h"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "5d7df5c086aa59dafe6aa62a26bb1d00dfdf422e33605ae4d3e016ea408643fa",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/BetaTools/Controller/BetaToolsViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/FacebookConfirmation/Controller/FacebookConfirmationViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/Help/Controller/HelpViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/LoginTout/Controller/LoginToutViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/ProjectUpdatesViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Library/MFMailComposeViewController.swift",
+          "Library/Sources/Library/Library/ViewModels/HelpViewModel.swift",
+          "Library/Sources/Library/Library/ViewModels/ProjectUpdatesViewModel.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "04a1445964e723dd50e2a5f311c1a68d1ce01f32b7e8af127928eec262b31b48",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "iOSClient/Extensions/UIViewController+Extension.swift",
+          "iOSClient/Menu/NCContextMenuProfile.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "9322be24f1481104b93d1412d4f204ffb45498f480145459c8ff2574ff4e2fbb",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "podcasts/LogsView.swift",
+          "podcasts/OnlineSupportController.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "8663c27c81e6118990403f979babc563823fc10e1121d86ec8cba3e98cf392c8",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/About/AboutController.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "1b5a086bc1564d6d3d51893404d5772bd3ba62ae5763d4798469fcdc096514fa",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Wikipedia/Code/HelpViewController.swift",
+          "Wikipedia/Code/WhichCameFirstCoordinator.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 17,
+    "byFocusLaunchBuildRelevance": 23
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,85 @@
+precise	kind	title	path	declaration
+c:@E@MFMailComposeControllerDeferredAction	swift.enum	MFMailComposeControllerDeferredAction	MFMailComposeControllerDeferredAction	enum MFMailComposeControllerDeferredAction
+c:@E@MFMailComposeControllerDeferredAction@MFMailComposeControllerDeferredActionAddMissingRecipients	swift.enum.case	MFMailComposeControllerDeferredAction.addMissingRecipients	MFMailComposeControllerDeferredAction.addMissingRecipients	case addMissingRecipients
+c:@E@MFMailComposeControllerDeferredAction@MFMailComposeControllerDeferredActionAdjustInsertionPoint	swift.enum.case	MFMailComposeControllerDeferredAction.adjustInsertionPoint	MFMailComposeControllerDeferredAction.adjustInsertionPoint	case adjustInsertionPoint
+c:@E@MFMailComposeControllerDeferredAction@MFMailComposeControllerDeferredActionNone	swift.enum.case	MFMailComposeControllerDeferredAction.none	MFMailComposeControllerDeferredAction.none	case none
+c:@E@MFMailComposeErrorCode	swift.enum	MFMailComposeError.Code	MFMailComposeError.Code	enum Code
+c:@E@MFMailComposeErrorCode@MFMailComposeErrorCodeSaveFailed	swift.enum.case	MFMailComposeError.Code.saveFailed	MFMailComposeError.Code.saveFailed	case saveFailed
+c:@E@MFMailComposeErrorCode@MFMailComposeErrorCodeSendFailed	swift.enum.case	MFMailComposeError.Code.sendFailed	MFMailComposeError.Code.sendFailed	case sendFailed
+c:@E@MFMailComposeResult	swift.enum	MFMailComposeResult	MFMailComposeResult	enum MFMailComposeResult
+c:@E@MFMailComposeResult@MFMailComposeResultCancelled	swift.enum.case	MFMailComposeResult.cancelled	MFMailComposeResult.cancelled	case cancelled
+c:@E@MFMailComposeResult@MFMailComposeResultFailed	swift.enum.case	MFMailComposeResult.failed	MFMailComposeResult.failed	case failed
+c:@E@MFMailComposeResult@MFMailComposeResultSaved	swift.enum.case	MFMailComposeResult.saved	MFMailComposeResult.saved	case saved
+c:@E@MFMailComposeResult@MFMailComposeResultSent	swift.enum.case	MFMailComposeResult.sent	MFMailComposeResult.sent	case sent
+c:@E@MessageComposeResult	swift.enum	MessageComposeResult	MessageComposeResult	enum MessageComposeResult
+c:@E@MessageComposeResult@MessageComposeResultCancelled	swift.enum.case	MessageComposeResult.cancelled	MessageComposeResult.cancelled	case cancelled
+c:@E@MessageComposeResult@MessageComposeResultFailed	swift.enum.case	MessageComposeResult.failed	MessageComposeResult.failed	case failed
+c:@E@MessageComposeResult@MessageComposeResultSent	swift.enum.case	MessageComposeResult.sent	MessageComposeResult.sent	case sent
+c:@MFMailComposeErrorDomain	swift.var	MFMailComposeErrorDomain	MFMailComposeErrorDomain	let MFMailComposeErrorDomain: String
+c:@MFMessageComposeViewControllerAttachmentAlternateFilename	swift.var	MFMessageComposeViewControllerAttachmentAlternateFilename	MFMessageComposeViewControllerAttachmentAlternateFilename	let MFMessageComposeViewControllerAttachmentAlternateFilename: String
+c:@MFMessageComposeViewControllerAttachmentURL	swift.var	MFMessageComposeViewControllerAttachmentURL	MFMessageComposeViewControllerAttachmentURL	let MFMessageComposeViewControllerAttachmentURL: String
+c:@MFMessageComposeViewControllerTextMessageAvailabilityDidChangeNotification	swift.type.property	MFMessageComposeViewControllerTextMessageAvailabilityDidChange	NSNotification.Name.MFMessageComposeViewControllerTextMessageAvailabilityDidChange	static let MFMessageComposeViewControllerTextMessageAvailabilityDidChange: NSNotification.Name
+c:@MFMessageComposeViewControllerTextMessageAvailabilityKey	swift.var	MFMessageComposeViewControllerTextMessageAvailabilityKey	MFMessageComposeViewControllerTextMessageAvailabilityKey	let MFMessageComposeViewControllerTextMessageAvailabilityKey: String
+c:objc(cs)MFMailComposeViewController	swift.class	MFMailComposeViewController	MFMailComposeViewController	@MainActor class MFMailComposeViewController
+c:objc(cs)MFMailComposeViewController(cm)canSendMail	swift.type.method	canSendMail()	MFMailComposeViewController.canSendMail()	@MainActor class func canSendMail() -> Bool
+c:objc(cs)MFMailComposeViewController(im)addAttachmentData:mimeType:fileName:	swift.method	addAttachmentData(_:mimeType:fileName:)	MFMailComposeViewController.addAttachmentData(_:mimeType:fileName:)	@MainActor func addAttachmentData(_ attachment: Data, mimeType: String, fileName filename: String)
+c:objc(cs)MFMailComposeViewController(im)insertCollaborationItemProvider:completionHandler:	swift.method	insertCollaborationItemProvider(_:)	MFMailComposeViewController.insertCollaborationItemProvider(_:)	@MainActor func insertCollaborationItemProvider(_ itemProvider: NSItemProvider) async -> Bool
+c:objc(cs)MFMailComposeViewController(im)setBccRecipients:	swift.method	setBccRecipients(_:)	MFMailComposeViewController.setBccRecipients(_:)	@MainActor func setBccRecipients(_ bccRecipients: [String]?)
+c:objc(cs)MFMailComposeViewController(im)setCcRecipients:	swift.method	setCcRecipients(_:)	MFMailComposeViewController.setCcRecipients(_:)	@MainActor func setCcRecipients(_ ccRecipients: [String]?)
+c:objc(cs)MFMailComposeViewController(im)setMessageBody:isHTML:	swift.method	setMessageBody(_:isHTML:)	MFMailComposeViewController.setMessageBody(_:isHTML:)	@MainActor func setMessageBody(_ body: String, isHTML: Bool)
+c:objc(cs)MFMailComposeViewController(im)setPreferredSendingEmailAddress:	swift.method	setPreferredSendingEmailAddress(_:)	MFMailComposeViewController.setPreferredSendingEmailAddress(_:)	@MainActor func setPreferredSendingEmailAddress(_ emailAddress: String)
+c:objc(cs)MFMailComposeViewController(im)setSubject:	swift.method	setSubject(_:)	MFMailComposeViewController.setSubject(_:)	@MainActor func setSubject(_ subject: String)
+c:objc(cs)MFMailComposeViewController(im)setToRecipients:	swift.method	setToRecipients(_:)	MFMailComposeViewController.setToRecipients(_:)	@MainActor func setToRecipients(_ toRecipients: [String]?)
+c:objc(cs)MFMailComposeViewController(py)mailComposeDelegate	swift.property	mailComposeDelegate	MFMailComposeViewController.mailComposeDelegate	@MainActor weak var mailComposeDelegate: (any MFMailComposeViewControllerDelegate)? { get set }
+c:objc(cs)MFMessageComposeViewController	swift.class	MFMessageComposeViewController	MFMessageComposeViewController	@MainActor class MFMessageComposeViewController
+c:objc(cs)MFMessageComposeViewController(cm)canSendAttachments	swift.type.method	canSendAttachments()	MFMessageComposeViewController.canSendAttachments()	@MainActor class func canSendAttachments() -> Bool
+c:objc(cs)MFMessageComposeViewController(cm)canSendSubject	swift.type.method	canSendSubject()	MFMessageComposeViewController.canSendSubject()	@MainActor class func canSendSubject() -> Bool
+c:objc(cs)MFMessageComposeViewController(cm)canSendText	swift.type.method	canSendText()	MFMessageComposeViewController.canSendText()	@MainActor class func canSendText() -> Bool
+c:objc(cs)MFMessageComposeViewController(cm)isSupportedAttachmentUTI:	swift.type.method	isSupportedAttachmentUTI(_:)	MFMessageComposeViewController.isSupportedAttachmentUTI(_:)	@MainActor class func isSupportedAttachmentUTI(_ uti: String) -> Bool
+c:objc(cs)MFMessageComposeViewController(im)addAttachmentData:typeIdentifier:filename:	swift.method	addAttachmentData(_:typeIdentifier:filename:)	MFMessageComposeViewController.addAttachmentData(_:typeIdentifier:filename:)	@MainActor func addAttachmentData(_ attachmentData: Data, typeIdentifier uti: String, filename: String) -> Bool
+c:objc(cs)MFMessageComposeViewController(im)addAttachmentURL:withAlternateFilename:	swift.method	addAttachmentURL(_:withAlternateFilename:)	MFMessageComposeViewController.addAttachmentURL(_:withAlternateFilename:)	@MainActor func addAttachmentURL(_ attachmentURL: URL, withAlternateFilename alternateFilename: String?) -> Bool
+c:objc(cs)MFMessageComposeViewController(im)disableUserAttachments	swift.method	disableUserAttachments()	MFMessageComposeViewController.disableUserAttachments()	@MainActor func disableUserAttachments()
+c:objc(cs)MFMessageComposeViewController(im)insertCollaborationItemProvider:	swift.method	insertCollaborationItemProvider(_:)	MFMessageComposeViewController.insertCollaborationItemProvider(_:)	@MainActor func insertCollaborationItemProvider(_ itemProvider: NSItemProvider) -> Bool
+c:objc(cs)MFMessageComposeViewController(py)attachments	swift.property	attachments	MFMessageComposeViewController.attachments	@MainActor var attachments: [[AnyHashable : Any]]? { get }
+c:objc(cs)MFMessageComposeViewController(py)body	swift.property	body	MFMessageComposeViewController.body	@MainActor var body: String? { get set }
+c:objc(cs)MFMessageComposeViewController(py)message	swift.property	message	MFMessageComposeViewController.message	@NSCopying @MainActor var message: MSMessage? { get set }
+c:objc(cs)MFMessageComposeViewController(py)messageComposeDelegate	swift.property	messageComposeDelegate	MFMessageComposeViewController.messageComposeDelegate	@MainActor weak var messageComposeDelegate: (any MFMessageComposeViewControllerDelegate)? { get set }
+c:objc(cs)MFMessageComposeViewController(py)recipients	swift.property	recipients	MFMessageComposeViewController.recipients	@MainActor var recipients: [String]? { get set }
+c:objc(cs)MFMessageComposeViewController(py)subject	swift.property	subject	MFMessageComposeViewController.subject	@MainActor var subject: String? { get set }
+c:objc(pl)MFMailComposeViewControllerDelegate	swift.protocol	MFMailComposeViewControllerDelegate	MFMailComposeViewControllerDelegate	protocol MFMailComposeViewControllerDelegate : NSObjectProtocol
+c:objc(pl)MFMailComposeViewControllerDelegate(im)mailComposeController:didFinishWithResult:error:	swift.method	mailComposeController(_:didFinishWith:error:)	MFMailComposeViewControllerDelegate.mailComposeController(_:didFinishWith:error:)	optional func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: (any Error)?)
+c:objc(pl)MFMessageComposeViewControllerDelegate	swift.protocol	MFMessageComposeViewControllerDelegate	MFMessageComposeViewControllerDelegate	protocol MFMessageComposeViewControllerDelegate : NSObjectProtocol
+c:objc(pl)MFMessageComposeViewControllerDelegate(im)messageComposeViewController:didFinishWithResult:	swift.method	messageComposeViewController(_:didFinishWith:)	MFMessageComposeViewControllerDelegate.messageComposeViewController(_:didFinishWith:)	func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.type.property	errorDomain	MFMailComposeError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	errorUserInfo	MFMailComposeError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	errorCode	MFMailComposeError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.func.op	~=(_:_:)	MFMailComposeError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	errorUserInfo	MFMailComposeError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.func.op	==(_:_:)	MFMailComposeError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	code	MFMailComposeError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.method	hash(into:)	MFMailComposeError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	userInfo	MFMailComposeError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	errorCode	MFMailComposeError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	hashValue	MFMailComposeError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.init	init(_:userInfo:)	MFMailComposeError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC22MFMailComposeErrorCodeLeV	swift.struct	MFMailComposeError	MFMailComposeError	struct MFMailComposeError
+s:SC22MFMailComposeErrorCodeLeV10saveFailedSoAAVvpZ	swift.type.property	saveFailed	MFMailComposeError.saveFailed	static var saveFailed: MFMailComposeError.Code { get }
+s:SC22MFMailComposeErrorCodeLeV10sendFailedSoAAVvpZ	swift.type.property	sendFailed	MFMailComposeError.sendFailed	static var sendFailed: MFMailComposeError.Code { get }
+s:SC22MFMailComposeErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	MFMailComposeError.errorDomain	static var errorDomain: String { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MFMailComposeControllerDeferredAction	swift.func.op	!=(_:_:)	MFMailComposeControllerDeferredAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.func.op	!=(_:_:)	MFMailComposeError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MFMailComposeResult	swift.func.op	!=(_:_:)	MFMailComposeResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MessageComposeResult	swift.func.op	!=(_:_:)	MessageComposeResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MFMailComposeControllerDeferredAction	swift.property	hashValue	MFMailComposeControllerDeferredAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	hashValue	MFMailComposeError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MFMailComposeResult	swift.property	hashValue	MFMailComposeResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MessageComposeResult	swift.property	hashValue	MessageComposeResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MFMailComposeControllerDeferredAction	swift.method	hash(into:)	MFMailComposeControllerDeferredAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.method	hash(into:)	MFMailComposeError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MFMailComposeResult	swift.method	hash(into:)	MFMailComposeResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MessageComposeResult	swift.method	hash(into:)	MessageComposeResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:So19MFMailComposeResultV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MFMailComposeResult.init(rawValue:)	init?(rawValue: Int)
+s:So20MessageComposeResultV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MessageComposeResult.init(rawValue:)	init?(rawValue: Int)
+s:So22MFMailComposeErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MFMailComposeError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So37MFMailComposeControllerDeferredActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MFMailComposeControllerDeferredAction.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MFMailComposeErrorCode	swift.property	localizedDescription	MFMailComposeError.localizedDescription	var localizedDescription: String { get }

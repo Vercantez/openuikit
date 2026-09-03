@@ -1,0 +1,312 @@
+{
+  "module": "WebKit",
+  "moduleRecord": {
+    "app_coverage_count": 19,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 383,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "34238373898d4b1d0819b4e49e0f4f0909e365e62e8b189e9761a7295d36a7fe",
+      "main_target_file_count": 6,
+      "repository_file_count": 6
+    },
+    "iphoneos_runtime_app_coverage_rank": 4,
+    "iphoneos_runtime_focus_launch_build_rank": 5,
+    "module": "WebKit",
+    "occurrence_count": 383,
+    "per_app": {
+      "Hackers": {
+        "evidence_sha256": "f7af405abb300201c5a062d3db38b7874a798a63cfd2eef4e2a3090bd7a5cba4",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "App/EmbeddedWebView.swift",
+          "Data/Sources/Data/SettingsRepository.swift"
+        ]
+      },
+      "NetNewsWire": {
+        "evidence_sha256": "1b980a941637f6880c380ec08fbf9d1f444cdc60c87b6312489c716a18113a60",
+        "file_count": 18,
+        "occurrence_count": 18,
+        "sample_paths": [
+          "Mac/MainWindow/Detail/DetailIconSchemeHandler.swift",
+          "Mac/MainWindow/Detail/DetailViewController.swift",
+          "Mac/MainWindow/Detail/DetailWebView.swift",
+          "Mac/MainWindow/Detail/DetailWebViewController.swift",
+          "Mac/WKPreferencesPrivate.h",
+          "Modules/RSCore/Sources/RSCoreResources/AppKit/WebViewWindowController.swift",
+          "Shared/Article Rendering/WebViewConfiguration.swift",
+          "iOS/Article/ArticleIconSchemeHandler.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "51bf3fd397da1ddac73ee679a0093bc26ea76d8f418c267af52ca30fd3a3e13b",
+        "file_count": 15,
+        "occurrence_count": 15,
+        "sample_paths": [
+          "Modules/App/Sources/UI/Actions/Print/MessagePrinter.swift",
+          "Modules/App/Sources/UI/Actions/Print/WebViewPrintingRegistrar.swift",
+          "Modules/App/Sources/UI/Actions/Print/WebViewPrintingTransaction.swift",
+          "Modules/App/Sources/UI/Extensions/WebView+Inspectability.swift",
+          "Modules/App/Sources/UI/Views/MessageBodyReaderView/MessageBodyReaderView.swift",
+          "Modules/App/Sources/UI/Views/ProtonAuthenticatedWebView/ProtonAuthenticatedWebModel+Upsell.swift",
+          "Modules/App/Sources/UI/Views/WebView.swift",
+          "Modules/InboxComposer/Sources/Composer/UIKitComponents/Views/ComposerBody/HtmlBodyEditor/HtmlBodyEditorController.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "b7aa2d2677a2166c84dc8f2c6e6e350d2f58a0896960a98d5525378770e535da",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "SignalUI/Views/CaptchaView.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "ddc728d7e603884ab334824f9b961997e0092424c6ed10f9182d886d48f3b3a8",
+        "file_count": 22,
+        "occurrence_count": 22,
+        "sample_paths": [
+          "submodules/AttachmentUI/Sources/AttachmentContainer.swift",
+          "submodules/BotPaymentsUI/Sources/BotCheckoutWebInteractionControllerNode.swift",
+          "submodules/BrowserUI/Sources/BrowserContent.swift",
+          "submodules/BrowserUI/Sources/BrowserDocumentContent.swift",
+          "submodules/BrowserUI/Sources/BrowserReadability.swift",
+          "submodules/BrowserUI/Sources/BrowserScreen.swift",
+          "submodules/BrowserUI/Sources/BrowserWebContent.swift",
+          "submodules/DebugSettingsUI/Sources/DebugController.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "c708fe749e234ce829aa8b508c4fb4bd3822bad16c9cf667ff1415a7b4d6e81c",
+        "file_count": 39,
+        "occurrence_count": 39,
+        "sample_paths": [
+          "Modules/Sources/JetpackSocial/Services/SocialOAuthAuthenticator.swift",
+          "Modules/Sources/JetpackSocial/Views/SocialOAuthWebViewController.swift",
+          "Modules/Sources/JetpackStats/Views/CountryMap/InteractiveMapView.swift",
+          "Modules/Sources/WordPressIntelligence/UseCases/TranslationViewModel.swift",
+          "Modules/Sources/WordPressReader/Comments/Views/WebCommentContentRenderer.swift",
+          "Modules/Sources/WordPressSharedUI/WKWebView+UserAgent.swift",
+          "Modules/Sources/WordPressUI/Views/WebView.swift",
+          "WordPress/Classes/Extensions/WKWebView+UserAgent.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "1d81092d9bca015fda6770342e14ae0cb454d4fc901c522f34ff926a946f964b",
+        "file_count": 70,
+        "occurrence_count": 70,
+        "sample_paths": [
+          "Core/DataStoreIDManager.swift",
+          "Core/DataStoreWarmup.swift",
+          "Core/DebugUserScript.swift",
+          "Core/FaviconUserScript.swift",
+          "Core/FullScreenVideoUserScript.swift",
+          "Core/HTTPCookieExtension.swift",
+          "Core/LoginFormDetectionUserScript.swift",
+          "Core/NavigatorSharePatchUserScript.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "42fe5afe3e00be477c7dbe998ceaf4cbcf8843a58c4d4258597ebe80ac4a2884",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/View_Controllers/Web_Browsing/ARExternalWebBrowserViewController.h"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "09c59577b6f7cd254b8747ffc560b1a4bc210d51e3ab1539273fa4017860d075",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Controllers/MXKWebViewViewController.h",
+          "Riot/Modules/MatrixKit/Views/Authentication/MXKAuthenticationFallbackWebView.h",
+          "Riot/Modules/MatrixKit/Views/Authentication/MXKAuthenticationRecaptchaWebView.h",
+          "Riot/Modules/Room/Attachements/MXKAttachmentsViewController.m",
+          "Riot/Modules/Room/TimelineCells/Common/MXKRoomBubbleTableViewCell.h",
+          "RiotSwiftUI/Modules/Authentication/ReCaptcha/View/AuthenticationReCaptchaWebView.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "2a57890e43bfff43b16839488220eb133804175ec5fe425dbb46693254c46195",
+        "file_count": 131,
+        "occurrence_count": 131,
+        "sample_paths": [
+          "BrowserKit/Sources/Shared/Extensions/WKWebViewExtensions.swift",
+          "BrowserKit/Sources/Shared/UserAgent.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/SummarizationChecker.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/SummarizerCheckerProtocol.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/SummarizerService.swift",
+          "BrowserKit/Sources/SummarizeKit/UI/SummarizeController.swift",
+          "BrowserKit/Sources/SummarizeKit/UI/SummarizeViewModel.swift",
+          "BrowserKit/Sources/WebEngine/EngineSessionBackForwardListItem.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "34238373898d4b1d0819b4e49e0f4f0909e365e62e8b189e9761a7295d36a7fe",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "focus-ios/Blockzilla/Modules/WebView/WebViewController.swift",
+          "focus-ios/Blockzilla/Settings/Controller/SettingsContentViewController.swift",
+          "focus-ios/Blockzilla/Utilities/AdsTelemetryHelper.swift",
+          "focus-ios/Blockzilla/Utilities/LocalContentBlocker.swift",
+          "focus-ios/Blockzilla/Utilities/SearchInContentTelemetry.swift",
+          "focus-ios/Blockzilla/Utilities/WebCacheUtils.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "771d6da5fcadc9c33b7473b5cda31f64ca3ee74af045ae6cb519171e37df6144",
+        "file_count": 18,
+        "occurrence_count": 18,
+        "sample_paths": [
+          "Sources/App/Frontend/DownloadManager/DownloadManagerViewModel.swift",
+          "Sources/App/Frontend/Extensions/WebViewScriptMessageHandler.swift",
+          "Sources/App/Frontend/ExternalMessageBus/SafeScriptMessageHandler.swift",
+          "Sources/App/Frontend/WebView/HomeAssistantView/HomeAssistantPullToRefreshObserver.swift",
+          "Sources/App/Frontend/WebView/Views/AnimatedSVGWebView.swift",
+          "Sources/App/Frontend/WebView/WebViewController/WebViewController+Navigation.swift",
+          "Sources/App/Frontend/WebView/WebViewController/WebViewController+ProtocolConformance.swift",
+          "Sources/App/Frontend/WebView/WebViewController/WebViewController+Settings.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "50b9a24f9d5bda730f151094eddf6a2891a8ec55b99d98607b8ec8e6ee3d1362",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/ProjectCreatorViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/ProjectUpdatesViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Views/Cells/ExternalSourceViewElementCell.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/SurveyResponse/Controller/PledgeManagerWebViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/Update/Controller/UpdateViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/Update/ViewModel/UpdateViewModel.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Library/WebViewController.swift",
+          "Library/Sources/Library/Library/ViewModels/PledgeManagerWebViewModel.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "11a1ed45127c4b6d8c3ea27eb432787049e2baff052d7f59069814f37ee6ec44",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Mastodon/In Progress New Layout and Datamodel/Common Components/Views/WebContentView.swift",
+          "Mastodon/In Progress New Layout and Datamodel/MastodonMainTabView.swift",
+          "Mastodon/In Progress New Layout and Datamodel/MastodonNavigationRouter.swift",
+          "Mastodon/In Progress New Layout and Datamodel/Profile/ProfileEditingView.swift",
+          "Mastodon/In Progress New Layout and Datamodel/Timeline/TimelineListView.swift",
+          "Mastodon/Scene/Onboarding/ResendEmail/MastodonResendEmailViewController.swift",
+          "Mastodon/Scene/Onboarding/ResendEmail/MastodonResendEmailViewModel.swift",
+          "Mastodon/Scene/Onboarding/ResendEmail/MastodonResendEmailViewModelNavigationDelegateShim.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "2a5ff6e1d7a36e5be0a4d988ea5921e764709c2c7798818ae6315f6a2df28874",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "iOSClient/BrowserWeb/NCBrowserWeb.swift",
+          "iOSClient/Login/NCLoginProvider.swift",
+          "iOSClient/RichWorkspace/NCViewerRichWorkspaceWebView.swift",
+          "iOSClient/Settings/Helpers/NCWebBrowserView.swift",
+          "iOSClient/Utility/NCSVGRenderer.swift",
+          "iOSClient/Viewer/NCViewerDirectEditing/NCViewerDirectEditing.swift",
+          "iOSClient/Viewer/NCViewerRichdocuments/NCViewerRichdocuments.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "54bfa8188112c4a81de761293276cdfadf956263165683453c8f0dedc28481ca",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "podcasts/Common Components/RichExpandableDescriptionView.swift",
+          "podcasts/Episode/EpisodeDetailViewController+ShowNotes.swift",
+          "podcasts/Episode/EpisodeDetailViewController.swift",
+          "podcasts/OnlineSupportController.swift",
+          "podcasts/Podcasts/Podcast Page/Cells/PodcastHeaderDescriptionView.swift",
+          "podcasts/ShowNotesPlayerItemViewController.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "8c5b70ae193b4ea8e3c6bf6cfd61378cc210957786b60f4ab678b2ae32bb6241",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Simplenote/Classes/SPMarkdownPreviewViewController.m"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "379bab02681586e39fcd8fa8aeceba622c4e4db34cbbd60129387bdccfcab21e",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/About/AboutController.swift",
+          "Sources/Donation/VLCDonationPayPalViewController.m"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "2c99cde05e06f14454211d3b9d74aa2dfd58bcd91cbcde27589a36f2f648af86",
+        "file_count": 16,
+        "occurrence_count": 16,
+        "sample_paths": [
+          "WMFComponents/Sources/WMFComponents/Components/Shared/WMFGIFImageView.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Year in Review/Views/WMFYearInReviewView.swift",
+          "Wikipedia/Code/AboutViewController.h",
+          "Wikipedia/Code/ActionHandlerScript.swift",
+          "Wikipedia/Code/ArticleViewController+Tooltips.swift",
+          "Wikipedia/Code/MWKDataStore.h",
+          "Wikipedia/Code/PageContentService+UITestAccessibilityScript.swift",
+          "Wikipedia/Code/PreviewWebViewContainer.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 4,
+    "byFocusLaunchBuildRelevance": 5
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 19,
+      "apps": [
+        "Hackers",
+        "NetNewsWire",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "eigen",
+        "element-ios",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "ios-oss",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios",
+        "vlc-ios",
+        "wikipedia-ios"
+      ],
+      "family": "WebKit",
+      "file_count": 383,
+      "focus_main_target_file_count": 6,
+      "focus_repository_file_count": 6,
+      "modules": [
+        "WebKit"
+      ],
+      "note": "web view and browser engine API"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

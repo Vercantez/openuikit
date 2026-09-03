@@ -1,0 +1,205 @@
+{
+  "module": "StoreKit",
+  "moduleRecord": {
+    "app_coverage_count": 14,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 45,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "270c78dd501bfb40c22df5c9a1a1f8c11f2828df68cfa0819b5ddcca79a9d109",
+      "main_target_file_count": 1,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 11,
+    "iphoneos_runtime_focus_launch_build_rank": 10,
+    "module": "StoreKit",
+    "occurrence_count": 45,
+    "per_app": {
+      "Hackers": {
+        "evidence_sha256": "94a4e308a76c3eaa2bcbda294ae2631dc1155cd9f7849e6aa78c8339c242988b",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Data/Sources/Data/SupportPurchaseRepository.swift",
+          "Shared/Sources/Shared/Services/ReviewPromptController.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "1b8761bfb17a3040c36ef3a7ef001f0291d7f8ef8416235712ca65b2fa147351",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Modules/App/Sources/State/Mailbox/MailboxModel.swift",
+          "Modules/InboxIAP/Sources/L10n.swift",
+          "Modules/InboxIAP/Sources/UpsellScreen/Onboarding/PlanTiles/PlanTileModel.swift",
+          "Modules/InboxIAP/Sources/UpsellScreen/Regular/SubscriptionPeriodRadioGroup/SubscriptionPeriodRadioButton.swift",
+          "Modules/InboxIAP/Sources/UpsellScreen/UpsellScreenFactory.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "c33ca7efb96a10f026316b9da0083a9a6cbf4acc13d43484bf895a902b549e56",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "Signal/Backups/BackupEnablingManager.swift",
+          "Signal/Backups/BackupPlanUpsellConfiguration.swift",
+          "Signal/Backups/BackupSettingsViewController.swift",
+          "Signal/Backups/ChooseBackupPlanViewController.swift",
+          "Signal/src/ViewControllers/HomeView/Chat List/ChatListViewController.swift",
+          "SignalServiceKit/Subscriptions/Backups/BackupSubscriptionManager.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "2cdd27ac9af50bf077c4d299137a82219f55a1975bad1fceec3d71bea32f7a8d",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "submodules/AuthorizationUI/Sources/AuthorizationSequencePaymentScreen.swift",
+          "submodules/InAppPurchaseManager/Sources/InAppPurchaseManager.swift",
+          "submodules/TelegramUI/Sources/AppDelegate.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "53ecdd535714f1b69c1f15c470c5909b91d5dbf32454a3382289a25cec9acc89",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "WordPress/Classes/Extensions/StoreKit+Debug.swift",
+          "WordPress/Classes/Models/Product.swift",
+          "WordPress/Classes/Utility/In-App Feedback/InAppFeedbackPromptCoordinator.swift",
+          "WordPress/Classes/ViewRelated/AppUpdate/BlockingUpdateView.swift",
+          "WordPress/Classes/ViewRelated/Notifications/Controllers/NotificationsViewController+AppRatings.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "b2eb9e2dfdb1b397da9293f0084c59623f7ec5d2a4100f9a7b1cde361525a033",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Core/MarketplaceAdPostback.swift",
+          "Core/MarketplaceAdPostbackUpdater.swift",
+          "DuckDuckGo/Subscription/ViewModel/SubscriptionSettingsViewModel.swift",
+          "DuckDuckGo/SubscriptionDebugViewController.swift",
+          "DuckDuckGo/TabViewController.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "439dceeb776a1188fbf148f9b6f62b37f4bfbcad8105397c3bf1c1ec1ec369fa",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "RiotSwiftUI/Modules/Authentication/Registration/Coordinator/AuthenticationRegistrationCoordinator.swift",
+          "RiotSwiftUI/Modules/Authentication/ServerSelection/Coordinator/AuthenticationServerSelectionCoordinator.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "f99ab1651bd2a5d4c7cb71530b6c93de8ed1d8230448763efc395980c3c8d344",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "firefox-ios/Client/Application/ConversionTracking/ConversionValue.swift",
+          "firefox-ios/Client/Application/ConversionTracking/ConversionValueUpdater.swift",
+          "firefox-ios/Client/RatingPromptManager.swift",
+          "focus-ios/Blockzilla/BrowserViewController.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "270c78dd501bfb40c22df5c9a1a1f8c11f2828df68cfa0819b5ddcca79a9d109",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/BrowserViewController.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "894c52b50b6440cf9cb479deb3efb5cc79502dfb3de90455fb32e171292cd27e",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/App/Settings/AppleWatch/HomeCustomization/WatchConfigurationView.swift",
+          "Sources/App/Settings/CarPlay/CarPlayConfigurationView.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "0e3696df0e0e6f3b1662fa3526c0a782abbb3956431f8f0b786b0f7c85ca3a4b",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ThanksProjects/Controller/ThanksViewController.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "31e434616bf68b1bac71f5170be121bbd1386b82e28bded48e266c9ace387b00",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Utility/NCStoreReview.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "59d3fc9413243068185a08823ede8532a519b380c34d8a429bc755613bf11518",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "Pocket Casts App Clip/NowPlayingView.swift",
+          "Pocket Casts TV App/UI/Profile/SubscriptionInfoView.swift",
+          "podcasts/Extensions/UIViewController+requestReview.swift",
+          "podcasts/InAppPurchases/IAPHelper.swift",
+          "podcasts/Referrals/ReferralsCoordinator.swift",
+          "podcasts/UserSatisfactionSurveyManager.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "eedb0cbb91d0574f5299030abb56e1d16c2b43a6079233a4e560de9ac01f2501",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Simplenote/Classes/SPNoteListViewController.m",
+          "Simplenote/StoreManager.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 11,
+    "byFocusLaunchBuildRelevance": 10
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 14,
+      "apps": [
+        "Hackers",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "element-ios",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "ios-oss",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios"
+      ],
+      "family": "StoreKit",
+      "file_count": 45,
+      "focus_main_target_file_count": 1,
+      "focus_repository_file_count": 1,
+      "modules": [
+        "StoreKit"
+      ],
+      "note": "purchases and App Store APIs"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

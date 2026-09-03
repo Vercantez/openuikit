@@ -1,0 +1,248 @@
+precise	kind	title	path	declaration
+c:@E@LAAccessControlOperation	swift.enum	LAAccessControlOperation	LAAccessControlOperation	enum LAAccessControlOperation
+c:@E@LAAccessControlOperation@LAAccessControlOperationCreateItem	swift.enum.case	LAAccessControlOperation.createItem	LAAccessControlOperation.createItem	case createItem
+c:@E@LAAccessControlOperation@LAAccessControlOperationCreateKey	swift.enum.case	LAAccessControlOperation.createKey	LAAccessControlOperation.createKey	case createKey
+c:@E@LAAccessControlOperation@LAAccessControlOperationUseItem	swift.enum.case	LAAccessControlOperation.useItem	LAAccessControlOperation.useItem	case useItem
+c:@E@LAAccessControlOperation@LAAccessControlOperationUseKeyDecrypt	swift.enum.case	LAAccessControlOperation.useKeyDecrypt	LAAccessControlOperation.useKeyDecrypt	case useKeyDecrypt
+c:@E@LAAccessControlOperation@LAAccessControlOperationUseKeyKeyExchange	swift.enum.case	LAAccessControlOperation.useKeyKeyExchange	LAAccessControlOperation.useKeyKeyExchange	case useKeyKeyExchange
+c:@E@LAAccessControlOperation@LAAccessControlOperationUseKeySign	swift.enum.case	LAAccessControlOperation.useKeySign	LAAccessControlOperation.useKeySign	case useKeySign
+c:@E@LABiometryType	swift.enum	LABiometryType	LABiometryType	enum LABiometryType
+c:@E@LABiometryType@LABiometryNone	swift.type.property	LABiometryNone	LABiometryType.LABiometryNone	static var LABiometryNone: LABiometryType { get }
+c:@E@LABiometryType@LABiometryTypeFaceID	swift.enum.case	LABiometryType.faceID	LABiometryType.faceID	case faceID
+c:@E@LABiometryType@LABiometryTypeNone	swift.enum.case	LABiometryType.none	LABiometryType.none	case none
+c:@E@LABiometryType@LABiometryTypeOpticID	swift.enum.case	LABiometryType.opticID	LABiometryType.opticID	case opticID
+c:@E@LABiometryType@LABiometryTypeTouchID	swift.enum.case	LABiometryType.touchID	LABiometryType.touchID	case touchID
+c:@E@LACompanionType	swift.enum	LACompanionType	LACompanionType	enum LACompanionType
+c:@E@LACompanionType@LACompanionTypeMac	swift.enum.case	LACompanionType.mac	LACompanionType.mac	case mac
+c:@E@LACompanionType@LACompanionTypeVision	swift.enum.case	LACompanionType.vision	LACompanionType.vision	case vision
+c:@E@LACredentialType	swift.enum	LACredentialType	LACredentialType	enum LACredentialType
+c:@E@LACredentialType@LACredentialTypeApplicationPassword	swift.enum.case	LACredentialType.applicationPassword	LACredentialType.applicationPassword	case applicationPassword
+c:@E@LACredentialType@LACredentialTypeSmartCardPIN	swift.enum.case	LACredentialType.smartCardPIN	LACredentialType.smartCardPIN	case smartCardPIN
+c:@E@LAError	swift.enum	LAError.Code	LAError.Code	enum Code
+c:@E@LAError@LAErrorAppCancel	swift.enum.case	LAError.Code.appCancel	LAError.Code.appCancel	case appCancel
+c:@E@LAError@LAErrorAuthenticationFailed	swift.enum.case	LAError.Code.authenticationFailed	LAError.Code.authenticationFailed	case authenticationFailed
+c:@E@LAError@LAErrorCompanionNotAvailable	swift.enum.case	LAError.Code.companionNotAvailable	LAError.Code.companionNotAvailable	case companionNotAvailable
+c:@E@LAError@LAErrorInvalidContext	swift.enum.case	LAError.Code.invalidContext	LAError.Code.invalidContext	case invalidContext
+c:@E@LAError@LAErrorNotInteractive	swift.enum.case	LAError.Code.notInteractive	LAError.Code.notInteractive	case notInteractive
+c:@E@LAError@LAErrorPasscodeNotSet	swift.enum.case	LAError.Code.passcodeNotSet	LAError.Code.passcodeNotSet	case passcodeNotSet
+c:@E@LAError@LAErrorSystemCancel	swift.enum.case	LAError.Code.systemCancel	LAError.Code.systemCancel	case systemCancel
+c:@E@LAError@LAErrorTouchIDLockout	swift.enum.case	LAError.Code.touchIDLockout	LAError.Code.touchIDLockout	case touchIDLockout
+c:@E@LAError@LAErrorTouchIDNotAvailable	swift.enum.case	LAError.Code.touchIDNotAvailable	LAError.Code.touchIDNotAvailable	case touchIDNotAvailable
+c:@E@LAError@LAErrorTouchIDNotEnrolled	swift.enum.case	LAError.Code.touchIDNotEnrolled	LAError.Code.touchIDNotEnrolled	case touchIDNotEnrolled
+c:@E@LAError@LAErrorUserCancel	swift.enum.case	LAError.Code.userCancel	LAError.Code.userCancel	case userCancel
+c:@E@LAError@LAErrorUserFallback	swift.enum.case	LAError.Code.userFallback	LAError.Code.userFallback	case userFallback
+c:@E@LAPolicy	swift.enum	LAPolicy	LAPolicy	enum LAPolicy
+c:@E@LAPolicy@LAPolicyDeviceOwnerAuthentication	swift.enum.case	LAPolicy.deviceOwnerAuthentication	LAPolicy.deviceOwnerAuthentication	case deviceOwnerAuthentication
+c:@E@LAPolicy@LAPolicyDeviceOwnerAuthenticationWithBiometrics	swift.enum.case	LAPolicy.deviceOwnerAuthenticationWithBiometrics	LAPolicy.deviceOwnerAuthenticationWithBiometrics	case deviceOwnerAuthenticationWithBiometrics
+c:@E@LAPolicy@LAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion	swift.enum.case	LAPolicy.deviceOwnerAuthenticationWithBiometricsOrCompanion	LAPolicy.deviceOwnerAuthenticationWithBiometricsOrCompanion	case deviceOwnerAuthenticationWithBiometricsOrCompanion
+c:@E@LAPolicy@LAPolicyDeviceOwnerAuthenticationWithCompanion	swift.enum.case	LAPolicy.deviceOwnerAuthenticationWithCompanion	LAPolicy.deviceOwnerAuthenticationWithCompanion	case deviceOwnerAuthenticationWithCompanion
+c:@E@LARightState	swift.enum	LARight.State	LARight.State	enum State
+c:@E@LARightState@LARightStateAuthorized	swift.enum.case	LARight.State.authorized	LARight.State.authorized	case authorized
+c:@E@LARightState@LARightStateAuthorizing	swift.enum.case	LARight.State.authorizing	LARight.State.authorizing	case authorizing
+c:@E@LARightState@LARightStateNotAuthorized	swift.enum.case	LARight.State.notAuthorized	LARight.State.notAuthorized	case notAuthorized
+c:@E@LARightState@LARightStateUnknown	swift.enum.case	LARight.State.unknown	LARight.State.unknown	case unknown
+c:@LAErrorDomain	swift.var	LAErrorDomain	LAErrorDomain	let LAErrorDomain: String
+c:@LATouchIDAuthenticationMaximumAllowableReuseDuration	swift.var	LATouchIDAuthenticationMaximumAllowableReuseDuration	LATouchIDAuthenticationMaximumAllowableReuseDuration	let LATouchIDAuthenticationMaximumAllowableReuseDuration: TimeInterval
+c:@macro@kLAAccessControlOperationCreateItem	swift.var	kLAAccessControlOperationCreateItem	kLAAccessControlOperationCreateItem	var kLAAccessControlOperationCreateItem: Int32 { get }
+c:@macro@kLAAccessControlOperationCreateKey	swift.var	kLAAccessControlOperationCreateKey	kLAAccessControlOperationCreateKey	var kLAAccessControlOperationCreateKey: Int32 { get }
+c:@macro@kLAAccessControlOperationUseItem	swift.var	kLAAccessControlOperationUseItem	kLAAccessControlOperationUseItem	var kLAAccessControlOperationUseItem: Int32 { get }
+c:@macro@kLAAccessControlOperationUseKeyDecrypt	swift.var	kLAAccessControlOperationUseKeyDecrypt	kLAAccessControlOperationUseKeyDecrypt	var kLAAccessControlOperationUseKeyDecrypt: Int32 { get }
+c:@macro@kLAAccessControlOperationUseKeyKeyExchange	swift.var	kLAAccessControlOperationUseKeyKeyExchange	kLAAccessControlOperationUseKeyKeyExchange	var kLAAccessControlOperationUseKeyKeyExchange: Int32 { get }
+c:@macro@kLAAccessControlOperationUseKeySign	swift.var	kLAAccessControlOperationUseKeySign	kLAAccessControlOperationUseKeySign	var kLAAccessControlOperationUseKeySign: Int32 { get }
+c:@macro@kLABiometryTypeFaceID	swift.var	kLABiometryTypeFaceID	kLABiometryTypeFaceID	var kLABiometryTypeFaceID: Int32 { get }
+c:@macro@kLABiometryTypeNone	swift.var	kLABiometryTypeNone	kLABiometryTypeNone	var kLABiometryTypeNone: Int32 { get }
+c:@macro@kLABiometryTypeOpticID	swift.var	kLABiometryTypeOpticID	kLABiometryTypeOpticID	var kLABiometryTypeOpticID: Int32 { get }
+c:@macro@kLABiometryTypeTouchID	swift.var	kLABiometryTypeTouchID	kLABiometryTypeTouchID	var kLABiometryTypeTouchID: Int32 { get }
+c:@macro@kLACompanionTypeMac	swift.var	kLACompanionTypeMac	kLACompanionTypeMac	var kLACompanionTypeMac: Int32 { get }
+c:@macro@kLACompanionTypeNone	swift.var	kLACompanionTypeNone	kLACompanionTypeNone	var kLACompanionTypeNone: Int32 { get }
+c:@macro@kLACompanionTypeVision	swift.var	kLACompanionTypeVision	kLACompanionTypeVision	var kLACompanionTypeVision: Int32 { get }
+c:@macro@kLACompanionTypeWatch	swift.var	kLACompanionTypeWatch	kLACompanionTypeWatch	var kLACompanionTypeWatch: Int32 { get }
+c:@macro@kLACredentialSmartCardPIN	swift.var	kLACredentialSmartCardPIN	kLACredentialSmartCardPIN	var kLACredentialSmartCardPIN: Int32 { get }
+c:@macro@kLACredentialTypeApplicationPassword	swift.var	kLACredentialTypeApplicationPassword	kLACredentialTypeApplicationPassword	var kLACredentialTypeApplicationPassword: Int32 { get }
+c:@macro@kLAErrorAppCancel	swift.var	kLAErrorAppCancel	kLAErrorAppCancel	var kLAErrorAppCancel: Int32 { get }
+c:@macro@kLAErrorAuthenticationFailed	swift.var	kLAErrorAuthenticationFailed	kLAErrorAuthenticationFailed	var kLAErrorAuthenticationFailed: Int32 { get }
+c:@macro@kLAErrorBiometryDisconnected	swift.var	kLAErrorBiometryDisconnected	kLAErrorBiometryDisconnected	var kLAErrorBiometryDisconnected: Int32 { get }
+c:@macro@kLAErrorBiometryLockout	swift.var	kLAErrorBiometryLockout	kLAErrorBiometryLockout	var kLAErrorBiometryLockout: Int32 { get }
+c:@macro@kLAErrorBiometryNotAvailable	swift.var	kLAErrorBiometryNotAvailable	kLAErrorBiometryNotAvailable	var kLAErrorBiometryNotAvailable: Int32 { get }
+c:@macro@kLAErrorBiometryNotEnrolled	swift.var	kLAErrorBiometryNotEnrolled	kLAErrorBiometryNotEnrolled	var kLAErrorBiometryNotEnrolled: Int32 { get }
+c:@macro@kLAErrorBiometryNotPaired	swift.var	kLAErrorBiometryNotPaired	kLAErrorBiometryNotPaired	var kLAErrorBiometryNotPaired: Int32 { get }
+c:@macro@kLAErrorCompanionNotAvailable	swift.var	kLAErrorCompanionNotAvailable	kLAErrorCompanionNotAvailable	var kLAErrorCompanionNotAvailable: Int32 { get }
+c:@macro@kLAErrorDomain	swift.var	kLAErrorDomain	kLAErrorDomain	var kLAErrorDomain: String { get }
+c:@macro@kLAErrorInvalidContext	swift.var	kLAErrorInvalidContext	kLAErrorInvalidContext	var kLAErrorInvalidContext: Int32 { get }
+c:@macro@kLAErrorInvalidDimensions	swift.var	kLAErrorInvalidDimensions	kLAErrorInvalidDimensions	var kLAErrorInvalidDimensions: Int32 { get }
+c:@macro@kLAErrorNotInteractive	swift.var	kLAErrorNotInteractive	kLAErrorNotInteractive	var kLAErrorNotInteractive: Int32 { get }
+c:@macro@kLAErrorPasscodeNotSet	swift.var	kLAErrorPasscodeNotSet	kLAErrorPasscodeNotSet	var kLAErrorPasscodeNotSet: Int32 { get }
+c:@macro@kLAErrorSystemCancel	swift.var	kLAErrorSystemCancel	kLAErrorSystemCancel	var kLAErrorSystemCancel: Int32 { get }
+c:@macro@kLAErrorTouchIDLockout	swift.var	kLAErrorTouchIDLockout	kLAErrorTouchIDLockout	var kLAErrorTouchIDLockout: Int32 { get }
+c:@macro@kLAErrorTouchIDNotAvailable	swift.var	kLAErrorTouchIDNotAvailable	kLAErrorTouchIDNotAvailable	var kLAErrorTouchIDNotAvailable: Int32 { get }
+c:@macro@kLAErrorTouchIDNotEnrolled	swift.var	kLAErrorTouchIDNotEnrolled	kLAErrorTouchIDNotEnrolled	var kLAErrorTouchIDNotEnrolled: Int32 { get }
+c:@macro@kLAErrorUserCancel	swift.var	kLAErrorUserCancel	kLAErrorUserCancel	var kLAErrorUserCancel: Int32 { get }
+c:@macro@kLAErrorUserFallback	swift.var	kLAErrorUserFallback	kLAErrorUserFallback	var kLAErrorUserFallback: Int32 { get }
+c:@macro@kLAErrorWatchNotAvailable	swift.var	kLAErrorWatchNotAvailable	kLAErrorWatchNotAvailable	var kLAErrorWatchNotAvailable: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthentication	swift.var	kLAPolicyDeviceOwnerAuthentication	kLAPolicyDeviceOwnerAuthentication	var kLAPolicyDeviceOwnerAuthentication: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthenticationWithBiometrics	swift.var	kLAPolicyDeviceOwnerAuthenticationWithBiometrics	kLAPolicyDeviceOwnerAuthenticationWithBiometrics	var kLAPolicyDeviceOwnerAuthenticationWithBiometrics: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion	swift.var	kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion	kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion	var kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch	swift.var	kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch	kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch	var kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthenticationWithCompanion	swift.var	kLAPolicyDeviceOwnerAuthenticationWithCompanion	kLAPolicyDeviceOwnerAuthenticationWithCompanion	var kLAPolicyDeviceOwnerAuthenticationWithCompanion: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthenticationWithWatch	swift.var	kLAPolicyDeviceOwnerAuthenticationWithWatch	kLAPolicyDeviceOwnerAuthenticationWithWatch	var kLAPolicyDeviceOwnerAuthenticationWithWatch: Int32 { get }
+c:@macro@kLAPolicyDeviceOwnerAuthenticationWithWristDetection	swift.var	kLAPolicyDeviceOwnerAuthenticationWithWristDetection	kLAPolicyDeviceOwnerAuthenticationWithWristDetection	var kLAPolicyDeviceOwnerAuthenticationWithWristDetection: Int32 { get }
+c:objc(cs)LAAuthenticationRequirement	swift.class	LAAuthenticationRequirement	LAAuthenticationRequirement	class LAAuthenticationRequirement
+c:objc(cs)LAAuthenticationRequirement(cm)biometryRequirementWithFallback:	swift.type.method	biometry(fallback:)	LAAuthenticationRequirement.biometry(fallback:)	class func biometry(fallback: LABiometryFallbackRequirement) -> Self
+c:objc(cs)LAAuthenticationRequirement(cpy)biometryCurrentSetRequirement	swift.type.property	biometryCurrentSet	LAAuthenticationRequirement.biometryCurrentSet	class var biometryCurrentSet: LAAuthenticationRequirement { get }
+c:objc(cs)LAAuthenticationRequirement(cpy)biometryRequirement	swift.type.property	biometry	LAAuthenticationRequirement.biometry	class var biometry: LAAuthenticationRequirement { get }
+c:objc(cs)LAAuthenticationRequirement(cpy)defaultRequirement	swift.type.property	default	LAAuthenticationRequirement.default	class var `default`: LAAuthenticationRequirement { get }
+c:objc(cs)LABiometryFallbackRequirement	swift.class	LABiometryFallbackRequirement	LABiometryFallbackRequirement	class LABiometryFallbackRequirement
+c:objc(cs)LABiometryFallbackRequirement(cpy)defaultRequirement	swift.type.property	default	LABiometryFallbackRequirement.default	class var `default`: LABiometryFallbackRequirement { get }
+c:objc(cs)LABiometryFallbackRequirement(cpy)devicePasscodeRequirement	swift.type.property	devicePasscode	LABiometryFallbackRequirement.devicePasscode	class var devicePasscode: LABiometryFallbackRequirement { get }
+c:objc(cs)LAContext	swift.class	LAContext	LAContext	class LAContext
+c:objc(cs)LAContext(im)canEvaluatePolicy:error:	swift.method	canEvaluatePolicy(_:error:)	LAContext.canEvaluatePolicy(_:error:)	func canEvaluatePolicy(_ policy: LAPolicy, error: NSErrorPointer) -> Bool
+c:objc(cs)LAContext(im)evaluateAccessControl:operation:localizedReason:reply:	swift.method	evaluateAccessControl(_:operation:localizedReason:)	LAContext.evaluateAccessControl(_:operation:localizedReason:)	func evaluateAccessControl(_ accessControl: SecAccessControl, operation: LAAccessControlOperation, localizedReason: String) async throws -> Bool
+c:objc(cs)LAContext(im)evaluatePolicy:localizedReason:reply:	swift.method	evaluatePolicy(_:localizedReason:)	LAContext.evaluatePolicy(_:localizedReason:)	func evaluatePolicy(_ policy: LAPolicy, localizedReason: String) async throws -> Bool
+c:objc(cs)LAContext(im)invalidate	swift.method	invalidate()	LAContext.invalidate()	func invalidate()
+c:objc(cs)LAContext(im)isCredentialSet:	swift.method	isCredentialSet(_:)	LAContext.isCredentialSet(_:)	func isCredentialSet(_ type: LACredentialType) -> Bool
+c:objc(cs)LAContext(im)setCredential:type:	swift.method	setCredential(_:type:)	LAContext.setCredential(_:type:)	func setCredential(_ credential: Data?, type: LACredentialType) -> Bool
+c:objc(cs)LAContext(py)biometryType	swift.property	biometryType	LAContext.biometryType	var biometryType: LABiometryType { get }
+c:objc(cs)LAContext(py)domainState	swift.property	domainState	LAContext.domainState	var domainState: LADomainState { get }
+c:objc(cs)LAContext(py)evaluatedPolicyDomainState	swift.property	evaluatedPolicyDomainState	LAContext.evaluatedPolicyDomainState	var evaluatedPolicyDomainState: Data? { get }
+c:objc(cs)LAContext(py)interactionNotAllowed	swift.property	interactionNotAllowed	LAContext.interactionNotAllowed	var interactionNotAllowed: Bool { get set }
+c:objc(cs)LAContext(py)localizedCancelTitle	swift.property	localizedCancelTitle	LAContext.localizedCancelTitle	var localizedCancelTitle: String? { get set }
+c:objc(cs)LAContext(py)localizedFallbackTitle	swift.property	localizedFallbackTitle	LAContext.localizedFallbackTitle	var localizedFallbackTitle: String? { get set }
+c:objc(cs)LAContext(py)localizedReason	swift.property	localizedReason	LAContext.localizedReason	var localizedReason: String { get set }
+c:objc(cs)LAContext(py)maxBiometryFailures	swift.property	maxBiometryFailures	LAContext.maxBiometryFailures	var maxBiometryFailures: NSNumber? { get set }
+c:objc(cs)LAContext(py)touchIDAuthenticationAllowableReuseDuration	swift.property	touchIDAuthenticationAllowableReuseDuration	LAContext.touchIDAuthenticationAllowableReuseDuration	var touchIDAuthenticationAllowableReuseDuration: TimeInterval { get set }
+c:objc(cs)LADomainState	swift.class	LADomainState	LADomainState	class LADomainState
+c:objc(cs)LADomainState(py)biometry	swift.property	biometry	LADomainState.biometry	var biometry: LADomainStateBiometry { get }
+c:objc(cs)LADomainState(py)companion	swift.property	companion	LADomainState.companion	var companion: LADomainStateCompanion { get }
+c:objc(cs)LADomainState(py)stateHash	swift.property	stateHash	LADomainState.stateHash	var stateHash: Data? { get }
+c:objc(cs)LADomainStateBiometry	swift.class	LADomainStateBiometry	LADomainStateBiometry	class LADomainStateBiometry
+c:objc(cs)LADomainStateBiometry(py)biometryType	swift.property	biometryType	LADomainStateBiometry.biometryType	var biometryType: LABiometryType { get }
+c:objc(cs)LADomainStateBiometry(py)stateHash	swift.property	stateHash	LADomainStateBiometry.stateHash	var stateHash: Data? { get }
+c:objc(cs)LADomainStateCompanion	swift.class	LADomainStateCompanion	LADomainStateCompanion	class LADomainStateCompanion
+c:objc(cs)LADomainStateCompanion(im)stateHashForCompanionType:	swift.method	stateHash(for:)	LADomainStateCompanion.stateHash(for:)	func stateHash(for companionType: LACompanionType) -> Data?
+c:objc(cs)LADomainStateCompanion(py)stateHash	swift.property	stateHash	LADomainStateCompanion.stateHash	var stateHash: Data? { get }
+c:objc(cs)LAEnvironment	swift.class	LAEnvironment	LAEnvironment	class LAEnvironment
+c:objc(cs)LAEnvironment(cpy)currentUser	swift.type.property	currentUser	LAEnvironment.currentUser	class var currentUser: LAEnvironment { get }
+c:objc(cs)LAEnvironment(im)addObserver:	swift.method	addObserver(_:)	LAEnvironment.addObserver(_:)	func addObserver(_ observer: any LAEnvironment.Observer)
+c:objc(cs)LAEnvironment(im)removeObserver:	swift.method	removeObserver(_:)	LAEnvironment.removeObserver(_:)	func removeObserver(_ observer: any LAEnvironment.Observer)
+c:objc(cs)LAEnvironment(py)state	swift.property	state	LAEnvironment.state	var state: LAEnvironment.State { get }
+c:objc(cs)LAEnvironmentMechanism	swift.class	LAEnvironment.Mechanism	LAEnvironment.Mechanism	class Mechanism
+c:objc(cs)LAEnvironmentMechanism(py)iconSystemName	swift.property	iconSystemName	LAEnvironment.Mechanism.iconSystemName	var iconSystemName: String { get }
+c:objc(cs)LAEnvironmentMechanism(py)isUsable	swift.property	isUsable	LAEnvironment.Mechanism.isUsable	var isUsable: Bool { get }
+c:objc(cs)LAEnvironmentMechanism(py)localizedName	swift.property	localizedName	LAEnvironment.Mechanism.localizedName	var localizedName: String { get }
+c:objc(cs)LAEnvironmentMechanismBiometry	swift.class	LAEnvironment.MechanismBiometry	LAEnvironment.MechanismBiometry	class MechanismBiometry
+c:objc(cs)LAEnvironmentMechanismBiometry(py)biometryType	swift.property	biometryType	LAEnvironment.MechanismBiometry.biometryType	var biometryType: LABiometryType { get }
+c:objc(cs)LAEnvironmentMechanismBiometry(py)builtInSensorInaccessible	swift.property	builtInSensorInaccessible	LAEnvironment.MechanismBiometry.builtInSensorInaccessible	var builtInSensorInaccessible: Bool { get }
+c:objc(cs)LAEnvironmentMechanismBiometry(py)isEnrolled	swift.property	isEnrolled	LAEnvironment.MechanismBiometry.isEnrolled	var isEnrolled: Bool { get }
+c:objc(cs)LAEnvironmentMechanismBiometry(py)isLockedOut	swift.property	isLockedOut	LAEnvironment.MechanismBiometry.isLockedOut	var isLockedOut: Bool { get }
+c:objc(cs)LAEnvironmentMechanismBiometry(py)stateHash	swift.property	stateHash	LAEnvironment.MechanismBiometry.stateHash	var stateHash: Data { get }
+c:objc(cs)LAEnvironmentMechanismCompanion	swift.class	LAEnvironment.MechanismCompanion	LAEnvironment.MechanismCompanion	class MechanismCompanion
+c:objc(cs)LAEnvironmentMechanismCompanion(py)stateHash	swift.property	stateHash	LAEnvironment.MechanismCompanion.stateHash	var stateHash: Data? { get }
+c:objc(cs)LAEnvironmentMechanismCompanion(py)type	swift.property	type	LAEnvironment.MechanismCompanion.type	var type: LACompanionType { get }
+c:objc(cs)LAEnvironmentMechanismUserPassword	swift.class	LAEnvironment.MechanismUserPassword	LAEnvironment.MechanismUserPassword	class MechanismUserPassword
+c:objc(cs)LAEnvironmentMechanismUserPassword(py)isSet	swift.property	isSet	LAEnvironment.MechanismUserPassword.isSet	var isSet: Bool { get }
+c:objc(cs)LAEnvironmentState	swift.class	LAEnvironment.State	LAEnvironment.State	class State
+c:objc(cs)LAEnvironmentState(py)allMechanisms	swift.property	allMechanisms	LAEnvironment.State.allMechanisms	var allMechanisms: [LAEnvironment.Mechanism] { get }
+c:objc(cs)LAEnvironmentState(py)biometry	swift.property	biometry	LAEnvironment.State.biometry	var biometry: LAEnvironment.MechanismBiometry? { get }
+c:objc(cs)LAEnvironmentState(py)companions	swift.property	companions	LAEnvironment.State.companions	var companions: [LAEnvironment.MechanismCompanion] { get }
+c:objc(cs)LAEnvironmentState(py)userPassword	swift.property	userPassword	LAEnvironment.State.userPassword	var userPassword: LAEnvironment.MechanismUserPassword? { get }
+c:objc(cs)LAPersistedRight	swift.class	LAPersistedRight	LAPersistedRight	class LAPersistedRight
+c:objc(cs)LAPersistedRight(py)key	swift.property	key	LAPersistedRight.key	var key: LAPrivateKey { get }
+c:objc(cs)LAPersistedRight(py)secret	swift.property	secret	LAPersistedRight.secret	var secret: LASecret { get }
+c:objc(cs)LAPrivateKey	swift.class	LAPrivateKey	LAPrivateKey	class LAPrivateKey
+c:objc(cs)LAPrivateKey(im)canDecryptUsingSecKeyAlgorithm:	swift.method	canDecrypt(using:)	LAPrivateKey.canDecrypt(using:)	func canDecrypt(using algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)LAPrivateKey(im)canExchangeKeysUsingSecKeyAlgorithm:	swift.method	canExchangeKeys(using:)	LAPrivateKey.canExchangeKeys(using:)	func canExchangeKeys(using algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)LAPrivateKey(im)canSignUsingSecKeyAlgorithm:	swift.method	canSign(using:)	LAPrivateKey.canSign(using:)	func canSign(using algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)LAPrivateKey(im)decryptData:secKeyAlgorithm:completion:	swift.method	decrypt(_:algorithm:)	LAPrivateKey.decrypt(_:algorithm:)	func decrypt(_ data: Data, algorithm: SecKeyAlgorithm) async throws -> Data
+c:objc(cs)LAPrivateKey(im)exchangeKeysWithPublicKey:secKeyAlgorithm:secKeyParameters:completion:	swift.method	exchangeKeys(publicKey:algorithm:parameters:)	LAPrivateKey.exchangeKeys(publicKey:algorithm:parameters:)	func exchangeKeys(publicKey: Data, algorithm: SecKeyAlgorithm, parameters: [AnyHashable : Any]) async throws -> Data
+c:objc(cs)LAPrivateKey(im)signData:secKeyAlgorithm:completion:	swift.method	sign(_:algorithm:)	LAPrivateKey.sign(_:algorithm:)	func sign(_ data: Data, algorithm: SecKeyAlgorithm) async throws -> Data
+c:objc(cs)LAPrivateKey(py)publicKey	swift.property	publicKey	LAPrivateKey.publicKey	var publicKey: LAPublicKey { get }
+c:objc(cs)LAPublicKey	swift.class	LAPublicKey	LAPublicKey	class LAPublicKey
+c:objc(cs)LAPublicKey(im)canEncryptUsingSecKeyAlgorithm:	swift.method	canEncrypt(using:)	LAPublicKey.canEncrypt(using:)	func canEncrypt(using algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)LAPublicKey(im)canVerifyUsingSecKeyAlgorithm:	swift.method	canVerify(using:)	LAPublicKey.canVerify(using:)	func canVerify(using algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)LAPublicKey(im)encryptData:secKeyAlgorithm:completion:	swift.method	encrypt(_:algorithm:)	LAPublicKey.encrypt(_:algorithm:)	func encrypt(_ data: Data, algorithm: SecKeyAlgorithm) async throws -> Data
+c:objc(cs)LAPublicKey(im)exportBytesWithCompletion:	swift.method	exportBytes(completion:)	LAPublicKey.exportBytes(completion:)	func exportBytes(completion handler: @escaping (Data?, (any Error)?) -> Void)
+c:objc(cs)LAPublicKey(im)verifyData:signature:secKeyAlgorithm:completion:	swift.method	verify(_:signature:algorithm:)	LAPublicKey.verify(_:signature:algorithm:)	func verify(_ signedData: Data, signature: Data, algorithm: SecKeyAlgorithm) async throws
+c:objc(cs)LARight	swift.class	LARight	LARight	class LARight
+c:objc(cs)LARight(im)authorizeWithLocalizedReason:completion:	swift.method	authorize(localizedReason:)	LARight.authorize(localizedReason:)	func authorize(localizedReason: String) async throws
+c:objc(cs)LARight(im)checkCanAuthorizeWithCompletion:	swift.method	checkCanAuthorize(completion:)	LARight.checkCanAuthorize(completion:)	func checkCanAuthorize(completion handler: @escaping ((any Error)?) -> Void)
+c:objc(cs)LARight(im)deauthorizeWithCompletion:	swift.method	deauthorize(completion:)	LARight.deauthorize(completion:)	func deauthorize(completion handler: @escaping () -> Void)
+c:objc(cs)LARight(im)init	swift.init	init()	LARight.init()	init()
+c:objc(cs)LARight(im)initWithRequirement:	swift.init	init(requirement:)	LARight.init(requirement:)	init(requirement: LAAuthenticationRequirement)
+c:objc(cs)LARight(py)state	swift.property	state	LARight.state	var state: LARight.State { get }
+c:objc(cs)LARight(py)tag	swift.property	tag	LARight.tag	var tag: Int { get set }
+c:objc(cs)LARightStore	swift.class	LARightStore	LARightStore	class LARightStore
+c:objc(cs)LARightStore(cpy)sharedStore	swift.type.property	shared	LARightStore.shared	class var shared: LARightStore { get }
+c:objc(cs)LARightStore(im)removeAllRightsWithCompletion:	swift.method	removeAllRights(completion:)	LARightStore.removeAllRights(completion:)	func removeAllRights(completion handler: @escaping ((any Error)?) -> Void)
+c:objc(cs)LARightStore(im)removeRight:completion:	swift.method	removeRight(_:)	LARightStore.removeRight(_:)	func removeRight(_ right: LAPersistedRight) async throws
+c:objc(cs)LARightStore(im)removeRightForIdentifier:completion:	swift.method	removeRight(forIdentifier:)	LARightStore.removeRight(forIdentifier:)	func removeRight(forIdentifier identifier: String) async throws
+c:objc(cs)LARightStore(im)rightForIdentifier:completion:	swift.method	right(forIdentifier:)	LARightStore.right(forIdentifier:)	func right(forIdentifier identifier: String) async throws -> LAPersistedRight
+c:objc(cs)LARightStore(im)saveRight:identifier:completion:	swift.method	saveRight(_:identifier:)	LARightStore.saveRight(_:identifier:)	func saveRight(_ right: LARight, identifier: String) async throws -> LAPersistedRight
+c:objc(cs)LARightStore(im)saveRight:identifier:secret:completion:	swift.method	saveRight(_:identifier:secret:)	LARightStore.saveRight(_:identifier:secret:)	func saveRight(_ right: LARight, identifier: String, secret: Data) async throws -> LAPersistedRight
+c:objc(cs)LASecret	swift.class	LASecret	LASecret	class LASecret
+c:objc(cs)LASecret(im)loadDataWithCompletion:	swift.method	loadData(completion:)	LASecret.loadData(completion:)	func loadData(completion handler: @escaping (Data?, (any Error)?) -> Void)
+c:objc(pl)LAEnvironmentObserver	swift.protocol	LAEnvironment.Observer	LAEnvironment.Observer	protocol Observer : NSObjectProtocol
+c:objc(pl)LAEnvironmentObserver(im)environment:stateDidChangeFromOldState:	swift.method	environment(_:stateDidChangeFromOldState:)	LAEnvironment.Observer.environment(_:stateDidChangeFromOldState:)	optional func environment(_ environment: LAEnvironment, stateDidChangeFromOldState oldState: LAEnvironment.State)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@LAError	swift.type.property	errorDomain	LAError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@LAError	swift.property	errorUserInfo	LAError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@LAError	swift.property	errorCode	LAError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@LAError	swift.func.op	~=(_:_:)	LAError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@LAError	swift.property	errorUserInfo	LAError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@LAError	swift.func.op	==(_:_:)	LAError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@LAError	swift.property	code	LAError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LAError	swift.method	hash(into:)	LAError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@LAError	swift.property	userInfo	LAError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@LAError	swift.property	errorCode	LAError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@LAError	swift.property	hashValue	LAError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@LAError	swift.init	init(_:userInfo:)	LAError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:7Combine16ObservableObjectPA2A0bC9PublisherC0c10WillChangeD0RtzrlE06objecteF0AEvp::SYNTHESIZED::c:objc(cs)LAContext	swift.property	objectWillChange	LAContext.objectWillChange	var objectWillChange: ObservableObjectPublisher { get }
+s:SC7LAErrorLeV	swift.struct	LAError	LAError	struct LAError
+s:SC7LAErrorLeV10userCancelSoAAVvpZ	swift.type.property	userCancel	LAError.userCancel	static var userCancel: LAError.Code { get }
+s:SC7LAErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	LAError.errorDomain	static var errorDomain: String { get }
+s:SC7LAErrorLeV12systemCancelSoAAVvpZ	swift.type.property	systemCancel	LAError.systemCancel	static var systemCancel: LAError.Code { get }
+s:SC7LAErrorLeV12userFallbackSoAAVvpZ	swift.type.property	userFallback	LAError.userFallback	static var userFallback: LAError.Code { get }
+s:SC7LAErrorLeV14invalidContextSoAAVvpZ	swift.type.property	invalidContext	LAError.invalidContext	static var invalidContext: LAError.Code { get }
+s:SC7LAErrorLeV14notInteractiveSoAAVvpZ	swift.type.property	notInteractive	LAError.notInteractive	static var notInteractive: LAError.Code { get }
+s:SC7LAErrorLeV14passcodeNotSetSoAAVvpZ	swift.type.property	passcodeNotSet	LAError.passcodeNotSet	static var passcodeNotSet: LAError.Code { get }
+s:SC7LAErrorLeV14touchIDLockoutSoAAVvpZ	swift.type.property	touchIDLockout	LAError.touchIDLockout	static var touchIDLockout: LAError.Code { get }
+s:SC7LAErrorLeV15biometryLockoutSoAAVvpZ	swift.type.property	biometryLockout	LAError.biometryLockout	static var biometryLockout: LAError.Code { get }
+s:SC7LAErrorLeV18touchIDNotEnrolledSoAAVvpZ	swift.type.property	touchIDNotEnrolled	LAError.touchIDNotEnrolled	static var touchIDNotEnrolled: LAError.Code { get }
+s:SC7LAErrorLeV19biometryNotEnrolledSoAAVvpZ	swift.type.property	biometryNotEnrolled	LAError.biometryNotEnrolled	static var biometryNotEnrolled: LAError.Code { get }
+s:SC7LAErrorLeV19touchIDNotAvailableSoAAVvpZ	swift.type.property	touchIDNotAvailable	LAError.touchIDNotAvailable	static var touchIDNotAvailable: LAError.Code { get }
+s:SC7LAErrorLeV20authenticationFailedSoAAVvpZ	swift.type.property	authenticationFailed	LAError.authenticationFailed	static var authenticationFailed: LAError.Code { get }
+s:SC7LAErrorLeV20biometryNotAvailableSoAAVvpZ	swift.type.property	biometryNotAvailable	LAError.biometryNotAvailable	static var biometryNotAvailable: LAError.Code { get }
+s:SC7LAErrorLeV21companionNotAvailableSoAAVvpZ	swift.type.property	companionNotAvailable	LAError.companionNotAvailable	static var companionNotAvailable: LAError.Code { get }
+s:SC7LAErrorLeV9appCancelSoAAVvpZ	swift.type.property	appCancel	LAError.appCancel	static var appCancel: LAError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LAAccessControlOperation	swift.func.op	!=(_:_:)	LAAccessControlOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LABiometryType	swift.func.op	!=(_:_:)	LABiometryType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LACompanionType	swift.func.op	!=(_:_:)	LACompanionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LACredentialType	swift.func.op	!=(_:_:)	LACredentialType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LAError	swift.func.op	!=(_:_:)	LAError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LAPolicy	swift.func.op	!=(_:_:)	LAPolicy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LARightState	swift.func.op	!=(_:_:)	LARight.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LAAccessControlOperation	swift.property	hashValue	LAAccessControlOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LABiometryType	swift.property	hashValue	LABiometryType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LACompanionType	swift.property	hashValue	LACompanionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LACredentialType	swift.property	hashValue	LACredentialType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LAError	swift.property	hashValue	LAError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LAPolicy	swift.property	hashValue	LAPolicy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LARightState	swift.property	hashValue	LARight.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LAAccessControlOperation	swift.method	hash(into:)	LAAccessControlOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LABiometryType	swift.method	hash(into:)	LABiometryType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LACompanionType	swift.method	hash(into:)	LACompanionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LACredentialType	swift.method	hash(into:)	LACredentialType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LAError	swift.method	hash(into:)	LAError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LAPolicy	swift.method	hash(into:)	LAPolicy.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LARightState	swift.method	hash(into:)	LARight.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12LARightStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LARight.State.init(rawValue:)	init?(rawValue: Int)
+s:So14LABiometryTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LABiometryType.init(rawValue:)	init?(rawValue: Int)
+s:So15LACompanionTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LACompanionType.init(rawValue:)	init?(rawValue: Int)
+s:So16LACredentialTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LACredentialType.init(rawValue:)	init?(rawValue: Int)
+s:So22LADomainStateCompanionC19LocalAuthenticationE09availableC5TypesShySo15LACompanionTypeVGvp	swift.property	availableCompanionTypes	LADomainStateCompanion.availableCompanionTypes	var availableCompanionTypes: Set<LACompanionType> { get }
+s:So24LAAccessControlOperationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LAAccessControlOperation.init(rawValue:)	init?(rawValue: Int)
+s:So7LAErrorV15biometryLockoutABvpZ	swift.type.property	biometryLockout	LAError.Code.biometryLockout	static var biometryLockout: LAError.Code { get }
+s:So7LAErrorV19biometryNotEnrolledABvpZ	swift.type.property	biometryNotEnrolled	LAError.Code.biometryNotEnrolled	static var biometryNotEnrolled: LAError.Code { get }
+s:So7LAErrorV20biometryNotAvailableABvpZ	swift.type.property	biometryNotAvailable	LAError.Code.biometryNotAvailable	static var biometryNotAvailable: LAError.Code { get }
+s:So7LAErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LAError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So8LAPolicyV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LAPolicy.init(rawValue:)	init?(rawValue: Int)
+s:So9LAContextC19LocalAuthenticationE25ObjectWillChangePublishera	swift.typealias	LAContext.ObjectWillChangePublisher	LAContext.ObjectWillChangePublisher	typealias ObjectWillChangePublisher = ObservableObjectPublisher
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@LAError	swift.property	localizedDescription	LAError.localizedDescription	var localizedDescription: String { get }

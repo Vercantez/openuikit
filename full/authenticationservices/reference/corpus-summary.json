@@ -1,0 +1,200 @@
+{
+  "module": "AuthenticationServices",
+  "moduleRecord": {
+    "app_coverage_count": 13,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 49,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 16,
+    "iphoneos_runtime_focus_launch_build_rank": 22,
+    "module": "AuthenticationServices",
+    "occurrence_count": 49,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "6d2317b6706e73da01a916129bc957a4e215abe5e62a888d79f4c0f5b3f77cd8",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/Account/Sources/Account/Feedly/OAuthAccountAuthorizationOperation.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "8fabe268aaac4a33bdff9ade3c3b5d85971699a7de22ed2f4687efac0ecfce71",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "Signal/Backups/RecoveryKey/BackupSaveKeyViewController.swift",
+          "Signal/Backups/RecoveryKey/PasswordManagerManager.swift",
+          "Signal/src/ViewControllers/AppSettings/Donations/BadgeGiftingConfirmationViewController+Paypal.swift",
+          "Signal/src/ViewControllers/Donations/DonateViewController+OneTimePaypalDonation.swift",
+          "Signal/src/ViewControllers/Donations/DonationPaymentDetailsViewController+3DSecure.swift",
+          "Signal/src/ViewControllers/Donations/DonationPaymentDetailsViewController.swift",
+          "Signal/util/ASWebAuthenticationSession+Util.swift",
+          "SignalServiceKit/Subscriptions/Donations/Paypal+WebAuthentication.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "4bb426137648da55d9d94a4fc60acbc2d4b7cfa88461c95f94f745f41266090c",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "submodules/AuthorizationUI/Sources/AuthorizationSequenceCodeEntryControllerNode.swift",
+          "submodules/AuthorizationUI/Sources/AuthorizationSequenceController.swift",
+          "submodules/AuthorizationUI/Sources/AuthorizationSequenceEmailEntryControllerNode.swift",
+          "submodules/AuthorizationUI/Sources/AuthorizationSequencePhoneEntryController.swift",
+          "submodules/SettingsUI/Sources/Privacy and Security/LoginEmailSetupController.swift",
+          "submodules/SettingsUI/Sources/Privacy and Security/PrivacyAndSecurityController.swift",
+          "submodules/TelegramUI/Components/Settings/PasskeysScreen/Sources/PasskeysScreen.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "bab87068c4175a2fdbb2532a9df97468d4f94b21ffbbfd7f22150d277654f93b",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "WordPress/Classes/Extensions/WebAuthenticationPresentationAnchorProvider.swift",
+          "WordPress/Classes/Login/LoginWithUrlView.swift",
+          "WordPress/Classes/Login/SelfHostedSiteAuthenticator.swift",
+          "WordPress/Classes/Login/WordPressDotComAuthenticator.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "68386f8095425be8667a94353b7cf1f43d8345921d681c20499dd704d29c0bab",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "AutofillCredentialProvider/CredentialProvider/CredentialProviderList/CredentialProviderListViewController.swift",
+          "AutofillCredentialProvider/CredentialProvider/CredentialProviderList/CredentialProviderListViewModel.swift",
+          "AutofillCredentialProvider/CredentialProvider/CredentialProviderViewController.swift",
+          "AutofillCredentialProvider/CredentialProvider/Shared/VaultCredentialManager.swift",
+          "DuckDuckGo/AutofillUsageMonitor.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "0b5bca6daf3adab8d18816fbc944af8a0dad1a1f039157be64f0b5803ffb2d92",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/App/ARAppDelegateHelper.mm"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "4c382d0132517a6f7b02460bab54ddf72fccdd059e4efc88f337dbd4df9286aa",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/Authentication/SSO/SSOAuthentificationSession.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "63854a15214932429352ca7a10ff2b239a62a3e4dcc84a426f8cc2533563edd7",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "firefox-ios/CredentialProvider/CredentialListPresenter.swift",
+          "firefox-ios/CredentialProvider/CredentialListViewController.swift",
+          "firefox-ios/CredentialProvider/CredentialProviderPresenter.swift",
+          "firefox-ios/CredentialProvider/CredentialProviderViewController.swift",
+          "firefox-ios/Providers/LoginRecordExtension.swift",
+          "firefox-ios/Providers/Profile.swift",
+          "firefox-ios/Providers/RustSyncManager.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "ec3265f9d938b978a468b978b25dacef11dd20bbef41154c66622207e1acc00d",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/LoginTout/Controller/LoginToutViewController.swift",
+          "Library/Sources/Library/Library/OAuth.swift",
+          "Library/Sources/Library/Library/OAuthError.swift",
+          "Library/Sources/Library/Library/ViewModels/AppleAuthServicesError.swift",
+          "Library/Sources/Library/Library/ViewModels/LoginToutViewModel.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "f97806401117ac4804db4c48d30c5eb3bfd9bcff86f54b2ebef498f80766bebe",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Mastodon/In Progress New Layout and Datamodel/Common Components/Views/TimelineRowViews/HashtagRowView.swift",
+          "Mastodon/Scene/Onboarding/Login/MastodonLoginViewController.swift",
+          "Mastodon/Scene/Onboarding/Share/AuthenticationViewModel.swift",
+          "Mastodon/Scene/Onboarding/Share/MastodonAuthenticationController.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "2f46d1842fa3cb9a3b88cab95aa11ca8f08bbae6b668ddd457a2f78125325850",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Login/NCLoginProvider.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "8fd84868a5b3fd97d65d1e95fa58417e7b848b08b598bc658f3de405ecb23023",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Sources/PocketCastsServer/Public/API/ApiServerHandler+SocialAuth.swift",
+          "podcasts/AuthenticationHelper.swift",
+          "podcasts/Utilities/Login/AppleSocialLogin.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "51f8edb7199344afe2adac4dbc73316bfc6d3b83b1422bee65a2db25647d765c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Donation/VLCDonationCreditCardViewController.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 16,
+    "byFocusLaunchBuildRelevance": 22
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 13,
+      "apps": [
+        "NetNewsWire",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "eigen",
+        "element-ios",
+        "firefox-ios",
+        "ios-oss",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "vlc-ios"
+      ],
+      "family": "AuthenticationServices",
+      "file_count": 49,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 0,
+      "modules": [
+        "AuthenticationServices"
+      ],
+      "note": "web authentication and credentials"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

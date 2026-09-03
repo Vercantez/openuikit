@@ -1,0 +1,788 @@
+precise	kind	title	path	declaration
+c:@E@PHAccessLevel	swift.enum	PHAccessLevel	PHAccessLevel	enum PHAccessLevel
+c:@E@PHAccessLevel@PHAccessLevelAddOnly	swift.enum.case	PHAccessLevel.addOnly	PHAccessLevel.addOnly	case addOnly
+c:@E@PHAccessLevel@PHAccessLevelReadWrite	swift.enum.case	PHAccessLevel.readWrite	PHAccessLevel.readWrite	case readWrite
+c:@E@PHAssetBurstSelectionType	swift.struct	PHAssetBurstSelectionType	PHAssetBurstSelectionType	struct PHAssetBurstSelectionType
+c:@E@PHAssetBurstSelectionType@PHAssetBurstSelectionTypeAutoPick	swift.type.property	autoPick	PHAssetBurstSelectionType.autoPick	static var autoPick: PHAssetBurstSelectionType { get }
+c:@E@PHAssetBurstSelectionType@PHAssetBurstSelectionTypeUserPick	swift.type.property	userPick	PHAssetBurstSelectionType.userPick	static var userPick: PHAssetBurstSelectionType { get }
+c:@E@PHAssetCollectionSubtype	swift.enum	PHAssetCollectionSubtype	PHAssetCollectionSubtype	enum PHAssetCollectionSubtype
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumCloudShared	swift.enum.case	PHAssetCollectionSubtype.albumCloudShared	PHAssetCollectionSubtype.albumCloudShared	case albumCloudShared
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumImported	swift.enum.case	PHAssetCollectionSubtype.albumImported	PHAssetCollectionSubtype.albumImported	case albumImported
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumMyPhotoStream	swift.enum.case	PHAssetCollectionSubtype.albumMyPhotoStream	PHAssetCollectionSubtype.albumMyPhotoStream	case albumMyPhotoStream
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumRegular	swift.enum.case	PHAssetCollectionSubtype.albumRegular	PHAssetCollectionSubtype.albumRegular	case albumRegular
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumSyncedAlbum	swift.enum.case	PHAssetCollectionSubtype.albumSyncedAlbum	PHAssetCollectionSubtype.albumSyncedAlbum	case albumSyncedAlbum
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumSyncedEvent	swift.enum.case	PHAssetCollectionSubtype.albumSyncedEvent	PHAssetCollectionSubtype.albumSyncedEvent	case albumSyncedEvent
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAlbumSyncedFaces	swift.enum.case	PHAssetCollectionSubtype.albumSyncedFaces	PHAssetCollectionSubtype.albumSyncedFaces	case albumSyncedFaces
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeAny	swift.enum.case	PHAssetCollectionSubtype.any	PHAssetCollectionSubtype.any	case any
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumAllHidden	swift.enum.case	PHAssetCollectionSubtype.smartAlbumAllHidden	PHAssetCollectionSubtype.smartAlbumAllHidden	case smartAlbumAllHidden
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumAnimated	swift.enum.case	PHAssetCollectionSubtype.smartAlbumAnimated	PHAssetCollectionSubtype.smartAlbumAnimated	case smartAlbumAnimated
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumBursts	swift.enum.case	PHAssetCollectionSubtype.smartAlbumBursts	PHAssetCollectionSubtype.smartAlbumBursts	case smartAlbumBursts
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumCinematic	swift.enum.case	PHAssetCollectionSubtype.smartAlbumCinematic	PHAssetCollectionSubtype.smartAlbumCinematic	case smartAlbumCinematic
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumDepthEffect	swift.enum.case	PHAssetCollectionSubtype.smartAlbumDepthEffect	PHAssetCollectionSubtype.smartAlbumDepthEffect	case smartAlbumDepthEffect
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumFavorites	swift.enum.case	PHAssetCollectionSubtype.smartAlbumFavorites	PHAssetCollectionSubtype.smartAlbumFavorites	case smartAlbumFavorites
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumGeneric	swift.enum.case	PHAssetCollectionSubtype.smartAlbumGeneric	PHAssetCollectionSubtype.smartAlbumGeneric	case smartAlbumGeneric
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumLivePhotos	swift.enum.case	PHAssetCollectionSubtype.smartAlbumLivePhotos	PHAssetCollectionSubtype.smartAlbumLivePhotos	case smartAlbumLivePhotos
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumLongExposures	swift.enum.case	PHAssetCollectionSubtype.smartAlbumLongExposures	PHAssetCollectionSubtype.smartAlbumLongExposures	case smartAlbumLongExposures
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumPanoramas	swift.enum.case	PHAssetCollectionSubtype.smartAlbumPanoramas	PHAssetCollectionSubtype.smartAlbumPanoramas	case smartAlbumPanoramas
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumRAW	swift.enum.case	PHAssetCollectionSubtype.smartAlbumRAW	PHAssetCollectionSubtype.smartAlbumRAW	case smartAlbumRAW
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumRecentlyAdded	swift.enum.case	PHAssetCollectionSubtype.smartAlbumRecentlyAdded	PHAssetCollectionSubtype.smartAlbumRecentlyAdded	case smartAlbumRecentlyAdded
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumScreenRecordings	swift.enum.case	PHAssetCollectionSubtype.smartAlbumScreenRecordings	PHAssetCollectionSubtype.smartAlbumScreenRecordings	case smartAlbumScreenRecordings
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumScreenshots	swift.enum.case	PHAssetCollectionSubtype.smartAlbumScreenshots	PHAssetCollectionSubtype.smartAlbumScreenshots	case smartAlbumScreenshots
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumSelfPortraits	swift.enum.case	PHAssetCollectionSubtype.smartAlbumSelfPortraits	PHAssetCollectionSubtype.smartAlbumSelfPortraits	case smartAlbumSelfPortraits
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumSlomoVideos	swift.enum.case	PHAssetCollectionSubtype.smartAlbumSlomoVideos	PHAssetCollectionSubtype.smartAlbumSlomoVideos	case smartAlbumSlomoVideos
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumSpatial	swift.enum.case	PHAssetCollectionSubtype.smartAlbumSpatial	PHAssetCollectionSubtype.smartAlbumSpatial	case smartAlbumSpatial
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumTimelapses	swift.enum.case	PHAssetCollectionSubtype.smartAlbumTimelapses	PHAssetCollectionSubtype.smartAlbumTimelapses	case smartAlbumTimelapses
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumUnableToUpload	swift.enum.case	PHAssetCollectionSubtype.smartAlbumUnableToUpload	PHAssetCollectionSubtype.smartAlbumUnableToUpload	case smartAlbumUnableToUpload
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumUserLibrary	swift.enum.case	PHAssetCollectionSubtype.smartAlbumUserLibrary	PHAssetCollectionSubtype.smartAlbumUserLibrary	case smartAlbumUserLibrary
+c:@E@PHAssetCollectionSubtype@PHAssetCollectionSubtypeSmartAlbumVideos	swift.enum.case	PHAssetCollectionSubtype.smartAlbumVideos	PHAssetCollectionSubtype.smartAlbumVideos	case smartAlbumVideos
+c:@E@PHAssetCollectionType	swift.enum	PHAssetCollectionType	PHAssetCollectionType	enum PHAssetCollectionType
+c:@E@PHAssetCollectionType@PHAssetCollectionTypeAlbum	swift.enum.case	PHAssetCollectionType.album	PHAssetCollectionType.album	case album
+c:@E@PHAssetCollectionType@PHAssetCollectionTypeMoment	swift.enum.case	PHAssetCollectionType.moment	PHAssetCollectionType.moment	case moment
+c:@E@PHAssetCollectionType@PHAssetCollectionTypeSmartAlbum	swift.enum.case	PHAssetCollectionType.smartAlbum	PHAssetCollectionType.smartAlbum	case smartAlbum
+c:@E@PHAssetEditOperation	swift.enum	PHAssetEditOperation	PHAssetEditOperation	enum PHAssetEditOperation
+c:@E@PHAssetEditOperation@PHAssetEditOperationContent	swift.enum.case	PHAssetEditOperation.content	PHAssetEditOperation.content	case content
+c:@E@PHAssetEditOperation@PHAssetEditOperationDelete	swift.enum.case	PHAssetEditOperation.delete	PHAssetEditOperation.delete	case delete
+c:@E@PHAssetEditOperation@PHAssetEditOperationProperties	swift.enum.case	PHAssetEditOperation.properties	PHAssetEditOperation.properties	case properties
+c:@E@PHAssetMediaSubtype	swift.struct	PHAssetMediaSubtype	PHAssetMediaSubtype	struct PHAssetMediaSubtype
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypePhotoDepthEffect	swift.type.property	photoDepthEffect	PHAssetMediaSubtype.photoDepthEffect	static var photoDepthEffect: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypePhotoHDR	swift.type.property	photoHDR	PHAssetMediaSubtype.photoHDR	static var photoHDR: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypePhotoLive	swift.type.property	photoLive	PHAssetMediaSubtype.photoLive	static var photoLive: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypePhotoPanorama	swift.type.property	photoPanorama	PHAssetMediaSubtype.photoPanorama	static var photoPanorama: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypePhotoScreenshot	swift.type.property	photoScreenshot	PHAssetMediaSubtype.photoScreenshot	static var photoScreenshot: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypeSpatialMedia	swift.type.property	spatialMedia	PHAssetMediaSubtype.spatialMedia	static var spatialMedia: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypeVideoCinematic	swift.type.property	videoCinematic	PHAssetMediaSubtype.videoCinematic	static var videoCinematic: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypeVideoHighFrameRate	swift.type.property	videoHighFrameRate	PHAssetMediaSubtype.videoHighFrameRate	static var videoHighFrameRate: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypeVideoScreenRecording	swift.type.property	videoScreenRecording	PHAssetMediaSubtype.videoScreenRecording	static var videoScreenRecording: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypeVideoStreamed	swift.type.property	videoStreamed	PHAssetMediaSubtype.videoStreamed	static var videoStreamed: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaSubtype@PHAssetMediaSubtypeVideoTimelapse	swift.type.property	videoTimelapse	PHAssetMediaSubtype.videoTimelapse	static var videoTimelapse: PHAssetMediaSubtype { get }
+c:@E@PHAssetMediaType	swift.enum	PHAssetMediaType	PHAssetMediaType	enum PHAssetMediaType
+c:@E@PHAssetMediaType@PHAssetMediaTypeAudio	swift.enum.case	PHAssetMediaType.audio	PHAssetMediaType.audio	case audio
+c:@E@PHAssetMediaType@PHAssetMediaTypeImage	swift.enum.case	PHAssetMediaType.image	PHAssetMediaType.image	case image
+c:@E@PHAssetMediaType@PHAssetMediaTypeUnknown	swift.enum.case	PHAssetMediaType.unknown	PHAssetMediaType.unknown	case unknown
+c:@E@PHAssetMediaType@PHAssetMediaTypeVideo	swift.enum.case	PHAssetMediaType.video	PHAssetMediaType.video	case video
+c:@E@PHAssetPlaybackStyle	swift.enum	PHAsset.PlaybackStyle	PHAsset.PlaybackStyle	enum PlaybackStyle
+c:@E@PHAssetPlaybackStyle@PHAssetPlaybackStyleImage	swift.enum.case	PHAsset.PlaybackStyle.image	PHAsset.PlaybackStyle.image	case image
+c:@E@PHAssetPlaybackStyle@PHAssetPlaybackStyleImageAnimated	swift.enum.case	PHAsset.PlaybackStyle.imageAnimated	PHAsset.PlaybackStyle.imageAnimated	case imageAnimated
+c:@E@PHAssetPlaybackStyle@PHAssetPlaybackStyleLivePhoto	swift.enum.case	PHAsset.PlaybackStyle.livePhoto	PHAsset.PlaybackStyle.livePhoto	case livePhoto
+c:@E@PHAssetPlaybackStyle@PHAssetPlaybackStyleUnsupported	swift.enum.case	PHAsset.PlaybackStyle.unsupported	PHAsset.PlaybackStyle.unsupported	case unsupported
+c:@E@PHAssetPlaybackStyle@PHAssetPlaybackStyleVideo	swift.enum.case	PHAsset.PlaybackStyle.video	PHAsset.PlaybackStyle.video	case video
+c:@E@PHAssetPlaybackStyle@PHAssetPlaybackStyleVideoLooping	swift.enum.case	PHAsset.PlaybackStyle.videoLooping	PHAsset.PlaybackStyle.videoLooping	case videoLooping
+c:@E@PHAssetResourceType	swift.enum	PHAssetResourceType	PHAssetResourceType	enum PHAssetResourceType
+c:@E@PHAssetResourceType@PHAssetResourceTypeAdjustmentBasePairedVideo	swift.enum.case	PHAssetResourceType.adjustmentBasePairedVideo	PHAssetResourceType.adjustmentBasePairedVideo	case adjustmentBasePairedVideo
+c:@E@PHAssetResourceType@PHAssetResourceTypeAdjustmentBasePhoto	swift.enum.case	PHAssetResourceType.adjustmentBasePhoto	PHAssetResourceType.adjustmentBasePhoto	case adjustmentBasePhoto
+c:@E@PHAssetResourceType@PHAssetResourceTypeAdjustmentBaseVideo	swift.enum.case	PHAssetResourceType.adjustmentBaseVideo	PHAssetResourceType.adjustmentBaseVideo	case adjustmentBaseVideo
+c:@E@PHAssetResourceType@PHAssetResourceTypeAdjustmentData	swift.enum.case	PHAssetResourceType.adjustmentData	PHAssetResourceType.adjustmentData	case adjustmentData
+c:@E@PHAssetResourceType@PHAssetResourceTypeAlternatePhoto	swift.enum.case	PHAssetResourceType.alternatePhoto	PHAssetResourceType.alternatePhoto	case alternatePhoto
+c:@E@PHAssetResourceType@PHAssetResourceTypeAudio	swift.enum.case	PHAssetResourceType.audio	PHAssetResourceType.audio	case audio
+c:@E@PHAssetResourceType@PHAssetResourceTypeFullSizePairedVideo	swift.enum.case	PHAssetResourceType.fullSizePairedVideo	PHAssetResourceType.fullSizePairedVideo	case fullSizePairedVideo
+c:@E@PHAssetResourceType@PHAssetResourceTypeFullSizePhoto	swift.enum.case	PHAssetResourceType.fullSizePhoto	PHAssetResourceType.fullSizePhoto	case fullSizePhoto
+c:@E@PHAssetResourceType@PHAssetResourceTypeFullSizeVideo	swift.enum.case	PHAssetResourceType.fullSizeVideo	PHAssetResourceType.fullSizeVideo	case fullSizeVideo
+c:@E@PHAssetResourceType@PHAssetResourceTypePairedVideo	swift.enum.case	PHAssetResourceType.pairedVideo	PHAssetResourceType.pairedVideo	case pairedVideo
+c:@E@PHAssetResourceType@PHAssetResourceTypePhoto	swift.enum.case	PHAssetResourceType.photo	PHAssetResourceType.photo	case photo
+c:@E@PHAssetResourceType@PHAssetResourceTypePhotoProxy	swift.enum.case	PHAssetResourceType.photoProxy	PHAssetResourceType.photoProxy	case photoProxy
+c:@E@PHAssetResourceType@PHAssetResourceTypeVideo	swift.enum.case	PHAssetResourceType.video	PHAssetResourceType.video	case video
+c:@E@PHAssetResourceUploadJobAction	swift.enum	PHAssetResourceUploadJob.Action	PHAssetResourceUploadJob.Action	enum Action
+c:@E@PHAssetResourceUploadJobAction@PHAssetResourceUploadJobActionAcknowledge	swift.enum.case	PHAssetResourceUploadJob.Action.acknowledge	PHAssetResourceUploadJob.Action.acknowledge	case acknowledge
+c:@E@PHAssetResourceUploadJobAction@PHAssetResourceUploadJobActionRetry	swift.enum.case	PHAssetResourceUploadJob.Action.retry	PHAssetResourceUploadJob.Action.retry	case retry
+c:@E@PHAssetResourceUploadJobState	swift.enum	PHAssetResourceUploadJob.State	PHAssetResourceUploadJob.State	enum State
+c:@E@PHAssetResourceUploadJobState@PHAssetResourceUploadJobStateFailed	swift.enum.case	PHAssetResourceUploadJob.State.failed	PHAssetResourceUploadJob.State.failed	case failed
+c:@E@PHAssetResourceUploadJobState@PHAssetResourceUploadJobStatePending	swift.enum.case	PHAssetResourceUploadJob.State.pending	PHAssetResourceUploadJob.State.pending	case pending
+c:@E@PHAssetResourceUploadJobState@PHAssetResourceUploadJobStateRegistered	swift.enum.case	PHAssetResourceUploadJob.State.registered	PHAssetResourceUploadJob.State.registered	case registered
+c:@E@PHAssetResourceUploadJobState@PHAssetResourceUploadJobStateSucceeded	swift.enum.case	PHAssetResourceUploadJob.State.succeeded	PHAssetResourceUploadJob.State.succeeded	case succeeded
+c:@E@PHAssetSourceType	swift.struct	PHAssetSourceType	PHAssetSourceType	struct PHAssetSourceType
+c:@E@PHAssetSourceType@PHAssetSourceTypeCloudShared	swift.type.property	typeCloudShared	PHAssetSourceType.typeCloudShared	static var typeCloudShared: PHAssetSourceType { get }
+c:@E@PHAssetSourceType@PHAssetSourceTypeUserLibrary	swift.type.property	typeUserLibrary	PHAssetSourceType.typeUserLibrary	static var typeUserLibrary: PHAssetSourceType { get }
+c:@E@PHAssetSourceType@PHAssetSourceTypeiTunesSynced	swift.type.property	typeiTunesSynced	PHAssetSourceType.typeiTunesSynced	static var typeiTunesSynced: PHAssetSourceType { get }
+c:@E@PHAuthorizationStatus	swift.enum	PHAuthorizationStatus	PHAuthorizationStatus	enum PHAuthorizationStatus
+c:@E@PHAuthorizationStatus@PHAuthorizationStatusAuthorized	swift.enum.case	PHAuthorizationStatus.authorized	PHAuthorizationStatus.authorized	case authorized
+c:@E@PHAuthorizationStatus@PHAuthorizationStatusDenied	swift.enum.case	PHAuthorizationStatus.denied	PHAuthorizationStatus.denied	case denied
+c:@E@PHAuthorizationStatus@PHAuthorizationStatusLimited	swift.enum.case	PHAuthorizationStatus.limited	PHAuthorizationStatus.limited	case limited
+c:@E@PHAuthorizationStatus@PHAuthorizationStatusNotDetermined	swift.enum.case	PHAuthorizationStatus.notDetermined	PHAuthorizationStatus.notDetermined	case notDetermined
+c:@E@PHAuthorizationStatus@PHAuthorizationStatusRestricted	swift.enum.case	PHAuthorizationStatus.restricted	PHAuthorizationStatus.restricted	case restricted
+c:@E@PHCollectionEditOperation	swift.enum	PHCollectionEditOperation	PHCollectionEditOperation	enum PHCollectionEditOperation
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationAddContent	swift.enum.case	PHCollectionEditOperation.addContent	PHCollectionEditOperation.addContent	case addContent
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationCreateContent	swift.enum.case	PHCollectionEditOperation.createContent	PHCollectionEditOperation.createContent	case createContent
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationDelete	swift.enum.case	PHCollectionEditOperation.delete	PHCollectionEditOperation.delete	case delete
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationDeleteContent	swift.enum.case	PHCollectionEditOperation.deleteContent	PHCollectionEditOperation.deleteContent	case deleteContent
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationRearrangeContent	swift.enum.case	PHCollectionEditOperation.rearrangeContent	PHCollectionEditOperation.rearrangeContent	case rearrangeContent
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationRemoveContent	swift.enum.case	PHCollectionEditOperation.removeContent	PHCollectionEditOperation.removeContent	case removeContent
+c:@E@PHCollectionEditOperation@PHCollectionEditOperationRename	swift.enum.case	PHCollectionEditOperation.rename	PHCollectionEditOperation.rename	case rename
+c:@E@PHCollectionListSubtype	swift.enum	PHCollectionListSubtype	PHCollectionListSubtype	enum PHCollectionListSubtype
+c:@E@PHCollectionListSubtype@PHCollectionListSubtypeAny	swift.enum.case	PHCollectionListSubtype.any	PHCollectionListSubtype.any	case any
+c:@E@PHCollectionListSubtype@PHCollectionListSubtypeMomentListCluster	swift.enum.case	PHCollectionListSubtype.momentListCluster	PHCollectionListSubtype.momentListCluster	case momentListCluster
+c:@E@PHCollectionListSubtype@PHCollectionListSubtypeMomentListYear	swift.enum.case	PHCollectionListSubtype.momentListYear	PHCollectionListSubtype.momentListYear	case momentListYear
+c:@E@PHCollectionListSubtype@PHCollectionListSubtypeRegularFolder	swift.enum.case	PHCollectionListSubtype.regularFolder	PHCollectionListSubtype.regularFolder	case regularFolder
+c:@E@PHCollectionListSubtype@PHCollectionListSubtypeSmartFolderEvents	swift.enum.case	PHCollectionListSubtype.smartFolderEvents	PHCollectionListSubtype.smartFolderEvents	case smartFolderEvents
+c:@E@PHCollectionListSubtype@PHCollectionListSubtypeSmartFolderFaces	swift.enum.case	PHCollectionListSubtype.smartFolderFaces	PHCollectionListSubtype.smartFolderFaces	case smartFolderFaces
+c:@E@PHCollectionListType	swift.enum	PHCollectionListType	PHCollectionListType	enum PHCollectionListType
+c:@E@PHCollectionListType@PHCollectionListTypeFolder	swift.enum.case	PHCollectionListType.folder	PHCollectionListType.folder	case folder
+c:@E@PHCollectionListType@PHCollectionListTypeMomentList	swift.enum.case	PHCollectionListType.momentList	PHCollectionListType.momentList	case momentList
+c:@E@PHCollectionListType@PHCollectionListTypeSmartFolder	swift.enum.case	PHCollectionListType.smartFolder	PHCollectionListType.smartFolder	case smartFolder
+c:@E@PHImageContentMode	swift.enum	PHImageContentMode	PHImageContentMode	enum PHImageContentMode
+c:@E@PHImageContentMode@PHImageContentModeAspectFill	swift.enum.case	PHImageContentMode.aspectFill	PHImageContentMode.aspectFill	case aspectFill
+c:@E@PHImageContentMode@PHImageContentModeAspectFit	swift.enum.case	PHImageContentMode.aspectFit	PHImageContentMode.aspectFit	case aspectFit
+c:@E@PHImageContentMode@PHImageContentModeDefault	swift.type.property	default	PHImageContentMode.default	static var `default`: PHImageContentMode { get }
+c:@E@PHImageRequestOptionsDeliveryMode	swift.enum	PHImageRequestOptionsDeliveryMode	PHImageRequestOptionsDeliveryMode	enum PHImageRequestOptionsDeliveryMode
+c:@E@PHImageRequestOptionsDeliveryMode@PHImageRequestOptionsDeliveryModeFastFormat	swift.enum.case	PHImageRequestOptionsDeliveryMode.fastFormat	PHImageRequestOptionsDeliveryMode.fastFormat	case fastFormat
+c:@E@PHImageRequestOptionsDeliveryMode@PHImageRequestOptionsDeliveryModeHighQualityFormat	swift.enum.case	PHImageRequestOptionsDeliveryMode.highQualityFormat	PHImageRequestOptionsDeliveryMode.highQualityFormat	case highQualityFormat
+c:@E@PHImageRequestOptionsDeliveryMode@PHImageRequestOptionsDeliveryModeOpportunistic	swift.enum.case	PHImageRequestOptionsDeliveryMode.opportunistic	PHImageRequestOptionsDeliveryMode.opportunistic	case opportunistic
+c:@E@PHImageRequestOptionsResizeMode	swift.enum	PHImageRequestOptionsResizeMode	PHImageRequestOptionsResizeMode	enum PHImageRequestOptionsResizeMode
+c:@E@PHImageRequestOptionsResizeMode@PHImageRequestOptionsResizeModeExact	swift.enum.case	PHImageRequestOptionsResizeMode.exact	PHImageRequestOptionsResizeMode.exact	case exact
+c:@E@PHImageRequestOptionsResizeMode@PHImageRequestOptionsResizeModeFast	swift.enum.case	PHImageRequestOptionsResizeMode.fast	PHImageRequestOptionsResizeMode.fast	case fast
+c:@E@PHImageRequestOptionsResizeMode@PHImageRequestOptionsResizeModeNone	swift.enum.case	PHImageRequestOptionsResizeMode.none	PHImageRequestOptionsResizeMode.none	case none
+c:@E@PHImageRequestOptionsVersion	swift.enum	PHImageRequestOptionsVersion	PHImageRequestOptionsVersion	enum PHImageRequestOptionsVersion
+c:@E@PHImageRequestOptionsVersion@PHImageRequestOptionsVersionCurrent	swift.enum.case	PHImageRequestOptionsVersion.current	PHImageRequestOptionsVersion.current	case current
+c:@E@PHImageRequestOptionsVersion@PHImageRequestOptionsVersionOriginal	swift.enum.case	PHImageRequestOptionsVersion.original	PHImageRequestOptionsVersion.original	case original
+c:@E@PHImageRequestOptionsVersion@PHImageRequestOptionsVersionUnadjusted	swift.enum.case	PHImageRequestOptionsVersion.unadjusted	PHImageRequestOptionsVersion.unadjusted	case unadjusted
+c:@E@PHLivePhotoFrameType	swift.enum	PHLivePhotoFrameType	PHLivePhotoFrameType	enum PHLivePhotoFrameType
+c:@E@PHLivePhotoFrameType@PHLivePhotoFrameTypePhoto	swift.enum.case	PHLivePhotoFrameType.photo	PHLivePhotoFrameType.photo	case photo
+c:@E@PHLivePhotoFrameType@PHLivePhotoFrameTypeVideo	swift.enum.case	PHLivePhotoFrameType.video	PHLivePhotoFrameType.video	case video
+c:@E@PHObjectType	swift.enum	PHObjectType	PHObjectType	enum PHObjectType
+c:@E@PHObjectType@PHObjectTypeAsset	swift.enum.case	PHObjectType.asset	PHObjectType.asset	case asset
+c:@E@PHObjectType@PHObjectTypeAssetCollection	swift.enum.case	PHObjectType.assetCollection	PHObjectType.assetCollection	case assetCollection
+c:@E@PHObjectType@PHObjectTypeCollectionList	swift.enum.case	PHObjectType.collectionList	PHObjectType.collectionList	case collectionList
+c:@E@PHPhotosError	swift.enum	PHPhotosError.Code	PHPhotosError.Code	enum Code
+c:@E@PHPhotosError@PHPhotosErrorAccessRestricted	swift.enum.case	PHPhotosError.Code.accessRestricted	PHPhotosError.Code.accessRestricted	case accessRestricted
+c:@E@PHPhotosError@PHPhotosErrorAccessUserDenied	swift.enum.case	PHPhotosError.Code.accessUserDenied	PHPhotosError.Code.accessUserDenied	case accessUserDenied
+c:@E@PHPhotosError@PHPhotosErrorChangeNotSupported	swift.enum.case	PHPhotosError.Code.changeNotSupported	PHPhotosError.Code.changeNotSupported	case changeNotSupported
+c:@E@PHPhotosError@PHPhotosErrorIdentifierNotFound	swift.enum.case	PHPhotosError.Code.identifierNotFound	PHPhotosError.Code.identifierNotFound	case identifierNotFound
+c:@E@PHPhotosError@PHPhotosErrorInternalError	swift.enum.case	PHPhotosError.Code.internalError	PHPhotosError.Code.internalError	case internalError
+c:@E@PHPhotosError@PHPhotosErrorInvalidResource	swift.enum.case	PHPhotosError.Code.invalidResource	PHPhotosError.Code.invalidResource	case invalidResource
+c:@E@PHPhotosError@PHPhotosErrorLibraryInFileProviderSyncRoot	swift.enum.case	PHPhotosError.Code.libraryInFileProviderSyncRoot	PHPhotosError.Code.libraryInFileProviderSyncRoot	case libraryInFileProviderSyncRoot
+c:@E@PHPhotosError@PHPhotosErrorLibraryVolumeOffline	swift.enum.case	PHPhotosError.Code.libraryVolumeOffline	PHPhotosError.Code.libraryVolumeOffline	case libraryVolumeOffline
+c:@E@PHPhotosError@PHPhotosErrorLimitExceeded	swift.enum.case	PHPhotosError.Code.limitExceeded	PHPhotosError.Code.limitExceeded	case limitExceeded
+c:@E@PHPhotosError@PHPhotosErrorMissingResource	swift.enum.case	PHPhotosError.Code.missingResource	PHPhotosError.Code.missingResource	case missingResource
+c:@E@PHPhotosError@PHPhotosErrorMultipleIdentifiersFound	swift.enum.case	PHPhotosError.Code.multipleIdentifiersFound	PHPhotosError.Code.multipleIdentifiersFound	case multipleIdentifiersFound
+c:@E@PHPhotosError@PHPhotosErrorNetworkAccessRequired	swift.enum.case	PHPhotosError.Code.networkAccessRequired	PHPhotosError.Code.networkAccessRequired	case networkAccessRequired
+c:@E@PHPhotosError@PHPhotosErrorNetworkError	swift.enum.case	PHPhotosError.Code.networkError	PHPhotosError.Code.networkError	case networkError
+c:@E@PHPhotosError@PHPhotosErrorNotEnoughSpace	swift.enum.case	PHPhotosError.Code.notEnoughSpace	PHPhotosError.Code.notEnoughSpace	case notEnoughSpace
+c:@E@PHPhotosError@PHPhotosErrorOperationInterrupted	swift.enum.case	PHPhotosError.Code.operationInterrupted	PHPhotosError.Code.operationInterrupted	case operationInterrupted
+c:@E@PHPhotosError@PHPhotosErrorPersistentChangeDetailsUnavailable	swift.enum.case	PHPhotosError.Code.persistentChangeDetailsUnavailable	PHPhotosError.Code.persistentChangeDetailsUnavailable	case persistentChangeDetailsUnavailable
+c:@E@PHPhotosError@PHPhotosErrorPersistentChangeTokenExpired	swift.enum.case	PHPhotosError.Code.persistentChangeTokenExpired	PHPhotosError.Code.persistentChangeTokenExpired	case persistentChangeTokenExpired
+c:@E@PHPhotosError@PHPhotosErrorRelinquishingLibraryBundleToWriter	swift.enum.case	PHPhotosError.Code.relinquishingLibraryBundleToWriter	PHPhotosError.Code.relinquishingLibraryBundleToWriter	case relinquishingLibraryBundleToWriter
+c:@E@PHPhotosError@PHPhotosErrorRequestNotSupportedForAsset	swift.enum.case	PHPhotosError.Code.requestNotSupportedForAsset	PHPhotosError.Code.requestNotSupportedForAsset	case requestNotSupportedForAsset
+c:@E@PHPhotosError@PHPhotosErrorSwitchingSystemPhotoLibrary	swift.enum.case	PHPhotosError.Code.switchingSystemPhotoLibrary	PHPhotosError.Code.switchingSystemPhotoLibrary	case switchingSystemPhotoLibrary
+c:@E@PHPhotosError@PHPhotosErrorUserCancelled	swift.enum.case	PHPhotosError.Code.userCancelled	PHPhotosError.Code.userCancelled	case userCancelled
+c:@E@PHVideoRequestOptionsDeliveryMode	swift.enum	PHVideoRequestOptionsDeliveryMode	PHVideoRequestOptionsDeliveryMode	enum PHVideoRequestOptionsDeliveryMode
+c:@E@PHVideoRequestOptionsDeliveryMode@PHVideoRequestOptionsDeliveryModeAutomatic	swift.enum.case	PHVideoRequestOptionsDeliveryMode.automatic	PHVideoRequestOptionsDeliveryMode.automatic	case automatic
+c:@E@PHVideoRequestOptionsDeliveryMode@PHVideoRequestOptionsDeliveryModeFastFormat	swift.enum.case	PHVideoRequestOptionsDeliveryMode.fastFormat	PHVideoRequestOptionsDeliveryMode.fastFormat	case fastFormat
+c:@E@PHVideoRequestOptionsDeliveryMode@PHVideoRequestOptionsDeliveryModeHighQualityFormat	swift.enum.case	PHVideoRequestOptionsDeliveryMode.highQualityFormat	PHVideoRequestOptionsDeliveryMode.highQualityFormat	case highQualityFormat
+c:@E@PHVideoRequestOptionsDeliveryMode@PHVideoRequestOptionsDeliveryModeMediumQualityFormat	swift.enum.case	PHVideoRequestOptionsDeliveryMode.mediumQualityFormat	PHVideoRequestOptionsDeliveryMode.mediumQualityFormat	case mediumQualityFormat
+c:@E@PHVideoRequestOptionsVersion	swift.enum	PHVideoRequestOptionsVersion	PHVideoRequestOptionsVersion	enum PHVideoRequestOptionsVersion
+c:@E@PHVideoRequestOptionsVersion@PHVideoRequestOptionsVersionCurrent	swift.enum.case	PHVideoRequestOptionsVersion.current	PHVideoRequestOptionsVersion.current	case current
+c:@E@PHVideoRequestOptionsVersion@PHVideoRequestOptionsVersionOriginal	swift.enum.case	PHVideoRequestOptionsVersion.original	PHVideoRequestOptionsVersion.original	case original
+c:@PHContentEditingInputCancelledKey	swift.var	PHContentEditingInputCancelledKey	PHContentEditingInputCancelledKey	let PHContentEditingInputCancelledKey: String
+c:@PHContentEditingInputErrorKey	swift.var	PHContentEditingInputErrorKey	PHContentEditingInputErrorKey	let PHContentEditingInputErrorKey: String
+c:@PHContentEditingInputResultIsInCloudKey	swift.var	PHContentEditingInputResultIsInCloudKey	PHContentEditingInputResultIsInCloudKey	let PHContentEditingInputResultIsInCloudKey: String
+c:@PHImageCancelledKey	swift.var	PHImageCancelledKey	PHImageCancelledKey	let PHImageCancelledKey: String
+c:@PHImageErrorKey	swift.var	PHImageErrorKey	PHImageErrorKey	let PHImageErrorKey: String
+c:@PHImageManagerMaximumSize	swift.var	PHImageManagerMaximumSize	PHImageManagerMaximumSize	let PHImageManagerMaximumSize: CGSize
+c:@PHImageResultIsDegradedKey	swift.var	PHImageResultIsDegradedKey	PHImageResultIsDegradedKey	let PHImageResultIsDegradedKey: String
+c:@PHImageResultIsInCloudKey	swift.var	PHImageResultIsInCloudKey	PHImageResultIsInCloudKey	let PHImageResultIsInCloudKey: String
+c:@PHImageResultRequestIDKey	swift.var	PHImageResultRequestIDKey	PHImageResultRequestIDKey	let PHImageResultRequestIDKey: String
+c:@PHInvalidAssetResourceDataRequestID	swift.var	PHInvalidAssetResourceDataRequestID	PHInvalidAssetResourceDataRequestID	let PHInvalidAssetResourceDataRequestID: PHAssetResourceDataRequestID
+c:@PHInvalidImageRequestID	swift.var	PHInvalidImageRequestID	PHInvalidImageRequestID	let PHInvalidImageRequestID: PHImageRequestID
+c:@PHLivePhotoInfoCancelledKey	swift.var	PHLivePhotoInfoCancelledKey	PHLivePhotoInfoCancelledKey	let PHLivePhotoInfoCancelledKey: String
+c:@PHLivePhotoInfoErrorKey	swift.var	PHLivePhotoInfoErrorKey	PHLivePhotoInfoErrorKey	let PHLivePhotoInfoErrorKey: String
+c:@PHLivePhotoInfoIsDegradedKey	swift.var	PHLivePhotoInfoIsDegradedKey	PHLivePhotoInfoIsDegradedKey	let PHLivePhotoInfoIsDegradedKey: String
+c:@PHLivePhotoRequestIDInvalid	swift.var	PHLivePhotoRequestIDInvalid	PHLivePhotoRequestIDInvalid	let PHLivePhotoRequestIDInvalid: PHLivePhotoRequestID
+c:@PHLivePhotoShouldRenderAtPlaybackTime	swift.type.property	shouldRenderAtPlaybackTime	PHLivePhotoEditingOption.shouldRenderAtPlaybackTime	static let shouldRenderAtPlaybackTime: PHLivePhotoEditingOption
+c:@PHLocalIdentifiersErrorKey	swift.var	PHLocalIdentifiersErrorKey	PHLocalIdentifiersErrorKey	let PHLocalIdentifiersErrorKey: String
+c:@PHPhotosErrorDomain	swift.var	PHPhotosErrorDomain	PHPhotosErrorDomain	let PHPhotosErrorDomain: String
+c:@PHPhotosErrorInvalidDeprecated	swift.var	PHPhotosErrorInvalid	PHPhotosErrorInvalid	let PHPhotosErrorInvalid: Int
+c:@PHPhotosErrorLibraryVolumeOfflineDeprecated	swift.var	PHPhotosErrorLibraryVolumeOffline	PHPhotosErrorLibraryVolumeOffline	let PHPhotosErrorLibraryVolumeOffline: Int
+c:@PHPhotosErrorRelinquishingLibraryBundleToWriterDeprecated	swift.var	PHPhotosErrorRelinquishingLibraryBundleToWriter	PHPhotosErrorRelinquishingLibraryBundleToWriter	let PHPhotosErrorRelinquishingLibraryBundleToWriter: Int
+c:@PHPhotosErrorSwitchingSystemPhotoLibraryDeprecated	swift.var	PHPhotosErrorSwitchingSystemPhotoLibrary	PHPhotosErrorSwitchingSystemPhotoLibrary	let PHPhotosErrorSwitchingSystemPhotoLibrary: Int
+c:@PHPhotosErrorUserCancelledDeprecated	swift.var	PHPhotosErrorUserCancelled	PHPhotosErrorUserCancelled	let PHPhotosErrorUserCancelled: Int
+c:@T@PHAssetImageProgressHandler	swift.typealias	PHAssetImageProgressHandler	PHAssetImageProgressHandler	typealias PHAssetImageProgressHandler = (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void
+c:@T@PHAssetResourceDataRequestID	swift.typealias	PHAssetResourceDataRequestID	PHAssetResourceDataRequestID	typealias PHAssetResourceDataRequestID = Int32
+c:@T@PHAssetResourceProgressHandler	swift.typealias	PHAssetResourceProgressHandler	PHAssetResourceProgressHandler	typealias PHAssetResourceProgressHandler = (Double) -> Void
+c:@T@PHAssetVideoProgressHandler	swift.typealias	PHAssetVideoProgressHandler	PHAssetVideoProgressHandler	typealias PHAssetVideoProgressHandler = (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void
+c:@T@PHContentEditingInputRequestID	swift.typealias	PHContentEditingInputRequestID	PHContentEditingInputRequestID	typealias PHContentEditingInputRequestID = Int
+c:@T@PHImageRequestID	swift.typealias	PHImageRequestID	PHImageRequestID	typealias PHImageRequestID = Int32
+c:@T@PHLivePhotoEditingOption	swift.struct	PHLivePhotoEditingOption	PHLivePhotoEditingOption	struct PHLivePhotoEditingOption
+c:@T@PHLivePhotoFrameProcessingBlock	swift.typealias	PHLivePhotoFrameProcessingBlock	PHLivePhotoFrameProcessingBlock	typealias PHLivePhotoFrameProcessingBlock = (any PHLivePhotoFrame, NSErrorPointer) -> CIImage?
+c:@T@PHLivePhotoRequestID	swift.typealias	PHLivePhotoRequestID	PHLivePhotoRequestID	typealias PHLivePhotoRequestID = Int32
+c:objc(cs)PHAdjustmentData	swift.class	PHAdjustmentData	PHAdjustmentData	class PHAdjustmentData
+c:objc(cs)PHAdjustmentData(im)initWithFormatIdentifier:formatVersion:data:	swift.init	init(formatIdentifier:formatVersion:data:)	PHAdjustmentData.init(formatIdentifier:formatVersion:data:)	init(formatIdentifier: String, formatVersion: String, data: Data)
+c:objc(cs)PHAdjustmentData(py)data	swift.property	data	PHAdjustmentData.data	var data: Data { get }
+c:objc(cs)PHAdjustmentData(py)formatIdentifier	swift.property	formatIdentifier	PHAdjustmentData.formatIdentifier	var formatIdentifier: String { get }
+c:objc(cs)PHAdjustmentData(py)formatVersion	swift.property	formatVersion	PHAdjustmentData.formatVersion	var formatVersion: String { get }
+c:objc(cs)PHAsset	swift.class	PHAsset	PHAsset	class PHAsset
+c:objc(cs)PHAsset(cm)fetchAssetsInAssetCollection:options:	swift.type.method	fetchAssets(in:options:)	PHAsset.fetchAssets(in:options:)	class func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions?) -> PHFetchResult<PHAsset>
+c:objc(cs)PHAsset(cm)fetchAssetsWithALAssetURLs:options:	swift.type.method	fetchAssets(withALAssetURLs:options:)	PHAsset.fetchAssets(withALAssetURLs:options:)	class func fetchAssets(withALAssetURLs assetURLs: [URL], options: PHFetchOptions?) -> PHFetchResult<PHAsset>
+c:objc(cs)PHAsset(cm)fetchAssetsWithBurstIdentifier:options:	swift.type.method	fetchAssets(withBurstIdentifier:options:)	PHAsset.fetchAssets(withBurstIdentifier:options:)	class func fetchAssets(withBurstIdentifier burstIdentifier: String, options: PHFetchOptions?) -> PHFetchResult<PHAsset>
+c:objc(cs)PHAsset(cm)fetchAssetsWithLocalIdentifiers:options:	swift.type.method	fetchAssets(withLocalIdentifiers:options:)	PHAsset.fetchAssets(withLocalIdentifiers:options:)	class func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHFetchResult<PHAsset>
+c:objc(cs)PHAsset(cm)fetchAssetsWithMediaType:options:	swift.type.method	fetchAssets(with:options:)	PHAsset.fetchAssets(with:options:)	class func fetchAssets(with mediaType: PHAssetMediaType, options: PHFetchOptions?) -> PHFetchResult<PHAsset>
+c:objc(cs)PHAsset(cm)fetchAssetsWithOptions:	swift.type.method	fetchAssets(with:)	PHAsset.fetchAssets(with:)	class func fetchAssets(with options: PHFetchOptions?) -> PHFetchResult<PHAsset>
+c:objc(cs)PHAsset(cm)fetchKeyAssetsInAssetCollection:options:	swift.type.method	fetchKeyAssets(in:options:)	PHAsset.fetchKeyAssets(in:options:)	class func fetchKeyAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions?) -> PHFetchResult<PHAsset>?
+c:objc(cs)PHAsset(im)canPerformEditOperation:	swift.method	canPerform(_:)	PHAsset.canPerform(_:)	func canPerform(_ editOperation: PHAssetEditOperation) -> Bool
+c:objc(cs)PHAsset(im)cancelContentEditingInputRequest:	swift.method	cancelContentEditingInputRequest(_:)	PHAsset.cancelContentEditingInputRequest(_:)	func cancelContentEditingInputRequest(_ requestID: PHContentEditingInputRequestID)
+c:objc(cs)PHAsset(im)requestContentEditingInputWithOptions:completionHandler:	swift.method	requestContentEditingInput(with:completionHandler:)	PHAsset.requestContentEditingInput(with:completionHandler:)	func requestContentEditingInput(with options: PHContentEditingInputRequestOptions?, completionHandler: @escaping (PHContentEditingInput?, [AnyHashable : Any]) -> Void) -> PHContentEditingInputRequestID
+c:objc(cs)PHAsset(py)addedDate	swift.property	addedDate	PHAsset.addedDate	var addedDate: Date { get }
+c:objc(cs)PHAsset(py)adjustmentFormatIdentifier	swift.property	adjustmentFormatIdentifier	PHAsset.adjustmentFormatIdentifier	var adjustmentFormatIdentifier: String? { get }
+c:objc(cs)PHAsset(py)burstIdentifier	swift.property	burstIdentifier	PHAsset.burstIdentifier	var burstIdentifier: String? { get }
+c:objc(cs)PHAsset(py)burstSelectionTypes	swift.property	burstSelectionTypes	PHAsset.burstSelectionTypes	var burstSelectionTypes: PHAssetBurstSelectionType { get }
+c:objc(cs)PHAsset(py)contentType	swift.property	contentType	PHAsset.contentType	var contentType: UTType { get }
+c:objc(cs)PHAsset(py)creationDate	swift.property	creationDate	PHAsset.creationDate	var creationDate: Date? { get }
+c:objc(cs)PHAsset(py)duration	swift.property	duration	PHAsset.duration	var duration: TimeInterval { get }
+c:objc(cs)PHAsset(py)favorite	swift.property	isFavorite	PHAsset.isFavorite	var isFavorite: Bool { get }
+c:objc(cs)PHAsset(py)hasAdjustments	swift.property	hasAdjustments	PHAsset.hasAdjustments	var hasAdjustments: Bool { get }
+c:objc(cs)PHAsset(py)hidden	swift.property	isHidden	PHAsset.isHidden	var isHidden: Bool { get }
+c:objc(cs)PHAsset(py)location	swift.property	location	PHAsset.location	var location: CLLocation? { get }
+c:objc(cs)PHAsset(py)mediaSubtypes	swift.property	mediaSubtypes	PHAsset.mediaSubtypes	var mediaSubtypes: PHAssetMediaSubtype { get }
+c:objc(cs)PHAsset(py)mediaType	swift.property	mediaType	PHAsset.mediaType	var mediaType: PHAssetMediaType { get }
+c:objc(cs)PHAsset(py)modificationDate	swift.property	modificationDate	PHAsset.modificationDate	var modificationDate: Date? { get }
+c:objc(cs)PHAsset(py)pixelHeight	swift.property	pixelHeight	PHAsset.pixelHeight	var pixelHeight: Int { get }
+c:objc(cs)PHAsset(py)pixelWidth	swift.property	pixelWidth	PHAsset.pixelWidth	var pixelWidth: Int { get }
+c:objc(cs)PHAsset(py)playbackStyle	swift.property	playbackStyle	PHAsset.playbackStyle	var playbackStyle: PHAsset.PlaybackStyle { get }
+c:objc(cs)PHAsset(py)representsBurst	swift.property	representsBurst	PHAsset.representsBurst	var representsBurst: Bool { get }
+c:objc(cs)PHAsset(py)sourceType	swift.property	sourceType	PHAsset.sourceType	var sourceType: PHAssetSourceType { get }
+c:objc(cs)PHAssetChangeRequest	swift.class	PHAssetChangeRequest	PHAssetChangeRequest	class PHAssetChangeRequest
+c:objc(cs)PHAssetChangeRequest(cm)changeRequestForAsset:	swift.init	init(for:)	PHAssetChangeRequest.init(for:)	convenience init(for asset: PHAsset)
+c:objc(cs)PHAssetChangeRequest(cm)changeRequestForAsset:::SYNTHESIZED::c:objc(cs)PHAssetChangeRequest	swift.init	init(forAsset:)	PHAssetChangeRequest.init(forAsset:)	convenience init(forAsset asset: PHAsset)
+c:objc(cs)PHAssetChangeRequest(cm)creationRequestForAssetFromImage:	swift.type.method	creationRequestForAsset(from:)	PHAssetChangeRequest.creationRequestForAsset(from:)	class func creationRequestForAsset(from image: UIImage) -> Self
+c:objc(cs)PHAssetChangeRequest(cm)creationRequestForAssetFromImageAtFileURL:	swift.type.method	creationRequestForAssetFromImage(atFileURL:)	PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL:)	class func creationRequestForAssetFromImage(atFileURL fileURL: URL) -> Self?
+c:objc(cs)PHAssetChangeRequest(cm)creationRequestForAssetFromVideoAtFileURL:	swift.type.method	creationRequestForAssetFromVideo(atFileURL:)	PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:)	class func creationRequestForAssetFromVideo(atFileURL fileURL: URL) -> Self?
+c:objc(cs)PHAssetChangeRequest(cm)deleteAssets:	swift.type.method	deleteAssets(_:)	PHAssetChangeRequest.deleteAssets(_:)	class func deleteAssets(_ assets: any NSFastEnumeration)
+c:objc(cs)PHAssetChangeRequest(im)revertAssetContentToOriginal	swift.method	revertAssetContentToOriginal()	PHAssetChangeRequest.revertAssetContentToOriginal()	func revertAssetContentToOriginal()
+c:objc(cs)PHAssetChangeRequest(py)contentEditingOutput	swift.property	contentEditingOutput	PHAssetChangeRequest.contentEditingOutput	var contentEditingOutput: PHContentEditingOutput? { get set }
+c:objc(cs)PHAssetChangeRequest(py)creationDate	swift.property	creationDate	PHAssetChangeRequest.creationDate	var creationDate: Date? { get set }
+c:objc(cs)PHAssetChangeRequest(py)favorite	swift.property	isFavorite	PHAssetChangeRequest.isFavorite	var isFavorite: Bool { get set }
+c:objc(cs)PHAssetChangeRequest(py)hidden	swift.property	isHidden	PHAssetChangeRequest.isHidden	var isHidden: Bool { get set }
+c:objc(cs)PHAssetChangeRequest(py)location	swift.property	location	PHAssetChangeRequest.location	var location: CLLocation? { get set }
+c:objc(cs)PHAssetChangeRequest(py)placeholderForCreatedAsset	swift.property	placeholderForCreatedAsset	PHAssetChangeRequest.placeholderForCreatedAsset	var placeholderForCreatedAsset: PHObjectPlaceholder? { get }
+c:objc(cs)PHAssetCollection	swift.class	PHAssetCollection	PHAssetCollection	class PHAssetCollection
+c:objc(cs)PHAssetCollection(cm)fetchAssetCollectionsContainingAsset:withType:options:	swift.type.method	fetchAssetCollectionsContaining(_:with:options:)	PHAssetCollection.fetchAssetCollectionsContaining(_:with:options:)	class func fetchAssetCollectionsContaining(_ asset: PHAsset, with type: PHAssetCollectionType, options: PHFetchOptions?) -> PHFetchResult<PHAssetCollection>
+c:objc(cs)PHAssetCollection(cm)fetchAssetCollectionsWithALAssetGroupURLs:options:	swift.type.method	fetchAssetCollections(withALAssetGroupURLs:options:)	PHAssetCollection.fetchAssetCollections(withALAssetGroupURLs:options:)	class func fetchAssetCollections(withALAssetGroupURLs assetGroupURLs: [URL], options: PHFetchOptions?) -> PHFetchResult<PHAssetCollection>
+c:objc(cs)PHAssetCollection(cm)fetchAssetCollectionsWithLocalIdentifiers:options:	swift.type.method	fetchAssetCollections(withLocalIdentifiers:options:)	PHAssetCollection.fetchAssetCollections(withLocalIdentifiers:options:)	class func fetchAssetCollections(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHFetchResult<PHAssetCollection>
+c:objc(cs)PHAssetCollection(cm)fetchAssetCollectionsWithType:subtype:options:	swift.type.method	fetchAssetCollections(with:subtype:options:)	PHAssetCollection.fetchAssetCollections(with:subtype:options:)	class func fetchAssetCollections(with type: PHAssetCollectionType, subtype: PHAssetCollectionSubtype, options: PHFetchOptions?) -> PHFetchResult<PHAssetCollection>
+c:objc(cs)PHAssetCollection(cm)fetchMomentsInMomentList:options:	swift.type.method	fetchMoments(inMomentList:options:)	PHAssetCollection.fetchMoments(inMomentList:options:)	class func fetchMoments(inMomentList momentList: PHCollectionList, options: PHFetchOptions?) -> PHFetchResult<PHAssetCollection>
+c:objc(cs)PHAssetCollection(cm)fetchMomentsWithOptions:	swift.type.method	fetchMoments(with:)	PHAssetCollection.fetchMoments(with:)	class func fetchMoments(with options: PHFetchOptions?) -> PHFetchResult<PHAssetCollection>
+c:objc(cs)PHAssetCollection(cm)transientAssetCollectionWithAssetFetchResult:title:	swift.type.method	transientAssetCollection(withAssetFetchResult:title:)	PHAssetCollection.transientAssetCollection(withAssetFetchResult:title:)	class func transientAssetCollection(withAssetFetchResult fetchResult: PHFetchResult<PHAsset>, title: String?) -> PHAssetCollection
+c:objc(cs)PHAssetCollection(cm)transientAssetCollectionWithAssets:title:	swift.type.method	transientAssetCollection(with:title:)	PHAssetCollection.transientAssetCollection(with:title:)	class func transientAssetCollection(with assets: [PHAsset], title: String?) -> PHAssetCollection
+c:objc(cs)PHAssetCollection(py)approximateLocation	swift.property	approximateLocation	PHAssetCollection.approximateLocation	var approximateLocation: CLLocation? { get }
+c:objc(cs)PHAssetCollection(py)assetCollectionSubtype	swift.property	assetCollectionSubtype	PHAssetCollection.assetCollectionSubtype	var assetCollectionSubtype: PHAssetCollectionSubtype { get }
+c:objc(cs)PHAssetCollection(py)assetCollectionType	swift.property	assetCollectionType	PHAssetCollection.assetCollectionType	var assetCollectionType: PHAssetCollectionType { get }
+c:objc(cs)PHAssetCollection(py)endDate	swift.property	endDate	PHAssetCollection.endDate	var endDate: Date? { get }
+c:objc(cs)PHAssetCollection(py)estimatedAssetCount	swift.property	estimatedAssetCount	PHAssetCollection.estimatedAssetCount	var estimatedAssetCount: Int { get }
+c:objc(cs)PHAssetCollection(py)localizedLocationNames	swift.property	localizedLocationNames	PHAssetCollection.localizedLocationNames	var localizedLocationNames: [String] { get }
+c:objc(cs)PHAssetCollection(py)startDate	swift.property	startDate	PHAssetCollection.startDate	var startDate: Date? { get }
+c:objc(cs)PHAssetCollectionChangeRequest	swift.class	PHAssetCollectionChangeRequest	PHAssetCollectionChangeRequest	class PHAssetCollectionChangeRequest
+c:objc(cs)PHAssetCollectionChangeRequest(cm)changeRequestForAssetCollection:	swift.init	init(for:)	PHAssetCollectionChangeRequest.init(for:)	convenience init?(for assetCollection: PHAssetCollection)
+c:objc(cs)PHAssetCollectionChangeRequest(cm)changeRequestForAssetCollection:::SYNTHESIZED::c:objc(cs)PHAssetCollectionChangeRequest	swift.init	init(forAssetCollection:)	PHAssetCollectionChangeRequest.init(forAssetCollection:)	convenience init?(forAssetCollection assetCollection: PHAssetCollection)
+c:objc(cs)PHAssetCollectionChangeRequest(cm)changeRequestForAssetCollection:assets:	swift.init	init(for:assets:)	PHAssetCollectionChangeRequest.init(for:assets:)	convenience init?(for assetCollection: PHAssetCollection, assets: PHFetchResult<PHAsset>?)
+c:objc(cs)PHAssetCollectionChangeRequest(cm)changeRequestForAssetCollection:assets:::SYNTHESIZED::c:objc(cs)PHAssetCollectionChangeRequest	swift.init	init(forAssetCollection:assets:)	PHAssetCollectionChangeRequest.init(forAssetCollection:assets:)	convenience init?(forAssetCollection assetCollection: PHAssetCollection, assets: PHFetchResult<PHAsset>?)
+c:objc(cs)PHAssetCollectionChangeRequest(cm)creationRequestForAssetCollectionWithTitle:	swift.type.method	creationRequestForAssetCollection(withTitle:)	PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle:)	class func creationRequestForAssetCollection(withTitle title: String) -> Self
+c:objc(cs)PHAssetCollectionChangeRequest(cm)deleteAssetCollections:	swift.type.method	deleteAssetCollections(_:)	PHAssetCollectionChangeRequest.deleteAssetCollections(_:)	class func deleteAssetCollections(_ assetCollections: any NSFastEnumeration)
+c:objc(cs)PHAssetCollectionChangeRequest(im)addAssets:	swift.method	addAssets(_:)	PHAssetCollectionChangeRequest.addAssets(_:)	func addAssets(_ assets: any NSFastEnumeration)
+c:objc(cs)PHAssetCollectionChangeRequest(im)insertAssets:atIndexes:	swift.method	insertAssets(_:at:)	PHAssetCollectionChangeRequest.insertAssets(_:at:)	func insertAssets(_ assets: any NSFastEnumeration, at indexes: IndexSet)
+c:objc(cs)PHAssetCollectionChangeRequest(im)moveAssetsAtIndexes:toIndex:	swift.method	moveAssets(at:to:)	PHAssetCollectionChangeRequest.moveAssets(at:to:)	func moveAssets(at fromIndexes: IndexSet, to toIndex: Int)
+c:objc(cs)PHAssetCollectionChangeRequest(im)removeAssets:	swift.method	removeAssets(_:)	PHAssetCollectionChangeRequest.removeAssets(_:)	func removeAssets(_ assets: any NSFastEnumeration)
+c:objc(cs)PHAssetCollectionChangeRequest(im)removeAssetsAtIndexes:	swift.method	removeAssets(at:)	PHAssetCollectionChangeRequest.removeAssets(at:)	func removeAssets(at indexes: IndexSet)
+c:objc(cs)PHAssetCollectionChangeRequest(im)replaceAssetsAtIndexes:withAssets:	swift.method	replaceAssets(at:withAssets:)	PHAssetCollectionChangeRequest.replaceAssets(at:withAssets:)	func replaceAssets(at indexes: IndexSet, withAssets assets: any NSFastEnumeration)
+c:objc(cs)PHAssetCollectionChangeRequest(py)placeholderForCreatedAssetCollection	swift.property	placeholderForCreatedAssetCollection	PHAssetCollectionChangeRequest.placeholderForCreatedAssetCollection	var placeholderForCreatedAssetCollection: PHObjectPlaceholder { get }
+c:objc(cs)PHAssetCollectionChangeRequest(py)title	swift.property	title	PHAssetCollectionChangeRequest.title	var title: String { get set }
+c:objc(cs)PHAssetCreationRequest	swift.class	PHAssetCreationRequest	PHAssetCreationRequest	class PHAssetCreationRequest
+c:objc(cs)PHAssetCreationRequest(cm)creationRequestForAsset	swift.type.method	forAsset()	PHAssetCreationRequest.forAsset()	class func forAsset() -> Self
+c:objc(cs)PHAssetCreationRequest(cm)supportsAssetResourceTypes:	swift.type.method	supportsAssetResourceTypes(_:)	PHAssetCreationRequest.supportsAssetResourceTypes(_:)	class func supportsAssetResourceTypes(_ types: [NSNumber]) -> Bool
+c:objc(cs)PHAssetCreationRequest(im)addResourceWithType:data:options:	swift.method	addResource(with:data:options:)	PHAssetCreationRequest.addResource(with:data:options:)	func addResource(with type: PHAssetResourceType, data: Data, options: PHAssetResourceCreationOptions?)
+c:objc(cs)PHAssetCreationRequest(im)addResourceWithType:fileURL:options:	swift.method	addResource(with:fileURL:options:)	PHAssetCreationRequest.addResource(with:fileURL:options:)	func addResource(with type: PHAssetResourceType, fileURL: URL, options: PHAssetResourceCreationOptions?)
+c:objc(cs)PHAssetResource	swift.class	PHAssetResource	PHAssetResource	class PHAssetResource
+c:objc(cs)PHAssetResource(cm)assetResourcesForAsset:	swift.type.method	assetResources(for:)	PHAssetResource.assetResources(for:)	class func assetResources(for asset: PHAsset) -> [PHAssetResource]
+c:objc(cs)PHAssetResource(cm)assetResourcesForLivePhoto:	swift.type.method	assetResources(for:)	PHAssetResource.assetResources(for:)	class func assetResources(for livePhoto: PHLivePhoto) -> [PHAssetResource]
+c:objc(cs)PHAssetResource(py)assetLocalIdentifier	swift.property	assetLocalIdentifier	PHAssetResource.assetLocalIdentifier	var assetLocalIdentifier: String { get }
+c:objc(cs)PHAssetResource(py)contentType	swift.property	contentType	PHAssetResource.contentType	var contentType: UTType { get }
+c:objc(cs)PHAssetResource(py)originalFilename	swift.property	originalFilename	PHAssetResource.originalFilename	var originalFilename: String { get }
+c:objc(cs)PHAssetResource(py)pixelHeight	swift.property	pixelHeight	PHAssetResource.pixelHeight	var pixelHeight: Int { get }
+c:objc(cs)PHAssetResource(py)pixelWidth	swift.property	pixelWidth	PHAssetResource.pixelWidth	var pixelWidth: Int { get }
+c:objc(cs)PHAssetResource(py)type	swift.property	type	PHAssetResource.type	var type: PHAssetResourceType { get }
+c:objc(cs)PHAssetResource(py)uniformTypeIdentifier	swift.property	uniformTypeIdentifier	PHAssetResource.uniformTypeIdentifier	var uniformTypeIdentifier: String { get }
+c:objc(cs)PHAssetResourceCreationOptions	swift.class	PHAssetResourceCreationOptions	PHAssetResourceCreationOptions	class PHAssetResourceCreationOptions
+c:objc(cs)PHAssetResourceCreationOptions(py)contentType	swift.property	contentType	PHAssetResourceCreationOptions.contentType	var contentType: UTType? { get set }
+c:objc(cs)PHAssetResourceCreationOptions(py)originalFilename	swift.property	originalFilename	PHAssetResourceCreationOptions.originalFilename	var originalFilename: String? { get set }
+c:objc(cs)PHAssetResourceCreationOptions(py)shouldMoveFile	swift.property	shouldMoveFile	PHAssetResourceCreationOptions.shouldMoveFile	var shouldMoveFile: Bool { get set }
+c:objc(cs)PHAssetResourceCreationOptions(py)uniformTypeIdentifier	swift.property	uniformTypeIdentifier	PHAssetResourceCreationOptions.uniformTypeIdentifier	var uniformTypeIdentifier: String? { get set }
+c:objc(cs)PHAssetResourceManager	swift.class	PHAssetResourceManager	PHAssetResourceManager	class PHAssetResourceManager
+c:objc(cs)PHAssetResourceManager(cm)defaultManager	swift.type.method	default()	PHAssetResourceManager.default()	class func `default`() -> PHAssetResourceManager
+c:objc(cs)PHAssetResourceManager(im)cancelDataRequest:	swift.method	cancelDataRequest(_:)	PHAssetResourceManager.cancelDataRequest(_:)	func cancelDataRequest(_ requestID: PHAssetResourceDataRequestID)
+c:objc(cs)PHAssetResourceManager(im)requestDataForAssetResource:options:dataReceivedHandler:completionHandler:	swift.method	requestData(for:options:dataReceivedHandler:completionHandler:)	PHAssetResourceManager.requestData(for:options:dataReceivedHandler:completionHandler:)	func requestData(for resource: PHAssetResource, options: PHAssetResourceRequestOptions?, dataReceivedHandler handler: @escaping (Data) -> Void, completionHandler: @escaping ((any Error)?) -> Void) -> PHAssetResourceDataRequestID
+c:objc(cs)PHAssetResourceManager(im)writeDataForAssetResource:toFile:options:completionHandler:	swift.method	writeData(for:toFile:options:)	PHAssetResourceManager.writeData(for:toFile:options:)	func writeData(for resource: PHAssetResource, toFile fileURL: URL, options: PHAssetResourceRequestOptions?) async throws
+c:objc(cs)PHAssetResourceRequestOptions	swift.class	PHAssetResourceRequestOptions	PHAssetResourceRequestOptions	class PHAssetResourceRequestOptions
+c:objc(cs)PHAssetResourceRequestOptions(py)networkAccessAllowed	swift.property	isNetworkAccessAllowed	PHAssetResourceRequestOptions.isNetworkAccessAllowed	var isNetworkAccessAllowed: Bool { get set }
+c:objc(cs)PHAssetResourceRequestOptions(py)progressHandler	swift.property	progressHandler	PHAssetResourceRequestOptions.progressHandler	var progressHandler: PHAssetResourceProgressHandler? { get set }
+c:objc(cs)PHAssetResourceUploadJob	swift.class	PHAssetResourceUploadJob	PHAssetResourceUploadJob	class PHAssetResourceUploadJob
+c:objc(cs)PHAssetResourceUploadJob(cm)fetchJobsWithAction:options:	swift.type.method	fetchJobs(action:options:)	PHAssetResourceUploadJob.fetchJobs(action:options:)	class func fetchJobs(action: PHAssetResourceUploadJob.Action, options: PHFetchOptions?) -> PHFetchResult<PHAssetResourceUploadJob>
+c:objc(cs)PHAssetResourceUploadJob(cpy)jobLimit	swift.type.property	jobLimit	PHAssetResourceUploadJob.jobLimit	class var jobLimit: Int { get }
+c:objc(cs)PHAssetResourceUploadJob(py)destination	swift.property	destination	PHAssetResourceUploadJob.destination	var destination: URLRequest { get }
+c:objc(cs)PHAssetResourceUploadJob(py)resource	swift.property	resource	PHAssetResourceUploadJob.resource	var resource: PHAssetResource { get }
+c:objc(cs)PHAssetResourceUploadJob(py)state	swift.property	state	PHAssetResourceUploadJob.state	var state: PHAssetResourceUploadJob.State { get }
+c:objc(cs)PHAssetResourceUploadJobChangeRequest	swift.class	PHAssetResourceUploadJobChangeRequest	PHAssetResourceUploadJobChangeRequest	class PHAssetResourceUploadJobChangeRequest
+c:objc(cs)PHAssetResourceUploadJobChangeRequest(cm)changeRequestForUploadJob:	swift.init	init(for:)	PHAssetResourceUploadJobChangeRequest.init(for:)	convenience init?(for job: PHAssetResourceUploadJob)
+c:objc(cs)PHAssetResourceUploadJobChangeRequest(cm)changeRequestForUploadJob:::SYNTHESIZED::c:objc(cs)PHAssetResourceUploadJobChangeRequest	swift.init	init(forUploadJob:)	PHAssetResourceUploadJobChangeRequest.init(forUploadJob:)	convenience init?(forUploadJob job: PHAssetResourceUploadJob)
+c:objc(cs)PHAssetResourceUploadJobChangeRequest(cm)createJobWithDestination:resource:	swift.type.method	createJob(destination:resource:)	PHAssetResourceUploadJobChangeRequest.createJob(destination:resource:)	class func createJob(destination: URLRequest, resource: PHAssetResource)
+c:objc(cs)PHAssetResourceUploadJobChangeRequest(im)acknowledge	swift.method	acknowledge()	PHAssetResourceUploadJobChangeRequest.acknowledge()	func acknowledge()
+c:objc(cs)PHAssetResourceUploadJobChangeRequest(im)retryWithDestination:	swift.method	retry(destination:)	PHAssetResourceUploadJobChangeRequest.retry(destination:)	func retry(destination: URLRequest?)
+c:objc(cs)PHCachingImageManager	swift.class	PHCachingImageManager	PHCachingImageManager	class PHCachingImageManager
+c:objc(cs)PHCachingImageManager(im)startCachingImagesForAssets:targetSize:contentMode:options:	swift.method	startCachingImages(for:targetSize:contentMode:options:)	PHCachingImageManager.startCachingImages(for:targetSize:contentMode:options:)	func startCachingImages(for assets: [PHAsset], targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?)
+c:objc(cs)PHCachingImageManager(im)stopCachingImagesForAllAssets	swift.method	stopCachingImagesForAllAssets()	PHCachingImageManager.stopCachingImagesForAllAssets()	func stopCachingImagesForAllAssets()
+c:objc(cs)PHCachingImageManager(im)stopCachingImagesForAssets:targetSize:contentMode:options:	swift.method	stopCachingImages(for:targetSize:contentMode:options:)	PHCachingImageManager.stopCachingImages(for:targetSize:contentMode:options:)	func stopCachingImages(for assets: [PHAsset], targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?)
+c:objc(cs)PHCachingImageManager(py)allowsCachingHighQualityImages	swift.property	allowsCachingHighQualityImages	PHCachingImageManager.allowsCachingHighQualityImages	var allowsCachingHighQualityImages: Bool { get set }
+c:objc(cs)PHChange	swift.class	PHChange	PHChange	class PHChange
+c:objc(cs)PHChangeRequest	swift.class	PHChangeRequest	PHChangeRequest	class PHChangeRequest
+c:objc(cs)PHCloudIdentifier	swift.class	PHCloudIdentifier	PHCloudIdentifier	class PHCloudIdentifier
+c:objc(cs)PHCloudIdentifier(im)initWithStringValue:	swift.init	init(stringValue:)	PHCloudIdentifier.init(stringValue:)	init(stringValue: String)
+c:objc(cs)PHCloudIdentifier(py)stringValue	swift.property	stringValue	PHCloudIdentifier.stringValue	var stringValue: String { get }
+c:objc(cs)PHCollection	swift.class	PHCollection	PHCollection	class PHCollection
+c:objc(cs)PHCollection(cm)fetchCollectionsInCollectionList:options:	swift.type.method	fetchCollections(in:options:)	PHCollection.fetchCollections(in:options:)	class func fetchCollections(in collectionList: PHCollectionList, options: PHFetchOptions?) -> PHFetchResult<PHCollection>
+c:objc(cs)PHCollection(cm)fetchTopLevelUserCollectionsWithOptions:	swift.type.method	fetchTopLevelUserCollections(with:)	PHCollection.fetchTopLevelUserCollections(with:)	class func fetchTopLevelUserCollections(with options: PHFetchOptions?) -> PHFetchResult<PHCollection>
+c:objc(cs)PHCollection(im)canPerformEditOperation:	swift.method	canPerform(_:)	PHCollection.canPerform(_:)	func canPerform(_ anOperation: PHCollectionEditOperation) -> Bool
+c:objc(cs)PHCollection(py)canContainAssets	swift.property	canContainAssets	PHCollection.canContainAssets	var canContainAssets: Bool { get }
+c:objc(cs)PHCollection(py)canContainCollections	swift.property	canContainCollections	PHCollection.canContainCollections	var canContainCollections: Bool { get }
+c:objc(cs)PHCollection(py)localizedTitle	swift.property	localizedTitle	PHCollection.localizedTitle	var localizedTitle: String? { get }
+c:objc(cs)PHCollectionList	swift.class	PHCollectionList	PHCollectionList	class PHCollectionList
+c:objc(cs)PHCollectionList(cm)fetchCollectionListsContainingCollection:options:	swift.type.method	fetchCollectionListsContaining(_:options:)	PHCollectionList.fetchCollectionListsContaining(_:options:)	class func fetchCollectionListsContaining(_ collection: PHCollection, options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
+c:objc(cs)PHCollectionList(cm)fetchCollectionListsWithLocalIdentifiers:options:	swift.type.method	fetchCollectionLists(withLocalIdentifiers:options:)	PHCollectionList.fetchCollectionLists(withLocalIdentifiers:options:)	class func fetchCollectionLists(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
+c:objc(cs)PHCollectionList(cm)fetchCollectionListsWithType:subtype:options:	swift.type.method	fetchCollectionLists(with:subtype:options:)	PHCollectionList.fetchCollectionLists(with:subtype:options:)	class func fetchCollectionLists(with collectionListType: PHCollectionListType, subtype: PHCollectionListSubtype, options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
+c:objc(cs)PHCollectionList(cm)fetchMomentListsWithSubtype:containingMoment:options:	swift.type.method	fetchMomentLists(with:containingMoment:options:)	PHCollectionList.fetchMomentLists(with:containingMoment:options:)	class func fetchMomentLists(with momentListSubtype: PHCollectionListSubtype, containingMoment moment: PHAssetCollection, options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
+c:objc(cs)PHCollectionList(cm)fetchMomentListsWithSubtype:options:	swift.type.method	fetchMomentLists(with:options:)	PHCollectionList.fetchMomentLists(with:options:)	class func fetchMomentLists(with momentListSubtype: PHCollectionListSubtype, options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
+c:objc(cs)PHCollectionList(cm)transientCollectionListWithCollections:title:	swift.type.method	transientCollectionList(with:title:)	PHCollectionList.transientCollectionList(with:title:)	class func transientCollectionList(with collections: [PHCollection], title: String?) -> PHCollectionList
+c:objc(cs)PHCollectionList(cm)transientCollectionListWithCollectionsFetchResult:title:	swift.type.method	transientCollectionList(withCollectionsFetchResult:title:)	PHCollectionList.transientCollectionList(withCollectionsFetchResult:title:)	class func transientCollectionList(withCollectionsFetchResult fetchResult: PHFetchResult<PHCollection>, title: String?) -> PHCollectionList
+c:objc(cs)PHCollectionList(py)collectionListSubtype	swift.property	collectionListSubtype	PHCollectionList.collectionListSubtype	var collectionListSubtype: PHCollectionListSubtype { get }
+c:objc(cs)PHCollectionList(py)collectionListType	swift.property	collectionListType	PHCollectionList.collectionListType	var collectionListType: PHCollectionListType { get }
+c:objc(cs)PHCollectionList(py)endDate	swift.property	endDate	PHCollectionList.endDate	var endDate: Date? { get }
+c:objc(cs)PHCollectionList(py)localizedLocationNames	swift.property	localizedLocationNames	PHCollectionList.localizedLocationNames	var localizedLocationNames: [String] { get }
+c:objc(cs)PHCollectionList(py)startDate	swift.property	startDate	PHCollectionList.startDate	var startDate: Date? { get }
+c:objc(cs)PHCollectionListChangeRequest	swift.class	PHCollectionListChangeRequest	PHCollectionListChangeRequest	class PHCollectionListChangeRequest
+c:objc(cs)PHCollectionListChangeRequest(cm)changeRequestForCollectionList:	swift.init	init(for:)	PHCollectionListChangeRequest.init(for:)	convenience init?(for collectionList: PHCollectionList)
+c:objc(cs)PHCollectionListChangeRequest(cm)changeRequestForCollectionList:::SYNTHESIZED::c:objc(cs)PHCollectionListChangeRequest	swift.init	init(forCollectionList:)	PHCollectionListChangeRequest.init(forCollectionList:)	convenience init?(forCollectionList collectionList: PHCollectionList)
+c:objc(cs)PHCollectionListChangeRequest(cm)changeRequestForCollectionList:childCollections:	swift.init	init(for:childCollections:)	PHCollectionListChangeRequest.init(for:childCollections:)	convenience init?(for collectionList: PHCollectionList, childCollections: PHFetchResult<PHCollection>)
+c:objc(cs)PHCollectionListChangeRequest(cm)changeRequestForCollectionList:childCollections:::SYNTHESIZED::c:objc(cs)PHCollectionListChangeRequest	swift.init	init(forCollectionList:childCollections:)	PHCollectionListChangeRequest.init(forCollectionList:childCollections:)	convenience init?(forCollectionList collectionList: PHCollectionList, childCollections: PHFetchResult<PHCollection>)
+c:objc(cs)PHCollectionListChangeRequest(cm)changeRequestForTopLevelCollectionListUserCollections:	swift.init	init(forTopLevelCollectionListUserCollections:)	PHCollectionListChangeRequest.init(forTopLevelCollectionListUserCollections:)	convenience init?(forTopLevelCollectionListUserCollections childCollections: PHFetchResult<PHCollection>)
+c:objc(cs)PHCollectionListChangeRequest(cm)creationRequestForCollectionListWithTitle:	swift.type.method	creationRequestForCollectionList(withTitle:)	PHCollectionListChangeRequest.creationRequestForCollectionList(withTitle:)	class func creationRequestForCollectionList(withTitle title: String) -> Self
+c:objc(cs)PHCollectionListChangeRequest(cm)deleteCollectionLists:	swift.type.method	deleteCollectionLists(_:)	PHCollectionListChangeRequest.deleteCollectionLists(_:)	class func deleteCollectionLists(_ collectionLists: any NSFastEnumeration)
+c:objc(cs)PHCollectionListChangeRequest(im)addChildCollections:	swift.method	addChildCollections(_:)	PHCollectionListChangeRequest.addChildCollections(_:)	func addChildCollections(_ collections: any NSFastEnumeration)
+c:objc(cs)PHCollectionListChangeRequest(im)insertChildCollections:atIndexes:	swift.method	insertChildCollections(_:at:)	PHCollectionListChangeRequest.insertChildCollections(_:at:)	func insertChildCollections(_ collections: any NSFastEnumeration, at indexes: IndexSet)
+c:objc(cs)PHCollectionListChangeRequest(im)moveChildCollectionsAtIndexes:toIndex:	swift.method	moveChildCollections(at:to:)	PHCollectionListChangeRequest.moveChildCollections(at:to:)	func moveChildCollections(at indexes: IndexSet, to toIndex: Int)
+c:objc(cs)PHCollectionListChangeRequest(im)removeChildCollections:	swift.method	removeChildCollections(_:)	PHCollectionListChangeRequest.removeChildCollections(_:)	func removeChildCollections(_ collections: any NSFastEnumeration)
+c:objc(cs)PHCollectionListChangeRequest(im)removeChildCollectionsAtIndexes:	swift.method	removeChildCollections(at:)	PHCollectionListChangeRequest.removeChildCollections(at:)	func removeChildCollections(at indexes: IndexSet)
+c:objc(cs)PHCollectionListChangeRequest(im)replaceChildCollectionsAtIndexes:withChildCollections:	swift.method	replaceChildCollections(at:withChildCollections:)	PHCollectionListChangeRequest.replaceChildCollections(at:withChildCollections:)	func replaceChildCollections(at indexes: IndexSet, withChildCollections collections: any NSFastEnumeration)
+c:objc(cs)PHCollectionListChangeRequest(py)placeholderForCreatedCollectionList	swift.property	placeholderForCreatedCollectionList	PHCollectionListChangeRequest.placeholderForCreatedCollectionList	var placeholderForCreatedCollectionList: PHObjectPlaceholder { get }
+c:objc(cs)PHCollectionListChangeRequest(py)title	swift.property	title	PHCollectionListChangeRequest.title	var title: String { get set }
+c:objc(cs)PHContentEditingInput	swift.class	PHContentEditingInput	PHContentEditingInput	class PHContentEditingInput
+c:objc(cs)PHContentEditingInput(py)adjustmentData	swift.property	adjustmentData	PHContentEditingInput.adjustmentData	var adjustmentData: PHAdjustmentData? { get }
+c:objc(cs)PHContentEditingInput(py)audiovisualAsset	swift.property	audiovisualAsset	PHContentEditingInput.audiovisualAsset	var audiovisualAsset: AVAsset? { get }
+c:objc(cs)PHContentEditingInput(py)avAsset	swift.property	avAsset	PHContentEditingInput.avAsset	var avAsset: AVAsset? { get }
+c:objc(cs)PHContentEditingInput(py)contentType	swift.property	contentType	PHContentEditingInput.contentType	var contentType: UTType? { get }
+c:objc(cs)PHContentEditingInput(py)creationDate	swift.property	creationDate	PHContentEditingInput.creationDate	var creationDate: Date? { get }
+c:objc(cs)PHContentEditingInput(py)displaySizeImage	swift.property	displaySizeImage	PHContentEditingInput.displaySizeImage	var displaySizeImage: UIImage? { get }
+c:objc(cs)PHContentEditingInput(py)fullSizeImageOrientation	swift.property	fullSizeImageOrientation	PHContentEditingInput.fullSizeImageOrientation	var fullSizeImageOrientation: Int32 { get }
+c:objc(cs)PHContentEditingInput(py)fullSizeImageURL	swift.property	fullSizeImageURL	PHContentEditingInput.fullSizeImageURL	var fullSizeImageURL: URL? { get }
+c:objc(cs)PHContentEditingInput(py)livePhoto	swift.property	livePhoto	PHContentEditingInput.livePhoto	var livePhoto: PHLivePhoto? { get }
+c:objc(cs)PHContentEditingInput(py)location	swift.property	location	PHContentEditingInput.location	@NSCopying var location: CLLocation? { get }
+c:objc(cs)PHContentEditingInput(py)mediaSubtypes	swift.property	mediaSubtypes	PHContentEditingInput.mediaSubtypes	var mediaSubtypes: PHAssetMediaSubtype { get }
+c:objc(cs)PHContentEditingInput(py)mediaType	swift.property	mediaType	PHContentEditingInput.mediaType	var mediaType: PHAssetMediaType { get }
+c:objc(cs)PHContentEditingInput(py)playbackStyle	swift.property	playbackStyle	PHContentEditingInput.playbackStyle	var playbackStyle: PHAsset.PlaybackStyle { get }
+c:objc(cs)PHContentEditingInput(py)uniformTypeIdentifier	swift.property	uniformTypeIdentifier	PHContentEditingInput.uniformTypeIdentifier	var uniformTypeIdentifier: String? { get }
+c:objc(cs)PHContentEditingInputRequestOptions	swift.class	PHContentEditingInputRequestOptions	PHContentEditingInputRequestOptions	class PHContentEditingInputRequestOptions
+c:objc(cs)PHContentEditingInputRequestOptions(py)canHandleAdjustmentData	swift.property	canHandleAdjustmentData	PHContentEditingInputRequestOptions.canHandleAdjustmentData	var canHandleAdjustmentData: (PHAdjustmentData) -> Bool { get set }
+c:objc(cs)PHContentEditingInputRequestOptions(py)networkAccessAllowed	swift.property	isNetworkAccessAllowed	PHContentEditingInputRequestOptions.isNetworkAccessAllowed	var isNetworkAccessAllowed: Bool { get set }
+c:objc(cs)PHContentEditingInputRequestOptions(py)progressHandler	swift.property	progressHandler	PHContentEditingInputRequestOptions.progressHandler	var progressHandler: ((Double, UnsafeMutablePointer<ObjCBool>) -> Void)? { get set }
+c:objc(cs)PHContentEditingOutput	swift.class	PHContentEditingOutput	PHContentEditingOutput	class PHContentEditingOutput
+c:objc(cs)PHContentEditingOutput(im)initWithContentEditingInput:	swift.init	init(contentEditingInput:)	PHContentEditingOutput.init(contentEditingInput:)	init(contentEditingInput: PHContentEditingInput)
+c:objc(cs)PHContentEditingOutput(im)initWithPlaceholderForCreatedAsset:	swift.init	init(placeholderForCreatedAsset:)	PHContentEditingOutput.init(placeholderForCreatedAsset:)	init(placeholderForCreatedAsset: PHObjectPlaceholder)
+c:objc(cs)PHContentEditingOutput(im)renderedContentURLForType:error:	swift.method	renderedContentURL(for:)	PHContentEditingOutput.renderedContentURL(for:)	func renderedContentURL(for type: UTType) throws -> URL
+c:objc(cs)PHContentEditingOutput(py)adjustmentData	swift.property	adjustmentData	PHContentEditingOutput.adjustmentData	var adjustmentData: PHAdjustmentData? { get set }
+c:objc(cs)PHContentEditingOutput(py)defaultRenderedContentType	swift.property	defaultRenderedContentType	PHContentEditingOutput.defaultRenderedContentType	var defaultRenderedContentType: UTType? { get }
+c:objc(cs)PHContentEditingOutput(py)renderedContentURL	swift.property	renderedContentURL	PHContentEditingOutput.renderedContentURL	var renderedContentURL: URL { get }
+c:objc(cs)PHContentEditingOutput(py)supportedRenderedContentTypes	swift.property	supportedRenderedContentTypes	PHContentEditingOutput.supportedRenderedContentTypes	var supportedRenderedContentTypes: [UTType] { get }
+c:objc(cs)PHFetchOptions	swift.class	PHFetchOptions	PHFetchOptions	class PHFetchOptions
+c:objc(cs)PHFetchOptions(py)fetchLimit	swift.property	fetchLimit	PHFetchOptions.fetchLimit	var fetchLimit: Int { get set }
+c:objc(cs)PHFetchOptions(py)includeAllBurstAssets	swift.property	includeAllBurstAssets	PHFetchOptions.includeAllBurstAssets	var includeAllBurstAssets: Bool { get set }
+c:objc(cs)PHFetchOptions(py)includeAssetSourceTypes	swift.property	includeAssetSourceTypes	PHFetchOptions.includeAssetSourceTypes	var includeAssetSourceTypes: PHAssetSourceType { get set }
+c:objc(cs)PHFetchOptions(py)includeHiddenAssets	swift.property	includeHiddenAssets	PHFetchOptions.includeHiddenAssets	var includeHiddenAssets: Bool { get set }
+c:objc(cs)PHFetchOptions(py)predicate	swift.property	predicate	PHFetchOptions.predicate	var predicate: NSPredicate? { get set }
+c:objc(cs)PHFetchOptions(py)sortDescriptors	swift.property	sortDescriptors	PHFetchOptions.sortDescriptors	var sortDescriptors: [NSSortDescriptor]? { get set }
+c:objc(cs)PHFetchOptions(py)wantsIncrementalChangeDetails	swift.property	wantsIncrementalChangeDetails	PHFetchOptions.wantsIncrementalChangeDetails	var wantsIncrementalChangeDetails: Bool { get set }
+c:objc(cs)PHFetchResult	swift.class	PHFetchResult	PHFetchResult	class PHFetchResult<ObjectType> where ObjectType : AnyObject
+c:objc(cs)PHFetchResult(im)containsObject:	swift.method	contains(_:)	PHFetchResult.contains(_:)	func contains(_ anObject: ObjectType) -> Bool
+c:objc(cs)PHFetchResult(im)countOfAssetsWithMediaType:	swift.method	countOfAssets(with:)	PHFetchResult.countOfAssets(with:)	func countOfAssets(with mediaType: PHAssetMediaType) -> Int
+c:objc(cs)PHFetchResult(im)enumerateObjectsAtIndexes:options:usingBlock:	swift.method	enumerateObjects(at:options:using:)	PHFetchResult.enumerateObjects(at:options:using:)	func enumerateObjects(at s: IndexSet, options opts: NSEnumerationOptions = [], using block: @escaping (ObjectType, Int, UnsafeMutablePointer<ObjCBool>) -> Void)
+c:objc(cs)PHFetchResult(im)enumerateObjectsUsingBlock:	swift.method	enumerateObjects(_:)	PHFetchResult.enumerateObjects(_:)	func enumerateObjects(_ block: @escaping (ObjectType, Int, UnsafeMutablePointer<ObjCBool>) -> Void)
+c:objc(cs)PHFetchResult(im)enumerateObjectsWithOptions:usingBlock:	swift.method	enumerateObjects(options:using:)	PHFetchResult.enumerateObjects(options:using:)	func enumerateObjects(options opts: NSEnumerationOptions = [], using block: @escaping (ObjectType, Int, UnsafeMutablePointer<ObjCBool>) -> Void)
+c:objc(cs)PHFetchResult(im)indexOfObject:	swift.method	index(of:)	PHFetchResult.index(of:)	func index(of anObject: ObjectType) -> Int
+c:objc(cs)PHFetchResult(im)indexOfObject:inRange:	swift.method	index(of:in:)	PHFetchResult.index(of:in:)	func index(of anObject: ObjectType, in range: NSRange) -> Int
+c:objc(cs)PHFetchResult(im)objectAtIndex:	swift.method	object(at:)	PHFetchResult.object(at:)	func object(at index: Int) -> ObjectType
+c:objc(cs)PHFetchResult(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	PHFetchResult.subscript(_:)	subscript(idx: Int) -> ObjectType { get }
+c:objc(cs)PHFetchResult(im)objectsAtIndexes:	swift.method	objects(at:)	PHFetchResult.objects(at:)	func objects(at indexes: IndexSet) -> [ObjectType]
+c:objc(cs)PHFetchResult(py)count	swift.property	count	PHFetchResult.count	var count: Int { get }
+c:objc(cs)PHFetchResult(py)firstObject	swift.property	firstObject	PHFetchResult.firstObject	var firstObject: ObjectType? { get }
+c:objc(cs)PHFetchResult(py)lastObject	swift.property	lastObject	PHFetchResult.lastObject	var lastObject: ObjectType? { get }
+c:objc(cs)PHFetchResultChangeDetails	swift.class	PHFetchResultChangeDetails	PHFetchResultChangeDetails	class PHFetchResultChangeDetails<ObjectType> where ObjectType : PHObject
+c:objc(cs)PHFetchResultChangeDetails(cm)changeDetailsFromFetchResult:toFetchResult:changedObjects:	swift.init	init(from:to:changedObjects:)	PHFetchResultChangeDetails.init(from:to:changedObjects:)	convenience init(from fromResult: PHFetchResult<ObjectType>, to toResult: PHFetchResult<ObjectType>, changedObjects: [ObjectType])
+c:objc(cs)PHFetchResultChangeDetails(cm)changeDetailsFromFetchResult:toFetchResult:changedObjects:::SYNTHESIZED::c:objc(cs)PHFetchResultChangeDetails	swift.init	init(fromFetchResult:toFetchResult:changedObjects:)	PHFetchResultChangeDetails.init(fromFetchResult:toFetchResult:changedObjects:)	convenience init(fromFetchResult fromResult: PHFetchResult<ObjectType>, toFetchResult toResult: PHFetchResult<ObjectType>, changedObjects: [ObjectType])
+c:objc(cs)PHFetchResultChangeDetails(im)enumerateMovesWithBlock:	swift.method	enumerateMoves(_:)	PHFetchResultChangeDetails.enumerateMoves(_:)	func enumerateMoves(_ handler: @escaping (Int, Int) -> Void)
+c:objc(cs)PHFetchResultChangeDetails(py)changedIndexes	swift.property	changedIndexes	PHFetchResultChangeDetails.changedIndexes	var changedIndexes: IndexSet? { get }
+c:objc(cs)PHFetchResultChangeDetails(py)changedObjects	swift.property	changedObjects	PHFetchResultChangeDetails.changedObjects	var changedObjects: [ObjectType] { get }
+c:objc(cs)PHFetchResultChangeDetails(py)fetchResultAfterChanges	swift.property	fetchResultAfterChanges	PHFetchResultChangeDetails.fetchResultAfterChanges	var fetchResultAfterChanges: PHFetchResult<ObjectType> { get }
+c:objc(cs)PHFetchResultChangeDetails(py)fetchResultBeforeChanges	swift.property	fetchResultBeforeChanges	PHFetchResultChangeDetails.fetchResultBeforeChanges	var fetchResultBeforeChanges: PHFetchResult<ObjectType> { get }
+c:objc(cs)PHFetchResultChangeDetails(py)hasIncrementalChanges	swift.property	hasIncrementalChanges	PHFetchResultChangeDetails.hasIncrementalChanges	var hasIncrementalChanges: Bool { get }
+c:objc(cs)PHFetchResultChangeDetails(py)hasMoves	swift.property	hasMoves	PHFetchResultChangeDetails.hasMoves	var hasMoves: Bool { get }
+c:objc(cs)PHFetchResultChangeDetails(py)insertedIndexes	swift.property	insertedIndexes	PHFetchResultChangeDetails.insertedIndexes	var insertedIndexes: IndexSet? { get }
+c:objc(cs)PHFetchResultChangeDetails(py)insertedObjects	swift.property	insertedObjects	PHFetchResultChangeDetails.insertedObjects	var insertedObjects: [ObjectType] { get }
+c:objc(cs)PHFetchResultChangeDetails(py)removedIndexes	swift.property	removedIndexes	PHFetchResultChangeDetails.removedIndexes	var removedIndexes: IndexSet? { get }
+c:objc(cs)PHFetchResultChangeDetails(py)removedObjects	swift.property	removedObjects	PHFetchResultChangeDetails.removedObjects	var removedObjects: [ObjectType] { get }
+c:objc(cs)PHImageManager	swift.class	PHImageManager	PHImageManager	class PHImageManager
+c:objc(cs)PHImageManager(cm)defaultManager	swift.type.method	default()	PHImageManager.default()	class func `default`() -> PHImageManager
+c:objc(cs)PHImageManager(im)cancelImageRequest:	swift.method	cancelImageRequest(_:)	PHImageManager.cancelImageRequest(_:)	func cancelImageRequest(_ requestID: PHImageRequestID)
+c:objc(cs)PHImageManager(im)requestAVAssetForVideo:options:resultHandler:	swift.method	requestAVAsset(forVideo:options:resultHandler:)	PHImageManager.requestAVAsset(forVideo:options:resultHandler:)	func requestAVAsset(forVideo asset: PHAsset, options: PHVideoRequestOptions?, resultHandler: @escaping (AVAsset?, AVAudioMix?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID
+c:objc(cs)PHImageManager(im)requestExportSessionForVideo:options:exportPreset:resultHandler:	swift.method	requestExportSession(forVideo:options:exportPreset:resultHandler:)	PHImageManager.requestExportSession(forVideo:options:exportPreset:resultHandler:)	func requestExportSession(forVideo asset: PHAsset, options: PHVideoRequestOptions?, exportPreset: String, resultHandler: @escaping (AVAssetExportSession?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID
+c:objc(cs)PHImageManager(im)requestImageDataAndOrientationForAsset:options:resultHandler:	swift.method	requestImageDataAndOrientation(for:options:resultHandler:)	PHImageManager.requestImageDataAndOrientation(for:options:resultHandler:)	func requestImageDataAndOrientation(for asset: PHAsset, options: PHImageRequestOptions?, resultHandler: @escaping (Data?, String?, CGImagePropertyOrientation, [AnyHashable : Any]?) -> Void) -> PHImageRequestID
+c:objc(cs)PHImageManager(im)requestImageForAsset:targetSize:contentMode:options:resultHandler:	swift.method	requestImage(for:targetSize:contentMode:options:resultHandler:)	PHImageManager.requestImage(for:targetSize:contentMode:options:resultHandler:)	func requestImage(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID
+c:objc(cs)PHImageManager(im)requestLivePhotoForAsset:targetSize:contentMode:options:resultHandler:	swift.method	requestLivePhoto(for:targetSize:contentMode:options:resultHandler:)	PHImageManager.requestLivePhoto(for:targetSize:contentMode:options:resultHandler:)	func requestLivePhoto(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHLivePhotoRequestOptions?, resultHandler: @escaping (PHLivePhoto?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID
+c:objc(cs)PHImageManager(im)requestPlayerItemForVideo:options:resultHandler:	swift.method	requestPlayerItem(forVideo:options:resultHandler:)	PHImageManager.requestPlayerItem(forVideo:options:resultHandler:)	func requestPlayerItem(forVideo asset: PHAsset, options: PHVideoRequestOptions?, resultHandler: @escaping (AVPlayerItem?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID
+c:objc(cs)PHImageRequestOptions	swift.class	PHImageRequestOptions	PHImageRequestOptions	class PHImageRequestOptions
+c:objc(cs)PHImageRequestOptions(py)allowSecondaryDegradedImage	swift.property	allowSecondaryDegradedImage	PHImageRequestOptions.allowSecondaryDegradedImage	var allowSecondaryDegradedImage: Bool { get set }
+c:objc(cs)PHImageRequestOptions(py)deliveryMode	swift.property	deliveryMode	PHImageRequestOptions.deliveryMode	var deliveryMode: PHImageRequestOptionsDeliveryMode { get set }
+c:objc(cs)PHImageRequestOptions(py)networkAccessAllowed	swift.property	isNetworkAccessAllowed	PHImageRequestOptions.isNetworkAccessAllowed	var isNetworkAccessAllowed: Bool { get set }
+c:objc(cs)PHImageRequestOptions(py)normalizedCropRect	swift.property	normalizedCropRect	PHImageRequestOptions.normalizedCropRect	var normalizedCropRect: CGRect { get set }
+c:objc(cs)PHImageRequestOptions(py)progressHandler	swift.property	progressHandler	PHImageRequestOptions.progressHandler	var progressHandler: PHAssetImageProgressHandler? { get set }
+c:objc(cs)PHImageRequestOptions(py)resizeMode	swift.property	resizeMode	PHImageRequestOptions.resizeMode	var resizeMode: PHImageRequestOptionsResizeMode { get set }
+c:objc(cs)PHImageRequestOptions(py)synchronous	swift.property	isSynchronous	PHImageRequestOptions.isSynchronous	var isSynchronous: Bool { get set }
+c:objc(cs)PHImageRequestOptions(py)version	swift.property	version	PHImageRequestOptions.version	var version: PHImageRequestOptionsVersion { get set }
+c:objc(cs)PHLivePhoto	swift.class	PHLivePhoto	PHLivePhoto	class PHLivePhoto
+c:objc(cs)PHLivePhoto(cm)cancelLivePhotoRequestWithRequestID:	swift.type.method	cancelRequest(withRequestID:)	PHLivePhoto.cancelRequest(withRequestID:)	class func cancelRequest(withRequestID requestID: PHLivePhotoRequestID)
+c:objc(cs)PHLivePhoto(cm)requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:	swift.type.method	request(withResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:)	PHLivePhoto.request(withResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:)	class func request(withResourceFileURLs fileURLs: [URL], placeholderImage image: UIImage?, targetSize: CGSize, contentMode: PHImageContentMode, resultHandler: @escaping (PHLivePhoto?, [AnyHashable : Any]) -> Void) -> PHLivePhotoRequestID
+c:objc(cs)PHLivePhoto(py)size	swift.property	size	PHLivePhoto.size	var size: CGSize { get }
+c:objc(cs)PHLivePhotoEditingContext	swift.class	PHLivePhotoEditingContext	PHLivePhotoEditingContext	class PHLivePhotoEditingContext
+c:objc(cs)PHLivePhotoEditingContext(im)cancel	swift.method	cancel()	PHLivePhotoEditingContext.cancel()	func cancel()
+c:objc(cs)PHLivePhotoEditingContext(im)initWithLivePhotoEditingInput:	swift.init	init(livePhotoEditingInput:)	PHLivePhotoEditingContext.init(livePhotoEditingInput:)	init?(livePhotoEditingInput livePhotoInput: PHContentEditingInput)
+c:objc(cs)PHLivePhotoEditingContext(im)prepareLivePhotoForPlaybackWithTargetSize:options:completionHandler:	swift.method	livePhotoForPlayback(targetSize:options:)	PHLivePhotoEditingContext.livePhotoForPlayback(targetSize:options:)	func livePhotoForPlayback(targetSize: CGSize, options: [String : Any]? = nil) async throws -> PHLivePhoto
+c:objc(cs)PHLivePhotoEditingContext(im)saveLivePhotoToOutput:options:completionHandler:	swift.method	saveLivePhoto(to:options:)	PHLivePhotoEditingContext.saveLivePhoto(to:options:)	func saveLivePhoto(to output: PHContentEditingOutput, options: [String : Any]? = nil) async throws
+c:objc(cs)PHLivePhotoEditingContext(py)audioVolume	swift.property	audioVolume	PHLivePhotoEditingContext.audioVolume	var audioVolume: Float { get set }
+c:objc(cs)PHLivePhotoEditingContext(py)duration	swift.property	duration	PHLivePhotoEditingContext.duration	var duration: CMTime { get }
+c:objc(cs)PHLivePhotoEditingContext(py)frameProcessor	swift.property	frameProcessor	PHLivePhotoEditingContext.frameProcessor	var frameProcessor: PHLivePhotoFrameProcessingBlock? { get set }
+c:objc(cs)PHLivePhotoEditingContext(py)fullSizeImage	swift.property	fullSizeImage	PHLivePhotoEditingContext.fullSizeImage	var fullSizeImage: CIImage { get }
+c:objc(cs)PHLivePhotoEditingContext(py)orientation	swift.property	orientation	PHLivePhotoEditingContext.orientation	var orientation: CGImagePropertyOrientation { get }
+c:objc(cs)PHLivePhotoEditingContext(py)photoTime	swift.property	photoTime	PHLivePhotoEditingContext.photoTime	var photoTime: CMTime { get }
+c:objc(cs)PHLivePhotoRequestOptions	swift.class	PHLivePhotoRequestOptions	PHLivePhotoRequestOptions	class PHLivePhotoRequestOptions
+c:objc(cs)PHLivePhotoRequestOptions(py)deliveryMode	swift.property	deliveryMode	PHLivePhotoRequestOptions.deliveryMode	var deliveryMode: PHImageRequestOptionsDeliveryMode { get set }
+c:objc(cs)PHLivePhotoRequestOptions(py)networkAccessAllowed	swift.property	isNetworkAccessAllowed	PHLivePhotoRequestOptions.isNetworkAccessAllowed	var isNetworkAccessAllowed: Bool { get set }
+c:objc(cs)PHLivePhotoRequestOptions(py)progressHandler	swift.property	progressHandler	PHLivePhotoRequestOptions.progressHandler	var progressHandler: PHAssetImageProgressHandler? { get set }
+c:objc(cs)PHLivePhotoRequestOptions(py)version	swift.property	version	PHLivePhotoRequestOptions.version	var version: PHImageRequestOptionsVersion { get set }
+c:objc(cs)PHObject	swift.class	PHObject	PHObject	class PHObject
+c:objc(cs)PHObject(py)localIdentifier	swift.property	localIdentifier	PHObject.localIdentifier	var localIdentifier: String { get }
+c:objc(cs)PHObjectChangeDetails	swift.class	PHObjectChangeDetails	PHObjectChangeDetails	class PHObjectChangeDetails<ObjectType> where ObjectType : PHObject
+c:objc(cs)PHObjectChangeDetails(py)assetContentChanged	swift.property	assetContentChanged	PHObjectChangeDetails.assetContentChanged	var assetContentChanged: Bool { get }
+c:objc(cs)PHObjectChangeDetails(py)objectAfterChanges	swift.property	objectAfterChanges	PHObjectChangeDetails.objectAfterChanges	var objectAfterChanges: ObjectType? { get }
+c:objc(cs)PHObjectChangeDetails(py)objectBeforeChanges	swift.property	objectBeforeChanges	PHObjectChangeDetails.objectBeforeChanges	var objectBeforeChanges: ObjectType { get }
+c:objc(cs)PHObjectChangeDetails(py)objectWasDeleted	swift.property	objectWasDeleted	PHObjectChangeDetails.objectWasDeleted	var objectWasDeleted: Bool { get }
+c:objc(cs)PHObjectPlaceholder	swift.class	PHObjectPlaceholder	PHObjectPlaceholder	class PHObjectPlaceholder
+c:objc(cs)PHPersistentChange	swift.class	PHPersistentChange	PHPersistentChange	class PHPersistentChange
+c:objc(cs)PHPersistentChange(im)changeDetailsForObjectType:error:	swift.method	changeDetails(for:)	PHPersistentChange.changeDetails(for:)	func changeDetails(for objectType: PHObjectType) throws -> PHPersistentObjectChangeDetails
+c:objc(cs)PHPersistentChange(py)changeToken	swift.property	changeToken	PHPersistentChange.changeToken	var changeToken: PHPersistentChangeToken { get }
+c:objc(cs)PHPersistentChangeFetchResult	swift.class	PHPersistentChangeFetchResult	PHPersistentChangeFetchResult	class PHPersistentChangeFetchResult
+c:objc(cs)PHPersistentChangeToken	swift.class	PHPersistentChangeToken	PHPersistentChangeToken	class PHPersistentChangeToken
+c:objc(cs)PHPersistentObjectChangeDetails	swift.class	PHPersistentObjectChangeDetails	PHPersistentObjectChangeDetails	class PHPersistentObjectChangeDetails
+c:objc(cs)PHPersistentObjectChangeDetails(py)deletedLocalIdentifiers	swift.property	deletedLocalIdentifiers	PHPersistentObjectChangeDetails.deletedLocalIdentifiers	var deletedLocalIdentifiers: Set<String> { get }
+c:objc(cs)PHPersistentObjectChangeDetails(py)insertedLocalIdentifiers	swift.property	insertedLocalIdentifiers	PHPersistentObjectChangeDetails.insertedLocalIdentifiers	var insertedLocalIdentifiers: Set<String> { get }
+c:objc(cs)PHPersistentObjectChangeDetails(py)objectType	swift.property	objectType	PHPersistentObjectChangeDetails.objectType	var objectType: PHObjectType { get }
+c:objc(cs)PHPersistentObjectChangeDetails(py)updatedLocalIdentifiers	swift.property	updatedLocalIdentifiers	PHPersistentObjectChangeDetails.updatedLocalIdentifiers	var updatedLocalIdentifiers: Set<String> { get }
+c:objc(cs)PHPhotoLibrary	swift.class	PHPhotoLibrary	PHPhotoLibrary	class PHPhotoLibrary
+c:objc(cs)PHPhotoLibrary(cm)authorizationStatus	swift.type.method	authorizationStatus()	PHPhotoLibrary.authorizationStatus()	class func authorizationStatus() -> PHAuthorizationStatus
+c:objc(cs)PHPhotoLibrary(cm)authorizationStatusForAccessLevel:	swift.type.method	authorizationStatus(for:)	PHPhotoLibrary.authorizationStatus(for:)	class func authorizationStatus(for accessLevel: PHAccessLevel) -> PHAuthorizationStatus
+c:objc(cs)PHPhotoLibrary(cm)requestAuthorization:	swift.type.method	requestAuthorization(_:)	PHPhotoLibrary.requestAuthorization(_:)	class func requestAuthorization(_ handler: @escaping (PHAuthorizationStatus) -> Void)
+c:objc(cs)PHPhotoLibrary(cm)requestAuthorizationForAccessLevel:handler:	swift.type.method	requestAuthorization(for:)	PHPhotoLibrary.requestAuthorization(for:)	class func requestAuthorization(for accessLevel: PHAccessLevel) async -> PHAuthorizationStatus
+c:objc(cs)PHPhotoLibrary(cm)sharedPhotoLibrary	swift.type.method	shared()	PHPhotoLibrary.shared()	class func shared() -> PHPhotoLibrary
+c:objc(cs)PHPhotoLibrary(im)fetchPersistentChangesSinceToken:error:	swift.method	fetchPersistentChanges(since:)	PHPhotoLibrary.fetchPersistentChanges(since:)	func fetchPersistentChanges(since token: PHPersistentChangeToken) throws -> PHPersistentChangeFetchResult
+c:objc(cs)PHPhotoLibrary(im)performChanges:completionHandler:	swift.method	performChanges(_:)	PHPhotoLibrary.performChanges(_:)	func performChanges(_ changeBlock: @escaping () -> Void) async throws
+c:objc(cs)PHPhotoLibrary(im)performChangesAndWait:error:	swift.method	performChangesAndWait(_:)	PHPhotoLibrary.performChangesAndWait(_:)	func performChangesAndWait(_ changeBlock: @escaping () -> Void) throws
+c:objc(cs)PHPhotoLibrary(im)registerAvailabilityObserver:	swift.method	register(_:)	PHPhotoLibrary.register(_:)	func register(_ observer: any PHPhotoLibraryAvailabilityObserver)
+c:objc(cs)PHPhotoLibrary(im)registerChangeObserver:	swift.method	register(_:)	PHPhotoLibrary.register(_:)	func register(_ observer: any PHPhotoLibraryChangeObserver)
+c:objc(cs)PHPhotoLibrary(im)setUploadJobExtensionEnabled:error:	swift.method	setUploadJobExtensionEnabled(_:)	PHPhotoLibrary.setUploadJobExtensionEnabled(_:)	func setUploadJobExtensionEnabled(_ enable: Bool) throws
+c:objc(cs)PHPhotoLibrary(im)unregisterAvailabilityObserver:	swift.method	unregisterAvailabilityObserver(_:)	PHPhotoLibrary.unregisterAvailabilityObserver(_:)	func unregisterAvailabilityObserver(_ observer: any PHPhotoLibraryAvailabilityObserver)
+c:objc(cs)PHPhotoLibrary(im)unregisterChangeObserver:	swift.method	unregisterChangeObserver(_:)	PHPhotoLibrary.unregisterChangeObserver(_:)	func unregisterChangeObserver(_ observer: any PHPhotoLibraryChangeObserver)
+c:objc(cs)PHPhotoLibrary(py)currentChangeToken	swift.property	currentChangeToken	PHPhotoLibrary.currentChangeToken	var currentChangeToken: PHPersistentChangeToken { get }
+c:objc(cs)PHPhotoLibrary(py)unavailabilityReason	swift.property	unavailabilityReason	PHPhotoLibrary.unavailabilityReason	var unavailabilityReason: (any Error)? { get }
+c:objc(cs)PHPhotoLibrary(py)uploadJobExtensionEnabled	swift.property	uploadJobExtensionEnabled	PHPhotoLibrary.uploadJobExtensionEnabled	var uploadJobExtensionEnabled: Bool { get }
+c:objc(cs)PHVideoRequestOptions	swift.class	PHVideoRequestOptions	PHVideoRequestOptions	class PHVideoRequestOptions
+c:objc(cs)PHVideoRequestOptions(py)deliveryMode	swift.property	deliveryMode	PHVideoRequestOptions.deliveryMode	var deliveryMode: PHVideoRequestOptionsDeliveryMode { get set }
+c:objc(cs)PHVideoRequestOptions(py)networkAccessAllowed	swift.property	isNetworkAccessAllowed	PHVideoRequestOptions.isNetworkAccessAllowed	var isNetworkAccessAllowed: Bool { get set }
+c:objc(cs)PHVideoRequestOptions(py)progressHandler	swift.property	progressHandler	PHVideoRequestOptions.progressHandler	var progressHandler: PHAssetVideoProgressHandler? { get set }
+c:objc(cs)PHVideoRequestOptions(py)version	swift.property	version	PHVideoRequestOptions.version	var version: PHVideoRequestOptionsVersion { get set }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PHCloudIdentifier	swift.init	init(coder:)	PHCloudIdentifier.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PHLivePhoto	swift.init	init(coder:)	PHLivePhoto.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PHPersistentChangeToken	swift.init	init(coder:)	PHPersistentChangeToken.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)PHLivePhotoFrame	swift.protocol	PHLivePhotoFrame	PHLivePhotoFrame	protocol PHLivePhotoFrame
+c:objc(pl)PHLivePhotoFrame(py)image	swift.property	image	PHLivePhotoFrame.image	var image: CIImage { get }
+c:objc(pl)PHLivePhotoFrame(py)renderScale	swift.property	renderScale	PHLivePhotoFrame.renderScale	var renderScale: CGFloat { get }
+c:objc(pl)PHLivePhotoFrame(py)time	swift.property	time	PHLivePhotoFrame.time	var time: CMTime { get }
+c:objc(pl)PHLivePhotoFrame(py)type	swift.property	type	PHLivePhotoFrame.type	var type: PHLivePhotoFrameType { get }
+c:objc(pl)PHPhotoLibraryAvailabilityObserver	swift.protocol	PHPhotoLibraryAvailabilityObserver	PHPhotoLibraryAvailabilityObserver	protocol PHPhotoLibraryAvailabilityObserver : NSObjectProtocol
+c:objc(pl)PHPhotoLibraryAvailabilityObserver(im)photoLibraryDidBecomeUnavailable:	swift.method	photoLibraryDidBecomeUnavailable(_:)	PHPhotoLibraryAvailabilityObserver.photoLibraryDidBecomeUnavailable(_:)	func photoLibraryDidBecomeUnavailable(_ photoLibrary: PHPhotoLibrary)
+c:objc(pl)PHPhotoLibraryChangeObserver	swift.protocol	PHPhotoLibraryChangeObserver	PHPhotoLibraryChangeObserver	protocol PHPhotoLibraryChangeObserver : NSObjectProtocol
+c:objc(pl)PHPhotoLibraryChangeObserver(im)photoLibraryDidChange:	swift.method	photoLibraryDidChange(_:)	PHPhotoLibraryChangeObserver.photoLibraryDidChange(_:)	func photoLibraryDidChange(_ changeInstance: PHChange)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHPhotosError	swift.type.property	errorDomain	PHPhotosError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	errorUserInfo	PHPhotosError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	errorCode	PHPhotosError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHPhotosError	swift.func.op	~=(_:_:)	PHPhotosError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	errorUserInfo	PHPhotosError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHPhotosError	swift.func.op	==(_:_:)	PHPhotosError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	code	PHPhotosError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHPhotosError	swift.method	hash(into:)	PHPhotosError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	userInfo	PHPhotosError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	errorCode	PHPhotosError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	hashValue	PHPhotosError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHPhotosError	swift.init	init(_:userInfo:)	PHPhotosError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:6Photos35PHBackgroundResourceUploadExtensionP	swift.protocol	PHBackgroundResourceUploadExtension	PHBackgroundResourceUploadExtension	protocol PHBackgroundResourceUploadExtension : AppExtension
+s:6Photos35PHBackgroundResourceUploadExtensionP17notifyTerminationyyF	swift.method	notifyTermination()	PHBackgroundResourceUploadExtension.notifyTermination()	func notifyTermination()
+s:6Photos35PHBackgroundResourceUploadExtensionP7processAA0bcD16ProcessingResultOyF	swift.method	process()	PHBackgroundResourceUploadExtension.process()	func process() -> PHBackgroundResourceUploadProcessingResult
+s:6Photos35PHBackgroundResourceUploadExtensionPAAE13configurationQrvp	swift.property	configuration	PHBackgroundResourceUploadExtension.configuration	var configuration: some AppExtensionConfiguration { get }
+s:6Photos42PHBackgroundResourceUploadProcessingResultO	swift.enum	PHBackgroundResourceUploadProcessingResult	PHBackgroundResourceUploadProcessingResult	enum PHBackgroundResourceUploadProcessingResult
+s:6Photos42PHBackgroundResourceUploadProcessingResultO10processingyA2CmF	swift.enum.case	PHBackgroundResourceUploadProcessingResult.processing	PHBackgroundResourceUploadProcessingResult.processing	case processing
+s:6Photos42PHBackgroundResourceUploadProcessingResultO7failureyA2CmF	swift.enum.case	PHBackgroundResourceUploadProcessingResult.failure	PHBackgroundResourceUploadProcessingResult.failure	case failure
+s:6Photos42PHBackgroundResourceUploadProcessingResultO8RawValuea	swift.typealias	PHBackgroundResourceUploadProcessingResult.RawValue	PHBackgroundResourceUploadProcessingResult.RawValue	typealias RawValue = Int
+s:6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueACSgSi_tcfc	swift.init	init(rawValue:)	PHBackgroundResourceUploadProcessingResult.init(rawValue:)	init?(rawValue: Int)
+s:6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueSivp	swift.property	rawValue	PHBackgroundResourceUploadProcessingResult.rawValue	var rawValue: Int { get }
+s:6Photos42PHBackgroundResourceUploadProcessingResultO9completedyA2CmF	swift.enum.case	PHBackgroundResourceUploadProcessingResult.completed	PHBackgroundResourceUploadProcessingResult.completed	case completed
+s:SC13PHPhotosErrorLeV	swift.struct	PHPhotosError	PHPhotosError	struct PHPhotosError
+s:SC13PHPhotosErrorLeV07networkB0SoAAVvpZ	swift.type.property	networkError	PHPhotosError.networkError	static var networkError: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV08internalB0SoAAVvpZ	swift.type.property	internalError	PHPhotosError.internalError	static var internalError: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	PHPhotosError.errorDomain	static var errorDomain: String { get }
+s:SC13PHPhotosErrorLeV13limitExceededSoAAVvpZ	swift.type.property	limitExceeded	PHPhotosError.limitExceeded	static var limitExceeded: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV13userCancelledSoAAVvpZ	swift.type.property	userCancelled	PHPhotosError.userCancelled	static var userCancelled: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV14notEnoughSpaceSoAAVvpZ	swift.type.property	notEnoughSpace	PHPhotosError.notEnoughSpace	static var notEnoughSpace: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV15invalidResourceSoAAVvpZ	swift.type.property	invalidResource	PHPhotosError.invalidResource	static var invalidResource: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV15missingResourceSoAAVvpZ	swift.type.property	missingResource	PHPhotosError.missingResource	static var missingResource: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV16accessRestrictedSoAAVvpZ	swift.type.property	accessRestricted	PHPhotosError.accessRestricted	static var accessRestricted: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV16accessUserDeniedSoAAVvpZ	swift.type.property	accessUserDenied	PHPhotosError.accessUserDenied	static var accessUserDenied: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV18changeNotSupportedSoAAVvpZ	swift.type.property	changeNotSupported	PHPhotosError.changeNotSupported	static var changeNotSupported: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV18identifierNotFoundSoAAVvpZ	swift.type.property	identifierNotFound	PHPhotosError.identifierNotFound	static var identifierNotFound: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV20libraryVolumeOfflineSoAAVvpZ	swift.type.property	libraryVolumeOffline	PHPhotosError.libraryVolumeOffline	static var libraryVolumeOffline: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV20operationInterruptedSoAAVvpZ	swift.type.property	operationInterrupted	PHPhotosError.operationInterrupted	static var operationInterrupted: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV21networkAccessRequiredSoAAVvpZ	swift.type.property	networkAccessRequired	PHPhotosError.networkAccessRequired	static var networkAccessRequired: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV24multipleIdentifiersFoundSoAAVvpZ	swift.type.property	multipleIdentifiersFound	PHPhotosError.multipleIdentifiersFound	static var multipleIdentifiersFound: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV27requestNotSupportedForAssetSoAAVvpZ	swift.type.property	requestNotSupportedForAsset	PHPhotosError.requestNotSupportedForAsset	static var requestNotSupportedForAsset: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV27switchingSystemPhotoLibrarySoAAVvpZ	swift.type.property	switchingSystemPhotoLibrary	PHPhotosError.switchingSystemPhotoLibrary	static var switchingSystemPhotoLibrary: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV28persistentChangeTokenExpiredSoAAVvpZ	swift.type.property	persistentChangeTokenExpired	PHPhotosError.persistentChangeTokenExpired	static var persistentChangeTokenExpired: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV29libraryInFileProviderSyncRootSoAAVvpZ	swift.type.property	libraryInFileProviderSyncRoot	PHPhotosError.libraryInFileProviderSyncRoot	static var libraryInFileProviderSyncRoot: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV34persistentChangeDetailsUnavailableSoAAVvpZ	swift.type.property	persistentChangeDetailsUnavailable	PHPhotosError.persistentChangeDetailsUnavailable	static var persistentChangeDetailsUnavailable: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV34relinquishingLibraryBundleToWriterSoAAVvpZ	swift.type.property	relinquishingLibraryBundleToWriter	PHPhotosError.relinquishingLibraryBundleToWriter	static var relinquishingLibraryBundleToWriter: PHPhotosError.Code { get }
+s:SC13PHPhotosErrorLeV7invalidSoAAVvpZ	swift.type.property	invalid	PHPhotosError.invalid	static var invalid: PHPhotosError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAccessLevel	swift.func.op	!=(_:_:)	PHAccessLevel.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.func.op	!=(_:_:)	PHAssetBurstSelectionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetCollectionSubtype	swift.func.op	!=(_:_:)	PHAssetCollectionSubtype.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetCollectionType	swift.func.op	!=(_:_:)	PHAssetCollectionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetEditOperation	swift.func.op	!=(_:_:)	PHAssetEditOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.func.op	!=(_:_:)	PHAssetMediaSubtype.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetMediaType	swift.func.op	!=(_:_:)	PHAssetMediaType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetPlaybackStyle	swift.func.op	!=(_:_:)	PHAsset.PlaybackStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetResourceType	swift.func.op	!=(_:_:)	PHAssetResourceType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetResourceUploadJobAction	swift.func.op	!=(_:_:)	PHAssetResourceUploadJob.Action.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetResourceUploadJobState	swift.func.op	!=(_:_:)	PHAssetResourceUploadJob.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetSourceType	swift.func.op	!=(_:_:)	PHAssetSourceType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAuthorizationStatus	swift.func.op	!=(_:_:)	PHAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHCollectionEditOperation	swift.func.op	!=(_:_:)	PHCollectionEditOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHCollectionListSubtype	swift.func.op	!=(_:_:)	PHCollectionListSubtype.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHCollectionListType	swift.func.op	!=(_:_:)	PHCollectionListType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHImageContentMode	swift.func.op	!=(_:_:)	PHImageContentMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHImageRequestOptionsDeliveryMode	swift.func.op	!=(_:_:)	PHImageRequestOptionsDeliveryMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHImageRequestOptionsResizeMode	swift.func.op	!=(_:_:)	PHImageRequestOptionsResizeMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHImageRequestOptionsVersion	swift.func.op	!=(_:_:)	PHImageRequestOptionsVersion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHLivePhotoFrameType	swift.func.op	!=(_:_:)	PHLivePhotoFrameType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHObjectType	swift.func.op	!=(_:_:)	PHObjectType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHPhotosError	swift.func.op	!=(_:_:)	PHPhotosError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHVideoRequestOptionsDeliveryMode	swift.func.op	!=(_:_:)	PHVideoRequestOptionsDeliveryMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHVideoRequestOptionsVersion	swift.func.op	!=(_:_:)	PHVideoRequestOptionsVersion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PHLivePhotoEditingOption	swift.func.op	!=(_:_:)	PHLivePhotoEditingOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Photos42PHBackgroundResourceUploadProcessingResultO	swift.func.op	!=(_:_:)	PHBackgroundResourceUploadProcessingResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	sorted(using:)	PHPersistentChangeFetchResult.sorted(using:)	func sorted<Comparator>(using comparator: Comparator) -> [Self.Element] where Comparator : SortComparator, Self.Element == Comparator.Compared
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	sorted(using:)	PHPersistentChangeFetchResult.sorted(using:)	func sorted<S, Comparator>(using comparators: S) -> [Self.Element] where S : Sequence, Comparator : SortComparator, Comparator == S.Element, Self.Element == Comparator.Compared
+s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	compare(_:_:)	PHPersistentChangeFetchResult.compare(_:_:)	func compare<Comparator>(_ lhs: Comparator.Compared, _ rhs: Comparator.Compared) -> ComparisonResult where Comparator : SortComparator, Comparator == Self.Element
+s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	formatted(_:)	PHPersistentChangeFetchResult.formatted(_:)	func formatted<S>(_ style: S) -> S.FormatOutput where Self == S.FormatInput, S : FormatStyle
+s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.property	publisher	PHPersistentChangeFetchResult.publisher	var publisher: Publishers.Sequence<Self, Never> { get }
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	allSatisfy(_:)	PHPersistentChangeFetchResult.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) throws -> Bool) rethrows -> Bool
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	compactMap(_:)	PHPersistentChangeFetchResult.compactMap(_:)	func compactMap<ElementOfResult>(_ transform: (Self.Element) throws -> ElementOfResult?) rethrows -> [ElementOfResult]
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	enumerated()	PHPersistentChangeFetchResult.enumerated()	func enumerated() -> EnumeratedSequence<Self>
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	elementsEqual(_:by:)	PHPersistentChangeFetchResult.elementsEqual(_:by:)	func elementsEqual<OtherSequence>(_ other: OtherSequence, by areEquivalent: (Self.Element, OtherSequence.Element) throws -> Bool) rethrows -> Bool where OtherSequence : Sequence
+s:STsE19underestimatedCountSivp::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.property	underestimatedCount	PHPersistentChangeFetchResult.underestimatedCount	var underestimatedCount: Int { get }
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	lexicographicallyPrecedes(_:by:)	PHPersistentChangeFetchResult.lexicographicallyPrecedes(_:by:)	func lexicographicallyPrecedes<OtherSequence>(_ other: OtherSequence, by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Bool where OtherSequence : Sequence, Self.Element == OtherSequence.Element
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	withContiguousStorageIfAvailable(_:)	PHPersistentChangeFetchResult.withContiguousStorageIfAvailable(_:)	func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Self.Element>) throws -> R) rethrows -> R?
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	map(_:)	PHPersistentChangeFetchResult.map(_:)	func map<T, E>(_ transform: (Self.Element) throws(E) -> T) throws(E) -> [T] where E : Error
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	max(by:)	PHPersistentChangeFetchResult.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	min(by:)	PHPersistentChangeFetchResult.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE4drop5whiles17DropWhileSequenceVyxGSb7ElementQzKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	drop(while:)	PHPersistentChangeFetchResult.drop(while:)	func drop(while predicate: (Self.Element) throws -> Bool) rethrows -> DropWhileSequence<Self>
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.property	lazy	PHPersistentChangeFetchResult.lazy	var lazy: LazySequence<Self> { get }
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	count(where:)	PHPersistentChangeFetchResult.count(where:)	func count<E>(where predicate: (Self.Element) throws(E) -> Bool) throws(E) -> Int where E : Error
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	first(where:)	PHPersistentChangeFetchResult.first(where:)	func first(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSays10ArraySliceVy7ElementQzGGSi_S2bAHKXEtKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	split(maxSplits:omittingEmptySubsequences:whereSeparator:)	PHPersistentChangeFetchResult.split(maxSplits:omittingEmptySubsequences:whereSeparator:)	func split(maxSplits: Int = Int.max, omittingEmptySubsequences: Bool = true, whereSeparator isSeparator: (Self.Element) throws -> Bool) rethrows -> [ArraySlice<Self.Element>]
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	filter(_:)	PHPersistentChangeFetchResult.filter(_:)	func filter(_ isIncluded: (Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6prefix5whileSay7ElementQzGSbADKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	prefix(while:)	PHPersistentChangeFetchResult.prefix(while:)	func prefix(while predicate: (Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6prefixys14PrefixSequenceVyxGSiF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	prefix(_:)	PHPersistentChangeFetchResult.prefix(_:)	func prefix(_ maxLength: Int) -> PrefixSequence<Self>
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	reduce(into:_:)	PHPersistentChangeFetchResult.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) throws -> ()) rethrows -> Result
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	reduce(_:_:)	PHPersistentChangeFetchResult.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) throws -> Result) rethrows -> Result
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	sorted(by:)	PHPersistentChangeFetchResult.sorted(by:)	func sorted(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	starts(with:by:)	PHPersistentChangeFetchResult.starts(with:by:)	func starts<PossiblePrefix>(with possiblePrefix: PossiblePrefix, by areEquivalent: (Self.Element, PossiblePrefix.Element) throws -> Bool) rethrows -> Bool where PossiblePrefix : Sequence
+s:STsE6suffixySay7ElementQzGSiF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	suffix(_:)	PHPersistentChangeFetchResult.suffix(_:)	func suffix(_ maxLength: Int) -> [Self.Element]
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	flatMap(_:)	PHPersistentChangeFetchResult.flatMap(_:)	func flatMap<SegmentOfResult>(_ transform: (Self.Element) throws -> SegmentOfResult) rethrows -> [SegmentOfResult.Element] where SegmentOfResult : Sequence
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	flatMap(_:)	PHPersistentChangeFetchResult.flatMap(_:)	func flatMap<ElementOfResult>(_ transform: (Self.Element) throws -> ElementOfResult?) rethrows -> [ElementOfResult]
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	forEach(_:)	PHPersistentChangeFetchResult.forEach(_:)	func forEach(_ body: (Self.Element) throws -> Void) rethrows
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	contains(where:)	PHPersistentChangeFetchResult.contains(where:)	func contains(where predicate: (Self.Element) throws -> Bool) rethrows -> Bool
+s:STsE8dropLastySay7ElementQzGSiF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	dropLast(_:)	PHPersistentChangeFetchResult.dropLast(_:)	func dropLast(_ k: Int = 1) -> [Self.Element]
+s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	reversed()	PHPersistentChangeFetchResult.reversed()	func reversed() -> [Self.Element]
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	shuffled(using:)	PHPersistentChangeFetchResult.shuffled(using:)	func shuffled<T>(using generator: inout T) -> [Self.Element] where T : RandomNumberGenerator
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	shuffled()	PHPersistentChangeFetchResult.shuffled()	func shuffled() -> [Self.Element]
+s:STsE9dropFirstys04DropB8SequenceVyxGSiF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	dropFirst(_:)	PHPersistentChangeFetchResult.dropFirst(_:)	func dropFirst(_ k: Int = 1) -> DropFirstSequence<Self>
+s:STsSQ7ElementRpzrlE13elementsEqualySbqd__STRd__AAQyd__ABRSlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	elementsEqual(_:)	PHPersistentChangeFetchResult.elementsEqual(_:)	func elementsEqual<OtherSequence>(_ other: OtherSequence) -> Bool where OtherSequence : Sequence, Self.Element == OtherSequence.Element
+s:STsSQ7ElementRpzrlE5split9separator9maxSplits25omittingEmptySubsequencesSays10ArraySliceVyABGGAB_SiSbtF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	split(separator:maxSplits:omittingEmptySubsequences:)	PHPersistentChangeFetchResult.split(separator:maxSplits:omittingEmptySubsequences:)	func split(separator: Self.Element, maxSplits: Int = Int.max, omittingEmptySubsequences: Bool = true) -> [ArraySlice<Self.Element>]
+s:STsSQ7ElementRpzrlE6starts4withSbqd___tSTRd__AAQyd__ABRSlF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	starts(with:)	PHPersistentChangeFetchResult.starts(with:)	func starts<PossiblePrefix>(with possiblePrefix: PossiblePrefix) -> Bool where PossiblePrefix : Sequence, Self.Element == PossiblePrefix.Element
+s:STsSQ7ElementRpzrlE8containsySbABF::SYNTHESIZED::c:objc(cs)PHPersistentChangeFetchResult	swift.method	contains(_:)	PHPersistentChangeFetchResult.contains(_:)	func contains(_ element: Self.Element) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAccessLevel	swift.property	hashValue	PHAccessLevel.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetCollectionSubtype	swift.property	hashValue	PHAssetCollectionSubtype.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetCollectionType	swift.property	hashValue	PHAssetCollectionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetEditOperation	swift.property	hashValue	PHAssetEditOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetMediaType	swift.property	hashValue	PHAssetMediaType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetPlaybackStyle	swift.property	hashValue	PHAsset.PlaybackStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetResourceType	swift.property	hashValue	PHAssetResourceType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetResourceUploadJobAction	swift.property	hashValue	PHAssetResourceUploadJob.Action.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAssetResourceUploadJobState	swift.property	hashValue	PHAssetResourceUploadJob.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHAuthorizationStatus	swift.property	hashValue	PHAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHCollectionEditOperation	swift.property	hashValue	PHCollectionEditOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHCollectionListSubtype	swift.property	hashValue	PHCollectionListSubtype.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHCollectionListType	swift.property	hashValue	PHCollectionListType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHImageContentMode	swift.property	hashValue	PHImageContentMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHImageRequestOptionsDeliveryMode	swift.property	hashValue	PHImageRequestOptionsDeliveryMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHImageRequestOptionsResizeMode	swift.property	hashValue	PHImageRequestOptionsResizeMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHImageRequestOptionsVersion	swift.property	hashValue	PHImageRequestOptionsVersion.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHLivePhotoFrameType	swift.property	hashValue	PHLivePhotoFrameType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHObjectType	swift.property	hashValue	PHObjectType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	hashValue	PHPhotosError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHVideoRequestOptionsDeliveryMode	swift.property	hashValue	PHVideoRequestOptionsDeliveryMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHVideoRequestOptionsVersion	swift.property	hashValue	PHVideoRequestOptionsVersion.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:6Photos42PHBackgroundResourceUploadProcessingResultO	swift.property	hashValue	PHBackgroundResourceUploadProcessingResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAccessLevel	swift.method	hash(into:)	PHAccessLevel.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetCollectionSubtype	swift.method	hash(into:)	PHAssetCollectionSubtype.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetCollectionType	swift.method	hash(into:)	PHAssetCollectionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetEditOperation	swift.method	hash(into:)	PHAssetEditOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetMediaType	swift.method	hash(into:)	PHAssetMediaType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetPlaybackStyle	swift.method	hash(into:)	PHAsset.PlaybackStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetResourceType	swift.method	hash(into:)	PHAssetResourceType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetResourceUploadJobAction	swift.method	hash(into:)	PHAssetResourceUploadJob.Action.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAssetResourceUploadJobState	swift.method	hash(into:)	PHAssetResourceUploadJob.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHAuthorizationStatus	swift.method	hash(into:)	PHAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHCollectionEditOperation	swift.method	hash(into:)	PHCollectionEditOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHCollectionListSubtype	swift.method	hash(into:)	PHCollectionListSubtype.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHCollectionListType	swift.method	hash(into:)	PHCollectionListType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHImageContentMode	swift.method	hash(into:)	PHImageContentMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHImageRequestOptionsDeliveryMode	swift.method	hash(into:)	PHImageRequestOptionsDeliveryMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHImageRequestOptionsResizeMode	swift.method	hash(into:)	PHImageRequestOptionsResizeMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHImageRequestOptionsVersion	swift.method	hash(into:)	PHImageRequestOptionsVersion.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHLivePhotoFrameType	swift.method	hash(into:)	PHLivePhotoFrameType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHObjectType	swift.method	hash(into:)	PHObjectType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHPhotosError	swift.method	hash(into:)	PHPhotosError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHVideoRequestOptionsDeliveryMode	swift.method	hash(into:)	PHVideoRequestOptionsDeliveryMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHVideoRequestOptionsVersion	swift.method	hash(into:)	PHVideoRequestOptionsVersion.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:6Photos42PHBackgroundResourceUploadProcessingResultO	swift.method	hash(into:)	PHBackgroundResourceUploadProcessingResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12PHObjectTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHObjectType.init(rawValue:)	init?(rawValue: Int)
+s:So13PHAccessLevelV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAccessLevel.init(rawValue:)	init?(rawValue: Int)
+s:So13PHPhotosErrorV7invalidABvpZ	swift.type.property	invalid	PHPhotosError.Code.invalid	static var invalid: PHPhotosError.Code { get }
+s:So13PHPhotosErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHPhotosError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14PHPhotoLibraryC6PhotosE23cloudIdentifierMappings19forLocalIdentifiersSDySSs6ResultOySo07PHCloudE0Cs5Error_pGGSaySSG_tF	swift.method	cloudIdentifierMappings(forLocalIdentifiers:)	PHPhotoLibrary.cloudIdentifierMappings(forLocalIdentifiers:)	func cloudIdentifierMappings(forLocalIdentifiers localIdentifiers: [String]) -> [String : Result<PHCloudIdentifier, any Error>]
+s:So14PHPhotoLibraryC6PhotosE23localIdentifierMappings3forSDySo07PHCloudE0Cs6ResultOySSs5Error_pGGSayAGG_tF	swift.method	localIdentifierMappings(for:)	PHPhotoLibrary.localIdentifierMappings(for:)	func localIdentifierMappings(for cloudIdentifiers: [PHCloudIdentifier]) -> [PHCloudIdentifier : Result<String, any Error>]
+s:So16PHAssetMediaTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetMediaType.init(rawValue:)	init?(rawValue: Int)
+s:So17PHAssetSourceTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PHAssetSourceType.init(rawValue:)	init(rawValue: UInt)
+s:So18PHImageContentModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHImageContentMode.init(rawValue:)	init?(rawValue: Int)
+s:So19PHAssetMediaSubtypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PHAssetMediaSubtype.init(rawValue:)	init(rawValue: UInt)
+s:So19PHAssetResourceTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetResourceType.init(rawValue:)	init?(rawValue: Int)
+s:So20PHAssetEditOperationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetEditOperation.init(rawValue:)	init?(rawValue: Int)
+s:So20PHAssetPlaybackStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAsset.PlaybackStyle.init(rawValue:)	init?(rawValue: Int)
+s:So20PHCollectionListTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHCollectionListType.init(rawValue:)	init?(rawValue: Int)
+s:So20PHLivePhotoFrameTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHLivePhotoFrameType.init(rawValue:)	init?(rawValue: Int)
+s:So21PHAssetCollectionTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetCollectionType.init(rawValue:)	init?(rawValue: Int)
+s:So21PHAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So23PHCollectionListSubtypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHCollectionListSubtype.init(rawValue:)	init?(rawValue: Int)
+s:So24PHAssetCollectionSubtypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetCollectionSubtype.init(rawValue:)	init?(rawValue: Int)
+s:So24PHLivePhotoEditingOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	PHLivePhotoEditingOption.init(rawValue:)	init(rawValue: String)
+s:So25PHAssetBurstSelectionTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PHAssetBurstSelectionType.init(rawValue:)	init(rawValue: UInt)
+s:So25PHCollectionEditOperationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHCollectionEditOperation.init(rawValue:)	init?(rawValue: Int)
+s:So28PHImageRequestOptionsVersionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHImageRequestOptionsVersion.init(rawValue:)	init?(rawValue: Int)
+s:So28PHVideoRequestOptionsVersionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHVideoRequestOptionsVersion.init(rawValue:)	init?(rawValue: Int)
+s:So29PHAssetResourceUploadJobStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetResourceUploadJob.State.init(rawValue:)	init?(rawValue: Int)
+s:So29PHPersistentChangeFetchResultC6PhotosE12makeIteratorAbCE0G0CyF	swift.method	makeIterator()	PHPersistentChangeFetchResult.makeIterator()	func makeIterator() -> PHPersistentChangeFetchResult.Iterator
+s:So29PHPersistentChangeFetchResultC6PhotosE7Elementa	swift.typealias	PHPersistentChangeFetchResult.Element	PHPersistentChangeFetchResult.Element	typealias Element = PHPersistentChangeFetchResult.Iterator.Element
+s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC	swift.class	PHPersistentChangeFetchResult.Iterator	PHPersistentChangeFetchResult.Iterator	final class Iterator
+s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC05fetchD0AeB_tcfc	swift.init	init(fetchResult:)	PHPersistentChangeFetchResult.Iterator.init(fetchResult:)	init(fetchResult: PHPersistentChangeFetchResult)
+s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC4nextSo0aB0CSgyF	swift.method	next()	PHPersistentChangeFetchResult.Iterator.next()	final func next() -> PHPersistentChangeFetchResult.Iterator.Element?
+s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC7Elementa	swift.typealias	PHPersistentChangeFetchResult.Iterator.Element	PHPersistentChangeFetchResult.Iterator.Element	typealias Element = PHPersistentChange
+s:So30PHAssetResourceUploadJobActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHAssetResourceUploadJob.Action.init(rawValue:)	init?(rawValue: Int)
+s:So31PHImageRequestOptionsResizeModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHImageRequestOptionsResizeMode.init(rawValue:)	init?(rawValue: Int)
+s:So33PHImageRequestOptionsDeliveryModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHImageRequestOptionsDeliveryMode.init(rawValue:)	init?(rawValue: Int)
+s:So33PHVideoRequestOptionsDeliveryModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHVideoRequestOptionsDeliveryMode.init(rawValue:)	init?(rawValue: Int)
+s:So8PHChangeC6PhotosE13changeDetails3forSo014PHObjectChangeD0CyxGSgx_tSo0F0CRbzlF	swift.method	changeDetails(for:)	PHChange.changeDetails(for:)	func changeDetails<T>(for object: T) -> PHObjectChangeDetails<T>? where T : PHObject
+s:So8PHChangeC6PhotosE13changeDetails3forSo019PHFetchResultChangeD0CyxGSgSo0fG0CyxG_tSo8PHObjectCRbzlF	swift.method	changeDetails(for:)	PHChange.changeDetails(for:)	func changeDetails<T>(for fetchResult: PHFetchResult<T>) -> PHFetchResultChangeDetails<T>? where T : PHObject
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.init	init(arrayLiteral:)	PHAssetBurstSelectionType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.init	init(arrayLiteral:)	PHAssetMediaSubtype.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHAssetSourceType	swift.init	init(arrayLiteral:)	PHAssetSourceType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	isDisjoint(with:)	PHAssetBurstSelectionType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	isDisjoint(with:)	PHAssetMediaSubtype.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	isDisjoint(with:)	PHAssetSourceType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	isSuperset(of:)	PHAssetBurstSelectionType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	isSuperset(of:)	PHAssetMediaSubtype.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	isSuperset(of:)	PHAssetSourceType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	subtracting(_:)	PHAssetBurstSelectionType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	subtracting(_:)	PHAssetMediaSubtype.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	subtracting(_:)	PHAssetSourceType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	isStrictSubset(of:)	PHAssetBurstSelectionType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	isStrictSubset(of:)	PHAssetMediaSubtype.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	isStrictSubset(of:)	PHAssetSourceType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	isStrictSuperset(of:)	PHAssetBurstSelectionType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	isStrictSuperset(of:)	PHAssetMediaSubtype.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	isStrictSuperset(of:)	PHAssetSourceType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.property	isEmpty	PHAssetBurstSelectionType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.property	isEmpty	PHAssetMediaSubtype.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHAssetSourceType	swift.property	isEmpty	PHAssetSourceType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	isSubset(of:)	PHAssetBurstSelectionType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	isSubset(of:)	PHAssetMediaSubtype.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	isSubset(of:)	PHAssetSourceType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	subtract(_:)	PHAssetBurstSelectionType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	subtract(_:)	PHAssetMediaSubtype.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	subtract(_:)	PHAssetSourceType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.init	init(_:)	PHAssetBurstSelectionType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.init	init(_:)	PHAssetMediaSubtype.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHAssetSourceType	swift.init	init(_:)	PHAssetSourceType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PHLivePhotoEditingOption	swift.property	hashValue	PHLivePhotoEditingOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PHLivePhotoEditingOption	swift.method	hash(into:)	PHLivePhotoEditingOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHPhotosError	swift.property	localizedDescription	PHPhotosError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	insert(_:)	PHAssetBurstSelectionType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	insert(_:)	PHAssetMediaSubtype.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	insert(_:)	PHAssetSourceType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	remove(_:)	PHAssetBurstSelectionType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	remove(_:)	PHAssetMediaSubtype.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	remove(_:)	PHAssetSourceType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	update(with:)	PHAssetBurstSelectionType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	update(with:)	PHAssetMediaSubtype.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	update(with:)	PHAssetSourceType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	contains(_:)	PHAssetBurstSelectionType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	contains(_:)	PHAssetMediaSubtype.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	contains(_:)	PHAssetSourceType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	intersection(_:)	PHAssetBurstSelectionType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	intersection(_:)	PHAssetMediaSubtype.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	intersection(_:)	PHAssetSourceType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	symmetricDifference(_:)	PHAssetBurstSelectionType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	symmetricDifference(_:)	PHAssetMediaSubtype.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	symmetricDifference(_:)	PHAssetSourceType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	union(_:)	PHAssetBurstSelectionType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	union(_:)	PHAssetMediaSubtype.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	union(_:)	PHAssetSourceType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	formIntersection(_:)	PHAssetBurstSelectionType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	formIntersection(_:)	PHAssetMediaSubtype.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	formIntersection(_:)	PHAssetSourceType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	formSymmetricDifference(_:)	PHAssetBurstSelectionType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	formSymmetricDifference(_:)	PHAssetMediaSubtype.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	formSymmetricDifference(_:)	PHAssetSourceType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.method	formUnion(_:)	PHAssetBurstSelectionType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.method	formUnion(_:)	PHAssetMediaSubtype.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHAssetSourceType	swift.method	formUnion(_:)	PHAssetSourceType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	swift.init	init()	PHAssetBurstSelectionType.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHAssetMediaSubtype	swift.init	init()	PHAssetMediaSubtype.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHAssetSourceType	swift.init	init()	PHAssetSourceType.init()	init()

@@ -1,0 +1,218 @@
+{
+  "module": "AVFoundation",
+  "moduleRecord": {
+    "app_coverage_count": 14,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 302,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 8,
+    "iphoneos_runtime_focus_launch_build_rank": 20,
+    "module": "AVFoundation",
+    "occurrence_count": 303,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "6620b06f38a9fd0bfd86ac515251d2cad348f672063b681c27e9c9dd4f3a8fe4",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/InboxComposer/Sources/Composer/Views/Attachments/AttachmentSourcePickerSheetModel.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "a8356f2ce69486a698ccf8b115caaa30a832826e08d173b7726bbb42f6349621",
+        "file_count": 40,
+        "occurrence_count": 40,
+        "sample_paths": [
+          "Signal/Calls/AudioSource.swift",
+          "Signal/Calls/CallAudioService.swift",
+          "Signal/Calls/CallService.swift",
+          "Signal/Calls/IndividualCall.swift",
+          "Signal/Calls/UserInterface/CallKitCallUIAdaptee.swift",
+          "Signal/Calls/UserInterface/CallMemberVideoView.swift",
+          "Signal/Calls/UserInterface/LocalVideoView.swift",
+          "Signal/ConversationView/AudioAttachment.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "6324719a862590fa606751305c1fbf5322465deb3456ecda013a922146d958b1",
+        "file_count": 130,
+        "occurrence_count": 131,
+        "sample_paths": [
+          "Telegram/BroadcastUpload/BroadcastUploadExtension.swift",
+          "Telegram/WatchApp/Packages/OpusKit/Sources/OpusKit/OpusDecoder.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/AVRecordingBackend.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/AudioPlaybackController.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/VideoNotePlayerView.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/VideoPlayerView.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/VoicePlaybackController.swift",
+          "submodules/AccountContext/Sources/OverlayMediaManager.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "3972bc3a7d39f0fafdf051746558128fbaed702272cf9cbdca52a3e3886f94c5",
+        "file_count": 18,
+        "occurrence_count": 18,
+        "sample_paths": [
+          "Modules/Sources/AsyncImageKit/ImageDownloader.swift",
+          "Modules/Sources/Support/InternalDataProvider.swift",
+          "Modules/Sources/WordPressMediaLibrary/Upload/UploadSourceMaterializer.swift",
+          "WordPress/Classes/Categories/Media+Extensions.h",
+          "WordPress/Classes/Networking/MediaHost.swift",
+          "WordPress/Classes/Networking/MediaRequestAuthenticator.swift",
+          "WordPress/Classes/Networking/WordPressDotComClient.swift",
+          "WordPress/Classes/Services/MediaSettings.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "51b3bfe96a8621947ff1b66f8794c6c9753fb01f765330b07cd2356692bff77e",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "DuckDuckGo/OnboardingExperiment/AddToDock/VideoPlayer/VideoPlayerView.swift",
+          "DuckDuckGo/OnboardingExperiment/AddToDock/VideoPlayer/VideoPlayerViewModel.swift",
+          "DuckDuckGo/SyncSettingsViewController+SyncDelegate.swift",
+          "LocalPackages/SyncUI-iOS/Sources/SyncUI-iOS/Views/Internal/QRCodeScannerView.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "9866c6f79283b3b16824854efdf5cb488a913eeb5c9bfa809fb6c5dd32275a88",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "Riot/Modules/Camera/CameraPresenter.swift",
+          "Riot/Modules/MatrixKit/Controllers/MXKCallViewController.h",
+          "Riot/Modules/MatrixKit/Utils/MXKSoundPlayer.m",
+          "Riot/Modules/MatrixKit/Utils/MXKTools.h",
+          "Riot/Modules/MatrixKit/Utils/MXKVideoThumbnailGenerator.swift",
+          "Riot/Modules/MediaPicker/SingleImagePickerPresenter.swift",
+          "Riot/Modules/Room/VoiceMessages/VoiceMessageAudioRecorder.swift",
+          "Riot/Modules/Room/VoiceMessages/VoiceMessageController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "e72b503b8fb19ed2b7190240a07c57b5994b4f6136ad9ae577d21721094b00fa",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "BrowserKit/Sources/OnboardingKit/Views/LaunchScreen/OnboardingVideoIntroViewController.swift",
+          "BrowserKit/Sources/QuickAnswersKit/Backend/SpeechService/Abstractions.swift",
+          "BrowserKit/Sources/QuickAnswersKit/Backend/SpeechService/AudioManager.swift",
+          "BrowserKit/Sources/QuickAnswersKit/Backend/SpeechService/SFSpeechRecognizerEngine.swift",
+          "BrowserKit/Sources/QuickAnswersKit/Backend/SpeechService/SpeechAnalyzerEngine.swift",
+          "firefox-ios/Client/Coordinators/CameraCoordinator.swift",
+          "firefox-ios/Client/Frontend/Browser/QRCodeViewController.swift",
+          "firefox-ios/Client/Frontend/TabContentsScripts/BackgroundAudioHelper.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "f293a1b587410514927bd70179775e1a0f4853f007d3f0ff737e99958b39c7c5",
+        "file_count": 27,
+        "occurrence_count": 27,
+        "sample_paths": [
+          "Sources/App/Assist/AssistViewModel.swift",
+          "Sources/App/Assist/Audio/AudioPlayer.swift",
+          "Sources/App/Assist/Audio/AudioRecorder.swift",
+          "Sources/App/Assist/Local/OnDeviceVoice.swift",
+          "Sources/App/Assist/Local/OnDeviceVoiceCatalog.swift",
+          "Sources/App/Assist/Local/SpeechSynthesizer.swift",
+          "Sources/App/Assist/Local/SpeechTranscriber.swift",
+          "Sources/App/Assist/Local/TTSVoicePickerView.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "1640b753715e990a6bd3dfe305894090a1c3ecf7037b56b202347622d63a00a4",
+        "file_count": 13,
+        "occurrence_count": 13,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/ProjectPageViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/VideoViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Datasource/Datasource/ProjectPageViewControllerDataSource.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/VideoFeed/Cell/VideoFeedCell.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/VideoFeed/Controller/VideoFeedAudioController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/VideoFeed/VideoPlayer/VideoFeedPlayerView.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/VideoFeed/VideoPlayer/VideoFeedVideoPlayer.swift",
+          "Library/Sources/Library/Library/AssetImageGeneratorType.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "217b0fb1b87219b076e548ea6a4f1d794dae96468fffe707f7c1df2c140d1067",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Mastodon/Scene/Share/ContextMenu/ImagePreview/ContextMenuImagePreviewViewController.swift",
+          "Mastodon/Supporting Files/AppDelegate.swift",
+          "MastodonSDK/Sources/MastodonUI/View/Container/MediaGridContainerView.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "5ee272dc7c0f4eafc99715030756efd6cc6c7e122ea61dcaa328e3cf46b9261c",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "iOSClient/AudioRecorder/NCAudioRecorderViewController.swift",
+          "iOSClient/Utility/NCCameraRoll.swift",
+          "iOSClient/Utility/NCLivePhoto.swift",
+          "iOSClient/Viewer/NCViewerMedia/Content/Audio/NCAudioViewerContentView.swift",
+          "iOSClient/Viewer/NCViewerMedia/Content/Video/AVPlayer/NCVideoAVPlayerViewController.swift",
+          "iOSClient/Viewer/NCViewerMedia/Content/Video/AVPlayer/NCVideoAVPlayerViewControls.swift",
+          "iOSClient/Viewer/NCViewerMedia/Content/Video/NCVideoPlaybackController.swift",
+          "iOSClient/Viewer/NCViewerMedia/Content/Video/VLC/NCVideoVLCViewController.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "783dd7327dd041b69fb39a1bf465ad43fe75758e96716a4bbe08a18bdd529e4d",
+        "file_count": 35,
+        "occurrence_count": 35,
+        "sample_paths": [
+          "Pocket Casts TV App/UI/Discover/BestFrameSelector.swift",
+          "Pocket Casts TV App/UI/Discover/DiscoverVideoEpisodeModel.swift",
+          "Pocket Casts TV App/UI/Player/NowPlayingViewModel.swift",
+          "Pocket Casts TV App/UI/Player/PlayerStatusObserver.swift",
+          "podcasts/AddCustomViewController.swift",
+          "podcasts/AudioPlayTask.swift",
+          "podcasts/AudioReadTask.swift",
+          "podcasts/AudioUtils.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "662370648a20fbfda66920fc34a7fc9c0d976be9207dc500288bc1e80688c543",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Sources/Network/Download/VLCTransferController.m",
+          "Sources/Playback/Control/VLCPlaybackService.m",
+          "Sources/Playback/Player/PlayerViewController.swift",
+          "Sources/Playback/Player/VideoPlayer-iOS/VideoPlayerViewController.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "f98548117a905b095d6ba60bf23e172e7ff3843c61a6bb069998bbcc1d509632",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Wikipedia/Code/InsertMediaSelectedImageView.swift",
+          "Wikipedia/Code/WelcomeAnimationView.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 8,
+    "byFocusLaunchBuildRelevance": 20
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

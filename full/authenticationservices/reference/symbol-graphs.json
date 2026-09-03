@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 23,
+  "duplicateOccurrenceCount": 23,
+  "duplicateRelationshipOccurrenceCount": 28,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AuthenticationServices.symbols.json",
+      "relationshipCount": 2283,
+      "sha256": "a4d3a21cd280486bc0db2dcd69cb5cc0a62aab4d67ce5e31e25ab40250f719a0",
+      "symbolCount": 1308
+    },
+    {
+      "path": "reference/symbol-graphs/_AuthenticationServices_SwiftUI@AuthenticationServices.symbols.json",
+      "relationshipCount": 813,
+      "sha256": "c1f90dfb1bb16f9eba0fe0ff145b0a2b91c90510ef626af8dcf57d8d09aacc66",
+      "symbolCount": 806
+    },
+    {
+      "path": "reference/symbol-graphs/_AuthenticationServices_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 5,
+      "sha256": "390dda3d5cfed927caf93ba9da30c79b75c89c9b2ef4c97180531a8b90b822bd",
+      "symbolCount": 5
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AuthenticationServices",
+  "relationshipCount": 3101,
+  "relationshipMultisetSHA256": "2427abb90ff3dcbd73c42c42abc9847687e2595cc2bb2eb9d71489801d0400e8",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 2096,
+  "symbolMultisetSHA256": "a2906ea0a2c7879683381373946aed07f85686cf8bafce3921a58f2afbf98766",
+  "target": "arm64-apple-ios26.0"
+}

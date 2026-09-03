@@ -1,0 +1,128 @@
+{
+  "module": "CoreLocation",
+  "moduleRecord": {
+    "app_coverage_count": 8,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 103,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 33,
+    "iphoneos_runtime_focus_launch_build_rank": 39,
+    "module": "CoreLocation",
+    "occurrence_count": 103,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "f71f4bfd28dbac14845ff4bab21cc66091babec402e2dc0baef5694d07b38d42",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Signal/src/ViewControllers/LocationPicker.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "d8586751cde62b9dc956be2c527682379e0c4be1ff0743a844a81e2392a464b3",
+        "file_count": 26,
+        "occurrence_count": 26,
+        "sample_paths": [
+          "Telegram/Watch/Bridge/TGBridgeLocationSignals.m",
+          "Telegram/Watch/Extension/TGLocationUtils.h",
+          "Telegram/Watch/WatchCommonWatch/TGBridgeLocationVenue.h",
+          "Telegram/Watch/WatchCommonWatch/TGBridgeSubscriptions.h",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/LocationBubbleView.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/LocationProvider.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/LocationSendController.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/LocationSendView.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "992b0d41affa13a7322fa08f34df006f628742e0d3969a35b906290df1765e6f",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WordPress/Classes/Extensions/CLPlacemark+Formatting.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "36291e9c3e7a746b0217807b91f9974db44e75e99e7f9399b05602b01bc5875d",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/Models/API_Models/Partner_Metadata/Location.h"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "553e6748e568172edcb6f06a9b1055001b821c9798f2d8388ceb490da67b4e7b",
+        "file_count": 19,
+        "occurrence_count": 19,
+        "sample_paths": [
+          "Riot/Modules/LocationSharing/LocationManager.swift",
+          "Riot/Modules/LocationSharing/UserLocationService.swift",
+          "RiotSwiftUI/Modules/Common/Extensions/CLLocationCoordinate2D.swift",
+          "RiotSwiftUI/Modules/LocationSharing/LiveLocationSharingViewer/LiveLocationSharingViewerModels.swift",
+          "RiotSwiftUI/Modules/LocationSharing/LiveLocationSharingViewer/Service/LiveLocationSharingViewerServiceProtocol.swift",
+          "RiotSwiftUI/Modules/LocationSharing/LiveLocationSharingViewer/Service/MatrixSDK/LiveLocationSharingViewerService.swift",
+          "RiotSwiftUI/Modules/LocationSharing/LiveLocationSharingViewer/Service/UserLiveLocation.swift",
+          "RiotSwiftUI/Modules/LocationSharing/ShareLocationActivity/ShareLocationActivityController.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "bddbfe984de4aa0bf5ad0021052e8b07947175b9fe552a8008c6dbcc5e7f8f6a",
+        "file_count": 39,
+        "occurrence_count": 39,
+        "sample_paths": [
+          "Sources/App/FlightGreetings/FlightDetector.swift",
+          "Sources/App/FlightGreetings/FlightSpeedProbe.swift",
+          "Sources/App/Frontend/WebView/WebViewController/WebViewController.swift",
+          "Sources/App/Onboarding/Steps/Permissions/OnboardingPermissionsNavigationViewModel.swift",
+          "Sources/App/ServerSwitching/LocationBasedServerSwitcher.swift",
+          "Sources/App/Settings/Connection/ConnectionURLView.swift",
+          "Sources/App/Settings/Location/LocationSettingsView.swift",
+          "Sources/App/Settings/Location/LocationSettingsViewModel.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "b2e630fda0dad1d59c9248271717f1f3f97842a75bdea8a85e017ea802a630e8",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "iOSClient/NCBackgroundLocationUploadManager.swift",
+          "iOSClient/Networking/NCAutoUpload.swift",
+          "iOSClient/SceneDelegate.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "8c78ac5bff441bec48f3f1f374ba17c4e774e6228d08b8d9aed31c21340f4898",
+        "file_count": 13,
+        "occurrence_count": 13,
+        "sample_paths": [
+          "WMF Framework/LocationManager.swift",
+          "WMF Framework/LocationManagerProtocol.swift",
+          "WMF Framework/WMFContentGroup+CoreDataProperties.h",
+          "WMF Framework/WMFContentGroup+Extensions.h",
+          "WMFComponents/Sources/WMFComponents/Components/Year in Review/View Models/WMFYearInReviewLocationViewModel.swift",
+          "Wikipedia/Code/CLLocation+WMFBearing.h",
+          "Wikipedia/Code/CLLocation+WMFComparison.h",
+          "Wikipedia/Code/MWKLocationSearchResult.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 33,
+    "byFocusLaunchBuildRelevance": 39
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "module": "Network",
+  "moduleRecord": {
+    "app_coverage_count": 10,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 30,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "ba68df56f869a40fb715ecf07868e2f3f156c3f1b2fb831bce6063560ad9d413",
+      "main_target_file_count": 1,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 25,
+    "iphoneos_runtime_focus_launch_build_rank": 12,
+    "module": "Network",
+    "occurrence_count": 30,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "e0bb508008bf47c62b09ae3bd13662157adc2e189b632000c3e5a71512c13c8c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/RSWeb/Sources/RSWeb/NetworkMonitor.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "dc745eb0ba712de2b182b239107b0cb18a7c910081184d11011b59cfb63310d8",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/App/Sources/Services/NetworkMonitoringService.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "1d28529e8ab932ae7264d1aa528011329321b4991fee3f52495bed35d37b97cd",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Signal/DeviceTransfer/WiFiAware/WADeviceTransferIncomingConnection.swift",
+          "Signal/DeviceTransfer/WiFiAware/WADeviceTransferOutgoingConnection.swift",
+          "Signal/DeviceTransfer/WiFiAware/WADeviceTransferSession.swift",
+          "Signal/DeviceTransfer/WiFiAware/WiFiAware+Extensions.swift",
+          "SignalServiceKit/Network/SignalProxy/SignalProxy+ProxyClient.swift",
+          "SignalServiceKit/Network/SignalProxy/SignalProxy+RelayClient.swift",
+          "SignalServiceKit/Network/SignalProxy/SignalProxy+RelayServer.swift",
+          "SignalServiceKit/Network/WebSocketPromise.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "18872a8a37aaca92e767ada26fed0c8c00e4d60d24fb8d9ee4815dcbce0b3498",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "submodules/Reachability/Sources/Reachability.swift",
+          "submodules/TelegramCore/Sources/Network/NetworkFrameworkTcpConnectionInterface.swift",
+          "submodules/TelegramVoip/Sources/OngoingCallContext.swift",
+          "submodules/TelegramVoip/Sources/ReflectorBenchmark.swift",
+          "submodules/TelegramVoip/Sources/WrappedMediaStreamingContext.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "bd0abef523599f9287e1cf53ef7748f6aab4418c4126b1a2a9b08fa1a227ec65",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Sources/WordPressShared/Reachability/ReachabilityUtils.swift",
+          "WordPress/Classes/ApplicationToken/ApplicationTokenItemView.swift",
+          "WordPress/Classes/ApplicationToken/Model/ApplicationTokenItem.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "0a1958e8fc407f6e2a94b4ab9a71b2b1e4d3846e1acb8dec8e2803ffd29e1f24",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Core/URLExtension.swift",
+          "DuckDuckGo/Feedback/VPNMetadataCollector.swift",
+          "DuckDuckGo/NetworkProtectionDebugViewController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "e89576bfa7c01e422578fb9b66b7c6dcf951bc1f176f9233e883e81768c21e3d",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "BrowserKit/Sources/Shared/NetworkUtils.swift",
+          "focus-ios/Blockzilla/Extensions/URLExtensions.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "ba68df56f869a40fb715ecf07868e2f3f156c3f1b2fb831bce6063560ad9d413",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/Extensions/URLExtensions.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "a9dd6c425ce1da8c44f24ea2f0e0640a6d2b6a1f93ef77b7aa9039644ed5ceff",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Sources/App/Frontend/ConnectivityCheck/ConnectivityChecker.swift",
+          "Sources/HANetworking/Sources/URL+Extensions.swift",
+          "Sources/Shared/Common/Extensions/Reachability+NetworkType.swift",
+          "Sources/Shared/Environment/CameraStreamServer.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "37810c8d49a8d5452d44683912f77c75c5053353e2ee904867d1aa2dbac30aee",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/Sources/PocketCastsUtils/Networking/NetworkUtils.swift",
+          "podcasts/StreamingCellularTracker.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 25,
+    "byFocusLaunchBuildRelevance": 12
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

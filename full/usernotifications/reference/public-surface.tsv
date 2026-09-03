@@ -1,0 +1,376 @@
+precise	kind	title	path	declaration
+c:@E@UNAlertStyle	swift.enum	UNAlertStyle	UNAlertStyle	enum UNAlertStyle
+c:@E@UNAlertStyle@UNAlertStyleAlert	swift.enum.case	UNAlertStyle.alert	UNAlertStyle.alert	case alert
+c:@E@UNAlertStyle@UNAlertStyleBanner	swift.enum.case	UNAlertStyle.banner	UNAlertStyle.banner	case banner
+c:@E@UNAlertStyle@UNAlertStyleNone	swift.enum.case	UNAlertStyle.none	UNAlertStyle.none	case none
+c:@E@UNAuthorizationOptions	swift.struct	UNAuthorizationOptions	UNAuthorizationOptions	struct UNAuthorizationOptions
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionAlert	swift.type.property	alert	UNAuthorizationOptions.alert	static var alert: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionAnnouncement	swift.type.property	announcement	UNAuthorizationOptions.announcement	static var announcement: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionBadge	swift.type.property	badge	UNAuthorizationOptions.badge	static var badge: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionCarPlay	swift.type.property	carPlay	UNAuthorizationOptions.carPlay	static var carPlay: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionCriticalAlert	swift.type.property	criticalAlert	UNAuthorizationOptions.criticalAlert	static var criticalAlert: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionProvidesAppNotificationSettings	swift.type.property	providesAppNotificationSettings	UNAuthorizationOptions.providesAppNotificationSettings	static var providesAppNotificationSettings: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionProvisional	swift.type.property	provisional	UNAuthorizationOptions.provisional	static var provisional: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionSound	swift.type.property	sound	UNAuthorizationOptions.sound	static var sound: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationOptions@UNAuthorizationOptionTimeSensitive	swift.type.property	timeSensitive	UNAuthorizationOptions.timeSensitive	static var timeSensitive: UNAuthorizationOptions { get }
+c:@E@UNAuthorizationStatus	swift.enum	UNAuthorizationStatus	UNAuthorizationStatus	enum UNAuthorizationStatus
+c:@E@UNAuthorizationStatus@UNAuthorizationStatusAuthorized	swift.enum.case	UNAuthorizationStatus.authorized	UNAuthorizationStatus.authorized	case authorized
+c:@E@UNAuthorizationStatus@UNAuthorizationStatusDenied	swift.enum.case	UNAuthorizationStatus.denied	UNAuthorizationStatus.denied	case denied
+c:@E@UNAuthorizationStatus@UNAuthorizationStatusEphemeral	swift.enum.case	UNAuthorizationStatus.ephemeral	UNAuthorizationStatus.ephemeral	case ephemeral
+c:@E@UNAuthorizationStatus@UNAuthorizationStatusNotDetermined	swift.enum.case	UNAuthorizationStatus.notDetermined	UNAuthorizationStatus.notDetermined	case notDetermined
+c:@E@UNAuthorizationStatus@UNAuthorizationStatusProvisional	swift.enum.case	UNAuthorizationStatus.provisional	UNAuthorizationStatus.provisional	case provisional
+c:@E@UNErrorCode	swift.enum	UNError.Code	UNError.Code	enum Code
+c:@E@UNErrorCode@UNErrorCodeAttachmentCorrupt	swift.enum.case	UNError.Code.attachmentCorrupt	UNError.Code.attachmentCorrupt	case attachmentCorrupt
+c:@E@UNErrorCode@UNErrorCodeAttachmentInvalidFileSize	swift.enum.case	UNError.Code.attachmentInvalidFileSize	UNError.Code.attachmentInvalidFileSize	case attachmentInvalidFileSize
+c:@E@UNErrorCode@UNErrorCodeAttachmentInvalidURL	swift.enum.case	UNError.Code.attachmentInvalidURL	UNError.Code.attachmentInvalidURL	case attachmentInvalidURL
+c:@E@UNErrorCode@UNErrorCodeAttachmentMoveIntoDataStoreFailed	swift.enum.case	UNError.Code.attachmentMoveIntoDataStoreFailed	UNError.Code.attachmentMoveIntoDataStoreFailed	case attachmentMoveIntoDataStoreFailed
+c:@E@UNErrorCode@UNErrorCodeAttachmentNotInDataStore	swift.enum.case	UNError.Code.attachmentNotInDataStore	UNError.Code.attachmentNotInDataStore	case attachmentNotInDataStore
+c:@E@UNErrorCode@UNErrorCodeAttachmentUnrecognizedType	swift.enum.case	UNError.Code.attachmentUnrecognizedType	UNError.Code.attachmentUnrecognizedType	case attachmentUnrecognizedType
+c:@E@UNErrorCode@UNErrorCodeBadgeInputInvalid	swift.enum.case	UNError.Code.badgeInputInvalid	UNError.Code.badgeInputInvalid	case badgeInputInvalid
+c:@E@UNErrorCode@UNErrorCodeContentProvidingInvalid	swift.enum.case	UNError.Code.contentProvidingInvalid	UNError.Code.contentProvidingInvalid	case contentProvidingInvalid
+c:@E@UNErrorCode@UNErrorCodeContentProvidingObjectNotAllowed	swift.enum.case	UNError.Code.contentProvidingObjectNotAllowed	UNError.Code.contentProvidingObjectNotAllowed	case contentProvidingObjectNotAllowed
+c:@E@UNErrorCode@UNErrorCodeNotificationInvalidNoContent	swift.enum.case	UNError.Code.notificationInvalidNoContent	UNError.Code.notificationInvalidNoContent	case notificationInvalidNoContent
+c:@E@UNErrorCode@UNErrorCodeNotificationInvalidNoDate	swift.enum.case	UNError.Code.notificationInvalidNoDate	UNError.Code.notificationInvalidNoDate	case notificationInvalidNoDate
+c:@E@UNErrorCode@UNErrorCodeNotificationsNotAllowed	swift.enum.case	UNError.Code.notificationsNotAllowed	UNError.Code.notificationsNotAllowed	case notificationsNotAllowed
+c:@E@UNNotificationActionOptions	swift.struct	UNNotificationActionOptions	UNNotificationActionOptions	struct UNNotificationActionOptions
+c:@E@UNNotificationActionOptions@UNNotificationActionOptionAuthenticationRequired	swift.type.property	authenticationRequired	UNNotificationActionOptions.authenticationRequired	static var authenticationRequired: UNNotificationActionOptions { get }
+c:@E@UNNotificationActionOptions@UNNotificationActionOptionDestructive	swift.type.property	destructive	UNNotificationActionOptions.destructive	static var destructive: UNNotificationActionOptions { get }
+c:@E@UNNotificationActionOptions@UNNotificationActionOptionForeground	swift.type.property	foreground	UNNotificationActionOptions.foreground	static var foreground: UNNotificationActionOptions { get }
+c:@E@UNNotificationCategoryOptions	swift.struct	UNNotificationCategoryOptions	UNNotificationCategoryOptions	struct UNNotificationCategoryOptions
+c:@E@UNNotificationCategoryOptions@UNNotificationCategoryOptionAllowAnnouncement	swift.type.property	allowAnnouncement	UNNotificationCategoryOptions.allowAnnouncement	static var allowAnnouncement: UNNotificationCategoryOptions { get }
+c:@E@UNNotificationCategoryOptions@UNNotificationCategoryOptionAllowInCarPlay	swift.type.property	allowInCarPlay	UNNotificationCategoryOptions.allowInCarPlay	static var allowInCarPlay: UNNotificationCategoryOptions { get }
+c:@E@UNNotificationCategoryOptions@UNNotificationCategoryOptionCustomDismissAction	swift.type.property	customDismissAction	UNNotificationCategoryOptions.customDismissAction	static var customDismissAction: UNNotificationCategoryOptions { get }
+c:@E@UNNotificationCategoryOptions@UNNotificationCategoryOptionHiddenPreviewsShowSubtitle	swift.type.property	hiddenPreviewsShowSubtitle	UNNotificationCategoryOptions.hiddenPreviewsShowSubtitle	static var hiddenPreviewsShowSubtitle: UNNotificationCategoryOptions { get }
+c:@E@UNNotificationCategoryOptions@UNNotificationCategoryOptionHiddenPreviewsShowTitle	swift.type.property	hiddenPreviewsShowTitle	UNNotificationCategoryOptions.hiddenPreviewsShowTitle	static var hiddenPreviewsShowTitle: UNNotificationCategoryOptions { get }
+c:@E@UNNotificationInterruptionLevel	swift.enum	UNNotificationInterruptionLevel	UNNotificationInterruptionLevel	enum UNNotificationInterruptionLevel
+c:@E@UNNotificationInterruptionLevel@UNNotificationInterruptionLevelActive	swift.enum.case	UNNotificationInterruptionLevel.active	UNNotificationInterruptionLevel.active	case active
+c:@E@UNNotificationInterruptionLevel@UNNotificationInterruptionLevelCritical	swift.enum.case	UNNotificationInterruptionLevel.critical	UNNotificationInterruptionLevel.critical	case critical
+c:@E@UNNotificationInterruptionLevel@UNNotificationInterruptionLevelPassive	swift.enum.case	UNNotificationInterruptionLevel.passive	UNNotificationInterruptionLevel.passive	case passive
+c:@E@UNNotificationInterruptionLevel@UNNotificationInterruptionLevelTimeSensitive	swift.enum.case	UNNotificationInterruptionLevel.timeSensitive	UNNotificationInterruptionLevel.timeSensitive	case timeSensitive
+c:@E@UNNotificationPresentationOptions	swift.struct	UNNotificationPresentationOptions	UNNotificationPresentationOptions	struct UNNotificationPresentationOptions
+c:@E@UNNotificationPresentationOptions@UNNotificationPresentationOptionAlert	swift.type.property	alert	UNNotificationPresentationOptions.alert	static var alert: UNNotificationPresentationOptions { get }
+c:@E@UNNotificationPresentationOptions@UNNotificationPresentationOptionBadge	swift.type.property	badge	UNNotificationPresentationOptions.badge	static var badge: UNNotificationPresentationOptions { get }
+c:@E@UNNotificationPresentationOptions@UNNotificationPresentationOptionBanner	swift.type.property	banner	UNNotificationPresentationOptions.banner	static var banner: UNNotificationPresentationOptions { get }
+c:@E@UNNotificationPresentationOptions@UNNotificationPresentationOptionList	swift.type.property	list	UNNotificationPresentationOptions.list	static var list: UNNotificationPresentationOptions { get }
+c:@E@UNNotificationPresentationOptions@UNNotificationPresentationOptionSound	swift.type.property	sound	UNNotificationPresentationOptions.sound	static var sound: UNNotificationPresentationOptions { get }
+c:@E@UNNotificationSetting	swift.enum	UNNotificationSetting	UNNotificationSetting	enum UNNotificationSetting
+c:@E@UNNotificationSetting@UNNotificationSettingDisabled	swift.enum.case	UNNotificationSetting.disabled	UNNotificationSetting.disabled	case disabled
+c:@E@UNNotificationSetting@UNNotificationSettingEnabled	swift.enum.case	UNNotificationSetting.enabled	UNNotificationSetting.enabled	case enabled
+c:@E@UNNotificationSetting@UNNotificationSettingNotSupported	swift.enum.case	UNNotificationSetting.notSupported	UNNotificationSetting.notSupported	case notSupported
+c:@E@UNShowPreviewsSetting	swift.enum	UNShowPreviewsSetting	UNShowPreviewsSetting	enum UNShowPreviewsSetting
+c:@E@UNShowPreviewsSetting@UNShowPreviewsSettingAlways	swift.enum.case	UNShowPreviewsSetting.always	UNShowPreviewsSetting.always	case always
+c:@E@UNShowPreviewsSetting@UNShowPreviewsSettingNever	swift.enum.case	UNShowPreviewsSetting.never	UNShowPreviewsSetting.never	case never
+c:@E@UNShowPreviewsSetting@UNShowPreviewsSettingWhenAuthenticated	swift.enum.case	UNShowPreviewsSetting.whenAuthenticated	UNShowPreviewsSetting.whenAuthenticated	case whenAuthenticated
+c:@T@UNNotificationSoundName	swift.struct	UNNotificationSoundName	UNNotificationSoundName	struct UNNotificationSoundName
+c:@UNErrorDomain	swift.var	UNErrorDomain	UNErrorDomain	let UNErrorDomain: String
+c:@UNNotificationAttachmentOptionsThumbnailClippingRectKey	swift.var	UNNotificationAttachmentOptionsThumbnailClippingRectKey	UNNotificationAttachmentOptionsThumbnailClippingRectKey	let UNNotificationAttachmentOptionsThumbnailClippingRectKey: String
+c:@UNNotificationAttachmentOptionsThumbnailHiddenKey	swift.var	UNNotificationAttachmentOptionsThumbnailHiddenKey	UNNotificationAttachmentOptionsThumbnailHiddenKey	let UNNotificationAttachmentOptionsThumbnailHiddenKey: String
+c:@UNNotificationAttachmentOptionsThumbnailTimeKey	swift.var	UNNotificationAttachmentOptionsThumbnailTimeKey	UNNotificationAttachmentOptionsThumbnailTimeKey	let UNNotificationAttachmentOptionsThumbnailTimeKey: String
+c:@UNNotificationAttachmentOptionsTypeHintKey	swift.var	UNNotificationAttachmentOptionsTypeHintKey	UNNotificationAttachmentOptionsTypeHintKey	let UNNotificationAttachmentOptionsTypeHintKey: String
+c:@UNNotificationDefaultActionIdentifier	swift.var	UNNotificationDefaultActionIdentifier	UNNotificationDefaultActionIdentifier	let UNNotificationDefaultActionIdentifier: String
+c:@UNNotificationDismissActionIdentifier	swift.var	UNNotificationDismissActionIdentifier	UNNotificationDismissActionIdentifier	let UNNotificationDismissActionIdentifier: String
+c:objc(cs)NSString(cm)localizedUserNotificationStringForKey:arguments:	swift.type.method	localizedUserNotificationString(forKey:arguments:)	NSString.localizedUserNotificationString(forKey:arguments:)	class func localizedUserNotificationString(forKey key: String, arguments: [Any]?) -> String
+c:objc(cs)UNCalendarNotificationTrigger	swift.class	UNCalendarNotificationTrigger	UNCalendarNotificationTrigger	class UNCalendarNotificationTrigger
+c:objc(cs)UNCalendarNotificationTrigger(cm)triggerWithDateMatchingComponents:repeats:	swift.init	init(dateMatching:repeats:)	UNCalendarNotificationTrigger.init(dateMatching:repeats:)	convenience init(dateMatching dateComponents: DateComponents, repeats: Bool)
+c:objc(cs)UNCalendarNotificationTrigger(cm)triggerWithDateMatchingComponents:repeats:::SYNTHESIZED::c:objc(cs)UNCalendarNotificationTrigger	swift.init	init(dateMatchingComponents:repeats:)	UNCalendarNotificationTrigger.init(dateMatchingComponents:repeats:)	convenience init(dateMatchingComponents dateComponents: DateComponents, repeats: Bool)
+c:objc(cs)UNCalendarNotificationTrigger(im)nextTriggerDate	swift.method	nextTriggerDate()	UNCalendarNotificationTrigger.nextTriggerDate()	func nextTriggerDate() -> Date?
+c:objc(cs)UNCalendarNotificationTrigger(py)dateComponents	swift.property	dateComponents	UNCalendarNotificationTrigger.dateComponents	var dateComponents: DateComponents { get }
+c:objc(cs)UNLocationNotificationTrigger	swift.class	UNLocationNotificationTrigger	UNLocationNotificationTrigger	class UNLocationNotificationTrigger
+c:objc(cs)UNLocationNotificationTrigger(cm)triggerWithRegion:repeats:	swift.init	init(region:repeats:)	UNLocationNotificationTrigger.init(region:repeats:)	convenience init(region: CLRegion, repeats: Bool)
+c:objc(cs)UNLocationNotificationTrigger(py)region	swift.property	region	UNLocationNotificationTrigger.region	@NSCopying var region: CLRegion { get }
+c:objc(cs)UNMutableNotificationContent	swift.class	UNMutableNotificationContent	UNMutableNotificationContent	class UNMutableNotificationContent
+c:objc(cs)UNMutableNotificationContent(py)attachments	swift.property	attachments	UNMutableNotificationContent.attachments	var attachments: [UNNotificationAttachment] { get set }
+c:objc(cs)UNMutableNotificationContent(py)badge	swift.property	badge	UNMutableNotificationContent.badge	@NSCopying var badge: NSNumber? { get set }
+c:objc(cs)UNMutableNotificationContent(py)body	swift.property	body	UNMutableNotificationContent.body	var body: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)categoryIdentifier	swift.property	categoryIdentifier	UNMutableNotificationContent.categoryIdentifier	var categoryIdentifier: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)filterCriteria	swift.property	filterCriteria	UNMutableNotificationContent.filterCriteria	var filterCriteria: String? { get set }
+c:objc(cs)UNMutableNotificationContent(py)interruptionLevel	swift.property	interruptionLevel	UNMutableNotificationContent.interruptionLevel	var interruptionLevel: UNNotificationInterruptionLevel { get set }
+c:objc(cs)UNMutableNotificationContent(py)launchImageName	swift.property	launchImageName	UNMutableNotificationContent.launchImageName	var launchImageName: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)relevanceScore	swift.property	relevanceScore	UNMutableNotificationContent.relevanceScore	var relevanceScore: Double { get set }
+c:objc(cs)UNMutableNotificationContent(py)sound	swift.property	sound	UNMutableNotificationContent.sound	@NSCopying var sound: UNNotificationSound? { get set }
+c:objc(cs)UNMutableNotificationContent(py)subtitle	swift.property	subtitle	UNMutableNotificationContent.subtitle	var subtitle: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)summaryArgument	swift.property	summaryArgument	UNMutableNotificationContent.summaryArgument	var summaryArgument: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)summaryArgumentCount	swift.property	summaryArgumentCount	UNMutableNotificationContent.summaryArgumentCount	var summaryArgumentCount: Int { get set }
+c:objc(cs)UNMutableNotificationContent(py)targetContentIdentifier	swift.property	targetContentIdentifier	UNMutableNotificationContent.targetContentIdentifier	var targetContentIdentifier: String? { get set }
+c:objc(cs)UNMutableNotificationContent(py)threadIdentifier	swift.property	threadIdentifier	UNMutableNotificationContent.threadIdentifier	var threadIdentifier: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)title	swift.property	title	UNMutableNotificationContent.title	var title: String { get set }
+c:objc(cs)UNMutableNotificationContent(py)userInfo	swift.property	userInfo	UNMutableNotificationContent.userInfo	var userInfo: [AnyHashable : Any] { get set }
+c:objc(cs)UNNotification	swift.class	UNNotification	UNNotification	class UNNotification
+c:objc(cs)UNNotification(py)date	swift.property	date	UNNotification.date	var date: Date { get }
+c:objc(cs)UNNotification(py)request	swift.property	request	UNNotification.request	@NSCopying var request: UNNotificationRequest { get }
+c:objc(cs)UNNotificationAction	swift.class	UNNotificationAction	UNNotificationAction	class UNNotificationAction
+c:objc(cs)UNNotificationAction(cm)actionWithIdentifier:title:options:	swift.init	init(identifier:title:options:)	UNNotificationAction.init(identifier:title:options:)	convenience init(identifier: String, title: String, options: UNNotificationActionOptions = [])
+c:objc(cs)UNNotificationAction(cm)actionWithIdentifier:title:options:icon:	swift.init	init(identifier:title:options:icon:)	UNNotificationAction.init(identifier:title:options:icon:)	convenience init(identifier: String, title: String, options: UNNotificationActionOptions = [], icon: UNNotificationActionIcon?)
+c:objc(cs)UNNotificationAction(py)icon	swift.property	icon	UNNotificationAction.icon	@NSCopying var icon: UNNotificationActionIcon? { get }
+c:objc(cs)UNNotificationAction(py)identifier	swift.property	identifier	UNNotificationAction.identifier	var identifier: String { get }
+c:objc(cs)UNNotificationAction(py)options	swift.property	options	UNNotificationAction.options	var options: UNNotificationActionOptions { get }
+c:objc(cs)UNNotificationAction(py)title	swift.property	title	UNNotificationAction.title	var title: String { get }
+c:objc(cs)UNNotificationActionIcon	swift.class	UNNotificationActionIcon	UNNotificationActionIcon	class UNNotificationActionIcon
+c:objc(cs)UNNotificationActionIcon(cm)iconWithSystemImageName:	swift.init	init(systemImageName:)	UNNotificationActionIcon.init(systemImageName:)	convenience init(systemImageName: String)
+c:objc(cs)UNNotificationActionIcon(cm)iconWithTemplateImageName:	swift.init	init(templateImageName:)	UNNotificationActionIcon.init(templateImageName:)	convenience init(templateImageName: String)
+c:objc(cs)UNNotificationAttachment	swift.class	UNNotificationAttachment	UNNotificationAttachment	class UNNotificationAttachment
+c:objc(cs)UNNotificationAttachment(cm)attachmentWithIdentifier:URL:options:error:	swift.init	init(identifier:url:options:)	UNNotificationAttachment.init(identifier:url:options:)	convenience init(identifier: String, url URL: URL, options: [AnyHashable : Any]? = nil) throws
+c:objc(cs)UNNotificationAttachment(cm)attachmentWithIdentifier:URL:options:error:::SYNTHESIZED::c:objc(cs)UNNotificationAttachment	swift.init	init(identifier:URL:options:)	UNNotificationAttachment.init(identifier:URL:options:)	convenience init(identifier: String, URL: URL, options: [AnyHashable : Any]? = nil) throws
+c:objc(cs)UNNotificationAttachment(py)URL	swift.property	url	UNNotificationAttachment.url	var url: URL { get }
+c:objc(cs)UNNotificationAttachment(py)identifier	swift.property	identifier	UNNotificationAttachment.identifier	var identifier: String { get }
+c:objc(cs)UNNotificationAttachment(py)type	swift.property	type	UNNotificationAttachment.type	var type: String { get }
+c:objc(cs)UNNotificationAttributedMessageContext	swift.class	UNNotificationAttributedMessageContext	UNNotificationAttributedMessageContext	class UNNotificationAttributedMessageContext
+c:objc(cs)UNNotificationAttributedMessageContext(cm)contextWithSendMessageIntent:attributedContent:	swift.init	init(sendMessageIntent:attributedContent:)	UNNotificationAttributedMessageContext.init(sendMessageIntent:attributedContent:)	convenience init(sendMessageIntent: INSendMessageIntent, attributedContent: NSAttributedString)
+c:objc(cs)UNNotificationCategory	swift.class	UNNotificationCategory	UNNotificationCategory	class UNNotificationCategory
+c:objc(cs)UNNotificationCategory(cm)categoryWithIdentifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:categorySummaryFormat:options:	swift.init	init(identifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:categorySummaryFormat:options:)	UNNotificationCategory.init(identifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:categorySummaryFormat:options:)	convenience init(identifier: String, actions: [UNNotificationAction], intentIdentifiers: [String], hiddenPreviewsBodyPlaceholder: String?, categorySummaryFormat: String?, options: UNNotificationCategoryOptions = [])
+c:objc(cs)UNNotificationCategory(cm)categoryWithIdentifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:options:	swift.init	init(identifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:options:)	UNNotificationCategory.init(identifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:options:)	convenience init(identifier: String, actions: [UNNotificationAction], intentIdentifiers: [String], hiddenPreviewsBodyPlaceholder: String, options: UNNotificationCategoryOptions = [])
+c:objc(cs)UNNotificationCategory(cm)categoryWithIdentifier:actions:intentIdentifiers:options:	swift.init	init(identifier:actions:intentIdentifiers:options:)	UNNotificationCategory.init(identifier:actions:intentIdentifiers:options:)	convenience init(identifier: String, actions: [UNNotificationAction], intentIdentifiers: [String], options: UNNotificationCategoryOptions = [])
+c:objc(cs)UNNotificationCategory(py)actions	swift.property	actions	UNNotificationCategory.actions	var actions: [UNNotificationAction] { get }
+c:objc(cs)UNNotificationCategory(py)categorySummaryFormat	swift.property	categorySummaryFormat	UNNotificationCategory.categorySummaryFormat	var categorySummaryFormat: String { get }
+c:objc(cs)UNNotificationCategory(py)hiddenPreviewsBodyPlaceholder	swift.property	hiddenPreviewsBodyPlaceholder	UNNotificationCategory.hiddenPreviewsBodyPlaceholder	var hiddenPreviewsBodyPlaceholder: String { get }
+c:objc(cs)UNNotificationCategory(py)identifier	swift.property	identifier	UNNotificationCategory.identifier	var identifier: String { get }
+c:objc(cs)UNNotificationCategory(py)intentIdentifiers	swift.property	intentIdentifiers	UNNotificationCategory.intentIdentifiers	var intentIdentifiers: [String] { get }
+c:objc(cs)UNNotificationCategory(py)options	swift.property	options	UNNotificationCategory.options	var options: UNNotificationCategoryOptions { get }
+c:objc(cs)UNNotificationContent	swift.class	UNNotificationContent	UNNotificationContent	class UNNotificationContent
+c:objc(cs)UNNotificationContent(im)contentByUpdatingWithProvider:error:	swift.method	updating(from:)	UNNotificationContent.updating(from:)	func updating(from provider: any UNNotificationContentProviding) throws -> UNNotificationContent
+c:objc(cs)UNNotificationContent(py)attachments	swift.property	attachments	UNNotificationContent.attachments	var attachments: [UNNotificationAttachment] { get }
+c:objc(cs)UNNotificationContent(py)badge	swift.property	badge	UNNotificationContent.badge	@NSCopying var badge: NSNumber? { get }
+c:objc(cs)UNNotificationContent(py)body	swift.property	body	UNNotificationContent.body	var body: String { get }
+c:objc(cs)UNNotificationContent(py)categoryIdentifier	swift.property	categoryIdentifier	UNNotificationContent.categoryIdentifier	var categoryIdentifier: String { get }
+c:objc(cs)UNNotificationContent(py)filterCriteria	swift.property	filterCriteria	UNNotificationContent.filterCriteria	var filterCriteria: String? { get }
+c:objc(cs)UNNotificationContent(py)interruptionLevel	swift.property	interruptionLevel	UNNotificationContent.interruptionLevel	var interruptionLevel: UNNotificationInterruptionLevel { get }
+c:objc(cs)UNNotificationContent(py)launchImageName	swift.property	launchImageName	UNNotificationContent.launchImageName	var launchImageName: String { get }
+c:objc(cs)UNNotificationContent(py)relevanceScore	swift.property	relevanceScore	UNNotificationContent.relevanceScore	var relevanceScore: Double { get }
+c:objc(cs)UNNotificationContent(py)sound	swift.property	sound	UNNotificationContent.sound	@NSCopying var sound: UNNotificationSound? { get }
+c:objc(cs)UNNotificationContent(py)subtitle	swift.property	subtitle	UNNotificationContent.subtitle	var subtitle: String { get }
+c:objc(cs)UNNotificationContent(py)summaryArgument	swift.property	summaryArgument	UNNotificationContent.summaryArgument	var summaryArgument: String { get }
+c:objc(cs)UNNotificationContent(py)summaryArgumentCount	swift.property	summaryArgumentCount	UNNotificationContent.summaryArgumentCount	var summaryArgumentCount: Int { get }
+c:objc(cs)UNNotificationContent(py)targetContentIdentifier	swift.property	targetContentIdentifier	UNNotificationContent.targetContentIdentifier	var targetContentIdentifier: String? { get }
+c:objc(cs)UNNotificationContent(py)threadIdentifier	swift.property	threadIdentifier	UNNotificationContent.threadIdentifier	var threadIdentifier: String { get }
+c:objc(cs)UNNotificationContent(py)title	swift.property	title	UNNotificationContent.title	var title: String { get }
+c:objc(cs)UNNotificationContent(py)userInfo	swift.property	userInfo	UNNotificationContent.userInfo	var userInfo: [AnyHashable : Any] { get }
+c:objc(cs)UNNotificationRequest	swift.class	UNNotificationRequest	UNNotificationRequest	class UNNotificationRequest
+c:objc(cs)UNNotificationRequest(cm)requestWithIdentifier:content:trigger:	swift.init	init(identifier:content:trigger:)	UNNotificationRequest.init(identifier:content:trigger:)	convenience init(identifier: String, content: UNNotificationContent, trigger: UNNotificationTrigger?)
+c:objc(cs)UNNotificationRequest(py)content	swift.property	content	UNNotificationRequest.content	@NSCopying var content: UNNotificationContent { get }
+c:objc(cs)UNNotificationRequest(py)identifier	swift.property	identifier	UNNotificationRequest.identifier	var identifier: String { get }
+c:objc(cs)UNNotificationRequest(py)trigger	swift.property	trigger	UNNotificationRequest.trigger	@NSCopying var trigger: UNNotificationTrigger? { get }
+c:objc(cs)UNNotificationResponse	swift.class	UNNotificationResponse	UNNotificationResponse	class UNNotificationResponse
+c:objc(cs)UNNotificationResponse(py)actionIdentifier	swift.property	actionIdentifier	UNNotificationResponse.actionIdentifier	var actionIdentifier: String { get }
+c:objc(cs)UNNotificationResponse(py)notification	swift.property	notification	UNNotificationResponse.notification	@NSCopying var notification: UNNotification { get }
+c:objc(cs)UNNotificationServiceExtension	swift.class	UNNotificationServiceExtension	UNNotificationServiceExtension	class UNNotificationServiceExtension
+c:objc(cs)UNNotificationServiceExtension(im)didReceiveNotificationRequest:withContentHandler:	swift.method	didReceive(_:withContentHandler:)	UNNotificationServiceExtension.didReceive(_:withContentHandler:)	func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void)
+c:objc(cs)UNNotificationServiceExtension(im)serviceExtensionTimeWillExpire	swift.method	serviceExtensionTimeWillExpire()	UNNotificationServiceExtension.serviceExtensionTimeWillExpire()	func serviceExtensionTimeWillExpire()
+c:objc(cs)UNNotificationSettings	swift.class	UNNotificationSettings	UNNotificationSettings	class UNNotificationSettings
+c:objc(cs)UNNotificationSettings(py)alertSetting	swift.property	alertSetting	UNNotificationSettings.alertSetting	var alertSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)alertStyle	swift.property	alertStyle	UNNotificationSettings.alertStyle	var alertStyle: UNAlertStyle { get }
+c:objc(cs)UNNotificationSettings(py)announcementSetting	swift.property	announcementSetting	UNNotificationSettings.announcementSetting	var announcementSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)authorizationStatus	swift.property	authorizationStatus	UNNotificationSettings.authorizationStatus	var authorizationStatus: UNAuthorizationStatus { get }
+c:objc(cs)UNNotificationSettings(py)badgeSetting	swift.property	badgeSetting	UNNotificationSettings.badgeSetting	var badgeSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)carPlaySetting	swift.property	carPlaySetting	UNNotificationSettings.carPlaySetting	var carPlaySetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)criticalAlertSetting	swift.property	criticalAlertSetting	UNNotificationSettings.criticalAlertSetting	var criticalAlertSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)directMessagesSetting	swift.property	directMessagesSetting	UNNotificationSettings.directMessagesSetting	var directMessagesSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)lockScreenSetting	swift.property	lockScreenSetting	UNNotificationSettings.lockScreenSetting	var lockScreenSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)notificationCenterSetting	swift.property	notificationCenterSetting	UNNotificationSettings.notificationCenterSetting	var notificationCenterSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)providesAppNotificationSettings	swift.property	providesAppNotificationSettings	UNNotificationSettings.providesAppNotificationSettings	var providesAppNotificationSettings: Bool { get }
+c:objc(cs)UNNotificationSettings(py)scheduledDeliverySetting	swift.property	scheduledDeliverySetting	UNNotificationSettings.scheduledDeliverySetting	var scheduledDeliverySetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)showPreviewsSetting	swift.property	showPreviewsSetting	UNNotificationSettings.showPreviewsSetting	var showPreviewsSetting: UNShowPreviewsSetting { get }
+c:objc(cs)UNNotificationSettings(py)soundSetting	swift.property	soundSetting	UNNotificationSettings.soundSetting	var soundSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSettings(py)timeSensitiveSetting	swift.property	timeSensitiveSetting	UNNotificationSettings.timeSensitiveSetting	var timeSensitiveSetting: UNNotificationSetting { get }
+c:objc(cs)UNNotificationSound	swift.class	UNNotificationSound	UNNotificationSound	class UNNotificationSound
+c:objc(cs)UNNotificationSound(cm)criticalSoundNamed:	swift.type.method	criticalSoundNamed(_:)	UNNotificationSound.criticalSoundNamed(_:)	class func criticalSoundNamed(_ name: UNNotificationSoundName) -> Self
+c:objc(cs)UNNotificationSound(cm)criticalSoundNamed:withAudioVolume:	swift.type.method	criticalSoundNamed(_:withAudioVolume:)	UNNotificationSound.criticalSoundNamed(_:withAudioVolume:)	class func criticalSoundNamed(_ name: UNNotificationSoundName, withAudioVolume volume: Float) -> Self
+c:objc(cs)UNNotificationSound(cm)defaultCriticalSoundWithAudioVolume:	swift.type.method	defaultCriticalSound(withAudioVolume:)	UNNotificationSound.defaultCriticalSound(withAudioVolume:)	class func defaultCriticalSound(withAudioVolume volume: Float) -> Self
+c:objc(cs)UNNotificationSound(cm)ringtoneSoundNamed:	swift.type.method	ringtoneSoundNamed(_:)	UNNotificationSound.ringtoneSoundNamed(_:)	class func ringtoneSoundNamed(_ name: UNNotificationSoundName) -> Self
+c:objc(cs)UNNotificationSound(cm)soundNamed:	swift.init	init(named:)	UNNotificationSound.init(named:)	convenience init(named name: UNNotificationSoundName)
+c:objc(cs)UNNotificationSound(cpy)defaultCriticalSound	swift.type.property	defaultCritical	UNNotificationSound.defaultCritical	@NSCopying class var defaultCritical: UNNotificationSound { get }
+c:objc(cs)UNNotificationSound(cpy)defaultRingtoneSound	swift.type.property	defaultRingtone	UNNotificationSound.defaultRingtone	@NSCopying class var defaultRingtone: UNNotificationSound { get }
+c:objc(cs)UNNotificationSound(cpy)defaultSound	swift.type.property	default	UNNotificationSound.default	@NSCopying class var `default`: UNNotificationSound { get }
+c:objc(cs)UNNotificationTrigger	swift.class	UNNotificationTrigger	UNNotificationTrigger	class UNNotificationTrigger
+c:objc(cs)UNNotificationTrigger(py)repeats	swift.property	repeats	UNNotificationTrigger.repeats	var repeats: Bool { get }
+c:objc(cs)UNPushNotificationTrigger	swift.class	UNPushNotificationTrigger	UNPushNotificationTrigger	class UNPushNotificationTrigger
+c:objc(cs)UNTextInputNotificationAction	swift.class	UNTextInputNotificationAction	UNTextInputNotificationAction	class UNTextInputNotificationAction
+c:objc(cs)UNTextInputNotificationAction(cm)actionWithIdentifier:title:options:icon:textInputButtonTitle:textInputPlaceholder:	swift.init	init(identifier:title:options:icon:textInputButtonTitle:textInputPlaceholder:)	UNTextInputNotificationAction.init(identifier:title:options:icon:textInputButtonTitle:textInputPlaceholder:)	convenience init(identifier: String, title: String, options: UNNotificationActionOptions = [], icon: UNNotificationActionIcon?, textInputButtonTitle: String, textInputPlaceholder: String)
+c:objc(cs)UNTextInputNotificationAction(cm)actionWithIdentifier:title:options:textInputButtonTitle:textInputPlaceholder:	swift.init	init(identifier:title:options:textInputButtonTitle:textInputPlaceholder:)	UNTextInputNotificationAction.init(identifier:title:options:textInputButtonTitle:textInputPlaceholder:)	convenience init(identifier: String, title: String, options: UNNotificationActionOptions = [], textInputButtonTitle: String, textInputPlaceholder: String)
+c:objc(cs)UNTextInputNotificationAction(py)textInputButtonTitle	swift.property	textInputButtonTitle	UNTextInputNotificationAction.textInputButtonTitle	var textInputButtonTitle: String { get }
+c:objc(cs)UNTextInputNotificationAction(py)textInputPlaceholder	swift.property	textInputPlaceholder	UNTextInputNotificationAction.textInputPlaceholder	var textInputPlaceholder: String { get }
+c:objc(cs)UNTextInputNotificationResponse	swift.class	UNTextInputNotificationResponse	UNTextInputNotificationResponse	class UNTextInputNotificationResponse
+c:objc(cs)UNTextInputNotificationResponse(py)userText	swift.property	userText	UNTextInputNotificationResponse.userText	var userText: String { get }
+c:objc(cs)UNTimeIntervalNotificationTrigger	swift.class	UNTimeIntervalNotificationTrigger	UNTimeIntervalNotificationTrigger	class UNTimeIntervalNotificationTrigger
+c:objc(cs)UNTimeIntervalNotificationTrigger(cm)triggerWithTimeInterval:repeats:	swift.init	init(timeInterval:repeats:)	UNTimeIntervalNotificationTrigger.init(timeInterval:repeats:)	convenience init(timeInterval: TimeInterval, repeats: Bool)
+c:objc(cs)UNTimeIntervalNotificationTrigger(im)nextTriggerDate	swift.method	nextTriggerDate()	UNTimeIntervalNotificationTrigger.nextTriggerDate()	func nextTriggerDate() -> Date?
+c:objc(cs)UNTimeIntervalNotificationTrigger(py)timeInterval	swift.property	timeInterval	UNTimeIntervalNotificationTrigger.timeInterval	var timeInterval: TimeInterval { get }
+c:objc(cs)UNUserNotificationCenter	swift.class	UNUserNotificationCenter	UNUserNotificationCenter	class UNUserNotificationCenter
+c:objc(cs)UNUserNotificationCenter(cm)currentNotificationCenter	swift.type.method	current()	UNUserNotificationCenter.current()	class func current() -> UNUserNotificationCenter
+c:objc(cs)UNUserNotificationCenter(im)addNotificationRequest:withCompletionHandler:	swift.method	add(_:)	UNUserNotificationCenter.add(_:)	func add(_ request: UNNotificationRequest) async throws
+c:objc(cs)UNUserNotificationCenter(im)getDeliveredNotificationsWithCompletionHandler:	swift.method	deliveredNotifications()	UNUserNotificationCenter.deliveredNotifications()	func deliveredNotifications() async -> [UNNotification]
+c:objc(cs)UNUserNotificationCenter(im)getNotificationCategoriesWithCompletionHandler:	swift.method	getNotificationCategories(completionHandler:)	UNUserNotificationCenter.getNotificationCategories(completionHandler:)	func getNotificationCategories(completionHandler: @escaping (Set<UNNotificationCategory>) -> Void)
+c:objc(cs)UNUserNotificationCenter(im)getNotificationSettingsWithCompletionHandler:	swift.method	getNotificationSettings(completionHandler:)	UNUserNotificationCenter.getNotificationSettings(completionHandler:)	func getNotificationSettings(completionHandler: @escaping (UNNotificationSettings) -> Void)
+c:objc(cs)UNUserNotificationCenter(im)getPendingNotificationRequestsWithCompletionHandler:	swift.method	getPendingNotificationRequests(completionHandler:)	UNUserNotificationCenter.getPendingNotificationRequests(completionHandler:)	func getPendingNotificationRequests(completionHandler: @escaping ([UNNotificationRequest]) -> Void)
+c:objc(cs)UNUserNotificationCenter(im)removeAllDeliveredNotifications	swift.method	removeAllDeliveredNotifications()	UNUserNotificationCenter.removeAllDeliveredNotifications()	func removeAllDeliveredNotifications()
+c:objc(cs)UNUserNotificationCenter(im)removeAllPendingNotificationRequests	swift.method	removeAllPendingNotificationRequests()	UNUserNotificationCenter.removeAllPendingNotificationRequests()	func removeAllPendingNotificationRequests()
+c:objc(cs)UNUserNotificationCenter(im)removeDeliveredNotificationsWithIdentifiers:	swift.method	removeDeliveredNotifications(withIdentifiers:)	UNUserNotificationCenter.removeDeliveredNotifications(withIdentifiers:)	func removeDeliveredNotifications(withIdentifiers identifiers: [String])
+c:objc(cs)UNUserNotificationCenter(im)removePendingNotificationRequestsWithIdentifiers:	swift.method	removePendingNotificationRequests(withIdentifiers:)	UNUserNotificationCenter.removePendingNotificationRequests(withIdentifiers:)	func removePendingNotificationRequests(withIdentifiers identifiers: [String])
+c:objc(cs)UNUserNotificationCenter(im)requestAuthorizationWithOptions:completionHandler:	swift.method	requestAuthorization(options:)	UNUserNotificationCenter.requestAuthorization(options:)	func requestAuthorization(options: UNAuthorizationOptions = []) async throws -> Bool
+c:objc(cs)UNUserNotificationCenter(im)setBadgeCount:withCompletionHandler:	swift.method	setBadgeCount(_:)	UNUserNotificationCenter.setBadgeCount(_:)	func setBadgeCount(_ newBadgeCount: Int) async throws
+c:objc(cs)UNUserNotificationCenter(im)setNotificationCategories:	swift.method	setNotificationCategories(_:)	UNUserNotificationCenter.setNotificationCategories(_:)	func setNotificationCategories(_ categories: Set<UNNotificationCategory>)
+c:objc(cs)UNUserNotificationCenter(py)delegate	swift.property	delegate	UNUserNotificationCenter.delegate	weak var delegate: (any UNUserNotificationCenterDelegate)? { get set }
+c:objc(cs)UNUserNotificationCenter(py)supportsContentExtensions	swift.property	supportsContentExtensions	UNUserNotificationCenter.supportsContentExtensions	var supportsContentExtensions: Bool { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotification	swift.init	init(coder:)	UNNotification.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationAction	swift.init	init(coder:)	UNNotificationAction.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationActionIcon	swift.init	init(coder:)	UNNotificationActionIcon.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationAttachment	swift.init	init(coder:)	UNNotificationAttachment.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationCategory	swift.init	init(coder:)	UNNotificationCategory.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationContent	swift.init	init(coder:)	UNNotificationContent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationRequest	swift.init	init(coder:)	UNNotificationRequest.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationResponse	swift.init	init(coder:)	UNNotificationResponse.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationSettings	swift.init	init(coder:)	UNNotificationSettings.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationSound	swift.init	init(coder:)	UNNotificationSound.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)UNNotificationTrigger	swift.init	init(coder:)	UNNotificationTrigger.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)UNNotificationContentProviding	swift.protocol	UNNotificationContentProviding	UNNotificationContentProviding	protocol UNNotificationContentProviding : NSObjectProtocol
+c:objc(pl)UNUserNotificationCenterDelegate	swift.protocol	UNUserNotificationCenterDelegate	UNUserNotificationCenterDelegate	protocol UNUserNotificationCenterDelegate : NSObjectProtocol
+c:objc(pl)UNUserNotificationCenterDelegate(im)userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:	swift.method	userNotificationCenter(_:didReceive:)	UNUserNotificationCenterDelegate.userNotificationCenter(_:didReceive:)	optional func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async
+c:objc(pl)UNUserNotificationCenterDelegate(im)userNotificationCenter:openSettingsForNotification:	swift.method	userNotificationCenter(_:openSettingsFor:)	UNUserNotificationCenterDelegate.userNotificationCenter(_:openSettingsFor:)	optional func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?)
+c:objc(pl)UNUserNotificationCenterDelegate(im)userNotificationCenter:willPresentNotification:withCompletionHandler:	swift.method	userNotificationCenter(_:willPresent:)	UNUserNotificationCenterDelegate.userNotificationCenter(_:willPresent:)	optional func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@UNErrorCode	swift.type.property	errorDomain	UNError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	errorUserInfo	UNError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	errorCode	UNError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@UNErrorCode	swift.func.op	~=(_:_:)	UNError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	errorUserInfo	UNError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@UNErrorCode	swift.func.op	==(_:_:)	UNError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	code	UNError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNErrorCode	swift.method	hash(into:)	UNError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	userInfo	UNError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	errorCode	UNError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	hashValue	UNError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@UNErrorCode	swift.init	init(_:userInfo:)	UNError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11UNErrorCodeLeV	swift.struct	UNError	UNError	struct UNError
+s:SC11UNErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	UNError.errorDomain	static var errorDomain: String { get }
+s:SC11UNErrorCodeLeV17attachmentCorruptSoAAVvpZ	swift.type.property	attachmentCorrupt	UNError.attachmentCorrupt	static var attachmentCorrupt: UNError.Code { get }
+s:SC11UNErrorCodeLeV17badgeInputInvalidSoAAVvpZ	swift.type.property	badgeInputInvalid	UNError.badgeInputInvalid	static var badgeInputInvalid: UNError.Code { get }
+s:SC11UNErrorCodeLeV20attachmentInvalidURLSoAAVvpZ	swift.type.property	attachmentInvalidURL	UNError.attachmentInvalidURL	static var attachmentInvalidURL: UNError.Code { get }
+s:SC11UNErrorCodeLeV23contentProvidingInvalidSoAAVvpZ	swift.type.property	contentProvidingInvalid	UNError.contentProvidingInvalid	static var contentProvidingInvalid: UNError.Code { get }
+s:SC11UNErrorCodeLeV23notificationsNotAllowedSoAAVvpZ	swift.type.property	notificationsNotAllowed	UNError.notificationsNotAllowed	static var notificationsNotAllowed: UNError.Code { get }
+s:SC11UNErrorCodeLeV24attachmentNotInDataStoreSoAAVvpZ	swift.type.property	attachmentNotInDataStore	UNError.attachmentNotInDataStore	static var attachmentNotInDataStore: UNError.Code { get }
+s:SC11UNErrorCodeLeV25attachmentInvalidFileSizeSoAAVvpZ	swift.type.property	attachmentInvalidFileSize	UNError.attachmentInvalidFileSize	static var attachmentInvalidFileSize: UNError.Code { get }
+s:SC11UNErrorCodeLeV25notificationInvalidNoDateSoAAVvpZ	swift.type.property	notificationInvalidNoDate	UNError.notificationInvalidNoDate	static var notificationInvalidNoDate: UNError.Code { get }
+s:SC11UNErrorCodeLeV26attachmentUnrecognizedTypeSoAAVvpZ	swift.type.property	attachmentUnrecognizedType	UNError.attachmentUnrecognizedType	static var attachmentUnrecognizedType: UNError.Code { get }
+s:SC11UNErrorCodeLeV28notificationInvalidNoContentSoAAVvpZ	swift.type.property	notificationInvalidNoContent	UNError.notificationInvalidNoContent	static var notificationInvalidNoContent: UNError.Code { get }
+s:SC11UNErrorCodeLeV32contentProvidingObjectNotAllowedSoAAVvpZ	swift.type.property	contentProvidingObjectNotAllowed	UNError.contentProvidingObjectNotAllowed	static var contentProvidingObjectNotAllowed: UNError.Code { get }
+s:SC11UNErrorCodeLeV33attachmentMoveIntoDataStoreFailedSoAAVvpZ	swift.type.property	attachmentMoveIntoDataStoreFailed	UNError.attachmentMoveIntoDataStoreFailed	static var attachmentMoveIntoDataStoreFailed: UNError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNAlertStyle	swift.func.op	!=(_:_:)	UNAlertStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.func.op	!=(_:_:)	UNAuthorizationOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNAuthorizationStatus	swift.func.op	!=(_:_:)	UNAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNErrorCode	swift.func.op	!=(_:_:)	UNError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.func.op	!=(_:_:)	UNNotificationActionOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.func.op	!=(_:_:)	UNNotificationCategoryOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationInterruptionLevel	swift.func.op	!=(_:_:)	UNNotificationInterruptionLevel.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.func.op	!=(_:_:)	UNNotificationPresentationOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationSetting	swift.func.op	!=(_:_:)	UNNotificationSetting.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNShowPreviewsSetting	swift.func.op	!=(_:_:)	UNShowPreviewsSetting.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@UNNotificationSoundName	swift.func.op	!=(_:_:)	UNNotificationSoundName.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNAlertStyle	swift.property	hashValue	UNAlertStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNAuthorizationStatus	swift.property	hashValue	UNAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	hashValue	UNError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNNotificationInterruptionLevel	swift.property	hashValue	UNNotificationInterruptionLevel.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNNotificationSetting	swift.property	hashValue	UNNotificationSetting.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNShowPreviewsSetting	swift.property	hashValue	UNShowPreviewsSetting.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNAlertStyle	swift.method	hash(into:)	UNAlertStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNAuthorizationStatus	swift.method	hash(into:)	UNAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNErrorCode	swift.method	hash(into:)	UNError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNNotificationInterruptionLevel	swift.method	hash(into:)	UNNotificationInterruptionLevel.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNNotificationSetting	swift.method	hash(into:)	UNNotificationSetting.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNShowPreviewsSetting	swift.method	hash(into:)	UNShowPreviewsSetting.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11UNErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	UNError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So12UNAlertStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	UNAlertStyle.init(rawValue:)	init?(rawValue: Int)
+s:So21UNAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	UNAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So21UNNotificationSettingV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	UNNotificationSetting.init(rawValue:)	init?(rawValue: Int)
+s:So21UNShowPreviewsSettingV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	UNShowPreviewsSetting.init(rawValue:)	init?(rawValue: Int)
+s:So22UNAuthorizationOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	UNAuthorizationOptions.init(rawValue:)	init(rawValue: UInt)
+s:So23UNNotificationSoundNamea8rawValueABSS_tcfc	swift.init	init(rawValue:)	UNNotificationSoundName.init(rawValue:)	init(rawValue: String)
+s:So23UNNotificationSoundNameayABSScfc	swift.init	init(_:)	UNNotificationSoundName.init(_:)	init(_ rawValue: String)
+s:So27UNNotificationActionOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	UNNotificationActionOptions.init(rawValue:)	init(rawValue: UInt)
+s:So29UNNotificationCategoryOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	UNNotificationCategoryOptions.init(rawValue:)	init(rawValue: UInt)
+s:So31UNNotificationInterruptionLevelV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	UNNotificationInterruptionLevel.init(rawValue:)	init?(rawValue: UInt)
+s:So33UNNotificationPresentationOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	UNNotificationPresentationOptions.init(rawValue:)	init(rawValue: UInt)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.init	init(arrayLiteral:)	UNAuthorizationOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.init	init(arrayLiteral:)	UNNotificationActionOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.init	init(arrayLiteral:)	UNNotificationCategoryOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.init	init(arrayLiteral:)	UNNotificationPresentationOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	isDisjoint(with:)	UNAuthorizationOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	isDisjoint(with:)	UNNotificationActionOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	isDisjoint(with:)	UNNotificationCategoryOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	isDisjoint(with:)	UNNotificationPresentationOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	isSuperset(of:)	UNAuthorizationOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	isSuperset(of:)	UNNotificationActionOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	isSuperset(of:)	UNNotificationCategoryOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	isSuperset(of:)	UNNotificationPresentationOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	subtracting(_:)	UNAuthorizationOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	subtracting(_:)	UNNotificationActionOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	subtracting(_:)	UNNotificationCategoryOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	subtracting(_:)	UNNotificationPresentationOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	isStrictSubset(of:)	UNAuthorizationOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	isStrictSubset(of:)	UNNotificationActionOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	isStrictSubset(of:)	UNNotificationCategoryOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	isStrictSubset(of:)	UNNotificationPresentationOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	isStrictSuperset(of:)	UNAuthorizationOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	isStrictSuperset(of:)	UNNotificationActionOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	isStrictSuperset(of:)	UNNotificationCategoryOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	isStrictSuperset(of:)	UNNotificationPresentationOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.property	isEmpty	UNAuthorizationOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.property	isEmpty	UNNotificationActionOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.property	isEmpty	UNNotificationCategoryOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.property	isEmpty	UNNotificationPresentationOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	isSubset(of:)	UNAuthorizationOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	isSubset(of:)	UNNotificationActionOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	isSubset(of:)	UNNotificationCategoryOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	isSubset(of:)	UNNotificationPresentationOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	subtract(_:)	UNAuthorizationOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	subtract(_:)	UNNotificationActionOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	subtract(_:)	UNNotificationCategoryOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	subtract(_:)	UNNotificationPresentationOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.init	init(_:)	UNAuthorizationOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.init	init(_:)	UNNotificationActionOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.init	init(_:)	UNNotificationCategoryOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.init	init(_:)	UNNotificationPresentationOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@UNNotificationSoundName	swift.property	hashValue	UNNotificationSoundName.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@UNNotificationSoundName	swift.method	hash(into:)	UNNotificationSoundName.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@UNErrorCode	swift.property	localizedDescription	UNError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	insert(_:)	UNAuthorizationOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	insert(_:)	UNNotificationActionOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	insert(_:)	UNNotificationCategoryOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	insert(_:)	UNNotificationPresentationOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	remove(_:)	UNAuthorizationOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	remove(_:)	UNNotificationActionOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	remove(_:)	UNNotificationCategoryOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	remove(_:)	UNNotificationPresentationOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	update(with:)	UNAuthorizationOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	update(with:)	UNNotificationActionOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	update(with:)	UNNotificationCategoryOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	update(with:)	UNNotificationPresentationOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	contains(_:)	UNAuthorizationOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	contains(_:)	UNNotificationActionOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	contains(_:)	UNNotificationCategoryOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	contains(_:)	UNNotificationPresentationOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	intersection(_:)	UNAuthorizationOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	intersection(_:)	UNNotificationActionOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	intersection(_:)	UNNotificationCategoryOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	intersection(_:)	UNNotificationPresentationOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	symmetricDifference(_:)	UNAuthorizationOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	symmetricDifference(_:)	UNNotificationActionOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	symmetricDifference(_:)	UNNotificationCategoryOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	symmetricDifference(_:)	UNNotificationPresentationOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	union(_:)	UNAuthorizationOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	union(_:)	UNNotificationActionOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	union(_:)	UNNotificationCategoryOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	union(_:)	UNNotificationPresentationOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	formIntersection(_:)	UNAuthorizationOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	formIntersection(_:)	UNNotificationActionOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	formIntersection(_:)	UNNotificationCategoryOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	formIntersection(_:)	UNNotificationPresentationOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	formSymmetricDifference(_:)	UNAuthorizationOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	formSymmetricDifference(_:)	UNNotificationActionOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	formSymmetricDifference(_:)	UNNotificationCategoryOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	formSymmetricDifference(_:)	UNNotificationPresentationOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.method	formUnion(_:)	UNAuthorizationOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.method	formUnion(_:)	UNNotificationActionOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.method	formUnion(_:)	UNNotificationCategoryOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.method	formUnion(_:)	UNNotificationPresentationOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@UNAuthorizationOptions	swift.init	init()	UNAuthorizationOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@UNNotificationActionOptions	swift.init	init()	UNNotificationActionOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@UNNotificationCategoryOptions	swift.init	init()	UNNotificationCategoryOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@UNNotificationPresentationOptions	swift.init	init()	UNNotificationPresentationOptions.init()	init()

@@ -1,0 +1,42 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 305,
+  "duplicateOccurrenceCount": 305,
+  "duplicateRelationshipOccurrenceCount": 318,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/Intents.symbols.json",
+      "relationshipCount": 7857,
+      "sha256": "afd43775b22e5829b7f3867246f467b6fd7e3f9cfe63720b94303be2c1d3756a",
+      "symbolCount": 4457
+    },
+    {
+      "path": "reference/symbol-graphs/Intents@CoreLocation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "0f70afefacf146914f41a886b51c366c23fc20add85521bb8d41bc05c86f7698",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/Intents@Foundation.symbols.json",
+      "relationshipCount": 7,
+      "sha256": "177c027dd102b70c45f3fb1bf325907aab86b55d7f3703fe3cdcceed8b22a6f3",
+      "symbolCount": 7
+    },
+    {
+      "path": "reference/symbol-graphs/_Intents_TipKit@Intents.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "91dc4ba4972a6386c2322233d2142c787a4a170192f503844e038ae2d6767c4c",
+      "symbolCount": 0
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "Intents",
+  "relationshipCount": 7865,
+  "relationshipMultisetSHA256": "e8299bb3cfac8f15be76364e9866391f9969749f630627408e4974fd8ddbada4",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 4160,
+  "symbolMultisetSHA256": "e73702cc9ebfcb18c6ee7f0fbd5ea86a2dd629b1c58dfeb53c551f89f5c4b350",
+  "target": "arm64-apple-ios26.0"
+}

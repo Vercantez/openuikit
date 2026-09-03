@@ -1,0 +1,231 @@
+{
+  "module": "Intents",
+  "moduleRecord": {
+    "app_coverage_count": 13,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 101,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "33e3f3d67744a233bcab8162ff2effcec33ce69e0cad68140f7f9146ed5e88f2",
+      "main_target_file_count": 4,
+      "repository_file_count": 6
+    },
+    "iphoneos_runtime_app_coverage_rank": 14,
+    "iphoneos_runtime_focus_launch_build_rank": 6,
+    "module": "Intents",
+    "occurrence_count": 101,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "96b46b3de958cd33276d64e8f26afd0cda16b58e17e0fb8a53564dea6e0f02f8",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Shared/Activity/ActivityManager.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "3dd68c1c35aa3248000b17e930d4efcb9859deef4eda6dc2bd5ba0a0ec7846fa",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "Signal/AppLaunch/AppDelegate.swift",
+          "SignalServiceKit/Messages/RecipientHidingManager.swift",
+          "SignalServiceKit/Notifications/NotificationPresenterImpl.swift",
+          "SignalServiceKit/Notifications/UserNotificationsPresenter.swift",
+          "SignalServiceKit/Threads/ThreadDeletionManager.swift",
+          "SignalServiceKit/Util/ThreadUtil.swift",
+          "SignalShareExtension/ShareViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "6a943f2cfe73eeead7b9662fe4c7eba7d5ff1bf6fa372e8afc57450f687e1543",
+        "file_count": 18,
+        "occurrence_count": 18,
+        "sample_paths": [
+          "Telegram/NotificationService/Sources/NotificationService.swift",
+          "Telegram/SiriIntents/IntentContacts.swift",
+          "Telegram/SiriIntents/IntentHandler.swift",
+          "Telegram/SiriIntents/IntentMessages.swift",
+          "Telegram/WidgetKitWidget/TodayViewController.swift",
+          "submodules/TelegramCallsUI/Sources/CallKitIntegration.swift",
+          "submodules/TelegramIntents/Sources/TelegramIntents.swift",
+          "submodules/TelegramUI/Components/ShareExtensionContext/Sources/ShareExtensionContext.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "eb4f9e2724252c2b1efbc65ae7fa00668e04730cdef3641d419c0c2d9395f171",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/Sources/WordPressData/Swift/SearchableActivityConvertable.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "ad4e302eb5606c524799ea44f714eeecbb144a8b0c9c77d408b0a904e65f5b04",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Riot/Modules/Application/AppCoordinator.swift",
+          "Riot/Modules/Application/LegacyAppDelegate.m",
+          "SiriIntents/ContactResolver/ContactResolver.m",
+          "SiriIntents/ContactResolver/ContactResolving.swift",
+          "SiriIntents/IntentHandler.h",
+          "SiriIntents/IntentHandlers/SendMessage/SendMessageIntentHandler.h",
+          "SiriIntents/IntentHandlers/StartAudioCall/StartAudioCallIntentHandler.h",
+          "SiriIntents/IntentHandlers/StartVideoCall/StartVideoCallIntentHandler.h"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "730c21871e9bde5542aedce35877c7521668869532324d96221afc4aaf924755",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Extensions/SiriShortcuts.swift",
+          "firefox-ios/Client/Frontend/Settings/SiriSettingsViewController.swift",
+          "focus-ios/Blockzilla/BrowserViewController.swift",
+          "focus-ios/Blockzilla/Settings/Controller/SettingsViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriFavoriteViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriShortcuts.swift",
+          "focus-ios/FocusIntentExtension/IntentHandler.swift",
+          "focus-ios/Widgets/Widgets.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "16e5c6d8e348a4ecc338a68b1a838ff7469688a5af273e0bdcfd9930b238a1ba",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "focus-ios/Blockzilla/BrowserViewController.swift",
+          "focus-ios/Blockzilla/Settings/Controller/SettingsViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriFavoriteViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriShortcuts.swift",
+          "focus-ios/FocusIntentExtension/IntentHandler.swift",
+          "focus-ios/Widgets/Widgets.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "e259f042b46139328c56a82864ef0c85971f97070d1cff89d4a41da15174b29e",
+        "file_count": 13,
+        "occurrence_count": 13,
+        "sample_paths": [
+          "Sources/App/AppDelegate.swift",
+          "Sources/Extensions/Intents/IntentHandler.swift",
+          "Sources/Extensions/Widgets/Custom/WidgetCustom.swift",
+          "Sources/Extensions/Widgets/Lockscreen/Details/WidgetDetails.swift",
+          "Sources/Extensions/Widgets/Lockscreen/Gauge/WidgetGauge.swift",
+          "Sources/Extensions/Widgets/Sensor/WidgetSensors.swift",
+          "Sources/Extensions/Widgets/TodoList/WidgetTodoList.swift",
+          "Sources/Shared/API/Webhook/Sensors/AudioOutputSensor.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "50df162df92b6e9f4c8e6c883acad67b2d27c0b87623971283f0c10dd31c383d",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "MastodonIntent/Handler/FollowersCountIntentHandler.swift",
+          "MastodonIntent/Handler/HashtagIntentHandler.swift",
+          "MastodonIntent/Handler/MultiFollowersCountIntentHandler.swift",
+          "MastodonIntent/Handler/SendPostIntentHandler.swift",
+          "MastodonIntent/IntentHandler.swift",
+          "MastodonIntent/Model/Account+Fetch.swift",
+          "WidgetExtension/Variants/FollowersCount/FollowersCountWidget.swift",
+          "WidgetExtension/Variants/LatestFollowers/LatestFollowersWidget.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "58f80d32099b2f313cf1e833e88f77bffa830250f9106c2e895fdfdcee3baccf",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "Widget/Dashboard/DashboardData.swift",
+          "Widget/Dashboard/DashboardWidgetProvider.swift",
+          "Widget/Files/FilesData.swift",
+          "Widget/Files/FilesWidgetProvider.swift",
+          "Widget/Lockscreen/LockscreenWidgetProvider.swift",
+          "Widget/Widget.swift",
+          "WidgetDashboardIntentHandler/IntentHandler.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "6a31a2c7c38a2273dc9b6007fc5b8f7debdbe9168262f1fc8307930fa8633ca4",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "PodcastsIntents/ChapterIntentHandler.swift",
+          "PodcastsIntents/ExtendSleepTimerIntentHandler.swift",
+          "PodcastsIntents/IntentHandler.swift",
+          "PodcastsIntents/OpenFilterIntentHandler.swift",
+          "PodcastsIntents/PlayMediaIntentHandler.swift",
+          "podcasts/AppDelegate+SiriShortcuts.swift",
+          "podcasts/SiriShortcutsManager.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "f79104ed677a9b0d4568973878d4a8ec1d78a0d805248ad2c66990f166112eed",
+        "file_count": 15,
+        "occurrence_count": 15,
+        "sample_paths": [
+          "Simplenote/Classes/NSUserActivity+Simplenote.swift",
+          "Simplenote/Classes/ShortcutsHandler.swift",
+          "Simplenote/Controllers/WidgetController.swift",
+          "SimplenoteIntents/Intent Handlers/AppendNoteIntentHandler.swift",
+          "SimplenoteIntents/Intent Handlers/CopyNoteContentIntentHandler.swift",
+          "SimplenoteIntents/Intent Handlers/CreateNewNoteIntentHandler.swift",
+          "SimplenoteIntents/Intent Handlers/FindNoteIntentHandler.swift",
+          "SimplenoteIntents/Intent Handlers/FindNoteWithTagIntentHandler.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "ad5b5929a25f2d587a783d17013a4ed60664d9a443b1cc3efd725d764be7c869",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/iOS/SirikitIntentCoordinator.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 14,
+    "byFocusLaunchBuildRelevance": 6
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 13,
+      "apps": [
+        "NetNewsWire",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "element-ios",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios",
+        "vlc-ios"
+      ],
+      "family": "Intents / IntentsUI",
+      "file_count": 117,
+      "focus_main_target_file_count": 7,
+      "focus_repository_file_count": 9,
+      "modules": [
+        "Intents",
+        "IntentsUI"
+      ],
+      "note": "Siri/custom intent model and UI"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "module": "Security",
+  "moduleRecord": {
+    "app_coverage_count": 8,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 26,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 37,
+    "iphoneos_runtime_focus_launch_build_rank": 42,
+    "module": "Security",
+    "occurrence_count": 27,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "40c6b3b85579afccabfef6f0a378d2e0a4385e0452e57c0fc02ec719ee15ff54",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/Secrets/Sources/Secrets/Credentials.swift",
+          "Modules/Secrets/Sources/Secrets/CredentialsManager.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "af2cca53af6c10158881cfb768b4af16d0e91af47705ee4d7f8abdd02e2aa1e6",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/InboxKeychain/Sources/Keychain.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "4b8950de18508aafca0ef2832fdd8c0c16a61f51edb9bdfa96eb5deb9cc31120",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "SignalServiceKit/Network/Certificates.swift",
+          "SignalServiceKit/Network/HttpSecurityPolicy.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "3bde46c6cc5614fe792c793b0cc0a7520ac2b9f67bee0da40d1d39cf666e7212",
+        "file_count": 5,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "submodules/LocalAuth/Sources/LocalAuth.swift",
+          "submodules/MtProtoKit/Sources/GCDAsyncSocket.h",
+          "submodules/MtProtoKit/Sources/MTRsa.m",
+          "submodules/MtProtoKit/Sources/MTTcpConnection.m",
+          "submodules/WebUI/Sources/WebAppSecureStorage.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "b6fe86d2d0bcee9de00b25e0ad6ea45cb40054eae6b0fa8b633c8accbf3b007c",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Sources/SFHFKeychainUtils/SFHFKeychainUtils.m",
+          "Modules/Sources/WordPressShared/Keychain/KeychainErrorClassification.swift",
+          "WordPress/Classes/Utility/KeychainTools.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "85ea2d88ea6a137635c57e6a6065887a384623858bf1efd3521fd90e012417f4",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/NativeErrorPage/CertificateHelper.swift",
+          "firefox-ios/Client/Frontend/NativeErrorPage/NativeErrorPageHelper.swift",
+          "firefox-ios/Client/Frontend/NativeErrorPage/NativeErrorPageMiddleware.swift",
+          "firefox-ios/Client/Frontend/TrackingProtection/CertificatesHelpers/CertificatesFetcher.swift",
+          "firefox-ios/Client/Frontend/TrackingProtection/CertificatesViewController.swift",
+          "firefox-ios/Client/Frontend/TrackingProtection/TrackigProtectionRedux/TrackingProtectionModel.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "500576219d8bb0f6b6831a8ad3d7a4039a2b4d48e0ae01e44d93a89e7f7e2a9a",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Sources/App/Settings/KeychainExplorer/KeychainExplorerView.swift",
+          "Sources/App/Utilities/Utils.swift",
+          "Sources/HANetworking/Sources/ClientCertificate.swift",
+          "Sources/HANetworking/Sources/CustomServerTrustManager.swift",
+          "Sources/WatchWidgets/WatchWidgetLiveFetch.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "c456ef2238992bd809f8d626f9307d8b7fecb79669930c855070cbb920ed6a10",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "KsApi/Sources/KsApi/Data+PKCE.swift",
+          "Library/Sources/Library/Library/Keychain.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 37,
+    "byFocusLaunchBuildRelevance": 42
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
