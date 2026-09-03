@@ -1069,11 +1069,17 @@ expected_foundationessentials_inputs=$(printf '%s\n' \
     "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
     "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
     "$SYS/usr/lib/libobjc.tbd")
+# libSystem.B.dylib (mrroot) resolves _remquo and _nan for
+# OpenCoreGraphics/PortableCGFloat.swift's CGFloat remquo(_:_:) / nan(_:)
+# wrappers: the sysroot libSystem.tbd re-exports libsystem_m, but the sysroot
+# carries no usr/lib/system/*.tbd to follow, so lld binds the real image --
+# the same image the loader maps for /usr/lib/libSystem.B.dylib.
 expected_opencoregraphics_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     "$FULL/opencoregraphics.o" \
     "$SYS/usr/lib/libobjc.tbd")
 expected_swiftui_inputs=$(printf '%s\n' \
