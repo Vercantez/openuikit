@@ -414,8 +414,18 @@ else:
     if "-fuse-ld=lld" not in executed:
         print("overlay_link: Darwin driver argv missing -fuse-ld=lld")
         sys.exit(1)
-    if "-dynamiclib" in executed.split() or "-nostdlib" in executed.split():
-        print("overlay_link: Darwin driver argv injected -dynamiclib/-nostdlib")
+    if "-dynamiclib" in executed.split():
+        print("overlay_link: Darwin driver argv injected -dynamiclib")
+        sys.exit(1)
+    if "-nostdlib" in executed.split():
+        print("overlay_link: Darwin driver argv injected -nostdlib (C); use -nostdlib++")
+        sys.exit(1)
+    if "/usr/lib/llvm-18/lib" in executed:
+        print("overlay_link: Darwin driver argv still has host /usr/lib/llvm-18/lib")
+        sys.exit(1)
+    cxx = next((l for l in err.splitlines() if l.startswith("clangxx_darwin_link: cxx_runtime=")), "")
+    if "libc++.tbd" not in cxx:
+        print("overlay_link: missing cxx_runtime= sysroot libc++.tbd")
         sys.exit(1)
     if "-platform_version" in executed.split() or (
         "-arch" in executed.split() and "ld64" not in executed
