@@ -1424,12 +1424,12 @@ phase2_fill_x86_libswiftcompat() {
     # f3594817: "STALE COPIES (1 of 5) ... upstream darwin/usr/lib/
     # libswiftcompat.dylib is gone" refused the x86 widget gate).
     phase2_install_compat_upstream() {
-        [ -d "$mrlib" ] || return 0
-        if [ -f "$mrlib/libswiftcompat.dylib" ] && cmp -s "$out" "$mrlib/libswiftcompat.dylib"; then
-            return 0
+        # Not a product reuse: the upstream copy is refreshed whenever its bytes
+        # differ from the graded shim (content compare, no existence skip).
+        if [ -d "$mrlib" ] && ! cmp -s "$out" "$mrlib/libswiftcompat.dylib" 2>/dev/null; then
+            cp -f "$out" "$mrlib/libswiftcompat.dylib"
+            echo "phase2: libswiftcompat installed upstream at $mrlib/libswiftcompat.dylib" >&2
         fi
-        cp -f "$out" "$mrlib/libswiftcompat.dylib"
-        echo "phase2: libswiftcompat installed upstream at $mrlib/libswiftcompat.dylib" >&2
     }
     local src_dir=$repo/swiftcore-macho/sdk/compat
     local work=$dest/shim-work
