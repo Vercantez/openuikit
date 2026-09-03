@@ -1,1 +1,6 @@
 full/photos/Photos.swift
+full/photos/PhotosChange.swift
+full/photos/PhotosCollections.swift
+full/photos/PhotosConstants.swift
+full/photos/PhotosEnums.swift
+full/photos/PhotosResources.swift
