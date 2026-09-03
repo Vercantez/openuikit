@@ -80,7 +80,7 @@ class PatchSystemAllocator(unittest.TestCase):
         self.assertNotIn("malloc_zone_malloc", first)
         self.assertIn("return malloc(size);", first)
         self.assertIn("malloc_zone_malloc((malloc_zone_t *)allocator, size);", out)
-        self.assertIn("((const CFRuntimeBase *)&__kCFAllocatorSystemDefault)->_cfisa", out)
+        self.assertIn(patcher.ZONE_CHECK_NEW, out)
         self.assertTrue(patcher.already_patched(out))
 
     def test_idempotent(self) -> None:

@@ -11,12 +11,11 @@ the zone; that pointer is not the default zone, so malloc_zone_malloc aborts
 the same file already uses malloc/calloc/realloc/free. Apply that body to the
 Mac callbacks only.
 
-Also rewrites __CFISAForCFAllocator: corelibs never registers a CFAllocator
-ObjC class, so the table is 0 while static allocators carry __NSCFType as
-isa. CFAllocatorAllocate then treats kCFAllocatorSystemDefault as a
-malloc_zone_t and malloc_zone_malloc aborts (CreateInstance exit 71).
-Fall back to the static object's isa so the callback path runs. Real
-malloc_zone_t* allocators still miss that isa and keep zone dispatch.
+Also tightens the "allocator is a malloc_zone_t" tests. corelibs never
+registers a CFAllocator ObjC class, so __CFISAForCFAllocator is 0 while
+static allocators carry __NSCFType. CFAllocatorAllocate then treated
+kCFAllocatorSystemDefault as a zone. Require the isa to differ from the
+static system default as well; real malloc_zone_t* still take zone dispatch.
 
 Does not rewrite:
   * CFAllocatorCustom* zone vtable (allocator used as a zone).
@@ -54,16 +53,13 @@ PORTABLE_DEALLOCATE = """static void __CFAllocatorSystemDeallocate(void *ptr, vo
     free(ptr);
 }"""
 
-ISA_OLD = """CF_INLINE uintptr_t __CFISAForCFAllocator(void) {
-    return _GetCFRuntimeObjcClassAtIndex(_kCFRuntimeIDCFAllocator);
-}"""
-
-ISA_NEW = """static struct __CFAllocator __kCFAllocatorSystemDefault;
-CF_INLINE uintptr_t __CFISAForCFAllocator(void) {
-    uintptr_t registered = _GetCFRuntimeObjcClassAtIndex(_kCFRuntimeIDCFAllocator);
-    if (registered) return registered;
-    return (uintptr_t)((const CFRuntimeBase *)&__kCFAllocatorSystemDefault)->_cfisa;
-}"""
+ZONE_CHECK_OLD = (
+    "_CFTypeGetClass(allocator) != __CFISAForCFAllocator()"
+)
+ZONE_CHECK_NEW = (
+    "_CFTypeGetClass(allocator) != __CFISAForCFAllocator() && "
+    "_CFTypeGetClass(allocator) != _CFTypeGetClass(kCFAllocatorSystemDefault)"
+)
 
 
 def _cfbase_path(arg: str) -> pathlib.Path:
@@ -113,7 +109,7 @@ def already_patched(text: str) -> bool:
         return False
     if "malloc_zone_malloc" in body or "malloc(" not in body:
         return False
-    return "((const CFRuntimeBase *)&__kCFAllocatorSystemDefault)->_cfisa" in text
+    return ZONE_CHECK_NEW in text
 
 
 def patch_text(text: str) -> str:
@@ -135,12 +131,13 @@ def patch_text(text: str) -> str:
     for signature, replacement in replacements:
         start, end = _function_span(out, signature)
         out = out[:start] + replacement + out[end:]
-    if ISA_OLD not in out:
+    n = out.count(ZONE_CHECK_OLD)
+    if n < 1:
         raise SystemExit(
-            "patch_cf_system_allocator: __CFISAForCFAllocator is not the "
-            "corelibs one-liner (pin changed; will not invent a CF allocator)"
+            "patch_cf_system_allocator: no allocator-is-zone checks "
+            "(pin changed; will not invent a CF allocator)"
         )
-    out = out.replace(ISA_OLD, ISA_NEW, 1)
+    out = out.replace(ZONE_CHECK_OLD, ZONE_CHECK_NEW)
     first = _first_body(out, SIG_ALLOCATE)
     if "malloc_zone_malloc" in first:
         raise SystemExit(
@@ -150,6 +147,10 @@ def patch_text(text: str) -> str:
         raise SystemExit(
             "patch_cf_system_allocator: zone-as-allocator malloc_zone_malloc "
             "vanished; refusing to drop CFAllocator-as-zone dispatch"
+        )
+    if ZONE_CHECK_NEW not in out:
+        raise SystemExit(
+            "patch_cf_system_allocator: static-allocator isa conjunct did not stick"
         )
     return out
 
@@ -169,7 +170,11 @@ def main(argv: list[str]) -> int:
     updated = patch_text(original)
     if updated != original:
         path.write_text(updated, encoding="utf-8")
-        print(f"patched {path} (__CFAllocatorSystem* -> malloc/free)", file=sys.stderr)
+        print(
+            f"patched {path} (__CFAllocatorSystem* -> malloc/free; "
+            "static CFAllocator isa is not a malloc zone)",
+            file=sys.stderr,
+        )
     else:
         print(f"already patched {path}", file=sys.stderr)
     return 0
