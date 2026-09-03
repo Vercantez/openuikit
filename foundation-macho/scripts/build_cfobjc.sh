@@ -86,6 +86,7 @@ find_cf() {
     local c
     for c in \
         "${CF:-}" \
+        "$W/cf/Sources/CoreFoundation" \
         "$W/cf" \
         "$W/cfobjc/src" \
         /work/cf \

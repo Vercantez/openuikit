@@ -246,7 +246,12 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    comes from `foundation-macho/scripts/build_cfobjc.sh` (objects under
    `$ud_w/cfobjc/obj`, recipe id `cfobjc.1`) then
    `foundation-macho/scripts/build_cftest_harness.sh` (the only CF linker).
-   Missing CF sources, a failed compile, or a failed link is
+   CoreFoundation sources are the env/contract.json checkout
+   `swift-corelibs-foundation` (`f3a7a343`, tree `2f9136f2`, tagged
+   `swift-6.2.4-RELEASE`, `demanded_by ud-guest-x86`). `ud-guest-x86` fetches
+   that commit into `scratch/ud-guest-x86_64/cf` and refuses if `HEAD^{tree}`
+   differs, naming the commit. The recipe compiles only
+   `Sources/CoreFoundation`. A failed fetch/compile/link is
    `CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib`. Will not invent a stub
    dylib. `UD_CFTEST_DYLIB=` still stages a provided x86 dylib.
    `link_ud_guest.sh` stays the only ud_guest linker. Any other
