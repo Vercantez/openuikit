@@ -6,8 +6,41 @@ public let UNNotificationDefaultActionIdentifier =
 public let UNNotificationDismissActionIdentifier =
   "com.apple.UNNotificationDismissActionIdentifier"
 
-public struct UNError: Error, Equatable, Sendable, CustomStringConvertible {
-  public enum Code: Int, Sendable {
+/// Apple documents these as `UNNotificationAttachmentOptions*` string
+/// constants. The pinned public inputs do not include the raw bytes; Linux
+/// uses the NS_STRING_ENUM constant names, matching the `UNErrorDomain`
+/// pattern, until an Apple-oracle observation lands.
+public let UNNotificationAttachmentOptionsTypeHintKey =
+  "UNNotificationAttachmentOptionsTypeHintKey"
+public let UNNotificationAttachmentOptionsThumbnailHiddenKey =
+  "UNNotificationAttachmentOptionsThumbnailHiddenKey"
+public let UNNotificationAttachmentOptionsThumbnailClippingRectKey =
+  "UNNotificationAttachmentOptionsThumbnailClippingRectKey"
+public let UNNotificationAttachmentOptionsThumbnailTimeKey =
+  "UNNotificationAttachmentOptionsThumbnailTimeKey"
+
+/// Linux overlay keyed-archive identifiers. Apple's NSSecureCoding keys are
+/// not in the pinned public inputs and remain an oracle question.
+private enum UNPortableArchive {
+  static let versionKey = "OpenUIKit.UserNotifications.archiveVersion"
+  static let kindKey = "OpenUIKit.UserNotifications.archiveKind"
+  static let version: Int32 = 1
+}
+
+/// Bridged UserNotifications error.
+///
+/// The pinned API digester records a stored `_nsError: NSError` overlay.
+/// Linux Foundation exposes `Foundation._BridgedStoredNSError` and
+/// `Foundation._ErrorCodeProtocol`. Foundation's protocol-default
+/// `hash(into:)` / `hashValue` witnesses trap (`__HALT`) on this toolchain,
+/// so those two Hashable members are provided here.
+@frozen
+public struct UNError: Foundation._BridgedStoredNSError, @unchecked Sendable,
+  CustomStringConvertible
+{
+  public enum Code: Int, Foundation._ErrorCodeProtocol, Sendable {
+    public typealias _ErrorType = UNError
+
     case notificationsNotAllowed = 1
     case attachmentInvalidURL = 100
     case attachmentUnrecognizedType = 101
@@ -22,10 +55,40 @@ public struct UNError: Error, Equatable, Sendable, CustomStringConvertible {
     case badgeInputInvalid = 1600
   }
 
-  public let code: Code
+  public let _nsError: NSError
 
-  public init(_ code: Code) {
-    self.code = code
+  public init(_nsError: NSError) {
+    self._nsError = _nsError
+  }
+
+  public static var _nsErrorDomain: String { UNErrorDomain }
+
+  public static var notificationsNotAllowed: Code { .notificationsNotAllowed }
+  public static var attachmentInvalidURL: Code { .attachmentInvalidURL }
+  public static var attachmentUnrecognizedType: Code { .attachmentUnrecognizedType }
+  public static var attachmentInvalidFileSize: Code { .attachmentInvalidFileSize }
+  public static var attachmentNotInDataStore: Code { .attachmentNotInDataStore }
+  public static var attachmentMoveIntoDataStoreFailed: Code {
+    .attachmentMoveIntoDataStoreFailed
+  }
+  public static var attachmentCorrupt: Code { .attachmentCorrupt }
+  public static var notificationInvalidNoDate: Code { .notificationInvalidNoDate }
+  public static var notificationInvalidNoContent: Code { .notificationInvalidNoContent }
+  public static var contentProvidingObjectNotAllowed: Code {
+    .contentProvidingObjectNotAllowed
+  }
+  public static var contentProvidingInvalid: Code { .contentProvidingInvalid }
+  public static var badgeInputInvalid: Code { .badgeInputInvalid }
+
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(_nsError.domain)
+    hasher.combine(_nsError.code)
+  }
+
+  public var hashValue: Int {
+    var hasher = Hasher()
+    hash(into: &hasher)
+    return hasher.finalize()
   }
 
   public var description: String {
@@ -68,7 +131,7 @@ public struct UNNotificationPresentationOptions: OptionSet, Sendable {
   public static let banner = Self(rawValue: 1 << 4)
 }
 
-public enum UNAuthorizationStatus: Int, Sendable {
+public enum UNAuthorizationStatus: Int, Hashable, Sendable {
   case notDetermined = 0
   case denied = 1
   case authorized = 2
@@ -76,32 +139,32 @@ public enum UNAuthorizationStatus: Int, Sendable {
   case ephemeral = 4
 }
 
-public enum UNNotificationSetting: Int, Sendable {
+public enum UNNotificationSetting: Int, Hashable, Sendable {
   case notSupported = 0
   case disabled = 1
   case enabled = 2
 }
 
-public enum UNShowPreviewsSetting: Int, Sendable {
+public enum UNShowPreviewsSetting: Int, Hashable, Sendable {
   case always = 0
   case whenAuthenticated = 1
   case never = 2
 }
 
-public enum UNAlertStyle: Int, Sendable {
+public enum UNAlertStyle: Int, Hashable, Sendable {
   case none = 0
   case banner = 1
   case alert = 2
 }
 
-public enum UNNotificationInterruptionLevel: UInt, Sendable {
+public enum UNNotificationInterruptionLevel: UInt, Hashable, Sendable {
   case passive = 0
   case active = 1
   case timeSensitive = 2
   case critical = 3
 }
 
-public final class UNNotificationSettings: NSObject {
+public final class UNNotificationSettings: NSObject, NSCopying, NSSecureCoding {
   public let authorizationStatus: UNAuthorizationStatus
   public let soundSetting: UNNotificationSetting
   public let badgeSetting: UNNotificationSetting
@@ -121,9 +184,44 @@ public final class UNNotificationSettings: NSObject {
   @usableFromInline
   internal init(
     authorizationStatus: UNAuthorizationStatus,
-    requestedOptions: UNAuthorizationOptions
+    soundSetting: UNNotificationSetting,
+    badgeSetting: UNNotificationSetting,
+    alertSetting: UNNotificationSetting,
+    notificationCenterSetting: UNNotificationSetting,
+    lockScreenSetting: UNNotificationSetting,
+    carPlaySetting: UNNotificationSetting,
+    alertStyle: UNAlertStyle,
+    showPreviewsSetting: UNShowPreviewsSetting,
+    criticalAlertSetting: UNNotificationSetting,
+    providesAppNotificationSettings: Bool,
+    announcementSetting: UNNotificationSetting,
+    timeSensitiveSetting: UNNotificationSetting,
+    scheduledDeliverySetting: UNNotificationSetting,
+    directMessagesSetting: UNNotificationSetting
   ) {
     self.authorizationStatus = authorizationStatus
+    self.soundSetting = soundSetting
+    self.badgeSetting = badgeSetting
+    self.alertSetting = alertSetting
+    self.notificationCenterSetting = notificationCenterSetting
+    self.lockScreenSetting = lockScreenSetting
+    self.carPlaySetting = carPlaySetting
+    self.alertStyle = alertStyle
+    self.showPreviewsSetting = showPreviewsSetting
+    self.criticalAlertSetting = criticalAlertSetting
+    self.providesAppNotificationSettings = providesAppNotificationSettings
+    self.announcementSetting = announcementSetting
+    self.timeSensitiveSetting = timeSensitiveSetting
+    self.scheduledDeliverySetting = scheduledDeliverySetting
+    self.directMessagesSetting = directMessagesSetting
+    super.init()
+  }
+
+  @usableFromInline
+  internal convenience init(
+    authorizationStatus: UNAuthorizationStatus,
+    requestedOptions: UNAuthorizationOptions
+  ) {
     let enabled =
       authorizationStatus == .authorized
       || authorizationStatus == .provisional
@@ -132,22 +230,141 @@ public final class UNNotificationSettings: NSObject {
       guard requestedOptions.contains(option) else { return .disabled }
       return enabled ? .enabled : .disabled
     }
-    soundSetting = setting(.sound)
-    badgeSetting = setting(.badge)
-    alertSetting = setting(.alert)
-    notificationCenterSetting = enabled ? .enabled : .disabled
-    lockScreenSetting = enabled ? .enabled : .disabled
-    carPlaySetting = setting(.carPlay)
-    alertStyle = setting(.alert) == .enabled ? .banner : .none
-    showPreviewsSetting = enabled ? .always : .never
-    criticalAlertSetting = setting(.criticalAlert)
-    providesAppNotificationSettings =
-      enabled && requestedOptions.contains(.providesAppNotificationSettings)
-    announcementSetting = setting(.announcement)
-    timeSensitiveSetting = setting(.timeSensitive)
-    scheduledDeliverySetting = .notSupported
-    directMessagesSetting = .notSupported
+    self.init(
+      authorizationStatus: authorizationStatus,
+      soundSetting: setting(.sound),
+      badgeSetting: setting(.badge),
+      alertSetting: setting(.alert),
+      notificationCenterSetting: enabled ? .enabled : .disabled,
+      lockScreenSetting: enabled ? .enabled : .disabled,
+      carPlaySetting: setting(.carPlay),
+      alertStyle: setting(.alert) == .enabled ? .banner : .none,
+      showPreviewsSetting: enabled ? .always : .never,
+      criticalAlertSetting: setting(.criticalAlert),
+      providesAppNotificationSettings:
+        enabled && requestedOptions.contains(.providesAppNotificationSettings),
+      announcementSetting: setting(.announcement),
+      timeSensitiveSetting: setting(.timeSensitive),
+      scheduledDeliverySetting: .notSupported,
+      directMessagesSetting: .notSupported
+    )
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let authorizationStatus = UNAuthorizationStatus(
+        rawValue: Int(coder.decodeInt64(forKey: "authorizationStatus"))
+      ),
+      let soundSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "soundSetting"))
+      ),
+      let badgeSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "badgeSetting"))
+      ),
+      let alertSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "alertSetting"))
+      ),
+      let notificationCenterSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "notificationCenterSetting"))
+      ),
+      let lockScreenSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "lockScreenSetting"))
+      ),
+      let carPlaySetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "carPlaySetting"))
+      ),
+      let alertStyle = UNAlertStyle(
+        rawValue: Int(coder.decodeInt64(forKey: "alertStyle"))
+      ),
+      let showPreviewsSetting = UNShowPreviewsSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "showPreviewsSetting"))
+      ),
+      let criticalAlertSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "criticalAlertSetting"))
+      ),
+      let announcementSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "announcementSetting"))
+      ),
+      let timeSensitiveSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "timeSensitiveSetting"))
+      ),
+      let scheduledDeliverySetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "scheduledDeliverySetting"))
+      ),
+      let directMessagesSetting = UNNotificationSetting(
+        rawValue: Int(coder.decodeInt64(forKey: "directMessagesSetting"))
+      )
+    else {
+      return nil
+    }
+    self.authorizationStatus = authorizationStatus
+    self.soundSetting = soundSetting
+    self.badgeSetting = badgeSetting
+    self.alertSetting = alertSetting
+    self.notificationCenterSetting = notificationCenterSetting
+    self.lockScreenSetting = lockScreenSetting
+    self.carPlaySetting = carPlaySetting
+    self.alertStyle = alertStyle
+    self.showPreviewsSetting = showPreviewsSetting
+    self.criticalAlertSetting = criticalAlertSetting
+    self.providesAppNotificationSettings =
+      coder.decodeBool(forKey: "providesAppNotificationSettings")
+    self.announcementSetting = announcementSetting
+    self.timeSensitiveSetting = timeSensitiveSetting
+    self.scheduledDeliverySetting = scheduledDeliverySetting
+    self.directMessagesSetting = directMessagesSetting
     super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(Int64(authorizationStatus.rawValue), forKey: "authorizationStatus")
+    coder.encode(Int64(soundSetting.rawValue), forKey: "soundSetting")
+    coder.encode(Int64(badgeSetting.rawValue), forKey: "badgeSetting")
+    coder.encode(Int64(alertSetting.rawValue), forKey: "alertSetting")
+    coder.encode(
+      Int64(notificationCenterSetting.rawValue), forKey: "notificationCenterSetting"
+    )
+    coder.encode(Int64(lockScreenSetting.rawValue), forKey: "lockScreenSetting")
+    coder.encode(Int64(carPlaySetting.rawValue), forKey: "carPlaySetting")
+    coder.encode(Int64(alertStyle.rawValue), forKey: "alertStyle")
+    coder.encode(Int64(showPreviewsSetting.rawValue), forKey: "showPreviewsSetting")
+    coder.encode(Int64(criticalAlertSetting.rawValue), forKey: "criticalAlertSetting")
+    coder.encode(
+      providesAppNotificationSettings, forKey: "providesAppNotificationSettings"
+    )
+    coder.encode(Int64(announcementSetting.rawValue), forKey: "announcementSetting")
+    coder.encode(Int64(timeSensitiveSetting.rawValue), forKey: "timeSensitiveSetting")
+    coder.encode(
+      Int64(scheduledDeliverySetting.rawValue), forKey: "scheduledDeliverySetting"
+    )
+    coder.encode(Int64(directMessagesSetting.rawValue), forKey: "directMessagesSetting")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationSettings(
+      authorizationStatus: authorizationStatus,
+      soundSetting: soundSetting,
+      badgeSetting: badgeSetting,
+      alertSetting: alertSetting,
+      notificationCenterSetting: notificationCenterSetting,
+      lockScreenSetting: lockScreenSetting,
+      carPlaySetting: carPlaySetting,
+      alertStyle: alertStyle,
+      showPreviewsSetting: showPreviewsSetting,
+      criticalAlertSetting: criticalAlertSetting,
+      providesAppNotificationSettings: providesAppNotificationSettings,
+      announcementSetting: announcementSetting,
+      timeSensitiveSetting: timeSensitiveSetting,
+      scheduledDeliverySetting: scheduledDeliverySetting,
+      directMessagesSetting: directMessagesSetting
+    )
   }
 }
 
@@ -161,7 +378,7 @@ public struct UNNotificationSoundName: RawRepresentable, Hashable, Sendable,
   public init(stringLiteral value: String) { rawValue = value }
 }
 
-open class UNNotificationSound: NSObject {
+open class UNNotificationSound: NSObject, NSCopying, NSSecureCoding {
   public enum Kind: Equatable, Sendable {
     case defaultSound
     case named(UNNotificationSoundName)
@@ -216,11 +433,62 @@ open class UNNotificationSound: NSObject {
   ) -> Self {
     self.init(kind: .ringtone(name))
   }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    let kindTag = coder.decodeInt64(forKey: "kind")
+    let name = coder.decodeObject(of: NSString.self, forKey: "name") as String?
+    let volume = Float(coder.decodeDouble(forKey: "volume"))
+    switch kindTag {
+    case 0:
+      portableKind = .defaultSound
+    case 1:
+      guard let name else { return nil }
+      portableKind = .named(UNNotificationSoundName(name))
+    case 2:
+      portableKind = .critical(name.map(UNNotificationSoundName.init(_:)), volume)
+    case 3:
+      guard let name else { return nil }
+      portableKind = .ringtone(UNNotificationSoundName(name))
+    default:
+      return nil
+    }
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    switch portableKind {
+    case .defaultSound:
+      coder.encode(Int64(0), forKey: "kind")
+    case .named(let name):
+      coder.encode(Int64(1), forKey: "kind")
+      coder.encode(name.rawValue as NSString, forKey: "name")
+    case .critical(let name, let volume):
+      coder.encode(Int64(2), forKey: "kind")
+      if let name {
+        coder.encode(name.rawValue as NSString, forKey: "name")
+      }
+      coder.encode(Double(volume), forKey: "volume")
+    case .ringtone(let name):
+      coder.encode(Int64(3), forKey: "kind")
+      coder.encode(name.rawValue as NSString, forKey: "name")
+    }
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationSound(kind: portableKind)
+  }
 }
 
-public protocol UNNotificationContentProviding: AnyObject {}
+public protocol UNNotificationContentProviding: NSObjectProtocol {}
 
-internal final class _UNContentStorage {
+internal final class _UNContentStorage: NSObject {
   var attachments: [UNNotificationAttachment] = []
   var badge: NSNumber?
   var body = ""
@@ -258,9 +526,77 @@ internal final class _UNContentStorage {
     result.filterCriteria = filterCriteria
     return result
   }
+
+  func encodeFields(with coder: NSCoder) {
+    coder.encode(attachments as NSArray, forKey: "attachments")
+    coder.encode(badge, forKey: "badge")
+    coder.encode(body as NSString, forKey: "body")
+    coder.encode(categoryIdentifier as NSString, forKey: "categoryIdentifier")
+    coder.encode(launchImageName as NSString, forKey: "launchImageName")
+    coder.encode(sound, forKey: "sound")
+    coder.encode(subtitle as NSString, forKey: "subtitle")
+    coder.encode(threadIdentifier as NSString, forKey: "threadIdentifier")
+    coder.encode(title as NSString, forKey: "title")
+    coder.encode(userInfo as NSDictionary, forKey: "userInfo")
+    coder.encode(summaryArgument as NSString, forKey: "summaryArgument")
+    coder.encode(Int64(summaryArgumentCount), forKey: "summaryArgumentCount")
+    if let targetContentIdentifier {
+      coder.encode(targetContentIdentifier as NSString, forKey: "targetContentIdentifier")
+    }
+    coder.encode(Int64(interruptionLevel.rawValue), forKey: "interruptionLevel")
+    coder.encode(relevanceScore, forKey: "relevanceScore")
+    if let filterCriteria {
+      coder.encode(filterCriteria as NSString, forKey: "filterCriteria")
+    }
+  }
+
+  static func decodeFields(from coder: NSCoder) -> _UNContentStorage? {
+    let result = _UNContentStorage()
+    if let attachments = coder.decodeObject(
+      of: [NSArray.self, UNNotificationAttachment.self],
+      forKey: "attachments"
+    ) as? [UNNotificationAttachment] {
+      result.attachments = attachments
+    }
+    result.badge = coder.decodeObject(of: NSNumber.self, forKey: "badge")
+    result.body = coder.decodeObject(of: NSString.self, forKey: "body") as String? ?? ""
+    result.categoryIdentifier =
+      coder.decodeObject(of: NSString.self, forKey: "categoryIdentifier") as String? ?? ""
+    result.launchImageName =
+      coder.decodeObject(of: NSString.self, forKey: "launchImageName") as String? ?? ""
+    result.sound = coder.decodeObject(of: UNNotificationSound.self, forKey: "sound")
+    result.subtitle =
+      coder.decodeObject(of: NSString.self, forKey: "subtitle") as String? ?? ""
+    result.threadIdentifier =
+      coder.decodeObject(of: NSString.self, forKey: "threadIdentifier") as String? ?? ""
+    result.title = coder.decodeObject(of: NSString.self, forKey: "title") as String? ?? ""
+    if let dictionary = coder.decodeObject(of: NSDictionary.self, forKey: "userInfo")
+      as [AnyHashable: Any]?
+    {
+      result.userInfo = dictionary
+    }
+    result.summaryArgument =
+      coder.decodeObject(of: NSString.self, forKey: "summaryArgument") as String? ?? ""
+    let count = Int(coder.decodeInt64(forKey: "summaryArgumentCount"))
+    result.summaryArgumentCount = count > 0 ? count : 1
+    result.targetContentIdentifier =
+      coder.decodeObject(of: NSString.self, forKey: "targetContentIdentifier") as String?
+    guard
+      let interruptionLevel = UNNotificationInterruptionLevel(
+        rawValue: UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: "interruptionLevel")))
+      )
+    else {
+      return nil
+    }
+    result.interruptionLevel = interruptionLevel
+    result.relevanceScore = coder.decodeDouble(forKey: "relevanceScore")
+    result.filterCriteria =
+      coder.decodeObject(of: NSString.self, forKey: "filterCriteria") as String?
+    return result
+  }
 }
 
-open class UNNotificationContent: NSObject {
+open class UNNotificationContent: NSObject, NSCopying, NSSecureCoding {
   private let storage: _UNContentStorage
 
   internal init(storage: _UNContentStorage) {
@@ -295,7 +631,28 @@ open class UNNotificationContent: NSObject {
     from provider: any UNNotificationContentProviding
   ) throws -> UNNotificationContent {
     _ = provider
-    throw UNError(.contentProvidingInvalid)
+    throw UNError(.contentProvidingObjectNotAllowed)
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard let storage = _UNContentStorage.decodeFields(from: coder) else { return nil }
+    self.storage = storage
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    storage.encodeFields(with: coder)
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return portableCopy()
   }
 }
 
@@ -304,6 +661,15 @@ open class UNMutableNotificationContent: UNNotificationContent {
 
   public init() {
     let storage = _UNContentStorage()
+    mutableStorage = storage
+    super.init(storage: storage)
+  }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard let storage = _UNContentStorage.decodeFields(from: coder) else { return nil }
     mutableStorage = storage
     super.init(storage: storage)
   }
@@ -374,7 +740,7 @@ open class UNMutableNotificationContent: UNNotificationContent {
   }
 }
 
-public final class UNNotificationAttachment: NSObject {
+public final class UNNotificationAttachment: NSObject, NSCopying, NSSecureCoding {
   public let identifier: String
   public let url: URL
   public let type: String
@@ -391,9 +757,50 @@ public final class UNNotificationAttachment: NSObject {
     type = url.pathExtension
     super.init()
   }
+
+  public convenience init(
+    identifier: String,
+    URL: URL,
+    options: [AnyHashable: Any]? = nil
+  ) throws {
+    try self.init(identifier: identifier, url: URL, options: options)
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
+        as String?,
+      let url = coder.decodeObject(of: NSURL.self, forKey: "url") as URL?,
+      let type = coder.decodeObject(of: NSString.self, forKey: "type") as String?
+    else {
+      return nil
+    }
+    guard url.isFileURL else { return nil }
+    self.identifier = identifier
+    self.url = url
+    self.type = type
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(identifier as NSString, forKey: "identifier")
+    coder.encode(url as NSURL, forKey: "url")
+    coder.encode(type as NSString, forKey: "type")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return (try? UNNotificationAttachment(identifier: identifier, url: url)) ?? self
+  }
 }
 
-open class UNNotificationTrigger: NSObject {
+open class UNNotificationTrigger: NSObject, NSCopying, NSSecureCoding {
   public let repeats: Bool
 
   internal init(repeats: Bool) {
@@ -402,6 +809,26 @@ open class UNNotificationTrigger: NSObject {
   }
 
   open func nextTriggerDate() -> Date? { nil }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    repeats = coder.decodeBool(forKey: "repeats")
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(repeats, forKey: "repeats")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationTrigger(repeats: repeats)
+  }
 }
 
 public final class UNTimeIntervalNotificationTrigger: UNNotificationTrigger {
@@ -412,8 +839,24 @@ public final class UNTimeIntervalNotificationTrigger: UNNotificationTrigger {
     super.init(repeats: repeats)
   }
 
+  public required init?(coder: NSCoder) {
+    timeInterval = coder.decodeDouble(forKey: "timeInterval")
+    super.init(coder: coder)
+  }
+
+  public override func encode(with coder: NSCoder) {
+    super.encode(with: coder)
+    coder.encode(timeInterval, forKey: "timeInterval")
+    coder.encode("timeInterval" as NSString, forKey: UNPortableArchive.kindKey)
+  }
+
   public override func nextTriggerDate() -> Date? {
     Date(timeIntervalSinceNow: timeInterval)
+  }
+
+  public override func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: repeats)
   }
 }
 
@@ -425,15 +868,92 @@ public final class UNCalendarNotificationTrigger: UNNotificationTrigger {
     super.init(repeats: repeats)
   }
 
+  public convenience init(dateMatchingComponents dateComponents: DateComponents, repeats: Bool) {
+    self.init(dateMatching: dateComponents, repeats: repeats)
+  }
+
+  public required init?(coder: NSCoder) {
+    guard
+      let dateComponents = coder.decodeObject(
+        of: NSDateComponents.self, forKey: "dateComponents"
+      ) as DateComponents?
+    else {
+      dateComponents = DateComponents()
+      super.init(coder: coder)
+      return nil
+    }
+    self.dateComponents = dateComponents
+    super.init(coder: coder)
+  }
+
+  public override func encode(with coder: NSCoder) {
+    super.encode(with: coder)
+    coder.encode(dateComponents as NSDateComponents, forKey: "dateComponents")
+    coder.encode("calendar" as NSString, forKey: UNPortableArchive.kindKey)
+  }
+
   public override func nextTriggerDate() -> Date? {
     Calendar.current.nextDate(
       after: Date(), matching: dateComponents,
       matchingPolicy: .nextTime
     )
   }
+
+  public override func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: repeats)
+  }
 }
 
-public final class UNNotificationRequest: NSObject {
+/// System-created remote-notification trigger. Linux has no APNs daemon, so
+/// there is no public initializer; the OpenUIKitHost SPI can construct a
+/// volatile stand-in for in-process tests.
+public final class UNPushNotificationTrigger: UNNotificationTrigger {
+  @_spi(OpenUIKitHost)
+  public init(repeats: Bool = false) {
+    super.init(repeats: repeats)
+  }
+
+  public required init?(coder: NSCoder) {
+    super.init(coder: coder)
+  }
+
+  public override func encode(with coder: NSCoder) {
+    super.encode(with: coder)
+    coder.encode("push" as NSString, forKey: UNPortableArchive.kindKey)
+  }
+
+  public override func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNPushNotificationTrigger(repeats: repeats)
+  }
+}
+
+/// Location-boundary trigger. `CLRegion` is owned by CoreLocation, which is
+/// not a declared dependency of this seed, so the region API is omitted
+/// rather than replaced with a module-local lookalike.
+public final class UNLocationNotificationTrigger: UNNotificationTrigger {
+  @_spi(OpenUIKitHost)
+  public init(repeats: Bool = false) {
+    super.init(repeats: repeats)
+  }
+
+  public required init?(coder: NSCoder) {
+    super.init(coder: coder)
+  }
+
+  public override func encode(with coder: NSCoder) {
+    super.encode(with: coder)
+    coder.encode("location" as NSString, forKey: UNPortableArchive.kindKey)
+  }
+
+  public override func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNLocationNotificationTrigger(repeats: repeats)
+  }
+}
+
+public final class UNNotificationRequest: NSObject, NSCopying, NSSecureCoding {
   public let identifier: String
   public let content: UNNotificationContent
   public let trigger: UNNotificationTrigger?
@@ -448,9 +968,54 @@ public final class UNNotificationRequest: NSObject {
     self.trigger = trigger
     super.init()
   }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
+        as String?,
+      let content = coder.decodeObject(
+        of: [UNNotificationContent.self, UNMutableNotificationContent.self],
+        forKey: "content"
+      ) as? UNNotificationContent
+    else {
+      return nil
+    }
+    self.identifier = identifier
+    self.content = content
+    self.trigger = coder.decodeObject(
+      of: [
+        UNNotificationTrigger.self,
+        UNTimeIntervalNotificationTrigger.self,
+        UNCalendarNotificationTrigger.self,
+        UNPushNotificationTrigger.self,
+        UNLocationNotificationTrigger.self,
+      ],
+      forKey: "trigger"
+    ) as? UNNotificationTrigger
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(identifier as NSString, forKey: "identifier")
+    coder.encode(content, forKey: "content")
+    coder.encode(trigger, forKey: "trigger")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationRequest(
+      identifier: identifier, content: content, trigger: trigger
+    )
+  }
 }
 
-open class UNNotification: NSObject {
+open class UNNotification: NSObject, NSCopying, NSSecureCoding {
   public let date: Date
   public let request: UNNotificationRequest
 
@@ -460,9 +1025,39 @@ open class UNNotification: NSObject {
     self.request = request
     super.init()
   }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let date = coder.decodeObject(of: NSDate.self, forKey: "date") as Date?,
+      let request = coder.decodeObject(
+        of: UNNotificationRequest.self, forKey: "request"
+      )
+    else {
+      return nil
+    }
+    self.date = date
+    self.request = request
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(date as NSDate, forKey: "date")
+    coder.encode(request, forKey: "request")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotification(date: date, request: request)
+  }
 }
 
-open class UNNotificationResponse: NSObject {
+open class UNNotificationResponse: NSObject, NSCopying, NSSecureCoding {
   public let notification: UNNotification
   public let actionIdentifier: String
 
@@ -471,6 +1066,40 @@ open class UNNotificationResponse: NSObject {
     self.notification = notification
     self.actionIdentifier = actionIdentifier
     super.init()
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let notification = coder.decodeObject(
+        of: UNNotification.self, forKey: "notification"
+      ),
+      let actionIdentifier = coder.decodeObject(
+        of: NSString.self, forKey: "actionIdentifier"
+      ) as String?
+    else {
+      return nil
+    }
+    self.notification = notification
+    self.actionIdentifier = actionIdentifier
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(notification, forKey: "notification")
+    coder.encode(actionIdentifier as NSString, forKey: "actionIdentifier")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationResponse(
+      notification: notification, actionIdentifier: actionIdentifier
+    )
   }
 }
 
@@ -489,6 +1118,17 @@ public final class UNTextInputNotificationResponse: UNNotificationResponse {
       actionIdentifier: actionIdentifier
     )
   }
+
+  public required init?(coder: NSCoder) {
+    userText =
+      coder.decodeObject(of: NSString.self, forKey: "userText") as String? ?? ""
+    super.init(coder: coder)
+  }
+
+  public override func encode(with coder: NSCoder) {
+    super.encode(with: coder)
+    coder.encode(userText as NSString, forKey: "userText")
+  }
 }
 
 public struct UNNotificationActionOptions: OptionSet, Sendable {
@@ -499,20 +1139,159 @@ public struct UNNotificationActionOptions: OptionSet, Sendable {
   public static let foreground = Self(rawValue: 1 << 2)
 }
 
-open class UNNotificationAction: NSObject {
+public final class UNNotificationActionIcon: NSObject, NSCopying, NSSecureCoding {
+  public let systemImageName: String?
+  public let templateImageName: String?
+
+  public init(systemImageName: String) {
+    self.systemImageName = systemImageName
+    self.templateImageName = nil
+    super.init()
+  }
+
+  public init(templateImageName: String) {
+    self.systemImageName = nil
+    self.templateImageName = templateImageName
+    super.init()
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    systemImageName =
+      coder.decodeObject(of: NSString.self, forKey: "systemImageName") as String?
+    templateImageName =
+      coder.decodeObject(of: NSString.self, forKey: "templateImageName") as String?
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    if let systemImageName {
+      coder.encode(systemImageName as NSString, forKey: "systemImageName")
+    }
+    if let templateImageName {
+      coder.encode(templateImageName as NSString, forKey: "templateImageName")
+    }
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    if let systemImageName {
+      return UNNotificationActionIcon(systemImageName: systemImageName)
+    }
+    return UNNotificationActionIcon(templateImageName: templateImageName ?? "")
+  }
+}
+
+open class UNNotificationAction: NSObject, NSCopying, NSSecureCoding {
   public let identifier: String
   public let title: String
   public let options: UNNotificationActionOptions
+  public let icon: UNNotificationActionIcon?
 
   public init(
     identifier: String,
     title: String,
-    options: UNNotificationActionOptions = []
+    options: UNNotificationActionOptions = [],
+    icon: UNNotificationActionIcon? = nil
   ) {
     self.identifier = identifier
     self.title = title
     self.options = options
+    self.icon = icon
     super.init()
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
+        as String?,
+      let title = coder.decodeObject(of: NSString.self, forKey: "title") as String?
+    else {
+      return nil
+    }
+    self.identifier = identifier
+    self.title = title
+    options = UNNotificationActionOptions(
+      rawValue: UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: "options")))
+    )
+    icon = coder.decodeObject(of: UNNotificationActionIcon.self, forKey: "icon")
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(identifier as NSString, forKey: "identifier")
+    coder.encode(title as NSString, forKey: "title")
+    coder.encode(Int64(bitPattern: UInt64(options.rawValue)), forKey: "options")
+    coder.encode(icon, forKey: "icon")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationAction(
+      identifier: identifier, title: title, options: options, icon: icon
+    )
+  }
+}
+
+public final class UNTextInputNotificationAction: UNNotificationAction {
+  public let textInputButtonTitle: String
+  public let textInputPlaceholder: String
+
+  public init(
+    identifier: String,
+    title: String,
+    options: UNNotificationActionOptions = [],
+    icon: UNNotificationActionIcon? = nil,
+    textInputButtonTitle: String,
+    textInputPlaceholder: String
+  ) {
+    self.textInputButtonTitle = textInputButtonTitle
+    self.textInputPlaceholder = textInputPlaceholder
+    super.init(identifier: identifier, title: title, options: options, icon: icon)
+  }
+
+  public convenience init(
+    identifier: String,
+    title: String,
+    options: UNNotificationActionOptions = [],
+    textInputButtonTitle: String,
+    textInputPlaceholder: String
+  ) {
+    self.init(
+      identifier: identifier,
+      title: title,
+      options: options,
+      icon: nil,
+      textInputButtonTitle: textInputButtonTitle,
+      textInputPlaceholder: textInputPlaceholder
+    )
+  }
+
+  public required init?(coder: NSCoder) {
+    textInputButtonTitle =
+      coder.decodeObject(of: NSString.self, forKey: "textInputButtonTitle") as String?
+      ?? ""
+    textInputPlaceholder =
+      coder.decodeObject(of: NSString.self, forKey: "textInputPlaceholder") as String?
+      ?? ""
+    super.init(coder: coder)
+  }
+
+  public override func encode(with coder: NSCoder) {
+    super.encode(with: coder)
+    coder.encode(textInputButtonTitle as NSString, forKey: "textInputButtonTitle")
+    coder.encode(textInputPlaceholder as NSString, forKey: "textInputPlaceholder")
   }
 }
 
@@ -526,7 +1305,7 @@ public struct UNNotificationCategoryOptions: OptionSet, Sendable {
   public static let allowAnnouncement = Self(rawValue: 1 << 4)
 }
 
-public final class UNNotificationCategory: NSObject {
+public final class UNNotificationCategory: NSObject, NSCopying, NSSecureCoding {
   public let identifier: String
   public let actions: [UNNotificationAction]
   public let intentIdentifiers: [String]
@@ -550,6 +1329,124 @@ public final class UNNotificationCategory: NSObject {
     self.options = options
     super.init()
   }
+
+  public convenience init(
+    identifier: String,
+    actions: [UNNotificationAction],
+    intentIdentifiers: [String],
+    hiddenPreviewsBodyPlaceholder: String,
+    options: UNNotificationCategoryOptions = []
+  ) {
+    self.init(
+      identifier: identifier,
+      actions: actions,
+      intentIdentifiers: intentIdentifiers,
+      hiddenPreviewsBodyPlaceholder: hiddenPreviewsBodyPlaceholder,
+      categorySummaryFormat: nil,
+      options: options
+    )
+  }
+
+  public convenience init(
+    identifier: String,
+    actions: [UNNotificationAction],
+    intentIdentifiers: [String],
+    options: UNNotificationCategoryOptions = []
+  ) {
+    self.init(
+      identifier: identifier,
+      actions: actions,
+      intentIdentifiers: intentIdentifiers,
+      hiddenPreviewsBodyPlaceholder: nil,
+      categorySummaryFormat: nil,
+      options: options
+    )
+  }
+
+  public static var supportsSecureCoding: Bool { true }
+
+  public required init?(coder: NSCoder) {
+    guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
+    let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
+    guard version == UNPortableArchive.version else { return nil }
+    guard
+      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
+        as String?
+    else {
+      return nil
+    }
+    self.identifier = identifier
+    actions =
+      (coder.decodeObject(
+        of: [NSArray.self, UNNotificationAction.self, UNTextInputNotificationAction.self],
+        forKey: "actions"
+      ) as? [UNNotificationAction]) ?? []
+    intentIdentifiers =
+      (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "intentIdentifiers")
+        as? [String]) ?? []
+    hiddenPreviewsBodyPlaceholder =
+      coder.decodeObject(of: NSString.self, forKey: "hiddenPreviewsBodyPlaceholder")
+      as String? ?? ""
+    categorySummaryFormat =
+      coder.decodeObject(of: NSString.self, forKey: "categorySummaryFormat") as String?
+      ?? ""
+    options = UNNotificationCategoryOptions(
+      rawValue: UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: "options")))
+    )
+    super.init()
+  }
+
+  public func encode(with coder: NSCoder) {
+    coder.encode(UNPortableArchive.version, forKey: UNPortableArchive.versionKey)
+    coder.encode(identifier as NSString, forKey: "identifier")
+    coder.encode(actions as NSArray, forKey: "actions")
+    coder.encode(intentIdentifiers as NSArray, forKey: "intentIdentifiers")
+    coder.encode(
+      hiddenPreviewsBodyPlaceholder as NSString, forKey: "hiddenPreviewsBodyPlaceholder"
+    )
+    coder.encode(categorySummaryFormat as NSString, forKey: "categorySummaryFormat")
+    coder.encode(Int64(bitPattern: UInt64(options.rawValue)), forKey: "options")
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return UNNotificationCategory(
+      identifier: identifier,
+      actions: actions,
+      intentIdentifiers: intentIdentifiers,
+      hiddenPreviewsBodyPlaceholder: hiddenPreviewsBodyPlaceholder,
+      categorySummaryFormat: categorySummaryFormat,
+      options: options
+    )
+  }
+}
+
+/// `INSendMessageIntent` is owned by Intents, which is not a declared
+/// dependency. The attributed-message initializer is omitted rather than
+/// replaced with a module-local lookalike. The class still exists so
+/// `UNNotificationContentProviding` type checks compile.
+public final class UNNotificationAttributedMessageContext: NSObject,
+  UNNotificationContentProviding
+{
+}
+
+open class UNNotificationServiceExtension: NSObject {
+  public override init() {
+    super.init()
+  }
+
+  /// Base implementation fail-closes by delivering the original request
+  /// content. Subclasses that mutate payloads must still call the handler;
+  /// Linux has no Notification Service Extension host to enforce the
+  /// expiration window.
+  open func didReceive(
+    _ request: UNNotificationRequest,
+    withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void
+  ) {
+    contentHandler(request.content)
+  }
+
+  open func serviceExtensionTimeWillExpire() {}
 }
 
 public protocol UNUserNotificationCenterDelegate: AnyObject {
@@ -593,6 +1490,31 @@ extension UNUserNotificationCenterDelegate {
   ) {
     _ = center
     _ = notification
+  }
+}
+
+extension NSString {
+  /// Linux has no UserNotifications strings table. Missing keys return the
+  /// key itself; non-empty `arguments` are formatted with `String(format:)`.
+  public class func localizedUserNotificationString(
+    forKey key: String,
+    arguments: [Any]?
+  ) -> String {
+    let localized = Bundle.main.localizedString(forKey: key, value: key, table: nil)
+    guard let arguments, !arguments.isEmpty else { return localized }
+    let vars: [CVarArg] = arguments.compactMap { value in
+      if let number = value as? NSNumber {
+        return number
+      }
+      if let string = value as? String {
+        return string
+      }
+      if let string = value as? NSString {
+        return string
+      }
+      return String(describing: value)
+    }
+    return String(format: localized, arguments: vars)
   }
 }
 
