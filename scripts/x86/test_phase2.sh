@@ -336,6 +336,8 @@ expect_grep 'overlay-posix' "$STAGE" \
     "x86 stager stages POSIX semaphore.h; real ioctl stays out of the Darwin sysroot"
 expect_grep 'fe_ioctl_stub.h' "$STAGE" \
     "x86 stager stages a FIONBIO-free ioctl stub so SwiftOverlayShims builds"
+expect_grep 'phase2_ensure_darwin_named_submodules' "$COMMON" \
+    "Darwin.modulemap grows sysdir and uuid submodules for import Darwin.sysdir"
 expect_grep 'phase2_ensure_macho_modulemap' "$COMMON" \
     "sysroot grows MachO.dyld for FoundationEssentials Platform.swift"
 expect_file "$ROOT/scripts/x86/MachO.modulemap"
