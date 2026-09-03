@@ -1,0 +1,10 @@
+full/scenekit/SCNAction.swift
+full/scenekit/SCNAnimation.swift
+full/scenekit/SCNAppearance.swift
+full/scenekit/SCNGeometry.swift
+full/scenekit/SCNMath.swift
+full/scenekit/SCNNode.swift
+full/scenekit/SCNPhysics.swift
+full/scenekit/SCNRendering.swift
+full/scenekit/SCNScene.swift
+full/scenekit/SceneKit.swift
