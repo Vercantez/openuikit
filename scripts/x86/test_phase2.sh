@@ -340,6 +340,8 @@ expect_grep 'phase2_ensure_darwin_named_submodules' "$COMMON" \
     "Darwin.modulemap grows sysdir and uuid submodules for import Darwin.sysdir"
 expect_grep 'malloc/malloc.h' "$COMMON" \
     "Darwin.modulemap names malloc_good_size's header for FoundationEssentials Data.swift"
+expect_grep 'phase2_ensure_macho_modulemap' "$COMMON" \
+    "sysroot grows MachO.dyld for FoundationEssentials Platform.swift"
 expect_file "$ROOT/scripts/x86/MachO.modulemap"
 expect_grep 'SwiftOverlayShims.timeval' "$COMMON" \
     "sys/time.h is textual so SwiftOverlayShims.timeval is visible"
