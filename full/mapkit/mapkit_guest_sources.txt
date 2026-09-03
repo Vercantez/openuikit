@@ -1,0 +1,6 @@
+full/mapkit/MKAddressFilter.swift
+full/mapkit/MKDistanceFormatter.swift
+full/mapkit/MKGeometry.swift
+full/mapkit/MKPointOfInterest.swift
+full/mapkit/MKTypes.swift
+full/mapkit/MapKit.swift
