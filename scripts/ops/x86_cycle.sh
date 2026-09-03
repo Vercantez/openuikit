@@ -204,6 +204,37 @@ fi
 # 7. stage roots happens inside phase2; call it out so the scoreboard names it
 emit_stage roots rebuilt "$TREE/scratch/mrroot-x86_64"
 
+# 7b. inputs phase2 needs that the proven operator driver staged by hand
+# (measured 2026-09-03, first committed cycle: rung b CANNOT_FOCUS_BUNDLE, rung c
+# build_full REFUSING -- machorun/darwin/usr/lib/swift/libswiftCore.dylib
+# missing after the stamped darwin rebuild).
+#  - the current x86 libswiftCore into machorun's darwin tree (build_full and
+#    the Reminder script stage "from the current machorun runtime");
+#  - the normalized Focus bundles staged on the box (arch-independent
+#    resources proven on the arm64 authority; the committed Linux/x86_64
+#    resource proof refuses for want of a reviewed rasterizer profile).
+core_src=$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
+core_dst=$TREE/machorun/darwin/usr/lib/swift/libswiftCore.dylib
+if [ -f "$core_src" ]; then
+    mkdir -p "$(dirname "$core_dst")"
+    if [ -f "$core_dst" ] && [ "$(sha256sum "$core_src" | cut -c1-64)" = "$(sha256sum "$core_dst" | cut -c1-64)" ]; then
+        emit_stage libswiftcore-darwin reused "$core_dst"
+    else
+        cp -f "$core_src" "$core_dst"
+        emit_stage libswiftcore-darwin rebuilt "$core_dst"
+    fi
+else
+    emit_stage libswiftcore-darwin cannot "$core_src"
+    exit 2
+fi
+FB=$(ls -d /tmp/focus-resources-x86-staged.* 2>/dev/null | head -1)
+if [ -n "$FB" ] && [ -d "$FB/bundles/Focus_Widget.bundle" ]; then
+    export FOCUS_WIDGET_BUNDLE="$FB/bundles/Focus_Widget.bundle"
+    emit_stage focus-bundle reused "$FOCUS_WIDGET_BUNDLE"
+else
+    emit_stage focus-bundle cannot "/tmp/focus-resources-x86-staged.*/bundles/Focus_Widget.bundle"
+fi
+
 # 8. phase2 rungs. Quote POSITIVE boards (phase2 already does; do not tail -1
 # the persist log past NEGATIVE CONTROL).
 if run_logged phase2 "$LOGDIR/phase2.log" \
