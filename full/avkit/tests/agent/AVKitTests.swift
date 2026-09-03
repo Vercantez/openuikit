@@ -2,14 +2,18 @@ import Dispatch
 import Foundation
 import AVKit
 
-@MainActor
+/// The sealed host runner calls `test*` from a nonisolated context. UIKit-shaped
+/// AVKit types are `@MainActor`; hop via assumeIsolated on the process main thread.
+private func avkitOnMain<T>(_ body: @MainActor () -> T) -> T {
+    MainActor.assumeIsolated(body)
+}
+
 func testAVKitErrorDomain() {
     precondition(AVKitErrorDomain == "AVKitErrorDomain")
     precondition(AVKitError.errorDomain == AVKitErrorDomain)
     precondition(AVKitError._nsErrorDomain == AVKitErrorDomain)
 }
 
-@MainActor
 func testAVKitErrorCodes() {
     precondition(AVKitError.Code.unknown.rawValue == -1000)
     precondition(AVKitError.Code.pictureInPictureStartFailed.rawValue == -1001)
@@ -20,7 +24,6 @@ func testAVKitErrorCodes() {
     precondition(AVKitError.pictureInPictureStartFailed == .pictureInPictureStartFailed)
 }
 
-@MainActor
 func testAVKitErrorBridging() {
     let typed = AVKitError(.pictureInPictureStartFailed, userInfo: ["probe": "avkit"])
     let nsError = typed as NSError
@@ -29,17 +32,16 @@ func testAVKitErrorBridging() {
     precondition(nsError.userInfo["probe"] as? String == "avkit")
     precondition(typed.code == .pictureInPictureStartFailed)
     precondition(typed.errorCode == -1001)
-    precondition(AVKitError.pictureInPictureStartFailed ~= nsError)
+    precondition(AVKitError.Code.pictureInPictureStartFailed ~= (typed as any Error))
+    precondition(!(AVKitError.Code.unknown ~= (typed as any Error)))
     precondition(typed.hashValue == AVKitError(.pictureInPictureStartFailed, userInfo: ["other": 1]).hashValue)
     precondition(typed != AVKitError(.unknown))
 }
 
-@MainActor
 func testPlatformSupportsAVKitCore() {
     precondition(PLATFORM_SUPPORTS_AVKITCORE == false)
 }
 
-@MainActor
 func testVideoFrameAnalysisOptionSet() {
     precondition(AVVideoFrameAnalysisType.default.rawValue == 1 << 0)
     precondition(AVVideoFrameAnalysisType.text.rawValue == 1 << 1)
@@ -54,7 +56,6 @@ func testVideoFrameAnalysisOptionSet() {
     precondition(AVVideoFrameAnalysisType().isEmpty)
 }
 
-@MainActor
 func testDisplayDynamicRangeRawValues() {
     precondition(AVDisplayDynamicRange.automatic.rawValue == 0)
     precondition(AVDisplayDynamicRange.standard.rawValue == 1)
@@ -63,58 +64,59 @@ func testDisplayDynamicRangeRawValues() {
     precondition(AVDisplayDynamicRange.automatic != .high)
 }
 
-@MainActor
 func testCaptureEventPhaseRawValues() {
     precondition(AVCaptureEventPhase.began.rawValue == 0)
     precondition(AVCaptureEventPhase.ended.rawValue == 1)
     precondition(AVCaptureEventPhase.cancelled.rawValue == 2)
 }
 
-@MainActor
 func testRouteSelectionRawValues() {
     precondition(AVAudioSession.RouteSelection.none.rawValue == 0)
     precondition(AVAudioSession.RouteSelection.local.rawValue == 1)
     precondition(AVAudioSession.RouteSelection.external.rawValue == 2)
 }
 
-@MainActor
 func testVideoPlayerNilCaption() {
-    let video = VideoPlayer(player: nil)
-    precondition(video.player == nil)
-    precondition(video.openUIKitHostCaption == "No Video")
-}
-
-@MainActor
-func testVideoPlayerPlayingCaption() {
-    let url = URL(fileURLWithPath: "/tmp/clip.m4v")
-    let player = AVPlayer(url: url)
-    player.rate = 1
-    let video = VideoPlayer(player: player)
-    precondition(video.player === player)
-    precondition(video.openUIKitHostCaption == "clip.m4v\nPlaying")
-    player.rate = 0
-    precondition(VideoPlayer(player: player).openUIKitHostCaption == "clip.m4v\nPaused")
-}
-
-@MainActor
-func testVideoPlayerOverlayInit() {
-    let player = AVPlayer()
-    let video = VideoPlayer(player: player) {
-        EmptyView()
+    avkitOnMain {
+        let video = VideoPlayer(player: nil)
+        precondition(video.player == nil)
+        precondition(video.openUIKitHostCaption == "No Video")
     }
-    precondition(video.player === player)
-    _ = video.body
 }
 
-@MainActor
+func testVideoPlayerPlayingCaption() {
+    avkitOnMain {
+        let url = URL(fileURLWithPath: "/tmp/clip.m4v")
+        let player = AVPlayer(url: url)
+        player.rate = 1
+        let video = VideoPlayer(player: player)
+        precondition(video.player === player)
+        precondition(video.openUIKitHostCaption == "clip.m4v\nPlaying")
+        player.rate = 0
+        precondition(VideoPlayer(player: player).openUIKitHostCaption == "clip.m4v\nPaused")
+    }
+}
+
+func testVideoPlayerOverlayInit() {
+    avkitOnMain {
+        let player = AVPlayer()
+        let video = VideoPlayer(player: player) {
+            EmptyView()
+        }
+        precondition(video.player === player)
+        _ = video.body
+    }
+}
+
 func testVideoPlayerViewModifiers() {
-    let video = VideoPlayer(player: nil)
-    _ = video.opacity(0.5)
-    _ = video.padding(8)
-    _ = video.disabled(true)
+    avkitOnMain {
+        let video = VideoPlayer(player: nil)
+        _ = video.opacity(0.5)
+        _ = video.padding(8)
+        _ = video.disabled(true)
+    }
 }
 
-@MainActor
 func testPictureInPictureUnsupported() {
     precondition(AVPictureInPictureController.isPictureInPictureSupported() == false)
     let layer = AVPlayerLayer()
@@ -125,7 +127,6 @@ func testPictureInPictureUnsupported() {
     precondition(controller?.isPictureInPictureSuspended == false)
 }
 
-@MainActor
 func testPictureInPictureStartStaysInactive() {
     let source = AVPictureInPictureController.ContentSource(playerLayer: AVPlayerLayer())
     let controller = AVPictureInPictureController(contentSource: source)
@@ -136,7 +137,6 @@ func testPictureInPictureStartStaysInactive() {
     precondition(controller.isPictureInPictureActive == false)
 }
 
-@MainActor
 func testPlaybackSpeedStoresRate() {
     let speed = AVPlaybackSpeed(rate: 1.5, localizedName: "1.5×")
     precondition(speed.rate == 1.5)
@@ -145,14 +145,12 @@ func testPlaybackSpeedStoresRate() {
     precondition(!AVPlaybackSpeed.systemDefaultSpeeds.isEmpty)
 }
 
-@MainActor
 func testCaptureEventPlayFailsClosed() {
     let event = AVCaptureEvent()
     precondition(event.play(.cameraShutter) == false)
     precondition(event.shouldPlaySound == false)
 }
 
-@MainActor
 func testCaptureEventSoundURLThrows() {
     do {
         _ = try AVCaptureEventSound(url: URL(fileURLWithPath: "/tmp/shutter.caf"))
@@ -166,42 +164,44 @@ func testCaptureEventSoundURLThrows() {
     }
 }
 
-@MainActor
 func testCaptureEventInteractionStoresEnabled() {
-    var sawEvent = false
-    let interaction = AVCaptureEventInteraction { _ in sawEvent = true }
-    precondition(interaction.isEnabled == true)
-    interaction.isEnabled = false
-    precondition(interaction.isEnabled == false)
-    precondition(sawEvent == false)
-    AVCaptureEventInteraction.defaultCaptureSoundDisabled = true
-    precondition(AVCaptureEventInteraction.defaultCaptureSoundDisabled == true)
-    AVCaptureEventInteraction.defaultCaptureSoundDisabled = false
+    avkitOnMain {
+        var sawEvent = false
+        let interaction = AVCaptureEventInteraction { _ in sawEvent = true }
+        precondition(interaction.isEnabled == true)
+        interaction.isEnabled = false
+        precondition(interaction.isEnabled == false)
+        precondition(sawEvent == false)
+        AVCaptureEventInteraction.defaultCaptureSoundDisabled = true
+        precondition(AVCaptureEventInteraction.defaultCaptureSoundDisabled == true)
+        AVCaptureEventInteraction.defaultCaptureSoundDisabled = false
+    }
 }
 
-@MainActor
 func testPlayerViewControllerSelectSpeed() {
-    let controller = AVPlayerViewController()
-    let speed = AVPlaybackSpeed(rate: 2, localizedName: "2×")
-    controller.player = AVPlayer()
-    controller.selectSpeed(speed)
-    precondition(controller.selectedSpeed === speed)
-    precondition(controller.isReadyForDisplay == false)
-    precondition(controller.showsPlaybackControls == true)
-    precondition(controller.preferredDisplayDynamicRange == .automatic)
+    avkitOnMain {
+        let controller = AVPlayerViewController()
+        let speed = AVPlaybackSpeed(rate: 2, localizedName: "2×")
+        controller.player = AVPlayer()
+        controller.selectSpeed(speed)
+        precondition(controller.selectedSpeed === speed)
+        precondition(controller.isReadyForDisplay == false)
+        precondition(controller.showsPlaybackControls == true)
+        precondition(controller.preferredDisplayDynamicRange == .automatic)
+    }
 }
 
-@MainActor
 func testInputPickerPresentStaysClosed() {
-    let picker = AVInputPickerInteraction()
-    precondition(picker.isPresented == false)
-    picker.present()
-    precondition(picker.isPresented == false)
-    picker.dismiss()
-    precondition(picker.isPresented == false)
+    avkitOnMain {
+        let picker = AVInputPickerInteraction()
+        precondition(picker.isPresented == false)
+        picker.present()
+        precondition(picker.isPresented == false)
+        picker.dismiss()
+        precondition(picker.isPresented == false)
+    }
 }
 
-@MainActor
 func testInterstitialTimeRangeIdentity() {
     let range = CMTimeRange(
         start: CMTime(value: 10, timescale: 1),
@@ -212,14 +212,14 @@ func testInterstitialTimeRangeIdentity() {
     precondition(interstitial.timeRange.duration.value == 5)
 }
 
-@MainActor
 func testRoutePickerStoresPriorities() {
-    let picker = AVRoutePickerView(frame: .zero)
-    picker.prioritizesVideoDevices = true
-    precondition(picker.prioritizesVideoDevices == true)
+    avkitOnMain {
+        let picker = AVRoutePickerView(frame: .zero)
+        picker.prioritizesVideoDevices = true
+        precondition(picker.prioritizesVideoDevices == true)
+    }
 }
 
-@MainActor
 func testPrepareRouteSelectionCallback() {
     let session = AVAudioSession()
     let lock = NSLock()

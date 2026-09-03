@@ -68,7 +68,7 @@ public protocol RoundedRectangularShape {}
 public protocol ScrollTargetBehavior {}
 public protocol SearchScopeActivation {}
 public protocol Shape {}
-public struct DefaultGlassEffectShape: Shape {}
+public struct DefaultGlassEffectShape: Shape { public init() {} }
 public protocol ShapeStyle {}
 public protocol SymbolEffect {}
 public protocol TabViewStyle {}
@@ -979,7 +979,7 @@ extension AttributedString {
     }
 }
 
-extension View {
+public extension View {
     @MainActor @preconcurrency func onCameraCaptureEvent(isEnabled: Bool = true, primaryAction: @escaping (AVCaptureEvent) -> Void, secondaryAction: @escaping (AVCaptureEvent) -> Void) -> some View { self }
 
     @MainActor @preconcurrency func onCameraCaptureEvent(isEnabled: Bool = true, defaultSoundDisabled: Bool = false, primaryAction: @escaping (AVCaptureEvent) async -> Void, secondaryAction: @escaping (AVCaptureEvent) async -> Void) -> some View { self }
