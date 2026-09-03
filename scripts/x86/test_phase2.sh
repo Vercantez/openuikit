@@ -264,8 +264,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.4' "$COMMON" \
-    "recipe bump restages a sysroot that lacked SDKSettings.json"
+expect_grep 'stage_fe_sysroot_x86.5' "$COMMON" \
+    "recipe bump restages a sysroot that lacked libobjc.tbd aliases"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -304,6 +304,48 @@ expect_grep 'removefile_compat.c' "$BUILD_FULL" \
     "arm64 full link compiles removefile_compat.c"
 expect_grep 'usr/include/_modules' "$COMMON" \
     "Linux Darwin fallback copies _modules from the arm64 sysroot"
+
+echo "== x86 sysroot .tbd set: gen_tbd aliases, overlay emit, resolve before build_full"
+expect_grep 'phase2_stage_darwin_tbds_into_sysroot' "$STAGE" \
+    "stager stages gen_tbd darwin tbds including unsuffixed aliases"
+expect_grep 'ln -sfn libobjc.A.tbd' "$COMMON" \
+    "libobjc.tbd alias is created (find -type f dropped the symlink)"
+expect_not_grep 'find "$MACHORUN/sdk/usr/lib" -maxdepth 1 -type f -name '\''*.tbd'\''' "$STAGE" \
+    "stager no longer copies only regular .tbd files (that skipped libobjc.tbd)"
+expect_grep 'phase2_stage_overlay_tbds_into_sysroot' "$STAGE" \
+    "stager emits overlay tbds from x86 dylibs"
+expect_grep 'never copy arm64' "$STAGE" "stager comment refuses arm64 tbd copies"
+expect_grep 'phase2_sysroot_tbd_resolve' "$PHASE2" \
+    "phase2 resolves the tbd set before build_full"
+expect_grep 'X86_SYSROOT_TBDS' "$PHASE2" "tbd hole is CANNOT_X86_SYSROOT_TBDS"
+expect_grep 'SYSROOT_TBDS_OK' "$PHASE2" "rungs b/c wait on SYSROOT_TBDS_OK"
+expect_grep 'tbd-set=' "$COMMON" "stamp records the arm64 tbd inventory"
+expect_grep 'tbd-darwin-dylibs=' "$COMMON" "stamp records darwin dylib shas that gen_tbd reads"
+expect_grep '_objc_sync_exit' "$COMMON" "acceptance list names render_full.o _objc_sync_exit"
+expect_grep '2>&1 | tee "$W/scratch/phase2-rung-a-smoke.log"' "$PHASE2" \
+    "rung a smoke log captures stderr"
+expect_grep '2>&1 | tee "$W/scratch/phase2-rung-b-widget.log"' "$PHASE2" \
+    "rung b widget log captures build_full stderr"
+expect_grep '2>&1 | tee "$W/scratch/phase2-rung-b-onboarding.log"' "$PHASE2" \
+    "rung b onboarding log captures stderr"
+expect_grep '2>&1 | tee "$W/scratch/phase2-rung-c-reminder.log"' "$PHASE2" \
+    "rung c log captures build_full stderr"
+expect_not_grep '^            | tee "$W/scratch/phase2-rung-b-widget.log"' "$PHASE2" \
+    "rung b widget tee is not stdout-only"
+expect_grep 'never copy arm64 tbds' "$COMMON" \
+    "darwin tbd stage refuses arm64-macos files"
+awk '
+    /cannot sysroot-tbds-x86 X86_SYSROOT_TBDS/ { t=NR }
+    /build_focus_widget_guest.sh/ { if (!w) w=NR }
+    END {
+        if (!t) { print "NO_TBD"; exit 1 }
+        if (!w) { print "NO_WIDGET"; exit 1 }
+        if (!(t<w)) { print "ORDER t="t" w="w; exit 1 }
+        print "OK"
+    }
+' "$PHASE2" | grep -q OK \
+    && ok "CANNOT_X86_SYSROOT_TBDS is emitted before build_focus_widget_guest.sh" \
+    || die_test "tbd resolve CANNOT is not before build_full/widget"
 
 echo "== measurement headers: shared list, stage_absent from arm64, stamp recipe .3"
 expect_grep 'phase2_darwin_modulemap_missing_headers' "$COMMON" \
@@ -371,7 +413,182 @@ case "$meas_diff" in
         ;;
     *) die_test "expected fe_sysroot_measurement_headers old->new, got: $meas_diff" ;;
 esac
+grep -q '^tbd-set=' "$STAMPWORK/stamp" \
+    && ok "written stamp includes tbd-set" \
+    || die_test "stamp missing tbd-set"
+grep -q '^tbd-darwin-dylibs=' "$STAMPWORK/stamp" \
+    && ok "written stamp includes tbd-darwin-dylibs" \
+    || die_test "stamp missing tbd-darwin-dylibs"
 rm -rf "$STAMPWORK"
+
+echo "== tbd resolve: missing alias, wrong target, gen_tbd symbols, live sysroot"
+TBDWORK=$(mktemp -d /tmp/phase2-tbd.XXXXXX)
+mkdir -p "$TBDWORK/x86/usr/lib" "$TBDWORK/arm/usr/lib" "$TBDWORK/arm/usr/lib/swift"
+# Arm64 inventory names libobjc.tbd (Apple unsuffixed). Empty x86 sysroot
+# must report it missing, not pass vacuously.
+printf '%s\n' '--- !tapi-tbd' 'targets:         [ arm64-macos ]' '...' \
+    > "$TBDWORK/arm/usr/lib/libobjc.tbd"
+miss=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
+case "$miss" in
+    MISSING=*libobjc.tbd*)
+        ok "resolve names MISSING=usr/lib/libobjc.tbd when the alias is absent ($miss)"
+        ;;
+    *) die_test "expected MISSING=…libobjc.tbd, got: $miss" ;;
+esac
+
+# Never copy an arm64-macos tbd even if the filename matches.
+FAKESDK=$(mktemp -d /tmp/phase2-fake-sdk.XXXXXX)
+mkdir -p "$FAKESDK/sdk/usr/lib"
+printf '%s\n' '--- !tapi-tbd' 'targets:         [ arm64-macos ]' '...' \
+    > "$FAKESDK/sdk/usr/lib/libobjc.A.tbd"
+ln -sfn libobjc.A.tbd "$FAKESDK/sdk/usr/lib/libobjc.tbd"
+if phase2_stage_darwin_tbds_into_sysroot "$TBDWORK/refuse" "$FAKESDK" 2>"$TBDWORK/refuse.err"; then
+    die_test "darwin tbd stage accepted an arm64-macos libobjc.A.tbd"
+else
+    grep -q 'never copy arm64 tbds' "$TBDWORK/refuse.err" \
+        && ok "darwin tbd stage refuses arm64-macos gen_tbd output" \
+        || die_test "refuse path did not name arm64 copy ($(cat "$TBDWORK/refuse.err"))"
+fi
+rm -rf "$FAKESDK"
+
+if ! phase2_stage_darwin_tbds_into_sysroot "$TBDWORK/x86" "$ROOT/machorun"; then
+    die_test "phase2_stage_darwin_tbds_into_sysroot failed against machorun/sdk"
+fi
+if [ -L "$TBDWORK/x86/usr/lib/libobjc.tbd" ] \
+    && [ "$(readlink "$TBDWORK/x86/usr/lib/libobjc.tbd")" = libobjc.A.tbd ]; then
+    ok "libobjc.tbd is a symlink to libobjc.A.tbd"
+else
+    die_test "libobjc.tbd is not the gen_tbd alias (link=$(readlink "$TBDWORK/x86/usr/lib/libobjc.tbd" 2>/dev/null || echo missing))"
+fi
+if phase2_tbd_is_x86_target "$TBDWORK/x86/usr/lib/libobjc.tbd"; then
+    ok "staged libobjc.tbd names x86_64-macos"
+else
+    die_test "staged libobjc.tbd does not name x86_64-macos"
+fi
+undef_ok=1
+while IFS= read -r sym; do
+    [ -n "$sym" ] || continue
+    if ! grep -q "'$sym'" "$TBDWORK/x86/usr/lib/libobjc.tbd"; then
+        echo "FAIL: $sym not in staged libobjc.tbd" >&2
+        undef_ok=0
+    fi
+done < <(phase2_render_full_objc_undefs)
+if [ "$undef_ok" -eq 1 ]; then
+    ok "render_full.o objc undefs are all in staged libobjc.tbd"
+else
+    die_test "staged libobjc.tbd is missing render_full.o objc undefs"
+fi
+# Acceptance: ld64 -lobjc against those undefs (the operator == link failure).
+# Other undefs (crt) may remain; the eight must not appear in ld64 stderr.
+if command -v ld64.lld-18 >/dev/null 2>&1 && command -v clang >/dev/null 2>&1; then
+    cat > "$TBDWORK/undefs.s" <<'EOF'
+    .text
+    .globl _main
+_main:
+    callq _objc_sync_exit
+    callq _objc_sync_enter
+    callq _objc_setAssociatedObject
+    callq _objc_getAssociatedObject
+    callq _objc_opt_self
+    callq _objc_getClassList
+    callq _objc_getClass
+    movq __objc_empty_cache@GOTPCREL(%rip), %rax
+    xorl %eax, %eax
+    ret
+EOF
+    if clang -c -target x86_64-apple-macos15.0 -o "$TBDWORK/undefs.o" "$TBDWORK/undefs.s" \
+        2>"$TBDWORK/clang.err"; then
+        set +e
+        ld64.lld-18 -arch x86_64 -platform_version macos 15.0 15.0 \
+            -syslibroot "$TBDWORK/x86" -L/usr/lib -lobjc -lSystem \
+            -e _main -o "$TBDWORK/undefs.bin" "$TBDWORK/undefs.o" \
+            >"$TBDWORK/ld.err" 2>&1
+        set -e
+        ld_hit=0
+        while IFS= read -r sym; do
+            [ -n "$sym" ] || continue
+            if grep -q "$sym" "$TBDWORK/ld.err"; then
+                echo "FAIL: ld64 still undefined $sym" >&2
+                ld_hit=1
+            fi
+        done < <(phase2_render_full_objc_undefs)
+        if [ "$ld_hit" -eq 0 ]; then
+            ok "ld64 -lobjc does not report render_full.o objc undefs"
+        else
+            die_test "ld64 still missing objc symbols ($(cat "$TBDWORK/ld.err"))"
+        fi
+    else
+        ok "skip ld64 -lobjc (clang could not emit x86_64 Mach-O: $(tr '\n' ' ' < "$TBDWORK/clang.err"))"
+    fi
+else
+    ok "skip ld64 -lobjc (ld64.lld-18 or clang absent)"
+fi
+# Arm inventory also names an overlay tbd we cannot copy (arm64 target).
+printf '%s\n' '--- !tapi-tbd' 'targets:         [ arm64-macos ]' '...' \
+    > "$TBDWORK/arm/usr/lib/swift/libswiftCore.tbd"
+overlay_miss=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
+case "$overlay_miss" in
+    MISSING=*usr/lib/swift/libswiftCore.tbd*)
+        ok "resolve names a missing overlay tbd from the arm64 inventory ($overlay_miss)"
+        ;;
+    *) die_test "expected MISSING overlay libswiftCore.tbd, got: $overlay_miss" ;;
+esac
+core_src=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
+if [ -f "$core_src" ] && phase2_is_x86_macho "$core_src"; then
+    if phase2_emit_tbd_from_dylib "$core_src" \
+        /usr/lib/swift/libswiftCore.dylib \
+        "$TBDWORK/x86/usr/lib/swift/libswiftCore.tbd" \
+        && phase2_tbd_is_x86_target "$TBDWORK/x86/usr/lib/swift/libswiftCore.tbd"; then
+        ok "overlay tbd emitted from x86 libswiftCore.dylib names x86_64-macos"
+    else
+        die_test "failed to emit x86 libswiftCore.tbd from the x86 dylib"
+    fi
+    overlay_ok=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
+    case "$overlay_ok" in
+        OK) ok "resolve OK after gen_tbd aliases + x86 overlay tbd" ;;
+        *) die_test "expected OK after emitting overlay tbd, got: $overlay_ok" ;;
+    esac
+else
+    ok "skip live libswiftCore overlay emit (no x86 dylib in artifacts)"
+fi
+# Copied arm64 target must not pass even if the file exists.
+cp -f "$TBDWORK/arm/usr/lib/libobjc.tbd" "$TBDWORK/x86/usr/lib/libobjc.tbd"
+wrong=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
+case "$wrong" in
+    *WRONG_TARGET=*libobjc.tbd*)
+        ok "resolve names WRONG_TARGET for an arm64-macos libobjc.tbd ($wrong)"
+        ;;
+    *) die_test "expected WRONG_TARGET=…libobjc.tbd, got: $wrong" ;;
+esac
+rm -rf "$TBDWORK"
+
+# Live x86 sysroot: apply darwin aliases without wiping headers, then check.
+if [ -d "$ROOT/scratch/sysroot_fe4-x86_64/usr/lib" ] \
+    && [ -s "$ROOT/machorun/sdk/usr/lib/libobjc.A.tbd" ]; then
+    if phase2_stage_darwin_tbds_into_sysroot \
+        "$ROOT/scratch/sysroot_fe4-x86_64" "$ROOT/machorun"; then
+        if [ -e "$ROOT/scratch/sysroot_fe4-x86_64/usr/lib/libobjc.tbd" ] \
+            && phase2_tbd_is_x86_target "$ROOT/scratch/sysroot_fe4-x86_64/usr/lib/libobjc.tbd" \
+            && grep -q "'_objc_sync_exit'" "$ROOT/scratch/sysroot_fe4-x86_64/usr/lib/libobjc.tbd"; then
+            ok "live sysroot_fe4-x86_64 libobjc.tbd is x86 and exports _objc_sync_exit"
+        else
+            die_test "live sysroot still lacks an x86 libobjc.tbd with _objc_sync_exit"
+        fi
+    else
+        die_test "could not stage darwin tbds into live sysroot_fe4-x86_64"
+    fi
+    W=$ROOT
+    phase2_stage_overlay_tbds_into_sysroot "$ROOT/scratch/sysroot_fe4-x86_64" || true
+    live_res=$(phase2_sysroot_tbd_resolve \
+        "$ROOT/scratch/sysroot_fe4-x86_64" "$ROOT/scratch/sysroot_fe4" || true)
+    case "$live_res" in
+        OK) ok "live x86 sysroot tbd resolve vs arm64 inventory: OK" ;;
+        *) die_test "live resolve not OK (required darwin aliases must pass when arm64 inventory is empty): $live_res" ;;
+    esac
+    W=$ROOT
+else
+    ok "skip live sysroot tbd apply (sysroot_fe4-x86_64 or gen_tbd output absent)"
+fi
 
 MMWORK=$(mktemp -d /tmp/phase2-modulemap.XXXXXX)
 mkdir -p "$MMWORK/arm/usr/include/_modules" \
