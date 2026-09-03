@@ -217,7 +217,7 @@ grep -q 'phase2_park_arm64_darwin_dylibs' "$ROOT/scripts/x86/ensure_machorun.sh"
 grep -q 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
     && ok "ensure_machorun asserts git status --short machorun is empty" \
     || die_test "ensure_machorun missing vendor-clean assertion"
-grep -q 'git status --short --untracked-files=all -- machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \
+grep -qF -- 'status --short --untracked-files=all -- machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \
     && ok "ensure_machorun git-status pathspec is machorun" \
     || die_test "ensure_machorun missing git status --short machorun"
 grep -q 'MACHORUN/build/machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \

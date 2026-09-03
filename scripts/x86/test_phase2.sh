@@ -338,7 +338,7 @@ expect_grep 'usr/include/Darwin.modulemap=' "$ROOT/swiftcore-macho/scripts/overl
     "overlay stamp hashes FE Darwin.modulemap bytes so a regenerated map restages"
 expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
     "ensure_machorun refuses a dirty machorun vendor subtree"
-expect_grep 'git status --short --untracked-files=all -- machorun' \
+expect_grep 'status --short --untracked-files=all -- machorun' \
     "$ROOT/scripts/x86/ensure_machorun.sh" \
     "ensure_machorun asserts git status --short machorun is empty"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \

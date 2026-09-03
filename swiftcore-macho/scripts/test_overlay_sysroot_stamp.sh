@@ -25,6 +25,24 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 W=$tmp/work
 export W SWIFTCORE_DARWIN_ARCH=x86_64
+unset SWIFTCORE_FE_SYSROOT
+# A live $OPENUIKIT_ROOT/scratch/sysroot_fe4-x86_64 (or machorun/sdk tbds)
+# on the developer tree must not win these fixtures. Cycle sets
+# SWIFTCORE_FE_SYSROOT at the named FE sysroot; tests use W's scratch only.
+overlay_sysroot_source_candidates() {
+  local arch=${SWIFTCORE_DARWIN_ARCH:-x86_64}
+  [ -n "${SWIFTCORE_FE_SYSROOT:-}" ] && printf '%s\n' "$SWIFTCORE_FE_SYSROOT"
+  if [ -n "${W:-}" ]; then
+    printf '%s\n' "$W/scratch/sysroot_fe4-${arch}"
+    if [ "$arch" = x86_64 ]; then
+      printf '%s\n' "$W/scratch/sysroot_fe4-x86_64"
+    fi
+  fi
+}
+overlay_sysroot_gen_tbd_candidates() {
+  [ -n "${W:-}" ] && printf '%s\n' "$W/machorun-sdk"
+  [ -n "${W:-}" ] && printf '%s\n' "$W/machorun/sdk"
+}
 
 need() {
   local cond=$1 msg=$2
@@ -177,6 +195,7 @@ exports:
     symbols: [ _fmaxl ]
 TBD
 ln -sfn libSystem.B.tbd "$fe/usr/lib/libSystem.tbd"
+export SWIFTCORE_FE_SYSROOT=$fe
 echo '--- !tapi-tbd-v3' > "$fe/usr/lib/swift/libswiftCore.tbd"
 echo 'module System {}' > "$fe/usr/lib/swift/System.swiftmodule/x86_64-apple-macos.swiftinterface"
 # Darwin is one of the twelve overlays the build produces itself: its
