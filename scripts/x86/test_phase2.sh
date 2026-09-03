@@ -773,8 +773,9 @@ expect_file "$ROOT/full/relativetime/build_host_helper.sh"
 expect_file "$ROOT/full/foundationinternationalization/build_host_helper.sh"
 expect_grep 'openuikit_host_runtime_toolchain_files' "$COMMON" \
     "host stager copies only toolchain names"
-expect_grep 'openuikit_host_runtime_built_files' "$COMMON" \
-    "host stager distinguishes built Open* names"
+expect_grep 'openuikit_host_runtime_built_files' \
+    "$ROOT/full/dispatch/swift_linux_lib.inc" \
+    "host runtime list splits built Open* names from toolchain copies"
 expect_grep 'urltransport/build_host_helper.sh' "$COMMON" \
     "phase2 builds libOpenURLTransportHost.so via committed helper script"
 expect_grep 'relativetime/build_host_helper.sh' "$COMMON" \
@@ -790,9 +791,9 @@ expect_grep 'relativetime/build_host_helper.sh' \
 expect_grep 'foundationinternationalization/build_host_helper.sh' \
     "$ROOT/full/foundationinternationalization/build_foundation_internationalization.sh" \
     "intl lane host recipe is the shared helper script"
-expect_grep -- '-lcurl -pthread' "$ROOT/full/urltransport/build_host_helper.sh" \
+expect_grep '-lcurl -pthread' "$ROOT/full/urltransport/build_host_helper.sh" \
     "URL host helper keeps committed -lcurl -pthread"
-expect_grep -- '-licui18n -licuuc -lm' \
+expect_grep '-licui18n -licuuc -lm' \
     "$ROOT/full/relativetime/build_host_helper.sh" \
     "relative-time host helper keeps committed ICU libs"
 expect_not_grep 'OpenURLTransportHost.c' "$COMMON" \
