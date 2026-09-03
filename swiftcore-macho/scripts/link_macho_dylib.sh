@@ -46,9 +46,28 @@ test -n "$OBJS"
 echo "$LIB: $(echo $OBJS | wc -w) objects  arch=${SWIFTCORE_DARWIN_ARCH}"
 
 mkdir -p "$(dirname "$OUT")"
+# libswiftDarwin: Apple's dylib carries exactly four LC_REEXPORT_DYLIB
+# (Builtin_float, _DarwinFoundation1/2/3). This object-list relink runs AFTER
+# the ninja link + overlay_ensure_darwin_reexports and used to overwrite that
+# image without them (measured 2026-09-03: staged Darwin had no re-exports).
+# Link at macosx15.0: our Builtin_float carries
+# `$ld$previous$/usr/lib/swift/libswiftDarwin.dylib$$1$10.14.4$15.0$$`, and at
+# the 13.0 CMake target lld records that re-export under the previous name.
+LINK_TARGET=$SWIFTCORE_CLANG_TARGET
+REEXPORT_FLAGS=()
+if [ "$LIB" = libswiftDarwin ]; then
+  for shell in libswift_Builtin_float libswift_DarwinFoundation1 \
+               libswift_DarwinFoundation2 libswift_DarwinFoundation3; do
+    sp=$B/lib/swift/${SWIFTCORE_STDLIB_DIR}/$shell.dylib
+    [ -f "$sp" ] || { echo "link_macho_dylib: CANNOT_DARWIN_REEXPORT missing $sp" >&2; exit 2; }
+    REEXPORT_FLAGS+=(-Wl,-reexport_library,"$sp")
+  done
+  LINK_TARGET=$(printf '%s' "$SWIFTCORE_CLANG_TARGET" | sed -E 's/-macosx[0-9.]+$/-macosx15.0/')
+  echo "link_macho_dylib: libswiftDarwin target=$LINK_TARGET reexport=4 shells"
+fi
 cd "$B"
 "$TC/bin/clang++" \
-  -target "$SWIFTCORE_CLANG_TARGET" -isysroot "$SDK" \
+  -target "$LINK_TARGET" -isysroot "$SDK" \
   `# the swift toolchain's own lld refuses platform macOS; Ubuntu's ld64.lld-18 does not` \
   -fuse-ld=lld -B "${LLD_BIN:-/usr/lib/llvm-18/bin}" \
   -dynamiclib -install_name "/usr/lib/swift/$LIB.dylib" \
@@ -58,9 +77,17 @@ cd "$B"
   -nostdlib $OBJS \
   -lSystem -lobjc -lc++ \
   -Wl,-undefined,dynamic_lookup \
+  "${REEXPORT_FLAGS[@]}" \
   -o "$OUT" "$@"
 
 echo "linked: $OUT"
+if [ "$LIB" = libswiftDarwin ]; then
+  have=$(/usr/lib/llvm-18/bin/llvm-otool -l "$OUT" 2>/dev/null \
+    | awk '/LC_REEXPORT_DYLIB/{r=1} r&&/^ *name /{print $2; r=0}' | sort -u | paste -sd, -)
+  want=/usr/lib/swift/libswift_Builtin_float.dylib,/usr/lib/swift/libswift_DarwinFoundation1.dylib,/usr/lib/swift/libswift_DarwinFoundation2.dylib,/usr/lib/swift/libswift_DarwinFoundation3.dylib
+  [ "$have" = "$want" ] || { echo "link_macho_dylib: CANNOT_DARWIN_REEXPORT have=[$have]" >&2; exit 2; }
+  echo "link_macho_dylib: libswiftDarwin LC_REEXPORT_DYLIB = Apple's four"
+fi
 if [ "$OUT_SO" != "$OUT" ]; then
   cp -f "$OUT" "$OUT_SO"
   echo "linked: $OUT_SO (ninja .so name)"
