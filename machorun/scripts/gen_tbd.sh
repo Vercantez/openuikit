@@ -441,7 +441,7 @@ require_syms "$TMP/sym.libSystem.B" "libSystem.B" \
     _dispatch_main _dispatch_activate _dispatch_set_context \
     _dispatch_release _dispatch_source_create _dispatch_source_set_timer \
     _dispatch_source_set_event_handler_f _dispatch_assert_queue\$V2 \
-    _dispatch_main_q _dispatch_source_type_timer
+    __dispatch_main_q __dispatch_source_type_timer
 require_syms "$TMP/sym.libc++.1" "libc++.1" \
     __ZNSt3__122__libcpp_verbose_abortEPKcz \
     __ZNSt3__16thread20hardware_concurrencyEv \
