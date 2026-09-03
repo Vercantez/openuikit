@@ -424,16 +424,25 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
 
     def test_recursive_runtime_closure_includes_extensionless_substrate_stubs(self) -> None:
         helper = ATTEST.read_text()
+        inventory = INVENTORIES_PY.read_text()
         self.assertIn("macho_commands", helper)
         self.assertIn("LC_REEXPORT_DYLIB", helper)
         self.assertIn("LC_LOAD_WEAK_DYLIB", helper)
         self.assertIn("weak-missing", helper)
-        self.assertIn("Foundation.framework/Foundation", helper)
-        self.assertIn("CoreFoundation.framework/CoreFoundation", helper)
+        self.assertIn("Foundation.framework/Foundation", inventory)
+        self.assertIn("CoreFoundation.framework/CoreFoundation", inventory)
+        self.assertIn("CLOSURE_STUBS_X86_64", inventory)
         self.assertIn("known substrate stub is absent from recursive closure", helper)
+        self.assertIn("substrate stub is not in the expected closure set", helper)
+        self.assertIn("inventory_stub_set", helper)
+        self.assertIn("'arch=s'", helper)
         build_full = BUILD_FULL.read_text()
         self.assertIn("restaging $framework loud-abort stub", build_full)
         self.assertIn("staged\\tdarwin/System/Library/Frameworks/%s.framework/%s", build_full)
+        text = BUILD.read_text()
+        self.assertIn('--arch "$ARCH"', text)
+        onboarding = (ROOT / "full/swiftui/build_focus_onboarding_guest.sh").read_text()
+        self.assertIn('--arch "$ARCH"', onboarding)
 
     def test_nested_guest_root_has_canonical_labels_and_tamper_teeth(self) -> None:
         with tempfile.TemporaryDirectory(prefix="nested-guest-root-closure.") as temporary:
@@ -496,6 +505,8 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
                 str(package),
                 "--guest-root",
                 str(guest_root),
+                "--arch",
+                "arm64",
             ]
             accepted = subprocess.run(
                 command, check=True, capture_output=True, text=True
@@ -542,6 +553,156 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
             )
             self.assertNotEqual(missing.returncode, 0)
             self.assertIn("cannot resolve LC_LOAD_DYLIB", missing.stderr)
+
+    def test_closure_substrate_stubs_fail_closed_per_arch(self) -> None:
+        foundation_label = (
+            "guest-root/darwin/System/Library/Frameworks/"
+            "Foundation.framework/Foundation"
+        )
+        core_label = (
+            "guest-root/darwin/System/Library/Frameworks/"
+            "CoreFoundation.framework/CoreFoundation"
+        )
+        self.assertEqual(
+            inventories.stubs("widget", "substrate", "arm64"),
+            (foundation_label, core_label),
+        )
+        self.assertEqual(
+            inventories.stubs("onboarding", "substrate", "arm64"),
+            inventories.stubs("widget", "substrate", "arm64"),
+        )
+        self.assertEqual(inventories.stubs("widget", "substrate", "x86_64"), ())
+        self.assertEqual(
+            inventories.stubs("onboarding", "substrate", "x86_64"), ()
+        )
+        self.assertEqual(
+            inventories.stubs("widget", "universe", "x86_64"),
+            inventories.CLOSURE_STUB_UNIVERSE,
+        )
+
+        def run_closure(arch: str, *, load_stubs: bool, pass_arch: bool = True):
+            temporary = tempfile.TemporaryDirectory(prefix="stub-inventory-closure.")
+            root = Path(temporary.name)
+            package = root / "package"
+            guest_root = package / "guest-root"
+            executable = package / "probe/CoreGuestPackageProbe"
+            runtime = guest_root / "darwin/usr/lib/swift/libRuntime.dylib"
+            foundation = (
+                guest_root
+                / "darwin/System/Library/Frameworks/Foundation.framework/Foundation"
+            )
+            core_foundation = (
+                guest_root
+                / "darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+            )
+            loader = guest_root / "machorun"
+            root_manifest = guest_root / ".manifest"
+            for fixture in (
+                executable,
+                runtime,
+                foundation,
+                core_foundation,
+                loader,
+                root_manifest,
+            ):
+                fixture.parent.mkdir(parents=True, exist_ok=True)
+                fixture.write_text(f"{fixture.name}\n", encoding="utf-8")
+            runtime_deps = [
+                "/System/Library/Frameworks/Foundation.framework/Foundation",
+                "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+            ] if load_stubs else []
+            fake_otool = root / "fake-otool"
+            fake_otool.write_text(
+                """#!/usr/bin/env python3
+from pathlib import Path
+import sys
+deps = {
+    "CoreGuestPackageProbe": ["/usr/lib/swift/libRuntime.dylib"],
+    "libRuntime.dylib": %r,
+}
+for dependency in deps.get(Path(sys.argv[-1]).name, []):
+    print("Load command 0")
+    print("      cmd LC_LOAD_DYLIB")
+    print(f"     name {dependency} (offset 24)")
+"""
+                % (runtime_deps,),
+                encoding="utf-8",
+            )
+            fake_otool.chmod(0o755)
+            command = [
+                "perl",
+                str(ATTEST),
+                "closure",
+                "--otool",
+                str(fake_otool),
+                "--executable",
+                str(executable),
+                "--package",
+                str(package),
+                "--guest-root",
+                str(guest_root),
+            ]
+            if pass_arch:
+                command.extend(["--arch", arch])
+            result = subprocess.run(command, check=False, capture_output=True, text=True)
+            return result, temporary
+
+        missing_arch, missing_arch_tmp = run_closure(
+            "arm64", load_stubs=True, pass_arch=False
+        )
+        try:
+            self.assertNotEqual(missing_arch.returncode, 0)
+            self.assertIn("closure requires", missing_arch.stderr)
+            self.assertIn("--arch", missing_arch.stderr)
+        finally:
+            missing_arch_tmp.cleanup()
+
+        arm_ok, arm_ok_tmp = run_closure("arm64", load_stubs=True)
+        try:
+            self.assertEqual(arm_ok.returncode, 0, arm_ok.stderr)
+            self.assertIn(foundation_label, arm_ok.stdout)
+            self.assertIn(core_label, arm_ok.stdout)
+        finally:
+            arm_ok_tmp.cleanup()
+
+        arm_missing, arm_missing_tmp = run_closure("arm64", load_stubs=False)
+        try:
+            self.assertNotEqual(arm_missing.returncode, 0)
+            self.assertIn(
+                "known substrate stub is absent from recursive closure",
+                arm_missing.stderr,
+            )
+            self.assertIn(foundation_label, arm_missing.stderr)
+            self.assertIn("arch\tarm64", arm_missing.stderr)
+            self.assertIn(f"expected\t{foundation_label}", arm_missing.stderr)
+            self.assertIn(f"expected\t{core_label}", arm_missing.stderr)
+            self.assertIn("file\texecutable/CoreGuestPackageProbe", arm_missing.stderr)
+            self.assertNotIn("expected\t(none)", arm_missing.stderr)
+        finally:
+            arm_missing_tmp.cleanup()
+
+        x86_ok, x86_ok_tmp = run_closure("x86_64", load_stubs=False)
+        try:
+            self.assertEqual(x86_ok.returncode, 0, x86_ok.stderr)
+            self.assertIn("file\tguest-root/darwin/usr/lib/swift/libRuntime.dylib\t", x86_ok.stdout)
+            self.assertNotIn("Foundation.framework/Foundation", x86_ok.stdout)
+            self.assertNotIn("CoreFoundation.framework/CoreFoundation", x86_ok.stdout)
+        finally:
+            x86_ok_tmp.cleanup()
+
+        x86_extra, x86_extra_tmp = run_closure("x86_64", load_stubs=True)
+        try:
+            self.assertNotEqual(x86_extra.returncode, 0)
+            self.assertIn(
+                "substrate stub is not in the expected closure set",
+                x86_extra.stderr,
+            )
+            self.assertIn(foundation_label, x86_extra.stderr)
+            self.assertIn("arch\tx86_64", x86_extra.stderr)
+            self.assertIn("expected\t(none)", x86_extra.stderr)
+            self.assertIn("file\t" + foundation_label, x86_extra.stderr)
+        finally:
+            x86_extra_tmp.cleanup()
 
     def test_provider_gate_is_universal_and_rejects_reverse_ownership(self) -> None:
         helper = ATTEST.read_text()
@@ -749,6 +910,14 @@ _ARM64_PACKAGE_SHA256 = {
     "directories": "6f919ab8362dc40f9cea64edd9b93a1e59aee0be48fdb2622c956392b02406be",
     "fe_module_files": "f3bdd5f1c2f371c76a19a96bab86c624318d21b8e85d253c805cbe033d9f50cb",
 }
+_ARM64_STUB_SHA256 = {
+    "substrate": "8b1b341eec181d0d668c72b19ee70516026c5794af691adb0939b158fe173360",
+    "universe": "8b1b341eec181d0d668c72b19ee70516026c5794af691adb0939b158fe173360",
+}
+_X86_STUB_SHA256 = {
+    "substrate": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "universe": "8b1b341eec181d0d668c72b19ee70516026c5794af691adb0939b158fe173360",
+}
 
 
 class FocusWidgetGuestInventoryTests(unittest.TestCase):
@@ -765,6 +934,8 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
         self.assertIn("guest_gate_inventory widget inputs", widget)
         self.assertIn("guest_gate_inventory widget package", widget)
         self.assertIn("guest_gate_inventory onboarding inputs", onboarding)
+        self.assertIn('--arch "$ARCH"', widget)
+        self.assertIn('--arch "$ARCH"', onboarding)
         self.assertNotIn("libswift_errno.dylib", widget)
         self.assertNotIn("/usr/lib/swift/libswift_DarwinFoundation1.dylib", widget)
         self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", widget)
@@ -974,6 +1145,95 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
         self.assertIn("@rpath/libFoundationEssentials.dylib", swiftui_arm)
         swiftui_inputs = inventories.inputs("widget", "swiftui", "arm64")
         self.assertIn("{PACKAGE}/libFoundationEssentials.dylib", swiftui_inputs)
+
+    def test_substrate_stub_inventory_is_arch_conditional(self) -> None:
+        self.assertEqual(
+            tuple(sorted(_ARM64_STUB_SHA256)),
+            inventories.check_names("widget", "stubs"),
+        )
+        self.assertEqual(
+            inventories.check_names("onboarding", "stubs"),
+            inventories.check_names("widget", "stubs"),
+        )
+        for name, digest in _ARM64_STUB_SHA256.items():
+            items = inventories.stubs("widget", name, "arm64")
+            self.assertEqual(inventories.inventory_sha256(items), digest, name)
+            self.assertEqual(
+                inventories.stubs("onboarding", name, "arm64"), items, name
+            )
+        self.assertEqual(
+            inventories.stubs("widget", "substrate", "arm64"),
+            inventories.CLOSURE_STUB_UNIVERSE,
+        )
+        self.assertEqual(
+            inventories.stubs("widget", "substrate", "x86_64"), ()
+        )
+        for name, digest in _X86_STUB_SHA256.items():
+            items = inventories.stubs("widget", name, "x86_64")
+            self.assertEqual(inventories.inventory_sha256(items), digest, name)
+            self.assertEqual(
+                inventories.stubs("onboarding", name, "x86_64"), items, name
+            )
+        arm_cli = subprocess.check_output(
+            [
+                "python3",
+                str(INVENTORIES_PY),
+                "--arch",
+                "arm64",
+                "--gate",
+                "widget",
+                "--kind",
+                "stubs",
+                "--name",
+                "substrate",
+            ],
+            text=True,
+        )
+        x86_cli = subprocess.check_output(
+            [
+                "python3",
+                str(INVENTORIES_PY),
+                "--arch",
+                "x86_64",
+                "--gate",
+                "widget",
+                "--kind",
+                "stubs",
+                "--name",
+                "substrate",
+            ],
+            text=True,
+        )
+        self.assertIn("Foundation.framework/Foundation\n", arm_cli)
+        self.assertIn("CoreFoundation.framework/CoreFoundation\n", arm_cli)
+        self.assertEqual(x86_cli, "")
+        with self.assertRaises(KeyError):
+            inventories.stubs("widget", "missing", "arm64")
+        script = r"""
+set -euo pipefail
+W=%s
+. "$W/full/scripts/guest_arch.inc"
+. "$W/full/swiftui/guest_gate_inventories.inc"
+ARCH=arm64
+guest_gate_inventory widget stubs substrate
+printf '==SPLIT==\n'
+ARCH=x86_64
+guest_gate_inventory widget stubs substrate
+printf '==ONBOARDING==\n'
+guest_gate_inventory onboarding stubs substrate
+""" % ROOT
+        result = subprocess.run(
+            ["bash", "-c", script],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        arm, rest = result.stdout.split("==SPLIT==\n", 1)
+        x86, onboarding_x86 = rest.split("==ONBOARDING==\n", 1)
+        self.assertIn("Foundation.framework/Foundation", arm)
+        self.assertIn("CoreFoundation.framework/CoreFoundation", arm)
+        self.assertEqual(x86, "")
+        self.assertEqual(onboarding_x86, "")
 
     def test_cli_emits_printf_compatible_lists(self) -> None:
         arm = subprocess.check_output(

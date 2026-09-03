@@ -372,6 +372,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$PROBE_APP/Contents/MacOS/FocusPackageProbe" \
     --package "$PACKAGE" --guest-root "$MRROOT" \
+    --arch "$ARCH" \
     > "$AUDIT/package-runtime-closure.manifest"
 grep -Fqx $'file\tpackage/FocusPackageProbe.framework/FocusPackageProbe\t'\
 "$(hash_file "$PROVIDER/FocusPackageProbe")" \
@@ -430,6 +431,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest" \
     --package "$PACKAGE" --guest-root "$MRROOT" \
+    --arch "$ARCH" \
     > "$AUDIT/licenses-runtime-closure.manifest"
 (
     cd "$OUT"
@@ -519,6 +521,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$PROBE_APP/Contents/MacOS/FocusPackageProbe" \
     --package "$PACKAGE" --guest-root "$MRROOT" \
+    --arch "$ARCH" \
     > "$AUDIT/post-package-runtime-closure.manifest"
 cmp -s "$AUDIT/package-runtime-closure.manifest" \
     "$AUDIT/post-package-runtime-closure.manifest" \
@@ -527,6 +530,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest" \
     --package "$PACKAGE" --guest-root "$MRROOT" \
+    --arch "$ARCH" \
     > "$AUDIT/post-licenses-runtime-closure.manifest"
 cmp -s "$AUDIT/licenses-runtime-closure.manifest" \
     "$AUDIT/post-licenses-runtime-closure.manifest" \
