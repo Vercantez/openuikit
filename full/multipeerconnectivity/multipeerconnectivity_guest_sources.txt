@@ -1,0 +1,5 @@
+full/multipeerconnectivity/MCBrowser.swift
+full/multipeerconnectivity/MCNearby.swift
+full/multipeerconnectivity/MCPeerID.swift
+full/multipeerconnectivity/MCSession.swift
+full/multipeerconnectivity/MultipeerConnectivity.swift
