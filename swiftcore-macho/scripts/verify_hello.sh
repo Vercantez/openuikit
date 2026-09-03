@@ -1,10 +1,16 @@
 #!/bin/bash
 # Compile+link a hello-world Swift program against the just-built Darwin slice.
-# Execution is refused: this cloud-agent VM is not the operator x86 host.
+# Execution is a positive probe: a machorun loader binary that can run an
+# x86_64 Mach-O on this host. The marker is never printed just because the
+# process happens to be a cloud-agent VM.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
+OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/guest_arch.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/probe_machorun.inc"
 
 W=${W:-$HOME/work}
 B=${B:-$W/build}
@@ -13,6 +19,7 @@ RES=$B/lib/swift
 LIBDIR=$B/lib/swift/${SWIFTCORE_STDLIB_DIR}
 HELLO=${HELLO:-$W/hello_swiftcore.swift}
 OUT=${OUT:-$W/hello_swiftcore}
+MACHORUN=${MACHORUN:-$OPENUIKIT_ROOT/machorun}
 
 if [ ! -f "$LIBDIR/libswiftCore.dylib" ]; then
   echo "verify_hello: no $LIBDIR/libswiftCore.dylib" >&2
@@ -67,5 +74,41 @@ if [ "$SWIFTCORE_DARWIN_ARCH" = x86_64 ]; then
 fi
 
 echo "compile+link OK  guest=$OUT  cpu=$SWIFTCORE_MACHO_CPU"
-echo "CURSOR_ENV_CANNOT_EXECUTE_X86_SWIFT_GUEST host=$(uname -m) split=compile-link-in-vm/execution-operator-x86-ec2 reason=linked Mach-O $OUT is ${SWIFTCORE_MACHO_CPU}; running it needs the ported machorun loader on the operator x86 host, not this cloud-agent VM" >&2
+
+if [ "$SWIFTCORE_DARWIN_ARCH" != x86_64 ]; then
+  echo "verify_hello: guest is $SWIFTCORE_DARWIN_ARCH; x86_64 loader probe skipped"
+  exit 0
+fi
+
+probed=$(probe_x86_macho_loader || true)
+if [ -z "$probed" ]; then
+  cands=$(probe_machorun_candidates | tr '\n' ' ')
+  echo "CURSOR_ENV_CANNOT_EXECUTE_X86_SWIFT_GUEST host=$(uname -m) guest=$OUT cpu=${SWIFTCORE_MACHO_CPU} reason=no machorun loader binary on this host can run an x86_64 Mach-O (probed: $cands)" >&2
+  exit 0
+fi
+
+loader=${probed%%$'\t'*}
+root=${probed#*$'\t'}
+echo "probe: machorun loader=$loader root=$root"
+echo "probe: $(file -b "$loader")"
+
+# Prefix map: /usr/lib/swift/libswiftCore.dylib -> $root/darwin/usr/lib/swift/...
+dst_dir=$root/darwin/usr/lib/swift
+mkdir -p "$dst_dir"
+if [ -e "$dst_dir/libswiftCore.dylib" ]; then
+  if ! cmp -s "$LIBDIR/libswiftCore.dylib" "$dst_dir/libswiftCore.dylib"; then
+    echo "verify_hello: $dst_dir/libswiftCore.dylib differs from this build; parking it"
+    mv "$dst_dir/libswiftCore.dylib" "$dst_dir/libswiftCore.dylib.park-$$"
+  fi
+fi
+ln -sfn "$LIBDIR/libswiftCore.dylib" "$dst_dir/libswiftCore.dylib"
+echo "probe: staged $dst_dir/libswiftCore.dylib -> $LIBDIR/libswiftCore.dylib"
+
+echo "=== hello under machorun ==="
+set +e
+hello_out=$(MACHORUN_ROOT="$root" "$loader" "$OUT" 2>&1)
+hello_rc=$?
+set -e
+printf '%s\n' "$hello_out"
+echo "hello_swiftcore machorun exit=$hello_rc"
 exit 0
