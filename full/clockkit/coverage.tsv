@@ -1,0 +1,14 @@
+precise	status	evidence	notes
+c:@CLKWatchFaceLibraryErrorDomain	implemented	tests/agent/ClockKitRuntime.swift	ErrorDomain string is CLKWatchFaceLibraryErrorDomain (Apple-oracle f1e7f20)
+c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	Int enum; observed raw values are exactly 1 through 5
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeFaceNotAvailable	implemented	tests/agent/ClockKitRuntime.swift	case faceNotAvailable rawValue 4; Linux file-URL fail-closed uses this code as host policy, not as observed Apple file-URL validation
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeInvalidFile	implemented	tests/agent/ClockKitRuntime.swift	case invalidFile rawValue 2; Apple file-payload validation that would produce this code is unobserved
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNoURL	implemented	tests/agent/ClockKitRuntime.swift	case noURL rawValue 5; Apple empty-URL mapping is unobserved
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNotFileURL	implemented	tests/agent/ClockKitRuntime.swift	case notFileURL rawValue 1; addWatchFace non-file URL returns this code
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodePermissionDenied	implemented	tests/agent/ClockKitRuntime.swift	case permissionDenied rawValue 3; Apple permission mapping is unobserved
+c:objc(cs)CLKWatchFaceLibrary	implemented	tests/agent/ClockKitRuntime.swift	open NSObject subclass; override dispatch exercised
+c:objc(cs)CLKWatchFaceLibrary(im)addWatchFaceAtURL:completionHandler:	implemented	tests/agent/ClockKitRuntime.swift	non-file URL: non-inline exactly-once callback with code 1; async overlay shares that path; Linux never succeeds
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	synthesized Equatable.!= for ErrorCode
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	synthesized hashValue for ErrorCode
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	synthesized hash(into:) for ErrorCode
+s:So28CLKWatchFaceLibraryErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/ClockKitRuntime.swift	init?(rawValue:) accepts 1...5 and rejects 0 and 6
