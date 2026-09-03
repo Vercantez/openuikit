@@ -156,7 +156,7 @@ for id in "${ids[@]}"; do
                && cmp -s "$X86_EXPECTED/$id.stdout" "$ACTUAL/$id.stdout" \
                && { [[ ! -f "$X86_EXPECTED/$id.stderr" ]] || cmp -s "$X86_EXPECTED/$id.stderr" "$ACTUAL/$id.stderr"; }; then
                 verdict="MATCH"
-                detail="x86_64 Darwin baseline (tests/expected-x86_64)"
+                detail="x86_64 expectation (tests/expected-x86_64; Rosetta-recorded, or a reviewed loader diagnostic per its README)"
                 n_match=$((n_match + 1))
             else
                 verdict="FAIL"
