@@ -91,6 +91,7 @@ echo 'module Darwin [system] { header "math.h" export * }' \
   > "$tmp/fe/usr/include/Darwin.modulemap"
 echo 'extern module Darwin "Darwin.modulemap"' > "$tmp/fe/usr/include/module.modulemap"
 echo 'extern float acosf(float);' > "$tmp/fe/usr/include/math.h"
+echo 'extern long double fmaxl(long double, long double);' >> "$tmp/fe/usr/include/math.h"
 ln -sfn "$tmp/fe" "$tmp/work/scratch/sysroot_fe4-x86_64"
 set +e
 out=$(W="$tmp/work" SWIFTCORE_DARWIN_ARCH=x86_64 \
@@ -106,6 +107,30 @@ grep -q 'header "math.h"' "$tmp/sdk4/usr/include/Darwin.modulemap" \
   || { echo "  FAIL FE map missing"; fail=1; }
 grep -q 'extern float acosf' "$tmp/sdk4/usr/include/math.h" \
   && echo "  OK  FE math.h copied" || { echo "  FAIL FE math.h missing"; fail=1; }
+grep -q fmaxl "$tmp/sdk4/usr/include/math.h" \
+  && echo "  OK  FE math.h kept (has fmaxl)" || { echo "  FAIL FE math.h lost fmaxl"; fail=1; }
+
+echo
+echo "=== FE math.h without fmaxl is repaired from overlay-darwin Intel pin ==="
+mkdir -p "$tmp/fe2/usr/include" "$tmp/sdk5/usr/include" "$tmp/work2/scratch"
+echo 'module Darwin [system] { header "math.h" export * }' \
+  > "$tmp/fe2/usr/include/Darwin.modulemap"
+echo 'extern module Darwin "Darwin.modulemap"' > "$tmp/fe2/usr/include/module.modulemap"
+echo 'extern float acosf(float); /* no fmaxl */' > "$tmp/fe2/usr/include/math.h"
+ln -sfn "$tmp/fe2" "$tmp/work2/scratch/sysroot_fe4-x86_64"
+set +e
+out=$(W="$tmp/work2" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk5" 2>&1)
+rc=$?
+set -e
+printf '%s\n' "$out" | tail -25
+[ "$rc" -eq 0 ] && echo "  OK  FE-repair rc=0" || { echo "  FAIL FE-repair rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -q 'math.h lacks fmaxl' \
+  && echo "  OK  named the fmaxl repair" || { echo "  FAIL no fmaxl repair line"; fail=1; }
+grep -q fmaxl "$tmp/sdk5/usr/include/math.h" \
+  && echo "  OK  repaired math.h has fmaxl" || { echo "  FAIL repaired math.h"; fail=1; }
+cmp -s "$ROOT/sdk/overlay-darwin/math.h" "$tmp/sdk5/usr/include/math.h" \
+  && echo "  OK  repaired math.h is the Intel pin" || { echo "  FAIL not Intel pin"; fail=1; }
 
 echo
 if [ "$fail" -eq 0 ]; then

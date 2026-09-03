@@ -1,0 +1,2398 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Swift version 6.2.4 (swift-6.2.4-RELEASE)
+// swift-module-flags: -target x86_64-apple-macosx13.0 -enable-objc-interop -enable-library-evolution -module-link-name swift_RegexParser -swift-version 5 -O -library-level api -enforce-exclusivity=unchecked -target-min-inlining-version min -enable-experimental-feature NoncopyableGenerics2 -enable-experimental-feature SuppressedAssociatedTypes -enable-experimental-feature SE427NoInferenceOnExtension -enable-experimental-feature NonescapableTypes -enable-experimental-feature LifetimeDependence -enable-experimental-feature InoutLifetimeDependence -enable-experimental-feature LifetimeDependenceMutableAccessors -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature AllowRuntimeSymbolDeclarations -module-name _RegexParser
+// swift-module-flags-ignorable: -enable-lexical-lifetimes=false -enable-ossa-modules -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2.4
+import Swift
+public struct AST : Swift.Hashable {
+  public var root: _RegexParser.AST.Node
+  public var globalOptions: _RegexParser.AST.GlobalMatchingOptionSequence?
+  public var diags: _RegexParser.Diagnostics
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init(_ root: _RegexParser.AST.Node, globalOptions: _RegexParser.AST.GlobalMatchingOptionSequence?, diags: _RegexParser.Diagnostics)
+  #endif
+  public static func == (a: _RegexParser.AST, b: _RegexParser.AST) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension _RegexParser.AST {
+  public var hasCapture: Swift.Bool {
+    get
+  }
+  public var isInvalid: Swift.Bool {
+    get
+  }
+  @discardableResult
+  public func ensureValid() throws -> _RegexParser.AST
+}
+extension _RegexParser.AST {
+  indirect public enum Node : Swift.Hashable, _RegexParser._TreeNode {
+    case alternation(_RegexParser.AST.Alternation)
+    case concatenation(_RegexParser.AST.Concatenation)
+    case group(_RegexParser.AST.Group)
+    case conditional(_RegexParser.AST.Conditional)
+    case quantification(_RegexParser.AST.Quantification)
+    case quote(_RegexParser.AST.Quote)
+    case trivia(_RegexParser.AST.Trivia)
+    case interpolation(_RegexParser.AST.Interpolation)
+    case atom(_RegexParser.AST.Atom)
+    case customCharacterClass(_RegexParser.AST.CustomCharacterClass)
+    case absentFunction(_RegexParser.AST.AbsentFunction)
+    case empty(_RegexParser.AST.Empty)
+    public static func == (a: _RegexParser.AST.Node, b: _RegexParser.AST.Node) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Node {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public func `as`<T>(_ t: T.Type = T.self) -> T? where T : _RegexParser._ASTNode
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var children: [_RegexParser.AST.Node]? {
+    get
+  }
+  #endif
+  public var location: _RegexParser.SourceLocation {
+    get
+  }
+  public var isTrivia: Swift.Bool {
+    get
+  }
+  public var hasCapture: Swift.Bool {
+    get
+  }
+  public var isQuantifiable: Swift.Bool {
+    get
+  }
+}
+extension _RegexParser.AST {
+  public struct Alternation : Swift.Hashable, _RegexParser._ASTNode {
+    public let children: [_RegexParser.AST.Node]
+    public let pipes: [_RegexParser.SourceLocation]
+    public init(_ mems: [_RegexParser.AST.Node], pipes: [_RegexParser.SourceLocation])
+    public var location: _RegexParser.SourceLocation {
+      get
+    }
+    public static func == (a: _RegexParser.AST.Alternation, b: _RegexParser.AST.Alternation) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Concatenation : Swift.Hashable, _RegexParser._ASTNode {
+    public let children: [_RegexParser.AST.Node]
+    public let location: _RegexParser.SourceLocation
+    public init(_ mems: [_RegexParser.AST.Node], _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Concatenation, b: _RegexParser.AST.Concatenation) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Quote : Swift.Hashable, _RegexParser._ASTNode {
+    public let literal: Swift.String
+    public let location: _RegexParser.SourceLocation
+    public init(_ s: Swift.String, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Quote, b: _RegexParser.AST.Quote) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Trivia : Swift.Hashable, _RegexParser._ASTNode {
+    public let contents: Swift.String
+    public let location: _RegexParser.SourceLocation
+    public init(_ s: Swift.String, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Trivia, b: _RegexParser.AST.Trivia) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Interpolation : Swift.Hashable, _RegexParser._ASTNode {
+    public let contents: Swift.String
+    public let location: _RegexParser.SourceLocation
+    public init(_ contents: Swift.String, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Interpolation, b: _RegexParser.AST.Interpolation) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Empty : Swift.Hashable, _RegexParser._ASTNode {
+    public let location: _RegexParser.SourceLocation
+    public init(_ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Empty, b: _RegexParser.AST.Empty) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct AbsentFunction : Swift.Hashable, _RegexParser._ASTNode {
+    public enum Start : Swift.Hashable {
+      case withPipe
+      case withoutPipe
+      public static func == (a: _RegexParser.AST.AbsentFunction.Start, b: _RegexParser.AST.AbsentFunction.Start) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public enum Kind : Swift.Hashable {
+      case repeater(_RegexParser.AST.Node)
+      case expression(absentee: _RegexParser.AST.Node, pipe: _RegexParser.SourceLocation, expr: _RegexParser.AST.Node)
+      case stopper(_RegexParser.AST.Node)
+      case clearer
+      public static func == (a: _RegexParser.AST.AbsentFunction.Kind, b: _RegexParser.AST.AbsentFunction.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var start: _RegexParser.SourceLocation
+    public var kind: _RegexParser.AST.AbsentFunction.Kind
+    public var location: _RegexParser.SourceLocation
+    public init(_ kind: _RegexParser.AST.AbsentFunction.Kind, start: _RegexParser.SourceLocation, location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.AbsentFunction, b: _RegexParser.AST.AbsentFunction) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Reference : Swift.Hashable {
+    public enum Kind : Swift.Hashable {
+      case absolute(_RegexParser.AST.Atom.Number)
+      case relative(_RegexParser.AST.Atom.Number)
+      case named(Swift.String)
+      public var recursesWholePattern: Swift.Bool {
+        get
+      }
+      public static func == (a: _RegexParser.AST.Reference.Kind, b: _RegexParser.AST.Reference.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var kind: _RegexParser.AST.Reference.Kind
+    public var recursionLevel: _RegexParser.AST.Atom.Number?
+    public var innerLoc: _RegexParser.SourceLocation
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(_ kind: _RegexParser.AST.Reference.Kind, recursionLevel: _RegexParser.AST.Atom.Number? = nil, innerLoc: _RegexParser.SourceLocation)
+    #endif
+    public var recursesWholePattern: Swift.Bool {
+      get
+    }
+    public static func == (a: _RegexParser.AST.Reference, b: _RegexParser.AST.Reference) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct GlobalMatchingOptionSequence : Swift.Hashable {
+    public var options: [_RegexParser.AST.GlobalMatchingOption]
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(_ options: [_RegexParser.AST.GlobalMatchingOption])
+    #endif
+    public var location: _RegexParser.SourceLocation {
+      get
+    }
+    public static func == (a: _RegexParser.AST.GlobalMatchingOptionSequence, b: _RegexParser.AST.GlobalMatchingOptionSequence) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+public protocol _ASTNode : _RegexParser._ASTPrintable {
+  var location: _RegexParser.SourceLocation { get }
+}
+extension _RegexParser.AST.AbsentFunction {
+  public var children: [_RegexParser.AST.Node] {
+    get
+  }
+}
+extension _RegexParser.AST {
+  public struct Atom : Swift.Hashable, _RegexParser._ASTNode {
+    public let kind: _RegexParser.AST.Atom.Kind
+    public let location: _RegexParser.SourceLocation
+    public init(_ k: _RegexParser.AST.Atom.Kind, _ loc: _RegexParser.SourceLocation)
+    public enum Kind : Swift.Hashable {
+      case char(Swift.Character)
+      case scalar(_RegexParser.AST.Atom.Scalar)
+      case scalarSequence(_RegexParser.AST.Atom.ScalarSequence)
+      case property(_RegexParser.AST.Atom.CharacterProperty)
+      case escaped(_RegexParser.AST.Atom.EscapedBuiltin)
+      case keyboardControl(Swift.Character)
+      case keyboardMeta(Swift.Character)
+      case keyboardMetaControl(Swift.Character)
+      case namedCharacter(Swift.String)
+      case dot
+      case caretAnchor
+      case dollarAnchor
+      case backreference(_RegexParser.AST.Reference)
+      case subpattern(_RegexParser.AST.Reference)
+      case callout(_RegexParser.AST.Atom.Callout)
+      case backtrackingDirective(_RegexParser.AST.Atom.BacktrackingDirective)
+      case changeMatchingOptions(_RegexParser.AST.MatchingOptionSequence)
+      case invalid
+      public static func == (a: _RegexParser.AST.Atom.Kind, b: _RegexParser.AST.Atom.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public static func == (a: _RegexParser.AST.Atom, b: _RegexParser.AST.Atom) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom {
+  public struct Number : Swift.Hashable {
+    public var value: Swift.Int?
+    public var location: _RegexParser.SourceLocation
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(_ value: Swift.Int?, at location: _RegexParser.SourceLocation)
+    #endif
+    public static func == (a: _RegexParser.AST.Atom.Number, b: _RegexParser.AST.Atom.Number) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct Scalar : Swift.Hashable {
+    public var value: Swift.UnicodeScalar
+    public var location: _RegexParser.SourceLocation
+    public init(_ value: Swift.UnicodeScalar, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Atom.Scalar, b: _RegexParser.AST.Atom.Scalar) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct ScalarSequence : Swift.Hashable {
+    public var scalars: [_RegexParser.AST.Atom.Scalar]
+    public var trivia: [_RegexParser.AST.Trivia]
+    public init(_ scalars: [_RegexParser.AST.Atom.Scalar], trivia: [_RegexParser.AST.Trivia])
+    public var scalarValues: [Swift.Unicode.Scalar] {
+      get
+    }
+    public static func == (a: _RegexParser.AST.Atom.ScalarSequence, b: _RegexParser.AST.Atom.ScalarSequence) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom {
+  public enum EscapedBuiltin : Swift.Hashable {
+    case alarm
+    case escape
+    case formfeed
+    case newline
+    case carriageReturn
+    case tab
+    case singleDataUnit
+    case decimalDigit
+    case notDecimalDigit
+    case horizontalWhitespace
+    case notHorizontalWhitespace
+    case notNewline
+    case newlineSequence
+    case whitespace
+    case notWhitespace
+    case verticalTab
+    case notVerticalTab
+    case wordCharacter
+    case notWordCharacter
+    case backspace
+    case graphemeCluster
+    case wordBoundary
+    case notWordBoundary
+    case startOfSubject
+    case endOfSubjectBeforeNewline
+    case endOfSubject
+    case firstMatchingPositionInSubject
+    case resetStartOfMatch
+    case trueAnychar
+    case textSegment
+    case notTextSegment
+    public static func == (a: _RegexParser.AST.Atom.EscapedBuiltin, b: _RegexParser.AST.Atom.EscapedBuiltin) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom.EscapedBuiltin {
+  public var character: Swift.Character {
+    get
+  }
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init?(_ c: Swift.Character, inCustomCharacterClass customCC: Swift.Bool)
+  #endif
+}
+extension _RegexParser.AST.Atom {
+  public struct CharacterProperty : Swift.Hashable {
+    public var kind: _RegexParser.AST.Atom.CharacterProperty.Kind
+    public var isInverted: Swift.Bool
+    public var isPOSIX: Swift.Bool
+    public init(_ kind: _RegexParser.AST.Atom.CharacterProperty.Kind, isInverted: Swift.Bool, isPOSIX: Swift.Bool)
+    public var _dumpBase: Swift.String {
+      get
+    }
+    public static func == (a: _RegexParser.AST.Atom.CharacterProperty, b: _RegexParser.AST.Atom.CharacterProperty) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom.CharacterProperty {
+  public enum Kind : Swift.Hashable {
+    case any
+    case assigned
+    case ascii
+    case generalCategory(Swift.Unicode.ExtendedGeneralCategory)
+    case binary(Swift.Unicode.BinaryProperty, value: Swift.Bool = true)
+    case script(Swift.Unicode.Script)
+    case scriptExtension(Swift.Unicode.Script)
+    case named(Swift.String)
+    case numericType(Swift.Unicode.NumericType)
+    case numericValue(Swift.Double)
+    case mapping(_RegexParser.AST.Atom.CharacterProperty.Kind.MapKind, Swift.String)
+    case ccc(Swift.Unicode.CanonicalCombiningClass)
+    case age(major: Swift.Int, minor: Swift.Int)
+    case block(Swift.Unicode.Block)
+    case posix(Swift.Unicode.POSIXProperty)
+    case pcreSpecial(_RegexParser.AST.Atom.CharacterProperty.PCRESpecialCategory)
+    case javaSpecial(_RegexParser.AST.Atom.CharacterProperty.JavaSpecial)
+    case invalid(key: Swift.String?, value: Swift.String)
+    public enum MapKind : Swift.Hashable {
+      case lowercase
+      case uppercase
+      case titlecase
+      public static func == (a: _RegexParser.AST.Atom.CharacterProperty.Kind.MapKind, b: _RegexParser.AST.Atom.CharacterProperty.Kind.MapKind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public static func == (a: _RegexParser.AST.Atom.CharacterProperty.Kind, b: _RegexParser.AST.Atom.CharacterProperty.Kind) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum PCRESpecialCategory : Swift.String, Swift.Hashable {
+    case alphanumeric
+    case posixSpace
+    case perlSpace
+    case universallyNamed
+    case perlWord
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum JavaSpecial : Swift.String, Swift.Hashable, Swift.CaseIterable {
+    case alphabetic
+    case defined
+    case digit
+    case identifierIgnorable
+    case ideographic
+    case isoControl
+    case javaIdentifierPart
+    case javaIdentifierStart
+    case javaLetter
+    case javaLetterOrDigit
+    case lowerCase
+    case mirrored
+    case spaceChar
+    case titleCase
+    case unicodeIdentifierPart
+    case unicodeIdentifierStart
+    case upperCase
+    case whitespace
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias AllCases = [_RegexParser.AST.Atom.CharacterProperty.JavaSpecial]
+    public typealias RawValue = Swift.String
+    nonisolated public static var allCases: [_RegexParser.AST.Atom.CharacterProperty.JavaSpecial] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom {
+  public enum Callout : Swift.Hashable {
+    public struct PCRE : Swift.Hashable {
+      public enum Argument : Swift.Hashable {
+        case number(_RegexParser.AST.Atom.Number)
+        case string(Swift.String)
+        public static func == (a: _RegexParser.AST.Atom.Callout.PCRE.Argument, b: _RegexParser.AST.Atom.Callout.PCRE.Argument) -> Swift.Bool
+        public func hash(into hasher: inout Swift.Hasher)
+        public var hashValue: Swift.Int {
+          get
+        }
+      }
+      public var arg: _RegexParser.Source.Located<_RegexParser.AST.Atom.Callout.PCRE.Argument>
+      public init(_ arg: _RegexParser.Source.Located<_RegexParser.AST.Atom.Callout.PCRE.Argument>)
+      public var isImplicit: Swift.Bool {
+        get
+      }
+      public static func == (a: _RegexParser.AST.Atom.Callout.PCRE, b: _RegexParser.AST.Atom.Callout.PCRE) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public struct OnigurumaNamed : Swift.Hashable {
+      public struct ArgList : Swift.Hashable {
+        public var leftBrace: _RegexParser.SourceLocation
+        public var args: [_RegexParser.Source.Located<Swift.String>]
+        public var rightBrace: _RegexParser.SourceLocation
+        public init(_ leftBrace: _RegexParser.SourceLocation, _ args: [_RegexParser.Source.Located<Swift.String>], _ rightBrace: _RegexParser.SourceLocation)
+        public static func == (a: _RegexParser.AST.Atom.Callout.OnigurumaNamed.ArgList, b: _RegexParser.AST.Atom.Callout.OnigurumaNamed.ArgList) -> Swift.Bool
+        public func hash(into hasher: inout Swift.Hasher)
+        public var hashValue: Swift.Int {
+          get
+        }
+      }
+      public var name: _RegexParser.Source.Located<Swift.String>
+      public var tag: _RegexParser.AST.Atom.Callout.OnigurumaTag?
+      public var args: _RegexParser.AST.Atom.Callout.OnigurumaNamed.ArgList?
+      #if compiler(>=5.3) && $NonescapableTypes
+      public init(_ name: _RegexParser.Source.Located<Swift.String>, tag: _RegexParser.AST.Atom.Callout.OnigurumaTag?, args: _RegexParser.AST.Atom.Callout.OnigurumaNamed.ArgList?)
+      #endif
+      public static func == (a: _RegexParser.AST.Atom.Callout.OnigurumaNamed, b: _RegexParser.AST.Atom.Callout.OnigurumaNamed) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public struct OnigurumaOfContents : Swift.Hashable {
+      public enum Direction : Swift.Hashable {
+        case inProgress
+        case inRetraction
+        case both
+        public static func == (a: _RegexParser.AST.Atom.Callout.OnigurumaOfContents.Direction, b: _RegexParser.AST.Atom.Callout.OnigurumaOfContents.Direction) -> Swift.Bool
+        public func hash(into hasher: inout Swift.Hasher)
+        public var hashValue: Swift.Int {
+          get
+        }
+      }
+      public var openBraces: _RegexParser.SourceLocation
+      public var contents: _RegexParser.Source.Located<Swift.String>
+      public var closeBraces: _RegexParser.SourceLocation
+      public var tag: _RegexParser.AST.Atom.Callout.OnigurumaTag?
+      public var direction: _RegexParser.Source.Located<_RegexParser.AST.Atom.Callout.OnigurumaOfContents.Direction>
+      #if compiler(>=5.3) && $NonescapableTypes
+      public init(_ openBraces: _RegexParser.SourceLocation, _ contents: _RegexParser.Source.Located<Swift.String>, _ closeBraces: _RegexParser.SourceLocation, tag: _RegexParser.AST.Atom.Callout.OnigurumaTag?, direction: _RegexParser.Source.Located<_RegexParser.AST.Atom.Callout.OnigurumaOfContents.Direction>)
+      #endif
+      public var isDirectionImplicit: Swift.Bool {
+        get
+      }
+      public static func == (a: _RegexParser.AST.Atom.Callout.OnigurumaOfContents, b: _RegexParser.AST.Atom.Callout.OnigurumaOfContents) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    case pcre(_RegexParser.AST.Atom.Callout.PCRE)
+    case onigurumaNamed(_RegexParser.AST.Atom.Callout.OnigurumaNamed)
+    case onigurumaOfContents(_RegexParser.AST.Atom.Callout.OnigurumaOfContents)
+    public static func == (a: _RegexParser.AST.Atom.Callout, b: _RegexParser.AST.Atom.Callout) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom.Callout {
+  public struct OnigurumaTag : Swift.Hashable {
+    public var leftBracket: _RegexParser.SourceLocation
+    public var name: _RegexParser.Source.Located<Swift.String>
+    public var rightBracket: _RegexParser.SourceLocation
+    public init(_ leftBracket: _RegexParser.SourceLocation, _ name: _RegexParser.Source.Located<Swift.String>, _ rightBracket: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Atom.Callout.OnigurumaTag, b: _RegexParser.AST.Atom.Callout.OnigurumaTag) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom {
+  public struct BacktrackingDirective : Swift.Hashable {
+    public enum Kind : Swift.Hashable {
+      case accept
+      case fail
+      case mark
+      case commit
+      case prune
+      case skip
+      case then
+      public static func == (a: _RegexParser.AST.Atom.BacktrackingDirective.Kind, b: _RegexParser.AST.Atom.BacktrackingDirective.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var kind: _RegexParser.Source.Located<_RegexParser.AST.Atom.BacktrackingDirective.Kind>
+    public var name: _RegexParser.Source.Located<Swift.String>?
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(_ kind: _RegexParser.Source.Located<_RegexParser.AST.Atom.BacktrackingDirective.Kind>, name: _RegexParser.Source.Located<Swift.String>?)
+    #endif
+    public var isQuantifiable: Swift.Bool {
+      get
+    }
+    public static func == (a: _RegexParser.AST.Atom.BacktrackingDirective, b: _RegexParser.AST.Atom.BacktrackingDirective) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Atom.EscapedBuiltin {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var scalarValue: Swift.UnicodeScalar? {
+    get
+  }
+  #endif
+  public var isQuantifiable: Swift.Bool {
+    get
+  }
+}
+extension _RegexParser.AST.Atom {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var literalCharacterValue: Swift.Character? {
+    get
+  }
+  #endif
+  public var isValidCharacterClassRangeBound: Swift.Bool {
+    get
+  }
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var literalStringValue: Swift.String? {
+    get
+  }
+  #endif
+  public var isQuantifiable: Swift.Bool {
+    get
+  }
+}
+extension _RegexParser.AST.Node {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var literalStringValue: Swift.String? {
+    get
+  }
+  #endif
+}
+extension _RegexParser.AST {
+  public struct Conditional : Swift.Hashable, _RegexParser._ASTNode {
+    public var location: _RegexParser.SourceLocation
+    public var condition: _RegexParser.AST.Conditional.Condition
+    public var trueBranch: _RegexParser.AST.Node
+    public var pipe: _RegexParser.SourceLocation?
+    public var falseBranch: _RegexParser.AST.Node
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(_ condition: _RegexParser.AST.Conditional.Condition, trueBranch: _RegexParser.AST.Node, pipe: _RegexParser.SourceLocation?, falseBranch: _RegexParser.AST.Node, _ location: _RegexParser.SourceLocation)
+    #endif
+    public static func == (a: _RegexParser.AST.Conditional, b: _RegexParser.AST.Conditional) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Conditional {
+  public struct Condition : Swift.Hashable {
+    public enum Kind : Swift.Hashable {
+      case groupMatched(_RegexParser.AST.Reference)
+      case recursionCheck
+      case groupRecursionCheck(_RegexParser.AST.Reference)
+      case defineGroup
+      case pcreVersionCheck(_RegexParser.AST.Conditional.Condition.PCREVersionCheck)
+      case group(_RegexParser.AST.Group)
+      public static func == (a: _RegexParser.AST.Conditional.Condition.Kind, b: _RegexParser.AST.Conditional.Condition.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var kind: _RegexParser.AST.Conditional.Condition.Kind
+    public var location: _RegexParser.SourceLocation
+    public init(_ kind: _RegexParser.AST.Conditional.Condition.Kind, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Conditional.Condition, b: _RegexParser.AST.Conditional.Condition) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Conditional.Condition {
+  public struct PCREVersionNumber : Swift.Hashable {
+    public var major: _RegexParser.AST.Atom.Number
+    public var minor: _RegexParser.AST.Atom.Number
+    public var location: _RegexParser.SourceLocation
+    public init(major: _RegexParser.AST.Atom.Number, minor: _RegexParser.AST.Atom.Number, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.Conditional.Condition.PCREVersionNumber, b: _RegexParser.AST.Conditional.Condition.PCREVersionNumber) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct PCREVersionCheck : Swift.Hashable {
+    public enum Kind : Swift.Hashable {
+      case equal, greaterThanOrEqual
+      public static func == (a: _RegexParser.AST.Conditional.Condition.PCREVersionCheck.Kind, b: _RegexParser.AST.Conditional.Condition.PCREVersionCheck.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var kind: _RegexParser.Source.Located<_RegexParser.AST.Conditional.Condition.PCREVersionCheck.Kind>
+    public var num: _RegexParser.AST.Conditional.Condition.PCREVersionNumber
+    public init(_ kind: _RegexParser.Source.Located<_RegexParser.AST.Conditional.Condition.PCREVersionCheck.Kind>, _ num: _RegexParser.AST.Conditional.Condition.PCREVersionNumber)
+    public static func == (a: _RegexParser.AST.Conditional.Condition.PCREVersionCheck, b: _RegexParser.AST.Conditional.Condition.PCREVersionCheck) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST {
+  public struct CustomCharacterClass : Swift.Hashable {
+    public var start: _RegexParser.Source.Located<_RegexParser.AST.CustomCharacterClass.Start>
+    public var members: [_RegexParser.AST.CustomCharacterClass.Member]
+    public let location: _RegexParser.SourceLocation
+    public init(_ start: _RegexParser.Source.Located<_RegexParser.AST.CustomCharacterClass.Start>, _ members: [_RegexParser.AST.CustomCharacterClass.Member], _ sr: _RegexParser.SourceLocation)
+    public enum Member : Swift.Hashable {
+      case custom(_RegexParser.AST.CustomCharacterClass)
+      case range(_RegexParser.AST.CustomCharacterClass.Range)
+      case atom(_RegexParser.AST.Atom)
+      case quote(_RegexParser.AST.Quote)
+      case trivia(_RegexParser.AST.Trivia)
+      case setOperation([_RegexParser.AST.CustomCharacterClass.Member], _RegexParser.Source.Located<_RegexParser.AST.CustomCharacterClass.SetOp>, [_RegexParser.AST.CustomCharacterClass.Member])
+      public static func == (a: _RegexParser.AST.CustomCharacterClass.Member, b: _RegexParser.AST.CustomCharacterClass.Member) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public struct Range : Swift.Hashable {
+      public var lhs: _RegexParser.AST.Atom
+      public var dashLoc: _RegexParser.SourceLocation
+      public var rhs: _RegexParser.AST.Atom
+      public var trivia: [_RegexParser.AST.Trivia]
+      public init(_ lhs: _RegexParser.AST.Atom, _ dashLoc: _RegexParser.SourceLocation, _ rhs: _RegexParser.AST.Atom, trivia: [_RegexParser.AST.Trivia])
+      public var location: _RegexParser.SourceLocation {
+        get
+      }
+      public static func == (a: _RegexParser.AST.CustomCharacterClass.Range, b: _RegexParser.AST.CustomCharacterClass.Range) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public enum SetOp : Swift.String, Swift.Hashable {
+      case subtraction
+      case intersection
+      case symmetricDifference
+      #if compiler(>=5.3) && $NonescapableTypes
+      public init?(rawValue: Swift.String)
+      #endif
+      public typealias RawValue = Swift.String
+      public var rawValue: Swift.String {
+        get
+      }
+    }
+    public enum Start : Swift.String, Swift.Hashable {
+      case normal
+      case inverted
+      #if compiler(>=5.3) && $NonescapableTypes
+      public init?(rawValue: Swift.String)
+      #endif
+      public typealias RawValue = Swift.String
+      public var rawValue: Swift.String {
+        get
+      }
+    }
+    public static func == (a: _RegexParser.AST.CustomCharacterClass, b: _RegexParser.AST.CustomCharacterClass) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.CustomCharacterClass {
+  public var isInverted: Swift.Bool {
+    get
+  }
+}
+extension _RegexParser.AST.CustomCharacterClass.Member {
+  public var isTrivia: Swift.Bool {
+    get
+  }
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var asTrivia: _RegexParser.AST.Trivia? {
+    get
+  }
+  #endif
+  public var isSemantic: Swift.Bool {
+    get
+  }
+  public var location: _RegexParser.SourceLocation {
+    get
+  }
+}
+extension _RegexParser.AST.CustomCharacterClass {
+  public var strippingTriviaShallow: _RegexParser.AST.CustomCharacterClass {
+    get
+  }
+}
+extension _RegexParser.AST {
+  public struct Group : Swift.Hashable {
+    public let kind: _RegexParser.Source.Located<_RegexParser.AST.Group.Kind>
+    public let child: _RegexParser.AST.Node
+    public let location: _RegexParser.SourceLocation
+    public init(_ kind: _RegexParser.Source.Located<_RegexParser.AST.Group.Kind>, _ child: _RegexParser.AST.Node, _ r: _RegexParser.SourceLocation)
+    public enum Kind : Swift.Hashable {
+      case capture
+      case namedCapture(_RegexParser.Source.Located<Swift.String>)
+      case balancedCapture(_RegexParser.AST.Group.BalancedCapture)
+      case nonCapture
+      case nonCaptureReset
+      case atomicNonCapturing
+      case lookahead
+      case negativeLookahead
+      case nonAtomicLookahead
+      case lookbehind
+      case negativeLookbehind
+      case nonAtomicLookbehind
+      case scriptRun
+      case atomicScriptRun
+      case changeMatchingOptions(_RegexParser.AST.MatchingOptionSequence)
+      public static func == (a: _RegexParser.AST.Group.Kind, b: _RegexParser.AST.Group.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public static func == (a: _RegexParser.AST.Group, b: _RegexParser.AST.Group) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Group.Kind {
+  public var isCapturing: Swift.Bool {
+    get
+  }
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var name: Swift.String? {
+    get
+  }
+  #endif
+}
+extension _RegexParser.AST.Group.Kind {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var lookaroundKind: (forwards: Swift.Bool, positive: Swift.Bool)? {
+    get
+  }
+  #endif
+}
+extension _RegexParser.AST.Group {
+  public struct BalancedCapture : Swift.Hashable {
+    public var name: _RegexParser.Source.Located<Swift.String>?
+    public var dash: _RegexParser.SourceLocation
+    public var priorName: _RegexParser.Source.Located<Swift.String>
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(name: _RegexParser.Source.Located<Swift.String>?, dash: _RegexParser.SourceLocation, priorName: _RegexParser.Source.Located<Swift.String>)
+    #endif
+    public static func == (a: _RegexParser.AST.Group.BalancedCapture, b: _RegexParser.AST.Group.BalancedCapture) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST {
+  public struct MatchingOption : Swift.Hashable {
+    public enum Kind : Swift.Hashable {
+      case caseInsensitive
+      case allowDuplicateGroupNames
+      case multiline
+      case namedCapturesOnly
+      case singleLine
+      case reluctantByDefault
+      case extended
+      case extraExtended
+      case unicodeWordBoundaries
+      case asciiOnlyDigit
+      case asciiOnlyPOSIXProps
+      case asciiOnlySpace
+      case asciiOnlyWord
+      case textSegmentGraphemeMode
+      case textSegmentWordMode
+      case graphemeClusterSemantics
+      case unicodeScalarSemantics
+      case byteSemantics
+      case possessiveByDefault
+      case nsreCompatibleDot
+      public static func == (a: _RegexParser.AST.MatchingOption.Kind, b: _RegexParser.AST.MatchingOption.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var kind: _RegexParser.AST.MatchingOption.Kind
+    public var location: _RegexParser.SourceLocation
+    public init(_ kind: _RegexParser.AST.MatchingOption.Kind, location: _RegexParser.SourceLocation)
+    public var isAnyExtended: Swift.Bool {
+      get
+    }
+    public var isTextSegmentMode: Swift.Bool {
+      get
+    }
+    public var isSemanticMatchingLevel: Swift.Bool {
+      get
+    }
+    public static func == (a: _RegexParser.AST.MatchingOption, b: _RegexParser.AST.MatchingOption) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct MatchingOptionSequence : Swift.Hashable {
+    public var caretLoc: _RegexParser.SourceLocation?
+    public var adding: [_RegexParser.AST.MatchingOption]
+    public var minusLoc: _RegexParser.SourceLocation?
+    public var removing: [_RegexParser.AST.MatchingOption]
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(caretLoc: _RegexParser.SourceLocation?, adding: [_RegexParser.AST.MatchingOption], minusLoc: _RegexParser.SourceLocation?, removing: [_RegexParser.AST.MatchingOption])
+    #endif
+    public var resetsCurrentOptions: Swift.Bool {
+      get
+    }
+    public static func == (a: _RegexParser.AST.MatchingOptionSequence, b: _RegexParser.AST.MatchingOptionSequence) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.MatchingOptionSequence {
+  public init(adding: [_RegexParser.AST.MatchingOption])
+  public init(removing: [_RegexParser.AST.MatchingOption])
+}
+extension _RegexParser.AST.MatchingOption : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.MatchingOptionSequence : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST {
+  public struct GlobalMatchingOption : _RegexParser._ASTNode, Swift.Hashable {
+    public enum NewlineMatching : Swift.Hashable {
+      case carriageReturnOnly
+      case linefeedOnly
+      case carriageAndLinefeedOnly
+      case anyCarriageReturnOrLinefeed
+      case anyUnicode
+      case nulCharacter
+      public static func == (a: _RegexParser.AST.GlobalMatchingOption.NewlineMatching, b: _RegexParser.AST.GlobalMatchingOption.NewlineMatching) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public enum NewlineSequenceMatching : Swift.Hashable {
+      case anyCarriageReturnOrLinefeed
+      case anyUnicode
+      public static func == (a: _RegexParser.AST.GlobalMatchingOption.NewlineSequenceMatching, b: _RegexParser.AST.GlobalMatchingOption.NewlineSequenceMatching) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public enum Kind : Swift.Hashable {
+      case limitDepth(_RegexParser.AST.Atom.Number)
+      case limitHeap(_RegexParser.AST.Atom.Number)
+      case limitMatch(_RegexParser.AST.Atom.Number)
+      case notEmpty
+      case notEmptyAtStart
+      case noAutoPossess
+      case noDotStarAnchor
+      case noJIT
+      case noStartOpt
+      case utfMode
+      case unicodeProperties
+      case newlineMatching(_RegexParser.AST.GlobalMatchingOption.NewlineMatching)
+      case newlineSequenceMatching(_RegexParser.AST.GlobalMatchingOption.NewlineSequenceMatching)
+      public static func == (a: _RegexParser.AST.GlobalMatchingOption.Kind, b: _RegexParser.AST.GlobalMatchingOption.Kind) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public var kind: _RegexParser.AST.GlobalMatchingOption.Kind
+    public var location: _RegexParser.SourceLocation
+    public init(_ kind: _RegexParser.AST.GlobalMatchingOption.Kind, _ location: _RegexParser.SourceLocation)
+    public static func == (a: _RegexParser.AST.GlobalMatchingOption, b: _RegexParser.AST.GlobalMatchingOption) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST {
+  public struct Quantification : Swift.Hashable {
+    public let amount: _RegexParser.Source.Located<_RegexParser.AST.Quantification.Amount>
+    public let kind: _RegexParser.Source.Located<_RegexParser.AST.Quantification.Kind>
+    public let child: _RegexParser.AST.Node
+    public let location: _RegexParser.SourceLocation
+    public let trivia: [_RegexParser.AST.Trivia]
+    public init(_ amount: _RegexParser.Source.Located<_RegexParser.AST.Quantification.Amount>, _ kind: _RegexParser.Source.Located<_RegexParser.AST.Quantification.Kind>, _ child: _RegexParser.AST.Node, _ r: _RegexParser.SourceLocation, trivia: [_RegexParser.AST.Trivia])
+    public enum Amount : Swift.Hashable {
+      case zeroOrMore
+      case oneOrMore
+      case zeroOrOne
+      case exactly(_RegexParser.AST.Atom.Number)
+      case nOrMore(_RegexParser.AST.Atom.Number)
+      case upToN(_RegexParser.AST.Atom.Number)
+      case range(_RegexParser.AST.Atom.Number, _RegexParser.AST.Atom.Number)
+      public static func == (a: _RegexParser.AST.Quantification.Amount, b: _RegexParser.AST.Quantification.Amount) -> Swift.Bool
+      public func hash(into hasher: inout Swift.Hasher)
+      public var hashValue: Swift.Int {
+        get
+      }
+    }
+    public enum Kind : Swift.String, Swift.Hashable {
+      case eager
+      case reluctant
+      case possessive
+      #if compiler(>=5.3) && $NonescapableTypes
+      public init?(rawValue: Swift.String)
+      #endif
+      public typealias RawValue = Swift.String
+      public var rawValue: Swift.String {
+        get
+      }
+    }
+    public static func == (a: _RegexParser.AST.Quantification, b: _RegexParser.AST.Quantification) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension _RegexParser.AST.Quantification.Amount {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public var bounds: (atLeast: Swift.Int?, atMost: Swift.Int?) {
+    get
+  }
+  #endif
+}
+public struct CaptureList {
+  public var captures: [_RegexParser.CaptureList.Capture]
+  public init<S>(_ s: S) where S : Swift.Sequence, S.Element == _RegexParser.CaptureList.Capture
+  public mutating func append(_ c: _RegexParser.CaptureList.Capture)
+}
+extension _RegexParser.CaptureList {
+  public struct Capture {
+    public var name: Swift.String?
+    public var type: any Any.Type
+    public var optionalDepth: Swift.Int
+    public var location: _RegexParser.SourceLocation
+    public var visibleInTypedOutput: Swift.Bool
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init(name: Swift.String? = nil, type: any Any.Type = Substring.self, optionalDepth: Swift.Int, visibleInTypedOutput: Swift.Bool, _ location: _RegexParser.SourceLocation)
+    #endif
+  }
+}
+extension _RegexParser.CaptureList {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public func indexOfCapture(named name: Swift.String) -> Swift.Int?
+  #endif
+  public func hasCapture(named name: Swift.String) -> Swift.Bool
+}
+extension _RegexParser.CaptureList {
+  public struct Builder {
+    public var captures: _RegexParser.CaptureList
+    public init()
+    public struct OptionalNesting {
+      public var outerDepth: Swift.Int
+      public var canNest: Swift.Bool
+      public var innerDepth: Swift.Int
+      public init(canNest: Swift.Bool)
+      public var depth: Swift.Int {
+        get
+      }
+      public var disablingNesting: _RegexParser.CaptureList.Builder.OptionalNesting {
+        get
+      }
+      public var addingOptional: _RegexParser.CaptureList.Builder.OptionalNesting {
+        get
+      }
+    }
+  }
+}
+extension _RegexParser.CaptureList.Builder {
+  public mutating func addCaptures(of node: _RegexParser.AST.Node, optionalNesting nesting: _RegexParser.CaptureList.Builder.OptionalNesting, visibleInTypedOutput: Swift.Bool)
+  public static func build(_ ast: _RegexParser.AST) -> _RegexParser.CaptureList
+}
+extension _RegexParser.AST {
+  public var captureList: _RegexParser.CaptureList {
+    get
+  }
+}
+extension _RegexParser.CaptureList.Capture : Swift.Equatable {
+  public static func == (lhs: _RegexParser.CaptureList.Capture, rhs: _RegexParser.CaptureList.Capture) -> Swift.Bool
+}
+extension _RegexParser.CaptureList : Swift.Equatable {
+  public static func == (a: _RegexParser.CaptureList, b: _RegexParser.CaptureList) -> Swift.Bool
+}
+extension _RegexParser.CaptureList.Capture : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension _RegexParser.CaptureList : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension _RegexParser.CaptureList : Swift.ExpressibleByArrayLiteral {
+  public init(arrayLiteral elements: _RegexParser.CaptureList.Capture...)
+  public typealias ArrayLiteralElement = _RegexParser.CaptureList.Capture
+}
+public let currentRegexLiteralFormatVersion: Swift.Int
+@_spi(CompilerInterface) public struct CompilerLexError : Swift.Error {
+  @_spi(CompilerInterface) public var message: Swift.String
+  @_spi(CompilerInterface) public var location: Swift.UnsafeRawPointer {
+    @_spi(CompilerInterface) get
+  }
+  @_spi(CompilerInterface) public var completelyErroneous: Swift.Bool
+}
+#if compiler(>=5.3) && $NonescapableTypes
+@_spi(CompilerInterface) public func swiftCompilerLexRegexLiteral(start: Swift.UnsafeRawPointer, bufferEnd: Swift.UnsafeRawPointer, mustBeRegex: Swift.Bool) -> (resumePtr: Swift.UnsafeRawPointer, error: _RegexParser.CompilerLexError?)?
+#endif
+@_spi(CompilerInterface) public struct CompilerParseError : Swift.Error {
+  @_spi(CompilerInterface) public var message: Swift.String
+  @_spi(CompilerInterface) public var location: Swift.String.Index?
+}
+@_spi(CompilerInterface) public func swiftCompilerParseRegexLiteral(_ input: Swift.String, captureBufferOut: Swift.UnsafeMutableRawBufferPointer) throws -> (regexToEmit: Swift.String, version: Swift.Int)
+public struct Delimiter : Swift.Hashable {
+  public static func == (a: _RegexParser.Delimiter, b: _RegexParser.Delimiter) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct DelimiterLexError : Swift.Error, Swift.CustomStringConvertible {
+  public enum Kind : Swift.Hashable {
+    case unterminated
+    case invalidUTF8
+    case unknownDelimiter
+    case unprintableASCII
+    case multilineClosingNotOnNewline
+    public static func == (a: _RegexParser.DelimiterLexError.Kind, b: _RegexParser.DelimiterLexError.Kind) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public var kind: _RegexParser.DelimiterLexError.Kind
+  public var resumePtr: Swift.UnsafeRawPointer {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+}
+public func lexRegex(start: Swift.UnsafeRawPointer, end: Swift.UnsafeRawPointer) throws -> (contents: Swift.String, _RegexParser.Delimiter, end: Swift.UnsafeRawPointer)
+public struct Diagnostic : Swift.Hashable {
+  public let behavior: _RegexParser.Diagnostic.Behavior
+  public let message: Swift.String
+  public let location: _RegexParser.SourceLocation
+  public var isAnyError: Swift.Bool {
+    get
+  }
+  public static func == (a: _RegexParser.Diagnostic, b: _RegexParser.Diagnostic) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension _RegexParser.Diagnostic {
+  public enum Behavior : Swift.Hashable {
+    case fatalError, error, warning
+    public var isAnyError: Swift.Bool {
+      get
+    }
+    public static func == (a: _RegexParser.Diagnostic.Behavior, b: _RegexParser.Diagnostic.Behavior) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+public struct Diagnostics : Swift.Hashable {
+  public var diags: [_RegexParser.Diagnostic] {
+    get
+  }
+  public init()
+  public init(_ diags: [_RegexParser.Diagnostic])
+  public mutating func append(_ diag: _RegexParser.Diagnostic)
+  public mutating func append(contentsOf other: _RegexParser.Diagnostics)
+  public mutating func appendNewFatalErrors(from other: _RegexParser.Diagnostics)
+  public var hasAnyError: Swift.Bool {
+    get
+  }
+  public var hasFatalError: Swift.Bool {
+    get
+  }
+  public static func == (a: _RegexParser.Diagnostics, b: _RegexParser.Diagnostics) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public func parseWithRecovery<S>(_ regex: S, _ syntax: _RegexParser.SyntaxOptions) -> _RegexParser.AST where S : Swift.StringProtocol, S.SubSequence == Swift.Substring
+public func parse<S>(_ regex: S, _ syntax: _RegexParser.SyntaxOptions) throws -> _RegexParser.AST where S : Swift.StringProtocol, S.SubSequence == Swift.Substring
+public func parseWithDelimitersWithRecovery<S>(_ regex: S) -> _RegexParser.AST where S : Swift.StringProtocol, S.SubSequence == Swift.Substring
+public func parseWithDelimiters<S>(_ regex: S) throws -> _RegexParser.AST where S : Swift.StringProtocol, S.SubSequence == Swift.Substring
+public func validate(_ ast: _RegexParser.AST) -> _RegexParser.AST
+public struct Source {
+}
+extension _RegexParser.Source {
+  public typealias Input = Swift.String
+  public typealias Char = Swift.Character
+  public typealias Position = Swift.String.Index
+}
+extension _RegexParser.Source {
+  public struct Location : Swift.Hashable {
+    public var range: Swift.Range<_RegexParser.Source.Position>
+    public var start: _RegexParser.Source.Position {
+      get
+    }
+    public var end: _RegexParser.Source.Position {
+      get
+    }
+    public init(_ r: Swift.Range<_RegexParser.Source.Position>)
+    public init<R>(_ r: R, in input: _RegexParser.Source) where R : Swift.RangeExpression, R.Bound == Swift.String.Index
+    public init(from sub: _RegexParser.Source.Input.SubSequence)
+    public static var fake: _RegexParser.Source.Location {
+      get
+    }
+    public var isFake: Swift.Bool {
+      get
+    }
+    public var isReal: Swift.Bool {
+      get
+    }
+    public var isEmpty: Swift.Bool {
+      get
+    }
+    public func union(with other: _RegexParser.Source.Location) -> _RegexParser.SourceLocation
+    public static func == (a: _RegexParser.Source.Location, b: _RegexParser.Source.Location) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+public typealias SourceLocation = _RegexParser.Source.Location
+public protocol LocatedErrorProtocol : Swift.Error {
+  var location: _RegexParser.SourceLocation { get }
+  var _typeErasedError: any Swift.Error { get }
+}
+extension _RegexParser.Source {
+  public struct LocatedError<E> : Swift.Error, _RegexParser.LocatedErrorProtocol where E : Swift.Error {
+    public let error: E
+    public let location: _RegexParser.SourceLocation
+    public init(_ v: E, _ r: Swift.Range<_RegexParser.Source.Position>)
+  }
+  public struct Located<T> {
+    public var value: T
+    public var location: _RegexParser.SourceLocation
+    public init(_ v: T, _ r: _RegexParser.SourceLocation)
+    public init(_ v: T, _ r: Swift.Range<_RegexParser.Source.Position>)
+    public init(faking v: T)
+    public func map<U>(_ fn: (T) throws -> U) rethrows -> _RegexParser.Source.Located<U>
+  }
+}
+extension _RegexParser.AST {
+  public typealias Located = _RegexParser.Source.Located
+}
+extension _RegexParser.Source.Located : Swift.Equatable where T : Swift.Equatable {
+  public static func == (a: _RegexParser.Source.Located<T>, b: _RegexParser.Source.Located<T>) -> Swift.Bool
+}
+extension _RegexParser.Source.Located : Swift.Hashable where T : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension _RegexParser.Source.LocatedError : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var _typeErasedError: any Swift.Error {
+    get
+  }
+}
+public struct SyntaxOptions : Swift.OptionSet {
+  public var rawValue: Swift.UInt
+  public init(rawValue: Swift.UInt)
+  public init()
+  public static var nonSemanticWhitespace: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var endOfLineComments: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var extendedSyntax: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var experimentalQuotes: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var experimentalComments: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var experimentalRanges: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var experimentalCaptures: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var multilineCompilerLiteral: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var namedCapturesOnly: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var traditional: _RegexParser.SyntaxOptions {
+    get
+  }
+  public static var experimental: _RegexParser.SyntaxOptions {
+    get
+  }
+  public typealias ArrayLiteralElement = _RegexParser.SyntaxOptions
+  public typealias Element = _RegexParser.SyntaxOptions
+  public typealias RawValue = Swift.UInt
+}
+public protocol _ASTPrintable : Swift.CustomDebugStringConvertible, Swift.CustomStringConvertible {
+  var _dumpBase: Swift.String { get }
+}
+extension _RegexParser._ASTPrintable {
+  public var description: Swift.String {
+    get
+  }
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Node : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Alternation {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Concatenation {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Quote {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Trivia {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Interpolation {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Empty {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Conditional {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Conditional.Condition : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Conditional.Condition.PCREVersionCheck.Kind : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Conditional.Condition.PCREVersionNumber : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Conditional.Condition.PCREVersionCheck : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Number : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Callout : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Callout.PCRE : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Callout.OnigurumaTag : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Callout.OnigurumaNamed.ArgList : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Callout.OnigurumaNamed : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.Callout.OnigurumaOfContents : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Reference : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Group.Kind : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Group : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Quantification.Amount : _RegexParser._ASTPrintable {
+  public var _printBase: Swift.String {
+    get
+  }
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Quantification.Kind : _RegexParser._ASTPrintable {
+  public var _printBase: Swift.String {
+    get
+  }
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Quantification : _RegexParser._ASTPrintable {
+  public var _printBase: Swift.String {
+    get
+  }
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.CustomCharacterClass : _RegexParser._ASTNode {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.CustomCharacterClass.Member : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.CustomCharacterClass.Range : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Atom.BacktrackingDirective : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.Group.BalancedCapture : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.AbsentFunction.Kind {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.AbsentFunction {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.GlobalMatchingOption.Kind : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.GlobalMatchingOption : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+extension _RegexParser.AST.GlobalMatchingOptionSequence : _RegexParser._ASTPrintable {
+  public var _dumpBase: Swift.String {
+    get
+  }
+}
+public struct PrettyPrinter {
+  public var maxTopDownLevels: Swift.Int?
+  public var minBottomUpLevels: Swift.Int?
+  public var indentWidth: Swift.Int
+  public var quantificationBehavior: _RegexParser.AST.Quantification.Kind
+  public var inlineMatchingOptions: [([_RegexParser.AST.MatchingOption], Swift.Bool)]
+}
+extension _RegexParser.PrettyPrinter {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init(maxTopDownLevels: Swift.Int? = nil, minBottomUpLevels: Swift.Int? = nil)
+  #endif
+  public mutating func output(_ s: Swift.String)
+  public mutating func terminateLine()
+  public mutating func indent()
+  public mutating func finish() -> Swift.String
+  public var depth: Swift.Int {
+    get
+  }
+}
+extension _RegexParser.PrettyPrinter {
+  public mutating func print(_ s: Swift.String)
+  #if compiler(>=5.3) && $NonescapableTypes
+  public mutating func printLine(_ f: () -> Swift.String?)
+  #endif
+  public mutating func printIndented(_ f: (inout _RegexParser.PrettyPrinter) -> ())
+  public mutating func printBlock(_ header: Swift.String, startDelimiter: Swift.String = "{", endDelimiter: Swift.String = "}", _ f: (inout _RegexParser.PrettyPrinter) -> ())
+  public mutating func pushMatchingOptions(_ options: [_RegexParser.AST.MatchingOption], isAdded: Swift.Bool)
+  public mutating func popMatchingOptions() -> ([_RegexParser.AST.MatchingOption], Swift.Bool)
+}
+extension _RegexParser.AST {
+  public func renderAsCanonical(showDelimiters delimiters: Swift.Bool = false, terminateLine: Swift.Bool = false) -> Swift.String
+}
+extension _RegexParser.AST.Node {
+  public func renderAsCanonical(showDelimiters delimiters: Swift.Bool = false, terminateLine: Swift.Bool = false) -> Swift.String
+}
+extension _RegexParser.PrettyPrinter {
+  public mutating func printAsCanonical(_ ast: _RegexParser.AST, delimiters: Swift.Bool = false, terminateLine terminate: Swift.Bool = true)
+}
+extension _RegexParser.AST.Node {
+  public func _render(in input: Swift.String) -> [Swift.String]
+}
+extension _RegexParser.AST {
+  public func _render(in input: Swift.String) -> [Swift.String]
+}
+public protocol _TreeNode {
+  #if compiler(>=5.3) && $NonescapableTypes
+  var children: [Self]? { get }
+  #endif
+}
+extension _RegexParser._TreeNode {
+  public var height: Swift.Int {
+    get
+  }
+}
+extension Swift.Unicode.Scalar {
+  public struct AllScalars : Swift.RandomAccessCollection {
+    public var startIndex: Swift.Int {
+      get
+    }
+    public var endIndex: Swift.Int {
+      get
+    }
+    public subscript(position: Swift.Int) -> Swift.Unicode.Scalar {
+      get
+    }
+    #if compiler(>=5.3) && $NonescapableTypes
+    public func _customIndexOfEquatableElement(_ scalar: Swift.Unicode.Scalar) -> Swift.Int??
+    #endif
+    #if compiler(>=5.3) && $NonescapableTypes
+    public func _customContainsEquatableElement(_: Swift.Unicode.Scalar) -> Swift.Bool?
+    #endif
+    public typealias Element = Swift.Unicode.Scalar
+    public typealias Index = Swift.Int
+    public typealias Indices = Swift.Range<Swift.Int>
+    public typealias Iterator = Swift.IndexingIterator<Swift.Unicode.Scalar.AllScalars>
+    public typealias SubSequence = Swift.Slice<Swift.Unicode.Scalar.AllScalars>
+  }
+  public static var allScalars: Swift.Unicode.Scalar.AllScalars {
+    get
+  }
+}
+public struct Unsupported : Swift.Error, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public init(_ s: Swift.String, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+}
+public struct Unreachable : Swift.Error, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public init(_ s: Swift.String, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+}
+extension Swift.Character {
+  public var hasExactlyOneScalar: Swift.Bool {
+    get
+  }
+  public var isConfusable: Swift.Bool {
+    get
+  }
+}
+extension Swift.CustomStringConvertible {
+  @_alwaysEmitIntoClient public var halfWidthCornerQuoted: Swift.String {
+    get {
+    "｢\(self)｣"
+  }
+  }
+}
+extension Swift.Sequence {
+  @_alwaysEmitIntoClient public func all(_ f: (Self.Element) -> Swift.Bool) -> Swift.Bool {
+    for element in self {
+      guard f(element) else { return false }
+    }
+    return true
+  }
+  @_alwaysEmitIntoClient public func none(_ f: (Self.Element) -> Swift.Bool) -> Swift.Bool {
+    return self.all { !f($0) }
+  }
+  @_alwaysEmitIntoClient public func any(_ f: (Self.Element) -> Swift.Bool) -> Swift.Bool {
+    for element in self {
+      if f(element) { return true }
+    }
+    return false
+  }
+}
+extension Swift.Range {
+  public var destructure: (lowerBound: Bound, upperBound: Bound) {
+    get
+  }
+}
+public typealias Offsets = (lower: Swift.Int, upper: Swift.Int)
+extension Swift.BidirectionalCollection {
+  public func mapOffsets(_ offsets: _RegexParser.Offsets) -> Swift.Range<Self.Index>
+  #if compiler(>=5.3) && $NonescapableTypes
+  public func flatmapOffsets(_ offsets: _RegexParser.Offsets?) -> Swift.Range<Self.Index>
+  #endif
+}
+extension Swift.Collection {
+  public func index(atOffset i: Swift.Int) -> Self.Index
+  public func offset(ofIndex index: Self.Index) -> Swift.Int
+  public func split(around r: Swift.Range<Self.Index>) -> (prefix: Self.SubSequence, Self.SubSequence, suffix: Self.SubSequence)
+  public func offset(of i: Self.Index) -> Swift.Int
+  public func offsets(of r: Swift.Range<Self.Index>) -> Swift.Range<Swift.Int>
+  public func convertByOffset<C>(_ range: Swift.Range<Self.Index>, in c: C) -> Swift.Range<C.Index> where C : Swift.Collection
+  public func convertByOffset<C>(_ idx: Self.Index, in c: C) -> C.Index where C : Swift.Collection
+}
+extension Swift.Collection where Self.Element : Swift.Equatable {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public func tryDropPrefix<C>(_ other: C) -> Self.SubSequence? where C : Swift.Collection, Self.Element == C.Element
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  public func tryDropSuffix<C>(_ other: C) -> Self.SubSequence? where C : Swift.Collection, Self.Element == C.Element
+  #endif
+}
+extension Swift.UnsafeMutableRawPointer {
+  public func roundedUp<T>(toAlignmentOf type: T.Type) -> Swift.UnsafeMutableRawPointer
+}
+extension Swift.String {
+  public func isOnGraphemeClusterBoundary(_ i: Swift.String.Index) -> Swift.Bool
+  public init<Scalars>(_ scs: Scalars) where Scalars : Swift.Collection, Scalars.Element == Swift.Unicode.Scalar
+}
+extension Swift.BinaryInteger {
+  @_alwaysEmitIntoClient public init<T>(asserting i: T) where T : Swift.BinaryInteger {
+    self.init(truncatingIfNeeded: i)
+    assert(self == i)
+  }
+}
+public struct AnyType : Swift.Hashable {
+  public var base: any Any.Type
+  public init(_ type: any Any.Type)
+  public static func == (lhs: _RegexParser.AnyType, rhs: _RegexParser.AnyType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension Swift.Unicode {
+  public enum Script : Swift.String, Swift.Hashable, Swift.CaseIterable {
+    case adlam
+    case ahom
+    case anatolianHieroglyphs
+    case arabic
+    case armenian
+    case avestan
+    case balinese
+    case bamum
+    case bassaVah
+    case batak
+    case bengali
+    case bhaiksuki
+    case bopomofo
+    case brahmi
+    case braille
+    case buginese
+    case buhid
+    case canadianAboriginal
+    case carian
+    case caucasianAlbanian
+    case chakma
+    case cham
+    case cherokee
+    case chorasmian
+    case common
+    case coptic
+    case cuneiform
+    case cypriot
+    case cyrillic
+    case cyproMinoan
+    case deseret
+    case devanagari
+    case divesAkuru
+    case dogra
+    case duployan
+    case egyptianHieroglyphs
+    case elbasan
+    case elymaic
+    case ethiopic
+    case garay
+    case georgian
+    case glagolitic
+    case gothic
+    case grantha
+    case greek
+    case gujarati
+    case gunjalaGondi
+    case gurmukhi
+    case gurungKhema
+    case han
+    case hangul
+    case hanifiRohingya
+    case hanunoo
+    case hatran
+    case hebrew
+    case hiragana
+    case imperialAramaic
+    case inherited
+    case inscriptionalPahlavi
+    case inscriptionalParthian
+    case javanese
+    case kaithi
+    case kannada
+    case katakana
+    case katakanaOrHiragana
+    case kawi
+    case kayahLi
+    case kharoshthi
+    case khitanSmallScript
+    case khmer
+    case khojki
+    case khudawadi
+    case lao
+    case latin
+    case lepcha
+    case limbu
+    case linearA
+    case linearB
+    case lisu
+    case lycian
+    case lydian
+    case kiratRai
+    case mahajani
+    case makasar
+    case malayalam
+    case mandaic
+    case manichaean
+    case marchen
+    case masaramGondi
+    case medefaidrin
+    case meeteiMayek
+    case mendeKikakui
+    case meroiticCursive
+    case meroiticHieroglyphs
+    case miao
+    case modi
+    case mongolian
+    case mro
+    case multani
+    case myanmar
+    case nabataean
+    case nagMundari
+    case nandinagari
+    case newa
+    case newTaiLue
+    case nko
+    case nushu
+    case nyiakengPuachueHmong
+    case ogham
+    case olChiki
+    case oldHungarian
+    case oldItalic
+    case oldNorthArabian
+    case oldPermic
+    case oldPersian
+    case oldSogdian
+    case oldSouthArabian
+    case oldTurkic
+    case oldUyghur
+    case olOnal
+    case oriya
+    case osage
+    case osmanya
+    case pahawhHmong
+    case palmyrene
+    case pauCinHau
+    case phagsPa
+    case phoenician
+    case psalterPahlavi
+    case rejang
+    case runic
+    case samaritan
+    case saurashtra
+    case sharada
+    case shavian
+    case siddham
+    case signWriting
+    case sinhala
+    case sogdian
+    case soraSompeng
+    case soyombo
+    case sundanese
+    case sunuwar
+    case sylotiNagri
+    case syriac
+    case tagalog
+    case tagbanwa
+    case taiLe
+    case taiTham
+    case taiViet
+    case takri
+    case tamil
+    case tangsa
+    case tangut
+    case telugu
+    case thaana
+    case thai
+    case tibetan
+    case tifinagh
+    case tirhuta
+    case todhri
+    case toto
+    case tuluTigalari
+    case ugaritic
+    case unknown
+    case vai
+    case vithkuqi
+    case wancho
+    case warangCiti
+    case yezidi
+    case yi
+    case zanabazarSquare
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias AllCases = [Swift.Unicode.Script]
+    public typealias RawValue = Swift.String
+    nonisolated public static var allCases: [Swift.Unicode.Script] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum POSIXProperty : Swift.String, Swift.Hashable, Swift.CaseIterable {
+    case alnum
+    case blank
+    case graph
+    case print
+    case word
+    case xdigit
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias AllCases = [Swift.Unicode.POSIXProperty]
+    public typealias RawValue = Swift.String
+    nonisolated public static var allCases: [Swift.Unicode.POSIXProperty] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum ExtendedGeneralCategory : Swift.String, Swift.Hashable, Swift.CaseIterable {
+    case other
+    case control
+    case format
+    case unassigned
+    case privateUse
+    case surrogate
+    case letter
+    case casedLetter
+    case lowercaseLetter
+    case modifierLetter
+    case otherLetter
+    case titlecaseLetter
+    case uppercaseLetter
+    case mark
+    case spacingMark
+    case enclosingMark
+    case nonspacingMark
+    case number
+    case decimalNumber
+    case letterNumber
+    case otherNumber
+    case punctuation
+    case connectorPunctuation
+    case dashPunctuation
+    case closePunctuation
+    case finalPunctuation
+    case initialPunctuation
+    case otherPunctuation
+    case openPunctuation
+    case symbol
+    case currencySymbol
+    case modifierSymbol
+    case mathSymbol
+    case otherSymbol
+    case separator
+    case lineSeparator
+    case paragraphSeparator
+    case spaceSeparator
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias AllCases = [Swift.Unicode.ExtendedGeneralCategory]
+    public typealias RawValue = Swift.String
+    nonisolated public static var allCases: [Swift.Unicode.ExtendedGeneralCategory] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum BinaryProperty : Swift.String, Swift.Hashable, Swift.CaseIterable {
+    case asciiHexDigit
+    case alphabetic
+    case bidiControl
+    case bidiMirrored
+    case cased
+    case compositionExclusion
+    case caseIgnorable
+    case changesWhenCasefolded
+    case changesWhenCasemapped
+    case changesWhenNFKCCasefolded
+    case changesWhenLowercased
+    case changesWhenTitlecased
+    case changesWhenUppercased
+    case dash
+    case deprecated
+    case defaultIgnorableCodePoint
+    case diacratic
+    case emojiModifierBase
+    case emojiComponent
+    case emojiModifier
+    case emoji
+    case emojiPresentation
+    case extender
+    case extendedPictographic
+    case fullCompositionExclusion
+    case graphemeBase
+    case graphemeExtended
+    case graphemeLink
+    case hexDigit
+    case hyphen
+    case idContinue
+    case ideographic
+    case idStart
+    case idsBinaryOperator
+    case idsTrinaryOperator
+    case joinControl
+    case logicalOrderException
+    case lowercase
+    case math
+    case noncharacterCodePoint
+    case otherAlphabetic
+    case otherDefaultIgnorableCodePoint
+    case otherGraphemeExtended
+    case otherIDContinue
+    case otherIDStart
+    case otherLowercase
+    case otherMath
+    case otherUppercase
+    case patternSyntax
+    case patternWhitespace
+    case prependedConcatenationMark
+    case quotationMark
+    case radical
+    case regionalIndicator
+    case softDotted
+    case sentenceTerminal
+    case terminalPunctuation
+    case unifiedIdiograph
+    case uppercase
+    case variationSelector
+    case whitespace
+    case xidContinue
+    case xidStart
+    case expandsOnNFC
+    case expandsOnNFD
+    case expandsOnNFKC
+    case expandsOnNFKD
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias AllCases = [Swift.Unicode.BinaryProperty]
+    public typealias RawValue = Swift.String
+    nonisolated public static var allCases: [Swift.Unicode.BinaryProperty] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum Block : Swift.String, Swift.Hashable, Swift.CaseIterable {
+    case basicLatin
+    case latin1Supplement
+    case latinExtendedA
+    case latinExtendedB
+    case ipaExtensions
+    case spacingModifierLetters
+    case combiningDiacriticalMarks
+    case greekAndCoptic
+    case cyrillic
+    case cyrillicSupplement
+    case armenian
+    case hebrew
+    case arabic
+    case syriac
+    case arabicSupplement
+    case thaana
+    case nko
+    case samaritan
+    case mandaic
+    case syriacSupplement
+    case arabicExtendedB
+    case arabicExtendedA
+    case devanagari
+    case bengali
+    case gurmukhi
+    case gujarati
+    case oriya
+    case tamil
+    case telugu
+    case kannada
+    case malayalam
+    case sinhala
+    case thai
+    case lao
+    case tibetan
+    case myanmar
+    case georgian
+    case hangulJamo
+    case ethiopic
+    case ethiopicSupplement
+    case cherokee
+    case unifiedCanadianAboriginalSyllabics
+    case ogham
+    case runic
+    case tagalog
+    case hanunoo
+    case buhid
+    case tagbanwa
+    case khmer
+    case mongolian
+    case unifiedCanadianAboriginalSyllabicsExtended
+    case limbu
+    case taiLe
+    case newTailue
+    case khmerSymbols
+    case buginese
+    case taiTham
+    case combiningDiacriticalMarksExtended
+    case balinese
+    case sundanese
+    case batak
+    case lepcha
+    case olChiki
+    case cyrillicExtendedC
+    case georgianExtended
+    case sundaneseSupplement
+    case vedicExtensions
+    case phoneticExtensions
+    case phoneticExtensionsSupplement
+    case combiningDiacriticalMarksSupplement
+    case latinExtendedAdditional
+    case greekExtended
+    case generalPunctuation
+    case superscriptsAndSubscripts
+    case currencySymbols
+    case combiningDiacriticalMarksForSymbols
+    case letterLikeSymbols
+    case numberForms
+    case arrows
+    case mathematicalOperators
+    case miscellaneousTechnical
+    case controlPictures
+    case opticalCharacterRecognition
+    case enclosedAlphanumerics
+    case boxDrawing
+    case blockElements
+    case geometricShapes
+    case miscellaneousSymbols
+    case dingbats
+    case miscellaneousMathematicalSymbolsA
+    case supplementalArrowsA
+    case braillePatterns
+    case supplementalArrowsB
+    case miscellaneousMathematicalSymbolsB
+    case supplementalMathematicalOperators
+    case miscellaneousSymbolsAndArrows
+    case glagolitic
+    case latinExtendedC
+    case coptic
+    case georgianSupplement
+    case tifinagh
+    case ethiopicExtended
+    case cyrillicExtendedA
+    case supplementalPunctuation
+    case cjkRadicalsSupplement
+    case kangxiRadicals
+    case ideographicDescriptionCharacters
+    case cjkSymbolsAndPunctuation
+    case hiragana
+    case katakana
+    case bopomofo
+    case hangulCompatibilityJamo
+    case kanbun
+    case bopomofoExtended
+    case cjkStrokes
+    case katakanaPhoneticExtensions
+    case enclosedCJKLettersAndMonths
+    case cjkCompatibility
+    case cjkUnifiedIdeographsExtensionA
+    case yijingHexagramSymbols
+    case cjkUnifiedIdeographs
+    case yiSyllables
+    case yiRadicals
+    case lisu
+    case vai
+    case cyrillicExtendedB
+    case bamum
+    case modifierToneLetters
+    case latinExtendedD
+    case sylotiNagri
+    case commonIndicNumberForms
+    case phagsPA
+    case saurashtra
+    case devanagariExtended
+    case kayahLi
+    case rejang
+    case hangulJamoExtendedA
+    case javanese
+    case myanmarExtendedB
+    case cham
+    case myanmarExtendedA
+    case taiViet
+    case meeteiMayekExtensions
+    case ethiopicExtendedA
+    case latinExtendedE
+    case cherokeeSupplement
+    case meeteiMayek
+    case hangulSyllables
+    case hangulJamoExtendedB
+    case highSurrogates
+    case highPrivateUseSurrogates
+    case lowSurrogates
+    case privateUseArea
+    case cjkCompatibilityIdeographs
+    case alphabeticPresentationForms
+    case arabicPresentationFormsA
+    case variationSelectors
+    case verticalForms
+    case combiningHalfMarks
+    case cjkcompatibilityForms
+    case smallFormVariants
+    case arabicPresentationFormsB
+    case halfwidthAndFullwidthForms
+    case specials
+    case linearBSyllabary
+    case linearBIdeograms
+    case aegeanNumbers
+    case ancientGreekNumbers
+    case ancientSymbols
+    case phaistosDisc
+    case lycian
+    case carian
+    case copticEpactNumbers
+    case oldItalic
+    case gothic
+    case oldPermic
+    case ugaritic
+    case oldPersian
+    case deseret
+    case shavian
+    case osmanya
+    case osage
+    case elbasan
+    case caucasianAlbanian
+    case vithkuqi
+    case linearA
+    case latinExtendedF
+    case cypriotSyllabary
+    case imperialAramaic
+    case palmyrene
+    case nabataean
+    case hatran
+    case phoenician
+    case lydian
+    case meroiticHieroglyphs
+    case meroiticCursive
+    case kharoshthi
+    case oldSouthArabian
+    case oldNorthArabian
+    case manichaean
+    case avestan
+    case inscriptionalParthian
+    case inscriptionalPahlavi
+    case psalterPahlavi
+    case oldTurkic
+    case oldHungarian
+    case hanifiRohingya
+    case rumiNumeralSymbols
+    case yezidi
+    case oldSogdian
+    case sogdian
+    case oldUyghur
+    case chorasmian
+    case elymaic
+    case brahmi
+    case kaithi
+    case soraSompeng
+    case chakma
+    case mahajani
+    case sharada
+    case sinhalaArchaicNumbers
+    case khojki
+    case multani
+    case khudawadi
+    case grantha
+    case newa
+    case tirhuta
+    case siddham
+    case modi
+    case mongolianSupplement
+    case takri
+    case ahom
+    case dogra
+    case warangCiti
+    case divesAkuru
+    case nandinagari
+    case zanabazarSquare
+    case soyombo
+    case unifiedCanadianAboriginalSyllabicsExtendedA
+    case pauCinHau
+    case bhaiksuki
+    case marchen
+    case masaramGondi
+    case gunjalaGondi
+    case makasar
+    case lisuSupplement
+    case tamilSupplement
+    case cuneiform
+    case cuneiformNumbersAndPunctuation
+    case earlyDynasticCuneiform
+    case cyproMinoan
+    case egyptianHieroglyphs
+    case egyptianHieroglyphFormatControls
+    case anatolianHieroglyphs
+    case bamumSupplement
+    case mro
+    case tangsa
+    case bassaVah
+    case pahawhHmong
+    case medefaidrin
+    case miao
+    case ideographicSymbolsAndPunctuation
+    case tangut
+    case tangutComponents
+    case khitanSmallScript
+    case tangutSupplement
+    case kanaExtendedB
+    case kanaSupplement
+    case kanaExtendedA
+    case smallKanaExtension
+    case nushu
+    case duployan
+    case shorthandFormatControls
+    case znamennyMusicalNotation
+    case byzantineMusicalSymbols
+    case musicalSymbols
+    case ancientGreekMusicalNotation
+    case mayanNumerals
+    case taiXuanJingSymbols
+    case countingRodNumerals
+    case mathematicalAlphanumericSymbols
+    case suttonSignwriting
+    case latinExtendedG
+    case glagoliticSupplement
+    case nyiakengPuachueHmong
+    case toto
+    case wancho
+    case ethiopicExtendedB
+    case mendeKikakui
+    case adlam
+    case indicSiyaqNumbers
+    case ottomanSiyaqNumbers
+    case arabicMathematicalAlphabeticSymbols
+    case mahjongTiles
+    case dominoTiles
+    case playingCards
+    case enclosedAlphanumericSupplement
+    case enclosedIdeographicSupplement
+    case miscellaneousSymbolsandPictographs
+    case emoticons
+    case ornamentalDingbats
+    case transportAndMapSymbols
+    case alchemicalSymbols
+    case geometricShapesExtended
+    case supplementalArrowsC
+    case supplementalSymbolsAndPictographs
+    case chessSymbols
+    case symbolsAndPictographsExtendedA
+    case symbolsForLegacyComputing
+    case cjkUnifiedIdeographsExtensionB
+    case cjkUnifiedIdeographsExtensionC
+    case cjkUnifiedIdeographsExtensionD
+    case cjkUnifiedIdeographsExtensionE
+    case cjkUnifiedIdeographsExtensionF
+    case cjkCompatibilityIdeographsSupplement
+    case cjkUnifiedIdeographsExtensionG
+    case tags
+    case variationSelectorsSupplement
+    case supplementaryPrivateUseAreaA
+    case supplementaryPrivateUseAreaB
+    case noBlock
+    #if compiler(>=5.3) && $NonescapableTypes
+    public init?(rawValue: Swift.String)
+    #endif
+    public typealias AllCases = [Swift.Unicode.Block]
+    public typealias RawValue = Swift.String
+    nonisolated public static var allCases: [Swift.Unicode.Block] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+}
+extension Swift.Character {
+  public var isOctalDigit: Swift.Bool {
+    get
+  }
+  public var isWordCharacter: Swift.Bool {
+    get
+  }
+  public var isPatternWhitespace: Swift.Bool {
+    get
+  }
+}
+extension Swift.Unicode.Scalar {
+  public var isPrintableASCII: Swift.Bool {
+    get
+  }
+}
+public enum TypeConstruction {
+  #if compiler(>=5.3) && $NonescapableTypes
+  public static func tupleType<ElementTypes>(of elementTypes: __owned ElementTypes, labels: Swift.String? = nil) -> any Any.Type where ElementTypes : Swift.BidirectionalCollection, ElementTypes.Element == any Any.Type
+  #endif
+  public static func tuple<Elements>(of elements: __owned Elements) -> Any where Elements : Swift.BidirectionalCollection, Elements.Element == Any
+  public static func arrayType(of childType: any Any.Type) -> any Any.Type
+  public static func optionalType(of childType: any Any.Type) -> any Any.Type
+}
+extension _RegexParser.TypeConstruction {
+  public static func optionalType<Base>(of base: Base.Type, depth: Swift.Int = 1) -> any Any.Type
+}
+#if compiler(>=5.3) && $NonescapableTypes
+extension Swift.MemoryLayout {
+  public static func tupleElementIndex<ElementTypes>(of keyPath: Swift.PartialKeyPath<T>, elementTypes: ElementTypes) -> Swift.Int? where ElementTypes : Swift.Collection, ElementTypes.Element == any Any.Type
+}
+#endif
+extension _RegexParser.AST.Group : _RegexParser._ASTNode {}
+extension _RegexParser.AST.Quantification : _RegexParser._ASTNode {}
+extension _RegexParser.AST.Atom.CharacterProperty.PCRESpecialCategory : Swift.RawRepresentable {}
+extension _RegexParser.AST.Atom.CharacterProperty.JavaSpecial : Swift.RawRepresentable {}
+extension _RegexParser.AST.CustomCharacterClass.SetOp : Swift.RawRepresentable {}
+extension _RegexParser.AST.CustomCharacterClass.Start : Swift.RawRepresentable {}
+extension _RegexParser.AST.Quantification.Kind : Swift.RawRepresentable {}
+extension Swift.Unicode.Script : Swift.RawRepresentable {}
+extension Swift.Unicode.POSIXProperty : Swift.RawRepresentable {}
+extension Swift.Unicode.ExtendedGeneralCategory : Swift.RawRepresentable {}
+extension Swift.Unicode.BinaryProperty : Swift.RawRepresentable {}
+extension Swift.Unicode.Block : Swift.RawRepresentable {}

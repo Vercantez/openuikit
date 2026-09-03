@@ -44,6 +44,35 @@ iname=$("$OTOOL" -D "$X86" | tail -1)
   || bad "missing x86 _Builtin_float.swiftmodule"
 
 echo
+echo "=== in-tree FE overlays (phase2_fe_overlay_names minus Apple SDK splits) ==="
+for n in libswiftDarwin.dylib libswiftSynchronization.dylib \
+         libswift_Builtin_float.dylib libswift_RegexParser.dylib \
+         libswift_StringProcessing.dylib; do
+  f=$ART/x86_64/$n
+  [ -f "$f" ] || { bad "missing $n"; continue; }
+  hdr=$("$OTOOL" -hv "$f")
+  echo "$hdr" | grep -Eq 'MH_MAGIC_64[[:space:]]+X86_64' && ok "$n MH_MAGIC_64 X86_64" \
+    || bad "$n header"
+  if echo "$hdr" | grep -q ARM64; then bad "$n has ARM64 token"; fi
+  id=$("$OTOOL" -D "$f" | tail -1)
+  [ "$id" = "/usr/lib/swift/$n" ] && ok "$n LC_ID_DYLIB" || bad "$n id $id"
+done
+for n in libswift_Concurrency.dylib libswiftObservation.dylib; do
+  f=$ART/x86_64/$n
+  [ -f "$f" ] || { bad "missing SwiftUI-load $n"; continue; }
+  hdr=$("$OTOOL" -hv "$f")
+  echo "$hdr" | grep -Eq 'MH_MAGIC_64[[:space:]]+X86_64' && ok "$n MH_MAGIC_64 X86_64" \
+    || bad "$n header"
+  id=$("$OTOOL" -D "$f" | tail -1)
+  [ "$id" = "/usr/lib/swift/$n" ] && ok "$n LC_ID_DYLIB" || bad "$n id $id"
+done
+for n in libswift_DarwinFoundation1.dylib libswift_DarwinFoundation2.dylib \
+         libswift_DarwinFoundation3.dylib libswift_errno.dylib; do
+  [ ! -e "$ART/x86_64/$n" ] && ok "$n absent (CANNOT_STAGE_XCODE_DARWIN_OVERLAYS)" \
+    || bad "must not stage fake $n"
+done
+
+echo
 echo "=== manifests agree with files ==="
 python3 - "$ROOT/artifacts/x86_64.manifest.json" "$ROOT/artifacts" <<'PY' || fail=1
 import hashlib, json, sys

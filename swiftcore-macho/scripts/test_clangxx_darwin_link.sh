@@ -31,8 +31,8 @@ printf '%s\n' "$got" | grep -F -- '-fuse-ld=gold' >/dev/null \
 printf '%s\n' "$got" | grep -F -- '-Wl,-soname' >/dev/null \
   && { echo "  FAIL -soname survived"; fail=1; } \
   || echo "  OK  no -soname"
-printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,libswiftCore.so' >/dev/null \
-  && echo "  OK  soname -> install_name" || { echo "  FAIL missing install_name"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftCore.dylib' >/dev/null \
+  && echo "  OK  soname -> Darwin install_name" || { echo "  FAIL missing Darwin install_name"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '/usr/lib/llvm-18/lib/libc++.so' >/dev/null \
   && { echo "  FAIL host libc++.so survived"; fail=1; } \
   || echo "  OK  dropped host libc++.so"

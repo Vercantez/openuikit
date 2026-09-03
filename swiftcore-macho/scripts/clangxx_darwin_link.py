@@ -95,6 +95,16 @@ def _drop_libdir(arg: str) -> bool:
     return False
 
 
+def _darwin_install_name(soname: str) -> str:
+    """Map Linux CMake soname libswiftX.so to the Darwin LC_ID_DYLIB guests load."""
+    base = os.path.basename(soname)
+    if base.startswith("libswift") and base.endswith(".so"):
+        return "/usr/lib/swift/" + base[: -len(".so")] + ".dylib"
+    if base.startswith("libswift") and base.endswith(".dylib") and not soname.startswith("/"):
+        return "/usr/lib/swift/" + base
+    return soname
+
+
 def rewrite_darwin_shared(argv: list[str]) -> list[str]:
     """Return clang++ argv for a Mach-O dylib link (same intent as link_macho_dylib.sh)."""
     out: list[str] = []
@@ -138,10 +148,17 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
             if i < len(argv):
                 soname = argv[i]
                 i += 1
-                out.append(f"-Wl,-install_name,{soname}")
+                out.append(f"-Wl,-install_name,{_darwin_install_name(soname)}")
             continue
         if a.startswith("-Wl,-soname,"):
-            out.append("-Wl,-install_name," + a[len("-Wl,-soname,"):])
+            out.append(
+                "-Wl,-install_name," + _darwin_install_name(a[len("-Wl,-soname,"):])
+            )
+            continue
+        if a.startswith("-Wl,-install_name,"):
+            out.append(
+                "-Wl,-install_name," + _darwin_install_name(a[len("-Wl,-install_name,"):])
+            )
             continue
         if a.startswith("-Wl,-rpath-link"):
             continue
