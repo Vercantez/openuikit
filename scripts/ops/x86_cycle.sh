@@ -246,9 +246,13 @@ core_src=$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
 core_dst=$TREE/machorun/darwin/usr/lib/swift/libswiftCore.dylib
 if [ -f "$core_src" ]; then
     mkdir -p "$(dirname "$core_dst")"
-    if [ -f "$core_dst" ] && [ "$(sha256sum "$core_src" | cut -c1-64)" = "$(sha256sum "$core_dst" | cut -c1-64)" ]; then
+    # A symlink here (verify_hello.sh left one into /root/work/build at the
+    # 44152400 cycle) reads as the same bytes but stage_swift_core_runtime.py
+    # refuses "not a regular non-symlink file"; only a regular file is reuse.
+    if [ -f "$core_dst" ] && [ ! -L "$core_dst" ] && [ "$(sha256sum "$core_src" | cut -c1-64)" = "$(sha256sum "$core_dst" | cut -c1-64)" ]; then
         emit_stage libswiftcore-darwin reused "$core_dst"
     else
+        rm -f "$core_dst"
         cp -f "$core_src" "$core_dst"
         emit_stage libswiftcore-darwin rebuilt "$core_dst"
     fi
