@@ -180,6 +180,27 @@ else
     exit 2
 fi
 
+# 4b. the regenerated machorun tbds must reach the x86 sysroot before the
+# overlay links read it. Measured 2026-09-03 (cycle at 5807d94a): machorun/sdk
+# libSystem.B.tbd regenerated 15:17 with __dispatch_main_q, but
+# scratch/sysroot_fe4-x86_64 kept the 14:54 copy (stage_fe_sysroot reuses its
+# own product) and every Concurrency/Observation link still said undefined.
+# The arm64 driver does the same copy by hand after build_full.
+tbd_synced=0
+for t in "$TREE"/machorun/sdk/usr/lib/*.tbd; do
+    [ -f "$t" ] || continue
+    dst="$TREE/scratch/sysroot_fe4-x86_64/usr/lib/$(basename "$t")"
+    if [ -f "$dst" ] && [ "$(sha256sum "$t" | cut -c1-64)" = "$(sha256sum "$dst" | cut -c1-64)" ]; then
+        continue
+    fi
+    mkdir -p "$(dirname "$dst")" && cp -f "$t" "$dst" && tbd_synced=$((tbd_synced + 1))
+done
+if [ "$tbd_synced" -gt 0 ]; then
+    emit_stage tbd-sysroot rebuilt "$TREE/scratch/sysroot_fe4-x86_64/usr/lib (synced $tbd_synced tbd)"
+else
+    emit_stage tbd-sysroot reused "$TREE/scratch/sysroot_fe4-x86_64/usr/lib"
+fi
+
 # 5. stage sysroot
 if run_logged sysroot "$LOGDIR/sysroot.log" \
     bash "$TREE/scripts/x86/stage_fe_sysroot.sh"; then
