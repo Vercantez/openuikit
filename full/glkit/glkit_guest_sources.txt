@@ -1,0 +1,11 @@
+full/glkit/GLKEffects.swift
+full/glkit/GLKEnums.swift
+full/glkit/GLKMathTypes.swift
+full/glkit/GLKMatrixMath.swift
+full/glkit/GLKMatrixStack.swift
+full/glkit/GLKMesh.swift
+full/glkit/GLKQuaternionMath.swift
+full/glkit/GLKTexture.swift
+full/glkit/GLKVectorMath.swift
+full/glkit/GLKView.swift
+full/glkit/GLKit.swift
