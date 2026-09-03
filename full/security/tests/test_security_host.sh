@@ -13,24 +13,39 @@ cleanup() {
 }
 trap cleanup EXIT
 
-xcrun swiftc -parse-as-library -swift-version 5 \
+if command -v xcrun >/dev/null 2>&1; then
+    SWIFTC=(xcrun swiftc)
+else
+    SWIFTC=(swiftc)
+fi
+
+mapfile -t SOURCES < "$ROOT/full/security/security_guest_sources.txt"
+SOURCE_PATHS=()
+for relative in "${SOURCES[@]}"; do
+    SOURCE_PATHS+=("$ROOT/$relative")
+done
+
+"${SWIFTC[@]}" -parse-as-library -swift-version 5 \
     -module-name Security -emit-module \
     -emit-module-path "$OUT/Security.swiftmodule" \
     -emit-library -o "$OUT/libSecurity.dylib" \
-    "$ROOT/full/security/Security.swift"
+    "${SOURCE_PATHS[@]}"
 
-xcrun swiftc -swift-version 5 \
+"${SWIFTC[@]}" -swift-version 5 \
     -I "$OUT" -L "$OUT" -lSecurity \
     "$HERE/SecurityHostRuntime.swift" -o "$OUT/SecurityHostRuntime"
 
-if xcrun otool -L "$OUT/libSecurity.dylib" \
-    | grep -F '/System/Library/Frameworks/Security.framework/' >/dev/null; then
-    printf 'portable Security dylib loads Apple Security.framework\n' >&2
-    exit 3
+if command -v otool >/dev/null 2>&1 || command -v xcrun >/dev/null 2>&1; then
+    if xcrun otool -L "$OUT/libSecurity.dylib" 2>/dev/null \
+        | grep -F '/System/Library/Frameworks/Security.framework/' >/dev/null; then
+        printf 'portable Security dylib loads Apple Security.framework\n' >&2
+        exit 3
+    fi
 fi
 
-DYLD_LIBRARY_PATH="$OUT${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}" \
-    "$OUT/SecurityHostRuntime" | tee "$OUT/runtime.log"
+export LD_LIBRARY_PATH="$OUT${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export DYLD_LIBRARY_PATH="$OUT${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+"$OUT/SecurityHostRuntime" | tee "$OUT/runtime.log"
 grep -Fx \
     'SECURITY_HOST_OK keychain=crud random=system code-signing=unavailable' \
     "$OUT/runtime.log" >/dev/null
