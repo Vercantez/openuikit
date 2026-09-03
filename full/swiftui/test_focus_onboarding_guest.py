@@ -253,6 +253,70 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("Project-owned runtime probe", UUID_PROBE.read_text())
         self.assertIn("static let module: Bundle", ACCESSOR.read_text())
 
+    def test_foundation_internationalization_is_a_named_umbrella_prerequisite(self) -> None:
+        source = FOUNDATION.read_text()
+        build = BUILD.read_text()
+        self.assertIn("@_exported import FoundationInternationalization", source)
+        self.assertIn(
+            'full/foundationinternationalization/build_foundation_internationalization.sh',
+            build,
+        )
+        self.assertIn("SWIFT_FOUNDATION_ICU=", build)
+        self.assertIn('bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"', build)
+        self.assertIn(
+            "== build pinned FoundationInternationalization against the same sysroot",
+            build,
+        )
+        umbrella = build.split(
+            "== compile the bounded Foundation umbrella after SwiftUI", 1
+        )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
+        self.assertIn("-I \"$PACKAGE\"", umbrella)
+        self.assertIn("libFoundationInternationalization.dylib", build)
+        self.assertIn("-lFoundationInternationalization", build)
+        self.assertIn("corefoundation_guest_sources.txt", build)
+
+    def test_umbrella_compile_passes_opencombine_helpers_module_map(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn(
+            '-Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"',
+            text,
+        )
+        self.assertIn('-Xcc -I"$PACKAGE/include/COpenCombineHelpers"', text)
+        umbrella = text.split(
+            "== compile the bounded Foundation umbrella after SwiftUI", 1
+        )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
+        self.assertIn('"${PACKAGE_CINC[@]}"', umbrella)
+        self.assertIn('"${SWIFTC[@]}"', umbrella)
+
+    def test_darwin_compiles_do_not_include_host_toolchain_swift(self) -> None:
+        text = BUILD.read_text()
+        swiftc = text.split("SWIFTC=(", 1)[1].split("LD=(", 1)[0]
+        package_cinc = text.split("PACKAGE_CINC=(", 1)[1].split("FE_OUT=", 1)[0]
+        fe_flags = text.split("FE_FLAGS=(", 1)[1].split("FE_OBJECTS=(", 1)[0]
+        umbrella = text.split(
+            "== compile the bounded Foundation umbrella after SwiftUI", 1
+        )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
+        self.assertIn('-target "$TARGET"', swiftc)
+        self.assertIn('-sdk "$SYS"', swiftc)
+        self.assertIn('-Xcc -isysroot "$SYS"', swiftc)
+        self.assertIn('-Xcc -target "$TARGET"', swiftc)
+        self.assertIn(
+            '-Xcc -fmodule-map-file="$PACKAGE/include/CoreFoundation/module.modulemap"',
+            package_cinc,
+        )
+        self.assertIn('-Xcc -I"$PACKAGE/include/CoreFoundation"', package_cinc)
+        self.assertIn(
+            'cp "$SYS/usr/include/CoreFoundation/CoreFoundation.h"',
+            text,
+        )
+        for blob in (swiftc, package_cinc, fe_flags, umbrella):
+            self.assertNotIn("-I /usr/lib/swift", blob)
+            self.assertNotIn("-I/usr/lib/swift", blob)
+            self.assertNotIn("-Xcc -I/usr/lib/swift", blob)
+            self.assertNotIn("/usr/lib/swift/CoreFoundation", blob)
+            self.assertNotIn("arm64e-apple-macos", blob)
+        self.assertIn("arm64-apple-macos", (ROOT / "full/scripts/guest_arch.inc").read_text())
+
     def test_success_marker_is_exact_and_fail_closed(self) -> None:
         build = BUILD.read_text()
         marker = (

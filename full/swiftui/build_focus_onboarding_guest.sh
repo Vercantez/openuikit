@@ -27,6 +27,9 @@ FULL=$W/build/full${FULL_OUT_SUFFIX}
 SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
 MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
+SWIFT_FOUNDATION_ICU=${SWIFT_FOUNDATION_ICU:-$W/scratch/swift-foundation-icu}
+FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/build_foundation_internationalization.sh
+COREFOUNDATION_GUEST_MANIFEST=$W/full/foundation/corefoundation_guest_sources.txt
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
 OPENCOMBINE_ARTIFACTS=${OPENCOMBINE_ARTIFACTS:-$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/artifacts}
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
@@ -135,6 +138,16 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 
 done
 [ -x "$MRROOT/machorun" ] || die "built machorun root is missing: $MRROOT"
 [ -d "$SYS/usr/include" ] || die "FoundationEssentials sysroot is missing: $SYS"
+[ -f "$SYS/usr/include/CoreFoundation/CoreFoundation.h" ] && \
+    [ ! -L "$SYS/usr/include/CoreFoundation/CoreFoundation.h" ] \
+    || die "Darwin sysroot CoreFoundation.h is missing: $SYS/usr/include/CoreFoundation/CoreFoundation.h"
+[ -f "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] && \
+    [ ! -L "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
+    || die "FoundationInternationalization builder is missing: $FOUNDATION_INTERNATIONALIZATION_BUILDER"
+[ -d "$SWIFT_FOUNDATION_ICU/.git" ] \
+    || die "swift-foundation-icu checkout is missing: $SWIFT_FOUNDATION_ICU"
+[ -f "$COREFOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$COREFOUNDATION_GUEST_MANIFEST" ] \
+    || die "missing regular CoreFoundation guest source manifest"
 
 # One fail-closed manifest owns the production Foundation facade source set.
 # Keep build order explicit: the umbrella/re-exports precede the concrete
@@ -186,7 +199,8 @@ validate_bundle "$WIDGET_INPUT" "$EXPECTED_WIDGET_FILES" \
 rm -rf -- "$OUT"
 mkdir -p "$PACKAGE/include/CPortableIO" "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/CHostClock" "$PACKAGE/include/COpenCombineHelpers" \
-    "$PACKAGE/include/CQuartz" "$MODULE_CACHE" "$AUDIT" "$OUT/fonts"
+    "$PACKAGE/include/CQuartz" "$PACKAGE/include/CoreFoundation" \
+    "$MODULE_CACHE" "$AUDIT" "$OUT/fonts"
 
 git -C "$FOCUS_ROOT" ls-tree -r -z "$EXPECTED_FOCUS_COMMIT" -- focus-ios \
     | while IFS= read -r -d '' record; do
@@ -283,6 +297,13 @@ cp -a "$W/full/foundation/include/COpenFoundationCore" \
     "$PACKAGE/include/COpenFoundationCore"
 cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
     "$OPENCOMBINE_HELPERS/include/module.modulemap" "$PACKAGE/include/COpenCombineHelpers/"
+# Darwin CoreFoundation clang module: the header comes from the Darwin sysroot
+# only. Never -I the host toolchain's lib/swift (that is the Linux overlay
+# that pulls /usr/lib/swift/CoreFoundation/CoreFoundation.h and setjmp.h).
+cp "$SYS/usr/include/CoreFoundation/CoreFoundation.h" \
+    "$PACKAGE/include/CoreFoundation/CoreFoundation.h"
+cp "$W/full/foundation/include/CoreFoundation/module.modulemap" \
+    "$PACKAGE/include/CoreFoundation/module.modulemap"
 cp "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
     "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$PACKAGE/"
 for module in OpenUIKit OpenCoreGraphics; do
@@ -294,16 +315,21 @@ done
 SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -disable-implicit-string-processing-module-import
-    -Xfrontend -disable-objc-attr-requires-foundation-module)
+    -Xfrontend -disable-objc-attr-requires-foundation-module
+    -Xcc -isysroot "$SYS"
+    -Xcc -target "$TARGET")
 LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
     -syslibroot "$SYS" -rpath /usr/lib/swift)
 PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -I"$PACKAGE/include/CSTBTrueType"
     -Xcc -I"$PACKAGE/include/CHostClock"
     -Xcc -I"$PACKAGE/include/COpenCombineHelpers"
+    -Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"
     -Xcc -I"$PACKAGE/include/CQuartz"
     -Xcc -fmodule-map-file="$PACKAGE/include/COpenFoundationCore/module.modulemap"
-    -Xcc -I"$PACKAGE/include/COpenFoundationCore")
+    -Xcc -I"$PACKAGE/include/COpenFoundationCore"
+    -Xcc -fmodule-map-file="$PACKAGE/include/CoreFoundation/module.modulemap"
+    -Xcc -I"$PACKAGE/include/CoreFoundation")
 FE_OUT=$FULL/foundation/essentials
 FE_COLLECTIONS=$FULL/foundation/collections
 FE_OS=$FULL/foundation/os
@@ -361,8 +387,7 @@ done
 # _Concurrency build.  Prewarming only Swift, with implicit stdlib imports
 # disabled by -parse-stdlib, makes the same clean-cache build deterministic.
 echo '== prewarm the Darwin Swift module cache'
-swiftc -target "$TARGET" -sdk "$SYS" \
-    -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck \
+"${SWIFTC[@]}" -parse-stdlib -typecheck \
     -e 'import Swift'
 
 echo '== package pinned OpenCombine and literal Combine'
@@ -435,6 +460,76 @@ done
     -I "$PACKAGE" -module-name SwiftUI \
     -emit-module -emit-module-path "$PACKAGE/SwiftUI.swiftmodule" \
     -emit-object -o "$OUT/swiftui.o" "${swiftui_sources[@]}"
+
+# FoundationGuest.swift @_exported-imports FoundationInternationalization;
+# the umbrella cannot be bounded without that module. Build it from the
+# committed FI script against the same Darwin sysroot / FE module the
+# gate already uses. Do not write the Darwin bridge into the shared
+# machorun root: this harness keeps that tree read-only.
+echo '== build pinned FoundationInternationalization against the same sysroot'
+for fe_artifact in FoundationEssentials.swiftmodule FoundationEssentials.swiftdoc; do
+    [ -f "$FE_OUT/$fe_artifact" ] && [ ! -L "$FE_OUT/$fe_artifact" ] \
+        || die "FoundationEssentials module artifact is missing: $FE_OUT/$fe_artifact"
+    cp "$FE_OUT/$fe_artifact" "$PACKAGE/$fe_artifact"
+done
+"${LD[@]}" -dylib -dead_strip -install_name @rpath/libFoundationEssentials.dylib \
+    -rpath @loader_path -L"$MRROOT/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -o "$PACKAGE/libFoundationEssentials.dylib" \
+    "${FE_OBJECTS[@]}" "$FULL/swiftcorepatch.o"
+FINTL_STAGE=$OUT/fi-stage
+FINTL_WORK=$OUT/fi-work
+rm -rf -- "$FINTL_STAGE" "$FINTL_WORK"
+mkdir -p "$FINTL_STAGE/guest-root/host" \
+    "$FINTL_STAGE/guest-root/darwin/usr/lib" \
+    "$FINTL_STAGE/include" \
+    "$FINTL_STAGE/attestation" \
+    "$FINTL_WORK"
+ln -sfn "$SYS" "$FINTL_STAGE/sdk"
+ln -sfn "$PACKAGE" "$FINTL_STAGE/lib"
+ln -sfn "$PACKAGE" "$FINTL_STAGE/modules"
+cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
+    "$FINTL_STAGE/include/_FoundationCShims/"
+for fi_runtime in libc++.1.dylib libc++.real.dylib libc++abi.dylib \
+    libSystem.B.dylib libSystem.real.dylib libswiftcompat.dylib; do
+    [ -e "$MRROOT/darwin/usr/lib/$fi_runtime" ] \
+        || die "FoundationInternationalization runtime dylib is missing: $MRROOT/darwin/usr/lib/$fi_runtime"
+    ln -s "$MRROOT/darwin/usr/lib/$fi_runtime" \
+        "$FINTL_STAGE/guest-root/darwin/usr/lib/$fi_runtime"
+done
+: > "$FINTL_STAGE/guest-root/.manifest"
+env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
+    SWIFT_FOUNDATION_ICU="$SWIFT_FOUNDATION_ICU" STAGE="$FINTL_STAGE" \
+    WORK="$FINTL_WORK" TARGET="$TARGET" MIN_OS=15.0 \
+    FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
+    bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
+[ -f "$PACKAGE/FoundationInternationalization.swiftmodule" ] && \
+    [ ! -L "$PACKAGE/FoundationInternationalization.swiftmodule" ] \
+    || die 'FoundationInternationalization swiftmodule is missing after build'
+[ -f "$PACKAGE/libFoundationInternationalization.dylib" ] && \
+    [ ! -L "$PACKAGE/libFoundationInternationalization.dylib" ] \
+    || die 'libFoundationInternationalization.dylib is missing after build'
+PACKAGE_CINC+=(
+    -Xcc -fmodule-map-file="$FINTL_STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
+    -Xcc -I"$FINTL_STAGE/include/FoundationICU"
+)
+
+echo '== compile first-party CoreFoundation before the Foundation umbrella'
+mapfile -t COREFOUNDATION_GUEST_RELATIVE_SOURCES < "$COREFOUNDATION_GUEST_MANIFEST"
+[ "${#COREFOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 1 ] \
+    || die "CoreFoundation guest source manifest must contain exactly 1 line"
+COREFOUNDATION_GUEST_SOURCES=()
+for relative in "${COREFOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "CoreFoundation guest source is not a regular file: $relative"
+    COREFOUNDATION_GUEST_SOURCES+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" -module-name CoreFoundation -module-link-name CoreFoundation \
+    -emit-module -emit-module-path "$PACKAGE/CoreFoundation.swiftmodule" \
+    -emit-object -o "$OUT/corefoundation.o" \
+    "${COREFOUNDATION_GUEST_SOURCES[@]}"
 
 echo '== compile the bounded Foundation umbrella after SwiftUI'
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
@@ -526,10 +621,11 @@ echo '== package ten reusable guest dylibs'
     "$FULL/swiftcorepatch.o"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
-    -o "$PACKAGE/libFoundation.dylib" "$OUT/foundation.o" \
+    -o "$PACKAGE/libFoundation.dylib" "$OUT/foundation.o" "$OUT/corefoundation.o" \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
-    -L"$PACKAGE" -lFoundationEssentials -lOpenUIKit -lCombine -lOpenCombine \
+    -L"$PACKAGE" -lFoundationEssentials -lFoundationInternationalization \
+    -lOpenUIKit -lCombine -lOpenCombine \
     -L"$SYS/usr/lib/swift" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
@@ -582,7 +678,8 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-    OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
+    FoundationInternationalization OpenCombine Combine Symbols SwiftUI Widget \
+    Onboarding; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
         | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
         || die "lib$dylib is not a $ARCH Mach-O dylib"
