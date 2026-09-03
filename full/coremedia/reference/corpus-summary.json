@@ -1,0 +1,113 @@
+{
+  "module": "CoreMedia",
+  "moduleRecord": {
+    "app_coverage_count": 8,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 58,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 34,
+    "iphoneos_runtime_focus_launch_build_rank": 40,
+    "module": "CoreMedia",
+    "occurrence_count": 58,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "6ecc357f749e7bd0673d3e29370152ea5fb50fc0025be3c7b82fcd27eeef602c",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Signal/src/ViewControllers/HomeView/Stories/Context View/StoryItemMediaView.swift",
+          "Signal/src/ViewControllers/MediaGallery/MediaItemViewController.swift",
+          "Signal/src/ViewControllers/MediaGallery/VideoPlaybackControls.swift",
+          "Signal/src/ViewControllers/ViewOnceMessageViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "36645f707b6defbaa936f4681f73acb206219e9d1ebae4a8b14eae784a021f06",
+        "file_count": 43,
+        "occurrence_count": 43,
+        "sample_paths": [
+          "Telegram/BroadcastUpload/BroadcastUploadExtension.swift",
+          "submodules/AnimatedStickerNode/Sources/VideoStickerFrameSource.swift",
+          "submodules/Camera/Sources/CameraPreviewView.swift",
+          "submodules/Camera/Sources/CameraRoundLegacyVideoFilter.swift",
+          "submodules/Camera/Sources/CameraRoundVideoFilter.swift",
+          "submodules/Display/Source/GenerateImage.swift",
+          "submodules/FFMpegBinding/Public/FFMpegBinding/FFMpegAVFormatContext.h",
+          "submodules/LegacyComponents/PublicHeaders/LegacyComponents/PGCamera.h"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "03cb35865721134b3dedde1fdc6456730c777e9f49a5b6502deb61261ceb128b",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WordPress/Classes/Utility/Media/Blog+VideoLimits.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "d87dd78f4cb0f0553fb100642db4a7f7ee540d4dbe729debce34dd831a4099cb",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "BrowserKit/Sources/QuickAnswersKit/Backend/SpeechService/SpeechAnalyzerEngine.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "b9dbb2f080ac64464b723e78bf52cb9c90efbc0c8ca89650050c11019263b3e6",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/Assist/Audio/CMSampleBuffer+AudioSamples.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "df1a2db2b55e245838850fdfc40a795fd9d1066228ed662d91ae4a6c39a6f62c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "KsApi/Sources/KsApi/lib/HTML Parser/View Elements/AudioVideoViewElement.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "55a41033668d84399d4a740e82fa41d242135eb1fa1fe5c15e4f2ffe8da15c4a",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "iOSClient/Data/NCManageDatabase.swift",
+          "iOSClient/Utility/NCUtility+Image.swift",
+          "iOSClient/Utility/NCUtility.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "ee92af013880dbda9481fe887611a1eed563ef577fac2ecec632183db80900f1",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "podcasts/CarPlay/CarPlaySceneDelegate+Convert.swift",
+          "podcasts/ChapterManager.swift",
+          "podcasts/Chapters.swift",
+          "podcasts/Third Party Libraries/MNAVChapters/MNAVChapterReader.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 34,
+    "byFocusLaunchBuildRelevance": 40
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
