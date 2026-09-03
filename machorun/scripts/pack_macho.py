@@ -15,6 +15,7 @@ n_value, ARM64 ADRP/LDR/ADD page immediates, and (format-6) rebase targets,
 then packs file bytes tightly.
 
     scripts/pack_macho.py pack IN.dylib -o OUT.dylib [--id INSTALL_NAME]
+                                                [--sparse | --gap N]
     scripts/pack_macho.py rename IN -o OUT --from STR --to STR
     scripts/pack_macho.py oversize IN -o OUT [--segment NAME]
     scripts/pack_macho.py inspect FILE
@@ -53,10 +54,13 @@ S_ZEROFILL = 0x1
 S_THREAD_LOCAL_ZEROFILL = 0x12
 
 # Matches the operator's 2026-09-03 wall: libswiftObjectiveC __DATA_CONST
-# vmaddr ...7720, i.e. 0x720 into a 4 KiB page. 0x10000 is a small stand-in
-# for the tens-of-megabyte TEXT-to-DATA gap in a real cache.
+# vmaddr ...7720, i.e. 0x720 into a 4 KiB page. CACHE_GAP (0x10000) is a
+# small stand-in for packed-contiguous cache data; CACHE_SPARSE_DELTA is
+# the measured TEXT-to-DATA gap on that extract (cache-wide addresses,
+# not a packed file).
 CACHE_UNALIGN = 0x720
 CACHE_GAP = 0x10000
+CACHE_SPARSE_DELTA = 0x22256720  # DATA_CONST.vmaddr - TEXT.vmaddr
 HOST_PAGE = 4096
 
 
@@ -199,7 +203,8 @@ class Image:
         return used
 
 
-def plan_pack(img: Image, unalign: int = CACHE_UNALIGN, gap: int = CACHE_GAP) -> None:
+def plan_pack(img: Image, unalign: int = CACHE_UNALIGN, gap: int = CACHE_GAP,
+              sparse: bool = False) -> None:
     """Pack non-__TEXT/__PAGEZERO segments like a dyld shared cache slice.
 
     __TEXT keeps its vmaddr (the mach header is the lowest mapped byte). Its
@@ -208,6 +213,10 @@ def plan_pack(img: Image, unalign: int = CACHE_UNALIGN, gap: int = CACHE_GAP) ->
         round_up(text.vmaddr + text.vmsize, 1) + gap + unalign
     and then packed against each other with no page rounding, so they share
     host pages and their vmaddrs are not page-aligned.
+
+    `--sparse` sets the first data vmaddr to text.vmaddr + CACHE_SPARSE_DELTA
+    (0x22256720: libswiftObjectiveC __DATA_CONST - __TEXT, measured
+    2026-09-03). File bytes stay packed; only the VM gap is huge.
     """
     text = next((s for s in img.segs if s.name == "__TEXT"), None)
     if text is None:
@@ -217,6 +226,14 @@ def plan_pack(img: Image, unalign: int = CACHE_UNALIGN, gap: int = CACHE_GAP) ->
     text_used = img.used_in_segment(text)
     text.new_filesize = text_used
     text.new_fileoff = 0 if text.fileoff == 0 else text.fileoff
+
+    if sparse:
+        gap = CACHE_SPARSE_DELTA - text.vmsize - unalign
+        if gap < 0:
+            raise ValueError(
+                f"CACHE_SPARSE_DELTA {CACHE_SPARSE_DELTA:#x} is smaller than "
+                f"TEXT.vmsize {text.vmsize:#x} + unalign {unalign:#x}"
+            )
 
     cursor_vm = text.vmaddr + text.vmsize + gap + unalign
     cursor_file = text.new_fileoff + text.new_filesize
@@ -408,10 +425,116 @@ def patch_nlists(img: Image) -> None:
                 struct.pack_into("<Q", img.data, p + 8, new)
 
 
-def patch_export_trie(img: Image, trie_off: int, trie_size: int) -> None:
-    if trie_size == 0:
-        return
-    blob = memoryview(img.data)[trie_off:trie_off + trie_size]
+class TrieNode:
+    __slots__ = ("flags", "value", "extra", "children")
+
+    def __init__(self) -> None:
+        self.flags: int | None = None
+        self.value: int = 0
+        self.extra: bytes = b""  # terminal bytes after flags[+value]
+        self.children: list[tuple[bytes, TrieNode]] = []
+
+
+def parse_export_trie(buf: bytes | bytearray, trie_off: int, trie_size: int) -> TrieNode:
+    end = trie_off + trie_size
+
+    def walk(node_off: int, depth: int) -> TrieNode:
+        node = TrieNode()
+        if depth > 128 or node_off >= trie_size:
+            return node
+        p = trie_off + node_off
+        term_size, q = uleb_decode(buf, p)
+        t = q
+        children = q + term_size
+        if term_size > 0:
+            flags, t = uleb_decode(buf, t)
+            node.flags = flags
+            if not (flags & 0x08) and not (flags & 0x10):
+                value, t = uleb_decode(buf, t)
+                node.value = value
+                node.extra = bytes(buf[t:q + term_size])
+            else:
+                node.extra = bytes(buf[t:q + term_size])
+        if children >= end:
+            return node
+        nchild = buf[children]
+        p = children + 1
+        for _ in range(nchild):
+            start = p
+            while p < end and buf[p]:
+                p += 1
+            edge = bytes(buf[start:p])
+            p += 1
+            coff, p = uleb_decode(buf, p)
+            node.children.append((edge, walk(coff, depth + 1)))
+        return node
+
+    return walk(0, 0)
+
+
+def reloc_export_trie(img: Image, node: TrieNode) -> None:
+    if node.flags is not None and not (node.flags & 0x08) and not (node.flags & 0x10):
+        node.value = reloc_vm(img, node.value)
+    for _, child in node.children:
+        reloc_export_trie(img, child)
+
+
+def encode_export_trie(root: TrieNode) -> bytes:
+    """Lay out the trie in DFS order; iterate until child-offset ULEBs stabilize."""
+    offsets: dict[int, int] = {}
+
+    def encode_one(node: TrieNode) -> bytes:
+        term = bytearray()
+        if node.flags is not None:
+            term += uleb_encode(node.flags)
+            if not (node.flags & 0x08) and not (node.flags & 0x10):
+                term += uleb_encode(node.value)
+            term += node.extra
+        out = bytearray(uleb_encode(len(term)))
+        out += term
+        out.append(len(node.children))
+        for edge, child in node.children:
+            out += edge + b"\0"
+            out += uleb_encode(offsets.get(id(child), 0))
+        return bytes(out)
+
+    blob = b""
+    for _ in range(16):
+        new_off: dict[int, int] = {}
+        parts: list[bytes] = []
+
+        def place(node: TrieNode) -> None:
+            b = encode_one(node)
+            new_off[id(node)] = sum(len(p) for p in parts)
+            parts.append(b)
+            for _, child in node.children:
+                place(child)
+
+        place(root)
+        blob = b"".join(parts)
+        if new_off == offsets:
+            break
+        offsets = new_off
+    else:
+        raise ValueError("export trie layout did not converge")
+    return blob
+
+
+def set_export_trie_loc(img: Image, old_off: int, new_off: int, new_size: int) -> None:
+    for off, cs in img.find_cmd(LC_DYLD_EXPORTS_TRIE):
+        o, s = struct.unpack_from("<II", img.data, off + 8)
+        if o == old_off:
+            struct.pack_into("<II", img.data, off + 8, new_off, new_size)
+    for off, cs in img.find_cmd(LC_DYLD_INFO) + img.find_cmd(LC_DYLD_INFO_ONLY):
+        fields = list(struct.unpack_from("<10I", img.data, off + 8))
+        if fields[8] == old_off:
+            fields[8] = new_off
+            fields[9] = new_size
+            struct.pack_into("<10I", img.data, off + 8, *fields)
+
+
+def _patch_export_trie_inplace(img: Image, trie_off: int, trie_size: int) -> None:
+    """Overwrite export addresses in-place, keeping each ULEB's original width."""
     buf = img.data
 
     def walk(node_off: int, depth: int = 0) -> None:
@@ -443,6 +566,46 @@ def patch_export_trie(img: Image, trie_off: int, trie_size: int) -> None:
             walk(coff, depth + 1)
 
     walk(0)
+
+
+def patch_export_trie(img: Image, trie_off: int, trie_size: int) -> None:
+    """Relocate regular export addresses.
+
+    Packed layout keeps each ULEB's original width so the committed packed
+    dylib stays bit-identical. Sparse packing moves DATA to +0x22256720 and
+    `_greet_counter` no longer fits in 3 bytes: rebuild the trie and append
+    it to __LINKEDIT.
+    """
+    if trie_size == 0:
+        return
+    try:
+        _patch_export_trie_inplace(img, trie_off, trie_size)
+        return
+    except ValueError:
+        pass
+
+    root = parse_export_trie(img.data, trie_off, trie_size)
+    reloc_export_trie(img, root)
+    blob = encode_export_trie(root)
+
+    le = next((s for s in img.segs if s.name == "__LINKEDIT"), None)
+    if le is None:
+        raise ValueError("export trie grew and there is no __LINKEDIT to hold it")
+    insert_at = le.fileoff + le.filesize
+    if insert_at < len(img.data):
+        raise ValueError(
+            f"__LINKEDIT is not at EOF (ends {insert_at}, file {len(img.data)}); "
+            "refusing to grow the export trie"
+        )
+    if insert_at > len(img.data):
+        img.data.extend(bytes(insert_at - len(img.data)))
+    img.data.extend(blob)
+    extra = len(blob)
+    le.filesize += extra
+    le.new_filesize += extra
+    if le.new_vmsize < le.new_filesize:
+        le.new_vmsize = le.new_filesize
+    set_export_trie_loc(img, trie_off, insert_at, extra)
 
 
 def patch_chained(img: Image) -> None:
@@ -594,9 +757,10 @@ def set_lc_string(data: bytearray, old: str, new: str) -> int:
 
 
 def pack_bytes(data: bytes, install_name: str | None = None,
-               unalign: int = CACHE_UNALIGN, gap: int = CACHE_GAP) -> bytes:
+               unalign: int = CACHE_UNALIGN, gap: int = CACHE_GAP,
+               sparse: bool = False) -> bytes:
     img = Image(data)
-    plan_pack(img, unalign=unalign, gap=gap)
+    plan_pack(img, unalign=unalign, gap=gap, sparse=sparse)
 
     # ADRP immediates live in TEXT at the old file offsets. Patch them
     # before rebuild_file copies the used TEXT prefix out.
@@ -665,7 +829,8 @@ def inspect(path: str) -> None:
 
 def cmd_pack(args: argparse.Namespace) -> int:
     data = open(args.input, "rb").read()
-    out = pack_bytes(data, install_name=args.id, unalign=args.unalign, gap=args.gap)
+    out = pack_bytes(data, install_name=args.id, unalign=args.unalign,
+                     gap=args.gap, sparse=args.sparse)
     os.makedirs(os.path.dirname(os.path.abspath(args.output)) or ".", exist_ok=True)
     open(args.output, "wb").write(out)
     inspect(args.output)
@@ -750,6 +915,50 @@ def _selftest() -> int:
         f"stub LDR lands at {slot:#x}, packed GOT is {data_c.vmaddr:#x}+{data_c.vmsize:#x}"
     )
 
+    sparse = pack_bytes(data, install_name="@rpath/libcache_sparse.dylib", sparse=True)
+    simg = Image(sparse)
+    assert simg.find_cmd(LC_ID_DYLIB), "sparse dylib lost LC_ID_DYLIB"
+    soff, scs = simg.find_cmd(LC_ID_DYLIB)[0]
+    sname_off, = struct.unpack_from("<I", sparse, soff + 8)
+    sident = sparse[soff + sname_off:soff + scs].split(b"\0", 1)[0]
+    assert sident == b"@rpath/libcache_sparse.dylib", sident
+    stext = next(s for s in simg.segs if s.name == "__TEXT")
+    sdc = next(s for s in simg.segs if s.name == "__DATA_CONST")
+    sds = next(s for s in simg.segs if s.name == "__DATA")
+    assert sdc.vmaddr - stext.vmaddr == CACHE_SPARSE_DELTA, (
+        hex(sdc.vmaddr - stext.vmaddr)
+    )
+    assert not aligned(sdc.vmaddr), hex(sdc.vmaddr)
+    assert not aligned(sdc.fileoff), sdc.fileoff
+    assert (sdc.vmaddr & ~(HOST_PAGE - 1)) == (sds.vmaddr & ~(HOST_PAGE - 1))
+    sstubs = next(s for s in stext.sects if s["name"] == "__stubs")
+    sstub0 = struct.unpack_from("<I", sparse, sstubs["offset"])[0]
+    sadrp = decode_adrp(sstub0, sstubs["addr"])
+    assert sadrp is not None, hex(sstub0)
+    sgot_page = sdc.vmaddr & ~(HOST_PAGE - 1)
+    assert sgot_page == CACHE_SPARSE_DELTA & ~(HOST_PAGE - 1)
+    assert sadrp[1] == sgot_page, (
+        f"sparse stub ADRP targets {sadrp[1]:#x}, GOT page is {sgot_page:#x}"
+    )
+    scf = simg.find_cmd(LC_DYLD_EXPORTS_TRIE)
+    assert scf, "sparse dylib lost the export trie"
+    soffs, ssize = struct.unpack_from("<II", sparse, scf[0][0] + 8)
+    sroot = parse_export_trie(sparse, soffs, ssize)
+
+    def _find_export(node, prefix=b""):
+        found = []
+        if node.flags is not None and prefix:
+            found.append((prefix, node.value))
+        for edge, child in node.children:
+            found.extend(_find_export(child, prefix + edge))
+        return found
+
+    exports = dict(_find_export(sroot))
+    assert b"_greet_counter" in exports, exports
+    assert exports[b"_greet_counter"] == sds.vmaddr, (
+        hex(exports[b"_greet_counter"]), hex(sds.vmaddr)
+    )
+
     cf = img.find_cmd(LC_DYLD_CHAINED_FIXUPS)
     assert cf, "packed dylib lost chained fixups"
     dataoff, _ = struct.unpack_from("<II", packed, cf[0][0] + 8)
@@ -779,6 +988,9 @@ def _selftest() -> int:
     print(f"  packed {len(data)} -> {len(packed)} bytes; "
           f"DATA_CONST vm={data_c.vmaddr:#x} fileoff={data_c.fileoff}; "
           f"DATA vm={data_s.vmaddr:#x}; shared page {page_c:#x}")
+    print(f"  sparse {len(data)} -> {len(sparse)} bytes; "
+          f"DATA_CONST vm={sdc.vmaddr:#x} (TEXT+{CACHE_SPARSE_DELTA:#x}); "
+          f"GOT page {sgot_page:#x}")
     return 0
 
 
@@ -792,6 +1004,12 @@ def main(argv: list[str] | None = None) -> int:
     sp.add_argument("--id", help="set LC_ID_DYLIB to this install name")
     sp.add_argument("--unalign", type=lambda x: int(x, 0), default=CACHE_UNALIGN)
     sp.add_argument("--gap", type=lambda x: int(x, 0), default=CACHE_GAP)
+    sp.add_argument(
+        "--sparse",
+        action="store_true",
+        help="place DATA_CONST at TEXT+0x22256720 (Apple cache-wide addresses); "
+             "implies ignoring --gap",
+    )
 
     sr = sub.add_parser("rename", help="replace an LC string (install name / load path)")
     sr.add_argument("input")

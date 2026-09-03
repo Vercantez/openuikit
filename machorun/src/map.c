@@ -14,15 +14,23 @@
  * swallow. Apple packs data segments contiguously in the cache, so a
  * segment's vmaddr (and its fileoff after `ipsw dyld extract`) is not page
  * aligned -- measured 2026-09-03 on x86_64:
- *     libswiftObjectiveC.dylib __DATA_CONST vmaddr 0x7ff843287720
- * mmap requires both addr and fileoff to be page-aligned, so those images
- * take the COPY path below: one anonymous reservation covering the
- * page-rounded union of the segments, file bytes pread into place, then
- * per-page protections. Two segments that share a host page get the UNION
- * of their protections (typically rwx across a TEXT/DATA boundary, rw
+ *     libswiftObjectiveC.dylib
+ *         __TEXT       vmaddr 0x7ff821031000  fileoff 0  filesize 16384
+ *         __DATA_CONST vmaddr 0x7ff843287720
+ *     TEXT-to-DATA delta 0x22256720 (~546 MB): cache-wide addresses, not a
+ *     packed-contiguous file. mmap requires both addr and fileoff to be
+ *     page-aligned, so those images take the COPY path below.
+ *
+ * The copy path reserves one anonymous mapping per merged page-run at a
+ * common slide (so ADRP deltas stay valid) and pread's file bytes into
+ * place. It does NOT mmap the vmaddr union: a union of those segments is
+ * hundreds of MB of hole, and walking or committing it is how the Reminder
+ * guest died with SIGSEGV (exit 139) after the alignment refusal was
+ * lifted. Gaps stay unmapped. Two segments that share a host page get the
+ * UNION of their protections (typically rwx across a TEXT/DATA boundary, rw
  * across DATA_CONST/DATA). Documented rather than clever, because a host
  * page cannot hold two protection sets. The mmap fast path for page-aligned
- * segments is unchanged.
+ * segments is unchanged: those images still take one small PROT_NONE union.
  */
 #define _GNU_SOURCE
 #include "machorun.h"
@@ -402,106 +410,188 @@ static int image_needs_copy(const mr_image *im, uint64_t page)
     return 0;
 }
 
-/* Per-page union of segment protections. `after_fixups` downgrades
- * SG_READ_ONLY segments from their initprot (rw, so fixups can land) to
- * PROT_READ, matching mr_protect_readonly_segments on the mmap path.
+/* Page-rounded runs relative to img_lo (the lowest mapped vmaddr, i.e.
+ * __TEXT). Overlapping runs are merged so DATA_CONST and DATA that share a
+ * host page become one mapping -- a second anonymous mmap of that page
+ * would zero the first. The hole between TEXT and a cache-wide DATA_CONST
+ * is NOT a run. */
+static int collect_rel_page_runs(const mr_image *im, uint64_t page, uint64_t img_lo,
+                                 uint64_t *lo, uint64_t *hi)
+{
+    uint64_t raw_lo[MR_MAX_SEGMENTS], raw_hi[MR_MAX_SEGMENTS];
+    int nraw = 0, nrun = 0;
+
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        uint64_t a, b;
+        int k;
+        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+        if (s->vmsize == 0) continue;
+        if (s->vmaddr < img_lo)
+            mr_die("%s: segment %s vmaddr 0x%llx is below image base 0x%llx",
+                   im->path, s->name,
+                   (unsigned long long)s->vmaddr, (unsigned long long)img_lo);
+        a = mr_round_dn(s->vmaddr, page);
+        b = mr_round_up(s->vmaddr + s->vmsize, page);
+        if (b < a) mr_die("%s: segment %s wraps the address space", im->path, s->name);
+        if (a < img_lo) a = img_lo;
+        a -= img_lo;
+        b -= img_lo;
+        for (k = nraw; k > 0 && raw_lo[k - 1] > a; k--) {
+            raw_lo[k] = raw_lo[k - 1];
+            raw_hi[k] = raw_hi[k - 1];
+        }
+        raw_lo[k] = a;
+        raw_hi[k] = b;
+        nraw++;
+    }
+    for (int i = 0; i < nraw; ) {
+        uint64_t a = raw_lo[i], b = raw_hi[i];
+        int j = i + 1;
+        while (j < nraw && raw_lo[j] <= b) {
+            if (raw_hi[j] > b) b = raw_hi[j];
+            j++;
+        }
+        lo[nrun] = a;
+        hi[nrun] = b;
+        nrun++;
+        i = j;
+    }
+    return nrun;
+}
+
+/* Per-page union of segment protections, walked only over mapped runs --
+ * never over span_lo..span_hi, which for a cache-extracted dylib is ~546 MB
+ * of hole. `after_fixups` downgrades SG_READ_ONLY segments from their
+ * initprot (rw, so fixups can land) to PROT_READ, matching
+ * mr_protect_readonly_segments on the mmap path.
  *
  * Two segments that share a host page cannot be given distinct protections:
  * the page gets every PROT_* bit either occupant asked for. Typical cases
  * in a packed cache dylib: DATA_CONST (r after fixups) sharing with DATA
  * (rw) becomes rw; TEXT (rx) sharing with DATA_CONST (rw) becomes rwx and
- * loses W^X on that page. Gaps between segments stay PROT_NONE. */
+ * loses W^X on that page. Gaps between segments stay unmapped. */
 static void apply_copy_page_prots(mr_image *im, int after_fixups)
 {
     uint64_t page = MR.page.v;
-    uint64_t a;
+    uint64_t rlo[MR_MAX_SEGMENTS], rhi[MR_MAX_SEGMENTS];
+    int nrun = collect_rel_page_runs(im, page, im->preferred_base, rlo, rhi);
 
-    for (a = im->span_lo; a < im->span_hi; a += page) {
-        int prot = 0, any = 0;
-        for (int i = 0; i < im->nsegs; i++) {
-            const mr_segment *s = &im->segs[i];
-            uint64_t lo, hi;
-            int p;
-            if (strcmp(s->name, "__PAGEZERO") == 0) continue;
-            if (s->vmsize == 0) continue;
-            lo = s->vmaddr + (uint64_t)im->slide;
-            hi = lo + s->vmsize;
-            if (a + page <= lo || a >= hi) continue;
-            any = 1;
-            p = prot_of(s->initprot);
-            if (after_fixups && (s->flags & SG_READ_ONLY))
-                p = PROT_READ | (p & PROT_EXEC);
-            prot |= p;
+    for (int r = 0; r < nrun; r++) {
+        uint64_t a0 = im->load_base + rlo[r];
+        uint64_t a1 = im->load_base + rhi[r];
+        uint64_t a;
+        for (a = a0; a < a1; a += page) {
+            int prot = 0, any = 0;
+            for (int i = 0; i < im->nsegs; i++) {
+                const mr_segment *s = &im->segs[i];
+                uint64_t lo, hi;
+                int p;
+                if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+                if (s->vmsize == 0) continue;
+                lo = s->vmaddr + (uint64_t)im->slide;
+                hi = lo + s->vmsize;
+                if (a + page <= lo || a >= hi) continue;
+                any = 1;
+                p = prot_of(s->initprot);
+                if (after_fixups && (s->flags & SG_READ_ONLY))
+                    p = PROT_READ | (p & PROT_EXEC);
+                prot |= p;
+            }
+            if (!any) continue;
+            if (prot == 0) prot = PROT_NONE;
+            if (mprotect((void *)(uintptr_t)a, (size_t)page, prot) != 0)
+                mr_die("%s: mprotect of copied page 0x%llx to %c%c%c: %m",
+                       im->path, (unsigned long long)a,
+                       (prot & PROT_READ) ? 'r' : '-',
+                       (prot & PROT_WRITE) ? 'w' : '-',
+                       (prot & PROT_EXEC) ? 'x' : '-');
         }
-        if (!any) continue;
-        if (prot == 0) prot = PROT_NONE;
-        if (mprotect((void *)a, (size_t)page, prot) != 0)
-            mr_die("%s: mprotect of copied page 0x%llx to %c%c%c: %m",
-                   im->path, (unsigned long long)a,
-                   (prot & PROT_READ) ? 'r' : '-',
-                   (prot & PROT_WRITE) ? 'w' : '-',
-                   (prot & PROT_EXEC) ? 'x' : '-');
     }
 }
 
-static void map_image_by_copy(mr_image *im)
+static void unmap_copy_runs(uint64_t base, const uint64_t *rlo, const uint64_t *rhi, int n)
+{
+    for (int i = 0; i < n; i++)
+        munmap((void *)(uintptr_t)(base + rlo[i]), (size_t)(rhi[i] - rlo[i]));
+}
+
+/* Place each merged page-run at a common slide with MAP_FIXED_NOREPLACE.
+ * The hole is not reserved, so later images may sit in it; a collision on
+ * any run retries at the next arena probe. arena_cursor advances by the
+ * lowest run (TEXT) only -- not by the 546 MB union. */
+static int place_copy_runs(mr_image *im, uint64_t img_lo,
+                           const uint64_t *rlo, const uint64_t *rhi, int nrun)
 {
     uint64_t page = MR.page.v;
-    void *got;
+    uint64_t base = mr_round_up(arena_cursor, page);
+    uint64_t max_hi = 0;
+
+    if (nrun == 0) return -1;
+    for (int i = 0; i < nrun; i++)
+        if (rhi[i] > max_hi) max_hi = rhi[i];
+
+    for (int t = 0; t < MR_ARENA_TRIES; t++) {
+        int mapped = 0, ok = 1;
+        if (base > MR_ISA_LIMIT || max_hi > MR_ISA_LIMIT - base) break;
+        for (int i = 0; i < nrun; i++) {
+            uint64_t a = base + rlo[i];
+            size_t len = (size_t)(rhi[i] - rlo[i]);
+            void *got = mmap((void *)(uintptr_t)a, len, PROT_READ | PROT_WRITE,
+                             MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
+            if (got == MAP_FAILED || got != (void *)(uintptr_t)a) {
+                if (got != MAP_FAILED) munmap(got, len);
+                ok = 0;
+                break;
+            }
+            mapped++;
+        }
+        if (!ok) {
+            unmap_copy_runs(base, rlo, rhi, mapped);
+            base += MR_ARENA_STEP;
+            continue;
+        }
+        im->load_base = base;
+        im->slide = (int64_t)base - (int64_t)img_lo;
+        im->span_lo = base + rlo[0];
+        im->span_hi = base + max_hi;
+        arena_cursor = base + rhi[0];
+        return 0;
+    }
+    return -1;
+}
+
+static void map_image_by_copy(mr_image *im, uint64_t img_lo)
+{
+    uint64_t page = MR.page.v;
+    uint64_t rlo[MR_MAX_SEGMENTS], rhi[MR_MAX_SEGMENTS];
+    int nrun;
 
     im->mapped_by_copy = 1;
-    mr_log("%s: mapping by copy (non-page-aligned vmaddr/fileoff; "
-           "dyld-shared-cache layout). Shared host pages take the union of "
-           "their segments' protections.", im->path);
+    nrun = collect_rel_page_runs(im, page, img_lo, rlo, rhi);
+    if (nrun == 0)
+        mr_die("%s: no mappable segments for copy-map", im->path);
 
-    /* Pass 1: one anonymous RW mapping per merged page-run, over the
-     * PROT_NONE reservation. Merging matters: DATA_CONST and DATA in a
-     * packed cache dylib share a host page, and a second MAP_FIXED
-     * anonymous mmap of that page would zero the first. Gaps between
-     * runs stay PROT_NONE. A packed-fixture SIGSEGV at slide+0x4008 with
-     * DATA at +0x14720 is stale ADRP in TEXT (the rewriter must move it),
-     * not a missing data page — TEXT.vmsize ends at 0x4000 and the gap
-     * is the CACHE_GAP, left unmapped on purpose. */
-    {
-        uint64_t lo[MR_MAX_SEGMENTS], hi[MR_MAX_SEGMENTS];
-        int nrun = 0;
-        for (int i = 0; i < im->nsegs; i++) {
-            const mr_segment *s = &im->segs[i];
-            uint64_t addr, a, b;
-            int k;
-            if (strcmp(s->name, "__PAGEZERO") == 0) continue;
-            if (s->vmsize == 0) continue;
-            addr = s->vmaddr + (uint64_t)im->slide;
-            a = mr_round_dn(addr, page);
-            b = mr_round_up(addr + s->vmsize, page);
-            if (b < a) mr_die("%s: segment %s wraps the address space", im->path, s->name);
-            for (k = nrun; k > 0 && lo[k - 1] > a; k--) {
-                lo[k] = lo[k - 1];
-                hi[k] = hi[k - 1];
-            }
-            lo[k] = a;
-            hi[k] = b;
-            nrun++;
-        }
-        for (int i = 0; i < nrun; ) {
-            uint64_t a = lo[i], b = hi[i];
-            int j = i + 1;
-            while (j < nrun && lo[j] <= b) {
-                if (hi[j] > b) b = hi[j];
-                j++;
-            }
-            got = mmap((void *)a, (size_t)(b - a), PROT_READ | PROT_WRITE,
-                       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
-            if (got == MAP_FAILED)
-                mr_die("%s: anonymous mapping for copied pages "
-                       "(0x%llx bytes at 0x%llx): %m",
-                       im->path, (unsigned long long)(b - a), (unsigned long long)a);
-            i = j;
-        }
+    mr_log("%s: mapping by copy (non-page-aligned vmaddr/fileoff; "
+           "dyld-shared-cache layout): %d page-run%s, hole unmapped. "
+           "Shared host pages take the union of their segments' protections.",
+           im->path, nrun, nrun == 1 ? "" : "s");
+
+    if (place_copy_runs(im, img_lo, rlo, rhi, nrun) != 0) {
+        uint64_t max_hi = 0;
+        for (int i = 0; i < nrun; i++)
+            if (rhi[i] > max_hi) max_hi = rhi[i];
+        mr_die("%s: cannot place %d copied page-runs below 2^47. "
+               "Each run is mapped separately so a cache-wide TEXT-to-DATA "
+               "gap (%llu bytes of hole) is not reserved; the arena "
+               "[0x%llx, 0x%llx) is full or the far run collides: %m",
+               im->path, nrun, (unsigned long long)max_hi,
+               (unsigned long long)MR_ARENA_BASE, (unsigned long long)MR_ISA_LIMIT);
     }
 
-    /* Pass 2: read each segment's file bytes into place. The rest of vmsize
-     * is already zero from the anonymous map. */
+    /* Read each segment's file bytes into place. The rest of vmsize is
+     * already zero from the anonymous map. MAP_FIXED would clobber another
+     * image sitting in our hole; the runs are already mapped RW. */
     for (int i = 0; i < im->nsegs; i++) {
         const mr_segment *s = &im->segs[i];
         uint64_t addr, filepart, off;
@@ -513,7 +603,7 @@ static void map_image_by_copy(mr_image *im)
         if (filepart > s->vmsize) filepart = s->vmsize;
         if (filepart == 0) continue;
         off = im->slice_off + s->fileoff;
-        n = pread(im->fd, (void *)addr, filepart, (off_t)off);
+        n = pread(im->fd, (void *)(uintptr_t)addr, filepart, (off_t)off);
         if (n < 0 || (uint64_t)n != filepart)
             mr_die("%s: short read of copied segment %s (wanted 0x%llx at file 0x%llx)",
                    im->path, s->name, (unsigned long long)filepart, (unsigned long long)off);
@@ -557,10 +647,21 @@ void mr_map_image(mr_image *im)
                "the loader assumes the mach header is the lowest mapped byte",
                im->path, (unsigned long long)lo, (unsigned long long)im->preferred_base);
 
+    /* Copy-map places each page-run itself. Reserving the vmaddr union
+     * here would mmap hundreds of MB of hole for a cache-extracted dylib
+     * (libswiftObjectiveC: TEXT-to-DATA 0x22256720) and was the layout
+     * that SIGSEGV'd Reminder at exit 139 once alignment ceased to refuse. */
+    if (image_needs_copy(im, page)) {
+        map_image_by_copy(im, lo);
+        return;
+    }
+
     span = mr_round_up(hi - lo, page);
 
     /* One reservation for the whole image: makes "did the preferred base
-     * collide" a single question and keeps inter-segment gaps unmapped. */
+     * collide" a single question and keeps inter-segment gaps unmapped.
+     * Only the mmap fast path (page-aligned segments, small span) takes
+     * this union. */
     /* MACHORUN_NO_PREFERRED_BASE exists to exercise the slid path. An
      * executable normally lands exactly at its preferred base, so slide == 0
      * and a whole class of "used the preferred base where the load base was
@@ -589,11 +690,6 @@ void mr_map_image(mr_image *im)
     im->slide = (int64_t)im->load_base - (int64_t)lo;
     im->span_lo = im->load_base;
     im->span_hi = im->load_base + span;
-
-    if (image_needs_copy(im, page)) {
-        map_image_by_copy(im);
-        return;
-    }
 
     for (int i = 0; i < im->nsegs; i++) {
         const mr_segment *s = &im->segs[i];

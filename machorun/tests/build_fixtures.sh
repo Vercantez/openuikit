@@ -157,19 +157,20 @@ if want dylib_classic; then
     echo "==> dylib_classic"; build_dylib_pair "$CLASSIC_TARGET" libdylib_greet_classic.dylib dylib_classic; built+=(dylib_classic)
 fi
 
-# ---------------------------------------------------------------- cache_layout / cache_layout_packed / cache_layout_oversize
-# The dyld-shared-cache mapping rung. Apple-built page-aligned dylib + the
-# same bytes rewritten by scripts/pack_macho.py into packed, non-page-aligned
-# vmaddr/fileoff. Both executables must print the same output. The packed
-# dylib cannot run on macOS (arm64 dyld SIGKILLs unaligned segments), so its
-# baseline is the normal layout's, copied not re-recorded. The oversize
-# fixture is main_ret with one segment's filesize past EOF; Darwin has no
-# twin for the loader diagnostic.
+# ---------------------------------------------------------------- cache_layout / cache_layout_packed / cache_layout_sparse / cache_layout_oversize
+# The dyld-shared-cache mapping rung. Apple-built page-aligned dylib + two
+# rewrites by scripts/pack_macho.py: packed-contiguous (small CACHE_GAP) and
+# sparse (TEXT-to-DATA 0x22256720, the libswiftObjectiveC cache-wide delta).
+# All three executables must print the same output. The packed/sparse
+# dylibs cannot run on macOS (arm64 dyld SIGKILLs unaligned segments), so
+# their baselines are the normal layout's, copied not re-recorded. The
+# oversize fixture is main_ret with one segment's filesize past EOF; Darwin
+# has no twin for the loader diagnostic.
 #
-# Packed is NEVER linked against: ld64 requires aligned segments. Link the
-# executable against the Apple-built dylib, then rewrite LC_LOAD_DYLIB to
-# name the packed file.
-if want cache_layout || want cache_layout_packed; then
+# Packed/sparse are NEVER linked against: ld64 requires aligned segments.
+# Link the executable against the Apple-built dylib, then rewrite LC_LOAD_DYLIB
+# to name the rewritten file.
+if want cache_layout || want cache_layout_packed || want cache_layout_sparse; then
     echo "==> cache_layout"
     "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
         -o "$BIN/libcache_layout.dylib" "$SRC/cache_layout_lib.c" \
@@ -190,6 +191,17 @@ if want cache_layout || want cache_layout_packed; then
         --to "@rpath/libcache_packed.dylib"
     chmod +x "$BIN/cache_layout_packed"
     built+=(cache_layout_packed)
+    echo "==> cache_layout_sparse"
+    python3 "$ROOT/scripts/pack_macho.py" pack "$BIN/libcache_layout.dylib" \
+        -o "$BIN/libcache_sparse.dylib" \
+        --id "@rpath/libcache_sparse.dylib" \
+        --sparse
+    python3 "$ROOT/scripts/pack_macho.py" rename "$BIN/cache_layout" \
+        -o "$BIN/cache_layout_sparse" \
+        --from "@rpath/libcache_layout.dylib" \
+        --to "@rpath/libcache_sparse.dylib"
+    chmod +x "$BIN/cache_layout_sparse"
+    built+=(cache_layout_sparse)
 fi
 if want cache_layout_oversize; then
     echo "==> cache_layout_oversize"

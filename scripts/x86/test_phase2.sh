@@ -50,12 +50,16 @@ REMINDER=$ROOT/full/xcodeplan/build_and_run_reminder_scene_guest.sh
 UD_RUNNER=$ROOT/foundation-macho/tests/ud_guest_runner.swift
 PREPARE=$ROOT/scripts/env/prepare.py
 BUILD_FULL=$ROOT/full/scripts/build_full.sh
+INVENTORIES=$ROOT/full/swiftui/guest_gate_inventories.py
+INVENTORIES_INC=$ROOT/full/swiftui/guest_gate_inventories.inc
 
 expect_file "$PHASE2"
 expect_file "$COMMON"
 expect_file "$STAGE"
 expect_file "$OC"
 expect_file "$GUEST"
+expect_file "$INVENTORIES"
+expect_file "$INVENTORIES_INC"
 
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
@@ -67,6 +71,7 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
+    "$ROOT/full/swiftui/guest_gate_inventories.inc" \
     "$ROOT/scripts/build_runtime_shims.sh" \
     "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; do
     if bash -n "$s"; then
@@ -347,9 +352,12 @@ expect_grep 'NOTE extra Apple-SDK' "$PHASE2" \
 expect_grep 'libquartz.tbd' "$COMMON" "consumer set includes libquartz.tbd"
 expect_grep '[-]lobjc' "$BUILD_FULL" "build_full link names -lobjc"
 expect_grep '[-]lSystem' "$BUILD_FULL" "build_full link names -lSystem"
-expect_grep 'libswift_Concurrency.dylib' "$WIDGET" "widget expected loads name Concurrency"
-expect_grep 'libswiftObjectiveC.dylib' "$WIDGET" "widget expected loads name ObjectiveC"
-expect_grep 'libswiftObservation.dylib' "$WIDGET" "widget expected loads name Observation"
+expect_grep 'libswift_Concurrency.dylib' "$INVENTORIES" "widget expected loads name Concurrency"
+expect_grep 'libswiftObjectiveC.dylib' "$INVENTORIES" "widget expected loads name ObjectiveC"
+expect_grep 'libswiftObservation.dylib' "$INVENTORIES" "widget expected loads name Observation"
+expect_grep 'libswift_DarwinFoundation1.dylib' "$INVENTORIES" \
+    "x86 widget loads name DarwinFoundation1"
+expect_grep 'libswift_errno.dylib' "$INVENTORIES" "arm64 widget loads still name errno"
 expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
     "widget attest requires named libswiftCore.tbd"
 expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
@@ -361,13 +369,13 @@ want=$(phase2_consumer_tbd_relpaths)
 derived=$(
     {
         grep -hoE 'libswift[A-Za-z0-9_]+\.tbd' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^|usr/lib/swift/|'
         grep -hoE 'lib(System(\.B)?|objc(\.A)?|c\+\+(\.1)?|c\+\+abi|quartz)\.tbd' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^|usr/lib/|'
         grep -hoE -- '-l(swift[A-Za-z0-9_]+|objc|System)' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | while IFS= read -r flag; do
                 name=${flag#-l}
                 case "$name" in
@@ -377,7 +385,7 @@ derived=$(
                 esac
             done
         grep -hoE '/usr/lib/swift/libswift[A-Za-z0-9_]+\.dylib' \
-            "$WIDGET" "$ONBOARD" "$LINK_UD" 2>/dev/null \
+            "$WIDGET" "$ONBOARD" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^/||; s/\.dylib$/.tbd/'
     } | grep -E '^usr/lib/' | sort -u
 )
@@ -1514,6 +1522,24 @@ expect_grep 'build_full.sh argv -O1 -nostdinc' "$UDINC" \
 expect_grep 'build_cftest_harness.sh' "$UDINC" "CF path names the committed CF linker"
 expect_file "$ROOT/foundation-macho/scripts/build_cfobjc.sh"
 expect_grep 'build_cfobjc.sh' "$UDINC" "CF path names the committed cfobjc recipe"
+expect_grep 'PHASE2_UD_GUEST_CF_COMMIT=f3a7a34302317a95665bf4ff1a62ee1b459c1695' \
+    "$UDINC" "ud-guest-x86 pins the census CF commit"
+expect_grep 'PHASE2_UD_GUEST_CF_TREE=2f9136f253a51406f2bcb0a612bcb6a9eba03570' \
+    "$UDINC" "ud-guest-x86 pins the census CF tree"
+expect_grep 'scratch/ud-guest-x86_64/cf' "$UDINC" "CF checkout dest is under the suffixed work tree"
+expect_grep 'phase2_ud_guest_ensure_cf_checkout' "$UDINC" "ud-guest fetches the pinned CF checkout"
+expect_grep '"id": "swift-corelibs-foundation"' "$ROOT/env/contract.json" \
+    "contract names the CF checkout"
+expect_grep 'f3a7a34302317a95665bf4ff1a62ee1b459c1695' "$ROOT/env/contract.json" \
+    "contract pins the census CF commit"
+expect_grep '"ud-guest-x86"' "$ROOT/env/contract.json" \
+    "contract demanded_by includes ud-guest-x86"
+expect_grep 'clone-pinned-repo.sh' "$UDINC" \
+    "ud-guest fetches CF through clone-pinned-repo.sh"
+expect_not_grep 'scf-full' "$UDINC" \
+    "does not ask the operator to stage HOME/scf-full"
+expect_not_grep 'CF sources missing' "$UDINC" \
+    "does not ask the operator to stage CF sources"
 expect_grep 'build_cfobjc.sh' "$ROOT/scripts/x86/PHASE2.md" \
     "PHASE2.md names the committed cfobjc recipe"
 expect_grep 'Will not invent a stub dylib' "$UDINC" \
@@ -1606,23 +1632,46 @@ else
     die_test "x86 sysroot missing; cannot compile staging fixtures"
 fi
 
-cfreport=$(
-    CF=/no/such/cfobjc-corefoundation
-    HOME=/no/such/cfobjc-home
-    export CF HOME
-    phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true
-)
+# Wrong-tree dest refuses and names the pin. Does not fetch over it.
+mkdir -p "$wt/cf"
+git -c safe.directory="$wt/cf" init -q "$wt/cf"
+git -c safe.directory="$wt/cf" -C "$wt/cf" config user.email test@example.com
+git -c safe.directory="$wt/cf" -C "$wt/cf" config user.name test
+echo wrong > "$wt/cf/README"
+git -c safe.directory="$wt/cf" -C "$wt/cf" add README
+git -c safe.directory="$wt/cf" -C "$wt/cf" commit -q -m wrong
+cfreport=$(phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true)
 case "$cfreport" in
     CANNOT_UD_GUEST_LIBCFTEST\ file=libCFTest.dylib*)
-        if echo "$cfreport" | grep -q 'build_cfobjc.sh' \
+        if echo "$cfreport" | grep -q 'f3a7a34302317a95665bf4ff1a62ee1b459c1695' \
+            && echo "$cfreport" | grep -q 'CF checkout tree differs' \
             && echo "$cfreport" | grep -q 'Will not invent a stub dylib'; then
-            ok "absent libCFTest.dylib is CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib (recipe named, no stub)"
+            ok "wrong CF tree is CANNOT_UD_GUEST_LIBCFTEST naming commit f3a7a343"
         else
-            die_test "libCFTest refusal did not name the recipe: $cfreport"
+            die_test "wrong-tree refusal did not name the pin: $cfreport"
         fi
         ;;
-    *) die_test "libCFTest refusal got: $cfreport" ;;
+    *) die_test "wrong-tree CF refusal got: $cfreport" ;;
 esac
+rm -rf "$wt/cf"
+
+# A leftover non-git dest (operator-staged tree) is also a named refusal.
+mkdir -p "$wt/cf"
+echo staged-by-operator > "$wt/cf/README"
+cfreport=$(phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true)
+case "$cfreport" in
+    CANNOT_UD_GUEST_LIBCFTEST\ file=libCFTest.dylib*)
+        if echo "$cfreport" | grep -q 'f3a7a34302317a95665bf4ff1a62ee1b459c1695' \
+            && echo "$cfreport" | grep -q 'not a git checkout' \
+            && [ -f "$wt/cf/README" ]; then
+            ok "non-git CF dest is CANNOT_UD_GUEST_LIBCFTEST naming commit f3a7a343 (not overwritten)"
+        else
+            die_test "non-git dest refusal did not name the pin: $cfreport"
+        fi
+        ;;
+    *) die_test "non-git CF dest refusal got: $cfreport" ;;
+esac
+rm -rf "$wt/cf"
 
 # A provided x86 dylib is accepted (resolution path for the CF hole).
 echo 'int ud_cftest=1;' | clang-18 -target x86_64-apple-macos15.0 \
@@ -1647,6 +1696,17 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     unset UD_CFTEST_DYLIB
 else
     die_test "could not emit an x86 libCFTest.dylib fixture"
+fi
+
+echo "== ud-guest-x86 fetches the pinned swift-corelibs-foundation checkout"
+ck=$(phase2_ud_guest_ensure_cf_checkout "$wt" "$ROOT" || true)
+if [ -z "$ck" ] \
+    && [ -f "$wt/cf/Sources/CoreFoundation/CFRuntime.c" ] \
+    && [ "$(git -c safe.directory="$wt/cf" -C "$wt/cf" rev-parse HEAD)" = "$PHASE2_UD_GUEST_CF_COMMIT" ] \
+    && [ "$(git -c safe.directory="$wt/cf" -C "$wt/cf" rev-parse 'HEAD^{tree}')" = "$PHASE2_UD_GUEST_CF_TREE" ]; then
+    ok "fetched $PHASE2_UD_GUEST_CF_ID commit=$PHASE2_UD_GUEST_CF_COMMIT tree=$PHASE2_UD_GUEST_CF_TREE"
+else
+    die_test "CF pin fetch got: '${ck:-empty}' dest=$wt/cf"
 fi
 
 echo "== cfobjc recipe argv is the documented flag set"

@@ -5,7 +5,8 @@
  * dylib's LAYOUT, not the C. `libcache_layout.dylib` is Apple-built and
  * page-aligned; `libcache_packed.dylib` is that binary rewritten by
  * scripts/pack_macho.py into packed, non-page-aligned vmaddr/fileoff
- * (the shape `ipsw dyld extract` leaves Apple's cache dylibs in). Both
+ * (contiguous cache data); `libcache_sparse.dylib` is the same rewrite
+ * with Apple's cache-wide TEXT-to-DATA gap (0x22256720). All three
  * executables must print the same bytes. See docs/FIXTURES.md.
  */
 #include <stdio.h>
