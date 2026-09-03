@@ -106,10 +106,16 @@ PY
         x86_64) DOCKER_PLATFORM=linux/amd64 ;;
         *)      DOCKER_PLATFORM=linux/arm64 ;;
     esac
-    # Native x86_64 host with the pinned toolchain: skip docker. The inner
-    # half already follows $TARGET / suffixed build/full. Arm64 keeps the
-    # historical swift-macho-spike:noble wrapper.
-    if [ "$ARCH" = x86_64 ] && [ "$(uname -m)" = x86_64 ] \
+    # Native host with the pinned toolchain: skip docker. The inner half
+    # already follows $TARGET / suffixed build/full. This holds for the arm64
+    # EC2 authority (no swift-macho-spike:noble image there) exactly as for the
+    # x86_64 box; docker remains the fallback when the toolchain is absent.
+    case "$(uname -m)" in
+        x86_64)        host_arch=x86_64 ;;
+        aarch64|arm64) host_arch=arm64 ;;
+        *)             host_arch=$(uname -m) ;;
+    esac
+    if [ "$ARCH" = "$host_arch" ] \
         && command -v swiftc >/dev/null && command -v ld64.lld-18 >/dev/null; then
         UIKIT="$uikit_checkout" MACHORUN="$machorun_checkout" \
             OPENUIKIT_HOST_TURNS="$turns" \
