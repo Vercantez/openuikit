@@ -395,8 +395,8 @@ cp -f "$OUT/fonts/DejaVuSans.ttf" "$HARNESS_FONT_DIR/"
 cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" "$HARNESS_FONT_DIR/"
 if [ -d /w/build ] || mkdir -p /w/build/swiftui-guest/fonts 2>/dev/null; then
     mkdir -p /w/build/swiftui-guest/fonts
-    cp -f "$OUT/fonts/DejaVuSans.ttf" /w/build/swiftui-guest/fonts/
-    cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" /w/build/swiftui-guest/fonts/
+    [ "$OUT/fonts/DejaVuSans.ttf" -ef "/w/build/swiftui-guest/fonts/DejaVuSans.ttf" ] || cp -f "$OUT/fonts/DejaVuSans.ttf" "/w/build/swiftui-guest/fonts/"
+    [ "$OUT/fonts/DejaVuSans-Bold.ttf" -ef "/w/build/swiftui-guest/fonts/DejaVuSans-Bold.ttf" ] || cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" "/w/build/swiftui-guest/fonts/"
 fi
 for module in OpenUIKit OpenCoreGraphics; do
     for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
