@@ -320,6 +320,9 @@ public extension _OpenText {
     }
 }
 
+// ImageResource is a DeveloperToolsSupport type: the Image/Label resource
+// initializers are app-side surface, hidden with the Preview slice above.
+#if canImport(DeveloperToolsSupport) && canImport(Foundation)
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 public extension _OpenImage {
     nonisolated init(_ resource: ImageResource) {
@@ -358,3 +361,4 @@ public extension _OpenLabel where Title == _OpenText, Icon == _OpenImage {
         self.init(LocalizedStringKey(String(title)), image: resource)
     }
 }
+#endif
