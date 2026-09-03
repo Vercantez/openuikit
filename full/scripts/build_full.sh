@@ -513,7 +513,32 @@ done
         echo "build_full: the libSystem umbrella still defines __NSGetMachExecuteHeader -- delete it from syspatch; a definition here beats .real" >&2
         exit 1
     fi
-    echo "   umbrella libSystem.B: $(llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" | wc -l) own defs (incl. _nan,_remquo; __NSGetMachExecuteHeader is in .real), reexporting libSystem.real"
+    # Overlay-surface names that moved into machorun. A copy here beats .real.
+    for moved in _memset_s _qos_class_self _os_release _voucher_copy _voucher_adopt \
+                 _clock_getres _vdprintf _openat _sem_open _nanf _remquof _remquol _nanl; do
+        if llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
+                | awk -v s="$moved" '$NF==s{f=1} END{exit !f}'; then
+            echo "build_full: the libSystem umbrella still defines $moved -- delete it from concpatch; a definition here beats .real" >&2
+            exit 1
+        fi
+        llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.real.dylib" 2>/dev/null \
+            | awk -v s="$moved" '$NF==s{f=1} END{exit !f}' || {
+            echo "build_full: libSystem.real does not define $moved -- it belongs in machorun, not the umbrella" >&2
+            exit 1; }
+    done
+    for dsym in _dispatch_async_f _dispatch_get_global_queue _dispatch_main \
+                _dispatch_main_q _dispatch_source_type_timer; do
+        llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
+            | awk -v s="$dsym" '$NF==s{f=1} END{exit !f}' || {
+            echo "build_full: the libSystem umbrella does not define $dsym -- overlay LINK advertises umbrella own-defs" >&2
+            exit 1; }
+        if llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.real.dylib" 2>/dev/null \
+                | awk -v s="$dsym" '$NF==s{f=1} END{exit !f}'; then
+            echo "build_full: libSystem.real defines $dsym -- that is a second definition; keep it in concpatch only" >&2
+            exit 1
+        fi
+    done
+    echo "   umbrella libSystem.B: $(llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" | wc -l) own defs (incl. _nan,_remquo, dispatch_*; overlay libSystem names live in .real), reexporting libSystem.real"
 
     touch "$ROOTDIR/.umbrellas"
 }

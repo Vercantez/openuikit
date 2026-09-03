@@ -9,9 +9,11 @@
  *
  * HOUSE RULE (docs/RUNTIME.md §4): a symbol that exists only so binding can
  * succeed is a LOUD ABORT, never a silent no-op. The Swift job scheduler,
- * global/main queues, dispatch_main, and null-voucher policy below are real;
- * unsupported Dispatch sources and signposts still abort. Anything genuinely
- * safe to implement IS implemented, and is marked REAL below.
+ * global/main queues, dispatch_main, and dispatch_async_f below are real;
+ * unsupported Dispatch sources and signposts still abort. Vouchers /
+ * os_release / qos_class_self / memset_s / clock_getres live in machorun
+ * so this umbrella cannot beat .real. Anything genuinely safe to implement
+ * IS implemented, and is marked REAL below.
  *
  * The three DATA symbols get real storage: the Swift runtime takes their
  * address during image initialisation (before any of our code runs), so an
@@ -192,69 +194,43 @@ void dispatch_async_swift_job(void *queue, void *job, unsigned int qos)
     dispatch_host_async(kind, host_queue, job, run_darwin_swift_job);
 }
 
+/* x86 overlay Concurrency (source dispatch executor) imports dispatch_async_f;
+ * arm64 Apple-prebuilt uses dispatch_async_swift_job. Same host bridge. */
+void dispatch_async_f(void *queue, void *context, void (*function)(void *));
+void dispatch_async_f(void *queue, void *context, void (*function)(void *))
+{
+    uint32_t kind;
+    void *host_queue;
+    if (function == NULL) conc_abort("dispatch_async_f(NULL function)");
+    if (queue == (void *)&_dispatch_main_q[0]) {
+        kind = OPENUI_DISPATCH_QUEUE_MAIN_V1;
+        host_queue = NULL;
+    } else if (is_registered_global_queue(queue)) {
+        kind = OPENUI_DISPATCH_QUEUE_GLOBAL_V1;
+        host_queue = queue;
+    } else {
+        conc_abort("dispatch_async_f(unmapped queue)");
+    }
+    dispatch_host_async(kind, host_queue, context, function);
+}
+
 __attribute__((noreturn)) void dispatch_main(void);
 __attribute__((noreturn)) void dispatch_main(void)
 {
     dispatch_host_main();
 }
 
-/* Darwin vouchers are unavailable on Linux. This is not a scheduling
- * shortcut: it is exactly Swift's non-Apple voucher policy. A NULL voucher is
- * the only value this implementation can mint or adopt, and a non-NULL value
- * is therefore an ABI violation rather than something to ignore. */
-void *voucher_copy(void);
-void *voucher_copy(void) { return NULL; }
-
-void *voucher_adopt(void *voucher);
-void *voucher_adopt(void *voucher)
-{
-    if (voucher != NULL) conc_abort("voucher_adopt(non-NULL)");
-    return NULL;
-}
-
-void os_release(void *object);
-void os_release(void *object)
-{
-    if (object != NULL) conc_abort("os_release(non-NULL voucher)");
-}
-
-/* qos_class_self: the bridge does not translate Linux thread priorities into
- * Darwin QoS classes, so every guest-visible worker reports
- * QOS_CLASS_DEFAULT (0x15, <sys/qos.h>). The Swift runtime calls this while
- * deciding executor priorities. */
-unsigned int qos_class_self(void);
-unsigned int qos_class_self(void) { return 0x15; }
-
-/* memset_s: C11 Annex K. The bounds-checked memset, with the guarantee it is
- * not optimised away. */
-int memset_s(void *s, size_t smax, int c, size_t n);
-int memset_s(void *s, size_t smax, int c, size_t n)
-{
-    if (s == NULL) return 22;              /* EINVAL */
-    if (n > smax) { memset(s, c, smax); return 34; }  /* ERANGE, but still wipe */
-    memset(s, c, n);
-    return 0;
-}
+/* voucher_copy / voucher_adopt / os_release / qos_class_self / memset_s
+ * live in machorun's libSystem (darwin/src/libsystem.c). A definition here
+ * would beat .real (umbrella-shadows-reexport). */
 
 /* __cxa_pure_virtual and operator new(size_t, __type_descriptor_t) are NOT
  * here: dyld_info says libswift_Concurrency binds them against libc++, and
  * two-level binding means a definition in libSystem would never be found.
  * They live in full/shims/conccxx.cpp, which goes into the libc++ umbrella. */
 
-/* clock_getres: our libSystem forwards clock_gettime to glibc but does not
- * export clock_getres. CLOCK_MONOTONIC/REALTIME on aarch64 Linux are
- * nanosecond-resolution, which is also what Darwin reports, so this is the
- * true answer rather than a placeholder. */
-struct conc_timespec { long tv_sec; long tv_nsec; };
-int clock_getres(int clk_id, struct conc_timespec *res);
-int clock_getres(int clk_id, struct conc_timespec *res)
-{
-    (void)clk_id;
-    if (!res) return -1;
-    res->tv_sec = 0;
-    res->tv_nsec = 1;
-    return 0;
-}
+/* clock_getres lives in machorun (posix.c, CLOCK_* translated). Do not
+ * redefine it here. */
 
 /* ---- DATA symbols -------------------------------------------------------
  * Addresses are taken during image initialisation, before any of our code can
