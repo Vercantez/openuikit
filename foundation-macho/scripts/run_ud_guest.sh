@@ -22,6 +22,10 @@
 # differently and only one of them is what this root is supposed to have.
 set -uo pipefail
 
+HERE=$(cd "$(dirname "$0")" && pwd)
+# shellcheck source=ud_dispatch_run.inc
+. "$HERE/ud_dispatch_run.inc"
+
 W=${W:-/work}
 ROOT=${1:-$W/root}
 BIN=${BIN:-$W/bin/ud_guest}
@@ -35,7 +39,7 @@ FW_SLOT=$ROOT/darwin/System/Library/Frameworks/Foundation.framework/Foundation
 REAL_CF=$ROOT/darwin/usr/lib/libCFTest.dylib
 
 echo "== root   $ROOT"
-echo "== binary $BIN"
+ud_dispatch_loader_line "$BIN"
 fail=0
 
 for slot in "$FW_SLOT" "$CF_SLOT"; do
@@ -75,9 +79,11 @@ fi
 
 [ "$fail" -eq 0 ] || { echo "REFUSING to run; the root is not fit." >&2; exit 2; }
 
+ud_dispatch_prepare_root || exit $?
+
 echo
-MACHORUN_ROOT=$ROOT "$MRUN" "$BIN"
+ud_dispatch_run "$BIN"
 rc=$?
 echo
-echo "== exit $rc   (root $ROOT)"
+echo "== exit $rc   (root $UD_MACHORUN_ROOT)"
 exit $rc

@@ -72,7 +72,11 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
     "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/run_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/run_ud_persist.sh" \
+    "$ROOT/foundation-macho/scripts/ud_dispatch_run.inc" \
     "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/test_run_ud_guest.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
     "$ROOT/full/swiftui/guest_gate_inventories.inc" \
@@ -1582,6 +1586,28 @@ expect_grep 'phase2_stage_cftest_into_run_root' "$UDINC" \
 expect_grep 'phase2_stage_cftest_into_run_root' "$PHASE2" \
     "phase2 stages libCFTest after ud-guest link, before rung a"
 expect_grep 'libCFTest-run-root' "$PHASE2" "ENV_PREPARE item names libCFTest-run-root"
+expect_grep 'phase2_ud_guest_ensure_dispatch' "$UDINC" \
+    "ud-guest builds/reuses the Dispatch host bridge + Darwin runtime"
+expect_grep 'phase2_ud_guest_ensure_dispatch' "$PHASE2" \
+    "phase2 invokes ud-guest-dispatch before rung a"
+expect_grep 'ud-guest-dispatch' "$PHASE2" "ENV_PREPARE item names ud-guest-dispatch"
+expect_grep 'DISPATCH_HOST=${UD_DISPATCH_HOST:-}' "$PHASE2" \
+    "rung a passes DISPATCH_HOST into run_ud_guest.sh"
+expect_grep 'DISPATCH_DARWIN=${UD_DISPATCH_DARWIN:-}' "$PHASE2" \
+    "rung a passes DISPATCH_DARWIN into the runners"
+expect_grep 'build_host_bridge.sh' "$UDINC" \
+    "ud-guest-dispatch reuses full/dispatch/build_host_bridge.sh"
+expect_grep 'OpenDispatchBridge.c' "$UDINC" \
+    "ud-guest-dispatch links the Darwin OpenDispatch facade"
+expect_grep 'run-root loader refresh' "$PHASE2" \
+    "phase2 refreshes \$MRROOT/machorun before rung a (build_full -nt rule)"
+expect_grep 'ud_dispatch_loader_line' "$ROOT/foundation-macho/scripts/run_ud_guest.sh" \
+    "run_ud_guest.sh prints loader sha256 on == binary"
+expect_grep 'LD_PRELOAD' "$ROOT/foundation-macho/scripts/ud_dispatch_run.inc" \
+    "runner helper LD_PRELOADs the host bridge"
+expect_grep 'darwin/usr/lib/libOpenDispatch.dylib' \
+    "$ROOT/foundation-macho/scripts/ud_dispatch_run.inc" \
+    "runner helper stages the Darwin runtime image"
 expect_grep 'darwin/usr/lib/libCFTest.dylib' "$PHASE2" \
     "libCFTest stage names the run-root path"
 expect_grep 'CoreFoundation slot is a byte-identical copy' "$UDINC" \
@@ -1834,6 +1860,48 @@ else
     die_test "could not emit an x86 libCFTest.dylib fixture"
 fi
 
+echo "== ud-guest-dispatch reuses an ELF host bridge and links the Darwin facade"
+DISP_HOST_DIR=$UDWORK/existing-host
+mkdir -p "$DISP_HOST_DIR"
+echo 'int openui_dispatch_host_v1_runtime_check(void){return 0;}' \
+    | clang-18 -shared -fPIC -o "$DISP_HOST_DIR/libOpenDispatchHost.so" -x c -
+DISP_SYS=$UDWORK/dispatch-sysroot
+mkdir -p "$DISP_SYS/usr/lib"
+disp_report=$(phase2_ud_guest_ensure_dispatch \
+    "$ROOT" "$wt" "$DISP_SYS" x86_64-apple-macos15.0 \
+    "$DISP_HOST_DIR/libOpenDispatchHost.so" || true)
+case "$disp_report" in
+    status=cold-built\ bridge=*runtime=*sha256=*)
+        dhost=${disp_report#*bridge=}
+        dhost=${dhost%% *}
+        drun=${disp_report#*runtime=}
+        drun=${drun%% *}
+        dsha=${disp_report##*sha256=}
+        want=$(sha256sum "$wt/lib/libOpenDispatch.dylib" | awk '{print $1}')
+        if [ "$dhost" = "$DISP_HOST_DIR/libOpenDispatchHost.so" ] \
+            && [ "$drun" = "$wt/lib/libOpenDispatch.dylib" ] \
+            && [ "$dsha" = "$want" ] \
+            && [ "$(llvm-otool-18 -D "$drun" | tail -n 1)" = \
+                /usr/lib/libOpenDispatch.dylib ] \
+            && llvm-nm-18 -u "$drun" | grep -q '_glibc_openui_dispatch_host_v1_get_global_queue'
+        then
+            ok "ensure_dispatch reuses ELF host and links Darwin LC_ID /usr/lib/libOpenDispatch.dylib"
+        else
+            die_test "ensure_dispatch dest mismatch: '$disp_report' id=$(llvm-otool-18 -D "$drun" 2>/dev/null | tail -n 1)"
+        fi
+        again=$(phase2_ud_guest_ensure_dispatch \
+            "$ROOT" "$wt" "$DISP_SYS" x86_64-apple-macos15.0 \
+            "$DISP_HOST_DIR/libOpenDispatchHost.so" || true)
+        case "$again" in
+            status=satisfied\ bridge=*runtime=*sha256=*)
+                ok "ensure_dispatch re-run of identical host+runtime is satisfied"
+                ;;
+            *) die_test "ensure_dispatch idempotent re-run got: '$again'" ;;
+        esac
+        ;;
+    *) die_test "ensure_dispatch got: '$disp_report'" ;;
+esac
+
 echo "== ud-guest-x86 fetches the pinned swift-corelibs-foundation checkout"
 ck=$(phase2_ud_guest_ensure_cf_checkout "$wt" "$ROOT" || true)
 if [ -z "$ck" ] \
@@ -1841,6 +1909,22 @@ if [ -z "$ck" ] \
     && [ "$(git -c safe.directory="$wt/cf" -C "$wt/cf" rev-parse HEAD)" = "$PHASE2_UD_GUEST_CF_COMMIT" ] \
     && [ "$(git -c safe.directory="$wt/cf" -C "$wt/cf" rev-parse 'HEAD^{tree}')" = "$PHASE2_UD_GUEST_CF_TREE" ]; then
     ok "fetched $PHASE2_UD_GUEST_CF_ID commit=$PHASE2_UD_GUEST_CF_COMMIT tree=$PHASE2_UD_GUEST_CF_TREE"
+    cf_dispatch=$(grep -RhoE '\bdispatch_[A-Za-z0-9_]+' \
+        "$wt/cf/Sources/CoreFoundation" \
+        | sed 's/^/_/' | sort -u)
+    for need in _dispatch_queue_attr_concurrent _dispatch_queue_create \
+        _dispatch_async_f _dispatch_once_f _dispatch_get_global_queue \
+        _dispatch_semaphore_create _dispatch_semaphore_signal \
+        _dispatch_semaphore_wait _dispatch_source_create
+    do
+        if printf '%s\n' "$cf_dispatch" | grep -qx "$need"; then
+            ok "pinned CF sources mention $need"
+        else
+            # Not every name is spelled in every CF tree; record absence, do not fail.
+            echo "NOTE: pinned CF sources do not spell $need (load-time nm is authoritative)"
+        fi
+    done
+    printf '%s\n' "$cf_dispatch" | grep dispatch_ | head -40
 else
     die_test "CF pin fetch got: '${ck:-empty}' dest=$wt/cf"
 fi
@@ -1857,6 +1941,13 @@ if bash "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh"; then
     ok "test_link_ud_guest.sh"
 else
     die_test "test_link_ud_guest.sh"
+fi
+
+echo "== run_ud_guest.sh dispatch argv (preload, runroot, loader sha256)"
+if bash "$ROOT/foundation-macho/scripts/test_run_ud_guest.sh"; then
+    ok "test_run_ud_guest.sh"
+else
+    die_test "test_run_ud_guest.sh"
 fi
 
 echo "== ud-guest-x86 linker log is a file path, not flattened ld64"
