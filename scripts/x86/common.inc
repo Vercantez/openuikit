@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.11
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.12
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1634,6 +1634,7 @@ phase2_expand_darwin_modulemap_for_fe() {
     fi
     echo "phase2: Darwin.modulemap FE expand added=$added" >&2
     phase2_ensure_darwin_named_submodules "$sys"
+    phase2_ensure_macho_modulemap "$sys"
     return 0
 }
 
@@ -1663,6 +1664,25 @@ text = text[:idx] + "".join(subs) + text[idx:]
 map_path.write_text(text)
 print("  Darwin.modulemap named submodules added", len(subs), file=sys.stderr)
 PY
+}
+
+# FoundationEssentials Platform.swift: `internal import MachO.dyld`.
+# machorun/sdk already stages mach-o/dyld.h; the VM sysroot had no MachO map.
+phase2_ensure_macho_modulemap() {
+    local sys=$1
+    local here map dest mm
+    here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+    map=$here/MachO.modulemap
+    dest=$sys/usr/include/MachO.modulemap
+    mm=$sys/usr/include/module.modulemap
+    [ -f "$map" ] || return 1
+    [ -f "$sys/usr/include/mach-o/dyld.h" ] || return 0
+    mkdir -p "$sys/usr/include"
+    cp -f "$map" "$dest"
+    if [ -f "$mm" ] && ! grep -q 'MachO.modulemap' "$mm"; then
+        printf '\nextern module MachO "MachO.modulemap"\n' >> "$mm"
+        echo "  module.modulemap extern MachO (import MachO.dyld)" >&2
+    fi
 }
 
 # Empty-by-design Foundation / CoreFoundation Mach-Os into a RUN root
