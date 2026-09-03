@@ -167,7 +167,8 @@ if [ -f "$posix_sem" ] && [ ! -e "$SYS/usr/include/semaphore.h" ]; then
 fi
 # ioctl.h in the Darwin sysroot makes CFSocket compile and then the
 # foundation-macho census reports CANNOT_CFOBJC_OBJECTS extra=CFSocket.
-# UserDefaultsGuest gets overlay-posix via -Xcc -I in ud_guest.inc.
+# os-module, FE, and UserDefaultsGuest get overlay-posix via -Xcc -I
+# (phase2_posix_overlay_dir / ud_guest.inc), not via usr/include.
 
 echo "== CLOCK_REALTIME as clockid_t (Clang modules hide Darwin clock ids)"
 cp -f "$W/scripts/x86/fe_clock_realtime.h" "$SYS/usr/include/fe_clock_realtime.h"

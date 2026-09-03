@@ -334,6 +334,12 @@ expect_grep 'phase2_ensure_swift_onone_support' "$STAGE" \
     "x86 stager stages a SwiftOnoneSupport stub for collections without -O"
 expect_grep 'overlay-posix' "$STAGE" \
     "x86 stager stages POSIX semaphore.h; ioctl stays out of the Darwin sysroot"
+expect_grep 'phase2_posix_overlay_dir' "$COMMON" \
+    "ioctl is injected via -Xcc -I overlay-posix, not Darwin usr/include"
+expect_grep 'phase2_posix_overlay_dir' "$PHASE2" \
+    "os-module and FE swiftc get overlay-posix -I so Darwin/SwiftOverlayShims compile"
+expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/build_os_module.sh" \
+    "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
 expect_grep 'fe_clock_realtime.h' "$STAGE" \
     "x86 stager exposes CLOCK_REALTIME as clockid_t"
 expect_grep 'build_foundation_placeholder.sh' "$COMMON" \

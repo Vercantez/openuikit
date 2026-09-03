@@ -455,6 +455,18 @@ EOF
     fi
 }
 
+# ioctl.h lives in swiftcore-macho/sdk/overlay-posix, not the Darwin sysroot.
+# Staging it into usr/include makes CFSocket compile; the CF census then
+# reports CANNOT_CFOBJC_OBJECTS extra=CFSocket. Swift compiles that
+# @_exported-import Darwin (os-module, FE, UserDefaultsGuest) pass
+# -Xcc -I this tree so SwiftOverlayShims can see <sys/ioctl.h>.
+phase2_posix_overlay_dir() {
+    local repo=${1:-${W:-}}
+    local d=$repo/swiftcore-macho/sdk/overlay-posix
+    [ -n "$repo" ] && [ -d "$d" ] && [ -f "$d/sys/ioctl.h" ] || return 1
+    printf '%s\n' "$d"
+}
+
 # Prefer the x86_64 Darwin.swiftinterface the overlays already ship; fall back
 # to the arm64 slice (same text family) or a loose Darwin.swiftinterface.
 phase2_arm_overlay_interface() {

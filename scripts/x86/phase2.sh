@@ -533,10 +533,16 @@ try_cshims() {
 
 try_os_module() {
     local out=$OSMOD
-    local key
+    local key posix_dir
+    local -a posix_xcc=()
+    posix_dir=$(phase2_posix_overlay_dir "$W" || true)
+    if [ -n "$posix_dir" ]; then
+        posix_xcc=(-Xcc -I"$posix_dir")
+    fi
     key=$(stamp_key "$out/os.o" \
         "$W/full/foundation/build_os_module.sh" \
-        "$TARGET")
+        "$TARGET" \
+        "${posix_dir:-no-posix-overlay}")
     if stamp_reuse "$out/os.o" "$key" && [ -f "$out/os.swiftmodule" ]; then
         note os-module-x86 satisfied "mc=$MC stamp=$(stamp_short "$key")"
         OS_OK=1
@@ -554,7 +560,7 @@ try_os_module() {
     mkdir -p "$out"
     set +e
     W="$W" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
-        bash "$W/full/foundation/build_os_module.sh"
+        bash "$W/full/foundation/build_os_module.sh" "${posix_xcc[@]}"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" \
@@ -589,11 +595,17 @@ try_fe_imports() {
 try_fe() {
     local out=$FE_OUT/essentials
     local have_fe=0 have_compat=0
-    local fe_key compat_key tree
+    local fe_key compat_key tree posix_dir
+    local -a posix_xcc=()
+    posix_dir=$(phase2_posix_overlay_dir "$W" || true)
+    if [ -n "$posix_dir" ]; then
+        posix_xcc=(-Xcc -I"$posix_dir")
+    fi
     tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
     fe_key=$(stamp_key "$out/FoundationEssentials.o" \
         "$W/full/foundation/build_fe.sh" \
-        "$tree" "$TARGET")
+        "$tree" "$TARGET" \
+        "${posix_dir:-no-posix-overlay}")
     compat_key=$(stamp_key "$out/removefile_compat.o" \
         "$W/full/foundation/removefile_compat.c" \
         "$TARGET")
@@ -661,7 +673,8 @@ try_fe() {
         COLLECTIONS="$FE_OUT/collections" MC="$MC" \
         bash "$W/full/foundation/build_fe.sh" \
             -emit-module -emit-module-path "$out/FoundationEssentials.swiftmodule" \
-            -c -o "$out/FoundationEssentials.o"
+            -c -o "$out/FoundationEssentials.o" \
+            "${posix_xcc[@]}"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
