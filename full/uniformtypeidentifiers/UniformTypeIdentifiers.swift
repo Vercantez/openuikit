@@ -4,6 +4,8 @@
 public struct UTTagClass: RawRepresentable, Hashable, Sendable, Codable,
     CustomStringConvertible, CustomDebugStringConvertible
 {
+    public typealias RawValue = String
+
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -45,6 +47,8 @@ private struct _UTRecord: Sendable {
 public struct UTType: Hashable, Sendable, Codable, CustomStringConvertible,
     CustomDebugStringConvertible
 {
+    public typealias ReferenceType = UTTypeReference
+
     public let identifier: String
     private let declaredParent: String?
 
@@ -354,6 +358,7 @@ public struct UTType: Hashable, Sendable, Codable, CustomStringConvertible,
     public static let gzip = known("org.gnu.gnu-zip-archive")
     public static let bz2 = known("public.bzip2-archive")
     public static let tar = known("public.tar-archive")
+    public static let tarArchive = tar
     public static let font = known("public.font")
     public static let database = known("public.database")
     public static let x509Certificate = known("public.x509-certificate")
@@ -670,4 +675,221 @@ public struct UTType: Hashable, Sendable, Codable, CustomStringConvertible,
             filenameExtensions: ["ahap"]
         ),
     ]
+}
+
+/// Objective-C `UTType` class, imported in Swift as `UTTypeReference`.
+///
+/// The struct `UTType` is the portable value type. This class wraps the same
+/// registry and fail-closed lookup rules so source that uses the ObjC names
+/// can compile. It does not contact Launch Services.
+public class UTTypeReference: NSObject {
+    private let value: UTType
+
+    private init(wrapping value: UTType) {
+        self.value = value
+        super.init()
+    }
+
+    public convenience init(exportedAs identifier: String) {
+        self.init(wrapping: UTType(exportedAs: identifier, conformingTo: nil))
+    }
+
+    public convenience init(exportedAs identifier: String, conformingTo parentType: UTType) {
+        self.init(wrapping: UTType(exportedAs: identifier, conformingTo: parentType))
+    }
+
+    public convenience init(importedAs identifier: String) {
+        self.init(wrapping: UTType(importedAs: identifier, conformingTo: nil))
+    }
+
+    public convenience init(importedAs identifier: String, conformingTo parentType: UTType) {
+        self.init(wrapping: UTType(importedAs: identifier, conformingTo: parentType))
+    }
+
+    public convenience init?(_ identifier: String) {
+        guard let value = UTType(identifier) else { return nil }
+        self.init(wrapping: value)
+    }
+
+    public convenience init?(identifier: String) {
+        self.init(identifier)
+    }
+
+    public convenience init?(filenameExtension: String) {
+        self.init(
+            tag: filenameExtension,
+            tagClass: UTTagClass.filenameExtension.rawValue,
+            conformingToType: nil
+        )
+    }
+
+    public convenience init?(filenameExtension: String, conformingTo supertype: UTType) {
+        self.init(
+            tag: filenameExtension,
+            tagClass: UTTagClass.filenameExtension.rawValue,
+            conformingToType: supertype
+        )
+    }
+
+    public convenience init?(filenameExtension: String, conformingToType supertype: UTType) {
+        self.init(filenameExtension: filenameExtension, conformingTo: supertype)
+    }
+
+    public convenience init?(mimeType: String) {
+        self.init(
+            tag: mimeType,
+            tagClass: UTTagClass.mimeType.rawValue,
+            conformingToType: nil
+        )
+    }
+
+    public convenience init?(mimeType: String, conformingTo supertype: UTType) {
+        self.init(
+            tag: mimeType,
+            tagClass: UTTagClass.mimeType.rawValue,
+            conformingToType: supertype
+        )
+    }
+
+    public convenience init?(MIMEType mimeType: String) {
+        self.init(mimeType: mimeType)
+    }
+
+    public convenience init?(MIMEType mimeType: String, conformingToType supertype: UTType) {
+        self.init(mimeType: mimeType, conformingTo: supertype)
+    }
+
+    public convenience init?(
+        tag: String,
+        tagClass: String,
+        conformingToType supertype: UTType?
+    ) {
+        guard let value = UTType(
+            tag: tag,
+            tagClass: UTTagClass(rawValue: tagClass),
+            conformingTo: supertype
+        ) else { return nil }
+        self.init(wrapping: value)
+    }
+
+    public class func types(
+        tag: String,
+        tagClass: String,
+        conformingTo supertype: UTType?
+    ) -> [UTType] {
+        UTType.types(
+            tag: tag,
+            tagClass: UTTagClass(rawValue: tagClass),
+            conformingTo: supertype
+        )
+    }
+
+    public var identifier: String { value.identifier }
+    public var preferredFilenameExtension: String? { value.preferredFilenameExtension }
+    public var preferredMIMEType: String? { value.preferredMIMEType }
+    public var localizedDescription: String? { value.localizedDescription }
+    public var referenceURL: URL? { value.referenceURL }
+    public var version: NSNumber? { value.version.map { NSNumber(value: $0) } }
+    public var isDeclared: Bool { value.isDeclared }
+    public var isDynamic: Bool { value.isDynamic }
+    public var isPublic: Bool { value.isPublic }
+
+    public var tags: [String: [String]] {
+        var result: [String: [String]] = [:]
+        for (tagClass, values) in value.tags {
+            result[tagClass.rawValue] = values
+        }
+        return result
+    }
+
+    public var supertypes: Set<UTType> { value.supertypes }
+
+    public func conforms(to type: UTType) -> Bool {
+        value.conforms(to: type)
+    }
+
+    public func isSubtype(of type: UTType) -> Bool {
+        value.isSubtype(of: type)
+    }
+
+    public func isSupertype(of type: UTType) -> Bool {
+        value.isSupertype(of: type)
+    }
+
+    /// Apple's keyed archive layout for `UTType` is unobserved. Decoding fails closed.
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+}
+
+private func utPreferredPathExtension(for contentType: UTType) -> String? {
+    guard let ext = contentType.preferredFilenameExtension, !ext.isEmpty else {
+        return nil
+    }
+    return ext
+}
+
+extension URL {
+    public func appendingPathComponent(
+        _ partialName: String,
+        conformingTo contentType: UTType
+    ) -> URL {
+        var url = appendingPathComponent(partialName)
+        if let ext = utPreferredPathExtension(for: contentType) {
+            url.appendPathExtension(ext)
+        }
+        return url
+    }
+
+    public mutating func appendPathComponent(
+        _ partialName: String,
+        conformingTo contentType: UTType
+    ) {
+        self = appendingPathComponent(partialName, conformingTo: contentType)
+    }
+
+    public func appendingPathExtension(for contentType: UTType) -> URL {
+        guard let ext = utPreferredPathExtension(for: contentType) else { return self }
+        return appendingPathExtension(ext)
+    }
+
+    public mutating func appendPathExtension(for contentType: UTType) {
+        self = appendingPathExtension(for: contentType)
+    }
+}
+
+extension NSString {
+    public func appendingPathComponent(
+        _ partialName: String,
+        conformingTo contentType: UTType
+    ) -> String {
+        let joined = appendingPathComponent(partialName)
+        guard let ext = utPreferredPathExtension(for: contentType) else { return joined }
+        return (joined as NSString).appendingPathExtension(ext) ?? (joined + "." + ext)
+    }
+
+    public func appendingPathExtension(for contentType: UTType) -> String {
+        guard let ext = utPreferredPathExtension(for: contentType) else {
+            return self as String
+        }
+        return appendingPathExtension(ext) ?? ((self as String) + "." + ext)
+    }
+}
+
+extension NSURL {
+    public func appendingPathComponent(
+        _ partialName: String,
+        conformingTo contentType: UTType
+    ) -> URL {
+        (self as URL).appendingPathComponent(partialName, conformingTo: contentType)
+    }
+
+    public func appendingPathExtension(for contentType: UTType) -> URL {
+        (self as URL).appendingPathExtension(for: contentType)
+    }
+}
+
+extension URLResourceValues {
+    /// Linux Foundation does not populate a UTI resource key. Fail closed.
+    public var contentType: UTType? { nil }
 }
