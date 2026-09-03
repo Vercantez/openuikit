@@ -234,6 +234,25 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
     `CANNOT_X86_HOST_RUNTIME missing=…` on item `mrroot-host-x86` **before**
     rungs b/c invoke `build_full.sh`, and `missing=` names each file that
     could not be copied or built. Not a PR3 `CURSOR_ENV_CANNOT_*` marker.
+11. `mrroot-layout-x86` makes `scratch/mrroot-x86_64` **layout-complete by
+    contract** with `build_full.sh` (widget/reminder guests call `build_full`
+    and read `mrroot_full`, not the base root). Before any rung runs
+    `build_full`, phase2 fills then checks every BASE path the consumer
+    reads: extensionless `Foundation` / `CoreFoundation` loud-abort stubs
+    (`scripts/build_runtime_shims.sh STUBS_ONLY=1`, `x86_64-apple-macos`),
+    `libswiftcompat.dylib` (`swiftcore-macho/scripts/build_compat.sh`; never
+    the arm64 `artifacts/libswiftcompat.dylib`), `libswiftCore.dylib` (already
+    from `mrroot-base-x86`), `libswift_Concurrency.dylib` /
+    `libswiftObjectiveC.dylib` from the x86 overlay search (Apple-SDK
+    ObjectiveC is named in `missing=` rather than stubbed). Host ELF files
+    and FE overlay dylibs are the same closed sets as `mrroot-host-x86` /
+    `mrroot-fe-overlays-x86`. Incomplete layout is
+    `CANNOT_X86_MRROOT_LAYOUT missing=…` (leaf names). Not a PR3
+    `CURSOR_ENV_CANNOT_*` marker. Rungs b/c wait on `LAYOUT_OK`; rung a does
+    not run `build_full`. The ud_guest port/runner argv also takes
+    `-I $fe_out/collections` (plus the staged `$ud_w/fe/collections`) so
+    swiftc sees `OrderedCollections` / `_RopeModule` the way
+    `build_url_runner.sh` / PR #28 put FI search paths on argv.
 
 ## Operator-staged Apple x86_64 overlays
 

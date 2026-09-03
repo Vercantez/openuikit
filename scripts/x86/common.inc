@@ -852,6 +852,174 @@ phase2_build_x86_host_helpers() {
     fi
 }
 
+# Closed BASE_RUNTIME_SOURCE Darwin/System/usr paths build_full.sh reads
+# (plus host/, checked as ELF). FE overlays are listed separately against
+# FE_RUNTIME_SOURCE. Leaf names are unique across this set.
+phase2_base_layout_macho_names() {
+    printf '%s\n' \
+        darwin/System/Library/Frameworks/Foundation.framework/Foundation \
+        darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation \
+        darwin/usr/lib/libswiftcompat.dylib \
+        darwin/usr/lib/swift/libswiftCore.dylib \
+        darwin/usr/lib/swift/libswiftObjectiveC.dylib \
+        darwin/usr/lib/swift/libswift_Concurrency.dylib
+}
+
+phase2_layout_leaf() {
+    local p=$1
+    printf '%s\n' "${p##*/}"
+}
+
+# Build the extensionless Foundation/CoreFoundation loud-abort stubs with
+# scripts/build_runtime_shims.sh (STUBS_ONLY, x86_64-apple-macos). Do not copy
+# arm64 stubs from scratch/mrroot.
+phase2_fill_x86_loud_abort_stubs() {
+    local dest=$1 repo=$2 sys=$3
+    local fw=$dest/darwin/System/Library/Frameworks
+    local work=$dest/shim-work
+    local log=$work/build_runtime_shims.log
+    mkdir -p "$fw/Foundation.framework" "$fw/CoreFoundation.framework" "$work"
+    if phase2_is_x86_macho "$fw/Foundation.framework/Foundation" \
+        && phase2_is_x86_macho "$fw/CoreFoundation.framework/CoreFoundation"; then
+        return 0
+    fi
+    rm -f "$fw/Foundation.framework/Foundation" \
+        "$fw/CoreFoundation.framework/CoreFoundation"
+    set +e
+    ROOT="$repo" W="$repo" SYS="$sys" OUT="$work" \
+        TARGET="${TARGET:-x86_64-apple-macos15.0}" MINOS=15.0 \
+        STUBS_ONLY=1 \
+        bash "$repo/scripts/build_runtime_shims.sh" >"$log" 2>&1
+    set -e
+    if [ -f "$work/Foundation.stub.dylib" ]; then
+        cp -f "$work/Foundation.stub.dylib" "$fw/Foundation.framework/Foundation"
+    fi
+    if [ -f "$work/CoreFoundation.stub.dylib" ]; then
+        cp -f "$work/CoreFoundation.stub.dylib" \
+            "$fw/CoreFoundation.framework/CoreFoundation"
+    fi
+    if ! phase2_is_x86_macho "$fw/Foundation.framework/Foundation"; then
+        rm -f "$fw/Foundation.framework/Foundation"
+    fi
+    if ! phase2_is_x86_macho "$fw/CoreFoundation.framework/CoreFoundation"; then
+        rm -f "$fw/CoreFoundation.framework/CoreFoundation"
+    fi
+}
+
+# libswiftcompat.dylib via swiftcore-macho/scripts/build_compat.sh. Never copy
+# artifacts/libswiftcompat.dylib is arm64; always rebuild through the committed
+# recipe. The x86 FE sysroot vends libSystem.B.tbd / libc++.1.tbd; the
+# committed link line is -lSystem -lc++, so a private alias SDK provides those
+# leaf names without mutating sysroot.
+phase2_prepare_compat_alias_sdk() {
+    local sys=$1 alias=$2 f
+    rm -rf "$alias"
+    mkdir -p "$alias/usr/lib"
+    if [ -d "$sys/usr/include" ]; then
+        ln -sfn "$sys/usr/include" "$alias/usr/include"
+    fi
+    if [ -d "$sys/usr/lib" ]; then
+        for f in "$sys/usr/lib/"*; do
+            [ -e "$f" ] || continue
+            ln -sfn "$f" "$alias/usr/lib/$(basename "$f")"
+        done
+    fi
+    if [ -e "$alias/usr/lib/libSystem.B.tbd" ] && [ ! -e "$alias/usr/lib/libSystem.tbd" ]; then
+        ln -sfn libSystem.B.tbd "$alias/usr/lib/libSystem.tbd"
+    fi
+    if [ -e "$alias/usr/lib/libc++.1.tbd" ] && [ ! -e "$alias/usr/lib/libc++.tbd" ]; then
+        ln -sfn libc++.1.tbd "$alias/usr/lib/libc++.tbd"
+    fi
+}
+
+phase2_fill_x86_libswiftcompat() {
+    local dest=$1 repo=$2 sys=$3 loader=${4:-}
+    local out=$dest/darwin/usr/lib/libswiftcompat.dylib
+    local mrlib=$repo/machorun/darwin/usr/lib
+    local src_dir=$repo/swiftcore-macho/sdk/compat
+    local work=$dest/shim-work
+    local log=$work/build_compat.log
+    local alias=$work/compat-sdk
+    mkdir -p "$(dirname "$out")" "$work"
+    if phase2_is_x86_macho "$out"; then
+        return 0
+    fi
+    rm -f "$out"
+    if [ ! -f "$src_dir/swiftcompat.c" ] || [ ! -f "$src_dir/shim.cpp" ]; then
+        return 1
+    fi
+    phase2_prepare_compat_alias_sdk "$sys" "$alias"
+    set +e
+    W="$dest" SDK="$alias" SRC="$src_dir" MRLIB="$mrlib" LOADER="$loader" \
+        OUT="$out" NM=llvm-nm-18 \
+        bash "$repo/swiftcore-macho/scripts/build_compat.sh" >"$log" 2>&1
+    set -e
+    if ! phase2_is_x86_macho "$out"; then
+        rm -f "$out"
+        return 1
+    fi
+}
+
+# Stage BASE swift runtime dylibs that exist as x86 Mach-O in the overlay
+# search dirs (stdlib cross-build / operator Apple overlays). Never copy arm64.
+phase2_fill_x86_base_swift_dylibs() {
+    local dest=$1
+    local swift=$dest/darwin/usr/lib/swift
+    local name src
+    mkdir -p "$swift"
+    for name in libswift_Concurrency.dylib libswiftObjectiveC.dylib; do
+        if phase2_is_x86_macho "$swift/$name"; then
+            continue
+        fi
+        rm -f "$swift/$name"
+        if src=$(phase2_find_x86_overlay "$name"); then
+            cp -f "$src" "$swift/$name"
+        fi
+    done
+}
+
+# Fill what the committed recipes can produce, then print OK or MISSING=…
+# naming every BASE/FE/host path build_full.sh still lacks as x86 Mach-O
+# (host files: ELF x86-64).
+phase2_stage_x86_mrroot_layout() {
+    local dest=$1 fe=$2 repo=$3 sys=$4 loader=$5
+    local missing=() rel leaf host name
+    mkdir -p "$dest"
+    phase2_fill_x86_loud_abort_stubs "$dest" "$repo" "$sys" || true
+    phase2_fill_x86_libswiftcompat "$dest" "$repo" "$sys" "$loader" || true
+    phase2_fill_x86_base_swift_dylibs "$dest" || true
+
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        leaf=$(phase2_layout_leaf "$rel")
+        if ! phase2_is_x86_macho "$dest/$rel"; then
+            missing+=("$leaf")
+        fi
+    done < <(phase2_base_layout_macho_names)
+
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        if ! phase2_is_elf_x86_so "$dest/host/$name"; then
+            missing+=("$name")
+        fi
+    done < <(openuikit_host_runtime_files)
+
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        if ! phase2_is_x86_macho "$fe/darwin/usr/lib/swift/$name"; then
+            missing+=("$name")
+        fi
+    done < <(phase2_fe_overlay_names)
+
+    if [ "${#missing[@]}" -eq 0 ]; then
+        printf 'OK\n'
+        return 0
+    fi
+    local IFS=,
+    printf 'MISSING=%s\n' "${missing[*]}"
+    return 1
+}
+
 # shellcheck source=ud_guest.inc
 . "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/ud_guest.inc"
 

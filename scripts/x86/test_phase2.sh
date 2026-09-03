@@ -64,7 +64,8 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/urltransport/build_host_helper.sh" \
     "$ROOT/full/relativetime/build_host_helper.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
-    "$ROOT/scripts/x86/ud_guest.inc"; do
+    "$ROOT/scripts/x86/ud_guest.inc" \
+    "$ROOT/scripts/build_runtime_shims.sh"; do
     if bash -n "$s"; then
         ok "bash -n $(basename "$s")"
     else
@@ -957,6 +958,109 @@ else
 fi
 rm -rf "$HOST_FIX" "$HOST_DEST" "$EMPTY_FIX" "$EMPTY_DEST" "$EMPTY_BUILD"
 
+echo "== x86 mrroot layout is build_full.sh BASE/FE inventory before any rung"
+expect_grep 'mrroot-layout-x86' "$PHASE2" "phase2 item mrroot-layout-x86"
+expect_grep 'X86_MRROOT_LAYOUT' "$PHASE2" "layout hole is CANNOT_X86_MRROOT_LAYOUT"
+expect_grep 'CANNOT_X86_MRROOT_LAYOUT' "$PHASE2" \
+    "rung substrate names CANNOT_X86_MRROOT_LAYOUT"
+expect_not_grep 'X86_MRROOT_LAYOUT' "$ROOT/scripts/env/markers.py" \
+    "CANNOT_X86_MRROOT_LAYOUT is not a PR3 CURSOR_ENV_CANNOT_* marker"
+expect_grep 'STUBS_ONLY' "$ROOT/scripts/build_runtime_shims.sh" \
+    "loud-abort stubs have a STUBS_ONLY recipe"
+expect_grep 'phase2_fill_x86_loud_abort_stubs' "$COMMON" \
+    "layout fill uses build_runtime_shims.sh STUBS_ONLY"
+expect_grep 'build_runtime_shims.sh' "$COMMON" \
+    "layout names the committed stub recipe"
+expect_grep 'build_compat.sh' "$COMMON" "layout names the committed compat recipe"
+expect_grep 'artifacts/libswiftcompat.dylib is arm64' "$COMMON" \
+    "layout never treats artifacts/libswiftcompat.dylib as an x86 source"
+expect_grep 'phase2_base_layout_macho_names' "$COMMON" \
+    "layout inventory is a closed BASE Mach-O list"
+expect_grep 'LAYOUT_OK' "$PHASE2" "rungs b/c wait on LAYOUT_OK"
+awk '
+    /cannot mrroot-layout-x86 X86_MRROOT_LAYOUT/ { l=NR }
+    /build_focus_widget_guest.sh/ { if (!w) w=NR }
+    END {
+        if (!l) { print "NO_LAYOUT"; exit 1 }
+        if (!w) { print "NO_WIDGET"; exit 1 }
+        if (!(l<w)) { print "ORDER l="l" w="w; exit 1 }
+        print "OK"
+    }
+' "$PHASE2" | grep -q OK \
+    && ok "CANNOT_X86_MRROOT_LAYOUT is emitted before build_focus_widget_guest.sh" \
+    || die_test "layout CANNOT is not before build_full/widget"
+for layout_name in Foundation CoreFoundation libswiftcompat.dylib \
+    libswiftCore.dylib libswiftObjectiveC.dylib libswift_Concurrency.dylib
+do
+    expect_grep "$layout_name" "$COMMON" "layout inventory names $layout_name"
+    expect_grep "$layout_name" "$BUILD_FULL" "build_full.sh names $layout_name"
+done
+
+LAYOUT_HOME=$(mktemp -d /tmp/phase2-layout-home.XXXXXX)
+LAYOUT_W=$(mktemp -d /tmp/phase2-layout-w.XXXXXX)
+LAYOUT_DEST=$(mktemp -d /tmp/phase2-layout-dest.XXXXXX)
+LAYOUT_FE=$(mktemp -d /tmp/phase2-layout-fe.XXXXXX)
+W=$LAYOUT_W
+HOME=$LAYOUT_HOME
+layout_miss=$(phase2_stage_x86_mrroot_layout \
+    "$LAYOUT_DEST" "$LAYOUT_FE" "$LAYOUT_W" "$LAYOUT_W/sys" "$LAYOUT_W/loader" || true)
+W=$ROOT
+case "$layout_miss" in
+    MISSING=*Foundation*CoreFoundation*)
+        if echo "$layout_miss" | grep -q 'libswiftcompat.dylib' \
+            && echo "$layout_miss" | grep -q 'libswiftObjectiveC.dylib' \
+            && echo "$layout_miss" | grep -q 'Foundation' \
+            && echo "$layout_miss" | grep -q 'CoreFoundation'; then
+            ok "empty dest MISSING= includes Foundation, CoreFoundation ($layout_miss)"
+        else
+            die_test "empty dest MISSING incomplete: $layout_miss"
+        fi
+        ;;
+    *) die_test "empty dest layout expected MISSING=… got: $layout_miss" ;;
+esac
+rm -rf "$LAYOUT_HOME" "$LAYOUT_W" "$LAYOUT_DEST" "$LAYOUT_FE"
+
+SYS=${SYS:-$ROOT/scratch/sysroot_fe4-x86_64}
+if [ -d "$SYS/usr/lib" ]; then
+    STUB_DEST=$(mktemp -d /tmp/phase2-layout-stubs.XXXXXX)
+    phase2_fill_x86_loud_abort_stubs "$STUB_DEST" "$ROOT" "$SYS" || true
+    if phase2_is_x86_macho \
+        "$STUB_DEST/darwin/System/Library/Frameworks/Foundation.framework/Foundation" \
+        && phase2_is_x86_macho \
+        "$STUB_DEST/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"; then
+        ok "STUBS_ONLY loud-abort stubs are X86_64 Mach-O"
+    else
+        die_test "loud-abort stubs were not x86 Mach-O under $STUB_DEST"
+    fi
+    phase2_fill_x86_libswiftcompat \
+        "$STUB_DEST" "$ROOT" "$SYS" "$ROOT/machorun/build/machorun" || true
+    if phase2_is_x86_macho "$STUB_DEST/darwin/usr/lib/libswiftcompat.dylib"; then
+        ok "build_compat.sh emits x86_64 libswiftcompat.dylib (not artifacts/ arm64)"
+    else
+        die_test "libswiftcompat fill did not produce x86 Mach-O ($(tail -5 "$STUB_DEST/shim-work/build_compat.log" 2>/dev/null))"
+    fi
+    phase2_fill_x86_base_swift_dylibs "$STUB_DEST" || true
+    if phase2_is_x86_macho \
+        "$STUB_DEST/darwin/usr/lib/swift/libswift_Concurrency.dylib"; then
+        ok "layout stages x86 libswift_Concurrency.dylib from overlay search"
+    else
+        die_test "libswift_Concurrency.dylib was not staged as x86 Mach-O"
+    fi
+    if [ -f "$STUB_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" ]; then
+        if phase2_is_x86_macho \
+            "$STUB_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib"; then
+            ok "layout staged x86 libswiftObjectiveC.dylib when overlay search found it"
+        else
+            die_test "libswiftObjectiveC.dylib present but not x86 Mach-O"
+        fi
+    else
+        ok "libswiftObjectiveC.dylib absent (Apple-SDK overlay; named in MISSING=)"
+    fi
+    rm -rf "$STUB_DEST"
+else
+    die_test "x86 sysroot missing; cannot build loud-abort stubs"
+fi
+
 echo "== env-prepare with FULL_OUT_SUFFIX=-x86_64 never resolves unsuffixed arm64 trees"
 PREP_FIX=$(mktemp -d /tmp/phase2-prepare-suffix.XXXXXX)
 mkdir -p "$PREP_FIX/env" \
@@ -1015,6 +1119,18 @@ expect_grep 'phase2_ensure_sdk_settings' "$STAGE" "x86 sysroot stager writes SDK
 expect_grep 'SDKSettings.json' "$COMMON" "SDKSettings.json helper is shared"
 expect_grep 'RUNNER runner.o' "$UDINC" "runner hole names file=runner.o"
 expect_grep 'build_ud_score_guest.sh' "$UDINC" "port/runner argv follows the committed scoreboard compile"
+expect_grep 'OrderedCollections.swiftmodule' "$UDINC" \
+    "ud-guest stages OrderedCollections.swiftmodule next to the .o"
+expect_grep '_RopeModule.swiftmodule' "$UDINC" \
+    "ud-guest stages _RopeModule.swiftmodule next to the .o"
+expect_grep 'InternalCollectionsUtilities.swiftmodule' "$UDINC" \
+    "ud-guest stages InternalCollectionsUtilities.swiftmodule"
+expect_grep '-I "$fe_out/collections"' "$UDINC" \
+    "port/runner argv has -I fe_out/collections (build_url_runner / PR #28 class)"
+expect_grep '-I "$ud_w/fe/collections"' "$UDINC" \
+    "port/runner argv has -I staged fe/collections"
+expect_grep 'phase2_ud_guest_compile_port "$ud_w" "$repo" "$sys" "$compile_triple" "$mc" "$fe_out"' \
+    "$UDINC" "try_ud_guest passes fe_out onto the port argv"
 expect_grep 'build_full.sh argv -O1 -nostdinc' "$UDINC" \
     "fm_unimplemented uses build_full.sh clang argv"
 expect_grep 'build_cftest_harness.sh' "$UDINC" "CF path names the committed CF linker"
@@ -1077,13 +1193,18 @@ if [ -d "$SYS/usr/include" ]; then
     echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
         -isysroot "$SYS" -c -o "$fe/cshims/uuid.o" -x c -
     : > "$fe/essentials/FoundationEssentials.swiftmodule"
+    : > "$fe/collections/OrderedCollections.swiftmodule"
+    : > "$fe/collections/InternalCollectionsUtilities.swiftmodule"
+    : > "$fe/collections/_RopeModule.swiftmodule"
     : > "$fe/os/os.swiftmodule"
     staged=$(phase2_ud_guest_stage_fe "$fe" "$wt" || true)
     case "$staged" in
         OK\ fe-staged*)
             if [ -f "$wt/fe/module/FoundationEssentials.o" ] \
                 && [ -f "$wt/fe/collections/OrderedCollections.o" ] \
+                && [ -f "$wt/fe/collections/OrderedCollections.swiftmodule" ] \
                 && [ -f "$wt/fe/collections/_RopeModule.o" ] \
+                && [ -f "$wt/fe/collections/_RopeModule.swiftmodule" ] \
                 && [ -f "$wt/fe/_RopeModule.o" ] \
                 && [ -f "$wt/fe/os/os.o" ] \
                 && [ -f "$wt/fe/cshims/uuid.o" ] \
