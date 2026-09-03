@@ -1,0 +1,7 @@
+full/coreml/CoreML.swift
+full/coreml/MLDescriptions.swift
+full/coreml/MLFeature.swift
+full/coreml/MLModel.swift
+full/coreml/MLMultiArray.swift
+full/coreml/MLShapedArray.swift
+full/coreml/MLTasks.swift
