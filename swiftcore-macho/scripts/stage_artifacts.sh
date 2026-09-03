@@ -69,6 +69,10 @@ while IFS= read -r -d '' f; do
           printf '  have: %s\n' "${have:-<none>}" >&2
           exit 2
         fi
+        # ld64.lld 18-20 also emit an LC_LOAD_DYLIB per re-export with
+        # per-file bind ordinals (dedupe_reexport_loads.py): never stage that.
+        python3 "$SCRIPT_DIR/dedupe_reexport_loads.py" "$f" --check >/dev/null \
+          || { echo "stage_artifacts: REFUSING — $f carries LC_LOAD_DYLIB duplicates of its re-exports (CANNOT_DARWIN_REEXPORT)" >&2; exit 2; }
       fi
       ;;
     *.a) ;;
