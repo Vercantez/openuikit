@@ -945,18 +945,52 @@ ud_report=$(phase2_try_ud_guest \
         UD_GUEST_BIN=${UD_GUEST_BIN%% *}
         UD_GUEST_W=$W/scratch/ud-guest-x86_64
         export UD_GUEST_BIN UD_GUEST_W
-        note ud-guest-x86 cold-built "$ud_report"
-        UD_GUEST_ITEM_OK=1
         echo "  $ud_report"
-        if [ -f "$UD_GUEST_W/stub-func-active.txt" ]; then
-            stub_n=$(grep -c . "$UD_GUEST_W/stub-func-active.txt" || true)
-            note cftest-stubs satisfied "count=$stub_n"
+        if phase2_cftest_stub_list_stale "$UD_GUEST_W"; then
+            stale_line=$(phase2_cftest_stub_stale_cannot "$UD_GUEST_W")
+            cannot cftest-stubs CFTEST_STALE "${stale_line#CANNOT_CFTEST_STALE }"
+            cannot ud-guest-x86 UD_GUEST_CFTEST_STALE \
+                "stub-func-active.txt is newer than lib/libCFTest.dylib; will not treat this as satisfied. See ENV_PREPARE cftest-stubs."
+        else
+            cftest_log=$UD_GUEST_W/lib/build_cftest_harness.log
+            link_log=$UD_GUEST_W/link_ud_guest.log
+            reuse_note=
+            if [ -f "$cftest_log" ] && grep -q 'libCFTest reused=1 stamp=' "$cftest_log"; then
+                reuse_note=$(grep 'libCFTest reused=1 stamp=' "$cftest_log" | tail -1)
+                echo "  $reuse_note"
+            elif [ -f "$cftest_log" ] && grep -q 'libCFTest relinked ' "$cftest_log"; then
+                echo "  $(grep 'libCFTest relinked ' "$cftest_log" | tail -1)"
+            fi
+            if [ -f "$link_log" ] && grep -q 'ud_guest reused=1 stamp=' "$link_log"; then
+                note ud-guest-x86 satisfied "reused=1 $ud_report"
+            else
+                note ud-guest-x86 cold-built "$ud_report"
+            fi
+            UD_GUEST_ITEM_OK=1
+            if [ -f "$UD_GUEST_W/stub-func-active.txt" ]; then
+                stub_n=$(grep -c . "$UD_GUEST_W/stub-func-active.txt" || true)
+                if [ -n "$reuse_note" ]; then
+                    note cftest-stubs satisfied "count=$stub_n $reuse_note"
+                else
+                    note cftest-stubs satisfied "count=$stub_n"
+                fi
+            fi
         fi
         ;;
     CANNOT_CFTEST_STUBS*)
         cannot cftest-stubs CFTEST_STUBS "${ud_report#CANNOT_CFTEST_STUBS }"
         cannot ud-guest-x86 UD_GUEST_CFTEST_STUBS \
             "libCFTest stub set refused; see ENV_PREPARE cftest-stubs. Will not link ud_guest against it."
+        ;;
+    CANNOT_CFTEST_STALE*)
+        cannot cftest-stubs CFTEST_STALE "${ud_report#CANNOT_CFTEST_STALE }"
+        cannot ud-guest-x86 UD_GUEST_CFTEST_STALE \
+            "stub-func-active.txt is newer than lib/libCFTest.dylib; see ENV_PREPARE cftest-stubs. Will not treat this as satisfied."
+        ;;
+    CANNOT_CFTEST_INPUTS*)
+        cannot cftest-stubs CFTEST_INPUTS "${ud_report#CANNOT_CFTEST_INPUTS }"
+        cannot ud-guest-x86 UD_GUEST_CFTEST_INPUTS \
+            "libCFTest input stamp mismatch; see ENV_PREPARE cftest-stubs. Will not reuse a dylib whose objects/stub-set/tbds/argv drifted."
         ;;
     CANNOT_UD_GUEST_*)
         ud_marker=${ud_report#CANNOT_UD_GUEST_}

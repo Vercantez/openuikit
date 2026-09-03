@@ -23,6 +23,13 @@
 # REPEATABLE, and it CHECKS. The freshness check is the point, not a courtesy
 # -- a binary older than its own inputs passes every git-level check there is.
 #
+# Reuse of bin/ud_guest is keyed on bin/ud_guest.inputs, written at link time:
+# sha256 of every object on the line, libCFTest.dylib, and the linker argv.
+# Existence of the binary is not enough (same class as the loader existence
+# reuse in PR #65). Matching stamp → reused=1 stamp=<sha>. Mismatch →
+# reason=inputs <key> old->new and relink. UD_GUEST_VERIFY_ONLY=1 reports
+# CANNOT_UD_GUEST_INPUTS instead of linking.
+#
 # NOT a compile step. The objects are built elsewhere (the port and runner by
 # the #87 recipe, FoundationEssentials by ~/swift-macho-linux's build_fe.sh).
 # This script only links, and it refuses rather than silently linking stale
@@ -107,14 +114,109 @@ DYLIBS=(-lswiftCore -lswiftDarwin -lswift_StringProcessing
 # path keeps it out of the search-order question entirely.
 DYLIBS+=("$W/lib/libCFTest.dylib" "$W/lib/libswiftcompat.dylib")
 
+ud_file_sha() {
+    if [ -f "$1" ]; then
+        sha256sum "$1" | awk '{print $1}'
+    else
+        printf 'ABSENT\n'
+    fi
+}
+
+ud_obj_key() {
+    printf 'obj:%s\n' "${1#$W/}"
+}
+
+ud_link_words() {
+    printf '%s\n' \
+        "$CC" -target "$TRIPLE" -isysroot "$SDK" \
+        -fuse-ld=lld -B "$LLD" -nostdlib \
+        "${LIBDIRS[@]}" \
+        -Wl,-rpath,/usr/lib/swift -Wl,-rpath,@loader_path \
+        "${INPUTS[@]}" "${DYLIBS[@]}" \
+        -o "$OUT"
+}
+
+ud_inputs_text() {
+    local o
+    printf 'argv=%s\n' "$(ud_link_words | sha256sum | awk '{print $1}')"
+    printf 'cftest=%s\n' "$(ud_file_sha "$W/lib/libCFTest.dylib")"
+    for o in "${INPUTS[@]}"; do
+        printf '%s=%s\n' "$(ud_obj_key "$o")" "$(ud_file_sha "$o")"
+    done
+}
+
+ud_write_inputs() {
+    mkdir -p "$(dirname "$OUT")"
+    ud_inputs_text > "$OUT.inputs"
+}
+
+ud_inputs_diff() {
+    local stamp=$OUT.inputs
+    local expected key val old changed=0
+    expected=$(ud_inputs_text)
+    if [ ! -f "$stamp" ]; then
+        printf 'stamp ABSENT->present\n'
+        return 1
+    fi
+    while IFS='=' read -r key val; do
+        [ -n "$key" ] || continue
+        old=$(awk -F= -v k="$key" '$1==k { print substr($0, index($0,"=")+1); exit }' "$stamp")
+        [ -n "$old" ] || old=ABSENT
+        if [ "$old" != "$val" ]; then
+            printf '%s %s->%s\n' "$key" "$old" "$val"
+            changed=1
+        fi
+    done <<EOF
+$expected
+EOF
+    while IFS='=' read -r key val; do
+        [ -n "$key" ] || continue
+        if ! printf '%s\n' "$expected" | awk -F= -v k="$key" '$1==k { found=1 } END { exit !found }'
+        then
+            printf '%s %s->ABSENT\n' "$key" "$val"
+            changed=1
+        fi
+    done < "$stamp"
+    [ "$changed" -eq 0 ]
+}
+
 echo "== inputs"
 for o in "${INPUTS[@]}"; do
     printf '   %-46s %10s bytes  %s\n' "${o#$W/}" "$(wc -c < "$o")" \
         "$(date -r "$o" -u '+%H:%M:%S')"
 done
 
-echo "==> linking $OUT CC=$CC"
+relink_reason=
 mkdir -p "$(dirname "$OUT")"
+if [ -f "$OUT" ]; then
+    diff=$(ud_inputs_diff || true)
+    if [ -z "$diff" ]; then
+        stamp_id=$(ud_file_sha "$OUT.inputs")
+        echo "ud_guest reused=1 stamp=$stamp_id dest=$OUT"
+        echo "== $OUT"
+        echo "   $(wc -c < "$OUT") bytes"
+        llvm-otool-18 -L "$OUT" | tail -n +2 | sed 's/^/   /'
+        exit 0
+    fi
+    first=$(printf '%s\n' "$diff" | head -1)
+    key=${first%% *}
+    rest=${first#"$key "}
+    relink_reason="reason=inputs $key $rest"
+    if [ "${UD_GUEST_VERIFY_ONLY:-0}" = 1 ]; then
+        echo "CANNOT_UD_GUEST_INPUTS file=ud_guest $relink_reason"
+        echo "$diff"
+        echo "link_ud_guest: input stamp mismatch; refusing to call this satisfied (verify-only)." >&2
+        exit 2
+    fi
+    echo "ud_guest relink $relink_reason"
+    echo "$diff"
+elif [ "${UD_GUEST_VERIFY_ONLY:-0}" = 1 ]; then
+    echo "CANNOT_UD_GUEST_INPUTS file=ud_guest reason=inputs stamp ABSENT->present"
+    echo "link_ud_guest: no $OUT (verify-only)." >&2
+    exit 2
+fi
+
+echo "==> linking $OUT CC=$CC${relink_reason:+ $relink_reason}"
 # -nostdlib: Linux-hosted Darwin links must not pull host crt. Same as
 # run_bundle_guest.sh / run_tests.sh. clang-18 still passes -syslibroot.
 "$CC" -target "$TRIPLE" -isysroot "$SDK" \
@@ -123,6 +225,7 @@ mkdir -p "$(dirname "$OUT")"
   -Wl,-rpath,/usr/lib/swift -Wl,-rpath,@loader_path \
   "${INPUTS[@]}" "${DYLIBS[@]}" \
   -o "$OUT"
+ud_write_inputs
 
 # ---------------------------------------------------------------------------
 # THE CHECK THIS SCRIPT EXISTS FOR. Every input must be OLDER than the output.
