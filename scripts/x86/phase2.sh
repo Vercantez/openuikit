@@ -1217,8 +1217,14 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
                     2>&1 | tee "$W/scratch/phase2-rung-a-persist.log"
                 persist_rc=${PIPESTATUS[0]}
                 set -e
-                persist_board=$(grep 'GUEST SCOREBOARD' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
-                persist_port=$(grep 'PORT: scored' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
+                # The persist log prints the board TWICE: the positive run
+                # (first) and the NEGATIVE CONTROL with the store deleted
+                # (last; it must fail and reads e.g. port 313/579). Quote the
+                # positive one -- measured 2026-09-03 on x86_64: tail -1 put
+                # the control's 313/579 on the scoreboard while the real
+                # board was 579/579.
+                persist_board=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'GUEST SCOREBOARD' | head -1 | phase2_flatten || true)
+                persist_port=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'PORT: scored' | head -1 | phase2_flatten || true)
                 persist_presence=$(grep 'presence:' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
                 if [ -n "$persist_board" ]; then
                     RUNG_A_DETAIL="smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS ($smoke_pass); persist $persist_board"
