@@ -325,7 +325,7 @@ name; two-level namespace binding (each import names its source dylib by
 ordinal); exporting the main executable's symbols; and running each image's
 initialisers in dependency order, dependencies first.
 
-### (g′) `cache_layout` / `cache_layout_packed` / `cache_layout_sparse` / `cache_layout_oversize` — dyld-shared-cache segment packing
+### (g′) `cache_layout` / `cache_layout_packed` / `cache_layout_sparse` / `cache_layout_nofix` / `cache_layout_oversize` — dyld-shared-cache segment packing
 `tests/src/cache_layout.c` + `cache_layout_lib.c` · chained · rewriter `scripts/pack_macho.py`
 
 The x86_64 app rung's first load of Apple's own cache-extracted Swift overlays
@@ -339,7 +339,13 @@ not page-aligned, inter-segment deltas of hundreds of megabytes. Measured on
 `libswiftObjectiveC.dylib`: `__TEXT vmaddr 0x7ff821031000`, `__DATA_CONST
 vmaddr 0x7ff843287720` — delta `0x22256720`, cache-wide addresses, not a
 contiguous file. Apple's dsc_extractor.bundle SIGBUSes on macOS 26.5.2 caches;
-the binaries cannot be rebuilt. The loader has to map them as they are.
+the binaries cannot be rebuilt. A packed image that still carries chained or
+classic fixups is copy-mapped (the `cache_layout_packed` / `_sparse`
+fixtures). Both `ipsw dyld extract` and `--slide --objc --stubs` of the
+x86_64 Apple overlays have **no** `LC_DYLD_INFO` and **no**
+`LC_DYLD_CHAINED_FIXUPS` — dyld already applied rebases and binds inside
+the cache — so those files are refused (`cache_layout_nofix`) rather than
+mapped.
 
 `cache_layout` is the control: an Apple-built, page-aligned dylib, loaded and
 called. `cache_layout_packed` is the same executable against a copy of that
@@ -362,6 +368,23 @@ one byte past EOF. The loader must refuse before mapping, with a diagnostic
 that names the segment. Darwin has no twin for that string, so this row is
 also `oracle=norun` and Linux-graded.
 
+`cache_layout_nofix` is the other negative: the same dylib with
+`LC_DYLD_CHAINED_FIXUPS` / `LC_DYLD_INFO` stripped (`pack_macho.py
+strip-fixups`), matching both `ipsw dyld extract` and `ipsw dyld extract
+--slide --objc --stubs` of Apple's x86_64 overlays — those files keep
+`LC_DYLD_EXPORTS_TRIE` and the DATA pointers dyld already resolved inside
+the cache, with nothing a loader can apply. Intra-image sliding would still
+leave every cross-image bind pointing into the missing cache. The loader
+must refuse **before mapping** (the TEXT-to-DATA hole is hundreds of MB):
+
+```
+machorun: ./libcache_nofix.dylib: dyld-shared-cache image without fixup info; not loadable
+```
+
+exit `74` (`MR_EXIT_DSC_NO_FIXUPS`). Packed/sparse fixtures keep their
+chained fixups and still load. Static executables with no DATA pointers are
+not this case.
+
 **Loader must implement:** when any segment's vmaddr or fileoff is not page
 aligned, map the image by COPY: one anonymous mapping per merged
 page-rounded segment run at a common slide (ADRP deltas stay valid), `pread`
@@ -373,6 +396,9 @@ lifted). Two segments that share a host page get the **union** of their
 protections (DATA_CONST `r` after fixups sharing with DATA `rw` becomes
 `rw`; TEXT `rx` sharing with DATA_CONST `rw` would become `rwx` and lose
 W^X on that page). A segment whose file bytes exceed the file is refused.
+A dylib with `__DATA`/`__DATA_CONST` file bytes and neither a chained
+fixup blob nor a classic rebase/bind stream is refused before mapping
+(`MR_EXIT_DSC_NO_FIXUPS`): that is a cache extract, not a static image.
 The mmap fast path for page-aligned segments is unchanged.
 
 ### (h) `pthread` — threads and per-thread TLS

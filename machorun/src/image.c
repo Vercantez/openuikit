@@ -475,6 +475,20 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
 
     parse_load_commands(im);
 
+    /* Cache extracts (plain `ipsw dyld extract` and `--slide --objc --stubs`)
+     * keep cache VAs / cache-resident binds in __DATA* and have no rebase or
+     * bind tables for a loader to apply. Sliding intra-image pointers would
+     * still leave every cross-image call pointing into the missing cache.
+     * Refuse before mapping: Apple's TEXT-to-DATA hole is hundreds of MB. */
+    if (mr_image_is_cache_extract_without_fixups(im)) {
+        fflush(stdout);
+        fprintf(stderr,
+                "machorun: %s: dyld-shared-cache image without fixup info; not loadable\n",
+                im->path);
+        fflush(stderr);
+        _exit(MR_EXIT_DSC_NO_FIXUPS);
+    }
+
     /* Registered before dependencies so a cycle terminates. */
     mr_image_append(im);
     if (is_main) MR.main_image = im;

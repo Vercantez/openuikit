@@ -47,6 +47,7 @@ class PackMachoTests(unittest.TestCase):
             "CACHE_SPARSE_DELTA = 0x22256720",
             "def pack_bytes",
             "def oversize_bytes",
+            "def strip_fixup_lcs",
             "dyld-shared-cache",
         ):
             self.assertIn(token, text)
@@ -131,6 +132,7 @@ class PackMachoTests(unittest.TestCase):
         self.assertIn("gap +0x4008 PROT_NONE", r.stdout)
         self.assertIn("DATA_CONST +0x22256720", r.stdout)
         self.assertIn("no union VMA", r.stdout)
+        self.assertIn("dsc-nofix predicate ok", r.stdout)
 
     def test_committed_sparse_dylib_is_cache_wide(self) -> None:
         pm = _pack_mod()
@@ -191,6 +193,35 @@ class PackMachoTests(unittest.TestCase):
         )
         self.assertGreaterEqual(n, 1)
         self.assertEqual(bytes(layout), sparse_exe)
+
+    def test_committed_nofix_dylib_has_no_fixup_lcs(self) -> None:
+        pm = _pack_mod()
+        path = BIN / "libcache_nofix.dylib"
+        self.assertTrue(path.is_file(), path)
+        img = pm.Image(path.read_bytes())
+        self.assertFalse(img.find_cmd(pm.LC_DYLD_CHAINED_FIXUPS))
+        self.assertFalse(img.find_cmd(pm.LC_DYLD_INFO))
+        self.assertFalse(img.find_cmd(pm.LC_DYLD_INFO_ONLY))
+        self.assertTrue(img.find_cmd(pm.LC_DYLD_EXPORTS_TRIE))
+        data_c = next(s for s in img.segs if s.name == "__DATA_CONST")
+        self.assertGreater(data_c.filesize, 0)
+        rebuilt = pm.strip_fixup_lcs((BIN / "libcache_layout.dylib").read_bytes())
+        buf = bytearray(rebuilt)
+        n = pm.set_lc_string(
+            buf, "@rpath/libcache_layout.dylib", "@rpath/libcache_nofix.dylib"
+        )
+        self.assertGreaterEqual(n, 1)
+        self.assertEqual(path.read_bytes(), bytes(buf))
+
+    def test_committed_nofix_rename_roundtrip(self) -> None:
+        pm = _pack_mod()
+        layout = bytearray((BIN / "cache_layout").read_bytes())
+        nofix_exe = (BIN / "cache_layout_nofix").read_bytes()
+        n = pm.set_lc_string(
+            layout, "@rpath/libcache_layout.dylib", "@rpath/libcache_nofix.dylib"
+        )
+        self.assertGreaterEqual(n, 1)
+        self.assertEqual(bytes(layout), nofix_exe)
 
 
 if __name__ == "__main__":

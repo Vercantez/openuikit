@@ -148,6 +148,16 @@ char *mr_join(const char *a, const char *b);
 char *mr_dirname(const char *path);
 int   mr_file_exists(const char *path);
 
+/* A dyld-shared-cache extract (ipsw dyld extract, with or without --slide)
+ * has neither LC_DYLD_INFO nor LC_DYLD_CHAINED_FIXUPS: dyld already applied
+ * rebases and binds inside the cache and stripped the tables. __DATA /
+ * __DATA_CONST still hold cache VAs and cache-resident binds, so there is
+ * nothing a loader can apply. True for MH_DYLIB/MH_BUNDLE with data bytes
+ * and no usable fixup stream. Static executables and our packed fixtures
+ * (which keep chained fixups) are false. */
+int mr_image_is_cache_extract_without_fixups(const mr_image *im);
+#define MR_EXIT_DSC_NO_FIXUPS 74
+
 /* ------------------------------------------------------------- host_deny */
 /* The loud stub for `name`, or NULL when the name may be host-bound. The host
  * fallback is a DEFAULT, not a decision; src/host_deny.c is the list of names
