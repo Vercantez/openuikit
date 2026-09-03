@@ -583,6 +583,11 @@ fi  # libobjc+libquartz present; CHECK 3 ran
 # is where it found the eight names #73 is about. Two copies of one symbol
 # checker would drift exactly as a .tbd drifts from its dylib.
 echo "   CHECK 5: the host-fallback surface of darwin/"
+# Overlay/stdlib cross-builds need .tbd files (CHECKs 0–4), not a host-fallback
+# audit of an operator mrroot they do not own. Phase2 still runs this check.
+if [ "${MACHORUN_SKIP_HOSTFALLBACK_CHECK:-0}" = 1 ]; then
+    echo "   CHECK 5: skipped (MACHORUN_SKIP_HOSTFALLBACK_CHECK=1; not a .tbd precondition)"
+else
 # Status captured from the command, NOT from a pipeline: `cmd | sed` reports
 # sed's exit status, and this file's `set -o pipefail` is one edit away from
 # turning that into a check that cannot fail.
@@ -591,6 +596,7 @@ printf '%s\n' "$cu_out" | sed 's/^/   /'
 if [ "$cu_rc" != 0 ]; then
     echo "!! re-run: scripts/check_undefined.sh --strict $ROOT/darwin" >&2
     exit 1
+fi
 fi
 
 echo "   all six checks passed"
