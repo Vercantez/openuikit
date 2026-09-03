@@ -89,11 +89,18 @@ for h in "$W/libc/"*.h; do
   cp "$h" "$SDK/usr/include/$b"
 done
 
-# 3c. libc++. A real macOS SDK ships Apple's libc++ at usr/include/c++/v1; the
+# 3c. POSIX overlay headers LibcOverlayShims.h needs (semaphore.h, sys/ioctl.h
+#     and the ioctl closure). Copied from the same apple-oss-distributions
+#     pins as machorun/sdk/SOURCES.tsv — not stand-ins. Refuse-overwrite lives
+#     in stage_overlay_posix.sh.
+bash "$SCRIPT_DIR/stage_overlay_posix.sh" "$SDK"
+
+# 3d. libc++. A real macOS SDK ships Apple's libc++ at usr/include/c++/v1; the
 #     stdlib's C++ half needs <new>, <atomic>, <type_traits>, ... machorun's
 #     SDK_SURVEY §2.5 measured stock LLVM 18 libc++ as a drop-in for Apple's
 #     (objc4 scored the same 41/44 and produced a byte-identical binary), so we
 #     use Ubuntu's libc++-18 headers rather than fabricating 734 of our own.
+#     (Numbering: overlay POSIX headers are 3c; this is 3d.)
 mkdir -p "$SDK/usr/include/c++"
 cp -a /usr/lib/llvm-18/include/c++/v1 "$SDK/usr/include/c++/v1"
 

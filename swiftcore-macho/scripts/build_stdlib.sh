@@ -19,13 +19,18 @@
 
 # This 4-vCPU / 15 GiB cloud-agent VM uses NINJA_JOBS=2. It will configure and
 # compile as far as RAM/time allow; it will not fake a dylib. Execution of the
-# linked guest is refused here — that is the operator host's job.
+# linked guest is a positive machorun-loader probe in verify_hello.sh, not a
+# VM assumption.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/guest_arch.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/ninja_checked.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_targets.inc"
 
 W=${W:-$HOME/work}
 B=${B:-$W/build}
@@ -44,6 +49,37 @@ export SWIFT_TOOLCHAIN SWIFT_PATH_TO_STRING_PROCESSING_SOURCE SWIFT_PATH_TO_LIBD
 
 mkdir -p "$W"
 step() { printf '\n==== %s ====\n' "$*"; }
+
+# Every ninja invocation reports its status. The core target may hit the
+# expected ELF gold wall (BUILD_LOG wall 7); overlay targets may not.
+run_stdlib_ninja() {
+  step "ninja $SWIFTCORE_NINJA_CORE -j$NINJA_JOBS"
+  ninja_checked --allow-gold-wall "$W/build.log" -C "$B" -j "$NINJA_JOBS" \
+    "$SWIFTCORE_NINJA_CORE"
+  obj_n=$(find "$B" -name '*.o' 2>/dev/null | wc -l)
+  echo "objects=$obj_n"
+  if [ "$STOP_AFTER" = ninja-first ]; then
+    echo "STOP_AFTER=ninja-first — first ninja finished. objects=$obj_n"
+    exit 0
+  fi
+  if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
+    overlay_select_targets "$B" "$SWIFTCORE_DARWIN_ARCH"
+    local t
+    for t in "${OVERLAY_NINJA_TARGETS[@]}"; do
+      step "ninja overlay $t"
+      ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" "$t"
+    done
+  fi
+}
+
+# Test hook: skip bootstrap/cmake so test_ninja_rc.sh can prove a failing
+# ninja target makes this script exit non-zero.
+if [ "${SWIFTCORE_NINJA_HARNESS:-0}" = 1 ]; then
+  mkdir -p "$B"
+  run_stdlib_ninja
+  echo "build_stdlib done darwin_arch=$SWIFTCORE_DARWIN_ARCH harness=1"
+  exit 0
+fi
 
 # ---------------------------------------------------------------------------
 # 0. Recorded arm64 artifacts must still be the arm64 slice after we finish.
@@ -130,38 +166,11 @@ if [ "$STOP_AFTER" = configure ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 6. Build. The ninja link edge is ELF (.so); that is expected (BUILD_LOG wall 7).
+# 6. Build. The ninja link edge is ELF (.so); that is expected (BUILD_LOG wall 7)
+#    and is the only ninja failure that is allowed to continue. Overlay ninja
+#    failures (unknown target, missing header, compile error) exit non-zero.
 # ---------------------------------------------------------------------------
-step "ninja $SWIFTCORE_NINJA_CORE -j$NINJA_JOBS"
-set +e
-ninja -C "$B" -j "$NINJA_JOBS" "$SWIFTCORE_NINJA_CORE" 2>&1 | tee "$W/build.log"
-ninja_st=${PIPESTATUS[0]}
-set -e
-obj_n=$(find "$B" -name '*.o' | wc -l)
-echo "ninja exit=$ninja_st objects=$obj_n"
-if [ "$STOP_AFTER" = ninja-first ]; then
-  echo "STOP_AFTER=ninja-first — first ninja finished. objects=$obj_n"
-  exit 0
-fi
-
-# Overlay targets, best-effort after core objects exist. Each is a separate
-# ninja invocation so a wall names itself.
-if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
-  for t in \
-      "$SWIFTCORE_NINJA_CONCURRENCY" \
-      "swiftSynchronization-macosx-${SWIFTCORE_DARWIN_ARCH}" \
-      "swift_StringProcessing-macosx-${SWIFTCORE_DARWIN_ARCH}" \
-      "swift_Builtin_float-macosx-${SWIFTCORE_DARWIN_ARCH}" \
-      "swiftDarwin-macosx-${SWIFTCORE_DARWIN_ARCH}" \
-      "swiftObjectiveC-macosx-${SWIFTCORE_DARWIN_ARCH}"
-  do
-    step "ninja overlay $t"
-    set +e
-    ninja -C "$B" -j "$NINJA_JOBS" "$t" 2>&1 | tee -a "$W/build.log"
-    echo "overlay $t exit=${PIPESTATUS[0]}"
-    set -e
-  done
-fi
+run_stdlib_ninja
 
 # ---------------------------------------------------------------------------
 # 7. Mach-O link from ninja's object list
@@ -190,7 +199,7 @@ if [ -f "$CORE_OUT" ]; then
   step "verify $CORE_OUT"
   bash "$SCRIPT_DIR/verify.sh"
   bash "$SCRIPT_DIR/stage_artifacts.sh"
-  bash "$SCRIPT_DIR/verify_hello.sh" || true
+  bash "$SCRIPT_DIR/verify_hello.sh"
 else
   echo "NO libswiftCore.dylib at $CORE_OUT"
   echo "objects compiled: $obj_n"
