@@ -1,0 +1,5 @@
+---
+Name: Darwin
+Enumerators:
+- Name: _CLOCK_REALTIME
+  SwiftName: CLOCK_REALTIME

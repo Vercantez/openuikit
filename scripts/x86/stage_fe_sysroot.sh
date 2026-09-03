@@ -187,6 +187,11 @@ if [ -f "$SYS/usr/include/Darwin.modulemap" ] \
     sed -i '$i\  textual header "fe_clock_realtime.h"' "$SYS/usr/include/Darwin.modulemap"
     echo "  Darwin.modulemap textual header fe_clock_realtime.h"
 fi
+# Swift imports enumerator _CLOCK_REALTIME, not `#define CLOCK_REALTIME`.
+if [ -f "$W/scripts/x86/Darwin.apinotes" ]; then
+    cp -f "$W/scripts/x86/Darwin.apinotes" "$SYS/usr/include/Darwin.apinotes"
+    echo "  Darwin.apinotes SwiftName CLOCK_REALTIME <- _CLOCK_REALTIME"
+fi
 
 # SwiftOverlayShims expects timespec/timeval from the Clang Darwin module.
 # Linux LibcOverlayShims.h does not include sys/time.h.

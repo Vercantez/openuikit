@@ -318,8 +318,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.13' "$COMMON" \
-    "recipe bump restages a sysroot whose Darwin map lacked libc/FileManager headers"
+expect_grep 'stage_fe_sysroot_x86.14' "$COMMON" \
+    "recipe bump restages a sysroot that lacked Darwin.apinotes CLOCK_REALTIME"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -352,8 +352,9 @@ expect_grep 'phase2_posix_overlay_dir' "$PHASE2" \
     "os-module and FE still receive overlay-posix -I (sysroot stub is what Clang modules see)"
 expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/build_os_module.sh" \
     "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
-expect_grep 'fe_clock_realtime.h' "$STAGE" \
-    "x86 stager exposes CLOCK_REALTIME as clockid_t"
+expect_grep 'Darwin.apinotes' "$STAGE" \
+    "x86 stager stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
+expect_file "$ROOT/scripts/x86/Darwin.apinotes"
 expect_grep 'build_foundation_placeholder.sh' "$COMMON" \
     "run-root Foundation slots are empty placeholders, not loud-abort stubs"
 expect_grep 'Work dir MUST sit outside dest' "$COMMON" \
