@@ -161,7 +161,11 @@ while IFS= read -r f; do
   # Full path as well as basename: libswiftCore.dylib lives in a subdirectory,
   # so re-deriving "$MRLIB/$basename" later would silently fail to find it.
   printf '%s\t%s\t%s\n' "$(basename "$f")" "$n" "$f" >> "$tmp/examined.txt"
-done < <(find "$MRLIB" -name '*.dylib' 2>/dev/null | sort)
+done < <(find "$MRLIB" -type f -name '*.dylib' ! -name '.*' 2>/dev/null | sort)
+# `! -name '.*'`: scripts/env/prepare.py (PR #65) writes a product stamp
+# `.source-tree.<basename>` beside each artefact; `.source-tree.libSystem.B.dylib`
+# matched the glob, read as 0 symbols, and the zero-symbol refusal below fired
+# (measured 2026-09-03 on the x86_64 box, main 0c2cbf39).
 sort -u "$tmp/userland.raw" 2>/dev/null > "$tmp/userland.txt" || true
 
 # Fold the LOADER's exports into the userland set. In machorun the loader IS

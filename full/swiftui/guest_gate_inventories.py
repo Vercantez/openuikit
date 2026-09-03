@@ -583,7 +583,28 @@ def loads(gate: str, name: str, arch: str) -> tuple[str, ...]:
 
 
 def inputs(gate: str, name: str, arch: str) -> tuple[str, ...]:
-    return macos_overlay_autolink_inputs(_inputs_table(gate)[name], arch)
+    items = macos_overlay_autolink_inputs(_inputs_table(gate)[name], arch)
+    if arch == "x86_64":
+        # The load record implies the contributing tbd: when the x86_64 loads
+        # list gained libswiftDarwin by the errno replacement, the link map
+        # lists libswiftDarwin.tbd too (measured on the x86_64 box at main
+        # 1663f48f: libOpenUIKit +{SYS}/usr/lib/swift/libswiftDarwin.tbd at
+        # the end). arm64 never listed libswift_errno.tbd for these dylibs,
+        # so there is nothing to replace; append.
+        # The onboarding gate has no LC_LOAD_DYLIB table; its packaged
+        # dylibs are the widget gate's, so the widget loads are the reference.
+        try:
+            loads_table = _loads_table(gate)
+        except KeyError:
+            loads_table = _loads_table("widget")
+        arm_loads = loads_table.get(name, ())
+        x86_loads = macos_overlay_autolink_loads(arm_loads, "x86_64")
+        gained = (
+            X86_OVERLAY_AUTOLINK in x86_loads and X86_OVERLAY_AUTOLINK not in arm_loads
+        )
+        if gained and X86_OVERLAY_AUTOLINK_TBD not in items:
+            items = items + (X86_OVERLAY_AUTOLINK_TBD,)
+    return items
 
 
 def package_items(name: str, arch: str) -> tuple[str, ...]:

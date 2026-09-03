@@ -1411,13 +1411,25 @@ phase2_fill_x86_libswiftcompat() {
     local log=$work/build_compat.log
     local alias=$work/compat-sdk
     mkdir -p "$(dirname "$out")" "$work"
-    if phase2_is_x86_macho "$out"; then
-        return 0
-    fi
-    rm -f "$out"
     if [ ! -f "$src_dir/swiftcompat.c" ] || [ ! -f "$src_dir/shim.cpp" ]; then
         return 1
     fi
+    # Reuse only against a stamp of the sources that produce the dylib.
+    # Measured 2026-09-03 (x86_64, main 44aa9493): a 04:38 compat built from
+    # the pre-PR67 swiftcompat.c was reused by existence after the source
+    # changed at 09:25, so FoundationEssentials bound strtod_l/strtof_l from
+    # libSystem on x86_64 while arm64 bound them from libswiftcompat and the
+    # link-map inventory diverged.
+    local stamp=$out.source-sha256 want
+    want=$(cat "$src_dir/swiftcompat.c" "$src_dir/shim.cpp" "$repo/swiftcore-macho/scripts/build_compat.sh" 2>/dev/null | sha256sum | awk '{print $1}')
+    if phase2_is_x86_macho "$out" && [ -f "$stamp" ] && [ "$(cat "$stamp")" = "$want" ]; then
+        echo "phase2: libswiftcompat reused=1 source-sha256=${want:0:12}" >&2
+        return 0
+    fi
+    if [ -f "$out" ]; then
+        echo "phase2: libswiftcompat rebuilt reason=$([ -f "$stamp" ] && echo "source-sha256 $(cut -c1-12 "$stamp")->${want:0:12}" || echo no-stamp)" >&2
+    fi
+    rm -f "$out" "$stamp"
     phase2_prepare_compat_alias_sdk "$sys" "$alias"
     set +e
     W="$dest" SDK="$alias" SRC="$src_dir" MRLIB="$mrlib" LOADER="$loader" \
@@ -1428,6 +1440,7 @@ phase2_fill_x86_libswiftcompat() {
         rm -f "$out"
         return 1
     fi
+    printf '%s\n' "$want" > "$stamp"
 }
 
 # Stage BASE swift runtime dylibs from the overlay search. Always overwrite

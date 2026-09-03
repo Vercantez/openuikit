@@ -289,7 +289,8 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn('perl "$ATTEST" providers', text)
         self.assertIn('--opencoregraphics "$PACKAGE/libOpenCoreGraphics.dylib"', text)
         self.assertIn('--foundationessentials "$PACKAGE/libFoundationEssentials.dylib"', text)
-        self.assertIn("--demangle swift-demangle", text)
+        self.assertIn('--demangle "$SWIFT_DEMANGLE"', text)
+        self.assertIn("readlink -f", text)
         self.assertIn("Universal, non-vacuous two-level provider gate", text)
         self.assertIn("_$sxSg7SwiftUI9_OpenViewA2bCRzlMc", text)
         self.assertIn("_$s4Body7SwiftUI9_OpenViewPTl", text)
@@ -850,6 +851,16 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
                         len(arm) - (1 if dropped else 0),
                         f"{kind}/{name}",
                     )
+                elif kind == "inputs":
+                    expected = arm
+                    wl = inventories.loads("widget", name, "arm64") if name in inventories.check_names("widget", "loads") else ()
+                    if (
+                        inventories.ARM64_OVERLAY_AUTOLINK in wl
+                        and inventories.X86_OVERLAY_AUTOLINK not in wl
+                        and inventories.X86_OVERLAY_AUTOLINK_TBD not in arm
+                    ):
+                        expected = arm + (inventories.X86_OVERLAY_AUTOLINK_TBD,)
+                    self.assertEqual(x86, expected, f"{kind}/{name}")
                 else:
                     self.assertEqual(x86, arm, f"{kind}/{name}")
                 self.assertTrue(x86, f"{kind}/{name} empty")
@@ -866,7 +877,17 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
         for name in inventories.check_names("onboarding", "inputs"):
             arm = inventories.inputs("onboarding", name, "arm64")
             x86 = inventories.inputs("onboarding", name, "x86_64")
-            self.assertEqual(x86, arm, name)
+            # x86_64 appends libswiftDarwin.tbd for a dylib whose loads gained
+            # libswiftDarwin by the errno replacement (measured: OpenUIKit).
+            expected = arm
+            widget_loads = inventories.loads("widget", name, "arm64") if name in inventories.check_names("widget", "loads") else ()
+            if (
+                inventories.ARM64_OVERLAY_AUTOLINK in widget_loads
+                and inventories.X86_OVERLAY_AUTOLINK not in widget_loads
+                and inventories.X86_OVERLAY_AUTOLINK_TBD not in arm
+            ):
+                expected = arm + (inventories.X86_OVERLAY_AUTOLINK_TBD,)
+            self.assertEqual(x86, expected, name)
             self.assertEqual(
                 inventories.inventory_sha256(x86),
                 _ARM64_ONBOARDING_INPUT_SHA256[name],
