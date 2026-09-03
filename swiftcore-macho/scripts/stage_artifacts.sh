@@ -52,6 +52,24 @@ while IFS= read -r -d '' f; do
       if [ -f "$dest" ]; then
         check_cpu "$dest"
       fi
+      if [ "$bn" = libswiftDarwin.dylib ]; then
+        # Apple's libswiftDarwin carries exactly four LC_REEXPORT_DYLIB
+        # (Builtin_float, _DarwinFoundation1/2/3). A Darwin linked at the
+        # CMake deployment target records Builtin_float under its
+        # $ld$previous name (a self re-export) -- that image was staged and
+        # reused for a whole day (2026-09-03). Refuse to publish it.
+        want=$(printf '%s\n' /usr/lib/swift/libswift_Builtin_float.dylib \
+          /usr/lib/swift/libswift_DarwinFoundation1.dylib \
+          /usr/lib/swift/libswift_DarwinFoundation2.dylib \
+          /usr/lib/swift/libswift_DarwinFoundation3.dylib)
+        have=$("${OTOOL:-llvm-otool-18}" -l "$f" 2>/dev/null \
+          | awk '/LC_REEXPORT_DYLIB/{r=1} r&&/^ *name /{print $2; r=0}' | sort -u)
+        if [ "$have" != "$want" ]; then
+          echo "stage_artifacts: REFUSING — $f LC_REEXPORT_DYLIB set is not Apple's four (CANNOT_DARWIN_REEXPORT)" >&2
+          printf '  have: %s\n' "${have:-<none>}" >&2
+          exit 2
+        fi
+      fi
       ;;
     *.a) ;;
     *) continue ;;
