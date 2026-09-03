@@ -145,12 +145,11 @@ for id in "${ids[@]}"; do
             stdout_ok=0 stderr_ok=0
             cmp -s "$EXPECTED/$id.stdout" "$ACTUAL/$id.stdout" && stdout_ok=1
             cmp -s "$EXPECTED/$id.stderr" "$ACTUAL/$id.stderr" && stderr_ok=1
-            if [[ "$ee" == "$ae" && "$stdout_ok" == 1 && "$stderr_ok" == 1 ]] \
-               && ! grep -q 'vm_allocate aligned=' "$ACTUAL/$id.stdout"; then
-                # Exact match, and no page-size line that Darwin/x86 will
-                # itself disagree with. (vm_allocate aligned=yes can happen
-                # on a 4 KiB allocator by luck of 16 KiB alignment -- that
-                # MATCH would be a false green.)
+            if [[ "$ee" == "$ae" && "$stdout_ok" == 1 && "$stderr_ok" == 1 ]]; then
+                # Exact match. (The old vm_allocate aligned= luck guard is gone:
+                # the fixture now tests vm_page_size alignment, which Darwin
+                # promises on both arches, and tests/expected-x86_64 carries
+                # the recorded x86 answer.)
                 verdict="MATCH"
                 n_match=$((n_match + 1))
             elif [[ "$ee" == "$ae" && "$stderr_ok" == 1 ]] && is_arch_baseline "$id"; then

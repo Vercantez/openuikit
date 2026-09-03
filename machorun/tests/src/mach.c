@@ -34,7 +34,11 @@ int main(void)
     printf("vm_allocate kr=%d ok=%s\n", kr, kr == KERN_SUCCESS ? "yes" : "no");
     if (kr != KERN_SUCCESS) return 1;
 
-    printf("vm_allocate aligned=%s\n", (addr & 0x3fff) == 0 ? "yes" : "no");
+    /* Alignment to the host page: 16 KiB on arm64, 4 KiB on x86_64. A fixed
+     * 0x3fff mask read "yes" on Darwin/x86_64 only by luck of placement
+     * (measured 2026-09-03 under Rosetta), so it is not an oracle-gradeable
+     * line; vm_page_size is what Darwin promises. */
+    printf("vm_allocate aligned=%s\n", (addr & (vm_page_size - 1)) == 0 ? "yes" : "no");
 
     /* Freshly allocated Mach memory is zero-filled, by contract. */
     {
