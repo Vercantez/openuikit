@@ -1,10 +1,10 @@
 {
   "artifact": "libswiftcompat.dylib",
   "arch": "arm64",
-  "artifactSha256": "c3dec553a1b483d7f272932b643020eba28ef68522743af8c45092c80ba31623",
-  "artifactBytes": 51792,
+  "artifactSha256": "3c623518c5e631b33509eb095e9e17428fea5ceaa96801b09941693e6efb72bd",
+  "artifactBytes": 51360,
   "swiftcompat.c": {
     "path": "sdk/compat/swiftcompat.c",
-    "sha256": "e76711be4528ea57f980d1fcd755d41ff08f75a17f3d9e4bbf39600349622c03"
+    "sha256": "68293a0271ca95286c574fe88c583dbd6710cc9d0519868d627468c3b519ab28"
   }
 }

@@ -260,19 +260,14 @@ size_t pthread_get_stacksize_np(pthread_t t) { (void)t; return SHIM_DEFAULT_STAC
  * libdispatch's main-queue check. It was never reached only because it was
  * never built: the shipped shim predates this line. */
 
-unsigned qos_class_self(void);
-unsigned qos_class_self(void) { return 0x21; }  /* QOS_CLASS_USER_INITIATED */
-
-int memset_s(void *d, size_t dn, int c, size_t n);
-int memset_s(void *d, size_t dn, int c, size_t n) {
-    if (!d) return 22; if (n > dn) { memset(d, c, dn); return 34; }
-    memset(d, c, n); return 0;
-}
-
-/* clock_getres is already declared by our sysroot's <time.h>; match it exactly
- * rather than redeclare, and forward to glibc through the loader's boundary. */
-extern int glibc_clock_getres(clockid_t, struct timespec *) __asm__("_glibc_clock_getres");
-int clock_getres(clockid_t id, struct timespec *ts) { return glibc_clock_getres(id, ts); }
+/* DELETED 2026-09-03: qos_class_self, memset_s, clock_getres, os_release,
+ * voucher_copy, voucher_adopt. They live in machorun's libSystem
+ * (darwin/src/libsystem.c / posix.c) so the x86 overlay NOUNDEFS surface
+ * and the arm64 .real are the same names. A copy here beats .real
+ * (umbrella-shadows-reexport / CHECK 4). qos_class_self here returned
+ * 0x21 (USER_INITIATED); machorun returns QOS_CLASS_DEFAULT (0x15).
+ * clock_getres here forwarded Darwin CLOCK_* ids to glibc -- Darwin
+ * CLOCK_MONOTONIC is 6 = Linux CLOCK_MONOTONIC_COARSE. */
 
 /* DELETED 2026-08-27: malloc_type_malloc. machorun's libSystem implements the
  * whole family, and this project has already paid once for a second copy of it:
@@ -283,20 +278,12 @@ int clock_getres(clockid_t id, struct timespec *ts) { return glibc_clock_getres(
 /* os_log / os_signpost: telemetry only. No-ops that keep the shape. */
 void *os_log_create(const char *s, const char *c);
 void *os_log_create(const char *s, const char *c) { (void)s; (void)c; return (void *)1; }
-void os_release(void *p);
-void os_release(void *p) { (void)p; }
 int  os_signpost_enabled(void *l);
 int  os_signpost_enabled(void *l) { (void)l; return 0; }
 unsigned long long os_signpost_id_generate(void *l);
 unsigned long long os_signpost_id_generate(void *l) { (void)l; return 0; }
 unsigned long long os_signpost_id_make_with_pointer(void *l, const void *p);
 unsigned long long os_signpost_id_make_with_pointer(void *l, const void *p) { (void)l; (void)p; return 0; }
-
-/* Mach vouchers: QoS propagation across queues. There are no queues here. */
-void *voucher_copy(void);
-void *voucher_copy(void) { return 0; }
-void *voucher_adopt(void *v);
-void *voucher_adopt(void *v) { (void)v; return 0; }
 
 int csops(int pid, unsigned int ops, void *useraddr, size_t usersize);
 int csops(int pid, unsigned int ops, void *useraddr, size_t usersize) {
