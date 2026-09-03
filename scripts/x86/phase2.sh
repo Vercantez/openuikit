@@ -700,7 +700,8 @@ fi
 
 # ---------------------------------------------------------------------------
 # 6a. scratch/mrroot_fe-x86_64 — FE overlays from the x86 stdlib cross-build.
-#     CoreSimulator overlays are arm64-only non-fat; never use that macOS marker.
+# Emits CANNOT_X86_OVERLAYS_NOT_BUILT (phase2_cannot prefixes CANNOT_).
+# CoreSimulator overlays are arm64-only non-fat; never use that macOS marker.
 echo "==== mrroot_fe-x86_64 (FE overlays, beside $ARM_FE_MRROOT) ===="
 [ "$FE_MRROOT" != "$ARM_FE_MRROOT" ] || {
     cannot mrroot-fe-overlays-x86 MRROOT_COLLIDES_ARM64 "x86 FE overlay path equals arm64 scratch/mrroot_fe"

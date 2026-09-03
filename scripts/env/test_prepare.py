@@ -104,7 +104,13 @@ class PrepareTests(unittest.TestCase):
             "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb",
         )
         self.assertRegex(proc.stdout, r"ENV_PREPARE_(STAGED|SATISFIED) id=libswiftCore")
-        self.assertIn("CURSOR_ENV_CANNOT_BUILD_LOADER", proc.stdout)
+        # x86 cannot compile the arm64 Linux-native loader; if this host already
+        # has an x86 ELF loader (phase2 substrate), the row is satisfied instead.
+        self.assertTrue(
+            "CURSOR_ENV_CANNOT_BUILD_LOADER" in proc.stdout
+            or "ENV_PREPARE_SATISFIED id=machorun-loader" in proc.stdout,
+            proc.stdout,
+        )
         summary = [ln for ln in proc.stdout.splitlines() if ln.startswith("ENV_PREPARE_SUMMARY ")][0]
         print(summary)
 
@@ -140,7 +146,11 @@ class PrepareTests(unittest.TestCase):
         )
         self.assertTrue(SUMMARY.match(line), line)
         cannot_rows = [o for o in outcomes if o.status == "cannot"]
-        self.assertTrue(any(o.marker == "CURSOR_ENV_CANNOT_BUILD_LOADER" for o in cannot_rows) or host_arch() in ("aarch64", "arm64"))
+        self.assertTrue(
+            any(o.marker == "CURSOR_ENV_CANNOT_BUILD_LOADER" for o in cannot_rows)
+            or any(o.id == "machorun-loader" and o.status == "satisfied" for o in outcomes)
+            or host_arch() in ("aarch64", "arm64")
+        )
 
 
 UNSUFFIXED_TREE = re.compile(

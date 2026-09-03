@@ -511,7 +511,7 @@ def staged_outcome(root: Path, row: dict, verify_only: bool, arch: str, system: 
             return Outcome(
                 "cannot",
                 ident,
-                f"missing={','.join(missing)}",
+                f"missing={','.join(missing)} path={path}",
                 marker="CANNOT_X86_OVERLAYS_NOT_BUILT",
             )
         if path.is_dir():

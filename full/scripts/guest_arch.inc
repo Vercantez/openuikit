@@ -37,7 +37,8 @@ SYSROOT_SUFFIX=$FULL_OUT_SUFFIX
 OPENCOMBINE_EXPORT_SUFFIX=$FULL_OUT_SUFFIX
 # Child processes (widget env-prepare / scripts/env/prepare.py) must inherit
 # the suffix; otherwise they resolve unsuffixed arm64 trees on an x86 host.
-export TARGET ARCH FULL_OUT_SUFFIX SYSROOT_SUFFIX OPENCOMBINE_EXPORT_SUFFIX
+export FULL_OUT_SUFFIX
+export TARGET ARCH SYSROOT_SUFFIX OPENCOMBINE_EXPORT_SUFFIX
 export LD64_ARCH SWIFT_MODULE_TRIPLE OTOOL_CPU
 
 require_macho_cpu() {
