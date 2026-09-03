@@ -445,7 +445,14 @@ for s in "$OSMOD_SH" "$COL_SH" "$FE_SH"; do
     fi
 done
 # /w -> physical tree is the same inode; clang treats two spellings as two pcm defs.
-MCWORK=$(mktemp -d /tmp/phase2-modcache.XXXXXX)
+# macOS: /tmp is a symlink to /private/tmp, so mktemp may return /tmp/... while
+# realpath -P returns /private/tmp/.... Reproduce that split on Linux with a
+# tmp -> private/tmp alias, then compare pwd -P paths on both sides.
+MC_HOST=$(mktemp -d /tmp/phase2-modcache-host.XXXXXX)
+mkdir -p "$MC_HOST/private/tmp"
+ln -sfn "$MC_HOST/private/tmp" "$MC_HOST/tmp"
+MC_REAL=$(mktemp -d "$MC_HOST/private/tmp/phase2-modcache.XXXXXX")
+MCWORK="$MC_HOST/tmp/$(basename "$MC_REAL")"
 mkdir -p "$MCWORK/physical/scratch/modcache_fe4-x86_64"
 ln -sfn "$MCWORK/physical" "$MCWORK/wlink"
 via_w=$(phase2_canonical_dir "$MCWORK/wlink/scratch/modcache_fe4-x86_64")
@@ -455,11 +462,16 @@ if [ -n "$via_w" ] && [ "$via_w" = "$via_phys" ]; then
 else
     die_test "canonical cache mismatch via_w=$via_w via_phys=$via_phys"
 fi
-case "$via_w" in
-    "$MCWORK/wlink"*) die_test "canonical cache still uses symlink spelling $via_w" ;;
-    "$MCWORK/physical"*) ok "canonical cache is the physical spelling ($via_w)" ;;
-    *) die_test "canonical cache is neither symlink nor physical: $via_w" ;;
-esac
+phys_canon=$(cd "$MCWORK/physical/scratch/modcache_fe4-x86_64" && pwd -P)
+link_unresolved="$MCWORK/wlink/scratch/modcache_fe4-x86_64"
+if [ "$via_w" = "$link_unresolved" ]; then
+    die_test "canonical cache still uses symlink spelling $via_w"
+fi
+if [ "$via_w" = "$phys_canon" ]; then
+    ok "canonical cache is the physical spelling ($via_w)"
+else
+    die_test "canonical cache is neither symlink nor physical: $via_w (physical=$phys_canon)"
+fi
 # Same canonicalize the os-module script applies on a hand-run with W=/w.
 hand=$(
     unset MC
@@ -486,7 +498,7 @@ if [ "$handed_symlink" = "$via_phys" ]; then
 else
     die_test "passed /w-style MC $handed_symlink != $via_phys"
 fi
-rm -rf "$MCWORK"
+rm -rf "$MC_HOST"
 
 FEWORK=$(mktemp -d /tmp/phase2-fe-imports.XXXXXX)
 mkdir -p "$FEWORK/sys/usr/include" \
