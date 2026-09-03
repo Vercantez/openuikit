@@ -60,6 +60,7 @@ expect_file "$GUEST"
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/foundation/fe_sysroot_measurement.inc" \
+    "$ROOT/full/dispatch/swift_linux_lib.inc" \
     "$ROOT/scripts/x86/ud_guest.inc"; do
     if bash -n "$s"; then
         ok "bash -n $(basename "$s")"
@@ -258,8 +259,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.3' "$COMMON" \
-    "recipe bump restages a sysroot that lacked the FileManager header set"
+expect_grep 'stage_fe_sysroot_x86.4' "$COMMON" \
+    "recipe bump restages a sysroot that lacked SDKSettings.json"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -743,6 +744,108 @@ else
 fi
 rm -rf "$BASE_DEST" "$OVERLAY_HOME" "$OVERLAY_DEST"
 
+echo "== x86 host runtime from /opt/swift/usr layout; empty host is CANNOT_X86_HOST_RUNTIME"
+expect_file "$ROOT/full/dispatch/swift_linux_lib.inc"
+expect_grep 'openuikit_resolve_swift_linux_lib' \
+    "$ROOT/full/dispatch/build_host_bridge.sh" \
+    "build_host_bridge.sh uses the shared Swift linux-lib resolver"
+expect_grep 'openuikit_resolve_swift_linux_lib' "$COMMON" \
+    "phase2 host stager uses the shared Swift linux-lib resolver"
+expect_grep '/opt/swift/usr' "$ROOT/full/dispatch/swift_linux_lib.inc" \
+    "resolver searches /opt/swift/usr"
+expect_grep 'phase2_stage_x86_host_runtime' "$PHASE2" \
+    "phase2 fills scratch/mrroot-x86_64/host"
+expect_grep 'X86_HOST_RUNTIME' "$PHASE2" "empty host/ is CANNOT_X86_HOST_RUNTIME"
+expect_not_grep 'src=/usr/lib/swift/linux/$name' "$COMMON" \
+    "host stager no longer hardcodes /usr/lib/swift/linux"
+expect_not_grep 'X86_HOST_RUNTIME' "$ROOT/scripts/env/markers.py" \
+    "CANNOT_X86_HOST_RUNTIME is not a PR3 CURSOR_ENV_CANNOT_* marker"
+# Host check must appear in phase2.sh before the widget/build_full invocation.
+awk '
+    /cannot mrroot-host-x86 X86_HOST_RUNTIME/ { h=NR }
+    /build_focus_widget_guest.sh/ { if (!w) w=NR }
+    END {
+        if (!h) { print "NO_HOST"; exit 1 }
+        if (!w) { print "NO_WIDGET"; exit 1 }
+        if (!(h<w)) { print "ORDER h="h" w="w; exit 1 }
+        print "OK"
+    }
+' "$PHASE2" | grep -q OK \
+    && ok "CANNOT_X86_HOST_RUNTIME is emitted before build_focus_widget_guest.sh" \
+    || die_test "host runtime CANNOT is not before build_full/widget"
+HOST_NAMES='libdispatch.so,libBlocksRuntime.so,libOpenDispatchHost.so,libOpenFoundationInternationalizationHost.so,libOpenURLTransportHost.so,libOpenRelativeTimeHost.so'
+for host_name in libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so \
+    libOpenFoundationInternationalizationHost.so libOpenURLTransportHost.so \
+    libOpenRelativeTimeHost.so
+do
+    expect_grep "$host_name" "$ROOT/full/dispatch/swift_linux_lib.inc" \
+        "host runtime names $host_name"
+    expect_grep "$host_name" "$BUILD_FULL" "build_full.sh names $host_name"
+done
+
+saved_toolchain=${SWIFT_TOOLCHAIN:-}
+HOST_FIX=$(mktemp -d /tmp/phase2-host-fix.XXXXXX)
+HOST_DEST=$(mktemp -d /tmp/phase2-host-dest.XXXXXX)
+mkdir -p "$HOST_FIX/opt/swift/usr/lib/swift/linux"
+for host_name in libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so \
+    libOpenFoundationInternationalizationHost.so libOpenURLTransportHost.so \
+    libOpenRelativeTimeHost.so
+do
+    printf 'fixture-%s\n' "$host_name" > "$HOST_FIX/opt/swift/usr/lib/swift/linux/$host_name"
+done
+export SWIFT_TOOLCHAIN=$HOST_FIX/opt/swift/usr
+resolved=$(openuikit_resolve_swift_linux_lib)
+if [ "$resolved" = "$HOST_FIX/opt/swift/usr/lib/swift/linux" ]; then
+    ok "resolver uses fixture SWIFT_TOOLCHAIN=/opt/swift/usr layout"
+else
+    die_test "resolver got $resolved want $HOST_FIX/opt/swift/usr/lib/swift/linux"
+fi
+host_ok=$(phase2_stage_x86_host_runtime "$HOST_DEST" || true)
+if [ "$host_ok" = OK ]; then
+    host_all=1
+    for host_name in libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so \
+        libOpenFoundationInternationalizationHost.so libOpenURLTransportHost.so \
+        libOpenRelativeTimeHost.so
+    do
+        if [ ! -f "$HOST_DEST/host/$host_name" ] || [ -L "$HOST_DEST/host/$host_name" ]; then
+            host_all=0
+        fi
+        if ! grep -q "$host_name" "$HOST_DEST/host/SHA256SUMS"; then
+            host_all=0
+        fi
+        want=$(sha256sum "$HOST_DEST/host/$host_name" | awk '{print $1}')
+        got=$(awk -v n="$host_name" '$2 ~ n { print $1; exit }' "$HOST_DEST/host/SHA256SUMS")
+        if [ "$want" != "$got" ]; then
+            host_all=0
+        fi
+    done
+    if [ "$host_all" -eq 1 ]; then
+        ok "fixture /opt/swift/usr layout fills host/ with sha256 recorded"
+    else
+        die_test "fixture host/ incomplete under $HOST_DEST/host: $(ls -l "$HOST_DEST/host")"
+    fi
+else
+    die_test "fixture host stage expected OK got: $host_ok"
+fi
+
+EMPTY_FIX=$(mktemp -d /tmp/phase2-host-empty.XXXXXX)
+EMPTY_DEST=$(mktemp -d /tmp/phase2-host-empty-dest.XXXXXX)
+mkdir -p "$EMPTY_FIX/opt/swift/usr/lib/swift/linux" "$EMPTY_DEST/host"
+export SWIFT_TOOLCHAIN=$EMPTY_FIX/opt/swift/usr
+host_miss=$(phase2_stage_x86_host_runtime "$EMPTY_DEST" || true)
+expected_host_missing="MISSING=$HOST_NAMES"
+if [ "$host_miss" = "$expected_host_missing" ]; then
+    ok "empty host/ is MISSING listing every HOST_RUNTIME_FILES name"
+else
+    die_test "empty host MISSING expected $expected_host_missing got: $host_miss"
+fi
+if [ -z "${saved_toolchain}" ]; then
+    unset SWIFT_TOOLCHAIN
+else
+    export SWIFT_TOOLCHAIN=$saved_toolchain
+fi
+rm -rf "$HOST_FIX" "$HOST_DEST" "$EMPTY_FIX" "$EMPTY_DEST"
+
 echo "== env-prepare with FULL_OUT_SUFFIX=-x86_64 never resolves unsuffixed arm64 trees"
 PREP_FIX=$(mktemp -d /tmp/phase2-prepare-suffix.XXXXXX)
 mkdir -p "$PREP_FIX/env" \
@@ -793,6 +896,12 @@ expect_grep 'export UD_GUEST_BIN' "$PHASE2" "successful link exports UD_GUEST_BI
 expect_grep 'CANNOT_UD_GUEST_' "$UDINC" "refusal markers use CANNOT_UD_GUEST_"
 expect_grep 'LIBCFTEST libCFTest.dylib' "$UDINC" "CF hole names file=libCFTest.dylib"
 expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
+expect_grep 'UserDefaultsGuest.swiftc.log' "$UDINC" "port swiftc output is spilled to a file"
+expect_grep 'runner.swiftc.log' "$UDINC" "runner swiftc output is spilled to a file"
+expect_grep '_FoundationCShims' "$UDINC" "port/runner pass the CShims module map"
+expect_grep 'phase2_ensure_sdk_settings' "$UDINC" "ud-guest compile writes SDKSettings.json if missing"
+expect_grep 'phase2_ensure_sdk_settings' "$STAGE" "x86 sysroot stager writes SDKSettings.json"
+expect_grep 'SDKSettings.json' "$COMMON" "SDKSettings.json helper is shared"
 expect_grep 'RUNNER runner.o' "$UDINC" "runner hole names file=runner.o"
 expect_grep 'build_ud_score_guest.sh' "$UDINC" "port/runner argv follows the committed scoreboard compile"
 expect_grep 'build_full.sh argv -O1 -nostdinc' "$UDINC" \
@@ -910,6 +1019,24 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     unset UD_CFTEST_DYLIB
 else
     die_test "could not emit an x86 libCFTest.dylib fixture"
+fi
+
+echo "== ud-guest-x86 compiler log is a file path, not inlined swiftc text"
+port_mc=$UDWORK/mc
+mkdir -p "$port_mc"
+port_report=$(phase2_ud_guest_compile_port "$wt" "$ROOT" "$SYS" \
+    "x86_64-apple-macos15.0" "$port_mc" || true)
+if echo "$port_report" | grep -q 'CANNOT_UD_GUEST_USERDEFAULTSGUEST file=UserDefaultsGuest.o' \
+    && echo "$port_report" | grep -q "log=$wt/fe/UserDefaultsGuest.swiftc.log" \
+    && [ -f "$wt/fe/UserDefaultsGuest.swiftc.log" ] \
+    && grep -q . "$wt/fe/UserDefaultsGuest.swiftc.log"; then
+    if echo "$port_report" | grep -q 'warning: Could not read SDKSettings'; then
+        die_test "CANNOT line still inlines swiftc output: $port_report"
+    else
+        ok "UserDefaultsGuest CANNOT names log= under scratch/ud-guest-x86_64"
+    fi
+else
+    die_test "port compile log-spill got: $port_report"
 fi
 rm -rf "$UDWORK"
 

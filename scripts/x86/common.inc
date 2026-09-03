@@ -14,6 +14,9 @@ PHASE2_COMMON_INC=1
 _phase2_tree=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 # shellcheck source=../../full/foundation/fe_sysroot_measurement.inc
 . "$_phase2_tree/full/foundation/fe_sysroot_measurement.inc"
+# shellcheck source=../../full/dispatch/swift_linux_lib.inc
+. "$_phase2_tree/full/dispatch/swift_linux_lib.inc"
+PHASE2_REPO=$_phase2_tree
 unset _phase2_tree
 
 phase2_prepare() {
@@ -111,7 +114,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.3
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.4
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -120,6 +123,42 @@ phase2_sha_or_absent() {
         sha256sum "$f" | awk '{print $1}'
     else
         printf 'ABSENT\n'
+    fi
+}
+
+# Linux swiftc warns (and some compiles then fail) when -sdk has no
+# SDKSettings.json. Same text as swiftcore-macho/scripts/stage_sdk.sh.
+# Idempotent: do not overwrite an existing file.
+phase2_ensure_sdk_settings() {
+    local sdk=$1
+    [ -d "$sdk" ] || return 0
+    if [ ! -f "$sdk/SDKSettings.json" ]; then
+        cat > "$sdk/SDKSettings.json" <<'EOF'
+{ "DefaultProperties": { "PLATFORM_NAME": "macosx" },
+  "DisplayName": "macOS 15.0", "Version": "15.0",
+  "MaximumDeploymentTarget": "15.0.99",
+  "CanonicalName": "macosx15.0" }
+EOF
+    fi
+    if [ ! -f "$sdk/SDKSettings.plist" ]; then
+        cat > "$sdk/SDKSettings.plist" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CanonicalName</key><string>macosx15.0</string>
+  <key>DisplayName</key><string>macOS 15.0</string>
+  <key>Version</key><string>15.0</string>
+  <key>MaximumDeploymentTarget</key><string>15.0.99</string>
+  <key>SupportedTargets</key>
+  <dict><key>macosx</key><dict>
+    <key>Archs</key><array><string>x86_64</string></array>
+    <key>LLVMTargetTripleSys</key><string>macos</string>
+    <key>LLVMTargetTripleVendor</key><string>apple</string>
+  </dict></dict>
+</dict>
+</plist>
+EOF
     fi
 }
 
@@ -628,7 +667,7 @@ phase2_stage_x86_fe_overlays() {
 #   phase2_stage_x86_base_mrroot <dest> <loader> <darwin-root> <x86-libswiftCore>
 phase2_stage_x86_base_mrroot() {
     local dest=$1 loader=$2 darwin_root=$3 x86_core=$4
-    local rel d name src
+    local rel d
     mkdir -p "$dest/darwin/usr/lib/swift" "$dest/host"
     if [ -x "$loader" ]; then
         cp -f "$loader" "$dest/machorun"
@@ -653,15 +692,131 @@ phase2_stage_x86_base_mrroot() {
     if [ -f "$x86_core" ] && phase2_is_x86_macho "$x86_core"; then
         cp -f "$x86_core" "$dest/darwin/usr/lib/swift/libswiftCore.dylib"
     fi
-    # Host Linux boundary: copy when present. Do not invent missing names.
-    for name in libdispatch.so libBlocksRuntime.so \
-        libOpenDispatchHost.so libOpenFoundationInternationalizationHost.so \
-        libOpenURLTransportHost.so libOpenRelativeTimeHost.so; do
-        src=/usr/lib/swift/linux/$name
-        if [ -f "$src" ] && [ ! -L "$src" ]; then
-            cp -f "$src" "$dest/host/$name"
+    # Host Linux boundary from the resolved Swift runtime dir (not a hardcoded
+    # /usr/lib/swift/linux). Incomplete host/ is CANNOT_X86_HOST_RUNTIME in
+    # phase2.sh, before build_full.sh runs.
+    phase2_stage_x86_host_runtime "$dest" >/dev/null || true
+}
+
+# Record sha256 of every regular file currently in dest/host/.
+phase2_record_host_runtime_sha256() {
+    local dest=$1
+    local host=$dest/host
+    local name
+    mkdir -p "$host"
+    {
+        echo "# sha256 of staged host runtime files"
+        while IFS= read -r name; do
+            [ -n "$name" ] || continue
+            if [ -f "$host/$name" ] && [ ! -L "$host/$name" ]; then
+                sha256sum "$host/$name"
+            fi
+        done < <(openuikit_host_runtime_files)
+    } > "$host/SHA256SUMS"
+}
+
+# Copy HOST_RUNTIME_FILES from the resolved Swift linux lib dir into dest/host.
+# Dereference symlinks so build_full.sh sees regular files. Prints OK or
+# MISSING=a,b,c. Optional $2 is the repo root: when set, missing Open* helpers
+# are built from the committed C sources (not invented).
+phase2_stage_x86_host_runtime() {
+    local dest=$1 repo=${2:-}
+    local host=$dest/host
+    local linux_lib src name missing
+    mkdir -p "$host"
+    linux_lib=$(openuikit_resolve_swift_linux_lib)
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        src=$linux_lib/$name
+        if [ -e "$src" ]; then
+            cp -fL "$src" "$host/$name"
         fi
-    done
+    done < <(openuikit_host_runtime_files)
+    if [ -n "$repo" ] && [ -f "$repo/full/dispatch/build_host_bridge.sh" ]; then
+        phase2_build_x86_host_helpers "$dest" "$repo" || true
+    fi
+    phase2_record_host_runtime_sha256 "$dest"
+    missing=$(phase2_host_runtime_missing "$dest")
+    if [ -z "$missing" ]; then
+        printf 'OK\n'
+        return 0
+    fi
+    printf 'MISSING=%s\n' "$missing"
+    return 1
+}
+
+# Comma-separated HOST_RUNTIME_FILES absent from dest/host as regular files.
+phase2_host_runtime_missing() {
+    local dest=$1
+    local host=$dest/host
+    local name missing=()
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        if [ ! -f "$host/$name" ] || [ -L "$host/$name" ]; then
+            missing+=("$name")
+        fi
+    done < <(openuikit_host_runtime_files)
+    if [ "${#missing[@]}" -eq 0 ]; then
+        return 0
+    fi
+    local IFS=,
+    printf '%s\n' "${missing[*]}"
+}
+
+# Produce Open* helpers that are not in the Swift toolchain. libdispatch.so
+# and libBlocksRuntime.so must already be regular files in dest/host.
+# Uses committed clang argv / build_host_bridge.sh. Does not stub missing libs.
+phase2_build_x86_host_helpers() {
+    local dest=$1 repo=$2
+    local host=$dest/host
+    local work=$dest/host-work
+    mkdir -p "$host" "$work"
+    if [ ! -f "$host/libdispatch.so" ] || [ -L "$host/libdispatch.so" ] \
+        || [ ! -f "$host/libBlocksRuntime.so" ] || [ -L "$host/libBlocksRuntime.so" ]; then
+        return 0
+    fi
+    if [ ! -f "$host/libOpenDispatchHost.so" ] || [ -L "$host/libOpenDispatchHost.so" ]; then
+        set +e
+        bash "$repo/full/dispatch/build_host_bridge.sh" \
+            --repo "$repo" \
+            --host-dir "$host" \
+            --work-dir "$work" \
+            --skip-runtime-pin \
+            --host-abi "ELF64-$(uname -m)" \
+            --refuse-prefix 'phase2_host_runtime: ' \
+            >"$work/build_host_bridge.log" 2>&1
+        set -e
+    fi
+    if [ ! -f "$host/libOpenFoundationInternationalizationHost.so" ] \
+        || [ -L "$host/libOpenFoundationInternationalizationHost.so" ]; then
+        set +e
+        clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+            -I "$repo/full/foundationinternationalization/include" -shared \
+            "$repo/full/foundationinternationalization/OpenFoundationInternationalizationHost.c" \
+            -o "$host/libOpenFoundationInternationalizationHost.so" \
+            >"$work/OpenFoundationInternationalizationHost.log" 2>&1
+        set -e
+    fi
+    if [ ! -f "$host/libOpenURLTransportHost.so" ] \
+        || [ -L "$host/libOpenURLTransportHost.so" ]; then
+        set +e
+        clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+            -I "$repo/full/urltransport/include" -shared \
+            "$repo/full/urltransport/OpenURLTransportHost.c" \
+            -o "$host/libOpenURLTransportHost.so" -lcurl -pthread \
+            >"$work/OpenURLTransportHost.log" 2>&1
+        set -e
+    fi
+    if [ ! -f "$host/libOpenRelativeTimeHost.so" ] \
+        || [ -L "$host/libOpenRelativeTimeHost.so" ]; then
+        set +e
+        clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+            -I "$repo/full/relativetime/include" -shared \
+            "$repo/full/relativetime/OpenRelativeTimeHost.c" \
+            -o "$host/libOpenRelativeTimeHost.so" -licui18n -licuuc -lm \
+            >"$work/OpenRelativeTimeHost.log" 2>&1
+        set -e
+    fi
 }
 
 # shellcheck source=ud_guest.inc

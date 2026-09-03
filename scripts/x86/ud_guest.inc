@@ -201,21 +201,32 @@ phase2_ud_guest_point_sysroot() {
 }
 
 # Port compile: same shape as foundation-macho/scripts/build_ud_score_guest.sh
-# (COMPILE_TRIPLE, -O -wmo, CFPreferencesMinimal -I). Module name is the
-# import the runner uses.
+# (COMPILE_TRIPLE, -O -wmo, CFPreferencesMinimal -I) plus the CShims clang
+# module map every FoundationEssentials consumer uses (build_url_runner.sh,
+# build_fe_host.sh). Without it, swiftc reports "no such module
+# 'FoundationEssentials'" at UserDefaults.swift:47 even when the staged
+# .swiftmodule is present. Compiler output is spilled to a file under the
+# work tree so the CANNOT line names the path instead of inlining a log
+# the operator logger truncates.
 phase2_ud_guest_compile_port() {
     local ud_w=$1 repo=$2 sdk=$3 compile_triple=$4 mc=$5
     local src_ud=$repo/foundation-macho/src/overlay/UserDefaults.swift
     local src_bridge=$repo/foundation-macho/src/overlay/UserDefaultsBridge_Guest.swift
     local out=$ud_w/fe/UserDefaultsGuest.o
-    local err log st
+    local log=$ud_w/fe/UserDefaultsGuest.swiftc.log
+    local st cshims
+    local -a cshims_args=()
     if [ ! -f "$src_ud" ] || [ ! -f "$src_bridge" ]; then
         phase2_ud_guest_cannot USERDEFAULTSGUEST UserDefaultsGuest.o \
             "missing overlay sources under foundation-macho/src/overlay"
         return 1
     fi
     mkdir -p "$ud_w/fe" "$mc"
-    log=$(mktemp)
+    phase2_ensure_sdk_settings "$sdk"
+    cshims=$repo/scratch/swift-foundation/Sources/_FoundationCShims/include
+    if [ -f "$cshims/module.modulemap" ]; then
+        cshims_args=(-Xcc -fmodule-map-file="$cshims/module.modulemap" -Xcc -I"$cshims")
+    fi
     set +e
     swiftc -c -O -wmo -parse-as-library \
         -module-name PortedUserDefaultsGuest \
@@ -225,18 +236,16 @@ phase2_ud_guest_compile_port() {
         -module-cache-path "$mc" \
         -I "$ud_w/fe/module" -I "$ud_w/fe" -I "$ud_w/fe/collections" -I "$ud_w/fe/os" \
         -I "$repo/foundation-macho/include/CFPreferencesMinimal" \
+        "${cshims_args[@]}" \
         "$src_ud" "$src_bridge" \
         -o "$out" >"$log" 2>&1
     st=$?
     set -e
     if [ "$st" -ne 0 ] || [ ! -f "$out" ] || ! phase2_is_x86_macho "$out"; then
-        err=$(phase2_flatten < "$log")
-        rm -f "$log"
         phase2_ud_guest_cannot USERDEFAULTSGUEST UserDefaultsGuest.o \
-            "swiftc exit $st $err"
+            "swiftc exit $st log=$log"
         return 1
     fi
-    rm -f "$log"
 }
 
 # Smoke runner: top-level code must be named main.swift (same as the
@@ -246,7 +255,9 @@ phase2_ud_guest_compile_runner() {
     local src=$repo/foundation-macho/tests/ud_guest_runner.swift
     local builddir=$ud_w/fe/runner-src
     local out=$ud_w/fe/runner.o
-    local log err st
+    local log=$ud_w/fe/runner.swiftc.log
+    local st cshims
+    local -a cshims_args=()
     if [ ! -f "$src" ]; then
         phase2_ud_guest_cannot RUNNER runner.o \
             "missing foundation-macho/tests/ud_guest_runner.swift"
@@ -254,8 +265,12 @@ phase2_ud_guest_compile_runner() {
     fi
     rm -rf "$builddir"
     mkdir -p "$builddir" "$mc"
+    phase2_ensure_sdk_settings "$sdk"
     cp "$src" "$builddir/main.swift"
-    log=$(mktemp)
+    cshims=$repo/scratch/swift-foundation/Sources/_FoundationCShims/include
+    if [ -f "$cshims/module.modulemap" ]; then
+        cshims_args=(-Xcc -fmodule-map-file="$cshims/module.modulemap" -Xcc -I"$cshims")
+    fi
     set +e
     swiftc -c -O -wmo \
         -module-name ud_guest \
@@ -264,17 +279,15 @@ phase2_ud_guest_compile_runner() {
         -module-cache-path "$mc" \
         -I "$ud_w/fe/module" -I "$ud_w/fe" -I "$ud_w/fe/collections" -I "$ud_w/fe/os" \
         -I "$repo/foundation-macho/include/CFPreferencesMinimal" \
+        "${cshims_args[@]}" \
         "$builddir/main.swift" \
         -o "$out" >"$log" 2>&1
     st=$?
     set -e
     if [ "$st" -ne 0 ] || [ ! -f "$out" ] || ! phase2_is_x86_macho "$out"; then
-        err=$(phase2_flatten < "$log")
-        rm -f "$log"
-        phase2_ud_guest_cannot RUNNER runner.o "swiftc exit $st $err"
+        phase2_ud_guest_cannot RUNNER runner.o "swiftc exit $st log=$log"
         return 1
     fi
-    rm -f "$log"
 }
 
 phase2_ud_guest_find_x86_dylib() {

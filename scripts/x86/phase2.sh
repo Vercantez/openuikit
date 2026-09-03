@@ -701,6 +701,35 @@ else
     fi
 fi
 
+# Host Linux runtime boundary for build_full.sh. Always (re)stage, including
+# when mrroot-base-x86 is already satisfied: the operator tree had an empty
+# scratch/mrroot-x86_64/host/. Incomplete host/ is a named CANNOT before
+# rungs b/c invoke build_full.sh.
+echo "==== mrroot-x86_64 host/ (Linux runtime boundary) ===="
+HOST_RUNTIME_OK=0
+if [ "$BASE_MRROOT" = "$ARM_BASE_MRROOT" ]; then
+    cannot mrroot-host-x86 MRROOT_COLLIDES_ARM64 "x86 base mrroot path equals arm64 scratch/mrroot"
+elif [ ! -d "$BASE_MRROOT" ]; then
+    cannot mrroot-host-x86 X86_HOST_RUNTIME \
+        "no $BASE_MRROOT to fill host/; mrroot-base-x86 did not produce a dest"
+else
+    host_report=$(phase2_stage_x86_host_runtime "$BASE_MRROOT" "$W" || true)
+    case "$host_report" in
+        OK)
+            note mrroot-host-x86 satisfied
+            HOST_RUNTIME_OK=1
+            ;;
+        MISSING=*)
+            cannot mrroot-host-x86 X86_HOST_RUNTIME \
+                "$host_report; resolved=$(openuikit_resolve_swift_linux_lib). build_full.sh copies this closed set from BASE_RUNTIME_SOURCE/host/ and will not run until it is complete."
+            ;;
+        *)
+            cannot mrroot-host-x86 X86_HOST_RUNTIME \
+                "host stage produced: ${host_report:-empty}"
+            ;;
+    esac
+fi
+
 # ---------------------------------------------------------------------------
 # 6a. scratch/mrroot_fe-x86_64 — FE overlays from the x86 stdlib cross-build.
 # Emits CANNOT_X86_OVERLAYS_NOT_BUILT (phase2_cannot prefixes CANNOT_).
@@ -1035,7 +1064,8 @@ try_normalize_focus_bundles() {
 }
 
 if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
-    && [ "$LIBSWIFTCORE_X86" -eq 1 ] && [ "${ITEM_STATUS[focus-pin]:-}" = satisfied ]; then
+    && [ "$LIBSWIFTCORE_X86" -eq 1 ] && [ "$HOST_RUNTIME_OK" -eq 1 ] \
+    && [ "${ITEM_STATUS[focus-pin]:-}" = satisfied ]; then
     echo "== rung b: full/swiftui Focus widget + onboarding (x86, source pins unchanged)"
     widget_bundle=$(find_widget_bundle || true)
     if [ -z "$widget_bundle" ]; then
@@ -1085,7 +1115,7 @@ if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
     fi
 else
     cannot rung-b-focus SWIFTUI_SUBSTRATE \
-        "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
+        "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
     RUNG_B_DETAIL="blocked by substrate"
 fi
 
@@ -1101,6 +1131,7 @@ reminder_src=$(find_existing_dir \
     "$W/scratch/ladder-corpus/reminder" \
     "$W/scratch/ladder-corpus/Reminder" || true)
 if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
+    && [ "$HOST_RUNTIME_OK" -eq 1 ] \
     && [ -n "$reminder_inv" ] && [ -n "$reminder_src" ]; then
     echo "== rung c: full/xcodeplan/build_and_run_reminder_scene_guest.sh"
     set +e
@@ -1125,13 +1156,14 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
             "build_and_run_reminder_scene_guest.sh exit $rem_rc; success bar is REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true (committed inner script, not invented here)"
         RUNG_C_DETAIL="scene guest failed"
     fi
-elif [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]; then
+elif [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
+    && [ "$HOST_RUNTIME_OK" -eq 1 ]; then
     cannot rung-c-reminder REMINDER_INVENTORY \
         "substrate ready enough to invoke full/xcodeplan/build_and_run_reminder_scene_guest.sh, but Reminder 22-source inventory + source root are absent. Looked at scratch/ladder-corpus/reminder and REMINDER_INVENTORY/REMINDER_SOURCE_ROOT. Success bar remains: REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true."
     RUNG_C_DETAIL="needs Reminder inventory json + source root"
 else
     cannot rung-c-reminder REMINDER_SUBSTRATE \
-        "needs x86 FE+mrroot+libswiftCore (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
+        "needs x86 FE+mrroot+libswiftCore+host runtime (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86 host=$HOST_RUNTIME_OK) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
     RUNG_C_DETAIL="blocked by substrate"
 fi
 

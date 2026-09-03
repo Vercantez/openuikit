@@ -123,7 +123,7 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    flag. x86 takes the same compile-the-interface path. Idempotency keys on
    input shas (artifact, generator, overlay text, **measurement-header list**)
    written to `.phase2-stage-inputs`
-   (recipe `stage_fe_sysroot_x86.3`); a sysroot staged before those inputs
+   (recipe `stage_fe_sysroot_x86.4`); a sysroot staged before those inputs
    existed is restaged, and the CANNOT/cold-built line names which input
    changed. Apple's `os.swiftmodule` is not copied (FE uses
    `full/foundation/os-module`).
@@ -199,7 +199,11 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    cshims argv phase2 already ran) and staged into that tree's `$W/fe` the
    way `stage_fe_guest.sh` laid out the arm64 #87 container. Port + runner
    compile use `build_ud_score_guest.sh`'s argv (`COMPILE_TRIPLE` macos15,
-   `-O -wmo`, `CFPreferencesMinimal`). Link is **only**
+   `-O -wmo`, `CFPreferencesMinimal`) plus the `_FoundationCShims` clang
+   module map every FE consumer needs (`build_url_runner.sh`). Compiler
+   output is written to `scratch/ud-guest-x86_64/fe/UserDefaultsGuest.swiftc.log`
+   (runner: `fe/runner.swiftc.log`); the CANNOT line names `log=` that path
+   instead of inlining swiftc text. Link is **only**
    `foundation-macho/scripts/link_ud_guest.sh` (macos13 `TRIPLE`, tbd-first
    `-L` order). `fm_unimplemented.o` is compiled once into essentials/ with
    `build_full.sh`'s clang argv. `libswiftcompat.dylib` comes from an existing
@@ -210,6 +214,17 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    binary is exported as `UD_GUEST_BIN` for rung a, with
    `bin/ud_guest.otool.txt` (`MH_MAGIC_64 X86_64` + expected loads). Overlay
    dylibs are not required at link time; rung a still needs them at load.
+10. `scratch/mrroot-x86_64/host/` is the Linux host runtime boundary
+    `build_full.sh` copies (`HOST_RUNTIME_FILES`: libdispatch.so,
+    libBlocksRuntime.so, and the four Open* helpers). phase2 resolves the
+    Swift linux lib dir the same way `full/dispatch/build_host_bridge.sh`
+    does (`SWIFT_TOOLCHAIN` → `/opt/swift624/usr` → `/opt/swift/usr` →
+    swiftc-on-PATH → `/usr`) via `full/dispatch/swift_linux_lib.inc`, copies
+    that closed set (dereference symlinks so they are regular files), records
+    sha256 in `host/SHA256SUMS`, and builds missing Open* helpers from the
+    committed C sources. An empty or partial `host/` is
+    `CANNOT_X86_HOST_RUNTIME missing=…` on item `mrroot-host-x86` **before**
+    rungs b/c invoke `build_full.sh`. Not a PR3 `CURSOR_ENV_CANNOT_*` marker.
 
 ## Operator-staged Apple x86_64 overlays
 
