@@ -286,7 +286,7 @@ func testSafariViewControllerConfigurationCopy() {
     precondition(configuration.barCollapsingEnabled == true)
     configuration.entersReaderIfAvailable = true
     configuration.barCollapsingEnabled = false
-    let copied = configuration.copy()
+    let copied: SFSafariViewControllerConfiguration = configuration.copy()
     precondition(copied !== configuration)
     precondition(copied.entersReaderIfAvailable)
     precondition(!copied.barCollapsingEnabled)

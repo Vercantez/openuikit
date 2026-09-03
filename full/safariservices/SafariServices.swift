@@ -218,15 +218,13 @@ public final class SFSafariSettings: NSObject {
     }
 
     public static func openExportBrowsingDataSettings(
-        completionHandler: (@MainActor (Error?) -> Void)? = nil
+        completionHandler: ((Error?) -> Void)? = nil
     ) {
         guard let completionHandler else { return }
         SafariServicesHost.settingsQueue.async {
-            Task { @MainActor in
-                completionHandler(
-                    SafariServicesPortableError(.browserServiceUnavailable)
-                )
-            }
+            completionHandler(
+                SafariServicesPortableError(.browserServiceUnavailable)
+            )
         }
     }
 }
@@ -261,14 +259,16 @@ public extension SFSafariViewControllerDelegate {
     func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController) {}
 }
 
+#if canImport(UIKit) || canImport(OpenUIKit)
+public typealias SFSafariViewControllerBase = UIViewController
+#else
+public typealias SFSafariViewControllerBase = NSObject
+#endif
+
 /// A constructible presentation shell. It preserves the requested URL and
 /// copied configuration but deliberately never claims that Safari loaded it.
 @MainActor
-#if canImport(UIKit) || canImport(OpenUIKit)
-open class SFSafariViewController: UIViewController {
-#else
-open class SFSafariViewController: NSObject {
-#endif
+open class SFSafariViewController: SFSafariViewControllerBase {
     public typealias Configuration = SFSafariViewControllerConfiguration
 
     public let initialURL: URL
