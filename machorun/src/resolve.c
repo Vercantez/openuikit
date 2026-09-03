@@ -295,7 +295,7 @@ uint64_t mr_resolve_symbol(mr_image *from, int lib_ordinal, const char *name,
         void *trap = mr_host_deny_trap(name);
         if (trap) {
             *found = 1;
-            mr_log("host: %s DENIED (ABI-divergent; loud stub -- src/host_deny.c)",
+            mr_log("host: %s DENIED (loud stub -- src/host_deny.c)",
                    name);
             return (uint64_t)(uintptr_t)trap;
         }

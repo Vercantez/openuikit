@@ -207,10 +207,14 @@ $CLANG $CFLAGS -c "$ROOT/darwin/src/libcxx.c" -o "$OBJ/libcxx.o"
 LIBCXX_INC="${LIBCXX_INC:-/usr/lib/llvm-18/include/c++/v1}"
 SDK="${OBJC4_SDK:-$ROOT/sdk}"
 if [ -d "$LIBCXX_INC" ] && [ -f "$SDK/usr/include/stdio.h" ]; then
+    # Do NOT define _LIBCPP_VERBOSE_ABORT as __builtin_trap() here: that hid
+    # std::__1::__libcpp_verbose_abort from the dylib (objc4 TUs keep the trap
+    # define -- that is compile-time, not an export). libcxx_std.cpp provides
+    # the handler, thread::hardware_concurrency, and the extern-template
+    # operator+(const char*, string).
     $CLANG -target "$TARGET" -isysroot "$SDK" -nostdinc++ -isystem "$LIBCXX_INC" \
         -D__STDC_WANT_LIB_EXT1__=0 \
         -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE \
-        -D'_LIBCPP_VERBOSE_ABORT(...)=__builtin_trap()' \
         -std=gnu++17 -fno-exceptions -fno-rtti -fPIC -Os -DNDEBUG \
         -c "$ROOT/darwin/src/libcxx_std.cpp" -o "$OBJ/libcxx_std.o"
     # -DLIBCXX_BUILDING_LIBCXXABI is not optional and the linker says so:

@@ -43,23 +43,35 @@
  * very symbol we are protecting. The label is where the audit lives; this
  * table is for the names that never got one.
  *
- * ADDING AN ENTRY: measure both sides first (sdk/tests/abi_probe.c on Darwin
- * against Apple's SDK, a host compile against real glibc on Linux) and put the
- * numbers in the message. The message a user sees must contain the evidence,
- * because the fix it points at -- a translating wrapper in darwin/src -- is
- * work, and nobody does work on the strength of an assertion.
+ * ADDING AN ENTRY: two kinds of row, and they must not be confused.
  *
- * REMOVING AN ENTRY: implement the symbol in darwin/src. Then libSystem
- * exports it, resolve.c finds it in a loaded image, and this table is never
- * consulted -- an entry costs nothing once the real thing exists, so delete it
- * for tidiness, not because it is in the way.
+ *   ABI-divergent Darwin C names -- measure both sides first (sdk/tests/abi_probe.c
+ *   on Darwin against Apple's SDK, a host compile against real glibc on Linux)
+ *   and put the numbers in the message. The fix is a translating wrapper in
+ *   darwin/src.
+ *
+ *   compiler-rt builtins -- do NOT measure Darwin vs glibc, do NOT add them to
+ *   darwin/host-bound-allowed.txt, and do NOT implement them in darwin/src.
+ *   Apple answers them from libclang_rt.osx.a at link (PR #64). A name in this
+ *   family reaching glibc means a dylib was linked without that archive
+ *   (typically `-undefined dynamic_lookup`). The message must name the archive.
+ *
+ * REMOVING AN ENTRY: for an ABI-divergent name, implement it in darwin/src.
+ * Then libSystem exports it, resolve.c finds it in a loaded image, and this
+ * table is never consulted -- an entry costs nothing once the real thing exists,
+ * so delete it for tidiness, not because it is in the way. For a compiler-rt
+ * row, rebuild the importing dylib NOUNDEFS with libclang_rt.osx.a; the row
+ * stays as the loud answer if some future dylib is linked without the archive.
  */
 #include "machorun.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
-/* X(mach-o name, C name, hazard family, why -- with the measured numbers) */
+/* X(mach-o identifier, "cname", hazard family, why).
+ * Parsers in check_undefined.sh and host_deny_gate.sh take cname from the
+ * SAME LINE as X(ident, "cname" -- do not wrap between the identifier and
+ * the quoted C name. Mixed-case compiler-rt hooks depend on that. */
 #define MR_HOST_DENY_TABLE(X)                                                  \
     X(openat, "openat",                                                        \
       "constants + variadic",                                                  \
@@ -96,7 +108,31 @@
       "measured both sides. glibc returns a quad in q0; the Darwin caller "    \
       "reads d0 as a double, i.e. the low half of a binary128 significand. "   \
       "Nothing in the signature, the arity or the linkage says so -- only the "\
-      "width of a register does.")
+      "width of a register does.")                                             \
+    /* compiler-rt builtins. Mach-O spelling is "_" + cname, so cname "__divti3"
+     * is the import ___divti3. glibc does not implement these. A root that
+     * still lists them as undefined was linked without libclang_rt.osx.a. */  \
+    X(__divti3, "__divti3", "compiler-rt",                                     \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")          \
+    X(__modti3, "__modti3", "compiler-rt",                                     \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")          \
+    X(__udivti3, "__udivti3", "compiler-rt",                                   \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")          \
+    X(__umodti3, "__umodti3", "compiler-rt",                                   \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")          \
+    X(__truncsfhf2, "__truncsfhf2", "compiler-rt",                             \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")          \
+    X(__isPlatformVersionAtLeast, "__isPlatformVersionAtLeast", "compiler-rt", \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")          \
+    X(__isPlatformOrVariantPlatformVersionAtLeast, "__isPlatformOrVariantPlatformVersionAtLeast", "compiler-rt", \
+      "compiler-rt builtin. Reaching glibc means a dylib was linked without "  \
+      "libclang_rt.osx.a (PR #64). Do not host-bind-allow this name.")
 
 #define DENY_STUB(mangled, cname, family, why)                                 \
     __attribute__((noreturn)) static void mr_host_deny_##mangled(void);        \
@@ -126,14 +162,28 @@ mr_host_deny_die(const char *name, const char *family, const char *why)
         "  would have handed the caller glibc's %s with NO TRANSLATION. It is\n"
         "  bound to this stub instead, and you have just called it.\n"
         "  hazard family: %s\n"
-        "  %s\n"
-        "  FIX: implement %s in darwin/src (libSystem), translating on the\n"
-        "  Darwin side of the call, and delete its row from src/host_deny.c.\n"
-        "  Do NOT declare it with a GLIBCSYM label: that label means \"this ABI\n"
-        "  is identical on both sides\", it binds straight to glibc, and it would\n"
-        "  route around the wrapper you just wrote -- silently, exactly as this\n"
-        "  stub does not. See docs/UNIMPLEMENTED.md#host-bind-denied.\n",
-        name, name + 1, family, why, name + 1);
+        "  %s\n",
+        name, name + 1, family, why);
+    if (strcmp(family, "compiler-rt") == 0) {
+        fprintf(stderr,
+            "  FIX: a compiler-rt builtin reaching glibc means a dylib was\n"
+            "  linked without libclang_rt.osx.a (PR #64,\n"
+            "  swiftcore-macho/scripts/build_compiler_rt_osx.sh). Rebuild that\n"
+            "  dylib NOUNDEFS with the archive. Do NOT add %s to\n"
+            "  darwin/host-bound-allowed.txt and do NOT implement it in\n"
+            "  darwin/src -- gen_tbd libSystem must not export compiler-rt.\n"
+            "  See docs/UNIMPLEMENTED.md#host-bind-denied.\n",
+            name + 1);
+    } else {
+        fprintf(stderr,
+            "  FIX: implement %s in darwin/src (libSystem), translating on the\n"
+            "  Darwin side of the call, and delete its row from src/host_deny.c.\n"
+            "  Do NOT declare it with a GLIBCSYM label: that label means \"this ABI\n"
+            "  is identical on both sides\", it binds straight to glibc, and it would\n"
+            "  route around the wrapper you just wrote -- silently, exactly as this\n"
+            "  stub does not. See docs/UNIMPLEMENTED.md#host-bind-denied.\n",
+            name + 1);
+    }
     fflush(stderr);
     _exit(70);
 }

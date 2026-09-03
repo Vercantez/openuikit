@@ -21,17 +21,19 @@ if [ "${STUBS_ONLY:-0}" != 1 ]; then
 fi
 #
 #   libc++.1.dylib UMBRELLA  (cxxpatch.cpp + reexport of machorun's libc++)
-#       the 5 libc++ symbols the sim libswiftCore needs that machorun's curated
-#       libc++ lacks: __libcpp_verbose_abort, __cxa_demangle, __gxx_personality_v0,
-#       thread::hardware_concurrency, operator+(const char*, string).
+#       remaining: __cxa_demangle, __gxx_personality_v0. verbose_abort,
+#       hardware_concurrency, and operator+(const char*, string) moved into
+#       machorun's libc++ (darwin/src/libcxx_std.cpp) and must not be redefined.
 #
 #   libSystem.B.dylib UMBRELLA  (syspatch.c + libsystem_math_compat.c +
 #                                reexport of machorun's libSystem)
 #       The sim Swift dylib closure plus C99 nan/remquo that CGFloat tgmath uses:
-#       compiler-rt 128-bit divide, dispatch_once_f, getsectiondata, malloc_type_*,
+#       compiler-rt 128-bit divide, getsectiondata, malloc_type_* (in machorun),
 #       the strtod_l family, real pthread stack bounds, the reserved-key TLS the
 #       Swift runtime claims (key 100), the correct-enum _dyld_lookup_section_info,
 #       and dyld shared-cache SPIs stubbed to "no preoptimized data" (the truth).
+#       dispatch_once_f, _NSGetMachExecuteHeader, _dyld_is_objc_constant, and
+#       flockfile/funlockfile live in machorun's libSystem — do not redefine.
 #
 # The umbrellas rename machorun's real dylib to *.real.dylib (a distinct install
 # name) and LC_REEXPORT_DYLIB it, because machorun searches a bound image's

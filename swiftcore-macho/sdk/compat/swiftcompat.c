@@ -9,10 +9,10 @@
  *
  * Symbols are grouped by how real the implementation is:
  *   REAL     — a correct implementation (the arithmetic builtins, getline,
- *              getsectiondata, dispatch_once_f, the locale strtod family).
+ *              getsectiondata, the locale strtod family).
  *   BENIGN   — correct for our purposes, where the Darwin behaviour is either
  *              trivially reproducible or genuinely unused off Apple hardware
- *              (availability checks, malloc zones, flockfile).
+ *              (availability checks, malloc zones).
  *
  * There is no longer a BIND-ONLY class, and that is the point of this file's
  * one hard rule:
@@ -33,10 +33,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <pthread.h>
-
-#define SHIM(name) __asm__(name) __attribute__((visibility("default")))
 
 /* ---------------------------------------------------------------- REAL ----
  * 128-bit integer division. Darwin gets these from libcompiler_rt inside
@@ -168,37 +165,10 @@ uint8_t *getsectiondata(const struct mh *header, const char *segname,
     return NULL;
 }
 
-/* _NSGetMachExecuteHeader: the main executable's header. machorun's libSystem
- * exports no dyld image APIs at all (it has only the _NSGetArgc/Argv family),
- * so this uses the other Darwin idiom: every Mach-O executable defines
- * __mh_execute_header, and a dylib referencing it gets the *host program's*
- * header bound at load time. */
-extern const struct mh __mh_execute_header __attribute__((weak_import));
-const struct mh *_NSGetMachExecuteHeader(void) {
-    /* weak_import: machorun's flat lookup does not surface symbols the main
-     * executable defines, so this can legitimately be absent. The runtime's one
-     * caller treats NULL as "no sections to register from the main image". */
-    return &__mh_execute_header ? &__mh_execute_header : (const struct mh *)0;
-}
-
-/* ---------------------------------------------------------------- REAL ----
- * dispatch_once_f. libdispatch's one-shot, with the same "run exactly once,
- * later callers observe the result" contract, built on pthread_once semantics
- * via an atomic state machine.
- */
-typedef long dispatch_once_t;
-void dispatch_once_f(dispatch_once_t *pred, void *ctx, void (*fn)(void *)) {
-    long observed = __atomic_load_n(pred, __ATOMIC_ACQUIRE);
-    if (observed == 2) return;
-    long expected = 0;
-    if (__atomic_compare_exchange_n(pred, &expected, 1, 0,
-                                    __ATOMIC_ACQUIRE, __ATOMIC_ACQUIRE)) {
-        fn(ctx);
-        __atomic_store_n(pred, 2, __ATOMIC_RELEASE);
-        return;
-    }
-    while (__atomic_load_n(pred, __ATOMIC_ACQUIRE) != 2) sched_yield();
-}
+/* _NSGetMachExecuteHeader, dispatch_once_f, _dyld_is_objc_constant,
+ * flockfile/funlockfile, and the three libc++ overlay symbols moved into
+ * machorun's libSystem / libc++. DELETED here so they cannot beat .real
+ * (CHECK 4 / two-level bind). */
 
 /* ---------------------------------------------------------------- REAL ----
  * The locale-aware strtod family. The stdlib calls these with the C locale
@@ -226,7 +196,6 @@ os_sysver_t os_system_version_get_current_version(void) {
     os_sysver_t v = { 15, 0, 0 };
     return v;
 }
-int _dyld_is_objc_constant(const void *p) { (void)p; return 0; }
 
 /* -------------------------------------------------------------- BENIGN ----
  * Malloc zones. machorun's allocator is a single flat heap with no zone
@@ -234,10 +203,6 @@ int _dyld_is_objc_constant(const void *p) { (void)p; return 0; }
  * is the answer the one caller (-[_TtCs12_SwiftObject zone]) handles.
  */
 void *malloc_zone_from_ptr(const void *p) { (void)p; return NULL; }
-
-/* stdio locking: machorun is not multiplexing FILE* across threads. */
-void flockfile(FILE *f)   { (void)f; }
-void funlockfile(FILE *f) { (void)f; }
 
 /* pthread stack introspection. Darwin's pthread.h has no pthread_getattr_np
  * (that is a glibc extension), and we are compiling against Darwin headers, so
@@ -253,21 +218,8 @@ void *pthread_get_stackaddr_np(pthread_t t) {
 }
 size_t pthread_get_stacksize_np(pthread_t t) { (void)t; return SHIM_DEFAULT_STACK; }
 
-/* ----------------------------------------------------------------- C++ ----
- * libc++ / libc++abi pieces machorun's 60 KB libc++.1.dylib does not carry.
- */
-void libcpp_verbose_abort(const char *fmt, ...) SHIM("__ZNSt3__122__libcpp_verbose_abortEPKcz");
-void libcpp_verbose_abort(const char *fmt, ...) { (void)fmt; abort(); }
-
-unsigned hardware_concurrency(void) SHIM("__ZNSt3__16thread20hardware_concurrencyEv");
-unsigned hardware_concurrency(void) {
-    long n = sysconf(_SC_NPROCESSORS_ONLN);
-    return n > 0 ? (unsigned)n : 1u;
-}
-
-/* std::operator+(const char*, const std::string&). libc++'s std::string is
- * layout-stable across the ABI, so this is expressed in C++ in shim.cpp
- * rather than reconstructed here. */
+/* libc++ overlay symbols (__libcpp_verbose_abort, hardware_concurrency,
+ * operator+(const char*, string)) moved to machorun darwin/src/libcxx_std.cpp. */
 
 /* DELETED 2026-08-27: the five __cxxabiv1 type_info vtables, __cxa_demangle
  * and operator delete(void*, size_t, align_val_t).

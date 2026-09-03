@@ -79,10 +79,10 @@ case_ "umbrella older than its input" 1 "older than its input" \
     'touch "$R/darwin/usr/lib/libSystem.B.dylib"; touch "$R/darwin/usr/lib/libSystem.real.dylib"'
 
 # (4) THE DISCRIMINATOR GONE. Overwriting the umbrella with machorun's plain
-#     libSystem is precisely what `MRROOT_REFRESH=1` used to do, and it is the
-#     state that left every scene dying with __NSGetMachExecuteHeader undefined.
-#     The old guard called that root FRESH.
-case_ "umbrella replaced by plain copy" 1 "does not define __NSGetMachExecuteHeader" \
+#     libSystem is precisely what `MRROOT_REFRESH=1` used to do. The remaining
+#     discriminators are _nan/_remquo (math_compat); __NSGetMachExecuteHeader
+#     now lives in machorun, so a plain copy would still define THAT one.
+case_ "umbrella replaced by plain copy" 1 "does not define _nan" \
     'cp -f "'"$MACHORUN"'/darwin/usr/lib/libSystem.B.dylib" "$R/darwin/usr/lib/libSystem.B.dylib"'
 
 # (5) A DYLIB MACHORUN HAS AND THE ROOT LACKS. Invisible by construction to any

@@ -45,7 +45,10 @@
 #   CHECK 4  no two dylibs in darwin/usr/lib define the same symbol (below).
 #   CHECK 5  every symbol the darwin root leaves to the loader's HOST FALLBACK
 #            is accounted for by a decision -- the `_glibc_*` label, the loader
-#            export list, src/host_deny.c, or darwin/host-bound-allowed.txt.
+#            export list, src/host_deny.c (ABI-divergent names AND compiler-rt
+#            builtins: a builtin reaching glibc means a dylib was linked without
+#            libclang_rt.osx.a -- never host-bound-allowed), or
+#            darwin/host-bound-allowed.txt.
 #            The only one of the five that is not about the .tbd surface at
 #            all; it is here because it sweeps the same "every dylib present"
 #            scope CHECK 4 does. Delegated to scripts/check_undefined.sh,
@@ -365,6 +368,30 @@ done
 sort -u "$TMP/sym.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B.tmp"
 mv "$TMP/sym.libSystem.B.tmp" "$TMP/sym.libSystem.B"
 
+# Overlay NOUNDEFS: symbols the x86 Swift overlay links import from Apple's
+# libSystem / libc++ that this tree must export. A missing name here is a
+# short .tbd that manufactures phantom undefineds at ld64.lld time.
+require_syms() { # require_syms <sym-file> <label> <sym...>
+    local file=$1 label=$2; shift 2
+    local s miss=
+    for s in "$@"; do
+        grep -qx "$s" "$file" && continue
+        miss="$miss $s"
+    done
+    if [ -n "$miss" ]; then
+        echo "!! $label is missing overlay-required symbol(s):$miss" >&2
+        echo "   darwin/src must export these; regenerate after the dylib grows them." >&2
+        exit 1
+    fi
+}
+require_syms "$TMP/sym.libSystem.B" "libSystem.B" \
+    _fmal _flockfile _funlockfile _dispatch_once_f \
+    __dyld_is_objc_constant __NSGetMachExecuteHeader
+require_syms "$TMP/sym.libc++.1" "libc++.1" \
+    __ZNSt3__122__libcpp_verbose_abortEPKcz \
+    __ZNSt3__16thread20hardware_concurrencyEv \
+    __ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EEPKS6_RKS9_
+
 emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
     {
         echo "--- !tapi-tbd"
@@ -581,7 +608,10 @@ fi  # libobjc+libquartz present; CHECK 3 ran
 # Delegated rather than inlined, because the same check has to run against
 # GUEST roots (~/swift-macho-linux/scratch/mrroot_fe and its siblings), which
 # is where it found the eight names #73 is about. Two copies of one symbol
-# checker would drift exactly as a .tbd drifts from its dylib.
+# checker would drift exactly as a .tbd drifts from its dylib. Compiler-rt
+# builtins (___divti3, ___isPlatform*, …) are host_deny compiler-rt rows, not
+# host-bound-allowed: a builtin reaching glibc means a dylib was linked without
+# libclang_rt.osx.a.
 echo "   CHECK 5: the host-fallback surface of darwin/"
 # Overlay/stdlib cross-builds need .tbd files (CHECKs 0–4), not a host-fallback
 # audit of an operator mrroot they do not own. Phase2 still runs this check.

@@ -30,9 +30,10 @@
 #      `MRROOT_REFRESH=1`, which overwrote each umbrella with the upstream file
 #      -- deleting the shim layer. Someone followed that advice and left
 #      mrroot_full unable to load anything for the rest of the day: every scene
-#      died with `__NSGetMachExecuteHeader` undefined, a symbol that exists ONLY
-#      in full/shims/concpatch.c and in no machorun libSystem ever (nm, and
-#      `git log -S`). AND, in the same breath, it SKIPPED libSystem.real.dylib
+#      died with `__NSGetMachExecuteHeader` undefined, a symbol that at the time
+#      existed ONLY in the umbrella. It has since moved into machorun's
+#      libSystem; the remaining discriminators are `_nan` and `_remquo`. AND, in
+#      the same breath, it SKIPPED libSystem.real.dylib
 #      as "local-only, no upstream counterpart" -- the one file in the root that
 #      actually carries machorun's bytes, i.e. the single place where staleness
 #      is a real question is the one place it never looked.
@@ -226,8 +227,8 @@ while IFS=$'\t' read -r kind rel up rest; do
                 why="could not read defined symbols with ${NM:-no nm found} -- refusing to grade"
             else
                 # The column is a comma-separated list (8f6fe979 added _nan and
-                # _remquo beside __NSGetMachExecuteHeader); every name must be
-                # defined, and the first absent one is named.
+                # _remquo; __NSGetMachExecuteHeader later moved into machorun);
+                # every name must be defined, and the first absent one is named.
                 for one in $(printf '%s' "$sym" | tr ',' ' '); do
                     if ! printf '%s\n' "$defs" | grep -qx "$one"; then
                         why="does not define $one (of $sym) -- it is not an umbrella, it is a plain copy"

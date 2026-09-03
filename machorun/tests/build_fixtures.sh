@@ -635,6 +635,15 @@ want hostbound_surface   && build hostbound_surface   "$CHAINED_TARGET" hostboun
 # struct return is the guess that crashed Darwin.
 want hostbound_osver     && build hostbound_osver     "$CHAINED_TARGET" hostbound_osver     hostbound_osver.c --
 
+# fmal. Long-double fma: host-bind on x86_64, fma(double) on arm64. Numeric
+# 1.5*2+3 is IEEE; 1+2^-63 is the 80-bit vs binary64 split.
+want fmal                && build fmal                "$CHAINED_TARGET" fmal                fmal.c -- -fno-builtin
+
+# dyld_objc_constant. _dyld_is_objc_constant is false without a shared cache;
+# _NSGetMachExecuteHeader is the main executable's header (MH_MAGIC_64 /
+# MH_EXECUTE), moved into machorun's libSystem from the full/ umbrella.
+want dyld_objc_constant  && build dyld_objc_constant  "$CHAINED_TARGET" dyld_objc_constant  dyld_objc_constant.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

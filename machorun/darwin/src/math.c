@@ -112,6 +112,10 @@ extern double glibc_scalbn(double, int)      GLIBCSYM(scalbn);
 extern float  glibc_scalbnf(float, int)      GLIBCSYM(scalbnf);
 extern double glibc_fma(double, double, double) GLIBCSYM(fma);
 extern float  glibc_fmaf(float, float, float)   GLIBCSYM(fmaf);
+#if defined(__x86_64__)
+/* Darwin x86_64 long double is 16-byte x87, matching glibc. Host-bind. */
+extern long double glibc_fmal(long double, long double, long double) GLIBCSYM(fmal);
+#endif
 extern long   glibc_lround(double)           GLIBCSYM(lround);
 extern float  glibc_lroundf(float)           GLIBCSYM(lroundf);
 extern long long glibc_llround(double)       GLIBCSYM(llround);
@@ -248,6 +252,21 @@ EXPORT double scalbn(double x, int e)  { return glibc_scalbn(x, e); }
 EXPORT float  scalbnf(float x, int e)  { return glibc_scalbnf(x, e); }
 EXPORT double fma(double a, double b, double c) { return glibc_fma(a, b, c); }
 EXPORT float  fmaf(float a, float b, float c)   { return glibc_fmaf(a, b, c); }
+#if defined(__x86_64__)
+EXPORT long double fmal(long double a, long double b, long double c)
+{
+    return glibc_fmal(a, b, c);
+}
+#else
+/* Darwin arm64 long double IS double (8 bytes); glibc aarch64 fmal is
+ * binary128. Host-binding would pass 8 bytes to a 16-byte callee. fma is
+ * the operation Darwin's long double actually performs. The tbd still
+ * advertises _fmal -- the export is implemented, not ARCH-hidden. */
+EXPORT long double fmal(long double a, long double b, long double c)
+{
+    return glibc_fma((double)a, (double)b, (double)c);
+}
+#endif
 EXPORT long   lround(double x)         { return glibc_lround(x); }
 EXPORT long   lroundf(float x)         { return (long)glibc_lroundf(x); }
 EXPORT long long llround(double x)     { return glibc_llround(x); }

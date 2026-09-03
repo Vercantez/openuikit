@@ -87,7 +87,7 @@ Demonstrated to bite: with the fix stashed, `dup_images` FAILS on exactly lines
 2–3 (the symlink half, `agree: no`, `2 images`) and the copy half already
 matches. Gates green before and after — difftest 52→53 pass / 0 fail / 1 xfail
 / 0 drift, objc44 100/100, gen_tbd all six, check_stale ok 6, swift_gate both
-orders, quartz_pixel 3/3, host_deny 9/9.
+orders, quartz_pixel 3/3, host_deny (table-sized: denied names fire).
 
 **One gate note found on the way:** `gen_tbd.sh` must be run **in the Linux
 container**. On macOS it exits 1 with 28 `comm: not in sorted order` lines,

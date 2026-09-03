@@ -1220,6 +1220,27 @@ the repository bind-mount often has no xattrs (see `tests/src/xattr.c`).
 
 Same Darwin-baseline rule as `statfs`.
 
+### `fmal` — long-double fma, and the arch split is the test
+`tests/src/fmal.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`** until the
+operator records on Darwin.
+
+`fmal(1.5, 2.0, 3.0) == 6` on both arches (IEEE). Darwin x86_64 long double
+is 16-byte x87, matching glibc, so libSystem host-binds `glibc_fmal`. Darwin
+arm64 long double **is double**; Linux aarch64 is binary128, so arm64
+implements `fmal` as `fma(double)` rather than host-binding. `1.0 + 2^-63`
+survives only in 80-bit. `tests/expected/fmal.stdout` is the arm64 shape;
+the x86 scoreboard maps `sizeof_ld` / `ld80_bit_survives` rather than FAIL.
+
+### `dyld_objc_constant` — dyld SPI the overlay links import
+`tests/src/dyld_objc_constant.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`**
+until recorded.
+
+`_dyld_is_objc_constant` is false outside a shared cache (a C string is not
+an objc constant even on Darwin-with-a-cache). `_NSGetMachExecuteHeader`
+returns the main executable: `MH_MAGIC_64` and `MH_EXECUTE`. Both live in
+machorun's libSystem; the full/ umbrella copy of the header accessor was
+removed so it cannot beat `.real`.
+
 ## What the harness guarantees
 
 `tests/expected/` is the oracle's output and nothing else may write it.

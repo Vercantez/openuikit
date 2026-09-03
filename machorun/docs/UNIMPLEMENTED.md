@@ -139,10 +139,18 @@ symbol being protected. The label is where the audit belongs — and a label
 applied *to a symbol that needs translating* routes around the wrapper
 silently, which is the trap that nearly shipped over `signalfd`.
 
-Graded by `scripts/host_deny_gate.sh` (9/9: 4 denied names fire, 2 controls
+Graded by `scripts/host_deny_gate.sh` (denied names fire, 2 controls
 return correct values, the verbose log distinguishes the two paths, and the
-built loader is checked to contain the table the source declares). Teeth shown
-by mutation: stubbing the hook out drops it to 4 pass / 5 fail.
+built loader is checked to contain the table the source declares; the
+denominator is `n_denied + n_control + 3`, read out of the table so a new
+row cannot pass by being skipped). The table has two families: ABI-divergent
+Darwin C names (`openat`, `sem_open`, `vdprintf`, `strtold`) and compiler-rt
+builtins (`__divti3`, `__modti3`, `__udivti3`, `__umodti3`, `__truncsfhf2`,
+`__isPlatformVersionAtLeast`, `__isPlatformOrVariantPlatformVersionAtLeast`).
+A compiler-rt name reaching glibc means a dylib was linked without
+`libclang_rt.osx.a` (PR #64) — those rows name the archive and must not be
+copied into `darwin/host-bound-allowed.txt`. Teeth shown
+by mutation: stubbing the hook out drops the ABI-divergent half.
 
 ---
 
@@ -2162,8 +2170,11 @@ need `libswiftcompat.dylib` to define them; that dylib must drop the overlap
 (its own rule: never define a symbol machorun already does).
 
 What remains of the 29-symbol gap is compiler-rt's 128-bit division (`__*ti3`),
-`flockfile` / `funlockfile`, `_NSGetMachExecuteHeader`, the availability
-checks, and C++ pieces still only in the compat dylib. They are supplied by a
+the availability checks, and a handful of C++ pieces still only in the compat
+dylib. `flockfile` / `funlockfile`, `_NSGetMachExecuteHeader`,
+`_dyld_is_objc_constant`, `dispatch_once_f`, and the three libc++ overlay
+symbols now live in `darwin/src/` (and the cxxpatch umbrella must not redefine
+the libc++ three). The rest is supplied by a
 separate `libswiftcompat.dylib` which **the guest** has to name on its link
 line — libswiftCore carries no `LC_LOAD_DYLIB` for it.
 

@@ -17,6 +17,14 @@
 # a decision with a date on it rather than whatever a staging script happened
 # to drag in.
 #
+# COMPILER-RT BUILTINS ARE NEVER ROWS HERE. `___divti3`, `___modti3`,
+# `___udivti3`, `___umodti3`, `___truncsfhf2`, `___isPlatformVersionAtLeast`,
+# `___isPlatformOrVariantPlatformVersionAtLeast` (and siblings the archive
+# defines) are answered at link by libclang_rt.osx.a (PR #64). A builtin
+# reaching glibc means a dylib was linked without that archive. src/host_deny.c
+# has compiler-rt family rows so CHECK 5 accounts them and a call dies naming
+# the archive. Do not "allow" them.
+#
 # THE CHECK IS ONE-SIDED AND THAT IS DELIBERATE. An unlisted name is a hard
 # failure; a listed name that nothing imports is reported, not failed, because
 # a root's contents are configuration -- libquartz is optional, libswiftCore is

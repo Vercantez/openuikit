@@ -267,11 +267,20 @@ grade_root() { # grade_root <root-dir> <depth>
     printf '   misplaced:  %4d  defined in the root, unreachable from the named library\n' \
         "$n_misplaced"
 
+    # compiler-rt family rows: Mach-O name is "_" + the X() cname. awk field 4
+    # is the family string. Mixed-case cnames (__isPlatform*) live here.
+    awk -F'"' '/^ *X\(/ && $4=="compiler-rt" { print "_" $2 }' \
+        "$ROOT/src/host_deny.c" | LC_ALL=C sort -u > "$TMP/denied_rt"
+
     if [ "$n_missing" != 0 ]; then
         while IFS= read -r s; do
             local who deny=""
             who=$(awk -F'\t' -v s="$s" '$1==s{printf "%s ", $2}' "$TMP/missing")
-            grep -q "\"${s#_}\"" "$ROOT/src/host_deny.c" && deny="  [DENIED by src/host_deny.c]"
+            if grep -qx "$s" "$TMP/denied_rt"; then
+                deny="  [DENIED — compiler-rt builtin; reaching glibc means a dylib was linked without libclang_rt.osx.a]"
+            elif grep -q "\"${s#_}\"" "$ROOT/src/host_deny.c"; then
+                deny="  [DENIED by src/host_deny.c]"
+            fi
             printf '     %-28s wanted by %s%s\n' "$s" "$who" "$deny"
         done < "$TMP/m_plain"
     fi
@@ -284,12 +293,18 @@ grade_root() { # grade_root <root-dir> <depth>
 
     # --------------------------------------------------------------- verdict
     # Reporting is the default; --strict is what makes it a gate. Every plain
-    # name must be accounted for by a DECISION: either denied (bound to a loud
-    # stub, src/host_deny.c) or written down as measured-compatible
-    # (darwin/host-bound-allowed.txt). An unaccounted one fails.
+    # name must be accounted for by a DECISION: denied (bound to a loud stub,
+    # src/host_deny.c -- ABI-divergent Darwin C names OR compiler-rt builtins
+    # whose reaching glibc means a dylib was linked without libclang_rt.osx.a)
+    # or written down as measured-compatible (darwin/host-bound-allowed.txt).
+    # Compiler-rt builtins must never go on the allow list. An unaccounted
+    # one fails.
     [ "$STRICT" = 1 ] || return 0
 
-    grep -oE '^ *X\([a-z_0-9]+, "[a-z_0-9]+"' "$ROOT/src/host_deny.c" \
+    # Mixed-case compiler-rt hooks (__isPlatformVersionAtLeast) are deny rows.
+    # [a-z_0-9]+ dropped them, so --strict listed a builtin as unaccounted
+    # and invited a host-bound-allowed row -- the wrong fix.
+    grep -oE '^ *X\([A-Za-z_][A-Za-z_0-9]*, "[A-Za-z_][A-Za-z_0-9]*"' "$ROOT/src/host_deny.c" \
         | sed 's/.*"\(.*\)"/_\1/' | LC_ALL=C sort -u > "$TMP/denied"
     grep -oE '^_[A-Za-z_][A-Za-z_0-9]*' "$ALLOW" | LC_ALL=C sort -u > "$TMP/allowed"
     [ -s "$TMP/denied" ] || { echo "!! parsed no rows out of src/host_deny.c" >&2; return 1; }
@@ -309,7 +324,15 @@ grade_root() { # grade_root <root-dir> <depth>
         echo "       saying WHAT WAS CHECKED (six hazard families, not just structs);" >&2
         echo "     * divergent -> add a row to src/host_deny.c so it dies naming itself;" >&2
         echo "     * ours to implement -> implement it in darwin/src and it stops being" >&2
-        echo "       undefined at all." >&2
+        echo "       undefined at all;" >&2
+        echo "     * compiler-rt builtin (___divti3, ___isPlatform*, ___truncsfhf2, …) ->" >&2
+        echo "       do NOT add it to host-bound-allowed.txt. A builtin reaching glibc" >&2
+        echo "       means a dylib was linked without libclang_rt.osx.a (PR #64)." >&2
+        echo "       Rebuild that dylib NOUNDEFS with the archive, or add a compiler-rt" >&2
+        echo "       row to src/host_deny.c so the miss dies naming the archive." >&2
+        if grep -qxE '___divti3|___modti3|___udivti3|___umodti3|___truncsfhf2|___isPlatformVersionAtLeast|___isPlatformOrVariantPlatformVersionAtLeast' "$TMP/unaccounted"; then
+            echo "   (a compiler-rt name is on that list: the dylib was linked without the archive)" >&2
+        fi
         return 1
     fi
     if [ "$n_misplaced" != 0 ]; then

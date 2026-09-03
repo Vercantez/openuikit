@@ -10,13 +10,17 @@
  *
  * Three honesty tiers:
  *   REAL     -- behaviour the drawing path can depend on: 128-bit divide,
- *               dispatch_once_f, getsectiondata, malloc_type_*, the strtod_l
- *               family, the main-executable header.
+ *               getsectiondata, malloc_type_* (in machorun, not here), the
+ *               strtod_l family.
  *   FALLBACK -- returns the value that means "no preoptimized data / not found",
  *               which is the TRUTH under machorun (no dyld shared cache). Swift
  *               then takes its own scan path. Correct, not a lie.
  *   STUB     -- os_log / signpost / asl logging and a couple of never-hit
  *               parsers: no-ops, so logging silently does nothing.
+ *
+ * dispatch_once_f, _NSGetMachExecuteHeader, _dyld_is_objc_constant,
+ * flockfile/funlockfile live in machorun's libSystem. Do not redefine them:
+ * a definition here beats libSystem.real.
  *
  * asm() labels pin the exact Mach-O symbol names.
  */
@@ -50,34 +54,8 @@ __int128 mi3(__int128 a, __int128 b) { return a % b; }
 unsigned __int128 udi3(unsigned __int128 a, unsigned __int128 b) { return a / b; }
 unsigned __int128 umi3(unsigned __int128 a, unsigned __int128 b) { return a % b; }
 
-/* dispatch_once_f: the one-time-init primitive swift_once sits on. The DONE
- * sentinel libdispatch uses (and the inlined fast path in libswiftCore checks)
- * is ~0l. This MUST be per-token, not a shared lock: the Swift runtime nests
- * swift_once on DIFFERENT tokens (one lazy init drives another), and a single
- * global mutex deadlocks the moment the fn() body enters a second once. A
- * per-token CAS state machine (0 -> RUNNING -> DONE) has no cross-token lock, so
- * nesting on distinct tokens is free; genuine same-token recursion still spins,
- * exactly as libdispatch would. */
-#define MR_ONCE_RUNNING 1l
-void mr_dispatch_once_f(long *pred, void *ctx, void (*fn)(void *)) asm("_dispatch_once_f");
-void mr_dispatch_once_f(long *pred, void *ctx, void (*fn)(void *))
-{
-    if (__atomic_load_n(pred, __ATOMIC_ACQUIRE) == ~0l) return;
-    long expected = 0;
-    if (__atomic_compare_exchange_n(pred, &expected, MR_ONCE_RUNNING, 0,
-                                    __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE)) {
-        fn(ctx);
-        __atomic_store_n(pred, ~0l, __ATOMIC_RELEASE);
-    } else {
-        while (__atomic_load_n(pred, __ATOMIC_ACQUIRE) != ~0l) {
-#if defined(__aarch64__)
-            __asm__ __volatile__("yield");
-#elif defined(__x86_64__)
-            __asm__ __volatile__("pause");
-#endif
-        }
-    }
-}
+/* dispatch_once_f lives in machorun's libSystem (darwin/src/libsystem.c).
+ * A definition here would beat the re-export. Do not put it back. */
 
 /* ---- shared section finder: match by SECTION name across all segments,
  * returning the slid address + size. Segment-name-agnostic so it serves both
@@ -212,11 +190,9 @@ mr_lookup_section_info(const void *mh, void *info, int kind)
     return r;
 }
 
-/* The main executable's mach header. Bound flat to __mh_execute_header, which
- * the guest exe is linked -export_dynamic so it lands in the export trie. */
-extern struct mach_header_64 mr_mh_exec asm("__mh_execute_header");
-struct mach_header_64 *mr_NSGetMachExecuteHeader(void) asm("__NSGetMachExecuteHeader");
-struct mach_header_64 *mr_NSGetMachExecuteHeader(void) { return &mr_mh_exec; }
+/* _NSGetMachExecuteHeader lives in machorun's libSystem (objcsupport.c),
+ * answering from the loader's image table. A definition here would beat
+ * libSystem.real. Do not put it back. */
 
 /* TYPED MALLOC IS DELIBERATELY NOT DEFINED HERE ANY MORE. It used to be, and
  * that was the single worst bug this project has had.
@@ -359,7 +335,6 @@ void *dyld_fftpc(void) asm("__dyld_find_foreign_type_protocol_conformance");
 void *dyld_fftpcod(void) asm("__dyld_find_foreign_type_protocol_conformance_on_disk");
 void *dyld_fphte(void) asm("__dyld_find_pointer_hash_table_entry");
 int   dyld_hpspc(void) asm("__dyld_has_preoptimized_swift_protocol_conformances");
-int   dyld_ioc(void) asm("__dyld_is_objc_constant");
 int   dyld_ipoil(void) asm("__dyld_is_preoptimized_objc_image_loaded");
 uint32_t dyld_sov(void) asm("__dyld_swift_optimizations_version");
 void *dyld_gscr(void) asm("__dyld_get_shared_cache_range");
@@ -371,7 +346,6 @@ void *dyld_fftpc(void) { return NULL; }
 void *dyld_fftpcod(void) { return NULL; }
 void *dyld_fphte(void) { return NULL; }
 int   dyld_hpspc(void) { return 0; }
-int   dyld_ioc(void) { return 0; }
 int   dyld_ipoil(void) { return 0; }
 uint32_t dyld_sov(void) { return 0; }
 void *dyld_gscr(void) { return NULL; }
@@ -415,10 +389,9 @@ int  mr_os_trace_lazy(void) asm("__os_trace_lazy_init_completed_4swift");
 int  mr_os_trace_lazy(void) { return 0; }
 void mr_asl_log(void) asm("_asl_log");
 void mr_asl_log(void) {}
-void mr_flockfile(void *f) asm("_flockfile");
-void mr_flockfile(void *f) { (void)f; }
-void mr_funlockfile(void *f) asm("_funlockfile");
-void mr_funlockfile(void *f) { (void)f; }
+
+/* flockfile / funlockfile live in machorun's libSystem (labelled glibc
+ * wrappers). A no-op here would beat those and silently drop locking. */
 
 /* sscanf / getline: on this stdlib's parsing paths, unreached by a bitmap draw.
  * Return "nothing matched" / "EOF" rather than pretend. */

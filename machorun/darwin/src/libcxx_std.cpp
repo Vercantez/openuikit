@@ -54,6 +54,11 @@
 #include <string>
 #include <algorithm>
 #include <unordered_map>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <thread>
+#include <unistd.h>
 
 // ---------------------------------------------------------------------------
 // Explicit instantiation definitions. No code of ours: LLVM 18's, emitted here.
@@ -220,3 +225,50 @@ string to_string(unsigned long long v)
 }
 
 _LIBCPP_END_NAMESPACE_STD
+
+// ---------------------------------------------------------------------------
+// Overlay NOUNDEFS. Apple's libc++.tbd exports these three; this dylib did
+// not, because:
+//
+//   __libcpp_verbose_abort
+//       build_darwin.sh compiled this TU with
+//       -D_LIBCPP_VERBOSE_ABORT(...)=__builtin_trap(), so the handler was
+//       never a symbol. The trap define stays on objc4 TUs (compile-time);
+//       the dylib must export the function Swift's .o files import.
+//
+//   thread::hardware_concurrency
+//       declaration-only in LLVM 18 <thread>; the body lives in src/thread.cpp
+//       which is not in the vendored libcxx sources. _LIBCPP_HAS_NO_THREADS
+//       is not set -- the function was simply never instantiated.
+//
+//   operator+(const char*, const string&)
+//       a separate `extern template` from `template class basic_string<char>`
+//       (string:688). Instantiating the class does not emit this overload.
+//
+// A definition here means the full/ cxxpatch umbrella must NOT also define
+// them -- a definition in the umbrella beats libc++.real.
+// ---------------------------------------------------------------------------
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+_LIBCPP_NORETURN void __libcpp_verbose_abort(const char* format, ...)
+{
+    std::va_list ap;
+    va_start(ap, format);
+    std::vfprintf(stderr, format, ap);
+    va_end(ap);
+    std::fprintf(stderr, "\nlibc++: __libcpp_verbose_abort reached\n");
+    std::abort();
+}
+
+unsigned thread::hardware_concurrency() _NOEXCEPT
+{
+    long n = ::sysconf(_SC_NPROCESSORS_ONLN);
+    return n > 0 ? static_cast<unsigned>(n) : 1u;
+}
+
+_LIBCPP_END_NAMESPACE_STD
+
+template std::__1::string
+std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(
+    const char*, const std::__1::string&);
