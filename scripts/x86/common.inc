@@ -692,13 +692,30 @@ phase2_stage_x86_base_mrroot() {
     if [ -f "$x86_core" ] && phase2_is_x86_macho "$x86_core"; then
         cp -f "$x86_core" "$dest/darwin/usr/lib/swift/libswiftCore.dylib"
     fi
-    # Host Linux boundary from the resolved Swift runtime dir (not a hardcoded
-    # /usr/lib/swift/linux). Incomplete host/ is CANNOT_X86_HOST_RUNTIME in
-    # phase2.sh, before build_full.sh runs.
-    phase2_stage_x86_host_runtime "$dest" >/dev/null || true
+    # Host Linux boundary: copy libdispatch.so / libBlocksRuntime.so from the
+    # resolved Swift runtime dir, then build the four Open* helpers as ELF
+    # x86_64. Incomplete host/ is CANNOT_X86_HOST_RUNTIME in phase2.sh.
+    phase2_stage_x86_host_runtime "$dest" "$PHASE2_REPO" >/dev/null || true
 }
 
-# Record sha256 of every regular file currently in dest/host/.
+# ELF 64-bit x86-64 shared object, regular file. Rejects arm64 ELF, Mach-O,
+# text fixtures, and symlinks (build_full.sh requires regular files).
+phase2_is_elf_x86_so() {
+    local f=$1
+    [ -f "$f" ] && [ ! -L "$f" ] || return 1
+    file -b "$f" | grep -q 'ELF 64-bit LSB shared object, x86-64'
+}
+
+phase2_drop_unless_elf_x86_so() {
+    local f=$1
+    if phase2_is_elf_x86_so "$f"; then
+        return 0
+    fi
+    rm -f "$f"
+    return 1
+}
+
+# Record sha256 of every staged ELF x86-64 host runtime file.
 phase2_record_host_runtime_sha256() {
     local dest=$1
     local host=$dest/host
@@ -708,17 +725,18 @@ phase2_record_host_runtime_sha256() {
         echo "# sha256 of staged host runtime files"
         while IFS= read -r name; do
             [ -n "$name" ] || continue
-            if [ -f "$host/$name" ] && [ ! -L "$host/$name" ]; then
+            if phase2_is_elf_x86_so "$host/$name"; then
                 sha256sum "$host/$name"
             fi
         done < <(openuikit_host_runtime_files)
     } > "$host/SHA256SUMS"
 }
 
-# Copy HOST_RUNTIME_FILES from the resolved Swift linux lib dir into dest/host.
-# Dereference symlinks so build_full.sh sees regular files. Prints OK or
-# MISSING=a,b,c. Optional $2 is the repo root: when set, missing Open* helpers
-# are built from the committed C sources (not invented).
+# Copy toolchain HOST_RUNTIME_FILES (libdispatch.so, libBlocksRuntime.so) from
+# the resolved Swift linux lib dir, then BUILD the four Open* helpers as ELF
+# x86_64 through the committed recipes. Never copies Open* (including arm64
+# ELF leftover in the linux dir). Optional $2 is the repo root. Prints OK or
+# MISSING=a,b,c naming each file that is not ELF x86-64.
 phase2_stage_x86_host_runtime() {
     local dest=$1 repo=${2:-}
     local host=$dest/host
@@ -731,8 +749,9 @@ phase2_stage_x86_host_runtime() {
         if [ -e "$src" ]; then
             cp -fL "$src" "$host/$name"
         fi
-    done < <(openuikit_host_runtime_files)
-    if [ -n "$repo" ] && [ -f "$repo/full/dispatch/build_host_bridge.sh" ]; then
+        phase2_drop_unless_elf_x86_so "$host/$name" || true
+    done < <(openuikit_host_runtime_toolchain_files)
+    if [ -n "$repo" ]; then
         phase2_build_x86_host_helpers "$dest" "$repo" || true
     fi
     phase2_record_host_runtime_sha256 "$dest"
@@ -745,14 +764,14 @@ phase2_stage_x86_host_runtime() {
     return 1
 }
 
-# Comma-separated HOST_RUNTIME_FILES absent from dest/host as regular files.
+# Comma-separated HOST_RUNTIME_FILES that are not ELF x86-64 regular files.
 phase2_host_runtime_missing() {
     local dest=$1
     local host=$dest/host
     local name missing=()
     while IFS= read -r name; do
         [ -n "$name" ] || continue
-        if [ ! -f "$host/$name" ] || [ -L "$host/$name" ]; then
+        if ! phase2_is_elf_x86_so "$host/$name"; then
             missing+=("$name")
         fi
     done < <(openuikit_host_runtime_files)
@@ -763,59 +782,73 @@ phase2_host_runtime_missing() {
     printf '%s\n' "${missing[*]}"
 }
 
-# Produce Open* helpers that are not in the Swift toolchain. libdispatch.so
-# and libBlocksRuntime.so must already be regular files in dest/host.
-# Uses committed clang argv / build_host_bridge.sh. Does not stub missing libs.
+# Build the four Open* helpers through committed scripts. Skip a helper that
+# is already ELF x86-64. Rebuild (do not keep) arm64 ELF / text / Mach-O.
+# libOpenDispatchHost.so uses full/dispatch/build_host_bridge.sh; the other
+# three use sibling build_host_helper.sh recipes. Does not stub missing libs.
 phase2_build_x86_host_helpers() {
     local dest=$1 repo=$2
     local host=$dest/host
     local work=$dest/host-work
     mkdir -p "$host" "$work"
-    if [ ! -f "$host/libdispatch.so" ] || [ -L "$host/libdispatch.so" ] \
-        || [ ! -f "$host/libBlocksRuntime.so" ] || [ -L "$host/libBlocksRuntime.so" ]; then
-        return 0
+
+    if ! phase2_is_elf_x86_so "$host/libOpenDispatchHost.so"; then
+        rm -f "$host/libOpenDispatchHost.so"
+        if phase2_is_elf_x86_so "$host/libdispatch.so" \
+            && phase2_is_elf_x86_so "$host/libBlocksRuntime.so" \
+            && [ -f "$repo/full/dispatch/build_host_bridge.sh" ]; then
+            set +e
+            bash "$repo/full/dispatch/build_host_bridge.sh" \
+                --repo "$repo" \
+                --host-dir "$host" \
+                --work-dir "$work" \
+                --skip-runtime-pin \
+                --host-abi "ELF64-$(uname -m)" \
+                --refuse-prefix 'phase2_host_runtime: ' \
+                >"$work/build_host_bridge.log" 2>&1
+            set -e
+        fi
+        phase2_drop_unless_elf_x86_so "$host/libOpenDispatchHost.so" || true
     fi
-    if [ ! -f "$host/libOpenDispatchHost.so" ] || [ -L "$host/libOpenDispatchHost.so" ]; then
-        set +e
-        bash "$repo/full/dispatch/build_host_bridge.sh" \
-            --repo "$repo" \
-            --host-dir "$host" \
-            --work-dir "$work" \
-            --skip-runtime-pin \
-            --host-abi "ELF64-$(uname -m)" \
-            --refuse-prefix 'phase2_host_runtime: ' \
-            >"$work/build_host_bridge.log" 2>&1
-        set -e
+
+    if ! phase2_is_elf_x86_so "$host/libOpenFoundationInternationalizationHost.so"; then
+        rm -f "$host/libOpenFoundationInternationalizationHost.so"
+        if [ -f "$repo/full/foundationinternationalization/build_host_helper.sh" ]; then
+            set +e
+            bash "$repo/full/foundationinternationalization/build_host_helper.sh" \
+                --repo "$repo" \
+                --host-dir "$host" \
+                >"$work/OpenFoundationInternationalizationHost.log" 2>&1
+            set -e
+        fi
+        phase2_drop_unless_elf_x86_so \
+            "$host/libOpenFoundationInternationalizationHost.so" || true
     fi
-    if [ ! -f "$host/libOpenFoundationInternationalizationHost.so" ] \
-        || [ -L "$host/libOpenFoundationInternationalizationHost.so" ]; then
-        set +e
-        clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-            -I "$repo/full/foundationinternationalization/include" -shared \
-            "$repo/full/foundationinternationalization/OpenFoundationInternationalizationHost.c" \
-            -o "$host/libOpenFoundationInternationalizationHost.so" \
-            >"$work/OpenFoundationInternationalizationHost.log" 2>&1
-        set -e
+
+    if ! phase2_is_elf_x86_so "$host/libOpenURLTransportHost.so"; then
+        rm -f "$host/libOpenURLTransportHost.so"
+        if [ -f "$repo/full/urltransport/build_host_helper.sh" ]; then
+            set +e
+            bash "$repo/full/urltransport/build_host_helper.sh" \
+                --repo "$repo" \
+                --host-dir "$host" \
+                >"$work/OpenURLTransportHost.log" 2>&1
+            set -e
+        fi
+        phase2_drop_unless_elf_x86_so "$host/libOpenURLTransportHost.so" || true
     fi
-    if [ ! -f "$host/libOpenURLTransportHost.so" ] \
-        || [ -L "$host/libOpenURLTransportHost.so" ]; then
-        set +e
-        clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-            -I "$repo/full/urltransport/include" -shared \
-            "$repo/full/urltransport/OpenURLTransportHost.c" \
-            -o "$host/libOpenURLTransportHost.so" -lcurl -pthread \
-            >"$work/OpenURLTransportHost.log" 2>&1
-        set -e
-    fi
-    if [ ! -f "$host/libOpenRelativeTimeHost.so" ] \
-        || [ -L "$host/libOpenRelativeTimeHost.so" ]; then
-        set +e
-        clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-            -I "$repo/full/relativetime/include" -shared \
-            "$repo/full/relativetime/OpenRelativeTimeHost.c" \
-            -o "$host/libOpenRelativeTimeHost.so" -licui18n -licuuc -lm \
-            >"$work/OpenRelativeTimeHost.log" 2>&1
-        set -e
+
+    if ! phase2_is_elf_x86_so "$host/libOpenRelativeTimeHost.so"; then
+        rm -f "$host/libOpenRelativeTimeHost.so"
+        if [ -f "$repo/full/relativetime/build_host_helper.sh" ]; then
+            set +e
+            bash "$repo/full/relativetime/build_host_helper.sh" \
+                --repo "$repo" \
+                --host-dir "$host" \
+                >"$work/OpenRelativeTimeHost.log" 2>&1
+            set -e
+        fi
+        phase2_drop_unless_elf_x86_so "$host/libOpenRelativeTimeHost.so" || true
     fi
 }
 

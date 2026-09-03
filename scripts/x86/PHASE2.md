@@ -215,16 +215,25 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    `bin/ud_guest.otool.txt` (`MH_MAGIC_64 X86_64` + expected loads). Overlay
    dylibs are not required at link time; rung a still needs them at load.
 10. `scratch/mrroot-x86_64/host/` is the Linux host runtime boundary
-    `build_full.sh` copies (`HOST_RUNTIME_FILES`: libdispatch.so,
-    libBlocksRuntime.so, and the four Open* helpers). phase2 resolves the
-    Swift linux lib dir the same way `full/dispatch/build_host_bridge.sh`
-    does (`SWIFT_TOOLCHAIN` → `/opt/swift624/usr` → `/opt/swift/usr` →
-    swiftc-on-PATH → `/usr`) via `full/dispatch/swift_linux_lib.inc`, copies
-    that closed set (dereference symlinks so they are regular files), records
-    sha256 in `host/SHA256SUMS`, and builds missing Open* helpers from the
-    committed C sources. An empty or partial `host/` is
+    `build_full.sh` copies (`HOST_RUNTIME_FILES`: libdispatch.so and
+    libBlocksRuntime.so from the Swift linux toolchain, **plus** four
+    project-built ELF helpers). phase2 resolves the Swift linux lib dir the
+    same way `full/dispatch/build_host_bridge.sh` does (`SWIFT_TOOLCHAIN` →
+    `/opt/swift624/usr` → `/opt/swift/usr` → swiftc-on-PATH → `/usr`) via
+    `full/dispatch/swift_linux_lib.inc`, copies **only** the two toolchain
+    names (dereference + require `ELF 64-bit LSB shared object, x86-64`;
+    arm64 ELF / Mach-O / text is dropped), then **builds** the four Open*
+    helpers for ELF x86_64 through the committed recipes — never copies
+    Open* from the linux dir or from an arm64 mrroot:
+    `full/dispatch/build_host_bridge.sh` → `libOpenDispatchHost.so`;
+    `full/foundationinternationalization/build_host_helper.sh` →
+    `libOpenFoundationInternationalizationHost.so`;
+    `full/urltransport/build_host_helper.sh` → `libOpenURLTransportHost.so`;
+    `full/relativetime/build_host_helper.sh` → `libOpenRelativeTimeHost.so`.
+    sha256 lands in `host/SHA256SUMS`. An empty or partial `host/` is
     `CANNOT_X86_HOST_RUNTIME missing=…` on item `mrroot-host-x86` **before**
-    rungs b/c invoke `build_full.sh`. Not a PR3 `CURSOR_ENV_CANNOT_*` marker.
+    rungs b/c invoke `build_full.sh`, and `missing=` names each file that
+    could not be copied or built. Not a PR3 `CURSOR_ENV_CANNOT_*` marker.
 
 ## Operator-staged Apple x86_64 overlays
 

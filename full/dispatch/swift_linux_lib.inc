@@ -8,22 +8,33 @@
 #   /usr/lib/swift/linux
 #
 # Closed host-runtime set is the same list full/scripts/build_full.sh stages
-# from scratch/mrroot[-x86_64]/host/. Do not add names here without an ABI
-# decision in build_full.sh.
+# from scratch/mrroot[-x86_64]/host/. libdispatch.so and libBlocksRuntime.so
+# are toolchain copies. The four Open* names are project-built ELF helpers
+# (not toolchain copies, never arm64 ELF). Do not add names here without an
+# ABI decision in build_full.sh.
 
 if [ -n "${OPENUIKIT_SWIFT_LINUX_LIB_INC:-}" ]; then
     return 0 2>/dev/null || true
 fi
 OPENUIKIT_SWIFT_LINUX_LIB_INC=1
 
-openuikit_host_runtime_files() {
+openuikit_host_runtime_toolchain_files() {
     printf '%s\n' \
         libdispatch.so \
-        libBlocksRuntime.so \
+        libBlocksRuntime.so
+}
+
+openuikit_host_runtime_built_files() {
+    printf '%s\n' \
         libOpenDispatchHost.so \
         libOpenFoundationInternationalizationHost.so \
         libOpenURLTransportHost.so \
         libOpenRelativeTimeHost.so
+}
+
+openuikit_host_runtime_files() {
+    openuikit_host_runtime_toolchain_files
+    openuikit_host_runtime_built_files
 }
 
 # Print the directory that contains libdispatch.so for the host Swift runtime.

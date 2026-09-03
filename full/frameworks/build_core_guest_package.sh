@@ -2256,10 +2256,10 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
 "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
     -install_name /usr/lib/libOpenURLTransport.dylib \
     -o "$URL_TRANSPORT_DARWIN" "$WORK/open-url-transport-bridge.o"
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$STAGE/include/COpenURLTransport" -shared \
-    "$W/full/urltransport/OpenURLTransportHost.c" \
-    -o "$URL_TRANSPORT_HOST" -lcurl -pthread
+bash "$W/full/urltransport/build_host_helper.sh" \
+    --repo "$W" \
+    --host-dir "$RUNTIME/host" \
+    --include-dir "$STAGE/include/COpenURLTransport"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
     -I "$STAGE/include/COpenURLTransport" \
     "$W/full/urltransport/OpenURLTransportHost.c" \
@@ -2375,10 +2375,10 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
 "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
     -install_name /usr/lib/libOpenRelativeTime.dylib \
     -o "$RELATIVE_TIME_DARWIN" "$WORK/open-relative-time-bridge.o"
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$STAGE/include/COpenRelativeTime" -shared \
-    "$W/full/relativetime/OpenRelativeTimeHost.c" \
-    -o "$RELATIVE_TIME_HOST" -licui18n -licuuc -lm
+bash "$W/full/relativetime/build_host_helper.sh" \
+    --repo "$W" \
+    --host-dir "$RUNTIME/host" \
+    --include-dir "$STAGE/include/COpenRelativeTime"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
     -I "$STAGE/include/COpenRelativeTime" \
     "$W/full/relativetime/OpenRelativeTimeHost.c" \

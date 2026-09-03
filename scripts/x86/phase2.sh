@@ -703,8 +703,10 @@ fi
 
 # Host Linux runtime boundary for build_full.sh. Always (re)stage, including
 # when mrroot-base-x86 is already satisfied: the operator tree had an empty
-# scratch/mrroot-x86_64/host/. Incomplete host/ is a named CANNOT before
-# rungs b/c invoke build_full.sh.
+# scratch/mrroot-x86_64/host/. Copies toolchain libdispatch.so /
+# libBlocksRuntime.so, then builds the four Open* helpers as ELF x86_64.
+# Incomplete host/ is a named CANNOT (each missing file) before rungs b/c
+# invoke build_full.sh.
 echo "==== mrroot-x86_64 host/ (Linux runtime boundary) ===="
 HOST_RUNTIME_OK=0
 if [ "$BASE_MRROOT" = "$ARM_BASE_MRROOT" ]; then
