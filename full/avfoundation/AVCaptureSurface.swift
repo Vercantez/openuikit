@@ -48,7 +48,7 @@ public enum AVCaptureColorSpace: Int, Hashable, Sendable {
 
 open class AVCaptureConnection: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(inputPorts ports: [AVCaptureInput.Port], output: AVCaptureOutput) {}
+  convenience init(inputPorts ports: [AVCaptureInput.Port], output: AVCaptureOutput) { self.init() }
   public var inputPorts: [AVCaptureInput.Port] { [] }
   public var output: AVCaptureOutput? { nil }
   public var isEnabled: Bool {
@@ -109,7 +109,7 @@ open class AVCaptureControl: NSObject, @unchecked Sendable {
 
 open class AVCaptureDataOutputSynchronizer: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(dataOutputs: [AVCaptureOutput]) {}
+  convenience init(dataOutputs: [AVCaptureOutput]) { self.init() }
   public var dataOutputs: [AVCaptureOutput] { [] }
   public func setDelegate(_ delegate: (any AVCaptureDataOutputSynchronizerDelegate)?, queue delegateCallbackQueue: DispatchQueue?) {}
   public var delegate: (any AVCaptureDataOutputSynchronizerDelegate)? { nil }
@@ -310,7 +310,7 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   }
   open class RotationCoordinator: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    public weak var device: AVCaptureDevice? { nil }
+    public var device: AVCaptureDevice? { nil }
     public var videoRotationAngleForHorizonLevelPreview: CGFloat { 0 }
     public var videoRotationAngleForHorizonLevelCapture: CGFloat { 0 }
   }
@@ -347,17 +347,17 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
     case auto = 2
   }
   public struct WhiteBalanceChromaticityValues: Sendable {
+    public init() {}
     public init(x: Float, y: Float) {}
     public var x: Float = 0
     public var y: Float = 0
-    public init() {}
   }
   public struct WhiteBalanceGains: Sendable {
+    public init() {}
     public init(redGain: Float, greenGain: Float, blueGain: Float) {}
     public var redGain: Float = 0
     public var greenGain: Float = 0
     public var blueGain: Float = 0
-    public init() {}
   }
   public enum WhiteBalanceMode: Int, Hashable, Sendable {
     case locked = 0
@@ -365,20 +365,20 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
     case continuousAutoWhiteBalance = 2
   }
   public struct WhiteBalanceTemperatureAndTintValues: Sendable {
-    public static let tungsten = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let fluorescent = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let daylight = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let cloudy = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let shadow = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
+    public init() {}
+    public static let tungsten: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
+    public static let fluorescent: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
+    public static let daylight: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
+    public static let cloudy: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
+    public static let shadow: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
     public init(temperature: Float, tint: Float) {}
     public var temperature: Float = 0
     public var tint: Float = 0
-    public init() {}
   }
   public class func devices() -> [AVCaptureDevice] { [] }
   public class func devices(for mediaType: AVMediaType) -> [AVCaptureDevice] { [] }
   public class func `default`(for mediaType: AVMediaType) -> AVCaptureDevice? { nil }
-  public init?(uniqueID deviceUniqueID: String) { return nil }
+  convenience init?(uniqueID deviceUniqueID: String) { return nil }
   public var uniqueID: String { "" }
   public var modelID: String { "" }
   public var localizedName: String { "" }
@@ -647,7 +647,7 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   public static let currentExposureDuration: CMTime = .zero
   public static let currentISO: Float = 0
   public static let currentExposureTargetBias: Float = 0
-  public static let currentWhiteBalanceGains = AVCaptureDevice.WhiteBalanceGains()
+  public static let currentWhiteBalanceGains: AVCaptureDevice.WhiteBalanceGains = AVCaptureDevice.WhiteBalanceGains()
   public static let wasConnectedNotification: Notification.Name = Notification.Name("wasConnectedNotification")
   public static let wasDisconnectedNotification: Notification.Name = Notification.Name("wasDisconnectedNotification")
   public static let subjectAreaDidChangeNotification: Notification.Name = Notification.Name("subjectAreaDidChangeNotification")
@@ -655,7 +655,7 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
 
 open class AVCaptureDeviceInput: AVCaptureInput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(device: AVCaptureDevice) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  convenience init(device: AVCaptureDevice) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public var device: AVCaptureDevice { AVCaptureDevice() }
   public var unifiedAutoExposureDefaultsEnabled: Bool {
       get { false }
@@ -715,7 +715,7 @@ open class AVCaptureExternalDisplayConfiguration: NSObject, @unchecked Sendable 
 
 open class AVCaptureExternalDisplayConfigurator: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public weak var device: AVCaptureDevice? { nil }
+  public var device: AVCaptureDevice? { nil }
   public var isActive: Bool { false }
   public func stop() {}
   public var activeExternalDisplayFrameRate: Double { 0 }
@@ -765,9 +765,9 @@ open class AVCaptureFraming: NSObject, @unchecked Sendable {
 
 open class AVCaptureIndexPicker: AVCaptureControl, @unchecked Sendable {
   public override init() { super.init() }
-  public init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int) {}
-  public init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int, localizedTitleTransform: (Int) -> String) {}
-  public init(_ localizedTitle: String, symbolName: String, localizedIndexTitles: [String]) {}
+  convenience init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int) { self.init() }
+  convenience init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int, localizedTitleTransform: (Int) -> String) { self.init() }
+  convenience init(_ localizedTitle: String, symbolName: String, localizedIndexTitles: [String]) { self.init() }
   public var selectedIndex: Int {
       get { 0 }
       set { _ = newValue }
@@ -809,7 +809,7 @@ open class AVCaptureManualExposureBracketedStillImageSettings: AVCaptureBrackete
 
 open class AVCaptureMetadataInput: AVCaptureInput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(formatDescription desc: CMMetadataFormatDescription, clock: CMClock) {}
+  convenience init(formatDescription desc: CMMetadataFormatDescription, clock: CMClock) { self.init() }
   public func append(_ metadata: AVTimedMetadataGroup) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
 }
 
@@ -1105,8 +1105,8 @@ open class AVCapturePhotoOutput: AVCaptureOutput, @unchecked Sendable {
 
 open class AVCapturePhotoOutputReadinessCoordinator: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(photoOutput: AVCapturePhotoOutput) {}
-  public weak var delegate: (any AVCapturePhotoOutputReadinessCoordinatorDelegate)? {
+  convenience init(photoOutput: AVCapturePhotoOutput) { self.init() }
+  public var delegate: (any AVCapturePhotoOutputReadinessCoordinatorDelegate)? {
       get { nil }
       set { _ = newValue }
     }
@@ -1509,9 +1509,9 @@ open class AVCaptureSynchronizedData: NSObject, @unchecked Sendable {
 open class AVCaptureSynchronizedDataCollection: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public struct Iterator: Sendable {
+    public init() {}
     public mutating func next() -> AVCaptureSynchronizedData? { nil }
     public typealias Element = AVCaptureSynchronizedData
-    public init() {}
   }
   public func makeIterator() -> AVCaptureSynchronizedDataCollection.Iterator { AVCaptureSynchronizedDataCollection.Iterator() }
   public typealias Element = AVCaptureSynchronizedData
@@ -1541,17 +1541,18 @@ open class AVCaptureSynchronizedSampleBufferData: AVCaptureSynchronizedData, @un
 
 open class AVCaptureSystemExposureBiasSlider: AVCaptureControl, @unchecked Sendable {
   public override init() { super.init() }
-  public init(device: AVCaptureDevice) {}
-  public init(device: AVCaptureDevice, action: @escaping (Float) -> Void) {}
+  convenience init(device: AVCaptureDevice) { self.init() }
+  convenience init(device: AVCaptureDevice, action: @escaping (Float) -> Void) { self.init() }
 }
 
 open class AVCaptureSystemZoomSlider: AVCaptureControl, @unchecked Sendable {
   public override init() { super.init() }
-  public init(device: AVCaptureDevice) {}
-  public init(device: AVCaptureDevice, action: @escaping (CGFloat) -> Void) {}
+  convenience init(device: AVCaptureDevice) { self.init() }
+  convenience init(device: AVCaptureDevice, action: @escaping (CGFloat) -> Void) { self.init() }
 }
 
 public struct AVCaptureTimecode: Sendable {
+  public init() {}
   public init(hours: UInt8, minutes: UInt8, seconds: UInt8, frames: UInt8, userBits: UInt32, frameDuration: CMTime, sourceType: AVCaptureTimecode.SourceType) {}
   public var hours: UInt8 = 0
   public var minutes: UInt8 = 0

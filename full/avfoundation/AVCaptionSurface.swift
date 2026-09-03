@@ -25,7 +25,7 @@ open class AVCaption: NSObject, @unchecked Sendable {
   }
   open class Ruby: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    public init(text: String) {}
+    convenience init(text: String) { self.init() }
     convenience init(text: String, position: AVCaptionRubyPosition, alignment: AVCaptionRubyAlignment) { self.init() }
     public var text: String { "" }
     public var position: AVCaptionRubyPosition { AVCaptionRubyPosition(rawValue: 0)! }
@@ -46,7 +46,7 @@ open class AVCaption: NSObject, @unchecked Sendable {
     case threeDigits = 4
     case fourDigits = 5
   }
-  public init(_ text: String, timeRange: CMTimeRange) {}
+  convenience init(_ text: String, timeRange: CMTimeRange) { self.init() }
   public var text: String { "" }
   public var timeRange: CMTimeRange { .zero }
   public var region: AVCaptionRegion? { nil }
@@ -79,7 +79,7 @@ open class AVCaptionConversionValidator: NSObject, @unchecked Sendable {
     case completed = 2
     case stopped = 3
   }
-  public init(captions: [AVCaption], timeRange: CMTimeRange, conversionSettings: [AVCaptionSettingsKey : Any]) {}
+  convenience init(captions: [AVCaption], timeRange: CMTimeRange, conversionSettings: [AVCaptionSettingsKey : Any]) { self.init() }
   public var status: AVCaptionConversionValidator.Status { AVCaptionConversionValidator.Status(rawValue: 0)! }
   public var captions: [AVCaption] { [] }
   public var timeRange: CMTimeRange { .zero }
@@ -100,15 +100,15 @@ open class AVCaptionConversionWarning: NSObject, @unchecked Sendable {
 }
 
 public struct AVCaptionDimension: Sendable {
+  public init() {}
   public init(value: CGFloat, units: AVCaptionUnitsType) {}
   public var value: CGFloat = 0
   public var units: AVCaptionUnitsType = AVCaptionUnitsType(rawValue: 0)!
-  public init() {}
 }
 
 open class AVCaptionFormatConformer: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(conversionSettings: [AVCaptionSettingsKey : Any]) {}
+  convenience init(conversionSettings: [AVCaptionSettingsKey : Any]) { self.init() }
   public var conformsCaptionsToTimeRange: Bool {
       get { false }
       set { _ = newValue }
@@ -118,8 +118,8 @@ open class AVCaptionFormatConformer: NSObject, @unchecked Sendable {
 
 open class AVCaptionGroup: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(captions: [AVCaption], timeRange: CMTimeRange) {}
-  public init(timeRange: CMTimeRange) {}
+  convenience init(captions: [AVCaption], timeRange: CMTimeRange) { self.init() }
+  convenience init(timeRange: CMTimeRange) { self.init() }
   public var timeRange: CMTimeRange { .zero }
   public var captions: [AVCaption] { [] }
 }
@@ -131,10 +131,10 @@ open class AVCaptionGrouper: NSObject, @unchecked Sendable {
 }
 
 public struct AVCaptionPoint: Sendable {
+  public init() {}
   public init(x: AVCaptionDimension, y: AVCaptionDimension) {}
   public var x: AVCaptionDimension = AVCaptionDimension()
   public var y: AVCaptionDimension = AVCaptionDimension()
-  public init() {}
 }
 
 open class AVCaptionRegion: NSObject, @unchecked Sendable {
@@ -210,10 +210,10 @@ public struct AVCaptionSettingsKey: RawRepresentable, Hashable, Sendable, Expres
 }
 
 public struct AVCaptionSize: Sendable {
+  public init() {}
   public init(width: AVCaptionDimension, height: AVCaptionDimension) {}
   public var width: AVCaptionDimension = AVCaptionDimension()
   public var height: AVCaptionDimension = AVCaptionDimension()
-  public init() {}
 }
 
 public enum AVCaptionUnitsType: Int, Hashable, Sendable {

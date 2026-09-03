@@ -389,8 +389,8 @@ open class AVMetadataItem: NSObject, @unchecked Sendable {
   public var key: (any NSCopying & NSObjectProtocol)? { nil }
   public var commonKey: AVMetadataKey? { nil }
   public var keySpace: AVMetadataKeySpace? { nil }
-  public init(propertiesOf metadataItem: AVMetadataItem, valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void) {}
-  public init(propertiesOfMetadataItem metadataItem: AVMetadataItem, valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void) {}
+  convenience init(propertiesOf metadataItem: AVMetadataItem, valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void) { self.init() }
+  convenience init(propertiesOfMetadataItem metadataItem: AVMetadataItem, valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void) { self.init() }
   public class func metadataItems(from metadataItems: [AVMetadataItem], with locale: Locale) -> [AVMetadataItem] { [] }
   public class func metadataItems(from metadataItems: [AVMetadataItem], withKey key: Any?, keySpace: AVMetadataKeySpace?) -> [AVMetadataItem] { [] }
 }
@@ -402,7 +402,7 @@ open class AVMetadataItemFilter: NSObject, @unchecked Sendable {
 
 open class AVMetadataItemValueRequest: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public weak var metadataItem: AVMetadataItem? { nil }
+  public var metadataItem: AVMetadataItem? { nil }
   public func respond(value: any NSCopying & NSObjectProtocol) {}
   public func respond(error: any Error) {}
 }

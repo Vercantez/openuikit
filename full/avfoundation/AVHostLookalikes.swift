@@ -78,6 +78,11 @@ public struct CMTimeMapping: Hashable, Sendable {
         self.source = source
         self.target = target
     }
+
+    public init() {
+        self.source = .zero
+        self.target = .zero
+    }
 }
 
 public struct CMVideoDimensions: Hashable, Sendable {
@@ -108,6 +113,12 @@ public struct CMProjectionType: RawRepresentable, Hashable, Sendable {
 open class CMSampleBuffer: NSObject, @unchecked Sendable {}
 open class CMFormatDescription: NSObject, @unchecked Sendable {
     public struct Extensions: Sendable {
+        public struct Value: Sendable {
+            public struct CameraCalibrationDataLensCollection: Sendable {
+                public init() {}
+            }
+            public init() {}
+        }
         public init() {}
     }
 }

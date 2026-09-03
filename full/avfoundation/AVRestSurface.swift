@@ -4,9 +4,9 @@ open class AVAnyAsyncProperty: NSObject, @unchecked Sendable {
   public override init() { super.init() }
 }
 
-open class AVAsyncProperty<Root, Value>: AVPartialAsyncProperty, @unchecked Sendable {
+open class AVAsyncProperty<Root, Value>: AVPartialAsyncProperty<Root>, @unchecked Sendable {
   public override init() { super.init() }
-  public enum Status: Sendable {
+  public enum Status {
     case notYetLoaded
     case loading
     case loaded(Value)
@@ -42,7 +42,7 @@ open class AVAsynchronousVideoCompositionRequest: NSObject, @unchecked Sendable 
   public var renderContext: AVVideoCompositionRenderContext { AVVideoCompositionRenderContext() }
   public var compositionTime: CMTime { .zero }
   public var sourceTrackIDs: [NSNumber] { [] }
-  public var videoCompositionInstruction: any AVVideoCompositionInstructionProtocol { AVVideoCompositionInstructionProtocol() }
+  public var videoCompositionInstruction: any AVVideoCompositionInstructionProtocol { AVVideoCompositionInstruction() }
   public func sourceFrame(byTrackID trackID: CMPersistentTrackID) -> CVPixelBuffer? { nil }
   public func sourceSampleBuffer(byTrackID trackID: CMPersistentTrackID) -> CMSampleBuffer? { nil }
   public func sourceTimedMetadata(byTrackID trackID: CMPersistentTrackID) -> AVTimedMetadataGroup? { nil }
@@ -59,17 +59,17 @@ public enum AVAuthorizationStatus: Int, Hashable, Sendable {
 }
 
 public struct AVCIImageFilteringParameters: Sendable {
+  public init() {}
   public var sourceImage: CIImage = CIImage()
   public var compositionTime: CMTime = .zero
   public var renderSize: CGSize = .zero
-  public init() {}
 }
 
 public struct AVCIImageFilteringResult: Sendable {
+  public init() {}
   public var resultImage: CIImage = CIImage()
   public var ciContext: CIContext? = nil
   public init(resultImage: CIImage, ciContext: CIContext? = nil) {}
-  public init() {}
 }
 
 open class AVCameraCalibrationData: NSObject, @unchecked Sendable {
@@ -89,18 +89,18 @@ open class AVCustomMediaSelectionScheme: NSObject, @unchecked Sendable {
 
 open class AVDateRangeMetadataGroup: AVMetadataGroup, @unchecked Sendable {
   public override init() { super.init() }
-  public init(items: [AVMetadataItem], start startDate: Date, end endDate: Date?) {}
+  convenience init(items: [AVMetadataItem], start startDate: Date, end endDate: Date?) { self.init() }
   public var startDate: Date { Date.distantPast }
   public var endDate: Date? { nil }
 }
 
 public struct AVEdgeWidths: Sendable {
+  public init() {}
   public init(left: CGFloat, top: CGFloat, right: CGFloat, bottom: CGFloat) {}
   public var left: CGFloat = 0
   public var top: CGFloat = 0
   public var right: CGFloat = 0
   public var bottom: CGFloat = 0
-  public init() {}
 }
 
 open class AVFrameRateRange: NSObject, @unchecked Sendable {
@@ -127,11 +127,12 @@ public struct AVLayerVideoGravity: RawRepresentable, Hashable, Sendable, Express
 }
 
 public struct AVMergedMetrics<MetricEvent1: AVMetricEvent, MetricEvent2: AVMetricEvent, MetricEventPack>: Sendable {
+  public init() {}
   public typealias Element = (AVMetricEvent, any AVMetricEventStreamPublisher)
-  public struct AsyncIterator<MetricEvent1: AVMetricEvent, MetricEvent2: AVMetricEvent, MetricEventPack>: Sendable {
+  public struct AsyncIterator: Sendable {
+    public init() {}
     public mutating func next() async throws -> (AVMetricEvent, any AVMetricEventStreamPublisher)? { return nil }
     public typealias Element = (AVMetricEvent, any AVMetricEventStreamPublisher)
-    public init() {}
   }
 }
 
@@ -145,10 +146,10 @@ open class AVPersistableContentKeyRequest: AVContentKeyRequest, @unchecked Senda
 }
 
 public struct AVPixelAspectRatio: Sendable {
+  public init() {}
   public init(horizontalSpacing: Int, verticalSpacing: Int) {}
   public var horizontalSpacing: Int = 0
   public var verticalSpacing: Int = 0
-  public init() {}
 }
 
 open class AVPortraitEffectsMatte: NSObject, @unchecked Sendable {
@@ -160,7 +161,7 @@ open class AVPortraitEffectsMatte: NSObject, @unchecked Sendable {
 
 open class AVQueuePlayer: AVPlayer, @unchecked Sendable {
   public override init() { super.init() }
-  public init(items: [AVPlayerItem]) {}
+  convenience init(items: [AVPlayerItem]) { self.init() }
   public func items() -> [AVPlayerItem] { [] }
   public func advanceToNextItem() {}
   public func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool { false }
@@ -198,13 +199,13 @@ public struct AVSpatialCaptureDiscomfortReason: RawRepresentable, Hashable, Send
 }
 
 public struct AVSpatialVideoConfiguration: Sendable {
+  public init() {}
   public var cameraCalibrationDataLensCollection: CMFormatDescription.Extensions.Value.CameraCalibrationDataLensCollection? = nil
   public var horizontalFieldOfView: UInt32? = nil
   public var cameraSystemBaseline: UInt32? = nil
   public var disparityAdjustment: Int32? = nil
   public init(formatDescription: CMFormatDescription) {}
   public static var nonSpatial: AVSpatialVideoConfiguration { AVSpatialVideoConfiguration() }
-  public init() {}
 }
 
 open class AVTextStyleRule: NSObject, @unchecked Sendable {
@@ -218,8 +219,8 @@ open class AVTextStyleRule: NSObject, @unchecked Sendable {
 open class AVTimedMetadataGroup: AVMetadataGroup, @unchecked Sendable {
   public override init() { super.init() }
   convenience init?(sampleBuffer: CMReadySampleBuffer<CMSampleBuffer.DynamicContent>) { return nil }
-  public init(items: [AVMetadataItem], timeRange: CMTimeRange) {}
-  public init?(sampleBuffer: CMSampleBuffer) { return nil }
+  convenience init(items: [AVMetadataItem], timeRange: CMTimeRange) { self.init() }
+  convenience init?(sampleBuffer: CMSampleBuffer) { return nil }
   public var timeRange: CMTimeRange { .zero }
   public func copyFormatDescription() -> CMMetadataFormatDescription? { nil }
 }

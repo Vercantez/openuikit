@@ -142,10 +142,11 @@ open class AVMetricPlayerItemVariantSwitchStartEvent: AVMetricEvent, @unchecked 
 }
 
 public struct AVMetrics<MetricEvent: AVMetricEvent>: Sendable {
+  public init() {}
   public typealias Element = MetricEvent
-  public struct AsyncIterator<MetricEvent: AVMetricEvent>: Sendable {
+  public struct AsyncIterator: Sendable {
+    public init() {}
     public mutating func next() async throws -> MetricEvent? { return nil }
     public typealias Element = MetricEvent
-    public init() {}
   }
 }

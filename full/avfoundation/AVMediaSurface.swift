@@ -33,7 +33,7 @@ public struct AVMediaCharacteristic: RawRepresentable, Hashable, Sendable, Expre
 
 open class AVMediaDataStorage: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(url URL: URL, options: [String : Any]? = nil) {}
+  convenience init(url URL: URL, options: [String : Any]? = nil) { self.init() }
   public func url() -> URL? { nil }
 }
 
@@ -52,7 +52,7 @@ open class AVMediaPresentationSetting: NSObject, @unchecked Sendable {
 
 open class AVMediaSelection: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public weak var asset: AVAsset? { nil }
+  public var asset: AVAsset? { nil }
   public func selectedMediaOption(in mediaSelectionGroup: AVMediaSelectionGroup) -> AVMediaSelectionOption? { nil }
   public func mediaSelectionCriteriaCanBeAppliedAutomatically(to mediaSelectionGroup: AVMediaSelectionGroup) -> Bool { false }
 }

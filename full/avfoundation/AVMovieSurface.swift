@@ -4,8 +4,8 @@ open class AVMovie: AVAsset, @unchecked Sendable {
   public override init() { super.init() }
   convenience init(url: URL) { self.init() }
   public class func movieTypes() -> [AVFileType] { [] }
-  public init(url URL: URL, options: [String : Any]? = nil) {}
-  public init(data: Data, options: [String : Any]? = nil) {}
+  convenience init(url URL: URL, options: [String : Any]? = nil) { self.init() }
+  convenience init(data: Data, options: [String : Any]? = nil) { self.init() }
   public var url: URL? { nil }
   public var data: Data? { nil }
   public var defaultMediaDataStorage: AVMediaDataStorage? { nil }

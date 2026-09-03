@@ -189,6 +189,11 @@ open class AVPlayerItem: NSObject, @unchecked Sendable {
     public let asset: AVAsset
     public var url: URL? { (asset as? AVURLAsset)?.url }
 
+    public override init() {
+        self.asset = AVAsset()
+        super.init()
+    }
+
     public init(asset: AVAsset) {
         self.asset = asset
         super.init()

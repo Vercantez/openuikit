@@ -45,6 +45,7 @@ public protocol AVVideoCompositing : AnyObject, Sendable {
 open class AVVideoComposition: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public struct Configuration: Sendable {
+    public init() {}
     public var animationTool: AVVideoCompositionCoreAnimationTool? = nil
     public var colorPrimaries: String? = nil
     public var colorTransferFunction: String? = nil
@@ -61,7 +62,6 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
     public var sourceTrackIDForFrameTiming: CMPersistentTrackID = 0
     public init(for asset: AVAsset, prototypeInstruction: AVVideoCompositionInstruction? = nil) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
     public init(animationTool: AVVideoCompositionCoreAnimationTool? = nil, colorPrimaries: String? = nil, colorTransferFunction: String? = nil, colorYCbCrMatrix: String? = nil, customVideoCompositorClass: (any AVVideoCompositing.Type)? = nil, frameDuration: CMTime = CMTime.zero, instructions: [any AVVideoCompositionInstructionProtocol] = [any AVVideoCompositionInstructionProtocol](), outputBufferDescription: [[CMTag]]? = nil, perFrameHDRDisplayMetadataPolicy: AVVideoComposition.PerFrameHDRDisplayMetadataPolicy = .propagate, renderScale: Float = 1.0, renderSize: CGSize = .zero, sourceSampleDataTrackIDs: [CMPersistentTrackID] = [CMPersistentTrackID](), sourceTrackIDForFrameTiming: Int32 = CMPersistentTrackID.zero, spatialVideoConfigurations: [AVSpatialVideoConfiguration] = []) {}
-    public init() {}
   }
   public struct PerFrameHDRDisplayMetadataPolicy: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
     public let rawValue: String
@@ -75,7 +75,7 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
   public var spatialVideoConfigurations: [AVSpatialVideoConfiguration] { [] }
   convenience init(applyingFiltersTo asset: AVAsset, applier: @escaping (AVCIImageFilteringParameters) async throws -> AVCIImageFilteringResult) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   convenience init(configuration: AVVideoComposition.Configuration) { self.init() }
-  public init(propertiesOf asset: AVAsset) {}
+  convenience init(propertiesOf asset: AVAsset) { self.init() }
   public class func videoComposition(withPropertiesOf asset: AVAsset) async throws -> AVVideoComposition { return AVVideoComposition() }
   public var customVideoCompositorClass: (any AVVideoCompositing.Type)? { nil }
   public var frameDuration: CMTime { .zero }
@@ -88,7 +88,7 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
   public var colorYCbCrMatrix: String? { nil }
   public var colorTransferFunction: String? { nil }
   public var perFrameHDRDisplayMetadataPolicy: AVVideoComposition.PerFrameHDRDisplayMetadataPolicy { AVVideoComposition.PerFrameHDRDisplayMetadataPolicy(rawValue: "") }
-  public init(asset: AVAsset, applyingCIFiltersWithHandler applier: @escaping (AVAsynchronousCIImageFilteringRequest) -> Void) {}
+  convenience init(asset: AVAsset, applyingCIFiltersWithHandler applier: @escaping (AVAsynchronousCIImageFilteringRequest) -> Void) { self.init() }
   public class func videoComposition(with asset: AVAsset, applyingCIFiltersWithHandler applier: @escaping (AVAsynchronousCIImageFilteringRequest) -> Void) async throws -> AVVideoComposition { return AVVideoComposition() }
   public func isValid(for asset: AVAsset?, timeRange: CMTimeRange, validationDelegate: (any AVVideoCompositionValidationHandling)?) -> Bool { false }
   public func isValid(for asset: AVAsset?, timeRange: CMTimeRange, validationDelegate: (any AVVideoCompositionValidationHandling)?) async throws -> Bool { return false }
@@ -98,31 +98,31 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
 open class AVVideoCompositionCoreAnimationTool: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public struct Configuration: Sendable {
-    public var layers: [CALayer] = []
     public init() {}
   }
   convenience init(configuration: sending AVVideoCompositionCoreAnimationTool.Configuration) { self.init() }
 }
 
-open class AVVideoCompositionInstruction: NSObject, @unchecked Sendable {
+open class AVVideoCompositionInstruction: NSObject, AVVideoCompositionInstructionProtocol, @unchecked Sendable {
   public override init() { super.init() }
   public struct Configuration: Sendable {
+    public init() {}
     public var backgroundColor: CGColor? = nil
     public var enablePostProcessing: Bool = false
     public var layerInstructions: [AVVideoCompositionLayerInstruction] = []
     public var requiredSourceSampleDataTrackIDs: [CMPersistentTrackID] = []
     public var timeRange: CMTimeRange = .zero
     public init(backgroundColor: CGColor? = nil, enablePostProcessing: Bool = true, layerInstructions: [AVVideoCompositionLayerInstruction] = [], requiredSourceSampleDataTrackIDs: [CMPersistentTrackID] = [], timeRange: CMTimeRange = .zero) {}
-    public init() {}
   }
   convenience init(configuration: AVVideoCompositionInstruction.Configuration) { self.init() }
   public var timeRange: CMTimeRange { .zero }
   public var backgroundColor: CGColor? { nil }
   public var layerInstructions: [AVVideoCompositionLayerInstruction] { [] }
   public var enablePostProcessing: Bool { false }
-  public var requiredSourceTrackIDs: [NSValue] { [] }
+  public var requiredSourceTrackIDs: [NSValue]? { nil }
   public var passthroughTrackID: CMPersistentTrackID { 0 }
   public var requiredSourceSampleDataTrackIDs: [NSNumber] { [] }
+  public var containsTweening: Bool { false }
 }
 
 public protocol AVVideoCompositionInstructionProtocol : AnyObject, Sendable {
@@ -137,6 +137,7 @@ public protocol AVVideoCompositionInstructionProtocol : AnyObject, Sendable {
 open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public struct Configuration: Sendable {
+    public init() {}
     public var trackID: CMPersistentTrackID = 0
     public init(trackID: CMPersistentTrackID = .zero) {}
     public init(assetTrack: AVAssetTrack) {}
@@ -149,28 +150,27 @@ open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
     public mutating func addTransformRamp(_ ramp: AVVideoCompositionLayerInstruction.TransformRamp) {}
     public mutating func setCropRectangle(_ rect: CGRect, at time: CMTime) {}
     public mutating func addCropRectangleRamp(_ ramp: AVVideoCompositionLayerInstruction.CropRectangleRamp) {}
-    public init() {}
   }
   public struct CropRectangleRamp: Sendable {
+    public init() {}
     public var timeRange: CMTimeRange = .zero
     public var start: CGRect = .zero
     public var end: CGRect = .zero
     public init(timeRange: CMTimeRange, start: CGRect, end: CGRect) {}
-    public init() {}
   }
   public struct OpacityRamp: Sendable {
+    public init() {}
     public var timeRange: CMTimeRange = .zero
     public var start: Float = 0
     public var end: Float = 0
     public init(timeRange: CMTimeRange, start: Float, end: Float) {}
-    public init() {}
   }
   public struct TransformRamp: Sendable {
+    public init() {}
     public var timeRange: CMTimeRange = .zero
     public var start: CGAffineTransform = .identity
     public var end: CGAffineTransform = .identity
     public init(timeRange: CMTimeRange, start: CGAffineTransform, end: CGAffineTransform) {}
-    public init() {}
   }
   convenience init(configuration: AVVideoCompositionLayerInstruction.Configuration) { self.init() }
   public func cropRectangleRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.CropRectangleRamp? { nil }

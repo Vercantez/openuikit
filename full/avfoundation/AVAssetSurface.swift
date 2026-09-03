@@ -108,7 +108,7 @@ public struct AVAssetDownloadedAssetEvictionPriority: RawRepresentable, Hashable
 }
 
 extension AVAssetExportSession {
-  public enum State: Sendable {
+  public enum State {
     case pending
     case waiting
     case exporting(progress: Progress)
@@ -182,14 +182,14 @@ extension AVAssetImageGenerator {
     public static let matchSource = DynamicRangePolicy(rawValue: "matchSource")
   }
   public struct Images: Sendable {
+    public init() {}
     public func makeAsyncIterator() -> AVAssetImageGenerator.Images { AVAssetImageGenerator.Images() }
     public mutating func next() async -> AVAssetImageGenerator.Images.Element? { nil }
     public typealias AsyncIterator = AVAssetImageGenerator.Images
-    public enum Element: Sendable {
+    public enum Element {
       case success(requestedTime: CMTime, image: CGImage, actualTime: CMTime)
       case failure(requestedTime: CMTime, error: any Error)
     }
-    public init() {}
   }
   public enum Result: Int, Hashable, Sendable {
     case succeeded = 0
@@ -253,7 +253,7 @@ open class AVAssetReader: NSObject, @unchecked Sendable {
     case cancelled = 4
   }
   public func start() throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public init(asset: AVAsset) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  convenience init(asset: AVAsset) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public var asset: AVAsset { AVAsset() }
   public var status: AVAssetReader.Status { AVAssetReader.Status(rawValue: 0)! }
   public var error: (any Error)? { nil }
@@ -270,7 +270,7 @@ open class AVAssetReader: NSObject, @unchecked Sendable {
 
 open class AVAssetReaderAudioMixOutput: AVAssetReaderOutput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(audioTracks: [AVAssetTrack], audioSettings: [String : Any]?) {}
+  convenience init(audioTracks: [AVAssetTrack], audioSettings: [String : Any]?) { self.init() }
   public var audioTracks: [AVAssetTrack] { [] }
   public var audioSettings: [String : Any]? { nil }
   public var audioMix: AVAudioMix? {
@@ -317,11 +317,11 @@ open class AVAssetReaderOutput: NSObject, @unchecked Sendable {
 
 open class AVAssetReaderOutputCaptionAdaptor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) {}
+  convenience init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) { self.init() }
   public var assetReaderTrackOutput: AVAssetReaderTrackOutput { AVAssetReaderTrackOutput() }
   public func nextCaptionGroup() -> AVCaptionGroup? { nil }
   public func captionsNotPresentInPreviousGroups(in captionGroup: AVCaptionGroup) -> [AVCaption] { [] }
-  public weak var validationDelegate: (any AVAssetReaderCaptionValidationHandling)? {
+  public var validationDelegate: (any AVAssetReaderCaptionValidationHandling)? {
       get { nil }
       set { _ = newValue }
     }
@@ -329,20 +329,20 @@ open class AVAssetReaderOutputCaptionAdaptor: NSObject, @unchecked Sendable {
 
 open class AVAssetReaderOutputMetadataAdaptor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) {}
+  convenience init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) { self.init() }
   public var assetReaderTrackOutput: AVAssetReaderTrackOutput { AVAssetReaderTrackOutput() }
   public func nextTimedMetadataGroup() -> AVTimedMetadataGroup? { nil }
 }
 
 open class AVAssetReaderSampleReferenceOutput: AVAssetReaderOutput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(track: AVAssetTrack) {}
+  convenience init(track: AVAssetTrack) { self.init() }
   public var track: AVAssetTrack { AVAssetTrack() }
 }
 
 open class AVAssetReaderTrackOutput: AVAssetReaderOutput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(track: AVAssetTrack, outputSettings: [String : Any]?) {}
+  convenience init(track: AVAssetTrack, outputSettings: [String : Any]?) { self.init() }
   public var track: AVAssetTrack { AVAssetTrack() }
   public var outputSettings: [String : Any]? { nil }
   public var audioTimePitchAlgorithm: AVAudioTimePitchAlgorithm {
@@ -353,7 +353,7 @@ open class AVAssetReaderTrackOutput: AVAssetReaderOutput, @unchecked Sendable {
 
 open class AVAssetReaderVideoCompositionOutput: AVAssetReaderOutput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(videoTracks: [AVAssetTrack], videoSettings: [String : Any]?) {}
+  convenience init(videoTracks: [AVAssetTrack], videoSettings: [String : Any]?) { self.init() }
   public var videoTracks: [AVAssetTrack] { [] }
   public var videoSettings: [String : Any]? { nil }
   public var videoComposition: AVVideoComposition? {
@@ -377,7 +377,7 @@ public struct AVAssetReferenceRestrictions: OptionSet, Hashable, Sendable {
 open class AVAssetResourceLoader: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public func setDelegate(_ delegate: (any AVAssetResourceLoaderDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public weak var delegate: (any AVAssetResourceLoaderDelegate)? { nil }
+  public var delegate: (any AVAssetResourceLoaderDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
   public var preloadsEligibleContentKeys: Bool {
       get { false }
@@ -493,7 +493,7 @@ open class AVAssetTrack: NSObject, @unchecked Sendable {
     public static let metadataReferent = AssociationType(rawValue: "metadataReferent")
     public static let renderMetadataSource = AssociationType(rawValue: "renderMetadataSource")
   }
-  public weak var asset: AVAsset? { nil }
+  public var asset: AVAsset? { nil }
   public var trackID: CMPersistentTrackID { 0 }
   public var mediaType: AVMediaType { AVMediaType(rawValue: "") }
   public var formatDescriptions: [Any] { [] }
@@ -601,7 +601,7 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
   }
   public func start() throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   convenience init(url outputURL: URL, fileType outputFileType: AVFileType) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public init(outputURL: URL, fileType outputFileType: AVFileType) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  convenience init(outputURL: URL, fileType outputFileType: AVFileType) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public var outputURL: URL { URL(fileURLWithPath: "/dev/null") }
   public var outputFileType: AVFileType { AVFileType(rawValue: "") }
   public var availableMediaTypes: [AVMediaType] { [] }
@@ -667,7 +667,7 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
       get { nil }
       set { _ = newValue }
     }
-  public weak var delegate: (any AVAssetWriterDelegate)? {
+  public var delegate: (any AVAssetWriterDelegate)? {
       get { nil }
       set { _ = newValue }
     }
@@ -705,7 +705,6 @@ open class AVAssetWriterInput: NSObject, @unchecked Sendable {
   }
   open class MultiPassController: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    public var passDescriptions: (some AsyncSequence<AVAssetWriterInputPassDescription, Never>)? { nil }
   }
   open class PixelBufferReceiver: NSObject, @unchecked Sendable {
     public override init() { super.init() }
@@ -728,7 +727,7 @@ open class AVAssetWriterInput: NSObject, @unchecked Sendable {
     public func finish() {}
   }
   convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?) { self.init() }
-  public init(mediaType: AVMediaType, outputSettings: [String : Any]?, sourceFormatHint: CMFormatDescription?) {}
+  convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?, sourceFormatHint: CMFormatDescription?) { self.init() }
   public var mediaType: AVMediaType { AVMediaType(rawValue: "") }
   public var outputSettings: [String : Any]? { nil }
   public var sourceFormatHint: CMFormatDescription? { nil }
@@ -800,7 +799,7 @@ open class AVAssetWriterInput: NSObject, @unchecked Sendable {
 
 open class AVAssetWriterInputCaptionAdaptor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(assetWriterInput input: AVAssetWriterInput) {}
+  convenience init(assetWriterInput input: AVAssetWriterInput) { self.init() }
   public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
   public func append(_ caption: AVCaption) -> Bool { false }
   public func append(_ captionGroup: AVCaptionGroup) -> Bool { false }
@@ -808,14 +807,14 @@ open class AVAssetWriterInputCaptionAdaptor: NSObject, @unchecked Sendable {
 
 open class AVAssetWriterInputGroup: AVMediaSelectionGroup, @unchecked Sendable {
   public override init() { super.init() }
-  public init(inputs: [AVAssetWriterInput], defaultInput: AVAssetWriterInput?) {}
+  convenience init(inputs: [AVAssetWriterInput], defaultInput: AVAssetWriterInput?) { self.init() }
   public var inputs: [AVAssetWriterInput] { [] }
   public var defaultInput: AVAssetWriterInput? { nil }
 }
 
 open class AVAssetWriterInputMetadataAdaptor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(assetWriterInput input: AVAssetWriterInput) {}
+  convenience init(assetWriterInput input: AVAssetWriterInput) { self.init() }
   public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
   public func append(_ timedMetadataGroup: AVTimedMetadataGroup) -> Bool { false }
 }
@@ -827,7 +826,7 @@ open class AVAssetWriterInputPassDescription: NSObject, @unchecked Sendable {
 
 open class AVAssetWriterInputPixelBufferAdaptor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) {}
+  convenience init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) { self.init() }
   public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
   public var sourcePixelBufferAttributes: [String : any Sendable]? { nil }
   public var pixelBufferPool: CVPixelBufferPool? { nil }
@@ -836,7 +835,7 @@ open class AVAssetWriterInputPixelBufferAdaptor: NSObject, @unchecked Sendable {
 
 open class AVAssetWriterInputTaggedPixelBufferGroupAdaptor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) {}
+  convenience init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) { self.init() }
   public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
   public var sourcePixelBufferAttributes: [String : any Sendable]? { nil }
   public var pixelBufferPool: CVPixelBufferPool? { nil }
@@ -860,8 +859,8 @@ open class AVCompositionTrackFormatDescriptionReplacement: NSObject, @unchecked 
 
 open class AVCompositionTrackSegment: AVAssetTrackSegment, @unchecked Sendable {
   public override init() { super.init() }
-  public init(url URL: URL, trackID: CMPersistentTrackID, sourceTimeRange: CMTimeRange, targetTimeRange: CMTimeRange) {}
-  public init(timeRange: CMTimeRange) {}
+  convenience init(url URL: URL, trackID: CMPersistentTrackID, sourceTimeRange: CMTimeRange, targetTimeRange: CMTimeRange) { self.init() }
+  convenience init(timeRange: CMTimeRange) { self.init() }
   public var sourceURL: URL? { nil }
   public var sourceTrackID: CMPersistentTrackID { 0 }
 }
@@ -876,7 +875,7 @@ open class AVFragmentedAsset: AVURLAsset, @unchecked Sendable {
 
 open class AVFragmentedAssetMinder: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(asset: any AVAsset & AVFragmentMinding, mindingInterval: TimeInterval) {}
+  convenience init(asset: any AVAsset & AVFragmentMinding, mindingInterval: TimeInterval) { self.init() }
   public var mindingInterval: TimeInterval {
       get { 0 }
       set { _ = newValue }
@@ -896,7 +895,7 @@ open class AVFragmentedMovie: AVMovie, @unchecked Sendable {
 
 open class AVFragmentedMovieMinder: AVFragmentedAssetMinder, @unchecked Sendable {
   public override init() { super.init() }
-  public init(movie: AVFragmentedMovie, mindingInterval: TimeInterval) {}
+  convenience init(movie: AVFragmentedMovie, mindingInterval: TimeInterval) { self.init() }
   public var movies: [AVFragmentedMovie] { [] }
   public func add(_ movie: AVFragmentedMovie) {}
   public func remove(_ movie: AVFragmentedMovie) {}
@@ -941,7 +940,7 @@ open class AVMutableCaption: AVCaption, @unchecked Sendable {
 
 open class AVMutableCaptionRegion: AVCaptionRegion, @unchecked Sendable {
   public override init() { super.init() }
-  public init(identifier: String) {}
+  convenience init(identifier: String) { self.init() }
 }
 
 open class AVMutableComposition: AVComposition, @unchecked Sendable {
@@ -984,9 +983,9 @@ open class AVMutableMetadataItem: AVMetadataItem, @unchecked Sendable {
 
 open class AVMutableMovie: AVMovie, @unchecked Sendable {
   public override init() { super.init() }
-  public init(url URL: URL, options: [String : Any]? = nil, error: ()) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public init(data: Data, options: [String : Any]? = nil, error: ()) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public init(settingsFrom movie: AVMovie?, options: [String : Any]? = nil) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  convenience init(url URL: URL, options: [String : Any]? = nil, error: ()) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  convenience init(data: Data, options: [String : Any]? = nil, error: ()) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  convenience init(settingsFrom movie: AVMovie?, options: [String : Any]? = nil) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public var timescale: CMTimeScale {
       get { 0 }
       set { _ = newValue }
@@ -1070,7 +1069,7 @@ open class AVMutableTimedMetadataGroup: AVTimedMetadataGroup, @unchecked Sendabl
 
 open class AVMutableVideoComposition: AVVideoComposition, @unchecked Sendable {
   public override init() { super.init() }
-  public init(propertiesOf asset: AVAsset, prototypeInstruction: AVVideoCompositionInstruction) {}
+  convenience init(propertiesOf asset: AVAsset, prototypeInstruction: AVVideoCompositionInstruction) { self.init() }
   public class func videoComposition(withPropertiesOf asset: AVAsset, prototypeInstruction: AVVideoCompositionInstruction) async throws -> AVMutableVideoComposition { return AVMutableVideoComposition() }
 }
 

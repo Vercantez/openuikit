@@ -28,8 +28,8 @@ open class AVCoordinatedPlaybackSuspension: NSObject, @unchecked Sendable {
 
 open class AVDelegatingPlaybackCoordinator: AVPlaybackCoordinator, @unchecked Sendable {
   public override init() { super.init() }
-  public init(playbackControlDelegate: any AVPlaybackCoordinatorPlaybackControlDelegate) {}
-  public weak var playbackControlDelegate: (any AVPlaybackCoordinatorPlaybackControlDelegate)? { nil }
+  convenience init(playbackControlDelegate: any AVPlaybackCoordinatorPlaybackControlDelegate) { self.init() }
+  public var playbackControlDelegate: (any AVPlaybackCoordinatorPlaybackControlDelegate)? { nil }
   public func coordinateRateChange(to rate: Float, options: AVDelegatingPlaybackCoordinatorRateChangeOptions = []) {}
   public func coordinateSeek(to time: CMTime, options: AVDelegatingPlaybackCoordinatorSeekOptions = []) {}
   public func transitionToItem(withIdentifier itemIdentifier: String?, proposingInitialTimingBasedOn snapshotTimebase: CMTimebase?) {}
@@ -296,10 +296,6 @@ extension AVPlayer {
   public static let eligibleForHDRPlaybackDidChangeNotification: Notification.Name = Notification.Name("eligibleForHDRPlaybackDidChangeNotification")
 }
 
-extension AVPlayerAudiovisualBackgroundPlaybackPolicy {
-  convenience init?(rawValue: Int) { return nil }
-}
-
 public struct AVPlayerIntegratedTimelineSnapshotsOutOfSyncReason: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
@@ -339,7 +335,7 @@ open class AVPlayerInterstitialEvent: NSObject, @unchecked Sendable {
   convenience init(primaryItem: AVPlayerItem, identifier: String?, date: Date, templateItems: [AVPlayerItem], restrictions: AVPlayerInterstitialEvent.Restrictions = [], resumptionOffset: CMTime = .indefinite, playoutLimit: CMTime = .invalid, userDefinedAttributes: [String : Any] = [:]) { self.init() }
   convenience init(primaryItem: AVPlayerItem, time: CMTime) { self.init() }
   convenience init(primaryItem: AVPlayerItem, date: Date) { self.init() }
-  public weak var primaryItem: AVPlayerItem? { nil }
+  public var primaryItem: AVPlayerItem? { nil }
   public var identifier: String {
       get { "" }
       set { _ = newValue }
@@ -437,8 +433,8 @@ open class AVPlayerInterstitialEventController: AVPlayerInterstitialEventMonitor
 
 open class AVPlayerInterstitialEventMonitor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(primaryPlayer: AVPlayer) {}
-  public weak var primaryPlayer: AVPlayer? { nil }
+  convenience init(primaryPlayer: AVPlayer) { self.init() }
+  public var primaryPlayer: AVPlayer? { nil }
   public var interstitialPlayer: AVQueuePlayer { AVQueuePlayer() }
   public var events: [AVPlayerInterstitialEvent] { [] }
   public var currentEvent: AVPlayerInterstitialEvent? { nil }
@@ -472,9 +468,8 @@ extension AVPlayerItem {
     case failed = 2
   }
   convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [AVPartialAsyncProperty<AVAsset>] = []) { self.init() }
-  convenience init(asset: any AVAsset & Sendable, automaticallyLoadedAssetKeys: [AVPartialAsyncProperty<AVAsset>]) { self.init() }
   public func seek(to date: Date) async -> Bool { false }
-  convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {}
+  convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) { self.init() }
   public func copy(with zone: NSZone? = nil) -> Any { 0 }
   public var status: AVPlayerItem.Status { AVPlayerItem.Status(rawValue: 0)! }
   public var error: (any Error)? { nil }
@@ -687,23 +682,25 @@ open class AVPlayerItemErrorLogEvent: NSObject, @unchecked Sendable {
 open class AVPlayerItemIntegratedTimeline: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public struct BoundaryTimes: Sendable {
+    public init() {}
     public typealias Element = CMTime
     public func makeAsyncIterator() -> AVPlayerItemIntegratedTimeline.BoundaryTimes.Iterator { AVPlayerItemIntegratedTimeline.BoundaryTimes.Iterator() }
     public typealias AsyncIterator = AVPlayerItemIntegratedTimeline.BoundaryTimes.Iterator
     public struct Iterator: Sendable {
+      public init() {}
       public mutating func next() async -> AVPlayerItemIntegratedTimeline.BoundaryTimes.Element? { nil }
       public typealias Element = AVPlayerItemIntegratedTimeline.BoundaryTimes.Element
-      public init() {}
     }
   }
   public struct PeriodicTimes: Sendable {
+    public init() {}
     public typealias Element = CMTime
     public func makeAsyncIterator() -> AVPlayerItemIntegratedTimeline.PeriodicTimes.Iterator { AVPlayerItemIntegratedTimeline.PeriodicTimes.Iterator() }
     public typealias AsyncIterator = AVPlayerItemIntegratedTimeline.PeriodicTimes.Iterator
     public struct Iterator: Sendable {
+      public init() {}
       public mutating func next() async -> AVPlayerItemIntegratedTimeline.PeriodicTimes.Element? { nil }
       public typealias Element = AVPlayerItemIntegratedTimeline.PeriodicTimes.Element
-      public init() {}
     }
   }
   public func periodicTimes(forInterval: CMTime) -> AVPlayerItemIntegratedTimeline.PeriodicTimes { AVPlayerItemIntegratedTimeline.PeriodicTimes() }
@@ -740,13 +737,13 @@ open class AVPlayerItemLegibleOutput: AVPlayerItemOutput, @unchecked Sendable {
     public static let sourceAndRulesOnly = TextStylingResolution(rawValue: "sourceAndRulesOnly")
   }
   public func setDelegate(_ delegate: (any AVPlayerItemLegibleOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public weak var delegate: (any AVPlayerItemLegibleOutputPushDelegate)? { nil }
+  public var delegate: (any AVPlayerItemLegibleOutputPushDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
   public var advanceIntervalForDelegateInvocation: TimeInterval {
       get { 0 }
       set { _ = newValue }
     }
-  public init(mediaSubtypesForNativeRepresentation subtypes: [NSNumber]) {}
+  convenience init(mediaSubtypesForNativeRepresentation subtypes: [NSNumber]) { self.init() }
   public var textStylingResolution: AVPlayerItemLegibleOutput.TextStylingResolution {
       get { AVPlayerItemLegibleOutput.TextStylingResolution(rawValue: "") }
       set { _ = newValue }
@@ -763,9 +760,9 @@ open class AVPlayerItemMediaDataCollector: NSObject, @unchecked Sendable {
 
 open class AVPlayerItemMetadataCollector: AVPlayerItemMediaDataCollector, @unchecked Sendable {
   public override init() { super.init() }
-  public init(identifiers: [String]?, classifyingLabels: [String]?) {}
+  convenience init(identifiers: [String]?, classifyingLabels: [String]?) { self.init() }
   public func setDelegate(_ delegate: (any AVPlayerItemMetadataCollectorPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public weak var delegate: (any AVPlayerItemMetadataCollectorPushDelegate)? { nil }
+  public var delegate: (any AVPlayerItemMetadataCollectorPushDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
 }
 
@@ -775,9 +772,9 @@ public protocol AVPlayerItemMetadataCollectorPushDelegate : AnyObject, Sendable 
 
 open class AVPlayerItemMetadataOutput: AVPlayerItemOutput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(identifiers: [String]?) {}
+  convenience init(identifiers: [String]?) { self.init() }
   public func setDelegate(_ delegate: (any AVPlayerItemMetadataOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public weak var delegate: (any AVPlayerItemMetadataOutputPushDelegate)? { nil }
+  public var delegate: (any AVPlayerItemMetadataOutputPushDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
   public var advanceIntervalForDelegateInvocation: TimeInterval {
       get { 0 }
@@ -810,9 +807,9 @@ public protocol AVPlayerItemOutputPushDelegate : AnyObject, Sendable {
 
 open class AVPlayerItemRenderedLegibleOutput: AVPlayerItemOutput, @unchecked Sendable {
   public override init() { super.init() }
-  public init(videoDisplay videoDisplaySize: CGSize) {}
+  convenience init(videoDisplay videoDisplaySize: CGSize) { self.init() }
   public func setDelegate(_ delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public weak var delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)? { nil }
+  public var delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
   public var advanceIntervalForDelegateInvocation: TimeInterval {
       get { 0 }
@@ -855,13 +852,13 @@ open class AVPlayerItemVideoOutput: AVPlayerItemOutput, @unchecked Sendable {
   public override init() { super.init() }
   convenience init(pixelBufferAttributes: CVPixelBufferAttributes) { self.init() }
   public func pixelBufferAndDisplayTime(forItemTime itemTime: CMTime) -> (pixelBuffer: CVReadOnlyPixelBuffer?, itemTimeForDisplay: CMTime) { (pixelBuffer: nil, itemTimeForDisplay: .zero) }
-  public init(pixelBufferAttributes: [String : any Sendable]? = nil) {}
-  public init(outputSettings: [String : any Sendable]?) {}
+  convenience init(pixelBufferAttributes: [String : any Sendable]? = nil) { self.init() }
+  convenience init(outputSettings: [String : any Sendable]?) { self.init() }
   public func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool { false }
   public func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { nil }
   public func setDelegate(_ delegate: (any AVPlayerItemOutputPullDelegate)?, queue delegateQueue: DispatchQueue?) {}
   public func requestNotificationOfMediaDataChange(withAdvanceInterval interval: TimeInterval) {}
-  public weak var delegate: (any AVPlayerItemOutputPullDelegate)? { nil }
+  public var delegate: (any AVPlayerItemOutputPullDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
 }
 
@@ -879,7 +876,7 @@ open class AVPlayerLooper: NSObject, @unchecked Sendable {
   }
   convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem) { self.init() }
   convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem, timeRange loopRange: CMTimeRange) { self.init() }
-  public init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem, timeRange loopRange: CMTimeRange, existingItemsOrdering itemOrdering: AVPlayerLooper.ItemOrdering) {}
+  convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem, timeRange loopRange: CMTimeRange, existingItemsOrdering itemOrdering: AVPlayerLooper.ItemOrdering) { self.init() }
   public var status: AVPlayerLooper.Status { AVPlayerLooper.Status(rawValue: 0)! }
   public var error: (any Error)? { nil }
   public func disableLooping() {}
@@ -892,14 +889,14 @@ open class AVPlayerMediaSelectionCriteria: NSObject, @unchecked Sendable {
   public var preferredLanguages: [String]? { nil }
   public var preferredMediaCharacteristics: [AVMediaCharacteristic]? { nil }
   public var principalMediaCharacteristics: [AVMediaCharacteristic]? { nil }
-  public init(preferredLanguages: [String]?, preferredMediaCharacteristics: [AVMediaCharacteristic]?) {}
-  public init(principalMediaCharacteristics: [AVMediaCharacteristic]?, preferredLanguages: [String]?, preferredMediaCharacteristics: [AVMediaCharacteristic]?) {}
+  convenience init(preferredLanguages: [String]?, preferredMediaCharacteristics: [AVMediaCharacteristic]?) { self.init() }
+  convenience init(principalMediaCharacteristics: [AVMediaCharacteristic]?, preferredLanguages: [String]?, preferredMediaCharacteristics: [AVMediaCharacteristic]?) { self.init() }
 }
 
 open class AVPlayerPlaybackCoordinator: AVPlaybackCoordinator, @unchecked Sendable {
   public override init() { super.init() }
-  public weak var player: AVPlayer? { nil }
-  public weak var delegate: (any AVPlayerPlaybackCoordinatorDelegate)? {
+  public var player: AVPlayer? { nil }
+  public var delegate: (any AVPlayerPlaybackCoordinatorDelegate)? {
       get { nil }
       set { _ = newValue }
     }
@@ -917,16 +914,16 @@ open class AVPlayerVideoOutput: NSObject, @unchecked Sendable {
   open class Configuration: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public var dataChannelDescription: [[CMTag]] { [] }
-    public weak var sourcePlayerItem: AVPlayerItem? { nil }
+    public var sourcePlayerItem: AVPlayerItem? { nil }
     public var preferredTransform: CGAffineTransform { .identity }
     public var activationTime: CMTime { .zero }
   }
   public struct Sample: Sendable {
+    public init() {}
     public var taggedBuffers: [CMTaggedDynamicBuffer] = []
     public var presentationTime: CMTime = .zero
     public var activeConfiguration: AVPlayerVideoOutput.Configuration = AVPlayerVideoOutput.Configuration()
-    public init() {}
   }
   public func sample(forHostTime hostTime: CMTime) -> AVPlayerVideoOutput.Sample? { nil }
-  public init(specification: AVVideoOutputSpecification) {}
+  convenience init(specification: AVVideoOutputSpecification) { self.init() }
 }

@@ -38,7 +38,7 @@ open class AVContentKeyRequest: NSObject, @unchecked Sendable {
   public var canProvidePersistableContentKey: Bool { false }
   public var contentKeySpecifier: AVContentKeySpecifier { AVContentKeySpecifier() }
   public var contentKey: AVContentKey? { nil }
-  public weak var originatingRecipient: (any AVContentKeyRecipient)? { nil }
+  public var originatingRecipient: (any AVContentKeyRecipient)? { nil }
   public func makeStreamingContentKeyRequestData(forApp appIdentifier: Data, contentIdentifier: Data?, options: [String : Any]? = nil) async throws -> Data { return .init() }
   public func processContentKeyResponse(_ keyResponse: AVContentKeyResponse) {}
   public func processContentKeyResponseError(_ error: any Error) {}
@@ -59,7 +59,7 @@ open class AVContentKeySession: NSObject, @unchecked Sendable {
   convenience init(keySystem: AVContentKeySystem) { self.init() }
   convenience init(keySystem: AVContentKeySystem, storageDirectoryAt storageURL: URL) { self.init() }
   public func setDelegate(_ delegate: (any AVContentKeySessionDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public weak var delegate: (any AVContentKeySessionDelegate)? { nil }
+  public var delegate: (any AVContentKeySessionDelegate)? { nil }
   public var delegateQueue: DispatchQueue? { nil }
   public var storageURL: URL? { nil }
   public var keySystem: AVContentKeySystem { AVContentKeySystem(rawValue: "") }
@@ -101,7 +101,7 @@ public struct AVContentKeySessionServerPlaybackContextOption: RawRepresentable, 
 
 open class AVContentKeySpecifier: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(forKeySystem keySystem: AVContentKeySystem, identifier contentKeyIdentifier: Any, options: [String : Any] = [:]) {}
+  convenience init(forKeySystem keySystem: AVContentKeySystem, identifier contentKeyIdentifier: Any, options: [String : Any] = [:]) { self.init() }
   public var keySystem: AVContentKeySystem { AVContentKeySystem(rawValue: "") }
   public var options: [String : any Sendable] { [:] }
 }

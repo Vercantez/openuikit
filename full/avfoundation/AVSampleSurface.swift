@@ -41,7 +41,7 @@ open class AVSampleBufferAudioRenderer: NSObject, @unchecked Sendable {
 
 open class AVSampleBufferGenerator: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public init(asset: AVAsset, timebase: CMTimebase?) {}
+  convenience init(asset: AVAsset, timebase: CMTimebase?) { self.init() }
   public func makeSampleBuffer(for request: AVSampleBufferRequest) throws -> sending CMSampleBuffer { throw AVFoundationPortableError.mediaServiceUnavailable }
   public func makeBatch() -> AVSampleBufferGeneratorBatch { AVSampleBufferGeneratorBatch() }
   public func makeSampleBuffer(for request: AVSampleBufferRequest, addTo batch: AVSampleBufferGeneratorBatch) throws -> CMSampleBuffer { return CMSampleBuffer() }
@@ -89,7 +89,7 @@ open class AVSampleBufferRequest: NSObject, @unchecked Sendable {
     case scheduled = 1
     case opportunistic = 2
   }
-  public init(start startCursor: AVSampleCursor) {}
+  convenience init(start startCursor: AVSampleCursor) { self.init() }
   public var startCursor: AVSampleCursor { AVSampleCursor() }
   public var direction: AVSampleBufferRequest.Direction {
       get { AVSampleBufferRequest.Direction(rawValue: 0)! }
@@ -119,13 +119,13 @@ open class AVSampleBufferRequest: NSObject, @unchecked Sendable {
 
 open class AVSampleBufferVideoRenderer: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public enum PresentationTimeExpectation: Sendable {
+  public enum PresentationTimeExpectation {
     case none
     case monotonicallyIncreasing
     case minimumUpcoming(CMTime)
   }
   public var presentationTimeExpectation: AVSampleBufferVideoRenderer.PresentationTimeExpectation {
-      get { AVSampleBufferVideoRenderer.PresentationTimeExpectation(rawValue: 0)! }
+      get { .none }
       set { _ = newValue }
     }
   public var recommendedPixelBufferAttributes: CVPixelBufferAttributes { CVPixelBufferAttributes() }
@@ -165,22 +165,23 @@ open class AVSampleCursor: NSObject, @unchecked Sendable {
 }
 
 public struct AVSampleCursorAudioDependencyInfo: Sendable {
+  public init() {}
   public init(audioSampleIsIndependentlyDecodable: Bool, audioSamplePacketRefreshCount: Int) {}
   public var audioSampleIsIndependentlyDecodable: Bool = false
   public var audioSamplePacketRefreshCount: Int = 0
-  public init() {}
 }
 
 public struct AVSampleCursorChunkInfo: Sendable {
+  public init() {}
   public init(chunkSampleCount: Int64, chunkHasUniformSampleSizes: Bool, chunkHasUniformSampleDurations: Bool, chunkHasUniformFormatDescriptions: Bool) {}
   public var chunkSampleCount: Int64 = 0
   public var chunkHasUniformSampleSizes: Bool = false
   public var chunkHasUniformSampleDurations: Bool = false
   public var chunkHasUniformFormatDescriptions: Bool = false
-  public init() {}
 }
 
 public struct AVSampleCursorDependencyInfo: Sendable {
+  public init() {}
   public init(sampleIndicatesWhetherItHasDependentSamples: Bool, sampleHasDependentSamples: Bool, sampleIndicatesWhetherItDependsOnOthers: Bool, sampleDependsOnOthers: Bool, sampleIndicatesWhetherItHasRedundantCoding: Bool, sampleHasRedundantCoding: Bool) {}
   public var sampleIndicatesWhetherItHasDependentSamples: Bool = false
   public var sampleHasDependentSamples: Bool = false
@@ -188,20 +189,19 @@ public struct AVSampleCursorDependencyInfo: Sendable {
   public var sampleDependsOnOthers: Bool = false
   public var sampleIndicatesWhetherItHasRedundantCoding: Bool = false
   public var sampleHasRedundantCoding: Bool = false
-  public init() {}
 }
 
 public struct AVSampleCursorStorageRange: Sendable {
+  public init() {}
   public init(offset: Int64, length: Int64) {}
   public var offset: Int64 = 0
   public var length: Int64 = 0
-  public init() {}
 }
 
 public struct AVSampleCursorSyncInfo: Sendable {
+  public init() {}
   public init(sampleIsFullSync: Bool, sampleIsPartialSync: Bool, sampleIsDroppable: Bool) {}
   public var sampleIsFullSync: Bool = false
   public var sampleIsPartialSync: Bool = false
   public var sampleIsDroppable: Bool = false
-  public init() {}
 }
