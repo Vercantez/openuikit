@@ -980,9 +980,10 @@ llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.bind"
 
 # Universal, non-vacuous two-level provider gate. Every symbol owned by
-# SwiftUI, OpenUIKit, or OpenCoreGraphics is classified, including associated
-# type descriptors, conformances, and extensions whose mangling does not begin
-# with its declaring module. Unknown framework-bearing manglings fail closed.
+# SwiftUI, OpenUIKit, OpenCoreGraphics, or FoundationEssentials is classified,
+# including associated type descriptors, conformances, and extensions whose
+# mangling does not begin with its declaring module. Unknown framework-bearing
+# manglings fail closed.
 # Every import is matched to every bind-table row and the exact defining
 # sibling; every definition is checked for reverse ownership.
 perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
@@ -990,6 +991,7 @@ perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
     --openuikit "$PACKAGE/libOpenUIKit.dylib" \
     --opencoregraphics "$PACKAGE/libOpenCoreGraphics.dylib" \
     --swiftui "$PACKAGE/libSwiftUI.dylib" \
+    --foundationessentials "$PACKAGE/libFoundationEssentials.dylib" \
     --combine "$PACKAGE/libCombine.dylib" \
     --opencombine "$PACKAGE/libOpenCombine.dylib" \
     --executable "$OUT/focus_widget_guest" \

@@ -249,6 +249,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("framework-providers.tsv", text)
         self.assertIn('perl "$ATTEST" providers', text)
         self.assertIn('--opencoregraphics "$PACKAGE/libOpenCoreGraphics.dylib"', text)
+        self.assertIn('--foundationessentials "$PACKAGE/libFoundationEssentials.dylib"', text)
         self.assertIn("--demangle swift-demangle", text)
         self.assertIn("Universal, non-vacuous two-level provider gate", text)
         self.assertIn("_$sxSg7SwiftUI9_OpenViewA2bCRzlMc", text)
@@ -500,7 +501,14 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
 
     def test_provider_gate_is_universal_and_rejects_reverse_ownership(self) -> None:
         helper = ATTEST.read_text()
-        for module in ("SwiftUI", "OpenUIKit", "OpenCoreGraphics", "Combine", "OpenCombine"):
+        for module in (
+            "SwiftUI",
+            "OpenUIKit",
+            "OpenCoreGraphics",
+            "FoundationEssentials",
+            "Combine",
+            "OpenCombine",
+        ):
             self.assertIn(module, helper)
         self.assertIn("no two-level bind", helper)
         self.assertIn("expected exactly", helper)
@@ -513,7 +521,9 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         self.assertIn("extension in", helper)
         self.assertIn("protocol conformance descriptor", helper)
         self.assertIn("protocol witness table", helper)
-        self.assertIn("conformance_protocol_module", helper)
+        self.assertIn("owning_module_from_demangle", helper)
+        self.assertNotIn("conformance_protocol_module", helper)
+        self.assertNotIn("/^\\(extension in", helper)
         self.assertIn("^_OBJC_(?:CLASS|METACLASS)_\\$__TtC", helper)
         self.assertIn("^_OBJC_IVAR_\\$__TtC", helper)
         self.assertIn("for (1 .. $nested_count + 2)", helper)
@@ -539,8 +549,26 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
             "_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc"
         )
         self.assertIn(exact, helper)
+        self.assertIn(
+            "_$s16OpenCoreGraphics7CGFloatV7SwiftUIE16magnitudeSquaredSdvpMV",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvpMV",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvg",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials22AttributeDynamicLookupO7SwiftUIEyxqd__cluig",
+            helper,
+        )
         self.assertIn("_$s16OpenCoreGraphics7CGFloatVMn", helper)
+        self.assertIn("_$s20FoundationEssentials15AttributeScopesOMn", helper)
         self.assertIn("conformance-classifier-selftest", helper)
+        self.assertIn("owning_module_from_demangle", helper)
         result = subprocess.run(
             ["perl", str(ATTEST), "conformance-classifier-selftest"],
             check=True,
@@ -549,7 +577,7 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         )
         self.assertEqual(
             result.stdout,
-            "CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=3 negatives=1\n",
+            "CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=7 negatives=2\n",
         )
         self.assertEqual(result.stderr, "")
 
