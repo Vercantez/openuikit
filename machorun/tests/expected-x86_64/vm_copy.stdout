@@ -1,0 +1,20 @@
+vm_allocate src returned 0
+vm_allocate dst returned 0
+aligned whole pages     returned 0
+  dst after aligned      first=a last=b sum=897000
+  memcmp src/dst        0
+aligned, size 100       returned 0
+  dst[0]=b dst[99]=w dst[100]=.
+unaligned src +8        returned 0
+  dst[0]=k
+unaligned dst +8        returned 0
+  dst[0]=. dst[8]=d
+size 0                  returned 0
+overlapping +1 page     returned 0
+  src after overlap      first=e last=h sum=1793992
+dst unmapped            returned 1
+src unmapped            returned 1
+dst PROT_NONE           returned 1
+dst read-only           returned 1
+src PROT_NONE           returned 1
+done

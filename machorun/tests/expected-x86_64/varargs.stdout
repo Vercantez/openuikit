@@ -1,0 +1,19 @@
+wide=1 2 3 4 5 6 7 8 9 10 11 12
+dwide=1.5 2.5 3.5 4.5 5.5 6.5 7.5 8.5 9.5 10.5 11.5 12.5
+inter=1 2.5 3 4.5 five 6 7.5 8 9 a 11.5 twelve
+promo=q -3 -1234 60000 0.5 -3 -1234
+lens=-9007199254740993 18446744073709551615 -1234567890123 1234567890123 4096 -42
+star=[    42][42    ][3.142][     2.50]
+bases=beef BEEF 0xbeef 100 0100 +7  7 01.50
+strs=[abc][     right][left      ]|
+nullstr=[(null)]
+ldbl=2.500 2.500000e+00 sizeof=16
+floats=1.234568e+04 1.234568E+04 1.234e-05 1.23457E+08 2 0.3333333333
+sum=55
+dsum=60.00
+mixed i=11,22 d=1.25,2.75 s=str ll=333333333333
+fwd=7/seven/7.50 (n=16)
+va_copy=[copy 3 4.5 six][copy 3 4.5 six] same=yes
+trunc=[0123456] n=13 len=7
+size=10 buf=[untouched]
+sp=-5,x,0.2
