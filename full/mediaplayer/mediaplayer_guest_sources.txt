@@ -1,0 +1,9 @@
+full/mediaplayer/MPConstants.swift
+full/mediaplayer/MPContent.swift
+full/mediaplayer/MPError.swift
+full/mediaplayer/MPMedia.swift
+full/mediaplayer/MPMusicPlayer.swift
+full/mediaplayer/MPNowPlaying.swift
+full/mediaplayer/MPRemoteCommand.swift
+full/mediaplayer/MPTypes.swift
+full/mediaplayer/MediaPlayer.swift
