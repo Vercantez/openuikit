@@ -72,6 +72,30 @@ MAC_AND_PORTABLE = textwrap.dedent(
     """
 )
 
+PIN_IS_SYSTEM_DEFAULT = textwrap.dedent(
+    """\
+    CF_INLINE Boolean _CFAllocatorIsSystemDefault(CFAllocatorRef allocator) {
+        if (allocator == kCFAllocatorSystemDefault) return true;
+        if (NULL == allocator || kCFAllocatorDefault == allocator) {
+            return (kCFAllocatorSystemDefault == CFAllocatorGetDefault());
+        }
+        return false;
+    }
+    """
+)
+
+PIN_GET_DEFAULT = textwrap.dedent(
+    """\
+    CF_INLINE CFAllocatorRef __CFGetDefaultAllocator(void) {
+        CFAllocatorRef allocator = (CFAllocatorRef)_CFGetTSD(__CFTSDKeyAllocator);
+        if (NULL == allocator) {
+            allocator = kCFAllocatorSystemDefault;
+        }
+        return allocator;
+    }
+    """
+)
+
 
 class PatchSystemAllocator(unittest.TestCase):
     def test_rewrites_mac_callbacks_keeps_zone_dispatch(self) -> None:
@@ -92,6 +116,35 @@ class PatchSystemAllocator(unittest.TestCase):
         with self.assertRaises(SystemExit):
             patcher.patch_text("int main(void) { return 0; }\n")
 
+    def test_forces_system_default_identity(self) -> None:
+        out = patcher.patch_is_system_default(PIN_IS_SYSTEM_DEFAULT)
+        self.assertIn(patcher.MARKER_IS_SYSTEM_DEFAULT, out)
+        self.assertIn("return true;", out)
+        self.assertNotIn("return false;", out)
+        self.assertEqual(out, patcher.patch_is_system_default(out))
+
+    def test_forces_static_default_allocator(self) -> None:
+        out = patcher.patch_get_default_allocator(PIN_GET_DEFAULT)
+        self.assertIn(patcher.MARKER_GET_DEFAULT, out)
+        self.assertNotIn("_CFGetTSD(__CFTSDKeyAllocator)", out)
+        self.assertEqual(out, patcher.patch_get_default_allocator(out))
+
+    def test_refuses_wrong_is_system_default(self) -> None:
+        with self.assertRaises(SystemExit):
+            patcher.patch_is_system_default(
+                "CF_INLINE Boolean _CFAllocatorIsSystemDefault(CFAllocatorRef allocator) {\n"
+                "    return allocator == kCFAllocatorSystemDefault;\n"
+                "}\n"
+            )
+
+    def test_refuses_wrong_get_default(self) -> None:
+        with self.assertRaises(SystemExit):
+            patcher.patch_get_default_allocator(
+                "CF_INLINE CFAllocatorRef __CFGetDefaultAllocator(void) {\n"
+                "    return kCFAllocatorSystemDefault;\n"
+                "}\n"
+            )
+
     def test_writes_file(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             path = pathlib.Path(td) / "CFBase.c"
@@ -101,6 +154,30 @@ class PatchSystemAllocator(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             self.assertTrue(patcher.already_patched(text))
             rc2 = patcher.main(["patch_cf_system_allocator.py", str(path.parent)])
+            self.assertEqual(rc2, 2)
+
+    def test_directory_patches_headers(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = pathlib.Path(td)
+            (root / "include").mkdir()
+            (root / "internalInclude").mkdir()
+            (root / "CFBase.c").write_text(MAC_AND_PORTABLE, encoding="utf-8")
+            (root / "include" / "CFRuntime.h").write_text(
+                PIN_IS_SYSTEM_DEFAULT, encoding="utf-8"
+            )
+            (root / "internalInclude" / "CFInternal.h").write_text(
+                PIN_GET_DEFAULT, encoding="utf-8"
+            )
+            rc = patcher.main(["patch_cf_system_allocator.py", str(root)])
+            self.assertEqual(rc, 0)
+            self.assertTrue(
+                patcher.already_patched((root / "CFBase.c").read_text(encoding="utf-8"))
+            )
+            rt = (root / "include" / "CFRuntime.h").read_text(encoding="utf-8")
+            inn = (root / "internalInclude" / "CFInternal.h").read_text(encoding="utf-8")
+            self.assertTrue(patcher.already_patched_is_system_default(rt))
+            self.assertTrue(patcher.already_patched_get_default(inn))
+            rc2 = patcher.main(["patch_cf_system_allocator.py", str(root)])
             self.assertEqual(rc2, 0)
 
 

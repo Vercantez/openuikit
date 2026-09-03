@@ -20,12 +20,23 @@ Rewrite (1) to the portable bodies and (2) to malloc/realloc/free.
 Real malloc_zone_t* passed as a CFAllocator then use the process heap,
 which is the only zone this libSystem has.
 
+CreateInstance then CFRetain(realAllocator) when
+_CFAllocatorIsSystemDefault is false. On this guest the TSD default is a
+Linux heap pointer, not the static __kCFAllocatorSystemDefault, so retain
+walks a raw malloc block and SIGSEGVs in __CFNonObjCRetain. Force the
+system-default identity:
+
+  3. _CFAllocatorIsSystemDefault always true (never prefix-store/retain).
+  4. __CFGetDefaultAllocator always kCFAllocatorSystemDefault (ignore TSD).
+
 Does not rewrite:
   * CFAllocatorCustom* zone vtable (allocator used as a zone).
   * CFRuntime.c malloc_zone_memalign(malloc_default_zone(), ...) — default
     zone is legal on this libSystem.
 
 The pin checkout is not mutated. Callers copy Sources/CoreFoundation first.
+A directory argument requires include/CFRuntime.h and
+internalInclude/CFInternal.h (named CANNOT via SystemExit if absent).
 """
 from __future__ import annotations
 
@@ -35,6 +46,10 @@ import sys
 SIG_ALLOCATE = "static void *__CFAllocatorSystemAllocate(CFIndex size, CFOptionFlags hint, void *info)"
 SIG_REALLOCATE = "static void *__CFAllocatorSystemReallocate(void *ptr, CFIndex newsize, CFOptionFlags hint, void *info)"
 SIG_DEALLOCATE = "static void __CFAllocatorSystemDeallocate(void *ptr, void *info)"
+SIG_IS_SYSTEM_DEFAULT = (
+    "CF_INLINE Boolean _CFAllocatorIsSystemDefault(CFAllocatorRef allocator)"
+)
+SIG_GET_DEFAULT = "CF_INLINE CFAllocatorRef __CFGetDefaultAllocator(void)"
 
 PORTABLE_ALLOCATE = """static void *__CFAllocatorSystemAllocate(CFIndex size, CFOptionFlags hint, void *info) {
     (void)info;
@@ -56,6 +71,17 @@ PORTABLE_DEALLOCATE = """static void __CFAllocatorSystemDeallocate(void *ptr, vo
     free(ptr);
 }"""
 
+REPL_IS_SYSTEM_DEFAULT = """CF_INLINE Boolean _CFAllocatorIsSystemDefault(CFAllocatorRef allocator) {
+    (void)allocator;
+    /* openuikit-x86: never prefix-store a custom allocator */
+    return true;
+}"""
+
+REPL_GET_DEFAULT = """CF_INLINE CFAllocatorRef __CFGetDefaultAllocator(void) {
+    /* openuikit-x86: static system default only */
+    return kCFAllocatorSystemDefault;
+}"""
+
 ZONE_AS_ALLOCATOR = (
     (
         "malloc_zone_malloc((malloc_zone_t *)allocator, size)",
@@ -75,6 +101,9 @@ ZONE_AS_ALLOCATOR = (
     ),
 )
 
+MARKER_IS_SYSTEM_DEFAULT = "openuikit-x86: never prefix-store a custom allocator"
+MARKER_GET_DEFAULT = "openuikit-x86: static system default only"
+
 
 def _cfbase_path(arg: str) -> pathlib.Path:
     p = pathlib.Path(arg)
@@ -87,7 +116,7 @@ def _function_span(text: str, signature: str, start: int = 0) -> tuple[int, int]
     pos = text.find(signature, start)
     if pos < 0:
         raise SystemExit(
-            f"patch_cf_system_allocator: CFBase.c is missing {signature} "
+            f"patch_cf_system_allocator: missing {signature} "
             "(pin changed; will not invent a CF allocator)"
         )
     brace = text.find("{", pos)
@@ -124,6 +153,22 @@ def already_patched(text: str) -> bool:
     if "malloc_zone_malloc" in body or "malloc(" not in body:
         return False
     return "malloc_zone_malloc((malloc_zone_t *)allocator" not in text
+
+
+def already_patched_is_system_default(text: str) -> bool:
+    try:
+        body = _first_body(text, SIG_IS_SYSTEM_DEFAULT)
+    except SystemExit:
+        return False
+    return MARKER_IS_SYSTEM_DEFAULT in body
+
+
+def already_patched_get_default(text: str) -> bool:
+    try:
+        body = _first_body(text, SIG_GET_DEFAULT)
+    except SystemExit:
+        return False
+    return MARKER_GET_DEFAULT in body
 
 
 def patch_text(text: str) -> str:
@@ -168,6 +213,42 @@ def patch_text(text: str) -> str:
     return out
 
 
+def patch_is_system_default(text: str) -> str:
+    if already_patched_is_system_default(text):
+        return text
+    body = _first_body(text, SIG_IS_SYSTEM_DEFAULT)
+    if "return false" not in body or "CFAllocatorGetDefault" not in body:
+        raise SystemExit(
+            "patch_cf_system_allocator: _CFAllocatorIsSystemDefault is not "
+            "the pin's pointer-identity predicate (pin changed; will not "
+            "invent a CF allocator)"
+        )
+    start, end = _function_span(text, SIG_IS_SYSTEM_DEFAULT)
+    return text[:start] + REPL_IS_SYSTEM_DEFAULT + text[end:]
+
+
+def patch_get_default_allocator(text: str) -> str:
+    if already_patched_get_default(text):
+        return text
+    body = _first_body(text, SIG_GET_DEFAULT)
+    if "_CFGetTSD(__CFTSDKeyAllocator)" not in body:
+        raise SystemExit(
+            "patch_cf_system_allocator: __CFGetDefaultAllocator does not "
+            "read __CFTSDKeyAllocator (pin changed; will not invent a CF "
+            "allocator)"
+        )
+    start, end = _function_span(text, SIG_GET_DEFAULT)
+    return text[:start] + REPL_GET_DEFAULT + text[end:]
+
+
+def _write_if_changed(path: pathlib.Path, original: str, updated: str, what: str) -> None:
+    if updated != original:
+        path.write_text(updated, encoding="utf-8")
+        print(f"patched {path} ({what})", file=sys.stderr)
+    else:
+        print(f"already patched {path}", file=sys.stderr)
+
+
 def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print(
@@ -175,21 +256,55 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return 2
+    arg = pathlib.Path(argv[1])
+    require_headers = arg.is_dir()
     path = _cfbase_path(argv[1])
     if not path.is_file():
         print(f"patch_cf_system_allocator: missing {path}", file=sys.stderr)
         return 2
+    root = path.parent if path.name == "CFBase.c" else arg
+    runtime = root / "include" / "CFRuntime.h"
+    internal = root / "internalInclude" / "CFInternal.h"
+    if require_headers:
+        if not runtime.is_file():
+            print(
+                f"patch_cf_system_allocator: missing {runtime} "
+                "(pin changed; will not invent a CF allocator)",
+                file=sys.stderr,
+            )
+            return 2
+        if not internal.is_file():
+            print(
+                f"patch_cf_system_allocator: missing {internal} "
+                "(pin changed; will not invent a CF allocator)",
+                file=sys.stderr,
+            )
+            return 2
+
     original = path.read_text(encoding="utf-8")
-    updated = patch_text(original)
-    if updated != original:
-        path.write_text(updated, encoding="utf-8")
-        print(
-            f"patched {path} (__CFAllocatorSystem* and allocator-as-zone "
-            "-> malloc/free)",
-            file=sys.stderr,
+    _write_if_changed(
+        path,
+        original,
+        patch_text(original),
+        "__CFAllocatorSystem* and allocator-as-zone -> malloc/free",
+    )
+
+    if runtime.is_file():
+        rt = runtime.read_text(encoding="utf-8")
+        _write_if_changed(
+            runtime,
+            rt,
+            patch_is_system_default(rt),
+            "_CFAllocatorIsSystemDefault always true",
         )
-    else:
-        print(f"already patched {path}", file=sys.stderr)
+    if internal.is_file():
+        inn = internal.read_text(encoding="utf-8")
+        _write_if_changed(
+            internal,
+            inn,
+            patch_get_default_allocator(inn),
+            "__CFGetDefaultAllocator always kCFAllocatorSystemDefault",
+        )
     return 0
 
 
