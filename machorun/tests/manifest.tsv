@@ -90,5 +90,8 @@ hostbound_surface	chained	run	pass	eight CHECK 5 names Darwin already printed (s
 hostbound_osver	chained	run	pass	os_system_version_get_current_version is an OUT-POINTER in x0 (libswiftCore zeros 12 bytes, mov x0,sp, bl, then ldr from [sp]) -- not a by-value {u32,u32,u32} return
 fmal	chained	run	pass	fmal: x86 host-binds glibc (80-bit); arm64 implements as fma(double) because Darwin long double IS double. 1.5*2+3==6 both arches; 1+2^-63 is the arch split
 dyld_objc_constant	chained	run	pass	_dyld_is_objc_constant is false outside a shared cache; _NSGetMachExecuteHeader is the main executable (MH_MAGIC_64 / MH_EXECUTE)
-fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug
+overlay_libsystem	chained	run	pass	overlay NOUNDEFS implemented in machorun: qos_class_self, vouchers, os_release, memset_s, vdprintf, openat(AT_FDCWD), clock_getres
+sem_open	chained	run	pass	Darwin sem_t is int; glibc's is a struct -- named sem_open/wait/post/close, not a by-name host-bind
+remquol	chained	run	pass	remquol: x86 host-binds glibc (80-bit); arm64 implements as remquo(double). Same arch split as fmal
+fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any slice-selection bug is a diff
 dup_images	chained	run	pass	the dedupe contract, and it is an ASYMMETRY: a SYMLINK to a loaded dylib is ONE image, two DISTINCT files sharing an install name are TWO -- a loader deduping on install name fails the second half in the direction that looks like an improvement

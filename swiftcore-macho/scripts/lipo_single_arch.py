@@ -73,7 +73,7 @@ def lipo_create(output: str, inputs: list[str]) -> int:
         return 2
     src = inputs[0]
     if not os.path.isfile(src):
-        print(f"CANNOT_LIPO_FAT_ON_LINUX: input missing {src}", file=sys.stderr)
+        print(f"lipo_single_arch: missing input {src}", file=sys.stderr)
         return 2
     dest_dir = os.path.dirname(output)
     if dest_dir:

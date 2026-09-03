@@ -108,6 +108,17 @@ overlay_copy_so_as_dylib "$tmp/build" x86_64
   && echo "  OK  .dylib beside .so" || { echo "  FAIL missing .dylib"; fail=1; }
 
 echo
+echo "=== overlay_satisfy_core_lipo_input copies staged artifact ==="
+mkdir -p "$tmp/empty/lib/swift/macosx/x86_64" \
+         "$tmp/artroot/artifacts/swift-macosx/x86_64"
+echo staged-core > "$tmp/artroot/artifacts/swift-macosx/x86_64/libswiftCore.dylib"
+SWIFTCORE_ROOT=$tmp/artroot overlay_satisfy_core_lipo_input "$tmp/empty" x86_64
+cmp -s "$tmp/empty/lib/swift/macosx/x86_64/libswiftCore.so" \
+       "$tmp/artroot/artifacts/swift-macosx/x86_64/libswiftCore.dylib" \
+  && echo "  OK  artifact staged as lipo input" \
+  || { echo "  FAIL satisfy did not copy artifact"; fail=1; }
+
+echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- overlay targets derived from ninja -t targets; ObjectiveC gated"
   exit 0

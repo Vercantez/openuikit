@@ -1,0 +1,12 @@
+vdprintf 42
+qos_class_self          0x21
+voucher_copy_NULL       yes
+voucher_adopt_NULL      yes
+os_release_NULL         ok
+memset_s_ok             rc=0 b0=0xaa
+memset_s_null           rc=22 EINVAL=1
+memset_s_erange         rc=84 ERANGE=0
+vdprintf_n              12
+openat_AT_FDCWD         fd>=0=1
+clock_getres            rc=0 nsec>0=1
+done

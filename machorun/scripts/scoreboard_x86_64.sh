@@ -60,7 +60,7 @@ is_arch_baseline() {
     local tmp
     tmp="$(mktemp -d)"
     # machine field of uname; long-double sizeof (varargs sizeof=N,
-    # hostbound_surface's "strtold_l width", fmal's sizeof_ld / ld80 bit);
+    # hostbound_surface's "strtold_l width", fmal/remquol's sizeof_ld / ld80 bit);
     # vm_copy checksums scale with Darwin's page (16 KiB arm64, 4 KiB x86_64)
     # and the fixture uses vm_page_size.
     local arch_sed=(

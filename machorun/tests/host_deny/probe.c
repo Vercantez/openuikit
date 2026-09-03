@@ -66,20 +66,24 @@ int deny_probe(const char *what)
         printf("nanf(\"\") returned a value with x!=x -> %d\n", x != x);
         return 0;
     }
-    if (strcmp(what, "openat") == 0) {          /* DENIED */
+    /* openat / sem_open / vdprintf used to be DENIED. They are implemented
+     * in darwin/src (posix.c / libsystem.c) and are no longer in the table
+     * host_deny_gate.sh reads. Leftover probes: if called they hit libSystem,
+     * not glibc-by-name. */
+    if (strcmp(what, "openat") == 0) {
         int fd = openat(-2 /* Darwin AT_FDCWD */, "probe.txt", 0 /* O_RDONLY */);
-        printf("openat returned %d -- REACHED GLIBC, the deny-list did not fire\n", fd);
-        return 1;
+        printf("openat returned %d -- libSystem wrapper (no longer denied)\n", fd);
+        return 0;
     }
-    if (strcmp(what, "sem_open") == 0) {        /* DENIED */
+    if (strcmp(what, "sem_open") == 0) {
         void *s = sem_open("/machorun_deny_probe", 0x200 /* Darwin O_CREAT */);
-        printf("sem_open returned %p -- REACHED GLIBC, the deny-list did not fire\n", s);
-        return 1;
+        printf("sem_open returned %p -- libSystem wrapper (no longer denied)\n", s);
+        return 0;
     }
-    if (strcmp(what, "vdprintf") == 0) {        /* DENIED */
+    if (strcmp(what, "vdprintf") == 0) {
         int n = probe_vdprintf("vdprintf wrote this: %d %s\n", 42, "text");
-        printf("vdprintf returned %d -- REACHED GLIBC, the deny-list did not fire\n", n);
-        return 1;
+        printf("vdprintf returned %d -- libSystem formatter (no longer denied)\n", n);
+        return 0;
     }
     if (strcmp(what, "strtold") == 0) {         /* DENIED */
         long double v = strtold("1.5", (char **)0);

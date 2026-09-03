@@ -13,11 +13,13 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertNotIn("metadata + 0x18", source)
         self.assertIn("OPENUI_DISPATCH_QUEUE_MAIN_V1", source)
         self.assertIn("is_registered_global_queue", source)
-        self.assertIn("if (voucher != NULL) conc_abort", source)
-        self.assertIn("void *voucher_copy(void) { return NULL; }", source)
-        self.assertIn("if (object != NULL) conc_abort", source)
+        self.assertIn("void dispatch_async_f(void *queue, void *context, void (*function)(void *))", source)
+        self.assertNotIn("void *voucher_copy(void)", source)
         self.assertIn("uint64_t os_signpost_id_make_with_pointer", source)
         self.assertIn("return 0;", source)
+        libsys = (ROOT / "machorun/darwin/src/libsystem.c").read_text(encoding="utf-8")
+        self.assertIn("EXPORT void *voucher_copy(void)", libsys)
+        self.assertIn("EXPORT void os_release(void *object)", libsys)
 
     def test_host_boundary_rejects_guest_queue_structs(self) -> None:
         source = (ROOT / "full/dispatch/OpenDispatchHost.c").read_text(encoding="utf-8")

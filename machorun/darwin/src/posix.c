@@ -432,6 +432,106 @@ EXPORT int mr_open_nocancel(const char *path, int flags, ...)
     return MR_ERRNO_CALL(glibc_open(path, linux_open_flags(flags), mode));
 }
 
+/* Darwin AT_FDCWD is -2; Linux is -100. Passing the guest's -2 through is an
+ * ordinary EBADF, which is why openat used to be denied rather than host-bound. */
+#define D_AT_FDCWD (-2)
+#define L_AT_FDCWD (-100)
+
+static int linux_at_fd(int darwin_fd)
+{
+    return darwin_fd == D_AT_FDCWD ? L_AT_FDCWD : darwin_fd;
+}
+
+EXPORT int openat(int fd, const char *path, int flags, ...)
+{
+    unsigned mode = 0;
+    if (flags & D_O_CREAT) {
+        va_list ap;
+        va_start(ap, flags);
+        mode = va_arg(ap, unsigned);
+        va_end(ap);
+    }
+    return MR_ERRNO_CALL(glibc_openat(linux_at_fd(fd), path,
+                                      linux_open_flags(flags), mode));
+}
+
+/* Darwin named semaphores. sem_t is int (4 bytes); glibc's is a 32-byte
+ * struct. A by-name bind would hand Darwin callers a pointer they treat as
+ * int* into a glibc object, and SEM_FAILED is inverted ((sem_t *)-1 vs NULL).
+ * The pointer we return is identity: wait/post/close recover the glibc
+ * semaphore from the heap object. Unnamed sem_init is not this path. */
+#define MR_SEM_MAGIC 0x53454d31 /* 'SEM1' */
+#define D_SEM_FAILED ((void *)(intptr_t)-1)
+struct mr_named_sem {
+    int   magic;
+    void *glibc;
+};
+
+EXPORT void *sem_open(const char *name, int oflag, ...)
+{
+    unsigned mode = 0, value = 0;
+    void *gs;
+    struct mr_named_sem *s;
+    if (oflag & D_O_CREAT) {
+        va_list ap;
+        va_start(ap, oflag);
+        mode = va_arg(ap, unsigned);
+        value = va_arg(ap, unsigned);
+        va_end(ap);
+    }
+    gs = MR_ERRNO_CALL(glibc_sem_open(name, linux_open_flags(oflag), mode, value));
+    if (!gs) return D_SEM_FAILED;
+    s = glibc_malloc(sizeof(*s));
+    if (!s) {
+        glibc_sem_close(gs);
+        return D_SEM_FAILED;
+    }
+    s->magic = MR_SEM_MAGIC;
+    s->glibc = gs;
+    return s;
+}
+
+static void *mr_sem_glibc(void *p, const char *who)
+{
+    struct mr_named_sem *s = p;
+    if (!s || s == D_SEM_FAILED || s->magic != MR_SEM_MAGIC)
+        mr_bail2(who, "not a named semaphore this libSystem minted "
+                 "(Darwin sem_t is int; unnamed sem_init is not implemented)");
+    return s->glibc;
+}
+
+EXPORT int sem_close(void *s)
+{
+    struct mr_named_sem *m = s;
+    void *gs;
+    int rc;
+    gs = mr_sem_glibc(s, "sem_close");
+    rc = MR_ERRNO_CALL(glibc_sem_close(gs));
+    m->magic = 0;
+    glibc_free(m);
+    return rc;
+}
+
+EXPORT int sem_unlink(const char *name)
+{
+    return MR_ERRNO_CALL(glibc_sem_unlink(name));
+}
+
+EXPORT int sem_wait(void *s)
+{
+    return MR_ERRNO_CALL(glibc_sem_wait(mr_sem_glibc(s, "sem_wait")));
+}
+
+EXPORT int sem_trywait(void *s)
+{
+    return MR_ERRNO_CALL(glibc_sem_trywait(mr_sem_glibc(s, "sem_trywait")));
+}
+
+EXPORT int sem_post(void *s)
+{
+    return MR_ERRNO_CALL(glibc_sem_post(mr_sem_glibc(s, "sem_post")));
+}
+
 /* ------------------------------------------------------------ struct stat */
 
 /* Darwin, arm64, __DARWIN_64_BIT_INO_T. Offsets measured, not guessed. */
@@ -1713,6 +1813,14 @@ HIDDEN int mr_linux_clock_id(int darwin_id)
 EXPORT int clock_gettime(int clk, void *ts)
 {
     return MR_ERRNO_CALL(glibc_clock_gettime(mr_linux_clock_id(clk), ts));
+}
+
+/* CLOCK_* disagree (Darwin CLOCK_MONOTONIC is 6, Linux's is 1 — Darwin 6 is
+ * Linux CLOCK_MONOTONIC_COARSE). timespec layout agrees ({long,long} 16 bytes
+ * both sides). Not host-bound. */
+EXPORT int clock_getres(int clk, void *ts)
+{
+    return MR_ERRNO_CALL(glibc_clock_getres(mr_linux_clock_id(clk), ts));
 }
 
 EXPORT uint64_t clock_gettime_nsec_np(int clk)

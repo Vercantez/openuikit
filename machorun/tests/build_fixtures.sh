@@ -644,6 +644,12 @@ want fmal                && build fmal                "$CHAINED_TARGET" fmal    
 # MH_EXECUTE), moved into machorun's libSystem from the full/ umbrella.
 want dyld_objc_constant  && build dyld_objc_constant  "$CHAINED_TARGET" dyld_objc_constant  dyld_objc_constant.c --
 
+# overlay_libsystem / sem_open / remquol. Overlay NOUNDEFS closed in machorun
+# (not host-bound). norun:NEEDS_DARWIN_BASELINE until the operator records.
+want overlay_libsystem   && build overlay_libsystem   "$CHAINED_TARGET" overlay_libsystem   overlay_libsystem.c --
+want sem_open            && build sem_open            "$CHAINED_TARGET" sem_open            sem_open.c --
+want remquol             && build remquol             "$CHAINED_TARGET" remquol             remquol.c -- -fno-builtin
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

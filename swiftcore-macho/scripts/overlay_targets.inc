@@ -192,6 +192,36 @@ overlay_flatten_unarch() {
     done
 }
 
+# Place lib/swift/macosx/<arch>/libswiftCore.so so lipo / overlay ninja can
+# copy it onto the unarch path without rebuilding core. Prefer the ninja
+# product, then the sibling .dylib, then artifacts/swift-macosx/<arch>/.
+# overlay_satisfy_core_lipo_input <build_dir> <arch>
+overlay_satisfy_core_lipo_input() {
+    local build_dir=${1:?overlay_satisfy_core_lipo_input: build dir}
+    local arch=${2:?overlay_satisfy_core_lipo_input: arch}
+    local dest=$build_dir/lib/swift/macosx/$arch/libswiftCore.so
+    local sibling=$build_dir/lib/swift/macosx/$arch/libswiftCore.dylib
+    local stdlib_dir=${SWIFTCORE_STDLIB_DIR:-macosx}
+    local built=$build_dir/lib/swift/$stdlib_dir/libswiftCore.dylib
+    local scripts_dir
+    scripts_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+    local art=${SWIFTCORE_ROOT:-$scripts_dir}/artifacts/swift-macosx/$arch/libswiftCore.dylib
+    local src=""
+    if [ -f "$dest" ]; then
+        echo "overlay_satisfy_core: have $dest"
+        return 0
+    fi
+    for src in "$sibling" "$built" "$art"; do
+        [ -n "$src" ] && [ -f "$src" ] || continue
+        mkdir -p "$(dirname "$dest")"
+        cp -f "$src" "$dest"
+        echo "overlay_satisfy_core: staged $dest from $src"
+        return 0
+    done
+    echo "overlay_satisfy_core: no staged libswiftCore for $arch (lipo will name the missing input)"
+    return 0
+}
+
 # Print the exact -isysroot / -sdk the Darwin overlay compile receives.
 # Swift's Darwin.o line uses -sdk (clang cc1 may rewrite that to -isysroot);
 # print both, so the operator log proves which tree ninja used.

@@ -73,34 +73,6 @@
  * SAME LINE as X(ident, "cname" -- do not wrap between the identifier and
  * the quoted C name. Mixed-case compiler-rt hooks depend on that. */
 #define MR_HOST_DENY_TABLE(X)                                                  \
-    X(openat, "openat",                                                        \
-      "constants + variadic",                                                  \
-      "AT_FDCWD is -2 on Darwin and -100 on Linux, so a guest asking for "     \
-      "\"relative to the current directory\" hands glibc an ordinary bad file "\
-      "descriptor. Worse, the O_* flags ROTATE rather than merely diverge "    \
-      "(measured both sides): Darwin's O_CREAT 0x200 IS Linux's O_TRUNC, and " \
-      "Darwin's O_TRUNC 0x400 IS Linux's O_APPEND, and Darwin's O_EXCL 0x800 " \
-      "IS Linux's O_NONBLOCK. A guest asking to CREATE a file therefore asks " \
-      "glibc to TRUNCATE one -- a value that maps to something else real is "  \
-      "what costs the afternoon, not a value that maps to nothing. And the "   \
-      "mode argument is variadic: Darwin's arm64 varargs go on the stack, "    \
-      "AAPCS64 puts them in registers.")                                       \
-    X(sem_open, "sem_open",                                                    \
-      "constants (inverted sentinel) + variadic",                              \
-      "SEM_FAILED is (sem_t *)-1 on Darwin and (sem_t *)0 on Linux, so the "   \
-      "error test is INVERTED: glibc's failure return reads as success and "   \
-      "glibc's success return reads as failure. The O_* flags diverge as for " \
-      "openat, and the mode/value arguments are variadic.")                    \
-    X(vdprintf, "vdprintf",                                                    \
-      "variadic convention (va_list layout)",                                  \
-      "va_list is 8 bytes on Darwin/arm64 and 32 on Linux/aarch64 (measured "  \
-      "both sides, not recalled). Darwin's is a single stack cursor -- all "   \
-      "varargs are on the stack; glibc's is {__stack,__gr_top,__vr_top,"       \
-      "__gr_offs,__vr_offs} and steers on the two offsets. glibc therefore "   \
-      "reads 32 bytes out of an 8-byte object and decides register-vs-stack "  \
-      "from whatever follows it. This is the same reason machorun owns its "   \
-      "own printf formatter, and it is why vdprintf is NOT the harmless "      \
-      "stdio forward it looks like.")                                          \
     X(strtold, "strtold",                                                      \
       "return-value width",                                                    \
       "long double is 8 bytes on Darwin/arm64 (LDBL_MANT_DIG 53 -- it IS "     \
@@ -108,7 +80,10 @@
       "measured both sides. glibc returns a quad in q0; the Darwin caller "    \
       "reads d0 as a double, i.e. the low half of a binary128 significand. "   \
       "Nothing in the signature, the arity or the linkage says so -- only the "\
-      "width of a register does.")                                             \
+      "width of a register does. x86_64 implements strtold in libSystem "      \
+      "(darwin/src/libsystem.c); this row stays so an aarch64 host-bind "      \
+      "cannot silently return a binary128 half. openat/sem_open/vdprintf "     \
+      "moved into darwin/src (translating wrappers) and are no longer here.")  \
     /* compiler-rt builtins. Mach-O spelling is "_" + cname, so cname "__divti3"
      * is the import ___divti3. glibc does not implement these. A root that
      * still lists them as undefined was linked without libclang_rt.osx.a. */  \

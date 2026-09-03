@@ -1241,6 +1241,39 @@ returns the main executable: `MH_MAGIC_64` and `MH_EXECUTE`. Both live in
 machorun's libSystem; the full/ umbrella copy of the header accessor was
 removed so it cannot beat `.real`.
 
+### `overlay_libsystem` — overlay NOUNDEFS implemented in machorun
+`tests/src/overlay_libsystem.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`**
+until the operator records on Darwin.
+
+`qos_class_self` returns `QOS_CLASS_DEFAULT` (0x15). `voucher_copy` /
+`voucher_adopt` return NULL; `os_release` is a no-op (documented; Swift's
+non-Apple voucher policy). `memset_s` is C11 Annex K (glibc lacks it).
+`vdprintf` formats on this side (arm64 `va_list` 8 vs 32). `openat` translates
+Darwin `AT_FDCWD` (-2) and `O_*`. `clock_getres` uses the same `CLOCK_*`
+translation as `clock_gettime` (Darwin `CLOCK_MONOTONIC` is 6 = Linux
+`CLOCK_MONOTONIC_COARSE` — a by-name host-bind is the wrong clock). None of
+these are host-bound.
+
+### `sem_open` — Darwin `sem_t` is `int`
+`tests/src/sem_open.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`** until
+recorded.
+
+Darwin `sem_t` is `int`; glibc's is ~32 bytes; `SEM_FAILED` is inverted.
+A by-name bind is wrong (same-name-different-abi). libSystem mints a heap
+object wrapping glibc's named semaphore. Unnamed `sem_init` is not this path
+and bails. Needs a Darwin twin.
+
+### `remquol` — long-double remquo, same arch split as `fmal`
+`tests/src/remquol.c` · chained · **`norun:NEEDS_DARWIN_BASELINE`** until
+recorded.
+
+`remquol(13, 4)` remainder 1, quo 3 on both arches (IEEE). Darwin x86_64
+long double is 16-byte x87, matching glibc, so libSystem wraps
+`glibc_remquol`. Darwin arm64 long double **is double**; Linux aarch64 is
+binary128, so arm64 implements `remquol` as `remquo(double)`. `1.0 + 2^-63`
+survives only in 80-bit. Double `_remquo` / `_nan` stay umbrella own-defs
+(Apple 7-bit quotient); do not implement them in machorun.
+
 ## What the harness guarantees
 
 `tests/expected/` is the oracle's output and nothing else may write it.
