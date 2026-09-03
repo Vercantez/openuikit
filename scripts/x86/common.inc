@@ -1655,19 +1655,25 @@ phase2_expand_darwin_modulemap_for_fe() {
         [ -f "$sys/usr/include/$h" ] || continue
         grep -q "header \"$h\"" "$map" && continue
         kind="header"
-        # timeval must land in SwiftOverlayShims (Darwin.swiftinterface names
-        # SwiftOverlayShims.timeval). A modular Darwin sys/time.h hides it.
-        if [ "$h" = "sys/time.h" ]; then
-            kind="textual header"
-        fi
+        # timeval / timespec / sem_t must land in SwiftOverlayShims
+        # (Darwin.swiftinterface names SwiftOverlayShims.{timeval,timespec,sem_t}).
+        # A modular Darwin header hides the type from the overlay shims module.
+        case "$h" in
+            sys/time.h|time.h|semaphore.h) kind="textual header" ;;
+        esac
         sed -i '$i\  '"$kind"' "'"$h"'"' "$map"
         echo "  Darwin.modulemap now names $h ($kind)" >&2
         added=$((added + 1))
     done < <(phase2_darwin_fe_extra_headers)
-    if grep -q '^  header "sys/time.h"' "$map"; then
-        sed -i 's/^  header "sys\/time.h"/  textual header "sys\/time.h"/' "$map"
-        echo "  Darwin.modulemap sys/time.h is textual (SwiftOverlayShims.timeval)" >&2
-    fi
+    # overlay-darwin may already have named these as modular `header`. Flip
+    # them textual so a restage does not hide the overlay-shims types.
+    local th
+    for th in sys/time.h time.h semaphore.h; do
+        if grep -q "^  header \"$th\"" "$map"; then
+            sed -i "s|^  header \"$th\"|  textual header \"$th\"|" "$map"
+            echo "  Darwin.modulemap $th is textual (SwiftOverlayShims)" >&2
+        fi
+    done
     echo "phase2: Darwin.modulemap FE expand added=$added" >&2
     phase2_ensure_darwin_named_submodules "$sys"
     phase2_ensure_macho_modulemap "$sys"

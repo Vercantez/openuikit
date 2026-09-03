@@ -372,6 +372,8 @@ expect_grep 'phase2_ensure_macho_modulemap' "$COMMON" \
 expect_file "$ROOT/scripts/x86/MachO.modulemap"
 expect_grep 'SwiftOverlayShims.timeval' "$COMMON" \
     "sys/time.h is textual so SwiftOverlayShims.timeval is visible"
+expect_grep 'sys/time.h|time.h|semaphore.h) kind="textual header"' "$COMMON" \
+    "time.h and semaphore.h are textual so SwiftOverlayShims.timespec/sem_t are visible"
 expect_grep 'phase2_posix_overlay_dir' "$COMMON" \
     "overlay-posix dir helper exists for Swift -Xcc -I (UD guest)"
 expect_file "$ROOT/scripts/x86/fe_ioctl_stub.h"

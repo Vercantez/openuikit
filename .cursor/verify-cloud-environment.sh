@@ -23,11 +23,10 @@ esac
 [ -f "$repo_root/harness/Dockerfile" ] \
     || { printf 'cursor-environment: OpenUIKit repository marker is missing\n' >&2; exit 1; }
 
-# Wipe per-agent compile trees (.build, build) so a snapshot cannot bless
-# stale acceptance binaries. Do NOT wipe scratch/: install-scratch-corpus.sh
-# and install-built-products.sh populate pinned public checkouts and the
-# in-repo Mach-O products this VM can emit. Those trees are verified below.
-for relative in .build build; do
+# Wipe per-agent SwiftPM trees (.build). Do NOT wipe scratch/. Do NOT wipe
+# build/full-x86_64: that is the phase2 FE object tree install snapshots so a
+# PHASE2_RUNGS=a rerun is stamp reuse. Other build/ children are still cleared.
+for relative in .build; do
     tracked_paths=$(git -C "$repo_root" ls-files -- "$relative") \
         || { printf 'cursor-environment: cannot inspect tracked cleanup paths\n' >&2; exit 1; }
     if [ -n "$tracked_paths" ]; then
@@ -39,6 +38,14 @@ for relative in .build build; do
         rm -rf -- "$generated_root"
     fi
 done
+tracked_build=$(git -C "$repo_root" ls-files -- build) \
+    || { printf 'cursor-environment: cannot inspect tracked build path\n' >&2; exit 1; }
+[ -z "$tracked_build" ] \
+    || { printf 'cursor-environment: refusing to treat tracked build/ as generated\n' >&2; exit 1; }
+if [ -d "$repo_root/build" ] && [ ! -L "$repo_root/build" ]; then
+    find "$repo_root/build" -mindepth 1 -maxdepth 1 ! -name 'full-x86_64' \
+        -exec rm -rf -- {} +
+fi
 tracked_scratch=$(git -C "$repo_root" ls-files -- scratch) \
     || { printf 'cursor-environment: cannot inspect tracked scratch path\n' >&2; exit 1; }
 [ -z "$tracked_scratch" ] \

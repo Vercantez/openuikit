@@ -135,6 +135,8 @@ check verify_does_not_wipe_scratch \
 check verify_cleanup_omits_scratch \
     bash -c 'awk "/for relative in/{print; exit}" "$1" | grep -vq scratch' \
     _ "$script_dir/verify-cloud-environment.sh"
+check verify_preserves_x86_fe_build \
+    grep -q "full-x86_64" "$script_dir/verify-cloud-environment.sh"
 rm -f "$sentinel"
 
 # --- fingerprint is stable ---
