@@ -31,6 +31,8 @@ OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
 . "$SCRIPT_DIR/ninja_checked.inc"
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/overlay_targets.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_sysroot.inc"
 
 W=${W:-$HOME/work}
 B=${B:-$W/build}
@@ -44,7 +46,7 @@ if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
   SWIFTCORE_BUILD_DISPATCH=${SWIFTCORE_BUILD_DISPATCH:-1}
 fi
 export W B TC SWIFTCORE_DARWIN_ARCH SWIFT_HOST_VARIANT_ARCH
-export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH
+export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH MACHORUN
 export SWIFT_TOOLCHAIN SWIFT_PATH_TO_STRING_PROCESSING_SOURCE SWIFT_PATH_TO_LIBDISPATCH_SOURCE
 
 # Dry path: dump cmake argv and exit. Does not touch MACHORUN/darwin, does not
@@ -106,6 +108,10 @@ run_stdlib_ninja() {
     overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
     overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
     python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B" || true
+    overlay_print_isysroot_from_ninja "$B" "$SWIFTCORE_DARWIN_ARCH"
+    if [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
+      overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
+    fi
     set +e
     overlay_select_targets "$B" "$SWIFTCORE_DARWIN_ARCH"
     sel_rc=$?
@@ -117,13 +123,18 @@ run_stdlib_ninja() {
       for t in "${OVERLAY_NINJA_TARGETS[@]}"; do
         step "ninja overlay $t"
         ninja_st=0
-        ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
+        tlog=$W/overlay.${t}.log
+        : > "$tlog"
+        ninja_checked "$tlog" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
+        if [ -f "$tlog" ]; then
+          cat "$tlog" >> "$W/build.log" 2>/dev/null || true
+        fi
         if [ "$ninja_st" -eq 0 ]; then
           OVERLAY_STATUS[$t]=built
           overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
           overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
         else
-          OVERLAY_STATUS[$t]=FAILED
+          overlay_status_on_fail "$B" "$t" "$tlog"
           if [ "$overlay_rc" -eq 0 ]; then
             overlay_rc=$ninja_st
           fi
@@ -215,12 +226,10 @@ ln -sfn "$MACHORUN" "$W/machorun"
 ln -sfn "$SWIFTCORE_ROOT/sdk/compat" "$W/compat"
 ln -sfn "$SWIFTCORE_ROOT/tests" "$W/tests" 2>/dev/null || true
 bash "$SCRIPT_DIR/stage_sdk.sh"
-tbd_n=$(find "$W/sdk/MacOSX.sdk" -name '*.tbd' | wc -l)
-echo "sysroot tbds: $tbd_n"
-[ "$tbd_n" -gt 0 ] || {
-  echo "build_stdlib: REFUSING empty tbd set — ld64 would see a lie" >&2
-  exit 2
-}
+overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
+tbd_n=$(overlay_sysroot_tbd_count "$W/sdk/MacOSX.sdk")
+echo "sysroot tbds: $tbd_n tree=$W/sdk/MacOSX.sdk realpath=$(realpath "$W/sdk/MacOSX.sdk" 2>/dev/null || echo UNRESOLVED)"
+overlay_sysroot_refuse_empty_tbds "$W/sdk/MacOSX.sdk" || exit 2
 
 # ---------------------------------------------------------------------------
 # 4. Patches. Legacy image-reg is opt-in and load-bearing for machorun.

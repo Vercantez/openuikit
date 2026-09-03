@@ -19,6 +19,9 @@ LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MIN_OS}
 APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}
 DYLIB_INSTALL_PREFIX=${DYLIB_INSTALL_PREFIX:-@rpath}
 FOUNDATION_ICU_JOBS=${FOUNDATION_ICU_JOBS:-8}
+COLLECTIONS=${COLLECTIONS:-}
+OSMOD=${OSMOD:-}
+CSHIMS=${CSHIMS:-}
 
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_FOUNDATION_TREE=4651798679b98e27383ca3626434fb128f191486
@@ -61,6 +64,30 @@ done
     || die 'staged SDK/module/library/runtime roots are incomplete'
 [ -f "$STAGE/lib/libFoundationEssentials.dylib" ] \
     || die 'libFoundationEssentials.dylib must be linked first'
+for name in COLLECTIONS OSMOD CSHIMS; do
+    value=${!name}
+    [ -n "$value" ] || continue
+    case "$value" in /*) ;; *) die "$name path must be absolute: $value" ;; esac
+    [ -d "$value" ] || die "$name directory is missing: $value"
+done
+if [ -n "$COLLECTIONS" ]; then
+    for module in InternalCollectionsUtilities OrderedCollections _RopeModule; do
+        [ -f "$COLLECTIONS/$module.swiftmodule" ] && [ ! -L "$COLLECTIONS/$module.swiftmodule" ] \
+            && [ -f "$COLLECTIONS/$module.o" ] && [ ! -L "$COLLECTIONS/$module.o" ] \
+            || die "COLLECTIONS is missing $module.swiftmodule/.o: $COLLECTIONS"
+    done
+fi
+if [ -n "$OSMOD" ]; then
+    [ -f "$OSMOD/os.swiftmodule" ] && [ ! -L "$OSMOD/os.swiftmodule" ] \
+        && [ -f "$OSMOD/os.o" ] && [ ! -L "$OSMOD/os.o" ] \
+        || die "OSMOD is missing os.swiftmodule/.o: $OSMOD"
+fi
+if [ -n "$CSHIMS" ]; then
+    for object in platform_shims string_shims uuid; do
+        [ -f "$CSHIMS/$object.o" ] && [ ! -L "$CSHIMS/$object.o" ] \
+            || die "CSHIMS is missing $object.o: $CSHIMS"
+    done
+fi
 
 assert_checkout() {
     local checkout=$1 expected_commit=$2 expected_tree=$3 label=$4
@@ -313,6 +340,8 @@ mapfile -d '' -t INTL_SOURCES < <(
 )
 "${SWIFTC[@]}" -parse-as-library -package-name SwiftFoundation \
     -I "$STAGE/modules" \
+    ${COLLECTIONS:+-I "$COLLECTIONS"} \
+    ${OSMOD:+-I "$OSMOD"} \
     -Xcc -fmodule-map-file="$STAGE/include/FoundationICU/_foundation_unicode/module.modulemap" \
     -Xcc -I"$STAGE/include/FoundationICU" \
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap" \
@@ -331,6 +360,13 @@ ld64.lld-18 -arch arm64 \
     -rpath @loader_path \
     -o "$STAGE/lib/libFoundationInternationalization.dylib" \
     "$INTL_WORK/FoundationInternationalization.o" \
+    ${COLLECTIONS:+"$COLLECTIONS/InternalCollectionsUtilities.o"} \
+    ${COLLECTIONS:+"$COLLECTIONS/OrderedCollections.o"} \
+    ${COLLECTIONS:+"$COLLECTIONS/_RopeModule.o"} \
+    ${OSMOD:+"$OSMOD/os.o"} \
+    ${CSHIMS:+"$CSHIMS/platform_shims.o"} \
+    ${CSHIMS:+"$CSHIMS/string_shims.o"} \
+    ${CSHIMS:+"$CSHIMS/uuid.o"} \
     -L"$STAGE/lib" -lFoundationEssentials -l_FoundationICU \
     -L"$RUNTIME_LIB" -L"$STAGE/sdk/usr/lib/swift" \
     -lswiftCore -lswiftObjectiveC -lswift_StringProcessing \

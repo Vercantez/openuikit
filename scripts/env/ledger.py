@@ -42,6 +42,15 @@ STYLES: dict[str, dict[str, str]] = {
         "tree": "{label} tree {actual}, expected {expected}",
         "dirty": "{label} checkout is dirty: {status}",
     },
+    "focus-onboarding": {
+        "prefix": "focus_onboarding_guest: ",
+        "missing": "missing regular {label}: {path}",
+        "mismatch": "{label} drifted: {actual}",
+        "not_git": "{label} is not a Git checkout: {repo}",
+        "commit": "{label} commit {actual}, expected {expected}",
+        "tree": "{label} tree {actual}, expected {expected}",
+        "dirty": "{label} checkout is dirty: {status}",
+    },
 }
 
 

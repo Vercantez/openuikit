@@ -204,6 +204,7 @@ validate_bundle "$WIDGET_INPUT" "$EXPECTED_WIDGET_FILES" \
 rm -rf -- "$OUT"
 mkdir -p "$PACKAGE/include/CPortableIO" "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/CHostClock" "$PACKAGE/include/COpenCombineHelpers" \
+    "$PACKAGE/include/COpenDispatch" \
     "$PACKAGE/include/CQuartz" "$PACKAGE/include/CoreFoundation" \
     "$MODULE_CACHE" "$AUDIT" "$OUT/fonts"
 
@@ -302,6 +303,7 @@ cp -a "$W/full/foundation/include/COpenFoundationCore" \
     "$PACKAGE/include/COpenFoundationCore"
 cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
     "$OPENCOMBINE_HELPERS/include/module.modulemap" "$PACKAGE/include/COpenCombineHelpers/"
+cp -a "$W/full/dispatch/include/." "$PACKAGE/include/COpenDispatch/"
 # Darwin CoreFoundation clang module: the header comes from the Darwin sysroot
 # only. Never -I the host toolchain's lib/swift (that is the Linux overlay
 # that pulls /usr/lib/swift/CoreFoundation/CoreFoundation.h and setjmp.h).
@@ -321,15 +323,17 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
-    -Xcc -isysroot "$SYS"
-    -Xcc -target "$TARGET")
+    -Xcc -isysroot -Xcc "$SYS"
+    -Xcc -target -Xcc "$TARGET")
 LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
     -syslibroot "$SYS" -rpath /usr/lib/swift)
 PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -I"$PACKAGE/include/CSTBTrueType"
     -Xcc -I"$PACKAGE/include/CHostClock"
-    -Xcc -I"$PACKAGE/include/COpenCombineHelpers"
     -Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"
+    -Xcc -I"$PACKAGE/include/COpenCombineHelpers"
+    -Xcc -fmodule-map-file="$PACKAGE/include/COpenDispatch/module.modulemap"
+    -Xcc -I"$PACKAGE/include/COpenDispatch"
     -Xcc -I"$PACKAGE/include/CQuartz"
     -Xcc -fmodule-map-file="$PACKAGE/include/COpenFoundationCore/module.modulemap"
     -Xcc -I"$PACKAGE/include/COpenFoundationCore"
@@ -507,6 +511,7 @@ done
 env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
     SWIFT_FOUNDATION_ICU="$SWIFT_FOUNDATION_ICU" STAGE="$FINTL_STAGE" \
     WORK="$FINTL_WORK" TARGET="$TARGET" MIN_OS=15.0 \
+    COLLECTIONS="$FE_COLLECTIONS" OSMOD="$FE_OS" CSHIMS="$FE_CSHIMS" \
     FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
     bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
 [ -f "$PACKAGE/FoundationInternationalization.swiftmodule" ] && \
@@ -536,12 +541,54 @@ done
     -emit-object -o "$OUT/corefoundation.o" \
     "${COREFOUNDATION_GUEST_SOURCES[@]}"
 
+echo '== compile the project Dispatch module before the Foundation umbrella'
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$PACKAGE/include/COpenDispatch" \
+    -c "$W/full/dispatch/OpenDispatchBridge.c" \
+    -o "$OUT/open-dispatch-bridge.o"
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" \
+    -I "$PACKAGE" \
+    -module-name Dispatch -module-link-name Dispatch -emit-module \
+    -emit-module-path "$PACKAGE/Dispatch.swiftmodule" \
+    -emit-object -o "$OUT/dispatch.o" "$W/full/dispatch/Dispatch.swift"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
+    -install_name @rpath/libDispatch.dylib -rpath @loader_path \
+    -o "$PACKAGE/libDispatch.dylib" \
+    "$OUT/dispatch.o" "$OUT/open-dispatch-bridge.o" \
+    -L"$PACKAGE" -lOpenCombine \
+    -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift \
+    -lswiftCore \
+    "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
+[ -f "$PACKAGE/Dispatch.swiftmodule" ] && [ ! -L "$PACKAGE/Dispatch.swiftmodule" ] \
+    || die 'project Dispatch swiftmodule is missing after build'
+[ -f "$PACKAGE/libDispatch.dylib" ] && [ ! -L "$PACKAGE/libDispatch.dylib" ] \
+    || die 'libDispatch.dylib is missing after build'
+
 echo '== compile the bounded Foundation umbrella after SwiftUI'
-"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
-    -I "$PACKAGE" -module-name Foundation \
-    -emit-module -emit-module-path "$PACKAGE/Foundation.swiftmodule" \
-    -emit-object -o "$OUT/foundation.o" \
-    "${FOUNDATION_GUEST_SOURCES[@]}"
+[ -f "$PACKAGE/include/COpenCombineHelpers/module.modulemap" ] && \
+    [ ! -L "$PACKAGE/include/COpenCombineHelpers/module.modulemap" ] \
+    && [ -f "$PACKAGE/include/COpenCombineHelpers/COpenCombineHelpers.h" ] && \
+    [ ! -L "$PACKAGE/include/COpenCombineHelpers/COpenCombineHelpers.h" ] \
+    || die 'packaged COpenCombineHelpers module map is missing from PACKAGE/include'
+umbrella_swiftc=(
+    "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}"
+    -Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"
+    -Xcc -I"$PACKAGE/include/COpenCombineHelpers"
+    -I "$PACKAGE"
+    -module-name Foundation
+    -emit-module -emit-module-path "$PACKAGE/Foundation.swiftmodule"
+    -emit-object -o "$OUT/foundation.o"
+)
+{
+    printf 'umbrella-swiftc'
+    printf ' %q' "${umbrella_swiftc[@]}"
+    printf '\n'
+}
+"${umbrella_swiftc[@]}" "${FOUNDATION_GUEST_SOURCES[@]}"
 llvm-nm-18 -u -j "$OUT/foundation.o" | LC_ALL=C sort -u \
     > "$AUDIT/foundation-undefined-symbols.txt"
 foundation_string_processing_undefineds=$(awk \
@@ -627,10 +674,11 @@ echo '== package ten reusable guest dylibs'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
     -o "$PACKAGE/libFoundation.dylib" "$OUT/foundation.o" "$OUT/corefoundation.o" \
+    "${FE_OBJECTS[@]}" \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L"$PACKAGE" -lFoundationEssentials -lFoundationInternationalization \
-    -lOpenUIKit -lCombine -lOpenCombine \
+    -lDispatch -lOpenUIKit -lCombine -lOpenCombine \
     -L"$SYS/usr/lib/swift" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
@@ -683,7 +731,7 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-    FoundationInternationalization OpenCombine Combine Symbols SwiftUI Widget \
+    FoundationInternationalization Dispatch OpenCombine Combine Symbols SwiftUI Widget \
     Onboarding; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
         | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
@@ -702,6 +750,26 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$AUDIT/runtime-closure.manifest"
 
 echo '== run exact Focus interaction path on Linux/machorun'
+echo '== build Linux Dispatch host bridge'
+HOST_BRIDGE_DIR=$OUT/host
+DISPATCH_HOST=$HOST_BRIDGE_DIR/libOpenDispatchHost.so
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST
+host_bridge_args=(
+    --repo "$W"
+    --host-dir "$HOST_BRIDGE_DIR"
+    --work-dir "$OUT/host-work"
+    --attestation-dir "$AUDIT"
+    --ledger-style focus-onboarding
+    --refuse-prefix 'focus_onboarding_guest: '
+)
+if [ "$(uname -m)" = aarch64 ] || [ "$(uname -m)" = arm64 ]; then
+    host_bridge_args+=(--host-abi ELF64-AArch64)
+else
+    host_bridge_args+=(--skip-runtime-pin --host-abi "ELF64-$(uname -m)")
+fi
+bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
+[ -f "$DISPATCH_HOST" ] && [ ! -L "$DISPATCH_HOST" ] \
+    || die "Linux Dispatch host helper is missing: $DISPATCH_HOST"
 if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
     echo "focus_onboarding_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
@@ -709,6 +777,8 @@ if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm
 fi
 (
     cd "$OUT"
+    LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
     MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" ./focus_onboarding_guest \
         "$OUT/Focus_Onboarding.bundle" \
         "$OUT/Focus_Widget.bundle" \
@@ -740,7 +810,7 @@ validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
     printf 'widget-bundle-accessor\t%s\n' \
         "$(hash_file "$W/full/swiftui/FocusWidgetBundle.generated.swift")"
     for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-        OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
+        Dispatch OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
         printf 'lib%s\t%s\n' "$dylib" "$(hash_file "$PACKAGE/lib$dylib.dylib")"
     done
     printf 'onboarding-resources\t%s\n' "$(tree_digest "$OUT/Focus_Onboarding.bundle")"

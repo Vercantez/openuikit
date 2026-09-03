@@ -171,6 +171,120 @@ overlay_flatten_unarch() {
     done
 }
 
+# Print the exact -isysroot / -sdk the Darwin overlay compile receives.
+# Swift's Darwin.o line uses -sdk (clang cc1 may rewrite that to -isysroot);
+# print both, so the operator log proves which tree ninja used.
+# overlay_print_isysroot_from_ninja <build_dir> <arch>
+overlay_print_isysroot_from_ninja() {
+    local build_dir=${1:?overlay_print_isysroot_from_ninja: build dir}
+    local arch=${2:?overlay_print_isysroot_from_ninja: arch}
+    local ninja_bin=${NINJA:-ninja}
+    local darwin_o="stdlib/public/Platform/OSX/${arch}/Darwin.o"
+    local cmds="" node
+    echo "overlay_sysroot: ninja -t commands for Darwin overlay compile (arch=$arch)"
+    for node in "$darwin_o" "swiftDarwin-macosx-${arch}"; do
+        cmds=$("$ninja_bin" -C "$build_dir" -t commands "$node" 2>/dev/null) || cmds=""
+        if [ -n "$cmds" ]; then
+            echo "overlay_sysroot: ninja -t commands node=$node"
+            break
+        fi
+    done
+    if [ -z "$cmds" ]; then
+        echo "overlay_sysroot: ninja -t commands Darwin.o ABSENT (no -isysroot/-sdk in graph yet)"
+        return 0
+    fi
+    python3 - "$cmds" <<'PY'
+import sys
+text = sys.argv[1]
+tokens = text.split()
+flags = ("-isysroot", "-sdk")
+seen = {f: [] for f in flags}
+i = 0
+while i < len(tokens):
+    t = tokens[i]
+    for f in flags:
+        if t == f and i + 1 < len(tokens):
+            p = tokens[i + 1]
+            if p not in seen[f]:
+                seen[f].append(p)
+            i += 2
+            break
+        if t.startswith(f + "="):
+            p = t.split("=", 1)[1]
+            if p not in seen[f]:
+                seen[f].append(p)
+            i += 1
+            break
+    else:
+        i += 1
+for f in flags:
+    if seen[f]:
+        for p in seen[f]:
+            print("overlay_sysroot: ninja Darwin.o %s=%s" % (f, p))
+    else:
+        print("overlay_sysroot: ninja Darwin.o %s=ABSENT" % f)
+PY
+}
+
+# Resolve the phony overlay target to its libswift*.so and see whether that
+# node's ninja inputs include the Darwin overlay (libswiftDarwin / Darwin.swiftmodule).
+# overlay_ninja_depends_on_darwin <build_dir> <target> → 0 if yes.
+overlay_ninja_depends_on_darwin() {
+    local build_dir=${1:?overlay_ninja_depends_on_darwin: build dir}
+    local target=${2:?overlay_ninja_depends_on_darwin: target}
+    local ninja_bin=${NINJA:-ninja}
+    local q so
+    q=$("$ninja_bin" -C "$build_dir" -t query "$target" 2>/dev/null) || q=""
+    so=$(printf '%s\n' "$q" | awk '/libswift[^ /]*\.(so|dylib)/ { gsub(/^[ \t|]+/, ""); print $1; exit }')
+    if [ -n "$so" ]; then
+        q=$q$'\n'$("$ninja_bin" -C "$build_dir" -t query "$so" 2>/dev/null || true)
+    fi
+    printf '%s\n' "$q" | grep -Eq 'libswiftDarwin\.(so|dylib)|swiftDarwin-swiftmodule|Platform/swiftDarwin'
+}
+
+# First compiler/ninja error line from an overlay log, single line.
+# overlay_first_error <logfile>
+overlay_first_error() {
+    local log=${1:?overlay_first_error: log}
+    local line
+    [ -f "$log" ] || { printf 'ABSENT\n'; return 0; }
+    line=$(grep -E -m1 '(^error:|: error:|^fatal error:|ninja: error:)' "$log" || true)
+    if [ -z "$line" ]; then
+        line=$(grep -E -m1 'FAILED:|ninja: build stopped' "$log" || true)
+    fi
+    if [ -z "$line" ]; then
+        printf 'ABSENT\n'
+        return 0
+    fi
+    printf '%s\n' "$line" | tr '\n' ' ' | sed 's/[[:space:]]\+/ /g; s/[[:space:]]*$//'
+}
+
+# If this overlay's ninja graph depends on swiftDarwin, record
+# FAILED dep=swiftDarwin. Otherwise FAILED first_error=<line>.
+# overlay_status_on_fail <build_dir> <target> <logfile>
+overlay_status_on_fail() {
+    local build_dir=${1:?overlay_status_on_fail: build dir}
+    local target=${2:?overlay_status_on_fail: target}
+    local log=${3:?overlay_status_on_fail: log}
+    local err
+    case "$target" in
+        swiftDarwin-macosx-*)
+            err=$(overlay_first_error "$log")
+            OVERLAY_STATUS[$target]="FAILED first_error=$err"
+            echo "OVERLAY $target FAILED first_error=$err"
+            return 0
+            ;;
+    esac
+    if overlay_ninja_depends_on_darwin "$build_dir" "$target"; then
+        OVERLAY_STATUS[$target]="FAILED dep=swiftDarwin"
+        echo "OVERLAY $target FAILED dep=swiftDarwin (ninja graph inputs include libswiftDarwin / Darwin.swiftmodule)"
+        return 0
+    fi
+    err=$(overlay_first_error "$log")
+    OVERLAY_STATUS[$target]="FAILED first_error=$err"
+    echo "OVERLAY $target FAILED first_error=$err (ninja graph does not depend on swiftDarwin)"
+}
+
 # Ninja's Linux rule writes .so; phase2 / stage_artifacts look for .dylib.
 # overlay_copy_so_as_dylib <build_dir> <arch>
 overlay_copy_so_as_dylib() {
