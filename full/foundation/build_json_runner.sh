@@ -28,6 +28,7 @@ ROOTDIR=${ROOTDIR:-$W/scratch/mrroot_fe}
 OUT=${OUT:-$W/scratch/fe4_out}
 J=${J:-$W/full/oracle-json}
 TARGET=${TARGET:-arm64-apple-macos15.0}
+LINK_ARCH=${TARGET%%-*}
 mkdir -p "$OUT"
 
 # The 202-file FoundationEssentials compile belongs to build_fe.sh.  Refuse
@@ -51,7 +52,7 @@ swiftc -target "$TARGET" -sdk "$SYS" -wmo -O \
 clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -nostdinc \
     -c -o "$OUT/fm_unimplemented.o" "$W/full/foundation/fm_unimplemented.c"
 
-ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0 -syslibroot "$SYS" \
+ld64.lld-18 -arch "$LINK_ARCH" -platform_version macos 15.0 15.0 -syslibroot "$SYS" \
     -rpath /usr/lib/swift -rpath @loader_path -dead_strip \
     -exported_symbol __mh_execute_header \
     -L"$ROOTDIR/darwin/usr/lib" \
