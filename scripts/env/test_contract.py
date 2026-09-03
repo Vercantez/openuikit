@@ -76,7 +76,7 @@ class ContractLockTests(unittest.TestCase):
         )
         self.assertEqual(
             checkouts["machorun-inrepo"]["tree"],
-            "60c576f2b4822640617e61b5e12b09d46e81f825",
+            "76885295ff2f4590038a497e2963edaa18185e6f",
         )
 
     def test_execution_hosts_name_instance_and_tree(self) -> None:
