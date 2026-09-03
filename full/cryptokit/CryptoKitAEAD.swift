@@ -632,106 +632,88 @@ private func _chacha20(key: [UInt8], nonce: [UInt8], counter: UInt32, data: [UIn
 
 private func _poly1305(key: [UInt8], message: [UInt8]) -> [UInt8] {
     precondition(key.count == 32)
-    var r128 = [UInt8](key.prefix(16))
-    r128[3] &= 15
-    r128[4] &= 252
-    r128[7] &= 15
-    r128[8] &= 252
-    r128[11] &= 15
-    r128[12] &= 252
-    r128[15] &= 15
-    func load26(_ bytes: [UInt8], _ offset: Int, _ right: Int) -> UInt64 {
-        var value: UInt64 = 0
-        for index in 0..<4 {
-            if offset + index < bytes.count {
-                value |= UInt64(bytes[offset + index]) << (8 * index)
+    var r = Array(key.prefix(16))
+    r[3] &= 15
+    r[7] &= 15
+    r[11] &= 15
+    r[15] &= 15
+    r[4] &= 252
+    r[8] &= 252
+    r[12] &= 252
+    let s = Array(key[16..<32])
+
+    func add(_ lhs: [UInt8], _ rhs: [UInt8]) -> [UInt8] {
+        let count = max(lhs.count, rhs.count)
+        var result = [UInt8](repeating: 0, count: count)
+        var carry: UInt16 = 0
+        for index in 0..<count {
+            let left = index < lhs.count ? UInt16(lhs[index]) : 0
+            let right = index < rhs.count ? UInt16(rhs[index]) : 0
+            let sum = left + right + carry
+            result[index] = UInt8(truncatingIfNeeded: sum)
+            carry = sum >> 8
+        }
+        if carry != 0 { result.append(UInt8(carry)) }
+        return result
+    }
+
+    func mul(_ lhs: [UInt8], _ rhs: [UInt8]) -> [UInt8] {
+        var acc = [UInt32](repeating: 0, count: lhs.count + rhs.count)
+        for i in 0..<lhs.count {
+            for j in 0..<rhs.count {
+                acc[i + j] += UInt32(lhs[i]) * UInt32(rhs[j])
             }
         }
-        return (value >> right) & 0x3ffffff
+        var result = [UInt8](repeating: 0, count: acc.count)
+        var carry: UInt32 = 0
+        for index in 0..<acc.count {
+            let value = acc[index] + carry
+            result[index] = UInt8(truncatingIfNeeded: value)
+            carry = value >> 8
+        }
+        while carry != 0 {
+            result.append(UInt8(truncatingIfNeeded: carry))
+            carry >>= 8
+        }
+        return result
     }
-    r = [
-        load26(r128, 0, 0),
-        load26(r128, 3, 2),
-        load26(r128, 6, 4),
-        load26(r128, 9, 6),
-        load26(r128, 12, 8),
-    ]
-    let s: [UInt64] = [
-        UInt64(key[16]) | (UInt64(key[17]) << 8) | (UInt64(key[18]) << 16) | (UInt64(key[19]) << 24),
-        UInt64(key[20]) | (UInt64(key[21]) << 8) | (UInt64(key[22]) << 16) | (UInt64(key[23]) << 24),
-        UInt64(key[24]) | (UInt64(key[25]) << 8) | (UInt64(key[26]) << 16) | (UInt64(key[27]) << 24),
-        UInt64(key[28]) | (UInt64(key[29]) << 8) | (UInt64(key[30]) << 16) | (UInt64(key[31]) << 24),
-    ]
-    var h = [UInt64](repeating: 0, count: 5)
-    let r1_5 = r[1] * 5
-    let r2_5 = r[2] * 5
-    let r3_5 = r[3] * 5
-    let r4_5 = r[4] * 5
+
+    func modP(_ value: [UInt8]) -> [UInt8] {
+        var current = value
+        while true {
+            while current.count > 17, current.last == 0 { current.removeLast() }
+            if current.count < 17 { return current }
+            if current.count == 17, current[16] < 4 { return current }
+            var high = Array(current.dropFirst(16))
+            if !high.isEmpty {
+                high[0] >>= 2
+                for index in 1..<high.count {
+                    high[index - 1] |= (high[index] & 3) << 6
+                    high[index] >>= 2
+                }
+            }
+            var low = Array(current.prefix(16))
+            if current.count > 16 {
+                low.append(current[16] & 3)
+            }
+            current = add(low, mul(high, [5]))
+        }
+    }
+
+    var accumulator: [UInt8] = [0]
     var offset = 0
     while offset < message.count {
-        var block = [UInt8](repeating: 0, count: 17)
         let take = min(16, message.count - offset)
-        for index in 0..<take { block[index] = message[offset + index] }
-        block[take] = 1
-        var t = [
-            load26(block, 0, 0),
-            load26(block, 3, 2),
-            load26(block, 6, 4),
-            load26(block, 9, 6),
-            load26(block, 12, 8),
-        ]
-        if take == 16 { t[4] += 1 << 24 }
-        for index in 0..<5 { h[index] &+= t[index] }
-        let d0 = h[0] * r[0] + h[1] * r4_5 + h[2] * r3_5 + h[3] * r2_5 + h[4] * r1_5
-        let d1 = h[0] * r[1] + h[1] * r[0] + h[2] * r4_5 + h[3] * r3_5 + h[4] * r2_5
-        let d2 = h[0] * r[2] + h[1] * r[1] + h[2] * r[0] + h[3] * r4_5 + h[4] * r3_5
-        let d3 = h[0] * r[3] + h[1] * r[2] + h[2] * r[1] + h[3] * r[0] + h[4] * r4_5
-        let d4 = h[0] * r[4] + h[1] * r[3] + h[2] * r[2] + h[3] * r[1] + h[4] * r[0]
-        h[0] = d0 & 0x3ffffff; var carry = d0 >> 26
-        h[1] = (d1 + carry) & 0x3ffffff; carry = (d1 + carry) >> 26
-        h[2] = (d2 + carry) & 0x3ffffff; carry = (d2 + carry) >> 26
-        h[3] = (d3 + carry) & 0x3ffffff; carry = (d3 + carry) >> 26
-        h[4] = (d4 + carry) & 0x3ffffff; carry = (d4 + carry) >> 26
-        h[0] += carry * 5
-        carry = h[0] >> 26
-        h[0] &= 0x3ffffff
-        h[1] += carry
-        offset += 16
+        var block = Array(message[offset..<(offset + take)])
+        block.append(1)
+        accumulator = modP(mul(add(accumulator, block), r))
+        offset += take
     }
-    var carry = h[1] >> 26; h[1] &= 0x3ffffff
-    h[2] += carry; carry = h[2] >> 26; h[2] &= 0x3ffffff
-    h[3] += carry; carry = h[3] >> 26; h[3] &= 0x3ffffff
-    h[4] += carry; carry = h[4] >> 26; h[4] &= 0x3ffffff
-    h[0] += carry * 5; carry = h[0] >> 26; h[0] &= 0x3ffffff
-    h[1] += carry
-    var g = h
-    g[0] += 5
-    carry = g[0] >> 26; g[0] &= 0x3ffffff
-    g[1] += carry; carry = g[1] >> 26; g[1] &= 0x3ffffff
-    g[2] += carry; carry = g[2] >> 26; g[2] &= 0x3ffffff
-    g[3] += carry; carry = g[3] >> 26; g[3] &= 0x3ffffff
-    g[4] += carry - (1 << 26)
-    let mask = (g[4] >> 63) &- 1
-    let nmask = ~mask
-    for index in 0..<5 {
-        h[index] = (h[index] & nmask) | (g[index] & mask)
+    var tag = add(accumulator, s)
+    if tag.count < 16 {
+        tag.append(contentsOf: [UInt8](repeating: 0, count: 16 - tag.count))
     }
-    var f0 = (h[0] | (h[1] << 26)) &+ s[0]
-    var f1 = ((h[1] >> 6) | (h[2] << 20)) &+ s[1]
-    var f2 = ((h[2] >> 12) | (h[3] << 14)) &+ s[2]
-    var f3 = ((h[3] >> 18) | (h[4] << 8)) &+ s[3]
-    f1 += f0 >> 32; f0 &= 0xffffffff
-    f2 += f1 >> 32; f1 &= 0xffffffff
-    f3 += f2 >> 32; f2 &= 0xffffffff
-    f3 &= 0xffffffff
-    var tag = [UInt8](repeating: 0, count: 16)
-    for (index, value) in [f0, f1, f2, f3].enumerated() {
-        tag[index * 4] = UInt8(truncatingIfNeeded: value)
-        tag[index * 4 + 1] = UInt8(truncatingIfNeeded: value >> 8)
-        tag[index * 4 + 2] = UInt8(truncatingIfNeeded: value >> 16)
-        tag[index * 4 + 3] = UInt8(truncatingIfNeeded: value >> 24)
-    }
-    return tag
+    return Array(tag.prefix(16))
 }
 
 private func _poly1305Pad(_ aad: [UInt8], _ ciphertext: [UInt8]) -> [UInt8] {

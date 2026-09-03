@@ -45,11 +45,11 @@ public enum MLKEM768: Sendable {
 
         public init<D: DataProtocol>(seedRepresentation seed: D, publicKey: PublicKey?) throws {
             if publicKey != nil { throw KEM.Errors.publicKeyMismatchDuringInitialization }
-            seedRepresentation = try _ckRejectSeed(seed, expected: 64)
+            self.seedRepresentation = try _ckRejectSeed(seed, expected: 64)
         }
 
         public init<D: DataProtocol>(integrityCheckedRepresentation representation: D) throws {
-            seedRepresentation = try _ckRejectSeed(representation, expected: 64)
+            self.seedRepresentation = try _ckRejectSeed(representation, expected: 64)
         }
 
         public func decapsulate<D: DataProtocol>(_ encapsulated: D) throws -> SymmetricKey {
@@ -85,11 +85,11 @@ public enum MLKEM1024: Sendable {
 
         public init<D: DataProtocol>(seedRepresentation seed: D, publicKey: PublicKey?) throws {
             if publicKey != nil { throw KEM.Errors.publicKeyMismatchDuringInitialization }
-            seedRepresentation = try _ckRejectSeed(seed, expected: 64)
+            self.seedRepresentation = try _ckRejectSeed(seed, expected: 64)
         }
 
         public init<D: DataProtocol>(integrityCheckedRepresentation representation: D) throws {
-            seedRepresentation = try _ckRejectSeed(representation, expected: 64)
+            self.seedRepresentation = try _ckRejectSeed(representation, expected: 64)
         }
 
         public func decapsulate<D: DataProtocol>(_ encapsulated: D) throws -> SymmetricKey {
@@ -139,11 +139,11 @@ public enum XWingMLKEM768X25519: Sendable {
 
         public init<D: DataProtocol>(seedRepresentation seed: D, publicKey: PublicKey?) throws {
             if publicKey != nil { throw KEM.Errors.publicKeyMismatchDuringInitialization }
-            seedRepresentation = try _ckRejectSeed(seed, expected: 32)
+            self.seedRepresentation = try _ckRejectSeed(seed, expected: 32)
         }
 
         public init<D: DataProtocol>(integrityCheckedRepresentation representation: D) throws {
-            seedRepresentation = try _ckRejectSeed(representation, expected: 32)
+            self.seedRepresentation = try _ckRejectSeed(representation, expected: 32)
         }
 
         public func decapsulate(_ encapsulated: Data) throws -> SymmetricKey {
@@ -188,11 +188,11 @@ public enum MLDSA65: Sendable {
 
         public init<D: DataProtocol>(seedRepresentation seed: D, publicKey: PublicKey?) throws {
             _ = publicKey
-            seedRepresentation = Data(_ckBytes(seed))
+            self.seedRepresentation = Data(_ckBytes(seed))
         }
 
         public init<D: DataProtocol>(integrityCheckedRepresentation representation: D) throws {
-            seedRepresentation = Data(_ckBytes(representation))
+            self.seedRepresentation = Data(_ckBytes(representation))
         }
 
         public func signature<D: DataProtocol>(for data: D) throws -> Data {
@@ -246,11 +246,11 @@ public enum MLDSA87: Sendable {
 
         public init<D: DataProtocol>(seedRepresentation seed: D, publicKey: PublicKey?) throws {
             _ = publicKey
-            seedRepresentation = Data(_ckBytes(seed))
+            self.seedRepresentation = Data(_ckBytes(seed))
         }
 
         public init<D: DataProtocol>(integrityCheckedRepresentation representation: D) throws {
-            seedRepresentation = Data(_ckBytes(representation))
+            self.seedRepresentation = Data(_ckBytes(representation))
         }
 
         public func signature<D: DataProtocol>(for data: D) throws -> Data {

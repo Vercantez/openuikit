@@ -29,13 +29,13 @@ public enum Curve25519: Sendable {
             }
 
             public init() {
-                rawRepresentation = Data(_ckRandomBytes(32))
+                self.rawRepresentation = Data(_ckRandomBytes(32))
             }
 
             public init<D: ContiguousBytes>(rawRepresentation data: D) throws {
                 let value = _ckData(data)
                 guard value.count == 32 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public func signature<D: DataProtocol>(for data: D) throws -> Data {
@@ -80,13 +80,13 @@ public enum Curve25519: Sendable {
             }
 
             public init() {
-                rawRepresentation = Data(_ckRandomBytes(32))
+                self.rawRepresentation = Data(_ckRandomBytes(32))
             }
 
             public init<D: ContiguousBytes>(rawRepresentation: D) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 32 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public func sharedSecretFromKeyAgreement(
@@ -194,13 +194,13 @@ public enum P256: Sendable {
 
             public init(compactRepresentable: Bool = true) {
                 _ = compactRepresentable
-                rawRepresentation = Data(_ckRandomBytes(32))
+                self.rawRepresentation = Data(_ckRandomBytes(32))
             }
 
             public init<Bytes: ContiguousBytes>(rawRepresentation: Bytes) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 32 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public init<Bytes: ContiguousBytes>(x963Representation: Bytes) throws {
@@ -296,18 +296,18 @@ public enum P256: Sendable {
             }
 
             public init() {
-                rawRepresentation = Data(_ckRandomBytes(32))
+                self.rawRepresentation = Data(_ckRandomBytes(32))
             }
 
             public init(compactRepresentable: Bool = true) {
                 _ = compactRepresentable
-                rawRepresentation = Data(_ckRandomBytes(32))
+                self.rawRepresentation = Data(_ckRandomBytes(32))
             }
 
             public init<Bytes: ContiguousBytes>(rawRepresentation: Bytes) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 32 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public init<Bytes: ContiguousBytes>(x963Representation: Bytes) throws {
@@ -430,13 +430,13 @@ public enum P384: Sendable {
 
             public init(compactRepresentable: Bool = true) {
                 _ = compactRepresentable
-                rawRepresentation = Data(_ckRandomBytes(48))
+                self.rawRepresentation = Data(_ckRandomBytes(48))
             }
 
             public init<Bytes: ContiguousBytes>(rawRepresentation: Bytes) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 48 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public init<Bytes: ContiguousBytes>(x963Representation: Bytes) throws {
@@ -531,18 +531,18 @@ public enum P384: Sendable {
             }
 
             public init() {
-                rawRepresentation = Data(_ckRandomBytes(48))
+                self.rawRepresentation = Data(_ckRandomBytes(48))
             }
 
             public init(compactRepresentable: Bool = true) {
                 _ = compactRepresentable
-                rawRepresentation = Data(_ckRandomBytes(48))
+                self.rawRepresentation = Data(_ckRandomBytes(48))
             }
 
             public init<Bytes: ContiguousBytes>(rawRepresentation: Bytes) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 48 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public init<Bytes: ContiguousBytes>(x963Representation: Bytes) throws {
@@ -665,13 +665,13 @@ public enum P521: Sendable {
 
             public init(compactRepresentable: Bool = true) {
                 _ = compactRepresentable
-                rawRepresentation = Data(_ckRandomBytes(66))
+                self.rawRepresentation = Data(_ckRandomBytes(66))
             }
 
             public init<Bytes: ContiguousBytes>(rawRepresentation: Bytes) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 66 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public init<Bytes: ContiguousBytes>(x963Representation: Bytes) throws {
@@ -767,18 +767,18 @@ public enum P521: Sendable {
             }
 
             public init() {
-                rawRepresentation = Data(_ckRandomBytes(66))
+                self.rawRepresentation = Data(_ckRandomBytes(66))
             }
 
             public init(compactRepresentable: Bool = true) {
                 _ = compactRepresentable
-                rawRepresentation = Data(_ckRandomBytes(66))
+                self.rawRepresentation = Data(_ckRandomBytes(66))
             }
 
             public init<Bytes: ContiguousBytes>(rawRepresentation: Bytes) throws {
                 let value = _ckData(rawRepresentation)
                 guard value.count == 66 else { throw CryptoKitError.incorrectKeySize }
-                rawRepresentation = value
+                self.rawRepresentation = value
             }
 
             public init<Bytes: ContiguousBytes>(x963Representation: Bytes) throws {
