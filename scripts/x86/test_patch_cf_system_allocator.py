@@ -17,6 +17,10 @@ import patch_cf_system_allocator as patcher  # noqa: E402
 
 MAC_AND_PORTABLE = textwrap.dedent(
     r"""
+    CF_INLINE uintptr_t __CFISAForCFAllocator(void) {
+        return _GetCFRuntimeObjcClassAtIndex(_kCFRuntimeIDCFAllocator);
+    }
+
     static void *__CFAllocatorSystemAllocate(CFIndex size, CFOptionFlags hint, void *info) {
         malloc_zone_t * const zone = (info == &__MallocDefaultZoneInfoPlaceholder) ? malloc_default_zone() : (malloc_zone_t *)info;
         void *result = NULL;
@@ -76,6 +80,7 @@ class PatchSystemAllocator(unittest.TestCase):
         self.assertNotIn("malloc_zone_malloc", first)
         self.assertIn("return malloc(size);", first)
         self.assertIn("malloc_zone_malloc((malloc_zone_t *)allocator, size);", out)
+        self.assertIn("((const CFRuntimeBase *)&__kCFAllocatorSystemDefault)->_cfisa", out)
         self.assertTrue(patcher.already_patched(out))
 
     def test_idempotent(self) -> None:
