@@ -30,6 +30,21 @@ printf '%s\n' "$out" | grep -q CANNOT_LIPO_FAT_ON_LINUX \
   || { echo "  FAIL wrote fat.so"; fail=1; }
 
 echo
+echo "=== missing input is one line, no traceback ==="
+set +e
+out=$(python3 "$py" -create -output "$tmp/missing-out.so" "$tmp/no-such-in.so" 2>&1)
+rc=$?
+set -e
+[ "$rc" -eq 2 ] && echo "  OK  rc=2" || { echo "  FAIL rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -qx "lipo_single_arch: missing input $tmp/no-such-in.so" \
+  && echo "  OK  named missing input" || { echo "  FAIL message: $out"; fail=1; }
+printf '%s\n' "$out" | grep -q Traceback \
+  && { echo "  FAIL traceback leaked"; fail=1; } \
+  || echo "  OK  no traceback"
+[ ! -e "$tmp/missing-out.so" ] && echo "  OK  no output file" \
+  || { echo "  FAIL wrote output"; fail=1; }
+
+echo
 echo "=== --rewrite-ninja turns env -create into cmake -E copy ==="
 mkdir -p "$tmp/build"
 cat > "$tmp/build/build.ninja" <<'EOF'

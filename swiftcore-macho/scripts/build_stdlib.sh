@@ -175,6 +175,9 @@ run_stdlib_ninja() {
       echo "staged ninja .so from $dylib"
     fi
     if [ ! -e "$so" ]; then
+      overlay_satisfy_core_lipo_input "$B" "$SWIFTCORE_DARWIN_ARCH"
+    fi
+    if [ ! -e "$so" ]; then
       echo "CANNOT_ELF_SO_LINUX_SHARED: ninja $SWIFTCORE_NINJA_CORE rc=$core_st did not produce $so. Linker is lld (not gold). Linux CMake still emits -shared/-soname and names the Darwin dylib .so; apple -target must keep the Darwin driver flags and resolve ld64.lld via --ld-path (not rewrite -dynamiclib/-nostdlib)." >&2
     fi
   fi
@@ -185,7 +188,7 @@ run_stdlib_ninja() {
     fi
     exit 0
   fi
-  if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
+    if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
     local sel_rc=0 ninja_st=0 t
     # Attempt every selected overlay even if select named a CANNOT, so one
     # operator run measures the nine FE dylibs plus _Concurrency / Observation.
@@ -195,6 +198,7 @@ run_stdlib_ninja() {
     if [ -n "${SWIFTCORE_TEST_RC126_EXEC:-}" ]; then
       "${SWIFTCORE_TEST_RC126_EXEC}"
     fi
+    overlay_satisfy_core_lipo_input "$B" "$SWIFTCORE_DARWIN_ARCH"
     overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
     overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
     python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B" || true
