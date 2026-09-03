@@ -878,8 +878,13 @@ llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
 # swift-demangle lives beside whichever swiftc this gate compiles with; on
 # the x86_64 box (2026-09-03) swiftc resolved but a bare `swift-demangle`
 # did not, so the attestation died with "cannot execute swift-demangle".
-SWIFT_DEMANGLE=$(dirname "$(command -v swiftc)")/swift-demangle
+# Resolve the symlink first: on the x86_64 box /usr/local/bin/swiftc ->
+# /opt/swift/usr/bin/swift-driver, and only the target directory has the
+# demangler.
+SWIFT_DEMANGLE=$(dirname "$(readlink -f "$(command -v swiftc)")")/swift-demangle
+[ -x "$SWIFT_DEMANGLE" ] || SWIFT_DEMANGLE=$(dirname "$(command -v swiftc)")/swift-demangle
 [ -x "$SWIFT_DEMANGLE" ] || SWIFT_DEMANGLE=swift-demangle
+echo "focus_widget_guest: demangler=$SWIFT_DEMANGLE"
 perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
     --demangle "$SWIFT_DEMANGLE" \
     --openuikit "$PACKAGE/libOpenUIKit.dylib" \
