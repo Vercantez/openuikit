@@ -1,0 +1,6 @@
+precise	question	risk	reason
+c:@HKErrorDomain	What is the exact NSError domain string for HKErrorDomain on iPhoneOS 26.1?	fail-closed	Linux uses com.apple.healthkit from public documentation; an Apple-oracle dump would confirm the constant payload.
+c:@E@HKErrorCode@HKErrorHealthDataUnavailable	Is HKErrorHealthDataUnavailable still raw value 1, and does a missing Health store on a non-iPhone use this code versus HKErrorHealthDataRestricted?	health	macios Native enum order is the current evidence; store failures here always use unavailable.
+c:objc(cs)HKHealthStore(cm)isHealthDataAvailable	Does isHealthDataAvailable ever return true on iPad/Mac Catalyst without Health, and is Linux required to match that predicate?	privacy	This port always returns false; an Apple runtime probe is needed before any true path.
+c:objc(cs)HKUnit(cm)kilocalorieUnit	Is HKUnit.kilocalorie exactly 4184 J (thermochemical) on iPhoneOS 26.1, or does Apple use a different calorie definition?	health	Linux uses 4.184 kJ/kcal; conversion tests are local SI, not Apple-bit-identical.
+module	When CoreLocation and UniformTypeIdentifiers are linked in the guest package, which HealthKit signatures must import those modules rather than remaining unavailable?	store	The isolated host gate cannot import those modules; CLLocation workout-route APIs stay deferred.
