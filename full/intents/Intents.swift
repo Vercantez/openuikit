@@ -7,7 +7,9 @@
 // state instead of manufacturing success.
 
 @_exported import Foundation
+#if canImport(OpenUIKit)
 @_exported import OpenUIKit
+#endif
 import Synchronization
 
 #if canImport(ObjectiveC)
@@ -16,14 +18,35 @@ import class ObjectiveC.NSObject
 import class Foundation.NSObject
 #endif
 
+// Corelibs Foundation has no NSUserActivity. The production Mach-O guest uses
+// OpenUIKit's class identity. The isolated host gate cannot import OpenUIKit,
+// so this lookalike exists only when neither Darwin nor OpenUIKit is present.
+#if !canImport(Darwin) && !canImport(OpenUIKit)
+open class NSUserActivity: NSObject, @unchecked Sendable {
+    public let activityType: String
+
+    public init(activityType: String) {
+        self.activityType = activityType
+        super.init()
+    }
+}
+#endif
+
 // MARK: - Intent and interaction identity
 
 open class INIntent: NSObject, @unchecked Sendable {
     open var suggestedInvocationPhrase: String?
     open var identifier: String?
+    open var intentDescription: String?
+    open var donationMetadata: INIntentDonationMetadata?
+    open var shortcutAvailability: INShortcutAvailabilityOptions = []
 
     public override init() {
         super.init()
+    }
+
+    open func keyImage() -> INImage? {
+        nil
     }
 }
 
@@ -468,17 +491,51 @@ open class INVoiceShortcutCenter: NSObject, @unchecked Sendable {
 open class INImage: NSObject, @unchecked Sendable {
     public let imageData: Data?
     public let namedImage: String?
+    public let imageURL: URL?
+    public let imageWidth: Double?
+    public let imageHeight: Double?
 
     public init(imageData: Data) {
         self.imageData = imageData
         self.namedImage = nil
+        self.imageURL = nil
+        self.imageWidth = nil
+        self.imageHeight = nil
         super.init()
     }
 
-    public init(named name: String) {
+    public required init(named name: String) {
         self.imageData = nil
         self.namedImage = name
+        self.imageURL = nil
+        self.imageWidth = nil
+        self.imageHeight = nil
         super.init()
+    }
+
+    public convenience init?(url URL: URL) {
+        self.init(url: URL, width: 0, height: 0)
+    }
+
+    public convenience init?(URL: URL) {
+        self.init(url: URL, width: 0, height: 0)
+    }
+
+    public init?(url URL: URL, width: Double, height: Double) {
+        self.imageData = nil
+        self.namedImage = nil
+        self.imageURL = URL
+        self.imageWidth = width
+        self.imageHeight = height
+        super.init()
+    }
+
+    public convenience init?(URL: URL, width: Double, height: Double) {
+        self.init(url: URL, width: width, height: height)
+    }
+
+    open class func systemImageNamed(_ systemImageName: String) -> Self {
+        self.init(named: systemImageName)
     }
 }
 
