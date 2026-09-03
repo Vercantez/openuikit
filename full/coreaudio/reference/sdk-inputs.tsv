@@ -1,0 +1,4 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/CoreAudio.framework/CoreAudio.tbd	40153	aea4df82ddbdeaaa34f753decb00d2c37fc8c5e3719caf0f57128f304b9f87ce
+header	System/Library/Frameworks/CoreAudio.framework/Headers/CoreAudioTypes.h	321	f361b7ce1fa4fd37308db58cbd4fbe588faa085b2290c28a7492251dae7cab77
+modulemap	System/Library/Frameworks/CoreAudio.framework/Modules/module.modulemap	68	3b3840dbb9180b627d6f00c5ecc8b913898c83912c95717fc33a8e4176a75c13

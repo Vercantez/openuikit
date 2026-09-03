@@ -1,0 +1,31 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreAudio.symbols.json",
+      "relationshipCount": 194,
+      "sha256": "2608a338c17bb08b6e712581b2c3f6a1e4431b795627053b5e46bf9c678d8570",
+      "symbolCount": 181
+    },
+    {
+      "path": "reference/symbol-graphs/CoreAudio@CoreAudioTypes.symbols.json",
+      "relationshipCount": 184,
+      "sha256": "a0fe38ac23df0ceda8e659432b52d80dd2515976881d2b5cb7af6cd90905c67a",
+      "symbolCount": 164
+    },
+    {
+      "path": "reference/symbol-graphs/CoreAudio@Swift.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "2b671380befc642b64a3e96d11112248e07f2808b2a34b6925c52d75c59d65f4",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreAudio",
+  "relationshipCount": 380,
+  "schema": 1,
+  "symbolCount": 347,
+  "target": "arm64-apple-ios26.0"
+}
