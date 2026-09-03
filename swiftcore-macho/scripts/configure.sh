@@ -20,6 +20,8 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 . "$SCRIPT_DIR/guest_arch.inc"
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/probe_lld.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_sysroot.inc"
 
 W=${W:-$HOME/work}
 SDK=$W/sdk/MacOSX.sdk
@@ -112,6 +114,14 @@ if [ "$PRINT_FLAGS" != 1 ]; then
       fi
     fi
   fi
+fi
+
+# Overlay sysroot must carry Intel math.h (fmaxl) + machorun sys/proc.h
+# (extern_proc) *before* cmake bakes -DSWIFT_SDK_OSX_PATH. A stale
+# MacOSX.sdk from an earlier refuse-overwrite is CANNOT, not a ninja surprise.
+if [ "$PRINT_FLAGS" != 1 ] && [ "$SWIFTCORE_DARWIN_ARCH" = x86_64 ]; then
+  overlay_sysroot_print_headers "$SDK"
+  overlay_sysroot_refuse_incomplete "$SDK" || exit 2
 fi
 
 # Linux-host ELF / Darwin-target shared links: lld, not gold. Probe before

@@ -25,8 +25,19 @@ while [ $i -lt ${#args[@]} ]; do
     -j) i=$((i+2)); continue ;;
     -t)
       i=$((i+1))
-      if [ "${args[$i]:-}" = targets ]; then targets_mode=1; fi
-      i=$((i+1)); continue
+      tool=${args[$i]:-}
+      i=$((i+1))
+      case "$tool" in
+        targets) targets_mode=1 ;;
+        commands)
+          echo "swiftc -sdk /sdk/MacOSX.sdk -c Darwin.swift"
+          exit 0 ;;
+        query)
+          echo "${args[$i]:-unknown}:"
+          echo "  input: phony"
+          exit 0 ;;
+      esac
+      continue
       ;;
     *) target=$a; i=$((i+1)); continue ;;
   esac
@@ -98,8 +109,19 @@ while [ $i -lt ${#args[@]} ]; do
     -j) i=$((i+2)); continue ;;
     -t)
       i=$((i+1))
-      if [ "${args[$i]:-}" = targets ]; then targets_mode=1; fi
-      i=$((i+1)); continue
+      tool=${args[$i]:-}
+      i=$((i+1))
+      case "$tool" in
+        targets) targets_mode=1 ;;
+        commands)
+          echo "swiftc -sdk /sdk/MacOSX.sdk -c Darwin.swift"
+          exit 0 ;;
+        query)
+          echo "${args[$i]:-unknown}:"
+          echo "  input: phony"
+          exit 0 ;;
+      esac
+      continue
       ;;
     *) target=$a; i=$((i+1)); continue ;;
   esac
@@ -186,8 +208,19 @@ while [ $i -lt ${#args[@]} ]; do
     -j) i=$((i+2)); continue ;;
     -t)
       i=$((i+1))
-      if [ "${args[$i]:-}" = targets ]; then targets_mode=1; fi
-      i=$((i+1)); continue
+      tool=${args[$i]:-}
+      i=$((i+1))
+      case "$tool" in
+        targets) targets_mode=1 ;;
+        commands)
+          echo "swiftc -sdk /sdk/MacOSX.sdk -c Darwin.swift"
+          exit 0 ;;
+        query)
+          echo "${args[$i]:-unknown}:"
+          echo "  input: phony"
+          exit 0 ;;
+      esac
+      continue
       ;;
     *) target=$a; i=$((i+1)); continue ;;
   esac

@@ -211,6 +211,43 @@ if [ -z "$FE" ]; then
   ensure_module_modulemap
 fi
 
+# FE copy or a leftover sysroot can leave a math.h / proc.h that does not
+# have the Darwin.o surface. Repair from the overlay-darwin / machorun pins
+# rather than compiling against a silently incomplete tree.
+if [ "${SWIFTCORE_DARWIN_ARCH}" = x86_64 ]; then
+  if [ ! -f "$SDK/usr/include/math.h" ] \
+      || ! grep -Eq '(^|[[:space:]*])fmaxl[[:space:]]*\(' "$SDK/usr/include/math.h"; then
+    echo "stage_overlay_darwin: math.h lacks fmaxl; staging overlay-darwin Intel math.h"
+    stage_file usr/include/math.h "$SRC/math.h" replace \
+      Libm "$LIBM_TAG" "$LIBM_COMMIT" Source/Intel/math.h
+    stage_file usr/include/architecture/i386/math.h \
+      "$SRC/architecture/i386/math.h" replace \
+      Libm "$LIBM_TAG" "$LIBM_COMMIT" Source/Intel/math.h
+  fi
+fi
+PROC_PIN=$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h
+if [ -f "$PROC_PIN" ]; then
+  if [ ! -f "$SDK/usr/include/sys/proc.h" ] \
+      || ! grep -Eq 'extern_proc' "$SDK/usr/include/sys/proc.h"; then
+    echo "stage_overlay_darwin: sys/proc.h lacks extern_proc; restoring machorun pin"
+    mkdir -p "$SDK/usr/include/sys"
+    cp "$PROC_PIN" "$SDK/usr/include/sys/proc.h"
+  fi
+fi
+if [ -f "$SDK/usr/include/Darwin.modulemap" ]; then
+  for h in math.h sys/proc.h; do
+    if [ -f "$SDK/usr/include/$h" ] \
+        && ! grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap"; then
+      # Insert before the last line (the outer module's closing brace).
+      sed -i '$i\  header "'"$h"'"' "$SDK/usr/include/Darwin.modulemap"
+      echo "stage_overlay_darwin: Darwin.modulemap now names $h"
+    fi
+  done
+else
+  write_darwin_modulemap
+fi
+ensure_module_modulemap
+
 echo "stage_overlay_darwin: done sysroot=$SDK"
 echo "  Darwin.modulemap: $([ -f "$SDK/usr/include/Darwin.modulemap" ] && echo present || echo ABSENT)"
 if [ -f "$SDK/usr/include/math.h" ]; then
