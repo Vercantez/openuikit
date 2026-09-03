@@ -142,9 +142,9 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    a named `.tbd` under `$SYS/usr/lib/swift` (the widget gate `lstat`s those
    paths; a dylib stand-in does not satisfy
    `focus_widget_guest_attest`) **and** the dylib in both `mrroot-x86_64` and
-   `mrroot_fe-x86_64`. Sources: cross-built artifacts first,
-   `scratch/apple-x86-overlays` second (ObjectiveC / `_DarwinFoundation*` /
-   `_errno` exist only there). Round-trip: every defined-external symbol of the
+   `mrroot_fe-x86_64`. Sources: cross-built artifacts first (the five SDK
+   overlays `_DarwinFoundation*` / `_errno` / ObjectiveC are built by
+   `overlay_build_xcode_shells`, not Apple dyld-cache copies). Round-trip: every defined-external symbol of the
    dylib appears in the `.tbd`, every `LC_REEXPORT_DYLIB` is recorded
    (`bash scripts/x86/test_gen_swift_tbd.sh`). The stamp records `tbd-set` (arm64
    inventory of `usr/lib` + `usr/lib/swift` `.tbd` names) and
@@ -240,7 +240,12 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    (runner: `fe/runner.swiftc.log`); the CANNOT line names `log=` that path
    instead of inlining swiftc text. Link is **only**
    `foundation-macho/scripts/link_ud_guest.sh` (macos13 `TRIPLE`, tbd-first
-   `-L` order). `fm_unimplemented.o` is compiled once into essentials/ with
+   `-L` order, clang-18, `-nostdlib`). stdout+stderr land in
+   `scratch/ud-guest-x86_64/link_ud_guest.log`; a failed link is
+   `CANNOT_UD_GUEST_UD_GUEST file=ud_guest` naming `log=` that path (same
+   spill as the swiftc logs — do not flatten ld64 onto the CANNOT line).
+   `collections/_RopeModule.o` and `fe/_RopeModule.o` are the same object;
+   the linker takes one, never both. `fm_unimplemented.o` is compiled once into essentials/ with
    `build_full.sh`'s clang argv. `libswiftcompat.dylib` comes from an existing
    x86 Mach-O or `swiftcore-macho/scripts/build_compat.sh`. `libCFTest.dylib`
    comes from `foundation-macho/scripts/build_cfobjc.sh` (objects under
@@ -293,9 +298,10 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
     from `mrroot-base-x86`), and the **twelve** overlay dylibs
     (`phase2_twelve_overlay_names`: nine FE + `libswift_Concurrency.dylib` /
     `libswiftObjectiveC.dylib` / `libswiftObservation.dylib`) in both
-    `mrroot-x86_64` and `mrroot_fe-x86_64`. Apple-SDK ObjectiveC /
-    `_DarwinFoundation*` / `_errno` come from `scratch/apple-x86-overlays`
-    and are named in `missing=` rather than stubbed. Host ELF files
+    `mrroot-x86_64` and `mrroot_fe-x86_64`. ObjectiveC /
+    `_DarwinFoundation*` / `_errno` come from
+    `swiftcore-macho/artifacts/swift-macosx/x86_64` (in-tree shells;
+    Apple dyld-cache copies have no `LC_DYLD_INFO`). Host ELF files
     are the same closed set as `mrroot-host-x86`. Incomplete layout is
     `CANNOT_X86_MRROOT_LAYOUT missing=…` (leaf names). Not a PR3
     `CURSOR_ENV_CANNOT_*` marker. Rungs b/c wait on `LAYOUT_OK`; rung a does
@@ -304,14 +310,13 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
     swiftc sees `OrderedCollections` / `_RopeModule` the way
     `build_url_runner.sh` / PR #28 put FI search paths on argv.
 
-## Operator-staged Apple x86_64 overlays
+## Operator-staged Apple x86_64 overlays (dead end)
 
-`scratch/apple-x86-overlays/` (never committed) holds Apple's own x86_64
-Swift overlays extracted on the operator Mac from
-`/System/Volumes/Preboot/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64`
-with `ipsw dyld extract`, plus a `PROVENANCE.txt` (macOS build, tool, sha256
-per file). phase2 searches it after the swiftcore-macho cross-build dir, so a
-cross-built overlay wins when present and the Apple copy fills the four
-Apple-SDK overlays (`_DarwinFoundation1/2/3`, `_errno`) that
-`stdlib/public/CMakeLists.txt` never builds on Linux. Same standing as the
-arm64 CoreSimulator overlays staged by `scripts/stage_swift_runtime.sh`.
+`scratch/apple-x86-overlays/` used to hold Apple's x86_64 Swift overlays
+extracted from the dyld shared cache. Those binaries carry **no**
+`LC_DYLD_INFO` and **no** `LC_DYLD_CHAINED_FIXUPS` (only
+`LC_DYLD_EXPORTS_TRIE`); rebases and binds were resolved in-cache and
+stripped. They cannot be loaded. `_DarwinFoundation1/2/3`, `_errno`, and
+`ObjectiveC` are built from in-tree `.swiftinterface` / re-export shells
+and `overlays/ObjectiveC.swift` (`overlay_build_xcode_shells`) and staged
+in `swiftcore-macho/artifacts/swift-macosx/x86_64`.

@@ -10,7 +10,9 @@
 # Linux: ObjectiveC, _DarwinFoundation1/2/3, _errno — those are Apple SDK
 # overlays (stdlib/public/CMakeLists.txt:359: "On Apple platforms, we aren't
 # building any overlays. Instead, we're picking them up from the SDK.").
-# Named CANNOT, never ninja'd.
+# They are not ninja targets. `overlay_build_xcode_shells` compiles them
+# from sysroot .swiftinterface (or in-tree re-export shells) + ObjectiveC.swift
+# with the Darwin driver. Shared-cache Apple dylibs have no LC_DYLD_INFO.
 
 if [ -n "${SWIFTCORE_OVERLAY_TARGETS_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -96,7 +98,7 @@ overlay_select_targets() {
             continue
         fi
         if overlay_xcode_only_target "$n"; then
-            echo "CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=$n reason=not in ninja -t targets; Swift 6.2.4 Linux-host OSX stdlib does not add_subdirectory Apple SDK overlays (_DarwinFoundation1/2/3, _errno, ObjectiveC — stdlib/public/CMakeLists.txt:359 'picking them up from the SDK')"
+            echo "CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=$n reason=not in ninja -t targets; will build via overlay_build_xcode_shells (sysroot interface / in-tree re-export, not Apple dyld-cache copies)"
             OVERLAY_STATUS[$n]=CANNOT_STAGE_XCODE_DARWIN_OVERLAYS
             continue
         fi
@@ -512,4 +514,54 @@ overlay_copy_so_as_dylib() {
             cp -f "$so" "$dylib"
         fi
     done
+}
+
+# Compile the five non-ninja Apple-SDK overlays with the Darwin driver.
+# overlay_build_xcode_shells <build_dir> <arch>
+# Skipped in SWIFTCORE_NINJA_HARNESS (fake ninja / no Darwin resource-dir).
+overlay_build_xcode_shells() {
+    local build_dir=${1:?overlay_build_xcode_shells: build dir}
+    local arch=${2:?overlay_build_xcode_shells: arch}
+    local script log line n st
+    if [ "${SWIFTCORE_NINJA_HARNESS:-0}" = 1 ]; then
+        echo "overlay_build_xcode_shells: skip (SWIFTCORE_NINJA_HARNESS=1)"
+        return 0
+    fi
+    script=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/build_sdk_overlays.sh
+    log=${W:-/tmp}/sdk-overlays.log
+    echo "==== overlay_build_xcode_shells arch=$arch ===="
+    set +e
+    bash "$script" "$arch" "$build_dir" >"$log" 2>&1
+    st=$?
+    set -e
+    cat "$log"
+    while IFS= read -r line; do
+        case "$line" in
+            "sdk_overlay: STATUS "*" built")
+                n=${line#sdk_overlay: STATUS }
+                n=${n% built}
+                OVERLAY_STATUS[$n]=built
+                ;;
+        esac
+    done < "$log"
+    if [ "$st" -ne 0 ]; then
+        for n in \
+            "swift_DarwinFoundation1-macosx-${arch}" \
+            "swift_DarwinFoundation2-macosx-${arch}" \
+            "swift_DarwinFoundation3-macosx-${arch}" \
+            "swift_errno-macosx-${arch}" \
+            "swiftObjectiveC-macosx-${arch}"
+        do
+            case "${OVERLAY_STATUS[$n]:-}" in
+                built) ;;
+                *)
+                    OVERLAY_STATUS[$n]="FAILED first_error=$(overlay_first_error "$log")"
+                    ;;
+            esac
+        done
+        return "$st"
+    fi
+    overlay_flatten_unarch "$build_dir" "$arch"
+    overlay_copy_so_as_dylib "$build_dir" "$arch"
+    return 0
 }

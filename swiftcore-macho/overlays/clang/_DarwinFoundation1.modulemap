@@ -1,0 +1,17 @@
+// Clang half of Apple's _DarwinFoundation1 overlay. The Swift shell
+// @_exported-imports this module. Headers are ones this Linux MacOSX.sdk
+// actually stages (not the full Xcode split).
+module _DarwinFoundation1 [system] [extern_c] {
+  module _errno {
+    header "errno.h"
+    header "sys/errno.h"
+    export *
+  }
+  header "errno.h"
+  header "math.h"
+  header "stdlib.h"
+  header "stdio.h"
+  header "string.h"
+  header "signal.h"
+  export *
+}

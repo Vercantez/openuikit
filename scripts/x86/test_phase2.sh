@@ -50,12 +50,16 @@ REMINDER=$ROOT/full/xcodeplan/build_and_run_reminder_scene_guest.sh
 UD_RUNNER=$ROOT/foundation-macho/tests/ud_guest_runner.swift
 PREPARE=$ROOT/scripts/env/prepare.py
 BUILD_FULL=$ROOT/full/scripts/build_full.sh
+INVENTORIES=$ROOT/full/swiftui/guest_gate_inventories.py
+INVENTORIES_INC=$ROOT/full/swiftui/guest_gate_inventories.inc
 
 expect_file "$PHASE2"
 expect_file "$COMMON"
 expect_file "$STAGE"
 expect_file "$OC"
 expect_file "$GUEST"
+expect_file "$INVENTORIES"
+expect_file "$INVENTORIES_INC"
 
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
@@ -65,8 +69,11 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/relativetime/build_host_helper.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
+    "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
+    "$ROOT/full/swiftui/guest_gate_inventories.inc" \
     "$ROOT/scripts/build_runtime_shims.sh" \
     "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; do
     if bash -n "$s"; then
@@ -347,9 +354,12 @@ expect_grep 'NOTE extra Apple-SDK' "$PHASE2" \
 expect_grep 'libquartz.tbd' "$COMMON" "consumer set includes libquartz.tbd"
 expect_grep '[-]lobjc' "$BUILD_FULL" "build_full link names -lobjc"
 expect_grep '[-]lSystem' "$BUILD_FULL" "build_full link names -lSystem"
-expect_grep 'libswift_Concurrency.dylib' "$WIDGET" "widget expected loads name Concurrency"
-expect_grep 'libswiftObjectiveC.dylib' "$WIDGET" "widget expected loads name ObjectiveC"
-expect_grep 'libswiftObservation.dylib' "$WIDGET" "widget expected loads name Observation"
+expect_grep 'libswift_Concurrency.dylib' "$INVENTORIES" "widget expected loads name Concurrency"
+expect_grep 'libswiftObjectiveC.dylib' "$INVENTORIES" "widget expected loads name ObjectiveC"
+expect_grep 'libswiftObservation.dylib' "$INVENTORIES" "widget expected loads name Observation"
+expect_grep 'libswift_DarwinFoundation1.dylib' "$INVENTORIES" \
+    "x86 widget loads name DarwinFoundation1"
+expect_grep 'libswift_errno.dylib' "$INVENTORIES" "arm64 widget loads still name errno"
 expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
     "widget attest requires named libswiftCore.tbd"
 expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
@@ -361,13 +371,13 @@ want=$(phase2_consumer_tbd_relpaths)
 derived=$(
     {
         grep -hoE 'libswift[A-Za-z0-9_]+\.tbd' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^|usr/lib/swift/|'
         grep -hoE 'lib(System(\.B)?|objc(\.A)?|c\+\+(\.1)?|c\+\+abi|quartz)\.tbd' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^|usr/lib/|'
         grep -hoE -- '-l(swift[A-Za-z0-9_]+|objc|System)' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | while IFS= read -r flag; do
                 name=${flag#-l}
                 case "$name" in
@@ -377,7 +387,7 @@ derived=$(
                 esac
             done
         grep -hoE '/usr/lib/swift/libswift[A-Za-z0-9_]+\.dylib' \
-            "$WIDGET" "$ONBOARD" "$LINK_UD" 2>/dev/null \
+            "$WIDGET" "$ONBOARD" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^/||; s/\.dylib$/.tbd/'
     } | grep -E '^usr/lib/' | sort -u
 )
@@ -1477,6 +1487,15 @@ expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
     "producer names the committed linker"
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
     "phase2 still names the committed linker"
+expect_grep 'link_ud_guest.log' "$UDINC" "ud-guest spills the linker log to the work-tree root"
+expect_grep 'link_ud_guest.sh exit $st log=$log' "$UDINC" \
+    "UD_GUEST CANNOT names log= (does not flatten ld64)"
+expect_grep 'Never both' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "linker takes one _RopeModule.o, never both copies"
+expect_grep 'clang-18' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "link_ud_guest prefers clang-18"
+expect_grep '-nostdlib' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "link_ud_guest is -nostdlib"
 if grep -E '^[^#]*build_fe\.sh' "$UDINC" >/dev/null; then
     die_test "ud-guest-x86 invokes build_fe.sh"
 else
@@ -1706,6 +1725,30 @@ if CFOBJC_SKIP_COMPILE=1 bash "$ROOT/foundation-macho/scripts/test_build_cfobjc.
     ok "test_build_cfobjc.sh (argv + missing-CF)"
 else
     die_test "test_build_cfobjc.sh"
+fi
+
+echo "== link_ud_guest.sh clang-18, one rope, dummy X86_64 binary"
+if bash "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh"; then
+    ok "test_link_ud_guest.sh"
+else
+    die_test "test_link_ud_guest.sh"
+fi
+
+echo "== ud-guest-x86 linker log is a file path, not flattened ld64"
+mkdir -p "$wt/bin"
+link_report=$(phase2_ud_guest_link "$ROOT" "$wt" "${SYS:-$wt/fe/sysroot}" \
+    "$wt/bin/ud_guest" || true)
+if echo "$link_report" | grep -q 'CANNOT_UD_GUEST_UD_GUEST file=ud_guest' \
+    && echo "$link_report" | grep -q "log=$wt/link_ud_guest.log" \
+    && [ -f "$wt/link_ud_guest.log" ] \
+    && grep -q . "$wt/link_ud_guest.log"; then
+    if echo "$link_report" | grep -q 'ld64.lld'; then
+        die_test "CANNOT line still inlines ld64 output: $link_report"
+    else
+        ok "UD_GUEST CANNOT names log= under scratch/ud-guest-x86_64"
+    fi
+else
+    die_test "link log-spill got: $link_report"
 fi
 
 echo "== ud-guest-x86 compiler log is a file path, not inlined swiftc text"
