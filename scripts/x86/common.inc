@@ -1418,6 +1418,19 @@ phase2_fill_x86_libswiftcompat() {
     local dest=$1 repo=$2 sys=$3 loader=${4:-}
     local out=$dest/darwin/usr/lib/libswiftcompat.dylib
     local mrlib=$repo/machorun/darwin/usr/lib
+    # The run-root manifest grades darwin/usr/lib/libswiftcompat.dylib as a COPY
+    # of machorun's; on arm64 stage_swiftcore puts the artifact there. Install
+    # the box-built x86 shim at the same upstream position (measured 2026-09-03,
+    # f3594817: "STALE COPIES (1 of 5) ... upstream darwin/usr/lib/
+    # libswiftcompat.dylib is gone" refused the x86 widget gate).
+    phase2_install_compat_upstream() {
+        [ -d "$mrlib" ] || return 0
+        if [ -f "$mrlib/libswiftcompat.dylib" ] && cmp -s "$out" "$mrlib/libswiftcompat.dylib"; then
+            return 0
+        fi
+        cp -f "$out" "$mrlib/libswiftcompat.dylib"
+        echo "phase2: libswiftcompat installed upstream at $mrlib/libswiftcompat.dylib" >&2
+    }
     local src_dir=$repo/swiftcore-macho/sdk/compat
     local work=$dest/shim-work
     local log=$work/build_compat.log
@@ -1438,6 +1451,7 @@ phase2_fill_x86_libswiftcompat() {
         "$src_dir/shim.cpp" \
         "$repo/swiftcore-macho/scripts/build_compat.sh")
     if stamp_reuse "$out" "$want"; then
+        phase2_install_compat_upstream
         return 0
     fi
     stamp_rebuild_reason "$out" "$want"
@@ -1453,6 +1467,7 @@ phase2_fill_x86_libswiftcompat() {
         return 1
     fi
     stamp_write "$out" "$want"
+    phase2_install_compat_upstream
 }
 
 # Stage BASE swift runtime dylibs from the overlay search. Always overwrite
