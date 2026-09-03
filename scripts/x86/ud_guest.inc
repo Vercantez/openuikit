@@ -782,9 +782,9 @@ phase2_ud_guest_patch_cf_system_allocator() {
             "no x86_64 Mach-O. $patcher left malloc_zone_malloc(zone) in $dest/CFBase.c. Will not invent a stub dylib."
         return 1
     fi
-    if ! grep -q 'malloc_zone_malloc((malloc_zone_t \*)allocator' "$dest/CFBase.c"; then
+    if grep -q 'malloc_zone_malloc((malloc_zone_t \*)allocator' "$dest/CFBase.c"; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher dropped CFAllocator-as-zone malloc_zone_malloc. Will not invent a stub dylib."
+            "no x86_64 Mach-O. $patcher left allocator-as-zone malloc_zone_malloc in $dest/CFBase.c. Will not invent a stub dylib."
         return 1
     fi
     stamp_write "$dest" "$key"

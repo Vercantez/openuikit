@@ -79,8 +79,8 @@ class PatchSystemAllocator(unittest.TestCase):
         first = patcher._first_body(out, patcher.SIG_ALLOCATE)
         self.assertNotIn("malloc_zone_malloc", first)
         self.assertIn("return malloc(size);", first)
-        self.assertIn("malloc_zone_malloc((malloc_zone_t *)allocator, size);", out)
-        self.assertIn(patcher.ZONE_CHECK_NEW, out)
+        self.assertNotIn("malloc_zone_malloc((malloc_zone_t *)allocator, size);", out)
+        self.assertIn("return malloc(size);", out)
         self.assertTrue(patcher.already_patched(out))
 
     def test_idempotent(self) -> None:

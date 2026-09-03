@@ -366,6 +366,8 @@ expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
 expect_file "$ROOT/scripts/x86/patch_cf_system_allocator.py"
 expect_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
     "ud-guest copies CF and rewrites only the Mac system-allocator callbacks"
+expect_grep 'allocator-as-zone malloc_zone_malloc' "$UDINC" \
+    "ud-guest refuses a copy that still passes a CFAllocator to malloc_zone_malloc"
 expect_grep 'CFOBJC_FORCE_COPY=1' "$UDINC" \
     "cfobjc recopies the patched CF tree (existence of OUT/src is not freshness)"
 expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
