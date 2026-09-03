@@ -869,6 +869,28 @@ else
     fi
 fi
 
+# 6b2. Loadable overlays into the run root. build_full.sh copies swift
+# dylibs from BASE/FE; that is how libswiftObjectiveC arrived as the Apple
+# extract (BASE fill skipped an existing x86 Mach-O). Always restage from
+# artifacts when present; refuse a dyld-cache extract (no LC_DYLD_INFO /
+# LC_DYLD_CHAINED_FIXUPS) with CANNOT_STAGE_CACHE_EXTRACT. One
+# OVERLAY_PROVENANCE line per staged overlay (name, srcdir, sha256 prefix,
+# fixups=dyld_info|chained from llvm-objdump --macho --private-headers).
+echo "==== mrroot_full-x86_64 overlays (artifacts first; refuse cache extracts) ===="
+if [ -d "$MRROOT" ]; then
+    overlay_full_report=$(phase2_stage_x86_run_root_overlays "$MRROOT" || true)
+    printf '%s\n' "$overlay_full_report"
+    if printf '%s\n' "$overlay_full_report" | grep -q '^CANNOT_STAGE_CACHE_EXTRACT'; then
+        cannot mrroot-overlays-x86 STAGE_CACHE_EXTRACT \
+            "$(printf '%s\n' "$overlay_full_report" | grep '^CANNOT_STAGE_CACHE_EXTRACT' | tr '\n' ' ' | phase2_flatten)"
+    else
+        note mrroot-overlays-x86 satisfied
+    fi
+else
+    cannot mrroot-overlays-x86 STAGE_CACHE_EXTRACT \
+        "no $MRROOT to stage overlays into (mrroot-x86 did not produce a dest)"
+fi
+
 # ---------------------------------------------------------------------------
 # 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts)
 echo "==== /w layout (guest-visible fonts path) ===="
@@ -922,6 +944,31 @@ case "$ud_report" in
         cannot ud-guest-x86 UD_GUEST_UNKNOWN "ud-guest-x86 produced: ${ud_report:-empty}"
         ;;
 esac
+
+# Stage libCFTest into the run root after link, before run. Arm64
+# build_cftest_harness.sh copies into $W/root; x86 W is the ud-guest work
+# tree, so this is the analogue for scratch/mrroot_full-x86_64. Not a
+# build_full.sh step (that script never stages libCFTest).
+echo "==== libCFTest into run root (after link, before run_ud_guest.sh) ===="
+if [ "$UD_GUEST_ITEM_OK" -eq 1 ] && [ -d "$MRROOT" ]; then
+    cftest_src=${UD_GUEST_W:-$W/scratch/ud-guest-x86_64}/lib/libCFTest.dylib
+    cftest_report=$(phase2_stage_cftest_into_run_root "$cftest_src" "$MRROOT" || true)
+    case "$cftest_report" in
+        status=satisfied\ path=*)
+            note libCFTest-run-root satisfied "${cftest_report#status=satisfied }"
+            ;;
+        status=cold-built\ path=*)
+            note libCFTest-run-root cold-built "${cftest_report#status=cold-built }"
+            ;;
+        *)
+            cannot libCFTest-run-root CFTEST_STAGE \
+                "${cftest_report:-empty}. arm64 stages via build_cftest_harness.sh into \$W/root; x86 stages scratch/ud-guest-x86_64/lib/libCFTest.dylib into $MRROOT/darwin/usr/lib/libCFTest.dylib (not the CoreFoundation.framework slot)."
+            ;;
+    esac
+elif [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
+    cannot libCFTest-run-root CFTEST_STAGE \
+        "ud_guest linked but no run root at $MRROOT to stage libCFTest.dylib into"
+fi
 
 # ---------------------------------------------------------------------------
 # 7. Rungs. Reuse committed gates. Never invent new denominators.

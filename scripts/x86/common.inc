@@ -857,8 +857,9 @@ phase2_fe_overlay_names() {
 # Durable x86 overlay set: nine FE + the three build_full / widget-gate loads
 # (expected_swiftui_loads: _Concurrency, ObjectiveC, Observation). Each needs
 # an x86 .tbd under sysroot usr/lib/swift and the dylib in both mrroot-x86_64
-# and mrroot_fe-x86_64. Sources: cross-built artifacts first, then
-# scratch/apple-x86-overlays (ObjectiveC / _DarwinFoundation* / _errno).
+# and mrroot_fe-x86_64. Sources: cross-built artifacts first. A dyld-cache
+# extract in scratch/apple-x86-overlays is named by CANNOT_STAGE_CACHE_EXTRACT,
+# not copied.
 phase2_twelve_overlay_names() {
     phase2_fe_overlay_names
     printf '%s\n' \
@@ -868,10 +869,12 @@ phase2_twelve_overlay_names() {
 }
 
 # scratch/apple-x86-overlays used to hold Apple dyld-cache extracts. Those
-# copies have no LC_DYLD_INFO / LC_DYLD_CHAINED_FIXUPS and cannot be loaded.
-# The five SDK overlays are now built from in-tree interfaces / ObjectiveC.swift
-# and staged in swiftcore-macho/artifacts/swift-macosx/x86_64. Keep the
-# directory last in the search only as a stale fallback.
+# copies have no LC_DYLD_INFO / LC_DYLD_CHAINED_FIXUPS and cannot be loaded
+# (machorun PR #55, MR_EXIT_DSC_NO_FIXUPS / exit 74). The five SDK overlays
+# are now built from in-tree interfaces / ObjectiveC.swift and staged in
+# swiftcore-macho/artifacts/swift-macosx/x86_64. Keep the Apple directory in
+# the search only so a cache-extract can be NAMED in
+# CANNOT_STAGE_CACHE_EXTRACT src=… — never copy it into a run root.
 phase2_x86_overlay_search_dirs() {
     printf '%s\n' \
         "${W:?}/swiftcore-macho/artifacts/swift-macosx/x86_64" \
@@ -880,8 +883,48 @@ phase2_x86_overlay_search_dirs() {
         "${HOME}/work/build/lib/swift/macosx"
 }
 
-# Print the first x86 Mach-O overlay path for $1, or return 1.
-phase2_find_x86_overlay() {
+# llvm-objdump --macho --private-headers (the reader provenance lines cite).
+phase2_macho_private_headers() {
+    local f=$1
+    if command -v llvm-objdump-18 >/dev/null 2>&1; then
+        llvm-objdump-18 --macho --private-headers "$f" 2>/dev/null
+    else
+        llvm-objdump --macho --private-headers "$f" 2>/dev/null
+    fi
+}
+
+# dyld_info (LC_DYLD_INFO / LC_DYLD_INFO_ONLY), chained, or empty.
+phase2_macho_fixups() {
+    local hdr
+    hdr=$(phase2_macho_private_headers "$1")
+    if printf '%s\n' "$hdr" | grep -q 'LC_DYLD_CHAINED_FIXUPS'; then
+        printf 'chained\n'
+    elif printf '%s\n' "$hdr" | grep -q 'LC_DYLD_INFO'; then
+        printf 'dyld_info\n'
+    else
+        printf '\n'
+    fi
+}
+
+# x86 Mach-O with neither LC_DYLD_INFO nor LC_DYLD_CHAINED_FIXUPS: a dyld
+# shared-cache extract (only LC_DYLD_EXPORTS_TRIE). Staging one into a run
+# root is a guaranteed later machorun failure.
+phase2_is_cache_extract() {
+    local f=$1
+    [ -f "$f" ] || return 1
+    phase2_is_x86_macho "$f" || return 1
+    [ -z "$(phase2_macho_fixups "$f")" ]
+}
+
+phase2_is_loadable_x86_overlay() {
+    local f=$1
+    phase2_is_x86_macho "$f" || return 1
+    phase2_is_cache_extract "$f" && return 1
+    return 0
+}
+
+# First x86 Mach-O for $1 in search order, including cache extracts.
+phase2_find_any_x86_overlay() {
     local name=$1 dir
     while IFS= read -r dir; do
         [ -n "$dir" ] || continue
@@ -893,21 +936,137 @@ phase2_find_x86_overlay() {
     return 1
 }
 
+# First LOADABLE x86 overlay (has LC_DYLD_INFO or LC_DYLD_CHAINED_FIXUPS).
+# Artifacts first. Cache extracts are skipped, not staged.
+phase2_find_x86_overlay() {
+    local name=$1 dir
+    while IFS= read -r dir; do
+        [ -n "$dir" ] || continue
+        if [ -f "$dir/$name" ] && phase2_is_loadable_x86_overlay "$dir/$name"; then
+            printf '%s\n' "$dir/$name"
+            return 0
+        fi
+    done < <(phase2_x86_overlay_search_dirs)
+    return 1
+}
+
+# Copy loadable overlay $2 into directory $1. Sets PHASE2_OVERLAY_SRC.
+#   0 copied from a loadable source
+#   1 missing
+#   2 only a dyld-cache extract exists (PHASE2_OVERLAY_SRC is that path)
+# Always overwrites. A dest that already holds an Apple extract is the
+# ObjectiveC provenance bug: phase2_fill_x86_base_swift_dylibs used to
+# `continue` when dest was any x86 Mach-O, so libswiftObjectiveC stayed the
+# cache extract while Darwin/errno (FE, always cp -f) and Concurrency
+# (absent from dest, so copied from artifacts) came from
+# swiftcore-macho/artifacts/swift-macosx/x86_64. build_full.sh then copied
+# BASE's ObjectiveC into scratch/mrroot_full-x86_64.
+phase2_copy_loadable_overlay() {
+    local dest_swift=$1 name=$2
+    local src extract dest
+    PHASE2_OVERLAY_SRC=
+    mkdir -p "$dest_swift"
+    dest=$dest_swift/$name
+    src=$(phase2_find_x86_overlay "$name" || true)
+    if [ -n "$src" ]; then
+        if phase2_is_cache_extract "$src"; then
+            PHASE2_OVERLAY_SRC=$src
+            return 2
+        fi
+        cp -f "$src" "$dest"
+        PHASE2_OVERLAY_SRC=$src
+        return 0
+    fi
+    extract=$(phase2_find_any_x86_overlay "$name" || true)
+    if [ -n "$extract" ] && phase2_is_cache_extract "$extract"; then
+        PHASE2_OVERLAY_SRC=$extract
+        if [ -f "$dest" ] && phase2_is_cache_extract "$dest"; then
+            rm -f "$dest"
+        fi
+        return 2
+    fi
+    if [ -f "$dest" ] && phase2_is_cache_extract "$dest"; then
+        rm -f "$dest"
+    fi
+    return 1
+}
+
+phase2_print_overlay_provenance() {
+    local name=$1 src=$2 dest=$3
+    local srcdir sha fix
+    srcdir=$(cd "$(dirname "$src")" && pwd)
+    sha=$(sha256sum "$dest" | awk '{print substr($1,1,12)}')
+    fix=$(phase2_macho_fixups "$dest")
+    printf 'OVERLAY_PROVENANCE name=%s srcdir=%s sha256=%s fixups=%s\n' \
+        "$name" "$srcdir" "$sha" "$fix"
+}
+
+# Stage the twelve overlays into a run root ($1/darwin/usr/lib/swift).
+# Always prefers artifacts. Refuses a cache extract with
+#   CANNOT_STAGE_CACHE_EXTRACT name=… src=…
+# At the end: one OVERLAY_PROVENANCE line per staged overlay.
+phase2_stage_x86_run_root_overlays() {
+    local dest=$1
+    local swift=$dest/darwin/usr/lib/swift
+    local name rc fail=0
+    local -a staged_names=() staged_srcs=() refused=()
+    mkdir -p "$swift"
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        rc=0
+        phase2_copy_loadable_overlay "$swift" "$name" || rc=$?
+        case "$rc" in
+            0)
+                staged_names+=("$name")
+                staged_srcs+=("$PHASE2_OVERLAY_SRC")
+                ;;
+            2)
+                refused+=("$name|$PHASE2_OVERLAY_SRC")
+                fail=1
+                ;;
+        esac
+    done < <(phase2_twelve_overlay_names)
+    local i
+    if [ "${#staged_names[@]}" -gt 0 ]; then
+        for i in "${!staged_names[@]}"; do
+            phase2_print_overlay_provenance \
+                "${staged_names[$i]}" \
+                "${staged_srcs[$i]}" \
+                "$swift/${staged_names[$i]}"
+        done
+    fi
+    if [ "${#refused[@]}" -gt 0 ]; then
+        for i in "${refused[@]}"; do
+            printf 'CANNOT_STAGE_CACHE_EXTRACT name=%s src=%s\n' \
+                "${i%%|*}" "${i#*|}"
+        done
+    fi
+    return "$fail"
+}
+
 # Stage FE overlays into $1/darwin/usr/lib/swift/. Prints OK or MISSING=a,b,c.
 # Missing overlays are a named CANNOT_X86_OVERLAYS_NOT_BUILT, not the macOS
-# CoreSimulator marker.
+# CoreSimulator marker. Cache extracts are not staged; stderr names
+# CANNOT_STAGE_CACHE_EXTRACT and the name is listed in MISSING=.
 phase2_stage_x86_fe_overlays() {
     local dest=$1
     local swift=$dest/darwin/usr/lib/swift
     mkdir -p "$swift"
-    local missing=() name src
+    local missing=() name rc
     while IFS= read -r name; do
         [ -n "$name" ] || continue
-        if src=$(phase2_find_x86_overlay "$name"); then
-            cp -f "$src" "$swift/$name"
-        else
-            missing+=("$name")
-        fi
+        rc=0
+        phase2_copy_loadable_overlay "$swift" "$name" || rc=$?
+        case "$rc" in
+            0) ;;
+            2)
+                echo "CANNOT_STAGE_CACHE_EXTRACT name=$name src=$PHASE2_OVERLAY_SRC" >&2
+                missing+=("$name")
+                ;;
+            *)
+                missing+=("$name")
+                ;;
+        esac
     done < <(phase2_twelve_overlay_names)
     if [ "${#missing[@]}" -eq 0 ]; then
         printf 'OK\n'
@@ -1219,22 +1378,25 @@ phase2_fill_x86_libswiftcompat() {
     fi
 }
 
-# Stage BASE swift runtime dylibs that exist as x86 Mach-O in the overlay
-# search dirs (stdlib cross-build / operator Apple overlays). Never copy arm64.
+# Stage BASE swift runtime dylibs from the overlay search. Always overwrite
+# from a loadable source (artifacts first). Never keep a dest that is only
+# x86 Mach-O — that is how libswiftObjectiveC stayed the Apple cache extract
+# while the other four overlays came from artifacts. Never copy arm64.
+# Cache extracts are refused, not copied.
 phase2_fill_x86_base_swift_dylibs() {
     local dest=$1
     local swift=$dest/darwin/usr/lib/swift
-    local name src
+    local name rc
     mkdir -p "$swift"
     while IFS= read -r name; do
         [ -n "$name" ] || continue
-        if phase2_is_x86_macho "$swift/$name"; then
-            continue
-        fi
-        rm -f "$swift/$name"
-        if src=$(phase2_find_x86_overlay "$name"); then
-            cp -f "$src" "$swift/$name"
-        fi
+        rc=0
+        phase2_copy_loadable_overlay "$swift" "$name" || rc=$?
+        case "$rc" in
+            2)
+                echo "CANNOT_STAGE_CACHE_EXTRACT name=$name src=$PHASE2_OVERLAY_SRC" >&2
+                ;;
+        esac
     done < <(phase2_twelve_overlay_names)
 }
 
@@ -1252,9 +1414,18 @@ phase2_stage_x86_mrroot_layout() {
     while IFS= read -r rel; do
         [ -n "$rel" ] || continue
         leaf=$(phase2_layout_leaf "$rel")
-        if ! phase2_is_x86_macho "$dest/$rel"; then
-            missing+=("$leaf")
-        fi
+        case "$rel" in
+            darwin/usr/lib/swift/*)
+                if ! phase2_is_loadable_x86_overlay "$dest/$rel"; then
+                    missing+=("$leaf")
+                fi
+                ;;
+            *)
+                if ! phase2_is_x86_macho "$dest/$rel"; then
+                    missing+=("$leaf")
+                fi
+                ;;
+        esac
     done < <(phase2_base_layout_macho_names)
 
     while IFS= read -r name; do
@@ -1266,10 +1437,10 @@ phase2_stage_x86_mrroot_layout() {
 
     while IFS= read -r name; do
         [ -n "$name" ] || continue
-        if ! phase2_is_x86_macho "$dest/darwin/usr/lib/swift/$name"; then
+        if ! phase2_is_loadable_x86_overlay "$dest/darwin/usr/lib/swift/$name"; then
             missing+=("$name")
         fi
-        if ! phase2_is_x86_macho "$fe/darwin/usr/lib/swift/$name"; then
+        if ! phase2_is_loadable_x86_overlay "$fe/darwin/usr/lib/swift/$name"; then
             missing+=("$name")
         fi
     done < <(phase2_twelve_overlay_names)

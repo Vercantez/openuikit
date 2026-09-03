@@ -5,6 +5,9 @@
 #   objects in $W/scratch/ud-guest-x86_64/fe  (never scratch/ud-guest)
 #   libCFTest.dylib from build_cfobjc.sh + build_cftest_harness.sh
 #     (never a stub dylib; link_ud_guest.sh stays the only ud_guest linker)
+#   after link, before run: stage that dylib into
+#     scratch/mrroot_full-x86_64/darwin/usr/lib/libCFTest.dylib
+#     (arm64 analogue: build_cftest_harness.sh -> $W/root; not build_full.sh)
 #   libswiftcompat.dylib in that tree's lib/
 #   link via foundation-macho/scripts/link_ud_guest.sh  (no second linker)
 #   binary at $W/scratch/ud-guest-x86_64/bin/ud_guest, handed to rung a as
@@ -635,6 +638,47 @@ phase2_ud_guest_check_loads() {
         return 1
     fi
     return 0
+}
+
+# Stage libCFTest.dylib into a named run root, after link, before run.
+# Arm64: build_cftest_harness.sh copies $W/lib/libCFTest.dylib into
+# $W/root/darwin/usr/lib/ when that directory exists (/work/root). x86 W is
+# scratch/ud-guest-x86_64; the run root is scratch/mrroot_full-x86_64.
+# full/scripts/build_full.sh does not stage libCFTest (ARCH does not change
+# that). Never copy onto the CoreFoundation.framework slot: a byte-identical
+# copy there is the duplicate-image refusal in run_ud_guest.sh.
+# Prints: status=cold-built|satisfied path=… sha256=…
+phase2_stage_cftest_into_run_root() {
+    local src=$1 dest_root=$2
+    local dest=$dest_root/darwin/usr/lib/libCFTest.dylib
+    local cf_slot=$dest_root/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
+    local sha a b already=0
+    if [ ! -f "$src" ] || ! phase2_is_x86_macho "$src"; then
+        printf 'CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib reason=no x86 Mach-O to stage into run root src=%s\n' \
+            "${src:-empty}"
+        return 1
+    fi
+    mkdir -p "$(dirname "$dest")"
+    if [ -f "$dest" ] && cmp -s "$src" "$dest"; then
+        already=1
+    else
+        cp -f "$src" "$dest"
+    fi
+    sha=$(sha256sum "$dest" | awk '{print $1}')
+    if [ -f "$cf_slot" ]; then
+        a=$(md5sum "$cf_slot" | awk '{print $1}')
+        b=$(md5sum "$dest" | awk '{print $1}')
+        if [ "$a" = "$b" ]; then
+            printf 'CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib reason=CoreFoundation slot is a byte-identical copy of libCFTest.dylib (duplicate-image refusal) path=%s\n' \
+                "$cf_slot"
+            return 1
+        fi
+    fi
+    if [ "$already" -eq 1 ]; then
+        printf 'status=satisfied path=%s sha256=%s\n' "$dest" "$sha"
+    else
+        printf 'status=cold-built path=%s sha256=%s\n' "$dest" "$sha"
+    fi
 }
 
 # Main producer. Prints one line:
