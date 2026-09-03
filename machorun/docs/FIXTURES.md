@@ -343,8 +343,9 @@ rebuilt. The loader has to map them as they are.
 called. `cache_layout_packed` is the same executable against a copy of that
 dylib whose segments `scripts/pack_macho.py` rewrote into packed
 non-page-aligned layout (vmaddr/fileoff/section addr and offset, chained
-starts `segment_offset`, export-trie image offsets, nlist `n_value`, load
-command dataoffs — consistently). Both must print identical output. Darwin
+starts `segment_offset`, export-trie image offsets, nlist `n_value`, ARM64
+`ADRP`/`LDR` page immediates in `__text`/`__stubs`, load command dataoffs —
+consistently). Both must print identical output. Darwin
 cannot execute the packed dylib (arm64 dyld SIGKILLs unaligned segments), so
 the packed row is `oracle=norun` with the control's baseline copied into
 `tests/expected/cache_layout_packed.*`; `difftest.sh` still grades Linux
