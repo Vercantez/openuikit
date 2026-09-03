@@ -27,6 +27,24 @@ private enum UNPortableArchive {
   static let version: Int32 = 1
 }
 
+private func unDecodeObject<T: NSObject & NSCoding>(
+  _ type: T.Type, from coder: NSCoder, key: String
+) -> T? {
+  guard coder.containsValue(forKey: key) else { return nil }
+  return coder.decodeObject(of: type, forKey: key)
+}
+
+private func unDecodeObject(
+  _ types: [AnyClass], from coder: NSCoder, key: String
+) -> Any? {
+  guard coder.containsValue(forKey: key) else { return nil }
+  return coder.decodeObject(of: types, forKey: key)
+}
+
+private func unDecodeString(_ coder: NSCoder, _ key: String) -> String? {
+  unDecodeObject(NSString.self, from: coder, key: key) as String?
+}
+
 /// Bridged UserNotifications error.
 ///
 /// The pinned API digester records a stored `_nsError: NSError` overlay.
@@ -441,7 +459,7 @@ open class UNNotificationSound: NSObject, NSCopying, NSSecureCoding {
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     let kindTag = coder.decodeInt64(forKey: "kind")
-    let name = coder.decodeObject(of: NSString.self, forKey: "name") as String?
+    let name = unDecodeString(coder, "name")
     let volume = Float(coder.decodeDouble(forKey: "volume"))
     switch kindTag {
     case 0:
@@ -552,37 +570,32 @@ internal final class _UNContentStorage: NSObject {
 
   static func decodeFields(from coder: NSCoder) -> _UNContentStorage? {
     let result = _UNContentStorage()
-    if let attachments = coder.decodeObject(
-      of: [NSArray.self, UNNotificationAttachment.self],
-      forKey: "attachments"
+    if let attachments = unDecodeObject(
+      [NSArray.self, UNNotificationAttachment.self],
+      from: coder,
+      key: "attachments"
     ) as? [UNNotificationAttachment] {
       result.attachments = attachments
     }
-    result.badge = coder.decodeObject(of: NSNumber.self, forKey: "badge")
-    result.body = coder.decodeObject(of: NSString.self, forKey: "body") as String? ?? ""
-    result.categoryIdentifier =
-      coder.decodeObject(of: NSString.self, forKey: "categoryIdentifier") as String? ?? ""
-    result.launchImageName =
-      coder.decodeObject(of: NSString.self, forKey: "launchImageName") as String? ?? ""
-    result.sound = coder.decodeObject(of: UNNotificationSound.self, forKey: "sound")
-    result.subtitle =
-      coder.decodeObject(of: NSString.self, forKey: "subtitle") as String? ?? ""
-    result.threadIdentifier =
-      coder.decodeObject(of: NSString.self, forKey: "threadIdentifier") as String? ?? ""
-    result.title = coder.decodeObject(of: NSString.self, forKey: "title") as String? ?? ""
-    if let dictionary = coder.decodeObject(of: NSDictionary.self, forKey: "userInfo") {
+    result.badge = unDecodeObject(NSNumber.self, from: coder, key: "badge")
+    result.body = unDecodeString(coder, "body") ?? ""
+    result.categoryIdentifier = unDecodeString(coder, "categoryIdentifier") ?? ""
+    result.launchImageName = unDecodeString(coder, "launchImageName") ?? ""
+    result.sound = unDecodeObject(UNNotificationSound.self, from: coder, key: "sound")
+    result.subtitle = unDecodeString(coder, "subtitle") ?? ""
+    result.threadIdentifier = unDecodeString(coder, "threadIdentifier") ?? ""
+    result.title = unDecodeString(coder, "title") ?? ""
+    if let dictionary = unDecodeObject(NSDictionary.self, from: coder, key: "userInfo") {
       var restored: [AnyHashable: Any] = [:]
       dictionary.enumerateKeysAndObjects { key, value, _ in
         restored[key as! AnyHashable] = value
       }
       result.userInfo = restored
     }
-    result.summaryArgument =
-      coder.decodeObject(of: NSString.self, forKey: "summaryArgument") as String? ?? ""
+    result.summaryArgument = unDecodeString(coder, "summaryArgument") ?? ""
     let count = Int(coder.decodeInt64(forKey: "summaryArgumentCount"))
     result.summaryArgumentCount = count > 0 ? count : 1
-    result.targetContentIdentifier =
-      coder.decodeObject(of: NSString.self, forKey: "targetContentIdentifier") as String?
+    result.targetContentIdentifier = unDecodeString(coder, "targetContentIdentifier")
     guard
       let interruptionLevel = UNNotificationInterruptionLevel(
         rawValue: UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: "interruptionLevel")))
@@ -592,8 +605,7 @@ internal final class _UNContentStorage: NSObject {
     }
     result.interruptionLevel = interruptionLevel
     result.relevanceScore = coder.decodeDouble(forKey: "relevanceScore")
-    result.filterCriteria =
-      coder.decodeObject(of: NSString.self, forKey: "filterCriteria") as String?
+    result.filterCriteria = unDecodeString(coder, "filterCriteria")
     return result
   }
 }
@@ -775,10 +787,9 @@ public final class UNNotificationAttachment: NSObject, NSCopying, NSSecureCoding
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     guard
-      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
-        as String?,
-      let url = coder.decodeObject(of: NSURL.self, forKey: "url") as URL?,
-      let type = coder.decodeObject(of: NSString.self, forKey: "type") as String?
+      let identifier = unDecodeString(coder, "identifier"),
+      let url = unDecodeObject(NSURL.self, from: coder, key: "url") as URL?,
+      let type = unDecodeString(coder, "type")
     else {
       return nil
     }
@@ -876,8 +887,8 @@ public final class UNCalendarNotificationTrigger: UNNotificationTrigger {
 
   public required init?(coder: NSCoder) {
     guard
-      let dateComponents = coder.decodeObject(
-        of: NSDateComponents.self, forKey: "dateComponents"
+      let dateComponents = unDecodeObject(
+        NSDateComponents.self, from: coder, key: "dateComponents"
       ) as DateComponents?
     else {
       dateComponents = DateComponents()
@@ -978,26 +989,27 @@ public final class UNNotificationRequest: NSObject, NSCopying, NSSecureCoding {
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     guard
-      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
-        as String?,
-      let content = coder.decodeObject(
-        of: [UNNotificationContent.self, UNMutableNotificationContent.self],
-        forKey: "content"
+      let identifier = unDecodeString(coder, "identifier"),
+      let content = unDecodeObject(
+        [UNNotificationContent.self, UNMutableNotificationContent.self],
+        from: coder,
+        key: "content"
       ) as? UNNotificationContent
     else {
       return nil
     }
     self.identifier = identifier
     self.content = content
-    self.trigger = coder.decodeObject(
-      of: [
+    self.trigger = unDecodeObject(
+      [
         UNNotificationTrigger.self,
         UNTimeIntervalNotificationTrigger.self,
         UNCalendarNotificationTrigger.self,
         UNPushNotificationTrigger.self,
         UNLocationNotificationTrigger.self,
       ],
-      forKey: "trigger"
+      from: coder,
+      key: "trigger"
     ) as? UNNotificationTrigger
     super.init()
   }
@@ -1035,10 +1047,8 @@ open class UNNotification: NSObject, NSCopying, NSSecureCoding {
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     guard
-      let date = coder.decodeObject(of: NSDate.self, forKey: "date") as Date?,
-      let request = coder.decodeObject(
-        of: UNNotificationRequest.self, forKey: "request"
-      )
+      let date = unDecodeObject(NSDate.self, from: coder, key: "date") as Date?,
+      let request = unDecodeObject(UNNotificationRequest.self, from: coder, key: "request")
     else {
       return nil
     }
@@ -1077,12 +1087,10 @@ open class UNNotificationResponse: NSObject, NSCopying, NSSecureCoding {
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     guard
-      let notification = coder.decodeObject(
-        of: UNNotification.self, forKey: "notification"
+      let notification = unDecodeObject(
+        UNNotification.self, from: coder, key: "notification"
       ),
-      let actionIdentifier = coder.decodeObject(
-        of: NSString.self, forKey: "actionIdentifier"
-      ) as String?
+      let actionIdentifier = unDecodeString(coder, "actionIdentifier")
     else {
       return nil
     }
@@ -1122,8 +1130,7 @@ public final class UNTextInputNotificationResponse: UNNotificationResponse {
   }
 
   public required init?(coder: NSCoder) {
-    userText =
-      coder.decodeObject(of: NSString.self, forKey: "userText") as String? ?? ""
+    userText = unDecodeString(coder, "userText") ?? ""
     super.init(coder: coder)
   }
 
@@ -1163,10 +1170,8 @@ public final class UNNotificationActionIcon: NSObject, NSCopying, NSSecureCoding
     guard coder.containsValue(forKey: UNPortableArchive.versionKey) else { return nil }
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
-    systemImageName =
-      coder.decodeObject(of: NSString.self, forKey: "systemImageName") as String?
-    templateImageName =
-      coder.decodeObject(of: NSString.self, forKey: "templateImageName") as String?
+    systemImageName = unDecodeString(coder, "systemImageName")
+    templateImageName = unDecodeString(coder, "templateImageName")
     super.init()
   }
 
@@ -1215,9 +1220,8 @@ open class UNNotificationAction: NSObject, NSCopying, NSSecureCoding {
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     guard
-      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
-        as String?,
-      let title = coder.decodeObject(of: NSString.self, forKey: "title") as String?
+      let identifier = unDecodeString(coder, "identifier"),
+      let title = unDecodeString(coder, "title")
     else {
       return nil
     }
@@ -1226,7 +1230,7 @@ open class UNNotificationAction: NSObject, NSCopying, NSSecureCoding {
     options = UNNotificationActionOptions(
       rawValue: UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: "options")))
     )
-    icon = coder.decodeObject(of: UNNotificationActionIcon.self, forKey: "icon")
+    icon = unDecodeObject(UNNotificationActionIcon.self, from: coder, key: "icon")
     super.init()
   }
 
@@ -1281,12 +1285,8 @@ public final class UNTextInputNotificationAction: UNNotificationAction {
   }
 
   public required init?(coder: NSCoder) {
-    textInputButtonTitle =
-      coder.decodeObject(of: NSString.self, forKey: "textInputButtonTitle") as String?
-      ?? ""
-    textInputPlaceholder =
-      coder.decodeObject(of: NSString.self, forKey: "textInputPlaceholder") as String?
-      ?? ""
+    textInputButtonTitle = unDecodeString(coder, "textInputButtonTitle") ?? ""
+    textInputPlaceholder = unDecodeString(coder, "textInputPlaceholder") ?? ""
     super.init(coder: coder)
   }
 
@@ -1372,26 +1372,24 @@ public final class UNNotificationCategory: NSObject, NSCopying, NSSecureCoding {
     let version = coder.decodeInt32(forKey: UNPortableArchive.versionKey)
     guard version == UNPortableArchive.version else { return nil }
     guard
-      let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier")
-        as String?
+      let identifier = unDecodeString(coder, "identifier")
     else {
       return nil
     }
     self.identifier = identifier
     actions =
-      (coder.decodeObject(
-        of: [NSArray.self, UNNotificationAction.self, UNTextInputNotificationAction.self],
-        forKey: "actions"
+      (unDecodeObject(
+        [NSArray.self, UNNotificationAction.self, UNTextInputNotificationAction.self],
+        from: coder,
+        key: "actions"
       ) as? [UNNotificationAction]) ?? []
     intentIdentifiers =
-      (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "intentIdentifiers")
-        as? [String]) ?? []
+      (unDecodeObject(
+        [NSArray.self, NSString.self], from: coder, key: "intentIdentifiers"
+      ) as? [String]) ?? []
     hiddenPreviewsBodyPlaceholder =
-      coder.decodeObject(of: NSString.self, forKey: "hiddenPreviewsBodyPlaceholder")
-      as String? ?? ""
-    categorySummaryFormat =
-      coder.decodeObject(of: NSString.self, forKey: "categorySummaryFormat") as String?
-      ?? ""
+      unDecodeString(coder, "hiddenPreviewsBodyPlaceholder") ?? ""
+    categorySummaryFormat = unDecodeString(coder, "categorySummaryFormat") ?? ""
     options = UNNotificationCategoryOptions(
       rawValue: UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: "options")))
     )
