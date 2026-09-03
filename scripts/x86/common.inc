@@ -74,6 +74,58 @@ phase2_git() {
         -C "$abs" "$@"
 }
 
+# Product stamp next to the artefact. The loader uses the contracted name
+# machorun/build/.source-tree (same identifier as HEAD:machorun / the
+# machorun-inrepo attestation). Other products get a sibling
+# .source-tree.<basename> so rebuilding the loader cannot make darwin/objc4/
+# quartz/tbd look fresh. build.sh's build/.input-hashes hashes a filtered
+# glob (*.c/*.h/*.sh, not *.S) under a different identifier than the pin;
+# reuse names the tree the pin already prints. A binary older than its own
+# source must not pass every gate.
+phase2_source_tree_stamp_path() {
+    local product=$1
+    local dir base
+    dir=$(dirname "$product")
+    base=$(basename "$product")
+    if [ "$base" = machorun ]; then
+        printf '%s/.source-tree\n' "$dir"
+    else
+        printf '%s/.source-tree.%s\n' "$dir" "$base"
+    fi
+}
+
+# Empty stdout = stamp matches HEAD:machorun. Otherwise no-stamp or
+# source-tree <old>→<new>.
+phase2_source_tree_reason() {
+    local root=$1 product=$2
+    local live stamp_file stamp
+    live=$(phase2_git "$root" rev-parse HEAD:machorun 2>/dev/null | tr -d '[:space:]') || live=
+    stamp_file=$(phase2_source_tree_stamp_path "$product")
+    if [ ! -f "$stamp_file" ]; then
+        printf '%s\n' no-stamp
+        return 0
+    fi
+    stamp=$(tr -d '[:space:]' < "$stamp_file")
+    if [ -z "$stamp" ]; then
+        printf '%s\n' no-stamp
+        return 0
+    fi
+    if [ -n "$live" ] && [ "$stamp" = "$live" ]; then
+        return 0
+    fi
+    printf 'source-tree %s→%s\n' "$stamp" "${live:-unknown}"
+}
+
+phase2_write_source_tree_stamp() {
+    local root=$1 product=$2
+    local live stamp_file
+    live=$(phase2_git "$root" rev-parse HEAD:machorun 2>/dev/null | tr -d '[:space:]') || return 1
+    [ -n "$live" ] || return 1
+    stamp_file=$(phase2_source_tree_stamp_path "$product")
+    mkdir -p "$(dirname "$stamp_file")"
+    printf '%s\n' "$live" > "$stamp_file"
+}
+
 # Probe Focus pin. One line, never silent:
 #   MATCH toplevel=... observed=<sha>
 #   MISMATCH start=... toplevel=... expected=<sha> observed=<sha>

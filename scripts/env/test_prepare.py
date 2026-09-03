@@ -9,6 +9,7 @@ import re
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,9 +20,12 @@ from prepare import (  # noqa: E402
     expected_cannot_for_host,
     guest_out_suffix,
     host_arch,
+    loader_source_tree_stamp,
+    maybe_build_loader,
     prepare,
     resolve_row_path,
     summarize,
+    write_source_tree_stamp,
 )
 from contract import load_contract  # noqa: E402
 
@@ -239,6 +243,119 @@ class SuffixPathPrepareTests(unittest.TestCase):
             self.assertEqual(len(oc), 1, proc.stdout)
             self.assertNotIn("CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT", oc[0])
             self.assertIn("export-x86_64", oc[0])
+
+
+class LoaderSourceTreeTests(unittest.TestCase):
+    """Reuse a loader only when machorun/build/.source-tree matches HEAD:machorun.
+
+    A binary older than its own source used to pass every gate: existence was
+    the only test, while machorun-inrepo attested the new tree.
+    """
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory(prefix="env-prepare-loader.")
+        self.root = Path(self._tmp.name)
+        (self.root / "machorun" / "src").mkdir(parents=True)
+        (self.root / "machorun" / "scripts").mkdir(parents=True)
+        (self.root / "machorun" / "src" / "util.c").write_text("int x;\n", encoding="utf-8")
+        (self.root / "machorun" / "scripts" / "build.sh").write_text(
+            "#!/bin/sh\nexit 0\n", encoding="utf-8"
+        )
+        subprocess.run(["git", "init"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "add", "machorun"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(
+            [
+                "git",
+                "-c",
+                "user.email=prepare-test@example.com",
+                "-c",
+                "user.name=prepare-test",
+                "commit",
+                "-m",
+                "init",
+            ],
+            cwd=self.root,
+            check=True,
+            capture_output=True,
+        )
+        tree = subprocess.run(
+            ["git", "rev-parse", "HEAD:machorun"],
+            cwd=self.root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.tree = tree.stdout.strip()
+        self.build_calls: list[list[str]] = []
+        import prepare as prepare_mod
+
+        self._orig_run = prepare_mod._run
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def _touch_loader(self) -> Path:
+        loader = self.root / "machorun" / "build" / "machorun"
+        loader.parent.mkdir(parents=True, exist_ok=True)
+        loader.write_bytes(b"fake-loader\n")
+        loader.chmod(0o755)
+        return loader
+
+    def _intercept_build(self, argv: list[str], cwd=None):
+        if argv and argv[0] == "sh" and len(argv) >= 3 and argv[2] == "loader":
+            self.build_calls.append(list(argv))
+            self._touch_loader()
+            return subprocess.CompletedProcess(argv, 0, "", "")
+        return self._orig_run(argv, cwd=cwd)
+
+    def test_matching_stamp_is_satisfied_reused(self) -> None:
+        loader = self._touch_loader()
+        write_source_tree_stamp(loader_source_tree_stamp(self.root), self.tree)
+        with patch("prepare._run", side_effect=self._intercept_build):
+            out = maybe_build_loader(self.root, verify_only=False, arch="aarch64")
+        self.assertEqual(out.status, "satisfied")
+        self.assertEqual(out.id, "machorun-loader")
+        self.assertIn("reused=1", out.detail)
+        self.assertIn(str(loader), out.detail)
+        self.assertEqual(self.build_calls, [])
+
+    def test_stale_stamp_cold_builds_with_reason(self) -> None:
+        self._touch_loader()
+        old = "a" * 40
+        write_source_tree_stamp(loader_source_tree_stamp(self.root), old)
+        with patch("prepare._run", side_effect=self._intercept_build):
+            out = maybe_build_loader(self.root, verify_only=False, arch="aarch64")
+        self.assertEqual(out.status, "cold-built")
+        self.assertEqual(len(self.build_calls), 1)
+        self.assertIn(f"reason=source-tree {old}→{self.tree}", out.detail)
+        self.assertEqual(
+            loader_source_tree_stamp(self.root).read_text(encoding="utf-8").strip(),
+            self.tree,
+        )
+
+    def test_missing_stamp_cold_builds(self) -> None:
+        self._touch_loader()
+        self.assertFalse(loader_source_tree_stamp(self.root).exists())
+        with patch("prepare._run", side_effect=self._intercept_build):
+            out = maybe_build_loader(self.root, verify_only=False, arch="aarch64")
+        self.assertEqual(out.status, "cold-built")
+        self.assertEqual(len(self.build_calls), 1)
+        self.assertIn("reason=no-stamp", out.detail)
+        self.assertEqual(
+            loader_source_tree_stamp(self.root).read_text(encoding="utf-8").strip(),
+            self.tree,
+        )
+
+    def test_verify_only_stale_is_unsatisfied_never_satisfied(self) -> None:
+        self._touch_loader()
+        old = "b" * 40
+        write_source_tree_stamp(loader_source_tree_stamp(self.root), old)
+        with patch("prepare._run", side_effect=self._intercept_build):
+            out = maybe_build_loader(self.root, verify_only=True, arch="aarch64")
+        self.assertEqual(out.status, "unsatisfied")
+        self.assertIn(f"reason=source-tree {old}→{self.tree}", out.detail)
+        self.assertEqual(self.build_calls, [])
+        self.assertNotIn("reused=1", out.detail)
 
 
 if __name__ == "__main__":

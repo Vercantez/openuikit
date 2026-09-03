@@ -330,18 +330,88 @@ def verify_absolute_hash(path: Path, expected: str, ident: str) -> Outcome:
     return Outcome("satisfied", ident, f"sha256={expected} reused=1")
 
 
+# Loader stamp: machorun/build/.source-tree, one git tree hash, same identifier
+# as `git rev-parse HEAD:machorun` / the machorun-inrepo attestation.
+#
+# build.sh already writes build/.input-hashes (check_stale.sh --stamp): one
+# content hash per artefact. The loader row hashes `src` + `scripts/build.sh`
+# for *.c/*.h/*.cpp/*.mm/*.m/*.sh, and darwin/objc4/quartz have their own
+# rows. That would have caught a util.c change. It is still the wrong
+# identifier for this gate: the in-repo pin prints HEAD:machorun, and the
+# measured failure was that attestation naming the NEW tree while a binary
+# built from the OLD tree passed every existence check. .input-hashes also
+# misses *.S (tlv_asm.S). Reuse compares the tree the pin already names.
+LOADER_SOURCE_TREE_STAMP = Path("machorun") / "build" / ".source-tree"
+
+
+def source_tree_stamp_path(product: Path) -> Path:
+    """Stamp file next to a built product.
+
+    The loader uses the contracted name machorun/build/.source-tree. Other
+    products (libSystem.B.dylib, libobjc.A.dylib, libquartz.dylib,
+    libSystem.tbd) get a sibling .source-tree.<basename> so a stamp written
+    after rebuilding one cannot make a different artefact look fresh.
+    """
+    if product.name == "machorun":
+        return product.parent / ".source-tree"
+    return product.parent / f".source-tree.{product.name}"
+
+
+def loader_source_tree_stamp(root: Path) -> Path:
+    return root / LOADER_SOURCE_TREE_STAMP
+
+
+def head_machorun_tree(root: Path) -> str:
+    """Git tree of HEAD:machorun, or empty if it cannot be read."""
+    result = _run(["git", "-C", str(root), "rev-parse", "HEAD:machorun"])
+    if result.returncode != 0:
+        return ""
+    return result.stdout.strip()
+
+
+def read_source_tree_stamp(stamp: Path) -> str:
+    if not stamp.is_file() or stamp.is_symlink():
+        return ""
+    return stamp.read_text(encoding="utf-8").strip()
+
+
+def write_source_tree_stamp(stamp: Path, tree: str) -> None:
+    stamp.parent.mkdir(parents=True, exist_ok=True)
+    stamp.write_text(tree + "\n", encoding="utf-8")
+
+
+def source_tree_mismatch_reason(root: Path, stamp: Path) -> str | None:
+    """None when the stamp matches HEAD:machorun; else no-stamp / source-tree old→new."""
+    live = head_machorun_tree(root)
+    recorded = read_source_tree_stamp(stamp)
+    if not recorded:
+        return "no-stamp"
+    if live and recorded == live:
+        return None
+    return f"source-tree {recorded}→{live or 'unknown'}"
+
+
 def maybe_build_loader(root: Path, verify_only: bool, arch: str) -> Outcome:
     loader = root / "machorun" / "build" / "machorun"
-    if loader.is_file() and os.access(loader, os.X_OK) and not loader.is_symlink():
+    stamp = loader_source_tree_stamp(root)
+    present = loader.is_file() and os.access(loader, os.X_OK) and not loader.is_symlink()
+    reason = source_tree_mismatch_reason(root, stamp)
+    if present and reason is None:
         return Outcome("satisfied", "machorun-loader", f"path={loader} reused=1")
-    if arch not in ("aarch64", "arm64"):
+    if present:
+        # A binary older than HEAD:machorun must not look satisfied. verify_only
+        # reports the reason; otherwise rebuild even on x86_64 — this host
+        # already produced a loader. A missing loader on x86_64 stays cannot.
+        if verify_only:
+            return Outcome("unsatisfied", "machorun-loader", f"reason={reason}")
+    elif arch not in ("aarch64", "arm64"):
         return Outcome(
             "cannot",
             "machorun-loader",
             f"host={arch}",
             marker="CURSOR_ENV_CANNOT_BUILD_LOADER",
         )
-    if verify_only:
+    elif verify_only:
         return Outcome("unsatisfied", "machorun-loader", "missing loader")
     built = _run(["sh", str(root / "machorun" / "scripts" / "build.sh"), "loader"], cwd=root)
     if built.returncode != 0 or not loader.is_file():
@@ -351,7 +421,11 @@ def maybe_build_loader(root: Path, verify_only: bool, arch: str) -> Outcome:
             "machorun-loader",
             tail[-1] if tail else "build.sh loader failed",
         )
-    return Outcome("cold-built", "machorun-loader", f"path={loader}")
+    live = head_machorun_tree(root)
+    if live:
+        write_source_tree_stamp(stamp, live)
+    extra = f" reason={reason}" if reason else ""
+    return Outcome("cold-built", "machorun-loader", f"path={loader}{extra}")
 
 
 def product_outcome(
@@ -398,10 +472,13 @@ def product_outcome(
             return Outcome("unsatisfied", ident, f"missing {','.join(missing)}")
         return Outcome("satisfied", ident, f"files={len(hashes)}/{len(hashes)} reused=1")
     if ident == "tbd-stubs":
-        # gen_tbd is host-independent (nm on dylibs ∪ loader exports). With
-        # FULL_OUT_SUFFIX set, actually try it — never refuse solely because
-        # uname is x86_64. Empty suffix keeps the historical arm64/Linux
-        # cannot so existing tests stay byte-identical.
+        # Presence-only reuse. The x86 operator path (phase2.sh ensure_tbd)
+        # refuses a .tbd older than HEAD:machorun; this row does not
+        # cold-build darwin/objc4/quartz. gen_tbd is host-independent (nm on
+        # dylibs ∪ loader exports). With FULL_OUT_SUFFIX set, actually try
+        # it — never refuse solely because uname is x86_64. Empty suffix
+        # keeps the historical arm64/Linux cannot so existing tests stay
+        # byte-identical.
         if suffix:
             if path.is_dir() and any(path.glob("*.tbd")):
                 return Outcome("satisfied", ident, "tbd present reused=1")
@@ -466,6 +543,9 @@ def product_outcome(
             marker="CURSOR_ENV_CANNOT_BUILD_MODCACHE_SWIFTUI_GUEST",
         )
     if ident == "darwin-userland":
+        # Presence-only: this row does not cold-build. machorun-darwin /
+        # objc4 / quartz reuse-by-existence lives in scripts/x86/phase2.sh
+        # ensure_* and is stamped against HEAD:machorun there.
         probe = path / "libSystem.B.dylib"
         if probe.is_file() and not probe.is_symlink():
             return Outcome("satisfied", ident, f"path={path} reused=1")

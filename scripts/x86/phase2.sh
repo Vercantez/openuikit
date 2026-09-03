@@ -198,14 +198,17 @@ echo "==== machorun substrate (build.sh all, objc4, quartz, tbd) ===="
 
 ensure_loader() {
     local bin=$MACHORUN/build/machorun
-    if phase2_is_elf_x86_loader "$bin"; then
-        note machorun-loader satisfied
+    local reason
+    reason=$(phase2_source_tree_reason "$W" "$bin")
+    if phase2_is_elf_x86_loader "$bin" && [ -z "$reason" ]; then
+        note machorun-loader satisfied "reused=1"
         return 0
     fi
-    echo "== cold-build loader (CC=$CC)"
+    echo "== cold-build loader (CC=$CC${reason:+; reason=$reason})"
     sh "$MACHORUN/scripts/build.sh" loader
     if phase2_is_elf_x86_loader "$bin"; then
-        note machorun-loader cold-built
+        phase2_write_source_tree_stamp "$W" "$bin" || true
+        note machorun-loader cold-built "${reason:+reason=$reason}"
         return 0
     fi
     cannot machorun-loader BUILD_LOADER "scripts/build.sh loader did not produce an x86-64 ELF PIE at $bin"
@@ -214,14 +217,17 @@ ensure_loader() {
 
 ensure_darwin() {
     local dylib=$MACHORUN/darwin/usr/lib/libSystem.B.dylib
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        note machorun-darwin satisfied
+    local reason
+    reason=$(phase2_source_tree_reason "$W" "$dylib")
+    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib" && [ -z "$reason" ]; then
+        note machorun-darwin satisfied "reused=1"
         return 0
     fi
-    echo "== cold-build darwin userland (x86_64-apple-macos)"
+    echo "== cold-build darwin userland (x86_64-apple-macos${reason:+; reason=$reason})"
     sh "$MACHORUN/scripts/build.sh" darwin
     if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        note machorun-darwin cold-built
+        phase2_write_source_tree_stamp "$W" "$dylib" || true
+        note machorun-darwin cold-built "${reason:+reason=$reason}"
         return 0
     fi
     cannot machorun-darwin BUILD_DARWIN "libSystem.B.dylib is not X86_64 Mach-O after build.sh darwin ($(file -b "$dylib" 2>/dev/null || echo missing))"
@@ -230,14 +236,17 @@ ensure_darwin() {
 
 ensure_objc4() {
     local dylib=$MACHORUN/darwin/usr/lib/libobjc.A.dylib
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        note machorun-objc4 satisfied
+    local reason
+    reason=$(phase2_source_tree_reason "$W" "$dylib")
+    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib" && [ -z "$reason" ]; then
+        note machorun-objc4 satisfied "reused=1"
         return 0
     fi
-    echo "== cold-build objc4 (unblocks the objc fixture CANNOT_BUILD_LIBOBJC_X86)"
+    echo "== cold-build objc4 (unblocks the objc fixture CANNOT_BUILD_LIBOBJC_X86${reason:+; reason=$reason})"
     bash "$MACHORUN/scripts/build_objc4.sh"
     if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        note machorun-objc4 cold-built
+        phase2_write_source_tree_stamp "$W" "$dylib" || true
+        note machorun-objc4 cold-built "${reason:+reason=$reason}"
         return 0
     fi
     cannot machorun-objc4 BUILD_LIBOBJC_X86 "libobjc.A.dylib is not X86_64 Mach-O after build_objc4.sh"
@@ -246,14 +255,17 @@ ensure_objc4() {
 
 ensure_quartz() {
     local dylib=$MACHORUN/darwin/usr/lib/libquartz.dylib
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        note machorun-quartz satisfied
+    local reason
+    reason=$(phase2_source_tree_reason "$W" "$dylib")
+    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib" && [ -z "$reason" ]; then
+        note machorun-quartz satisfied "reused=1"
         return 0
     fi
-    echo "== cold-build quartz"
+    echo "== cold-build quartz${reason:+; reason=$reason}"
     bash "$MACHORUN/scripts/build_quartz.sh"
     if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        note machorun-quartz cold-built
+        phase2_write_source_tree_stamp "$W" "$dylib" || true
+        note machorun-quartz cold-built "${reason:+reason=$reason}"
         return 0
     fi
     cannot machorun-quartz BUILD_QUARTZ_X86 "libquartz.dylib is not X86_64 Mach-O after build_quartz.sh"
@@ -262,10 +274,12 @@ ensure_quartz() {
 
 ensure_tbd() {
     local tbd=$MACHORUN/sdk/usr/lib/libSystem.tbd
-    if [ -s "$tbd" ] && grep -q x86_64 "$tbd" && [ -x "$MACHORUN/build/machorun" ]; then
+    local reason
+    reason=$(phase2_source_tree_reason "$W" "$tbd")
+    if [ -s "$tbd" ] && grep -q x86_64 "$tbd" && [ -x "$MACHORUN/build/machorun" ] && [ -z "$reason" ]; then
         # Idempotent: a non-empty x86_64-macos tbd plus a live loader is enough.
         if grep -q 'x86_64-macos' "$tbd" 2>/dev/null || grep -q x86_64 "$tbd"; then
-            note machorun-tbd satisfied
+            note machorun-tbd satisfied "reused=1"
             return 0
         fi
     fi
@@ -273,7 +287,7 @@ ensure_tbd() {
         cannot machorun-tbd GENERATE_TBD "gen_tbd.sh CHECK 1 needs the host ELF loader; loader is missing"
         return 1
     fi
-    echo "== cold-generate .tbd (CHECK 1 against this loader)"
+    echo "== cold-generate .tbd (CHECK 1 against this loader${reason:+; reason=$reason})"
     # CHECK 4 scans every dylib under darwin/usr/lib. An arm64 staged
     # libswiftcompat beside a freshly built x86 libSystem is a mixed-slice
     # coin toss, not a generated stub. Park arm64 dylibs beside (do not
@@ -297,7 +311,8 @@ ensure_tbd() {
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -s "$tbd" ]; then
-        note machorun-tbd cold-built
+        phase2_write_source_tree_stamp "$W" "$tbd" || true
+        note machorun-tbd cold-built "${reason:+reason=$reason}"
         return 0
     fi
     tbd_state=missing
