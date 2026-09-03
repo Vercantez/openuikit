@@ -92,8 +92,11 @@ sub inventory_command {
     my $oc_art_logical = ($opencombine_artifacts =~ m{/export-x86_64/artifacts$})
         ? 'opencombine/export-x86_64/artifacts'
         : 'opencombine/export/artifacts';
+    my ($oc_result, $oc_result_logical) = ($opencombine_artifacts =~ m{/export-x86_64/artifacts$})
+        ? ("$opencombine_root/export-x86_64/RESULT.txt", 'opencombine/export-x86_64/RESULT.txt')
+        : ("$opencombine_root/export/RESULT.txt", 'opencombine/export/RESULT.txt');
     my @opencombine_files = (
-        [ "$opencombine_root/export/RESULT.txt", 'opencombine/export/RESULT.txt' ],
+        [ $oc_result, $oc_result_logical ],
         [ "$opencombine_artifacts/OpenCombine.o", "$oc_art_logical/OpenCombine.o" ],
         [ "$opencombine_artifacts/OpenCombine.swiftmodule", "$oc_art_logical/OpenCombine.swiftmodule" ],
         [ "$opencombine_artifacts/OpenCombine.swiftdoc", "$oc_art_logical/OpenCombine.swiftdoc" ],

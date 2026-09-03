@@ -93,7 +93,7 @@ class TrueIOSFullBuildContractTests(unittest.TestCase):
             'APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}',
             'SF=${SF:-$W/scratch/swift-foundation}',
             'SC=${SC:-$W/scratch/swift-collections}',
-            'BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot}',
+            'BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot${FULL_OUT_SUFFIX}}',
             '-platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION"',
             '--platform 7 --minimum-os "$MINOS" --sdk "$LINK_SDK_VERSION"',
         ):
