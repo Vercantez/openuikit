@@ -69,6 +69,8 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/relativetime/build_host_helper.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
+    "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
     "$ROOT/full/swiftui/guest_gate_inventories.inc" \
@@ -1485,6 +1487,15 @@ expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
     "producer names the committed linker"
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
     "phase2 still names the committed linker"
+expect_grep 'link_ud_guest.log' "$UDINC" "ud-guest spills the linker log to the work-tree root"
+expect_grep 'link_ud_guest.sh exit $st log=$log' "$UDINC" \
+    "UD_GUEST CANNOT names log= (does not flatten ld64)"
+expect_grep 'Never both' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "linker takes one _RopeModule.o, never both copies"
+expect_grep 'clang-18' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "link_ud_guest prefers clang-18"
+expect_grep '-nostdlib' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "link_ud_guest is -nostdlib"
 if grep -E '^[^#]*build_fe\.sh' "$UDINC" >/dev/null; then
     die_test "ud-guest-x86 invokes build_fe.sh"
 else
@@ -1714,6 +1725,30 @@ if CFOBJC_SKIP_COMPILE=1 bash "$ROOT/foundation-macho/scripts/test_build_cfobjc.
     ok "test_build_cfobjc.sh (argv + missing-CF)"
 else
     die_test "test_build_cfobjc.sh"
+fi
+
+echo "== link_ud_guest.sh clang-18, one rope, dummy X86_64 binary"
+if bash "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh"; then
+    ok "test_link_ud_guest.sh"
+else
+    die_test "test_link_ud_guest.sh"
+fi
+
+echo "== ud-guest-x86 linker log is a file path, not flattened ld64"
+mkdir -p "$wt/bin"
+link_report=$(phase2_ud_guest_link "$ROOT" "$wt" "${SYS:-$wt/fe/sysroot}" \
+    "$wt/bin/ud_guest" || true)
+if echo "$link_report" | grep -q 'CANNOT_UD_GUEST_UD_GUEST file=ud_guest' \
+    && echo "$link_report" | grep -q "log=$wt/link_ud_guest.log" \
+    && [ -f "$wt/link_ud_guest.log" ] \
+    && grep -q . "$wt/link_ud_guest.log"; then
+    if echo "$link_report" | grep -q 'ld64.lld'; then
+        die_test "CANNOT line still inlines ld64 output: $link_report"
+    else
+        ok "UD_GUEST CANNOT names log= under scratch/ud-guest-x86_64"
+    fi
+else
+    die_test "link log-spill got: $link_report"
 fi
 
 echo "== ud-guest-x86 compiler log is a file path, not inlined swiftc text"
