@@ -3,8 +3,8 @@
   "fileCount": 33,
   "files": {
     "concurrency/libswiftcompat.dylib": {
-      "bytes": 52848,
-      "sha256": "1f39acf8f78a7949a6ec1931735f75f6b7c4fdbd2093cc5e59af48b7d6aa096a"
+      "bytes": 17408,
+      "sha256": "08960791e16effb10e1e7c6f5d6951c2da29f0d5deff40adc41952a1a310fb29"
     },
     "concurrency/swift-macosx/Swift.swiftmodule/Swift.opt.bitstream": {
       "bytes": 1803972,
@@ -99,8 +99,8 @@
       "sha256": "c84e3849248ffba4c43e00feafe47d0324db06768b395710924e83c4f7a34957"
     },
     "libswiftcompat.dylib": {
-      "bytes": 51360,
-      "sha256": "3c623518c5e631b33509eb095e9e17428fea5ceaa96801b09941693e6efb72bd"
+      "bytes": 17408,
+      "sha256": "08960791e16effb10e1e7c6f5d6951c2da29f0d5deff40adc41952a1a310fb29"
     },
     "swift-macosx/Swift.swiftmodule/Swift.opt.bitstream": {
       "bytes": 1803972,
