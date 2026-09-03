@@ -16,7 +16,7 @@ W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
 . "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
 MACHORUN=${MACHORUN:-$W/machorun}
 MIN_OS=15.0
-SYS=$W/scratch/sysroot_fe4
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
 FULL=$W/build/full${FULL_OUT_SUFFIX}
 WORK=$W/build/core-guest-work${FULL_OUT_SUFFIX}
 MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
@@ -27,7 +27,7 @@ SWIFT_FOUNDATION_ICU=$W/scratch/swift-foundation-icu
 SWIFT_COLLECTIONS=$W/scratch/swift-collections
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
-OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
+OPENCOMBINE_ARTIFACTS=${OPENCOMBINE_ARTIFACTS:-$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/artifacts}
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
@@ -1495,9 +1495,16 @@ python3 "$MANIFEST_TOOL" dangling-symlinks \
     --output "$WORK/sdk-dangling.pre.tsv"
 
 require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" "$EXPECTED_OPENCOMBINE_RESULT" OpenCombine-result
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$EXPECTED_OPENCOMBINE_DOC" OpenCombine-doc
+if [ "$ARCH" = arm64 ]; then
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$EXPECTED_OPENCOMBINE_DOC" OpenCombine-doc
+else
+    if ! llvm-otool-18 -hv "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" 2>/dev/null \
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}"; then
+        die "NEEDS_X86_OPENCOMBINE: OpenCombine.o is not $ARCH (arm64 durable SHA $EXPECTED_OPENCOMBINE_OBJECT still stands; rebuild for $TARGET beside that tree)"
+    fi
+fi
 require_hash "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$EXPECTED_OPENCOMBINE_HELPER" OpenCombine-helper
 require_hash "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" "$EXPECTED_OPENCOMBINE_HEADER" OpenCombine-header
 require_hash "$OPENCOMBINE_HELPERS/include/module.modulemap" "$EXPECTED_OPENCOMBINE_MODULEMAP" OpenCombine-modulemap

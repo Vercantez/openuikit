@@ -22,7 +22,7 @@ OUT=$W/build/swiftui-guest${FULL_OUT_SUFFIX}
 PACKAGE=$OUT/package
 AUDIT=$OUT/audit
 FULL=$W/build/full${FULL_OUT_SUFFIX}
-SYS=$W/scratch/sysroot_fe4
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
 MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 MC=$W/scratch/modcache_swiftui_guest${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
@@ -32,7 +32,7 @@ FE_OS=$FULL/foundation/os
 FE_CSHIMS=$FULL/foundation/cshims
 SWIFTUI_SOURCE_DIR=$UIKIT/Sources/SwiftUI
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
-OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
+OPENCOMBINE_ARTIFACTS=${OPENCOMBINE_ARTIFACTS:-$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/artifacts}
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 
@@ -132,7 +132,8 @@ support_digest() {
 generate_build_input_inventory() {
     perl "$ATTEST" inventory \
         --w "$W" --uikit "$UIKIT" --full "$FULL" --sysroot "$SYS" \
-        --opencombine-root "$OPENCOMBINE_ROOT"
+        --opencombine-root "$OPENCOMBINE_ROOT" \
+        --opencombine-artifacts "$OPENCOMBINE_ARTIFACTS"
 }
 
 assert_build_input_inventory() {
@@ -350,6 +351,19 @@ mkdir -p "$OUT/fonts" "$PACKAGE" "$AUDIT" "$MC" \
 cp -a "$RESOURCE_INPUT" "$OUT/Focus_Widget.bundle"
 cp "$SYSTEM_FONT" "$OUT/fonts/DejaVuSans.ttf"
 cp "$MEDIUM_FONT" "$OUT/fonts/DejaVuSans-Bold.ttf"
+# FocusWidgetGuestMain.swift opens the docker-era guest-visible path
+# /w/build/swiftui-guest/fonts regardless of FULL_OUT_SUFFIX. Stage fonts
+# there (and under $W/build/swiftui-guest/fonts for a /w -> $W symlink)
+# without touching arm64 Mach-O outputs.
+HARNESS_FONT_DIR=$W/build/swiftui-guest/fonts
+mkdir -p "$HARNESS_FONT_DIR"
+cp -f "$OUT/fonts/DejaVuSans.ttf" "$HARNESS_FONT_DIR/"
+cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" "$HARNESS_FONT_DIR/"
+if [ -d /w/build ] || mkdir -p /w/build/swiftui-guest/fonts 2>/dev/null; then
+    mkdir -p /w/build/swiftui-guest/fonts
+    cp -f "$OUT/fonts/DejaVuSans.ttf" /w/build/swiftui-guest/fonts/
+    cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" /w/build/swiftui-guest/fonts/
+fi
 for module in OpenUIKit OpenCoreGraphics; do
     for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
         cp "$FULL/$module.$extension" "$PACKAGE/$module.$extension"
@@ -1104,23 +1118,23 @@ runtime_closure_edge_count=$(grep -Ec '^(edge|weak-missing)'"$(printf '\t')" "$R
 }
 runtime_before=$(runtime_fingerprint)
 
-echo "== run arm64 Mach-O under machorun on Linux"
-if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
-    echo "focus_widget_guest: compile/link may proceed on this VM; execution cannot" >&2
+echo "== run $ARCH Mach-O under machorun on Linux"
+if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_widget_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
         || exit $?
 fi
 export MACHORUN_ROOT="$MRROOT"
 cd "$OUT"
 "$MRROOT/machorun" ./focus_widget_guest \
-    /w/build/swiftui-guest/Focus_Widget.bundle \
-    /w/build/swiftui-guest/focus-search-widget.png | tee guest-first.log
+    "$OUT/Focus_Widget.bundle" \
+    "$OUT/focus-search-widget.png" | tee guest-first.log
 cp "$OUT/focus-search-widget.png" "$OUT/focus-search-widget.first.png"
 assert_build_input_inventory
 assert_runtime_closure
 "$MRROOT/machorun" ./focus_widget_guest \
-    /w/build/swiftui-guest/Focus_Widget.bundle \
-    /w/build/swiftui-guest/focus-search-widget.png | tee guest-repeat.log
+    "$OUT/Focus_Widget.bundle" \
+    "$OUT/focus-search-widget.png" | tee guest-repeat.log
 cmp -s "$OUT/focus-search-widget.first.png" "$OUT/focus-search-widget.png" || {
     echo "focus_widget_guest: separate guest processes emitted different PNG bytes" >&2
     exit 2
@@ -1151,8 +1165,8 @@ set +e
 (
     cd "$missing_control"
     "$MRROOT/machorun" ./focus_widget_guest \
-        /w/build/swiftui-guest/Focus_Widget.bundle \
-        /w/build/swiftui-guest/missing-control-must-not-exist.png
+        "$OUT/Focus_Widget.bundle" \
+        "$OUT/missing-control-must-not-exist.png"
 ) > "$AUDIT/missing-swiftui.stdout" 2> "$AUDIT/missing-swiftui.stderr"
 missing_rc=$?
 set -e
@@ -1183,8 +1197,8 @@ set +e
 (
     cd "$missing_openuikit"
     "$MRROOT/machorun" ./focus_widget_guest \
-        /w/build/swiftui-guest/Focus_Widget.bundle \
-        /w/build/swiftui-guest/missing-openuikit-must-not-exist.png
+        "$OUT/Focus_Widget.bundle" \
+        "$OUT/missing-openuikit-must-not-exist.png"
 ) > "$AUDIT/missing-openuikit.stdout" 2> "$AUDIT/missing-openuikit.stderr"
 missing_openuikit_rc=$?
 set -e
@@ -1221,7 +1235,7 @@ run_missing_observation_control() {
     (
         cd "$control"
         "$MRROOT/machorun" ./focus_widget_guest \
-            /w/build/swiftui-guest/Focus_Widget.bundle "$artifact"
+            "$OUT/Focus_Widget.bundle" "$artifact"
     ) > "$stdout" 2> "$stderr"
     local rc=$?
     set -e

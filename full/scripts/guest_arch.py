@@ -39,3 +39,8 @@ def swift_module_triple(arch: str | None = None) -> str:
 
 def otool_cpu(arch: str | None = None) -> str:
     return "X86_64" if (arch or guest_arch()) == "x86_64" else "ARM64"
+
+
+def out_suffix(arch: str | None = None) -> str:
+    """Arm64 keeps historical paths; x86_64 writes beside them."""
+    return "-x86_64" if (arch or guest_arch()) == "x86_64" else ""

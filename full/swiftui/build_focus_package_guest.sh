@@ -27,7 +27,7 @@ PACKAGE=$OUT/package
 MODULE_CACHE=$OUT/module-cache
 AUDIT=$OUT/audit
 FULL=$W/build/full${FULL_OUT_SUFFIX}
-SYS=$W/scratch/sysroot_fe4
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
 MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 
@@ -377,8 +377,8 @@ grep -Fqx $'file\tpackage/FocusPackageProbe.framework/FocusPackageProbe\t'\
 "$(hash_file "$PROVIDER/FocusPackageProbe")" \
     "$AUDIT/package-runtime-closure.manifest" \
     || die "dynamic Bundle provider is absent from recursive runtime closure"
-if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
-    echo "focus_package_guest: compile/link may proceed on this VM; execution cannot" >&2
+if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_package_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
         || exit $?
 fi

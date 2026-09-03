@@ -6,10 +6,12 @@
 set -euo pipefail
 
 W=${W:-/w}
+# shellcheck disable=SC1091
+. "$W/full/scripts/guest_arch.inc"
 RESOURCE_INPUT=${1:?usage: test_focus_widget_guest_adversarial.sh <normalized-Focus_Widget.bundle>}
-FULL=$W/build/full
-SYS=$W/scratch/sysroot_fe4
-MRROOT=$W/scratch/mrroot_full
+FULL=$W/build/full${FULL_OUT_SUFFIX}
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
+MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 ATTEST=$W/full/swiftui/focus_widget_guest_attest.pl
 BUILD=$W/full/swiftui/build_focus_widget_guest.sh
 
@@ -120,7 +122,7 @@ expect_resume_refusal() {
         sed -n '1,160p' "$log" >&2
         exit 2
     }
-    if grep -Eq '== run arm64 Mach-O|^PASS: exact unchanged Focus|^== PASS:' "$log"; then
+    if grep -Eq '== run (arm64|x86_64) Mach-O|^PASS: exact unchanged Focus|^== PASS:' "$log"; then
         echo "focus_widget_guest_adversarial: $label reached guest success before refusal" >&2
         sed -n '1,200p' "$log" >&2
         exit 2

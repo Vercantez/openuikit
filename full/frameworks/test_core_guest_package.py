@@ -3443,6 +3443,7 @@ class ShellContractTests(unittest.TestCase):
                         mutated_builder, mutated_wrapper
                     )
         self.assertIn('BUILD_FE_CACHE=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}', BUILDER.read_text(encoding="utf-8"))
+        self.assertIn('SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}', BUILDER.read_text(encoding="utf-8"))
         self.assertIn('"$BUILD_FE_CACHE"', BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))

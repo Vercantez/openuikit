@@ -60,7 +60,7 @@ sub inventory_tree {
 
 sub inventory_command {
     my (@args) = @_;
-    my ($w, $uikit, $full, $sysroot, $opencombine_root);
+    my ($w, $uikit, $full, $sysroot, $opencombine_root, $opencombine_artifacts);
     GetOptionsFromArray(
         \@args,
         'w=s'       => \$w,
@@ -68,6 +68,7 @@ sub inventory_command {
         'full=s'    => \$full,
         'sysroot=s' => \$sysroot,
         'opencombine-root=s' => \$opencombine_root,
+        'opencombine-artifacts=s' => \$opencombine_artifacts,
     ) or fail('invalid inventory options');
     fail('inventory takes no positional arguments') if @args;
     fail('inventory requires --w, --uikit, --full, --sysroot, and --opencombine-root')
@@ -80,12 +81,22 @@ sub inventory_command {
     fail("OpenCombine root is outside project root $w: $opencombine_root")
         unless beneath($opencombine_root, $w);
 
+    $opencombine_artifacts //= "$opencombine_root/export/artifacts";
+    fail('OpenCombine artifacts must be an absolute canonical path')
+        unless $opencombine_artifacts =~ m{^/}
+            && normalize_absolute($opencombine_artifacts) eq $opencombine_artifacts;
+    fail("OpenCombine artifacts are outside project root $w: $opencombine_artifacts")
+        unless beneath($opencombine_artifacts, $w);
+
     my @records;
+    my $oc_art_logical = ($opencombine_artifacts =~ m{/export-x86_64/artifacts$})
+        ? 'opencombine/export-x86_64/artifacts'
+        : 'opencombine/export/artifacts';
     my @opencombine_files = (
         [ "$opencombine_root/export/RESULT.txt", 'opencombine/export/RESULT.txt' ],
-        [ "$opencombine_root/export/artifacts/OpenCombine.o", 'opencombine/export/artifacts/OpenCombine.o' ],
-        [ "$opencombine_root/export/artifacts/OpenCombine.swiftmodule", 'opencombine/export/artifacts/OpenCombine.swiftmodule' ],
-        [ "$opencombine_root/export/artifacts/OpenCombine.swiftdoc", 'opencombine/export/artifacts/OpenCombine.swiftdoc' ],
+        [ "$opencombine_artifacts/OpenCombine.o", "$oc_art_logical/OpenCombine.o" ],
+        [ "$opencombine_artifacts/OpenCombine.swiftmodule", "$oc_art_logical/OpenCombine.swiftmodule" ],
+        [ "$opencombine_artifacts/OpenCombine.swiftdoc", "$oc_art_logical/OpenCombine.swiftdoc" ],
         [ "$opencombine_root/source/Sources/COpenCombineHelpers/COpenCombineHelpers.cpp", 'opencombine/source/Sources/COpenCombineHelpers/COpenCombineHelpers.cpp' ],
         [ "$opencombine_root/source/Sources/COpenCombineHelpers/include/COpenCombineHelpers.h", 'opencombine/source/Sources/COpenCombineHelpers/include/COpenCombineHelpers.h' ],
         [ "$opencombine_root/source/Sources/COpenCombineHelpers/include/module.modulemap", 'opencombine/source/Sources/COpenCombineHelpers/include/module.modulemap' ],
