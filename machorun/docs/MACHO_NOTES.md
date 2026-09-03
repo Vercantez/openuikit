@@ -73,6 +73,14 @@ ObjC binary, a C++ binary, a 3000-pointer/200 KB-bss binary):
 | `__DATA_CONST` initprot | `rw` (3), **not** `r` — see below |
 | pointer format everywhere | `6` = `DYLD_CHAINED_PTR_64_OFFSET` |
 
+**Exception, measured 2026-09-03 on x86_64 (not emitted by this toolchain):**
+dylibs extracted from the macOS dyld shared cache (`ipsw dyld extract`) keep
+the cache's packing. `libswiftObjectiveC.dylib` `__DATA_CONST vmaddr
+0x7ff843287720` — not page-aligned, and the TEXT-to-DATA gap is tens of
+megabytes. Apple's `dsc_extractor.bundle` SIGBUSes on macOS 26.5.2 caches, so
+these files cannot be rebuilt as standalone dylibs. machorun maps them by
+copy (`src/map.c`); the fixture is `cache_layout_packed` (FIXTURES.md g′).
+
 ### `__PAGEZERO`
 
 `vmsize = 0x100000000` (4 GiB), `filesize = 0`, `maxprot = initprot = 0`. It is
@@ -733,6 +741,10 @@ clang -target arm64-apple-macos14 -Wl,-segalign,0x1000 -o hello_4k hello.c
 
 **macOS itself refuses to run it.** arm64 macOS requires 16 KiB segment
 alignment. So a Mach-O that runs on the oracle is *always* ≥16K-aligned.
+
+Cache-extracted dylibs are the other side of that fact: they do **not** run
+on the oracle (dyld SIGKILLs unaligned segments) and they are still files
+the loader has to map. See the §1 exception and FIXTURES.md (g′).
 
 ### What this means
 

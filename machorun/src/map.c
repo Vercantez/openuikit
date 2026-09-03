@@ -9,6 +9,20 @@
  *   - a 64 KiB-page kernel cannot give __TEXT and __DATA_CONST distinct
  *     protections (they are 16 KiB apart) -- detected and refused here
  *     rather than silently mis-mapped.
+ *
+ * Extracted dyld-shared-cache dylibs are the exception the mmap path cannot
+ * swallow. Apple packs data segments contiguously in the cache, so a
+ * segment's vmaddr (and its fileoff after `ipsw dyld extract`) is not page
+ * aligned -- measured 2026-09-03 on x86_64:
+ *     libswiftObjectiveC.dylib __DATA_CONST vmaddr 0x7ff843287720
+ * mmap requires both addr and fileoff to be page-aligned, so those images
+ * take the COPY path below: one anonymous reservation covering the
+ * page-rounded union of the segments, file bytes pread into place, then
+ * per-page protections. Two segments that share a host page get the UNION
+ * of their protections (typically rwx across a TEXT/DATA boundary, rw
+ * across DATA_CONST/DATA). Documented rather than clever, because a host
+ * page cannot hold two protection sets. The mmap fast path for page-aligned
+ * segments is unchanged.
  */
 #define _GNU_SOURCE
 #include "machorun.h"
@@ -356,6 +370,148 @@ void mr_reserve_pagezero(void)
     mr_log("__PAGEZERO reserved: [0x10000, 0x100000000) PROT_NONE");
 }
 
+/* A segment that claims file bytes past EOF is corrupt. Apple's toolchain
+ * never emits this; a truncated extraction and the cache_layout_oversize
+ * fixture do. Checked against the real file size (im->raw_len), not against
+ * vmsize -- claiming more file bytes than exist is the thing we refuse,
+ * even if we would have truncated the copy to vmsize. */
+static void check_segment_file_bytes(const mr_image *im, const mr_segment *s)
+{
+    uint64_t off;
+    if (s->filesize == 0) return;
+    off = im->slice_off + s->fileoff;
+    if (off < im->slice_off || off > im->raw_len ||
+        s->filesize > im->raw_len - off)
+        mr_die("%s: segment %s file bytes at offset %llu+%llu exceed the file (%zu bytes)",
+               im->path, s->name,
+               (unsigned long long)off, (unsigned long long)s->filesize, im->raw_len);
+}
+
+static int image_needs_copy(const mr_image *im, uint64_t page)
+{
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        uint64_t off;
+        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+        if (s->vmsize == 0) continue;
+        if ((s->vmaddr & (page - 1)) != 0) return 1;
+        if (s->filesize == 0) continue;
+        off = im->slice_off + s->fileoff;
+        if ((off & (page - 1)) != 0) return 1;
+    }
+    return 0;
+}
+
+/* Per-page union of segment protections. `after_fixups` downgrades
+ * SG_READ_ONLY segments from their initprot (rw, so fixups can land) to
+ * PROT_READ, matching mr_protect_readonly_segments on the mmap path.
+ *
+ * Two segments that share a host page cannot be given distinct protections:
+ * the page gets every PROT_* bit either occupant asked for. Typical cases
+ * in a packed cache dylib: DATA_CONST (r after fixups) sharing with DATA
+ * (rw) becomes rw; TEXT (rx) sharing with DATA_CONST (rw) becomes rwx and
+ * loses W^X on that page. Gaps between segments stay PROT_NONE. */
+static void apply_copy_page_prots(mr_image *im, int after_fixups)
+{
+    uint64_t page = MR.page.v;
+    uint64_t a;
+
+    for (a = im->span_lo; a < im->span_hi; a += page) {
+        int prot = 0, any = 0;
+        for (int i = 0; i < im->nsegs; i++) {
+            const mr_segment *s = &im->segs[i];
+            uint64_t lo, hi;
+            int p;
+            if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+            if (s->vmsize == 0) continue;
+            lo = s->vmaddr + (uint64_t)im->slide;
+            hi = lo + s->vmsize;
+            if (a + page <= lo || a >= hi) continue;
+            any = 1;
+            p = prot_of(s->initprot);
+            if (after_fixups && (s->flags & SG_READ_ONLY))
+                p = PROT_READ | (p & PROT_EXEC);
+            prot |= p;
+        }
+        if (!any) continue;
+        if (prot == 0) prot = PROT_NONE;
+        if (mprotect((void *)a, (size_t)page, prot) != 0)
+            mr_die("%s: mprotect of copied page 0x%llx to %c%c%c: %m",
+                   im->path, (unsigned long long)a,
+                   (prot & PROT_READ) ? 'r' : '-',
+                   (prot & PROT_WRITE) ? 'w' : '-',
+                   (prot & PROT_EXEC) ? 'x' : '-');
+    }
+}
+
+static void map_image_by_copy(mr_image *im)
+{
+    uint64_t page = MR.page.v;
+    void *got;
+
+    im->mapped_by_copy = 1;
+    mr_log("%s: mapping by copy (non-page-aligned vmaddr/fileoff; "
+           "dyld-shared-cache layout). Shared host pages take the union of "
+           "their segments' protections.", im->path);
+
+    /* Pass 1: cover every segment's pages with anonymous RW. Two segments
+     * that share a page both land in this pass BEFORE any file bytes are
+     * copied, so a later mmap cannot zero the first segment's prefix. */
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        uint64_t addr, lo, hi, len;
+        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+        if (s->vmsize == 0) continue;
+        addr = s->vmaddr + (uint64_t)im->slide;
+        lo = mr_round_dn(addr, page);
+        hi = mr_round_up(addr + s->vmsize, page);
+        if (hi < lo) mr_die("%s: segment %s wraps the address space", im->path, s->name);
+        len = hi - lo;
+        got = mmap((void *)lo, len, PROT_READ | PROT_WRITE,
+                   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+        if (got == MAP_FAILED)
+            mr_die("%s: anonymous mapping for copied segment %s "
+                   "(0x%llx bytes at 0x%llx): %m",
+                   im->path, s->name, (unsigned long long)len, (unsigned long long)lo);
+    }
+
+    /* Pass 2: read each segment's file bytes into place. The rest of vmsize
+     * is already zero from the anonymous map. */
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        uint64_t addr, filepart, off;
+        ssize_t n;
+        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+        if (s->vmsize == 0) continue;
+        addr = s->vmaddr + (uint64_t)im->slide;
+        filepart = s->filesize;
+        if (filepart > s->vmsize) filepart = s->vmsize;
+        if (filepart == 0) continue;
+        off = im->slice_off + s->fileoff;
+        n = pread(im->fd, (void *)addr, filepart, (off_t)off);
+        if (n < 0 || (uint64_t)n != filepart)
+            mr_die("%s: short read of copied segment %s (wanted 0x%llx at file 0x%llx)",
+                   im->path, s->name, (unsigned long long)filepart, (unsigned long long)off);
+    }
+
+    apply_copy_page_prots(im, 0);
+
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        uint64_t addr;
+        int prot;
+        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+        if (s->vmsize == 0) continue;
+        addr = s->vmaddr + (uint64_t)im->slide;
+        prot = prot_of(s->initprot);
+        mr_log("  %-12s 0x%012llx+0x%llx prot=%c%c%c%s [copy]", s->name,
+               (unsigned long long)addr, (unsigned long long)s->vmsize,
+               (prot & PROT_READ) ? 'r' : '-', (prot & PROT_WRITE) ? 'w' : '-',
+               (prot & PROT_EXEC) ? 'x' : '-',
+               (s->flags & SG_READ_ONLY) ? " SG_READ_ONLY" : "");
+    }
+}
+
 void mr_map_image(mr_image *im)
 {
     uint64_t page = MR.page.v;
@@ -366,6 +522,7 @@ void mr_map_image(mr_image *im)
         const mr_segment *s = &im->segs[i];
         if (strcmp(s->name, "__PAGEZERO") == 0) continue;
         if (s->vmsize == 0) continue;
+        check_segment_file_bytes(im, s);
         if (s->vmaddr < lo) lo = s->vmaddr;
         if (s->vmaddr + s->vmsize > hi) hi = s->vmaddr + s->vmsize;
     }
@@ -407,6 +564,11 @@ void mr_map_image(mr_image *im)
     im->slide = (int64_t)im->load_base - (int64_t)lo;
     im->span_lo = im->load_base;
     im->span_hi = im->load_base + span;
+
+    if (image_needs_copy(im, page)) {
+        map_image_by_copy(im);
+        return;
+    }
 
     for (int i = 0; i < im->nsegs; i++) {
         const mr_segment *s = &im->segs[i];
@@ -483,6 +645,12 @@ int mr_mprotect_rw(void *addr, uint64_t size)
 
 void mr_protect_readonly_segments(mr_image *im)
 {
+    if (im->mapped_by_copy) {
+        apply_copy_page_prots(im, 1);
+        mr_log("  %s: copied-image page prots reapplied after fixups "
+               "(SG_READ_ONLY -> r, union on shared pages)", im->path);
+        return;
+    }
     for (int i = 0; i < im->nsegs; i++) {
         const mr_segment *s = &im->segs[i];
         uint64_t addr;

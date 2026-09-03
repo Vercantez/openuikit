@@ -165,9 +165,32 @@ while IFS= read -r row; do
         detail="macOS output changed; comparison void"
         n_drift=$((n_drift + 1))
     elif [ "$(verdict "$oracle")" = "norun" ]; then
-        verdict_s="NO-ORACLE"; colour="$C_YEL"
-        detail="$(reason "$oracle")"
-        n_noor=$((n_noor + 1))
+        # Linux-only fixtures: Darwin cannot execute them (unaligned cache
+        # layout, a segment that overruns the file) but they still have a
+        # committed expected/ that describes what the loader must do. Grade
+        # that. exit_unixthread stays NO-ORACLE because it is linux=xfail
+        # and has no expected output -- the two cases must not collapse.
+        if [ "$(verdict "$linux")" = "pass" ] && [ -f "$EXPECTED_DIR/$id.exit" ]; then
+            if [ -n "$LINUX_SKIP_REASON" ] || [ ! -f "$LNX_DIR/$id.exit" ]; then
+                verdict_s="SKIPPED"; colour="$C_YEL"
+                [ -n "$LINUX_SKIP_REASON" ] && detail="" || detail="no result recorded"
+                n_skip=$((n_skip + 1))
+            else
+                cmp_out="$(compare_capture "$EXPECTED_DIR" "$LNX_DIR" "$id")"
+                if [ "$cmp_out" = match ]; then
+                    verdict_s="PASS"; colour="$C_GRN"
+                    n_pass=$((n_pass + 1))
+                else
+                    verdict_s="FAIL"; colour="$C_RED"
+                    detail="$cmp_out"
+                    n_fail=$((n_fail + 1))
+                fi
+            fi
+        else
+            verdict_s="NO-ORACLE"; colour="$C_YEL"
+            detail="$(reason "$oracle")"
+            n_noor=$((n_noor + 1))
+        fi
     elif [ -n "$LINUX_SKIP_REASON" ] || [ ! -f "$LNX_DIR/$id.exit" ]; then
         verdict_s="SKIPPED"; colour="$C_YEL"
         # The global reason is already printed above the table; only say

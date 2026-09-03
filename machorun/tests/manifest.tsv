@@ -37,6 +37,9 @@ cxx_init	chained	run	pass	C++ global ctors/dtors, __cxa_atexit, guarded local st
 tls	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
 dylib	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
 dylib_classic	classic	run	pass	same, classic fixups on both images
+cache_layout	chained	run	pass	a dylib with Apple-aligned segments; the control for cache_layout_packed
+cache_layout_packed	chained	norun:macOS SIGKILLs non-page-aligned segments (the dyld-shared-cache layout)	pass	same program as cache_layout, dylib rewritten to packed non-page-aligned vmaddr/fileoff
+cache_layout_oversize	chained	norun:segment filesize exceeds the file; Darwin has no twin for the loader diagnostic	pass	refuse a segment whose file bytes exceed the file
 pthread	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
 objc	chained	run	pass	Foundation-free Objective-C: classes, selrefs, objc_msgSend
 varargs	chained	run	pass	Darwin arm64 varargs in anger: >8 args, interleaved int/double, va_copy, guest va_list into vsnprintf

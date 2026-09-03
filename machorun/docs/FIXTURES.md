@@ -1,7 +1,7 @@
 # The fixture ladder
 
-Twenty-five Mach-O programs (plus two dylibs they load), built once by Apple's
-toolchain on macOS and committed as bytes.
+The fixture corpus: Mach-O programs (plus the dylibs they load), built once by
+Apple's toolchain on macOS and committed as bytes.
 
 > **These binaries must keep coming from Xcode, and `sdk/` must never be used to
 > rebuild them.** Since 2026-08-26 this repository can compile and link a Mach-O
@@ -324,6 +324,47 @@ expansion against `LC_RPATH`; a load graph with de-duplication by install
 name; two-level namespace binding (each import names its source dylib by
 ordinal); exporting the main executable's symbols; and running each image's
 initialisers in dependency order, dependencies first.
+
+### (g′) `cache_layout` / `cache_layout_packed` / `cache_layout_oversize` — dyld-shared-cache segment packing
+`tests/src/cache_layout.c` + `cache_layout_lib.c` · chained · rewriter `scripts/pack_macho.py`
+
+The x86_64 app rung's first load of Apple's own cache-extracted Swift overlays
+(`libswiftObjectiveC.dylib` and four friends) died with
+
+    segment __DATA_CONST maps to 0x222e83720 which is not page (4096) aligned
+
+Those dylibs exist only as `ipsw dyld extract` output. Extracted cache dylibs
+keep the CACHE layout: data segments packed contiguously, vmaddr and fileoff
+not page-aligned, inter-segment deltas of tens of megabytes. Apple's
+dsc_extractor.bundle SIGBUSes on macOS 26.5.2 caches; the binaries cannot be
+rebuilt. The loader has to map them as they are.
+
+`cache_layout` is the control: an Apple-built, page-aligned dylib, loaded and
+called. `cache_layout_packed` is the same executable against a copy of that
+dylib whose segments `scripts/pack_macho.py` rewrote into packed
+non-page-aligned layout (vmaddr/fileoff/section addr and offset, chained
+starts `segment_offset`, export-trie image offsets, nlist `n_value`, load
+command dataoffs — consistently). Both must print identical output. Darwin
+cannot execute the packed dylib (arm64 dyld SIGKILLs unaligned segments), so
+the packed row is `oracle=norun` with the control's baseline copied into
+`tests/expected/cache_layout_packed.*`; `difftest.sh` still grades Linux
+against that expected. After `--record cache_layout`, copy those three files
+onto the packed name.
+
+`cache_layout_oversize` is the negative: `main_ret` with `__LINKEDIT.filesize`
+one byte past EOF. The loader must refuse before mapping, with a diagnostic
+that names the segment. Darwin has no twin for that string, so this row is
+also `oracle=norun` and Linux-graded.
+
+**Loader must implement:** when any segment's vmaddr or fileoff is not page
+aligned, map the image by COPY: reserve the page-rounded union of its
+segments at the chosen slide, `pread` each segment's file bytes into place
+(zero-fill the rest of vmsize), then `mprotect` at page granularity. Two
+segments that share a host page get the **union** of their protections
+(DATA_CONST `r` after fixups sharing with DATA `rw` becomes `rw`; TEXT `rx`
+sharing with DATA_CONST `rw` would become `rwx` and lose W^X on that page).
+A segment whose file bytes exceed the file is refused. The mmap fast path
+for page-aligned segments is unchanged.
 
 ### (h) `pthread` — threads and per-thread TLS
 `tests/src/pthread.c` · chained
