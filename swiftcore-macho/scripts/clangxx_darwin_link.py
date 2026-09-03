@@ -11,9 +11,11 @@ Forcing ld.lld at that argv made:
 
 Apple triple → exec the real clang++ with the original argv plus
 `--ld-path=` and keep `-fuse-ld=lld` so the Darwin driver still emits
-`-platform_version`/`-arch`. Replacing `-fuse-ld=lld` with `--ld-path=`
-alone made ld64.lld fail `must specify -platform_version`.
-Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
+`-platform_version`/`-arch`. CMake `LINK_PATH` starts with
+`-L/usr/lib/llvm-18/lib`; drop that on Darwin links and pass
+`-nostdlib++` plus the sysroot `usr/lib/libc++.tbd` / `libc++abi.tbd`
+so ld64 never opens the host ELF `libc++.so`. Print
+`cxx_runtime=<tbd>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
 `-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
 flag; nothing else is rewritten (PR #40's -dynamiclib/-nostdlib pass
 dropped -platform_version/-arch).
@@ -270,6 +272,101 @@ def rewrite_darwin_soname(argv: list[str]) -> list[str]:
     return out
 
 
+def _isysroot(argv: list[str]) -> str | None:
+    for i, a in enumerate(argv):
+        if a in ("-isysroot", "--sysroot") and i + 1 < len(argv):
+            return argv[i + 1]
+        if a.startswith("-isysroot="):
+            return a.split("=", 1)[1]
+        if a.startswith("--sysroot="):
+            return a.split("=", 1)[1]
+    return None
+
+
+def _host_elf_cxx_libdir(path: str) -> bool:
+    """True if `path` is a Linux libc++ search dir (ELF libc++.so / llvm-*/lib)."""
+    if not path:
+        return False
+    p = os.path.normpath(path).replace("\\", "/").rstrip("/")
+    if p.endswith("/llvm-18/lib") or p.endswith("/llvm-19/lib") or "/llvm-18/lib/" in p + "/":
+        return True
+    # CMake LINK_PATH puts this first; ld64 then opens ELF libc++.so.
+    if os.path.isfile(os.path.join(p, "libc++.so")):
+        return True
+    return False
+
+
+def _strip_host_cxx_libdirs(argv: list[str]) -> list[str]:
+    """Drop -L/-B to host llvm-*/lib so ld64 never sees ELF libc++.so.
+
+    Keep `-B/usr/lib/llvm-18/bin` (linker tools). Only the *lib* dir is poison.
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        i += 1
+        if a in ("-L", "-B") and i < len(argv):
+            path = argv[i]
+            if a == "-B" and not _host_elf_cxx_libdir(path):
+                out.append(a)
+                out.append(path)
+                i += 1
+                continue
+            if _host_elf_cxx_libdir(path):
+                i += 1
+                continue
+            out.append(a)
+            out.append(path)
+            i += 1
+            continue
+        if a.startswith("-L"):
+            path = a[2:]
+            if path.startswith("="):
+                path = path[1:]
+            if _host_elf_cxx_libdir(path):
+                continue
+        if a.startswith("-B") and not a.startswith("-Bdynamic") and not a.startswith("-Bstatic"):
+            path = a[2:]
+            if path.startswith("="):
+                path = path[1:]
+            if _host_elf_cxx_libdir(path):
+                continue
+        if a.startswith("-Wl,"):
+            parts = a.split(",")
+            # -Wl,-L,/usr/lib/llvm-18/lib  or -Wl,-rpath-link,/usr/lib/llvm-18/lib
+            skip = False
+            for j, p in enumerate(parts):
+                if p in ("-L", "-rpath-link", "-rpath") and j + 1 < len(parts):
+                    if _host_elf_cxx_libdir(parts[j + 1]):
+                        skip = True
+                        break
+                if p.startswith("-L") and _host_elf_cxx_libdir(p[2:]):
+                    skip = True
+                    break
+            if skip:
+                continue
+        out.append(a)
+    return out
+
+
+def darwin_cxx_tbds(argv: list[str]) -> list[str]:
+    """Sysroot libc++ / libc++abi tbds the Darwin link must use (not host .so)."""
+    root = _isysroot(argv)
+    if not root:
+        return []
+    tbds = []
+    for name in ("libc++.tbd", "libc++abi.tbd"):
+        cand = os.path.join(root, "usr/lib", name)
+        tbds.append(cand)
+    return tbds
+
+
+def darwin_cxx_runtime_path(argv: list[str]) -> str:
+    tbds = darwin_cxx_tbds(argv)
+    return tbds[0] if tbds else "ABSENT"
+
+
 def darwin_driver_argv(argv: list[str]) -> list[str]:
     """Exec clang++ with the original driver argv plus linker resolution.
 
@@ -281,12 +378,21 @@ def darwin_driver_argv(argv: list[str]) -> list[str]:
     ld64.lld failed with `must specify -platform_version` / `missing -arch`.
     Keep `-fuse-ld=lld` (drop gold) and add `--ld-path=` so resolution
     hits ld64.lld. Translate GNU `-soname` only if it is still in argv.
+
+    CMake LINK_PATH puts `-L/usr/lib/llvm-18/lib` first; the driver's
+    `-stdlib=libc++` then hands ld64.lld the host ELF `libc++.so`
+    (`unhandled file type`). Drop that -L/-B, pass `-nostdlib++`, and
+    add the sysroot `usr/lib/libc++.tbd` / `libc++abi.tbd`.
     """
     out = rewrite_darwin_soname(argv) if _has_soname_flag(argv) else list(argv)
+    out = _strip_host_cxx_libdirs(out)
     kept: list[str] = []
     saw_fuse_lld = False
     saw_ld64_path = False
+    saw_nostdlibxx = False
     ld_path = _ld_path_flag(_ld64_lld())
+    tbds = darwin_cxx_tbds(out)
+    tbd_set = set(tbds)
     for a in out:
         if a.startswith("-fuse-ld="):
             val = a.split("=", 1)[1]
@@ -295,9 +401,6 @@ def darwin_driver_argv(argv: list[str]) -> list[str]:
                 if not saw_fuse_lld:
                     kept.append("-fuse-ld=lld")
                     saw_fuse_lld = True
-            # gold / bfd / -fuse-ld=<absolute path>: drop. Darwin maps
-            # the name `lld` to ld64.lld; an absolute -fuse-ld= is deprecated
-            # and skips -platform_version the same way --ld-path-alone does.
             continue
         if a.startswith("--ld-path="):
             path = a.split("=", 1)[1]
@@ -306,11 +409,28 @@ def darwin_driver_argv(argv: list[str]) -> list[str]:
                     kept.append(ld_path)
                     saw_ld64_path = True
             continue
+        if a == "-nostdlib++":
+            saw_nostdlibxx = True
+            kept.append(a)
+            continue
+        # Host -lc++ would still search leftover -L; sysroot tbds replace it.
+        if a in ("-lc++", "-lc++abi", "-stdlib=libc++"):
+            continue
+        if a in tbd_set:
+            continue
         kept.append(a)
     if not saw_fuse_lld:
         kept.append("-fuse-ld=lld")
     if not saw_ld64_path:
         kept.append(ld_path)
+    if not saw_nostdlibxx:
+        kept.append("-nostdlib++")
+    for t in tbds:
+        kept.append(t)
+    # clang ignores argv after -###; keep diagnostics last.
+    diag = [a for a in kept if a in ("-###", "-v", "--verbose")]
+    if diag:
+        kept = [a for a in kept if a not in ("-###", "-v", "--verbose")] + diag
     return kept
 
 
@@ -338,6 +458,9 @@ def log_link(
             sys.stderr.write(
                 "clangxx_darwin_link: driver argv: " + shlex.join(driver_argv) + "\n"
             )
+        sys.stderr.write(
+            f"clangxx_darwin_link: cxx_runtime={darwin_cxx_runtime_path(original)}\n"
+        )
     elif rewritten is not None:
         sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
     sys.stderr.flush()
