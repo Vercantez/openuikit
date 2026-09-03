@@ -137,7 +137,8 @@ phase2_required_darwin_tbd_relpaths() {
         usr/lib/libc++.tbd \
         usr/lib/libc++abi.tbd \
         usr/lib/libobjc.A.tbd \
-        usr/lib/libobjc.tbd
+        usr/lib/libobjc.tbd \
+        usr/lib/libquartz.tbd
 }
 
 # render_full.o undefineds that -lobjc must resolve (operator link at
@@ -296,21 +297,38 @@ phase2_stage_overlay_tbds_into_sysroot() {
     return 0
 }
 
-# Every .tbd the arm64 sysroot's usr/lib and usr/lib/swift carry, plus the
-# darwin aliases -lSystem/-lobjc/-lc++ need, must exist for x86 and name
-# x86_64-macos. Prints OK or MISSING=… WRONG_TARGET=….
+# Consumer-derived inventory: what build_full.sh, the widget/onboarding
+# expected_*_inputs / expected_*_loads, focus_widget_guest_attest.pl, and
+# foundation-macho/scripts/link_ud_guest.sh actually -l / name as .tbd.
+# Never the Apple SDK's whole usr/lib/swift overlay list (ARKit, AppKit, …).
+phase2_consumer_tbd_relpaths() {
+    {
+        phase2_required_darwin_tbd_relpaths
+        phase2_required_swift_tbd_relpaths
+    } | sort -u
+}
+
+# Apple-SDK .tbd names in the arm64 sysroot that no consumer links.
+# Printed as NOTE, never a CANNOT.
+phase2_sysroot_tbd_extras() {
+    local arm=$1 rel want
+    want=$(phase2_consumer_tbd_relpaths)
+    [ -n "$arm" ] && [ -d "$arm" ] || return 0
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        printf '%s\n' "$want" | grep -qx "$rel" && continue
+        printf '%s\n' "$rel"
+    done < <(phase2_sysroot_tbd_relpaths "$arm")
+}
+
+# Consumer .tbd set must exist for x86 and name x86_64-macos. Extra Apple-SDK
+# names from the arm64 sysroot are not required. Prints OK or MISSING=…
+# WRONG_TARGET=…. An arm64-macos .tbd staged into the x86 sysroot is always
+# WRONG_TARGET (never copy arm64 tbds).
 phase2_sysroot_tbd_resolve() {
     local sys=$1 arm=$2
-    local rel path missing=() wrong=() want
-    want=$(
-        {
-            phase2_required_darwin_tbd_relpaths
-            phase2_required_swift_tbd_relpaths
-            if [ -n "$arm" ] && [ -d "$arm" ]; then
-                phase2_sysroot_tbd_relpaths "$arm"
-            fi
-        } | sort -u
-    )
+    local rel path missing=() wrong=() want seen=' '
+    want=$(phase2_consumer_tbd_relpaths)
     while IFS= read -r rel; do
         [ -n "$rel" ] || continue
         path=$sys/$rel
@@ -321,9 +339,18 @@ phase2_sysroot_tbd_resolve() {
         if ! phase2_tbd_is_x86_target "$path"; then
             wrong+=("$rel")
         fi
+        seen="$seen $rel "
     done <<EOF
 $want
 EOF
+    # Negative: a copied arm64-macos tbd anywhere in the x86 usr/lib set.
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        case " $seen " in *" $rel "*) continue ;; esac
+        if ! phase2_tbd_is_x86_target "$sys/$rel"; then
+            wrong+=("$rel")
+        fi
+    done < <(phase2_sysroot_tbd_relpaths "$sys")
     if [ "${#missing[@]}" -eq 0 ] && [ "${#wrong[@]}" -eq 0 ]; then
         printf 'OK\n'
         return 0

@@ -788,11 +788,14 @@ else
     esac
 fi
 
-# 6a3. Every arm64 sysroot usr/lib + usr/lib/swift .tbd exists for x86 and
-# names x86_64-macos. BEFORE build_full: -lobjc looks for libobjc.tbd.
-echo "==== x86 sysroot .tbd set (arm64 inventory; gen_tbd + overlay dylibs) ===="
+# 6a3. Consumer .tbd set (build_full / widget gate / link_ud_guest), not the
+# Apple SDK's whole overlay inventory. BEFORE build_full: -lobjc looks for
+# libobjc.tbd; the widget gate lstat()s named $SYS/usr/lib/swift/*.tbd.
+echo "==== x86 sysroot .tbd set (consumer inventory; gen_tbd + gen_swift_tbd) ===="
 SYSROOT_TBDS_OK=0
 tbd_report=$(phase2_sysroot_tbd_resolve "$SYS" "$ARM_SYS" || true)
+tbd_extras=$(phase2_sysroot_tbd_extras "$ARM_SYS" | paste -sd, - || true)
+[ -z "$tbd_extras" ] || echo "  NOTE extra Apple-SDK .tbd names in arm64 sysroot (not required; no consumer links them): $tbd_extras"
 case "$tbd_report" in
     OK)
         note sysroot-tbds-x86 satisfied
@@ -800,7 +803,7 @@ case "$tbd_report" in
         ;;
     *)
         cannot sysroot-tbds-x86 X86_SYSROOT_TBDS \
-            "${tbd_report:-empty}; darwin usr/lib tbds from machorun gen_tbd; Swift usr/lib/swift tbds from scripts/x86/gen_swift_tbd.sh (libswiftCore + twelve overlays). Widget gate lstat()s named .tbd paths (dylib stand-ins fail focus_widget_guest_attest). Never copy arm64 tbds. render_full.o link needs -lobjc (_objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache) then _swift_task_*/\$sScP (libswift_Concurrency) and ObjectiveC."
+            "${tbd_report:-empty}; required set is consumer link/load names (build_full.sh -lSystem/-lobjc/libquartz, widget expected_*_inputs/loads, link_ud_guest.sh, attest.pl) — usr/lib/{libSystem,libSystem.B,libobjc,libobjc.A,libc++,libc++.1,libc++abi,libquartz}.tbd + usr/lib/swift/{libswiftCore + twelve overlays}.tbd. Extra Apple-SDK names (ARKit, AppKit, …) are a NOTE, not a CANNOT. Darwin tbds from machorun gen_tbd; Swift tbds from scripts/x86/gen_swift_tbd.sh. Never copy arm64 tbds."
         ;;
 esac
 

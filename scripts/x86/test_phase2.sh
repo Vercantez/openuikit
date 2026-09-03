@@ -320,8 +320,20 @@ expect_grep 'phase2_twelve_overlay_names' "$COMMON" \
     "durable overlay set is twelve (nine FE + Concurrency/ObjectiveC/Observation)"
 expect_grep 'gen_swift_tbd.sh' "$COMMON" \
     "overlay tbds come from the committed TAPI writer"
-expect_grep 'usr/lib/swift/libswiftCore.tbd' "$COMMON" \
-    "resolve requires the named libswiftCore.tbd the widget gate lstat()s"
+expect_grep 'phase2_consumer_tbd_relpaths' "$COMMON" \
+    "resolve inventory is consumer-derived, not the Apple SDK overlay list"
+expect_grep 'NOTE extra Apple-SDK' "$PHASE2" \
+    "extra Apple-SDK tbd names are a NOTE, never a CANNOT"
+expect_grep 'libquartz.tbd' "$COMMON" "consumer set includes libquartz.tbd"
+expect_grep '[-]lobjc' "$BUILD_FULL" "build_full link names -lobjc"
+expect_grep '[-]lSystem' "$BUILD_FULL" "build_full link names -lSystem"
+expect_grep 'libswift_Concurrency.dylib' "$WIDGET" "widget expected loads name Concurrency"
+expect_grep 'libswiftObjectiveC.dylib' "$WIDGET" "widget expected loads name ObjectiveC"
+expect_grep 'libswiftObservation.dylib' "$WIDGET" "widget expected loads name Observation"
+expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
+    "widget attest requires named libswiftCore.tbd"
+expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "link_ud_guest -lswiftCore"
 expect_grep 'never copy arm64' "$STAGE" "stager comment refuses arm64 tbd copies"
 expect_grep 'phase2_sysroot_tbd_resolve' "$PHASE2" \
     "phase2 resolves the tbd set before build_full"
@@ -537,9 +549,28 @@ printf '%s\n' '--- !tapi-tbd' 'targets:         [ arm64-macos ]' '...' \
 overlay_miss=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
 case "$overlay_miss" in
     MISSING=*usr/lib/swift/libswiftCore.tbd*)
-        ok "resolve names a missing overlay tbd from the arm64 inventory ($overlay_miss)"
+        ok "resolve names missing consumer overlay libswiftCore.tbd ($overlay_miss)"
         ;;
     *) die_test "expected MISSING overlay libswiftCore.tbd, got: $overlay_miss" ;;
+esac
+# Extra Apple-SDK names (ARKit, AppKit, …) must not become CANNOT.
+printf '%s\n' '--- !tapi-tbd' 'targets:         [ arm64-macos ]' '...' \
+    > "$TBDWORK/arm/usr/lib/swift/libswiftARKit.tbd"
+printf '%s\n' '--- !tapi-tbd' 'targets:         [ arm64-macos ]' '...' \
+    > "$TBDWORK/arm/usr/lib/swift/libswiftAppKit.tbd"
+arkit_res=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
+case "$arkit_res" in
+    *libswiftARKit*|*libswiftAppKit*)
+        die_test "Apple-SDK extras must not be MISSING/WRONG_TARGET: $arkit_res"
+        ;;
+esac
+ok "ARKit/AppKit in the arm64 inventory are not a CANNOT ($arkit_res)"
+extras=$(phase2_sysroot_tbd_extras "$TBDWORK/arm" | paste -sd, -)
+case "$extras" in
+    *libswiftARKit.tbd*libswiftAppKit.tbd*|*libswiftAppKit.tbd*libswiftARKit.tbd*)
+        ok "extras helper names ARKit and AppKit ($extras)"
+        ;;
+    *) die_test "expected extras to name ARKit and AppKit, got: $extras" ;;
 esac
 core_src=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
 if [ -f "$core_src" ] && phase2_is_x86_macho "$core_src"; then

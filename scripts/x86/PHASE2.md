@@ -149,11 +149,15 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    (`bash scripts/x86/test_gen_swift_tbd.sh`). The stamp records `tbd-set` (arm64
    inventory of `usr/lib` + `usr/lib/swift` `.tbd` names) and
    `tbd-darwin-dylibs`. Before `build_full` runs, `sysroot-tbds-x86` requires
-   the darwin aliases, libswiftCore + the twelve overlay `.tbd`s, and every
-   arm64 sysroot `.tbd`, each naming `x86_64-macos`
+   the **consumer** `.tbd` set (`build_full.sh` `-lSystem`/`-lobjc`/`libquartz`,
+   widget/onboarding `expected_*_inputs` / `expected_*_loads`,
+   `focus_widget_guest_attest.pl`, `link_ud_guest.sh`) — darwin aliases +
+   libquartz + libswiftCore + the twelve overlays — each naming `x86_64-macos`
    (`CANNOT_X86_SYSROOT_TBDS`). Extra Apple-SDK `.tbd` names in the arm64
-   sysroot with no matching x86 dylib fail that check honestly (never copy
-   an `arm64-macos` `.tbd`). Acceptance: `render_full.o`'s undefined
+   sysroot (ARKit, AppKit, AVFoundation, …) are a printed **NOTE**, never a
+   CANNOT; there is no x86 dylib for them and nothing links them. An
+   `arm64-macos` `.tbd` staged into the x86 sysroot is still `WRONG_TARGET`.
+   Acceptance: `render_full.o`'s undefined
    `_objc_sync_exit` / `_objc_sync_enter` / associated-object /
    `_objc_opt_self` / `_objc_getClass*` / `__objc_empty_cache` are in the
    staged `libobjc.tbd`. Rung logs `2>&1 | tee` so `build_full` ld64 stderr
