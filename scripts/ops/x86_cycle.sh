@@ -71,10 +71,14 @@ run_logged() {
     local name=$1 log=$2
     shift 2
     echo "== $name: $*" >&2
-    if "$@" >"$log" 2>&1; then
+    # $? after `if cmd; then ...; fi` is the if's status (0), not cmd's:
+    # every failed stage printed "failed rc=0" and was reported rebuilt
+    # (measured 2026-09-03: sysroot, overlays and phase2 all "failed rc=0").
+    local rc=0
+    "$@" >"$log" 2>&1 || rc=$?
+    if [ "$rc" -eq 0 ]; then
         return 0
     fi
-    rc=$?
     echo "x86_cycle: $name failed rc=$rc log=$log (child log follows, not hidden by ERR trap)" >&2
     tail -n 80 "$log" >&2 || true
     return "$rc"
@@ -203,7 +207,7 @@ fi
 
 # 5. stage sysroot
 if run_logged sysroot "$LOGDIR/sysroot.log" \
-    bash "$TREE/scripts/x86/stage_fe_sysroot.sh"; then
+    env W="$TREE" bash "$TREE/scripts/x86/stage_fe_sysroot.sh"; then
     emit_stage sysroot "$(status_from_log "$LOGDIR/sysroot.log")" "$TREE/scratch/sysroot_fe4-x86_64"
 else
     emit_stage sysroot cannot "$TREE/scratch/sysroot_fe4-x86_64"
