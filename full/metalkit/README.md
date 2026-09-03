@@ -1,9 +1,9 @@
 # MetalKit for Linux
 
 This directory is a clean-room starting implementation of Apple's public
-`MetalKit` module. Isolated host compilation produces `libMetalKit.dylib`.
-That is not an integrated Linux GPU product and it is not Apple behavioral
-parity.
+`MetalKit` module. Isolated host compilation produces `libMetalKit.dylib`
+from toolchain Foundation plus module-local lookalikes. That is not an
+integrated Linux GPU product and it is not Apple behavioral parity.
 
 ## Source of the starting point
 
@@ -18,21 +18,22 @@ seed (schema v1, generator `scripts/framework-fanout/generate_seed.py`,
 Xcode 26.1 / iPhoneOS 26.1, 124 precise IDs, floor 62). Platform PR #40's
 older `reference/` was not copied.
 
-Metal's promotion (`full/metal`, platform PR #55) had not merged when this
-lane was built. Metal was **not** vendored into `full/metalkit/`. The isolated
-host compile on this VM uses a local fail-closed software Metal module plus
-minimal UIKit `UIView` / CoreGraphics `CGImage` modules installed only on the
-VM module path.
+Product sources do **not** `import` Metal, UIKit, CoreGraphics, QuartzCore,
+or ModelIO. Those modules are absent from the isolated `swiftc` host gate.
+Dependency-owned names used in MetalKit signatures (`MTLDevice`, `UIView`,
+`CGImage`, `CAMetalDrawable`, …) are lookalikes in
+`MetalKitLinuxSupport.swift`. The later integration build wires the real
+module graph.
 
 ## What is real (this isolated compile)
 
 - `MTKModelError` and `MTKTextureLoader.{Error,Option,Origin,CubeLayout}`
   string newtypes, including domain/key/option raw values matching the ObjC
   export names. Apple string payloads remain unobserved beyond those names.
-- `MTKView` as a `UIView` subclass with a software drawable path: stored
-  view state, `draw()` / delegate callbacks, `drawableSize` change
-  notification, CPU `CAMetalDrawable` / `MTLRenderPassDescriptor` from the
-  software Metal device, fail-closed `currentMTL4RenderPassDescriptor` (`nil`).
+- `MTKView` as a lookalike-`UIView` subclass with a software drawable path:
+  stored view state, `draw()` / delegate callbacks, `drawableSize` change
+  notification, CPU `CAMetalDrawable` / `MTLRenderPassDescriptor`,
+  fail-closed `currentMTL4RenderPassDescriptor` (`nil`).
 - `MTKTextureLoader` construction, option plumbing, and fail-closed decode:
   data/URL/CGImage/name loaders throw `NSError` in
   `MTKTextureLoaderErrorDomain`. Async overloads hop once onto
@@ -41,7 +42,9 @@ VM module path.
 
 ## Fail-closed / deferred
 
-- No ImageIO import in this isolated configuration, so no PNG/JPEG/KTX GPU
+- Lookalike `MTL*` / `UIView` / `CGImage` types are not the Metal, UIKit, or
+  CoreGraphics modules. They exist so the isolated host gate can compile.
+- No ImageIO module in this isolated configuration, so no PNG/JPEG/KTX GPU
   upload. Texture APIs exist and fail closed.
 - ModelIO is not on main. Vertex-descriptor conversions, `MTKMesh`,
   `MTKMeshBuffer`, `MTKSubmesh`, `MTKMeshBufferAllocator`, and MDLTexture

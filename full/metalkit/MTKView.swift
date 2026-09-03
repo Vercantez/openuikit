@@ -1,7 +1,4 @@
-import CoreGraphics
 import Foundation
-import Metal
-import UIKit
 
 @MainActor
 public protocol MTKViewDelegate: AnyObject {

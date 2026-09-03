@@ -1,11 +1,10 @@
 // Linux starting point for Apple's public MetalKit module.
 //
-// Isolated host compilation imports the real Metal / UIKit / CoreGraphics
-// module names. On this VM those modules are a local fail-closed software
-// Metal substrate plus a minimal UIView/CGImage surface; they are not vendored
-// into this lane. ModelIO is not on main, so mesh conversion stays deferred.
-// ImageIO is present as source but is not an importable module here, so
-// texture decode is fail-closed rather than a fabricated GPU upload.
+// Isolated host compilation uses toolchain Foundation only. Metal, UIKit,
+// CoreGraphics, QuartzCore, and ModelIO types that appear in public
+// signatures are module-local lookalikes in MetalKitLinuxSupport.swift.
+// The later integration build wires the real modules. ModelIO mesh
+// conversion stays deferred. Texture decode is fail-closed.
 
 import Foundation
 

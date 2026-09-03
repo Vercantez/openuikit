@@ -1,8 +1,5 @@
-import CoreGraphics
 import Foundation
-import Metal
 @_spi(OpenUIKitHost) import MetalKit
-import UIKit
 
 enum MetalKitRuntimeFailure: Error {
     case message(String)

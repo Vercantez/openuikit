@@ -1,6 +1,4 @@
-import CoreGraphics
 import Foundation
-import Metal
 
 open class MTKTextureLoader: NSObject, @unchecked Sendable {
     public struct Error: RawRepresentable, Hashable, Equatable, Sendable {
