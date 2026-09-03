@@ -718,7 +718,7 @@ _ARM64_WIDGET_LOAD_SHA256 = {
     "symbols": "33355a1f20997221c9fd5a7557f44ff0fcbc8a235fbb5a7b35ea5015aa6984bf",
 }
 _X86_WIDGET_LOAD_SHA256 = {
-    "openuikit": "555edf5bd64e8cca6f7046c84f86d627c8c5eb0df6ecc24d307af7f918bba18c",
+    "openuikit": "dd0590d96c4ae3d34bf95cd253d41f35a9e3a0ae8b1a81f50f5fbe87feef89d5",
     "foundationessentials": "92d52ef2b005a80128e7ee17bd90aff3cd271af3b8df21543825ca8262ddba86",
 }
 _ARM64_WIDGET_INPUT_SHA256 = {
@@ -839,7 +839,12 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
                         inventories.macos_overlay_autolink_loads(arm, "x86_64"),
                         f"{kind}/{name}",
                     )
-                    dropped = inventories.ARM64_OVERLAY_AUTOLINK in arm
+                    # errno -> libswiftDarwin in place; one entry shorter only
+                    # when libswiftDarwin was already listed (dedupe).
+                    dropped = (
+                        inventories.ARM64_OVERLAY_AUTOLINK in arm
+                        and inventories.X86_OVERLAY_AUTOLINK in arm
+                    )
                     self.assertEqual(
                         len(x86),
                         len(arm) - (1 if dropped else 0),
@@ -874,14 +879,21 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
             x86 = inventories.loads("widget", name, "x86_64")
             self.assertIn(inventories.ARM64_OVERLAY_AUTOLINK, arm)
             self.assertNotIn(inventories.ARM64_OVERLAY_AUTOLINK, x86)
-            self.assertEqual(
-                x86,
-                tuple(
-                    item
+            # errno -> libswiftDarwin in place, dropped when Darwin is already
+            # listed (ld64 records a dylib once, at its first reference).
+            if inventories.X86_OVERLAY_AUTOLINK in arm:
+                expected = tuple(
+                    item for item in arm if item != inventories.ARM64_OVERLAY_AUTOLINK
+                )
+            else:
+                expected = tuple(
+                    inventories.X86_OVERLAY_AUTOLINK
+                    if item == inventories.ARM64_OVERLAY_AUTOLINK
+                    else item
                     for item in arm
-                    if item != inventories.ARM64_OVERLAY_AUTOLINK
-                ),
-            )
+                )
+            self.assertEqual(x86, expected, name)
+            self.assertEqual(x86.count(inventories.X86_OVERLAY_AUTOLINK), 1, name)
             self.assertEqual(
                 inventories.macos_overlay_autolink_loads(arm, "x86_64"), x86
             )
@@ -895,6 +907,11 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
             )
         fe_x86 = inventories.loads("widget", "foundationessentials", "x86_64")
         self.assertIn("/usr/lib/swift/libswiftDarwin.dylib", fe_x86)
+        # Measured on the x86_64 box (main a9e85d41): OpenUIKit records
+        # libswiftDarwin where arm64 records libswift_errno, at the end.
+        ui_x86 = inventories.loads("widget", "openuikit", "x86_64")
+        self.assertEqual(ui_x86[-1], "/usr/lib/swift/libswiftDarwin.dylib")
+        self.assertNotIn("/usr/lib/swift/libswiftDarwin.dylib", inventories.loads("widget", "openuikit", "arm64"))
         # Link-map inputs: Darwin.tbd already listed on arm64; drop errno.tbd
         # rather than substituting the DarwinFoundation1 tbd.
         for gate in ("widget", "onboarding"):
@@ -964,7 +981,7 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
             text=True,
         )
         self.assertTrue(arm.endswith("libswift_errno.dylib\n"))
-        self.assertTrue(x86.endswith("libswiftObjectiveC.dylib\n"))
+        self.assertTrue(x86.endswith("libswiftDarwin.dylib\n"))
         self.assertNotIn("libswift_errno.dylib", x86)
         self.assertNotIn("DarwinFoundation1", x86)
         binds = [
@@ -1036,7 +1053,7 @@ guest_gate_inventory widget loads openuikit
         )
         arm, x86 = result.stdout.split("==SPLIT==\n", 1)
         self.assertTrue(arm.strip().endswith("libswift_errno.dylib"))
-        self.assertTrue(x86.strip().endswith("libswiftObjectiveC.dylib"))
+        self.assertTrue(x86.strip().endswith("libswiftDarwin.dylib"))
         self.assertNotIn("libswift_DarwinFoundation1.dylib", arm)
         self.assertNotIn("libswift_errno.dylib", x86)
         self.assertNotIn("DarwinFoundation1", x86)

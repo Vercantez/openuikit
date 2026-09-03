@@ -79,14 +79,27 @@ KINDS = ("loads", "inputs", "package", "otool-cpu")
 # carries $ld$previous$/usr/lib/swift/libswiftDarwin.dylib$$1$10.14.4$15.0$$,
 # so the errno accessor is also recorded against libswiftDarwin on macOS.
 #
-# Therefore x86_64 drops ARM64_OVERLAY_AUTOLINK (libswift_errno.dylib) from
-# every loads list that carries it, and drops the matching .tbd from inputs.
-# libswiftDarwin is already in the FE loads/inputs; do not substitute the
-# DarwinFoundation1 image. Measured LC_LOAD_DYLIB on the restaged x86_64 box
-# matches this drop. Tied to linker behaviour by
-# test_guest_gate_inventories_x86_oracle.sh (ld64.lld re-export attribution).
+# Therefore on x86_64 the bind that arm64 records against libswift_errno is
+# recorded against libswiftDarwin: ARM64_OVERLAY_AUTOLINK becomes
+# X86_OVERLAY_AUTOLINK in place, unless libswiftDarwin is already in the list
+# (FoundationEssentials), in which case the line simply disappears -- ld64
+# records each dylib once, at its first reference. Measured LC_LOAD_DYLIB on
+# the x86_64 box (main a9e85d41, libswiftDarwin re-exporting the shells):
+# FE = arm64 list minus errno; OpenUIKit = arm64 list with errno replaced by
+# libswiftDarwin at the end. Same rule for the .tbd inputs. Tied to linker
+# behaviour by test_guest_gate_inventories_x86_oracle.sh (ld64.lld re-export
+# attribution).
 ARM64_OVERLAY_AUTOLINK = "/usr/lib/swift/libswift_errno.dylib"
 ARM64_OVERLAY_AUTOLINK_TBD = "{SYS}/usr/lib/swift/libswift_errno.tbd"
+X86_OVERLAY_AUTOLINK = "/usr/lib/swift/libswiftDarwin.dylib"
+X86_OVERLAY_AUTOLINK_TBD = "{SYS}/usr/lib/swift/libswiftDarwin.tbd"
+
+
+def _replace_once(items: tuple[str, ...], old: str, new: str) -> tuple[str, ...]:
+    """old -> new in place; if new already appears, old is dropped instead."""
+    if new in items:
+        return tuple(item for item in items if item != old)
+    return tuple(new if item == old else item for item in items)
 
 BIND_NAMES = (
     "PACKAGE",
@@ -121,7 +134,7 @@ def macos_overlay_autolink_loads(items: tuple[str, ...], arch: str) -> tuple[str
         return items
     if arch != "x86_64":
         raise ValueError(f"unsupported arch {arch!r}")
-    return tuple(item for item in items if item != ARM64_OVERLAY_AUTOLINK)
+    return _replace_once(items, ARM64_OVERLAY_AUTOLINK, X86_OVERLAY_AUTOLINK)
 
 
 def macos_overlay_autolink_inputs(items: tuple[str, ...], arch: str) -> tuple[str, ...]:
@@ -129,7 +142,7 @@ def macos_overlay_autolink_inputs(items: tuple[str, ...], arch: str) -> tuple[st
         return items
     if arch != "x86_64":
         raise ValueError(f"unsupported arch {arch!r}")
-    return tuple(item for item in items if item != ARM64_OVERLAY_AUTOLINK_TBD)
+    return _replace_once(items, ARM64_OVERLAY_AUTOLINK_TBD, X86_OVERLAY_AUTOLINK_TBD)
 
 
 # --- widget LC_LOAD_DYLIB inventories (otool -L, no path binds) ---
