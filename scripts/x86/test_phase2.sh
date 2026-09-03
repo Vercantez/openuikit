@@ -1125,9 +1125,9 @@ expect_grep '_RopeModule.swiftmodule' "$UDINC" \
     "ud-guest stages _RopeModule.swiftmodule next to the .o"
 expect_grep 'InternalCollectionsUtilities.swiftmodule' "$UDINC" \
     "ud-guest stages InternalCollectionsUtilities.swiftmodule"
-expect_grep -- '-I "$fe_out/collections"' "$UDINC" \
+expect_grep '-I "$fe_out/collections"' "$UDINC" \
     "port/runner argv has -I fe_out/collections (build_url_runner / PR #28 class)"
-expect_grep -- '-I "$ud_w/fe/collections"' "$UDINC" \
+expect_grep '-I "$ud_w/fe/collections"' "$UDINC" \
     "port/runner argv has -I staged fe/collections"
 expect_grep 'phase2_ud_guest_compile_port "$ud_w" "$repo" "$sys" "$compile_triple" "$mc" "$fe_out"' \
     "$UDINC" "try_ud_guest passes fe_out onto the port argv"
