@@ -109,6 +109,7 @@ run_stdlib_ninja() {
     overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
     python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B" || true
     overlay_print_isysroot_from_ninja "$B" "$SWIFTCORE_DARWIN_ARCH"
+    overlay_print_overlay_module_evidence "$B" "$SWIFTCORE_DARWIN_ARCH"
     overlay_print_darwin_link_from_ninja "$B" "$SWIFTCORE_DARWIN_ARCH"
     if [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
       overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"

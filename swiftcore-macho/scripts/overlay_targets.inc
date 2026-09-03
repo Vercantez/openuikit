@@ -226,6 +226,51 @@ for f in flags:
 PY
 }
 
+# Prove overlay compiles load Darwin via -sdk, not libc++ via -fmodule-map-file.
+# overlay_print_overlay_module_evidence <build_dir> <arch>
+overlay_print_overlay_module_evidence() {
+    local build_dir=${1:?overlay_print_overlay_module_evidence: build dir}
+    local arch=${2:?overlay_print_overlay_module_evidence: arch}
+    local ninja_bin=${NINJA:-ninja}
+    local node ifc
+    echo "overlay_sysroot: overlay compile module evidence (arch=$arch)"
+    for node in \
+        "stdlib/public/Platform/OSX/${arch}/Darwin.o" \
+        "swiftSynchronization-macosx-${arch}" \
+        "swift_Concurrency-macosx-${arch}" \
+        "swift_StringProcessing-macosx-${arch}" \
+        "swift_Builtin_float-macosx-${arch}" \
+        "swift_RegexParser-macosx-${arch}" \
+        "swiftObservation-macosx-${arch}"
+    do
+        local cmds
+        cmds=$("$ninja_bin" -C "$build_dir" -t commands "$node" 2>/dev/null) || cmds=""
+        if [ -z "$cmds" ]; then
+            echo "overlay_sysroot: ninja $node commands=ABSENT"
+            continue
+        fi
+        if printf '%s\n' "$cmds" | grep -q -- '-fmodule-map-file'; then
+            echo "overlay_sysroot: ninja $node -fmodule-map-file=PRESENT"
+            printf '%s\n' "$cmds" | tr ' ' '\n' | grep -E '^-fmodule-map-file' | sort -u | sed 's/^/overlay_sysroot:   /'
+        else
+            echo "overlay_sysroot: ninja $node -fmodule-map-file=ABSENT"
+        fi
+    done
+    local macosx=$build_dir/lib/swift/macosx
+    for ifc in \
+        "$macosx/Darwin.swiftmodule/"*apple-macos.swiftinterface \
+        "$macosx/Synchronization.swiftmodule/"*apple-macos.swiftinterface \
+        "$macosx/_Concurrency.swiftmodule/"*apple-macos.swiftinterface \
+        "$macosx/_StringProcessing.swiftmodule/"*apple-macos.swiftinterface \
+        "$macosx/_Builtin_float.swiftmodule/"*apple-macos.swiftinterface \
+        "$macosx/_RegexParser.swiftmodule/"*apple-macos.swiftinterface \
+        "$macosx/Observation.swiftmodule/"*apple-macos.swiftinterface
+    do
+        [ -f "$ifc" ] || continue
+        echo "overlay_sysroot: imports $(basename "$(dirname "$ifc")")/$(basename "$ifc"): $(grep -E '^(@_exported )?import ' "$ifc" | tr '\n' ' ')"
+    done
+}
+
 # Print the exact Darwin overlay dylib link ninja will run, and the argv
 # clangxx_darwin_link.py rewrites it to (no -soname). Operator log must
 # show both: the Linux CMake line and the ld64.lld line.
