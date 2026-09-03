@@ -440,6 +440,64 @@ EOF
 fi
 
 echo
+echo "=== Darwin link re-exports the four Apple shells; other overlays do not ==="
+clang_c=$(command -v clang-18 || command -v clang)
+# shellcheck source=overlay_targets.inc
+. "$SCRIPT_DIR/overlay_targets.inc"
+rxdir=$tmp/reexport
+mkdir -p "$rxdir"
+echo 'void _swift_reexport_stub(void) {}' | "$clang_c" -target x86_64-apple-macosx13.0 -c -o "$tmp/stub.o" -x c -
+for n in libswift_Builtin_float libswift_DarwinFoundation1 \
+         libswift_DarwinFoundation2 libswift_DarwinFoundation3; do
+  /usr/lib/llvm-18/bin/ld64.lld -arch x86_64 -dylib \
+    -platform_version macos 13.0.0 13.0.0 \
+    -install_name /usr/lib/swift/${n}.dylib \
+    -o "$rxdir/${n}.dylib" "$tmp/stub.o"
+done
+echo 'int darwin_overlay(void) { return 0; }' | "$clang_c" -target x86_64-apple-macosx13.0 -c -o "$rxdir/Darwin.o" -x c -
+got=$(rewrite -target x86_64-apple-macosx13.0 -isysroot /sdk \
+  -shared -o "$rxdir/libswiftDarwin.dylib" "$rxdir/Darwin.o" \
+  -L "$rxdir")
+rx_n=$(printf '%s\n' "$got" | tr ' ' '\n' | grep -c -- '-reexport_library' || true)
+[ "$rx_n" -eq 4 ] && echo "  OK  Darwin driver argv has 4 -reexport_library" \
+  || { echo "  FAIL Darwin -reexport_library count=$rx_n want 4"; fail=1; }
+for n in libswift_Builtin_float libswift_DarwinFoundation1 \
+         libswift_DarwinFoundation2 libswift_DarwinFoundation3; do
+  printf '%s\n' "$got" | grep -q "$n" \
+    && echo "  OK  reexports $n" \
+    || { echo "  FAIL missing reexport $n"; fail=1; }
+done
+grep -q 'clangxx_darwin_link: darwin_reexport=' "$tmp/link.err" \
+  && echo "  OK  printed darwin_reexport=" \
+  || { echo "  FAIL missing darwin_reexport line"; fail=1; }
+got=$(rewrite -target x86_64-apple-macosx13.0 -isysroot /sdk \
+  -shared -o "$rxdir/libswiftObjectiveC.dylib" "$rxdir/Darwin.o" \
+  -L "$rxdir")
+printf '%s\n' "$got" | grep -q -- '-reexport_library' \
+  && { echo "  FAIL ObjectiveC link grew -reexport_library"; fail=1; } \
+  || echo "  OK  ObjectiveC link has no -reexport_library"
+# Direct ld64.lld: exactly four LC_REEXPORT_DYLIB (Apple's set).
+/usr/lib/llvm-18/bin/ld64.lld -arch x86_64 -dylib \
+  -platform_version macos 13.0.0 13.0.0 \
+  -install_name /usr/lib/swift/libswiftDarwin.dylib \
+  -reexport_library "$rxdir/libswift_Builtin_float.dylib" \
+  -reexport_library "$rxdir/libswift_DarwinFoundation1.dylib" \
+  -reexport_library "$rxdir/libswift_DarwinFoundation2.dylib" \
+  -reexport_library "$rxdir/libswift_DarwinFoundation3.dylib" \
+  -o "$rxdir/libswiftDarwin.linked.dylib" "$rxdir/Darwin.o"
+have=$(overlay_darwin_lc_reexport_names "$rxdir/libswiftDarwin.linked.dylib")
+want=$(overlay_darwin_reexport_install_names | sort -u)
+if [ "$(printf '%s\n' "$have")" = "$(printf '%s\n' "$want")" ]; then
+  echo "  OK  exactly four LC_REEXPORT_DYLIB on synthetic Darwin"
+  printf '%s\n' "$have" | sed 's/^/    /'
+else
+  echo "  FAIL LC_REEXPORT_DYLIB set:"
+  echo "    have:"; printf '%s\n' "$have" | sed 's/^/      /'
+  echo "    want:"; printf '%s\n' "$want" | sed 's/^/      /'
+  fail=1
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- apple-target .so → Darwin driver + sysroot libc++ + compiler-rt; linux-gnu .so → ld.lld"
   exit 0

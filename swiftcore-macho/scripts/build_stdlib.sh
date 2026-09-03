@@ -211,6 +211,17 @@ run_stdlib_ninja() {
     if [ "$sel_rc" -ne 0 ]; then
       overlay_rc=$sel_rc
     fi
+    # DarwinFoundation shells before Darwin ninja: libswiftDarwin re-exports
+    # them (Apple's four LC_REEXPORT_DYLIB). Builtin_float is ninja'd first.
+    if [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
+      set +e
+      overlay_build_xcode_shells "$B" "$SWIFTCORE_DARWIN_ARCH"
+      local shells_st=$?
+      set -e
+      if [ "$shells_st" -ne 0 ] && [ "$overlay_rc" -eq 0 ]; then
+        overlay_rc=$shells_st
+      fi
+    fi
     if [ ${#OVERLAY_NINJA_TARGETS[@]} -gt 0 ]; then
       for t in "${OVERLAY_NINJA_TARGETS[@]}"; do
         step "ninja overlay $t"
@@ -241,11 +252,14 @@ run_stdlib_ninja() {
     fi
     if [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
       set +e
-      overlay_build_xcode_shells "$B" "$SWIFTCORE_DARWIN_ARCH"
-      local shells_st=$?
+      overlay_ensure_darwin_reexports "$B" "$SWIFTCORE_DARWIN_ARCH"
+      local rx_st=$?
       set -e
-      if [ "$shells_st" -ne 0 ] && [ "$overlay_rc" -eq 0 ]; then
-        overlay_rc=$shells_st
+      if [ "$rx_st" -ne 0 ]; then
+        OVERLAY_STATUS[swiftDarwin-macosx-${SWIFTCORE_DARWIN_ARCH}]="FAILED first_error=CANNOT_DARWIN_REEXPORT"
+        if [ "$overlay_rc" -eq 0 ]; then
+          overlay_rc=$rx_st
+        fi
       fi
     fi
     overlay_print_scoreboard "$SWIFTCORE_DARWIN_ARCH"

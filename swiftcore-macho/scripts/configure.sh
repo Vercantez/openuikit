@@ -45,7 +45,8 @@ done
 # it from SWIFT_BUILD_DYNAMIC_SDK_OVERLAY (default TRUE on a non-Apple host),
 # so Platform/swiftDarwin *is* in the ninja graph. ObjectiveC /
 # _DarwinFoundation* / _errno are not CMake targets on Linux; build_stdlib.sh
-# compiles them via overlay_build_xcode_shells after the ninja overlay loop.
+# compiles them via overlay_build_xcode_shells *before* the Darwin ninja
+# target so libswiftDarwin can LC_REEXPORT DarwinFoundation{1,2,3}.
 #
 # Phase-2 guests load _Concurrency + _StringProcessing + Synchronization.
 # Overlays therefore also fetch/pass libdispatch (BUILD_LOG §16): CMake with

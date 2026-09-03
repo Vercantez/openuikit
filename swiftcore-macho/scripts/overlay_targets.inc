@@ -12,7 +12,9 @@
 # building any overlays. Instead, we're picking them up from the SDK.").
 # They are not ninja targets. `overlay_build_xcode_shells` compiles them
 # from sysroot .swiftinterface (or in-tree re-export shells) + ObjectiveC.swift
-# with the Darwin driver. Shared-cache Apple dylibs have no LC_DYLD_INFO.
+# with the Darwin driver *before* the Darwin ninja target so libswiftDarwin
+# can LC_REEXPORT DarwinFoundation{1,2,3}. Shared-cache Apple dylibs have no
+# LC_DYLD_INFO.
 
 if [ -n "${SWIFTCORE_OVERLAY_TARGETS_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -34,14 +36,18 @@ overlay_write_ninja_commands() {
 
 overlay_candidate_targets() {
     local arch=${1:?overlay_candidate_targets: arch}
+    # Builtin_float before Darwin so libswiftDarwin can LC_REEXPORT it.
+    # Darwin before Synchronization (Sync's ninja graph depends on Darwin).
+    # DarwinFoundation shells are not ninja targets; overlay_build_xcode_shells
+    # runs them before this ninja loop.
     printf '%s\n' \
-        "swift_Concurrency-macosx-${arch}" \
-        "swiftSynchronization-macosx-${arch}" \
-        "swift_StringProcessing-macosx-${arch}" \
         "swift_Builtin_float-macosx-${arch}" \
+        "swiftDarwin-macosx-${arch}" \
+        "swift_Concurrency-macosx-${arch}" \
+        "swift_StringProcessing-macosx-${arch}" \
         "swift_RegexParser-macosx-${arch}" \
         "swiftObservation-macosx-${arch}" \
-        "swiftDarwin-macosx-${arch}" \
+        "swiftSynchronization-macosx-${arch}" \
         "swift_DarwinFoundation1-macosx-${arch}" \
         "swift_DarwinFoundation2-macosx-${arch}" \
         "swift_DarwinFoundation3-macosx-${arch}" \
@@ -520,9 +526,130 @@ overlay_copy_so_as_dylib() {
     done
 }
 
+# Apple's libswiftDarwin LC_REEXPORT_DYLIB install names (exactly four).
+overlay_darwin_reexport_install_names() {
+    printf '%s\n' \
+        /usr/lib/swift/libswift_Builtin_float.dylib \
+        /usr/lib/swift/libswift_DarwinFoundation1.dylib \
+        /usr/lib/swift/libswift_DarwinFoundation2.dylib \
+        /usr/lib/swift/libswift_DarwinFoundation3.dylib
+}
+
+overlay_darwin_lc_reexport_names() {
+    local dylib=$1
+    local otool=${OTOOL:-llvm-otool-18}
+    command -v "$otool" >/dev/null 2>&1 || otool=llvm-otool
+    "$otool" -l "$dylib" 2>/dev/null \
+        | awk '/LC_REEXPORT_DYLIB/{f=1} f&&/^ *name /{print $2; f=0}' \
+        | sort -u
+}
+
+# After ninja Darwin + the four shells exist, relink libswiftDarwin so it
+# carries Apple's four LC_REEXPORT_DYLIB entries. clangxx_darwin_link.py
+# injects -reexport_library when those dylibs are on disk; this pass covers
+# the case where ninja first linked Darwin as a Synchronization dep before
+# Builtin_float landed.
+# overlay_ensure_darwin_reexports <build_dir> <arch>
+overlay_ensure_darwin_reexports() {
+    local build_dir=${1:?overlay_ensure_darwin_reexports: build dir}
+    local arch=${2:?overlay_ensure_darwin_reexports: arch}
+    local py cmds_file darwin want have missing
+    if [ "${SWIFTCORE_NINJA_HARNESS:-0}" = 1 ]; then
+        echo "overlay_ensure_darwin_reexports: skip (SWIFTCORE_NINJA_HARNESS=1)"
+        return 0
+    fi
+    darwin=$build_dir/lib/swift/macosx/$arch/libswiftDarwin.dylib
+    [ -f "$darwin" ] || darwin=$build_dir/lib/swift/macosx/$arch/libswiftDarwin.so
+    if [ ! -f "$darwin" ]; then
+        echo "overlay_ensure_darwin_reexports: no libswiftDarwin (ninja Darwin did not land)"
+        return 0
+    fi
+    want=$(overlay_darwin_reexport_install_names | sort -u)
+    have=$(overlay_darwin_lc_reexport_names "$darwin")
+    if [ "$(printf '%s\n' "$have")" = "$(printf '%s\n' "$want")" ]; then
+        echo "overlay_ensure_darwin_reexports: $darwin already has four LC_REEXPORT_DYLIB"
+        printf '%s\n' "$have" | sed 's/^/  reexport /'
+        return 0
+    fi
+    py=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/clangxx_darwin_link.py
+    cmds_file=$(mktemp)
+    overlay_write_ninja_commands "$cmds_file" "$build_dir" \
+        "lib/swift/macosx/${arch}/libswiftDarwin.so"
+    if [ ! -s "$cmds_file" ]; then
+        overlay_write_ninja_commands "$cmds_file" "$build_dir" \
+            "swiftDarwin-macosx-${arch}"
+    fi
+    if [ ! -s "$cmds_file" ]; then
+        echo "CANNOT_DARWIN_REEXPORT reason=no ninja Darwin link command to relink" >&2
+        rm -f "$cmds_file"
+        return 2
+    fi
+    echo "overlay_ensure_darwin_reexports: relink $darwin with -reexport_library of four shells"
+    set +e
+    python3 - "$py" "$cmds_file" <<'PY'
+import os, pathlib, shlex, subprocess, sys
+
+def compiler_args(line):
+    argv = shlex.split(line)
+    if not argv:
+        return []
+    if argv[0] == ":" and len(argv) > 2 and argv[1] == "&&":
+        argv = argv[2:]
+    while len(argv) >= 2 and argv[-2] == "&&" and argv[-1] == ":":
+        argv = argv[:-2]
+    i = 0
+    for j, t in enumerate(argv):
+        base = os.path.basename(t.rstrip("\\"))
+        if base in ("clang++", "clang", "clangxx_darwin_link.py") or t.endswith("/clang++"):
+            i = j
+            break
+    return argv[i + 1 :]
+
+py, cmds_path = sys.argv[1], sys.argv[2]
+text = pathlib.Path(cmds_path).read_text(errors="replace")
+line = None
+for raw in text.splitlines():
+    if "libswiftDarwin.so" in raw and " -o " in raw and (
+        "clang++" in raw or "clang " in raw or "clangxx_darwin_link" in raw
+    ):
+        line = raw
+        break
+if line is None:
+    sys.stderr.write("CANNOT_DARWIN_REEXPORT reason=no clang++ Darwin link line\n")
+    sys.exit(2)
+args = compiler_args(line)
+proc = subprocess.run([sys.executable, py, *args])
+sys.exit(proc.returncode)
+PY
+    local st=$?
+    set -e
+    rm -f "$cmds_file"
+    if [ "$st" -ne 0 ]; then
+        echo "CANNOT_DARWIN_REEXPORT reason=relink rc=$st" >&2
+        return "$st"
+    fi
+    overlay_copy_so_as_dylib "$build_dir" "$arch"
+    overlay_flatten_unarch "$build_dir" "$arch"
+    darwin=$build_dir/lib/swift/macosx/$arch/libswiftDarwin.dylib
+    [ -f "$darwin" ] || darwin=$build_dir/lib/swift/macosx/$arch/libswiftDarwin.so
+    have=$(overlay_darwin_lc_reexport_names "$darwin")
+    missing=$(comm -23 <(printf '%s\n' "$want") <(printf '%s\n' "$have"))
+    if [ -n "$missing" ]; then
+        echo "CANNOT_DARWIN_REEXPORT missing=$(printf '%s' "$missing" | tr '\n' ',')" >&2
+        echo "  have:" >&2
+        printf '%s\n' "$have" | sed 's/^/    /' >&2
+        return 2
+    fi
+    echo "overlay_ensure_darwin_reexports: four LC_REEXPORT_DYLIB on $darwin"
+    printf '%s\n' "$have" | sed 's/^/  reexport /'
+    return 0
+}
+
 # Compile the five non-ninja Apple-SDK overlays with the Darwin driver.
 # overlay_build_xcode_shells <build_dir> <arch>
 # Skipped in SWIFTCORE_NINJA_HARNESS (fake ninja / no Darwin resource-dir).
+# Called *before* the Darwin ninja target so libswiftDarwin can re-export
+# DarwinFoundation{1,2,3}. Builtin_float is a ninja target, built first.
 overlay_build_xcode_shells() {
     local build_dir=${1:?overlay_build_xcode_shells: build dir}
     local arch=${2:?overlay_build_xcode_shells: arch}

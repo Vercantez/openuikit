@@ -77,6 +77,34 @@ if [ -f "$SDK/usr/include/Darwin.modulemap" ] \
     && echo "  OK  NSObject hash" || { echo "  FAIL missing NSObject hash"; fail=1; }
   echo "$nm_o" | grep -q 'ObjectiveC8SelectorV' \
     && echo "  OK  Selector helpers" || { echo "  FAIL missing Selector"; fail=1; }
+  # The five SDK overlays must not grow Darwin's LC_REEXPORT_DYLIB set.
+  for n in libswift_DarwinFoundation1.dylib libswift_DarwinFoundation2.dylib \
+           libswift_DarwinFoundation3.dylib libswift_errno.dylib \
+           libswiftObjectiveC.dylib; do
+    f=$B/lib/swift/macosx/x86_64/$n
+    [ -f "$f" ] || continue
+    rx=$("$OTOOL" -l "$f" | awk '/LC_REEXPORT_DYLIB/{c++} END{print c+0}')
+    [ "$rx" -eq 0 ] && echo "  OK  $n has 0 LC_REEXPORT_DYLIB" \
+      || { echo "  FAIL $n has $rx LC_REEXPORT_DYLIB (only Darwin re-exports the shells)"; fail=1; }
+  done
+  darwin=$B/lib/swift/macosx/x86_64/libswiftDarwin.dylib
+  [ -f "$darwin" ] || darwin=$B/lib/swift/macosx/x86_64/libswiftDarwin.so
+  if [ -f "$darwin" ]; then
+    # shellcheck source=overlay_targets.inc
+    . "$SCRIPT_DIR/overlay_targets.inc"
+    have=$(overlay_darwin_lc_reexport_names "$darwin")
+    want=$(overlay_darwin_reexport_install_names | sort -u)
+    if [ "$(printf '%s\n' "$have")" = "$(printf '%s\n' "$want")" ]; then
+      echo "  OK  libswiftDarwin has exactly four LC_REEXPORT_DYLIB"
+    else
+      echo "  FAIL libswiftDarwin LC_REEXPORT_DYLIB:"
+      echo "    have:"; printf '%s\n' "$have" | sed 's/^/      /'
+      echo "    want:"; printf '%s\n' "$want" | sed 's/^/      /'
+      fail=1
+    fi
+  else
+    echo "  note: libswiftDarwin not in this live recipe (ninja target; operator overlay loop)"
+  fi
 else
   echo "  skip live recipe (no MacOSX.sdk Darwin map or Swift.swiftmodule)"
 fi
