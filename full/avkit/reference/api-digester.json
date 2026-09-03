@@ -1,0 +1,921 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "_DarwinFoundation1.availability.Availability",
+        "printedName": "_DarwinFoundation1.availability.Availability"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "_DarwinFoundation1.TargetConditionals",
+        "printedName": "_DarwinFoundation1.TargetConditionals"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVKitDefines",
+        "printedName": "AVKit.AVKitDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVKitTypes",
+        "printedName": "AVKit.AVKitTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVInputPickerInteraction",
+        "printedName": "AVKit.AVInputPickerInteraction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVCaptureEvent",
+        "printedName": "AVKit.AVCaptureEvent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVCaptureEventInteraction",
+        "printedName": "AVKit.AVCaptureEventInteraction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVCaptureEventSound",
+        "printedName": "AVKit.AVCaptureEventSound"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVError",
+        "printedName": "AVKit.AVError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPictureInPictureController",
+        "printedName": "AVKit.AVPictureInPictureController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPictureInPictureController_AVSampleBufferDisplayLayerSupport",
+        "printedName": "AVKit.AVPictureInPictureController_AVSampleBufferDisplayLayerSupport"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPictureInPictureController_VideoCallSupport",
+        "printedName": "AVKit.AVPictureInPictureController_VideoCallSupport"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPlaybackRouteSelecting",
+        "printedName": "AVKit.AVPlaybackRouteSelecting"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPlayerItem_AVKitAdditions",
+        "printedName": "AVKit.AVPlayerItem_AVKitAdditions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPlayerViewController",
+        "printedName": "AVKit.AVPlayerViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVRoutePickerView",
+        "printedName": "AVKit.AVRoutePickerView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVInterstitialTimeRange",
+        "printedName": "AVKit.AVInterstitialTimeRange"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit.AVPlaybackSpeed",
+        "printedName": "AVKit.AVPlaybackSpeed"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC10AVKitErrorLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "AVKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC10AVKitErrorLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC10AVKitErrorLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "AVKit",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC10AVKitErrorLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AVKitError",
+                "printedName": "AVKit.AVKitError",
+                "usr": "c:@E@AVKitError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC10AVKitErrorLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "AVKit",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC10AVKitErrorLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC10AVKitErrorLeV11errorDomainSSvgZ",
+                "moduleName": "AVKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC10AVKitErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC10AVKitErrorLeV11errorDomainSSvpZ",
+            "moduleName": "AVKit",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC10AVKitErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AVKit.AVKitError.Code",
+                        "usr": "c:@E@AVKitError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AVKit.AVKitError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo10AVKitErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "AVKit",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So10AVKitErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo10AVKitErrorV8rawValueSivg",
+                    "moduleName": "AVKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So10AVKitErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo10AVKitErrorV8rawValueSivp",
+                "moduleName": "AVKit",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So10AVKitErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo10AVKitErrorV8RawValuea",
+                "moduleName": "AVKit",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So10AVKitErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AVKitError",
+                    "printedName": "AVKit.AVKitError",
+                    "usr": "c:@E@AVKitError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "AVKit",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@AVKitError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AVKit.AVKitError.Code",
+                        "usr": "c:@E@AVKitError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AVKit.AVKitError.Code",
+                            "usr": "c:@E@AVKitError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AVKit.AVKitError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AVKit.AVKitError.Code.Type) -> AVKit.AVKitError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AVKit",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@AVKitError@AVKitErrorUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AVKit.AVKitError.Code",
+                        "usr": "c:@E@AVKitError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AVKit.AVKitError.Code",
+                            "usr": "c:@E@AVKitError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AVKit.AVKitError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AVKit.AVKitError.Code.Type) -> AVKit.AVKitError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AVKit",
+                "name": "pictureInPictureStartFailed",
+                "printedName": "pictureInPictureStartFailed",
+                "usr": "c:@E@AVKitError@AVKitErrorPictureInPictureStartFailed"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "AVKit.AVKitError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "9.0",
+            "kind": "TypeDecl",
+            "moduleName": "AVKit",
+            "name": "Code",
+            "objc_name": "AVKitError",
+            "printedName": "Code",
+            "usr": "c:@E@AVKitError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AVKit.AVKitError.Code",
+                    "usr": "c:@E@AVKitError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC10AVKitErrorLeV7unknownSoAAVvgZ",
+                "moduleName": "AVKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC10AVKitErrorLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AVKit.AVKitError.Code",
+                "usr": "c:@E@AVKitError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AVKit",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@AVKitError@AVKitErrorUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AVKit.AVKitError.Code",
+                    "usr": "c:@E@AVKitError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC10AVKitErrorLeV27pictureInPictureStartFailedSoAAVvgZ",
+                "moduleName": "AVKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC10AVKitErrorLeV27pictureInPictureStartFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AVKit.AVKitError.Code",
+                "usr": "c:@E@AVKitError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AVKit",
+            "name": "pictureInPictureStartFailed",
+            "printedName": "pictureInPictureStartFailed",
+            "static": true,
+            "usr": "c:@E@AVKitError@AVKitErrorPictureInPictureStartFailed"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "9.0",
+        "kind": "TypeDecl",
+        "moduleName": "AVKit",
+        "name": "AVKitError",
+        "printedName": "AVKitError",
+        "usr": "c:@E@AVKitError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "AVKit",
+        "printedName": "AVKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "Observation",
+        "printedName": "Observation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "QuartzCore",
+        "printedName": "QuartzCore"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "Synchronization",
+        "printedName": "Synchronization"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "TipKit",
+        "printedName": "TipKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AVKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "AVKit",
+    "printedName": "AVKit"
+  }
+}

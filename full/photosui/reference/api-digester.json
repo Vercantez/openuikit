@@ -1,0 +1,3676 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "_DarwinFoundation1.TargetConditionals",
+        "printedName": "_DarwinFoundation1.TargetConditionals"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "PhotosUI.PHLivePhotoView",
+        "printedName": "PhotosUI.PHLivePhotoView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "PhotosUI.PHPicker",
+        "printedName": "PhotosUI.PHPicker"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "PhotosUI.PHContentEditingController",
+        "printedName": "PhotosUI.PHContentEditingController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "PhotosUI.PHPhotoLibrary_PhotosUISupport",
+        "printedName": "PhotosUI.PHPhotoLibrary_PhotosUISupport"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "PhotosUI",
+        "printedName": "PhotosUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PhotosUI",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerMode",
+                    "printedName": "PhotosUI.PHPickerMode",
+                    "usr": "s:8PhotosUI12PHPickerModeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI12PHPickerModeV7defaultACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI12PHPickerModeV7defaultACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerMode",
+                "printedName": "PhotosUI.PHPickerMode",
+                "usr": "s:8PhotosUI12PHPickerModeV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI12PHPickerModeV7defaultACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "default",
+            "printedName": "default",
+            "static": true,
+            "usr": "s:8PhotosUI12PHPickerModeV7defaultACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerMode",
+                    "printedName": "PhotosUI.PHPickerMode",
+                    "usr": "s:8PhotosUI12PHPickerModeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI12PHPickerModeV7compactACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI12PHPickerModeV7compactACvgZ"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerMode",
+                    "printedName": "PhotosUI.PHPickerMode",
+                    "usr": "s:8PhotosUI12PHPickerModeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI12PHPickerModeV7compactACvsZ",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "static": true,
+                "usr": "s:8PhotosUI12PHPickerModeV7compactACvsZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerMode",
+                "printedName": "PhotosUI.PHPickerMode",
+                "usr": "s:8PhotosUI12PHPickerModeV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI12PHPickerModeV7compactACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "compact",
+            "printedName": "compact",
+            "static": true,
+            "usr": "s:8PhotosUI12PHPickerModeV7compactACvpZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerMode",
+                "printedName": "PhotosUI.PHPickerMode",
+                "usr": "s:8PhotosUI12PHPickerModeV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerMode",
+                "printedName": "PhotosUI.PHPickerMode",
+                "usr": "s:8PhotosUI12PHPickerModeV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI12PHPickerModeV2eeoiySbAC_ACtFZ",
+            "moduleName": "PhotosUI",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:8PhotosUI12PHPickerModeV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI12PHPickerModeV4hash4intoys6HasherVz_tF",
+            "moduleName": "PhotosUI",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:8PhotosUI12PHPickerModeV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI12PHPickerModeV9hashValueSivg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI12PHPickerModeV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI12PHPickerModeV9hashValueSivp",
+            "moduleName": "PhotosUI",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:8PhotosUI12PHPickerModeV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.0",
+        "intro_iOS": "17.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s8PhotosUI12PHPickerModeV",
+        "moduleName": "PhotosUI",
+        "name": "PHPickerMode",
+        "printedName": "PHPickerMode",
+        "usr": "s:8PhotosUI12PHPickerModeV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV6imagesACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV6imagesACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV6imagesACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "images",
+            "printedName": "images",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV6imagesACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV6videosACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV6videosACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV6videosACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "videos",
+            "printedName": "videos",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV6videosACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV04liveA0ACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV04liveA0ACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV04liveA0ACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "livePhotos",
+            "printedName": "livePhotos",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV04liveA0ACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV011depthEffectA0ACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV011depthEffectA0ACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "16.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV011depthEffectA0ACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "depthEffectPhotos",
+            "printedName": "depthEffectPhotos",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV011depthEffectA0ACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV6burstsACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV6burstsACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "16.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV6burstsACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "bursts",
+            "printedName": "bursts",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV6burstsACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV9panoramasACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV9panoramasACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV9panoramasACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "panoramas",
+            "printedName": "panoramas",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV9panoramasACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV11screenshotsACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV11screenshotsACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV11screenshotsACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "screenshots",
+            "printedName": "screenshots",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV11screenshotsACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV16screenRecordingsACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV16screenRecordingsACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV16screenRecordingsACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "screenRecordings",
+            "printedName": "screenRecordings",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV16screenRecordingsACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV11slomoVideosACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV11slomoVideosACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV11slomoVideosACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "slomoVideos",
+            "printedName": "slomoVideos",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV11slomoVideosACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV15timelapseVideosACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV15timelapseVideosACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV15timelapseVideosACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "timelapseVideos",
+            "printedName": "timelapseVideos",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV15timelapseVideosACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV15cinematicVideosACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV15cinematicVideosACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "16.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV15cinematicVideosACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "cinematicVideos",
+            "printedName": "cinematicVideos",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV15cinematicVideosACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV12spatialMediaACvgZ",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8PhotosUI14PHPickerFilterV12spatialMediaACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV12spatialMediaACvpZ",
+            "moduleName": "PhotosUI",
+            "name": "spatialMedia",
+            "printedName": "spatialMedia",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV12spatialMediaACvpZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PlaybackStyle",
+                "printedName": "Photos.PHAsset.PlaybackStyle",
+                "usr": "c:@E@PHAssetPlaybackStyle"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "15.0",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV13playbackStyleyACSo015PHAssetPlaybackF0VFZ",
+            "moduleName": "PhotosUI",
+            "name": "playbackStyle",
+            "printedName": "playbackStyle(_:)",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV13playbackStyleyACSo015PHAssetPlaybackF0VFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PhotosUI.PHPickerFilter]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV3any2ofACSayACG_tFZ",
+            "moduleName": "PhotosUI",
+            "name": "any",
+            "printedName": "any(of:)",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV3any2ofACSayACG_tFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PhotosUI.PHPickerFilter]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "15.0",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV3all2ofACSayACG_tFZ",
+            "moduleName": "PhotosUI",
+            "name": "all",
+            "printedName": "all(of:)",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV3all2ofACSayACG_tFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "15.0",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV3notyA2CFZ",
+            "moduleName": "PhotosUI",
+            "name": "not",
+            "printedName": "not(_:)",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV3notyA2CFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerFilter",
+                "printedName": "PhotosUI.PHPickerFilter",
+                "usr": "s:8PhotosUI14PHPickerFilterV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV2eeoiySbAC_ACtFZ",
+            "moduleName": "PhotosUI",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerFilterV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV4hash4intoys6HasherVz_tF",
+            "moduleName": "PhotosUI",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:8PhotosUI14PHPickerFilterV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerFilterV9hashValueSivg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI14PHPickerFilterV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerFilterV9hashValueSivp",
+            "moduleName": "PhotosUI",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:8PhotosUI14PHPickerFilterV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "14.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s8PhotosUI14PHPickerFilterV",
+        "moduleName": "PhotosUI",
+        "name": "PHPickerFilter",
+        "printedName": "PHPickerFilter",
+        "usr": "s:8PhotosUI14PHPickerFilterV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AssetRepresentationMode",
+                        "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AssetRepresentationMode",
+                            "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.AssetRepresentationMode.Type) -> PhotosUI.PHPickerConfiguration.AssetRepresentationMode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO9automaticyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "automatic",
+                "printedName": "automatic",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO9automaticyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AssetRepresentationMode",
+                        "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AssetRepresentationMode",
+                            "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.AssetRepresentationMode.Type) -> PhotosUI.PHPickerConfiguration.AssetRepresentationMode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO7currentyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "current",
+                "printedName": "current",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO7currentyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AssetRepresentationMode",
+                        "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AssetRepresentationMode",
+                            "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.AssetRepresentationMode.Type) -> PhotosUI.PHPickerConfiguration.AssetRepresentationMode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO10compatibleyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "compatible",
+                "printedName": "compatible",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO10compatibleyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetRepresentationMode",
+                    "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetRepresentationMode",
+                    "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO2eeoiySbAE_AEtFZ",
+                "moduleName": "PhotosUI",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO4hash4intoys6HasherVz_tF",
+                "moduleName": "PhotosUI",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO9hashValueSivg",
+                    "moduleName": "PhotosUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO9hashValueSivp",
+                "moduleName": "PhotosUI",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO",
+            "moduleName": "PhotosUI",
+            "name": "AssetRepresentationMode",
+            "printedName": "AssetRepresentationMode",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Selection",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Selection",
+                            "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.Selection.Type) -> PhotosUI.PHPickerConfiguration.Selection"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO7defaultyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "default",
+                "printedName": "default",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO7defaultyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Selection",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Selection",
+                            "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.Selection.Type) -> PhotosUI.PHPickerConfiguration.Selection"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO7orderedyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "ordered",
+                "printedName": "ordered",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO7orderedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Selection",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Selection",
+                            "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.Selection.Type) -> PhotosUI.PHPickerConfiguration.Selection"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "EnumElement",
+                "intro_Macosx": "14.0",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO10continuousyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "continuous",
+                "printedName": "continuous",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO10continuousyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Selection",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                        "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Selection",
+                            "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                            "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PhotosUI.PHPickerConfiguration.Selection.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PhotosUI.PHPickerConfiguration.Selection.Type) -> PhotosUI.PHPickerConfiguration.Selection"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "EnumElement",
+                "intro_Macosx": "14.0",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO20continuousAndOrderedyA2EmF",
+                "moduleName": "PhotosUI",
+                "name": "continuousAndOrdered",
+                "printedName": "continuousAndOrdered",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO20continuousAndOrderedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Selection",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Selection",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO2eeoiySbAE_AEtFZ",
+                "moduleName": "PhotosUI",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO4hash4intoys6HasherVz_tF",
+                "moduleName": "PhotosUI",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO9hashValueSivg",
+                    "moduleName": "PhotosUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO9hashValueSivp",
+                "moduleName": "PhotosUI",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_iOS": "15.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV9SelectionO",
+            "moduleName": "PhotosUI",
+            "name": "Selection",
+            "printedName": "Selection",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.Int?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV14selectionLimitSiSgvg",
+                    "moduleName": "PhotosUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV14selectionLimitSiSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.Int?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV14selectionLimitSiSgvs",
+                    "moduleName": "PhotosUI",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV14selectionLimitSiSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV14selectionLimitSiSgvp",
+                "moduleName": "PhotosUI",
+                "name": "selectionLimit",
+                "printedName": "selectionLimit",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV14selectionLimitSiSgvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "NSDirectionalRectEdge",
+                            "printedName": "UIKit.NSDirectionalRectEdge",
+                            "usr": "c:@E@NSDirectionalRectEdge"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "UIKit.NSDirectionalRectEdge?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVSgvg",
+                    "moduleName": "PhotosUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "NSDirectionalRectEdge",
+                            "printedName": "UIKit.NSDirectionalRectEdge",
+                            "usr": "c:@E@NSDirectionalRectEdge"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "UIKit.NSDirectionalRectEdge?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVSgvs",
+                    "moduleName": "PhotosUI",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NSDirectionalRectEdge",
+                        "printedName": "UIKit.NSDirectionalRectEdge",
+                        "usr": "c:@E@NSDirectionalRectEdge"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.NSDirectionalRectEdge?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVSgvp",
+                "moduleName": "PhotosUI",
+                "name": "edgesWithoutContentMargins",
+                "printedName": "edgesWithoutContentMargins",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVSgvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Update",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Update",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateVAEycfc",
+                "moduleName": "PhotosUI",
+                "name": "init",
+                "printedName": "init()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateVAEycfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Update",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Update",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Update",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Update",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV2eeoiySbAE_AEtFZ",
+                "moduleName": "PhotosUI",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV4hash4intoys6HasherVz_tF",
+                "moduleName": "PhotosUI",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV9hashValueSivg",
+                    "moduleName": "PhotosUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV9hashValueSivp",
+                "moduleName": "PhotosUI",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV6UpdateV",
+            "moduleName": "PhotosUI",
+            "name": "Update",
+            "printedName": "Update",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetRepresentationMode",
+                    "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV32preferredAssetRepresentationModeAC0fgH0Ovg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV32preferredAssetRepresentationModeAC0fgH0Ovg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetRepresentationMode",
+                    "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV32preferredAssetRepresentationModeAC0fgH0Ovs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV32preferredAssetRepresentationModeAC0fgH0Ovs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetRepresentationMode",
+                "printedName": "PhotosUI.PHPickerConfiguration.AssetRepresentationMode",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV23AssetRepresentationModeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV32preferredAssetRepresentationModeAC0fgH0Ovp",
+            "moduleName": "PhotosUI",
+            "name": "preferredAssetRepresentationMode",
+            "printedName": "preferredAssetRepresentationMode",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV32preferredAssetRepresentationModeAC0fgH0Ovp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Selection",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9selectionAC9SelectionOvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9selectionAC9SelectionOvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Selection",
+                    "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9selectionAC9SelectionOvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9selectionAC9SelectionOvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Selection",
+                "printedName": "PhotosUI.PHPickerConfiguration.Selection",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9SelectionO"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV9selectionAC9SelectionOvp",
+            "moduleName": "PhotosUI",
+            "name": "selection",
+            "printedName": "selection",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV9selectionAC9SelectionOvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV14selectionLimitSivg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV14selectionLimitSivg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV14selectionLimitSivs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV14selectionLimitSivs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV14selectionLimitSivp",
+            "moduleName": "PhotosUI",
+            "name": "selectionLimit",
+            "printedName": "selectionLimit",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV14selectionLimitSivp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHPickerFilter",
+                        "printedName": "PhotosUI.PHPickerFilter",
+                        "usr": "s:8PhotosUI14PHPickerFilterV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PhotosUI.PHPickerFilter?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6filterAA0C6FilterVSgvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6filterAA0C6FilterVSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHPickerFilter",
+                        "printedName": "PhotosUI.PHPickerFilter",
+                        "usr": "s:8PhotosUI14PHPickerFilterV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PhotosUI.PHPickerFilter?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV6filterAA0C6FilterVSgvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6filterAA0C6FilterVSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerFilter",
+                    "printedName": "PhotosUI.PHPickerFilter",
+                    "usr": "s:8PhotosUI14PHPickerFilterV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "PhotosUI.PHPickerFilter?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV6filterAA0C6FilterVSgvp",
+            "moduleName": "PhotosUI",
+            "name": "filter",
+            "printedName": "filter",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV6filterAA0C6FilterVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV27preselectedAssetIdentifiersSaySSGvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV27preselectedAssetIdentifiersSaySSGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV27preselectedAssetIdentifiersSaySSGvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV27preselectedAssetIdentifiersSaySSGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV27preselectedAssetIdentifiersSaySSGvp",
+            "moduleName": "PhotosUI",
+            "name": "preselectedAssetIdentifiers",
+            "printedName": "preselectedAssetIdentifiers",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV27preselectedAssetIdentifiersSaySSGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerMode",
+                    "printedName": "PhotosUI.PHPickerMode",
+                    "usr": "s:8PhotosUI12PHPickerModeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV4modeAA0C4ModeVvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV4modeAA0C4ModeVvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerMode",
+                    "printedName": "PhotosUI.PHPickerMode",
+                    "usr": "s:8PhotosUI12PHPickerModeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV4modeAA0C4ModeVvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV4modeAA0C4ModeVvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerMode",
+                "printedName": "PhotosUI.PHPickerMode",
+                "usr": "s:8PhotosUI12PHPickerModeV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV4modeAA0C4ModeVvp",
+            "moduleName": "PhotosUI",
+            "name": "mode",
+            "printedName": "mode",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV4modeAA0C4ModeVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSDirectionalRectEdge",
+                    "printedName": "UIKit.NSDirectionalRectEdge",
+                    "usr": "c:@E@NSDirectionalRectEdge"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSDirectionalRectEdge",
+                    "printedName": "UIKit.NSDirectionalRectEdge",
+                    "usr": "c:@E@NSDirectionalRectEdge"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSDirectionalRectEdge",
+                "printedName": "UIKit.NSDirectionalRectEdge",
+                "usr": "c:@E@NSDirectionalRectEdge"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVvp",
+            "moduleName": "PhotosUI",
+            "name": "edgesWithoutContentMargins",
+            "printedName": "edgesWithoutContentMargins",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV26edgesWithoutContentMarginsSo21NSDirectionalRectEdgeVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerCapabilities",
+                    "printedName": "PhotosUI.PHPickerCapabilities",
+                    "usr": "c:@E@PHPickerCapabilities"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV20disabledCapabilitiesSo0cF0Vvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV20disabledCapabilitiesSo0cF0Vvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerCapabilities",
+                    "printedName": "PhotosUI.PHPickerCapabilities",
+                    "usr": "c:@E@PHPickerCapabilities"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV20disabledCapabilitiesSo0cF0Vvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV20disabledCapabilitiesSo0cF0Vvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerCapabilities",
+                "printedName": "PhotosUI.PHPickerCapabilities",
+                "usr": "c:@E@PHPickerCapabilities"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV20disabledCapabilitiesSo0cF0Vvp",
+            "moduleName": "PhotosUI",
+            "name": "disabledCapabilities",
+            "printedName": "disabledCapabilities",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV20disabledCapabilitiesSo0cF0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerConfiguration",
+                "printedName": "PhotosUI.PHPickerConfiguration",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationVACycfc",
+            "moduleName": "PhotosUI",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:8PhotosUI21PHPickerConfigurationVACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerConfiguration",
+                "printedName": "PhotosUI.PHPickerConfiguration",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPhotoLibrary",
+                "printedName": "Photos.PHPhotoLibrary",
+                "usr": "c:objc(cs)PHPhotoLibrary"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV12photoLibraryACSo07PHPhotoF0C_tcfc",
+            "moduleName": "PhotosUI",
+            "name": "init",
+            "printedName": "init(photoLibrary:)",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV12photoLibraryACSo07PHPhotoF0C_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerConfiguration",
+                "printedName": "PhotosUI.PHPickerConfiguration",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerConfiguration",
+                "printedName": "PhotosUI.PHPickerConfiguration",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV2eeoiySbAC_ACtFZ",
+            "moduleName": "PhotosUI",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:8PhotosUI21PHPickerConfigurationV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV4hash4intoys6HasherVz_tF",
+            "moduleName": "PhotosUI",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI21PHPickerConfigurationV9hashValueSivg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI21PHPickerConfigurationV9hashValueSivp",
+            "moduleName": "PhotosUI",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:8PhotosUI21PHPickerConfigurationV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "14.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s8PhotosUI21PHPickerConfigurationV",
+        "moduleName": "PhotosUI",
+        "name": "PHPickerConfiguration",
+        "printedName": "PHPickerConfiguration",
+        "usr": "s:8PhotosUI21PHPickerConfigurationV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSItemProvider",
+                    "printedName": "Foundation.NSItemProvider",
+                    "usr": "c:objc(cs)NSItemProvider"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerResultV12itemProviderSo06NSItemF0Cvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI14PHPickerResultV12itemProviderSo06NSItemF0Cvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSItemProvider",
+                "printedName": "Foundation.NSItemProvider",
+                "usr": "c:objc(cs)NSItemProvider"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerResultV12itemProviderSo06NSItemF0Cvp",
+            "moduleName": "PhotosUI",
+            "name": "itemProvider",
+            "printedName": "itemProvider",
+            "usr": "s:8PhotosUI14PHPickerResultV12itemProviderSo06NSItemF0Cvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerResultV15assetIdentifierSSSgvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI14PHPickerResultV15assetIdentifierSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerResultV15assetIdentifierSSSgvp",
+            "moduleName": "PhotosUI",
+            "name": "assetIdentifier",
+            "printedName": "assetIdentifier",
+            "usr": "s:8PhotosUI14PHPickerResultV15assetIdentifierSSSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerResult",
+                "printedName": "PhotosUI.PHPickerResult",
+                "usr": "s:8PhotosUI14PHPickerResultV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerResult",
+                "printedName": "PhotosUI.PHPickerResult",
+                "usr": "s:8PhotosUI14PHPickerResultV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerResultV2eeoiySbAC_ACtFZ",
+            "moduleName": "PhotosUI",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:8PhotosUI14PHPickerResultV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI14PHPickerResultV4hash4intoys6HasherVz_tF",
+            "moduleName": "PhotosUI",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:8PhotosUI14PHPickerResultV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8PhotosUI14PHPickerResultV9hashValueSivg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8PhotosUI14PHPickerResultV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8PhotosUI14PHPickerResultV9hashValueSivp",
+            "moduleName": "PhotosUI",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:8PhotosUI14PHPickerResultV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "14.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s8PhotosUI14PHPickerResultV",
+        "moduleName": "PhotosUI",
+        "name": "PHPickerResult",
+        "printedName": "PHPickerResult",
+        "usr": "s:8PhotosUI14PHPickerResultV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerViewController",
+                "printedName": "PhotosUI.PHPickerViewController",
+                "usr": "c:objc(cs)PHPickerViewController"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerResult",
+                    "printedName": "PhotosUI.PHPickerResult",
+                    "usr": "s:8PhotosUI14PHPickerResultV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PhotosUI.PHPickerResult]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : PhotosUI.PHPickerViewControllerDelegate>",
+            "kind": "Function",
+            "mangledName": "$s8PhotosUI30PHPickerViewControllerDelegateP6picker_16didFinishPickingySo0cdE0C_SayAA0C6ResultVGtF",
+            "moduleName": "PhotosUI",
+            "name": "picker",
+            "printedName": "picker(_:didFinishPicking:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:8PhotosUI30PHPickerViewControllerDelegateP6picker_16didFinishPickingySo0cdE0C_SayAA0C6ResultVGtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : AnyObject>",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "14.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s8PhotosUI30PHPickerViewControllerDelegateP",
+        "moduleName": "PhotosUI",
+        "name": "PHPickerViewControllerDelegate",
+        "printedName": "PHPickerViewControllerDelegate",
+        "usr": "s:8PhotosUI30PHPickerViewControllerDelegateP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPickerConfiguration",
+                    "printedName": "PhotosUI.PHPickerConfiguration",
+                    "usr": "s:8PhotosUI21PHPickerConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE13configurationAC0A13ConfigurationVvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So22PHPickerViewControllerC8PhotosUIE13configurationAC0A13ConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerConfiguration",
+                "printedName": "PhotosUI.PHPickerConfiguration",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE13configurationAC0A13ConfigurationVvp",
+            "moduleName": "PhotosUI",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:So22PHPickerViewControllerC8PhotosUIE13configurationAC0A13ConfigurationVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHPickerViewControllerDelegate",
+                        "printedName": "any PhotosUI.PHPickerViewControllerDelegate",
+                        "usr": "s:8PhotosUI30PHPickerViewControllerDelegateP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any PhotosUI.PHPickerViewControllerDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE8delegateAC0abC8Delegate_pSgvg",
+                "moduleName": "PhotosUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So22PHPickerViewControllerC8PhotosUIE8delegateAC0abC8Delegate_pSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHPickerViewControllerDelegate",
+                        "printedName": "any PhotosUI.PHPickerViewControllerDelegate",
+                        "usr": "s:8PhotosUI30PHPickerViewControllerDelegateP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any PhotosUI.PHPickerViewControllerDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE8delegateAC0abC8Delegate_pSgvs",
+                "moduleName": "PhotosUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So22PHPickerViewControllerC8PhotosUIE8delegateAC0abC8Delegate_pSgvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any PhotosUI.PHPickerViewControllerDelegate)?"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "ReferenceOwnership",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE8delegateAC0abC8Delegate_pSgvp",
+            "moduleName": "PhotosUI",
+            "name": "delegate",
+            "ownership": 1,
+            "printedName": "delegate",
+            "usr": "s:So22PHPickerViewControllerC8PhotosUIE8delegateAC0abC8Delegate_pSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerViewController",
+                "printedName": "PhotosUI.PHPickerViewController",
+                "usr": "c:objc(cs)PHPickerViewController"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PHPickerConfiguration",
+                "printedName": "PhotosUI.PHPickerConfiguration",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE13configurationAbC0A13ConfigurationV_tcfc",
+            "moduleName": "PhotosUI",
+            "name": "init",
+            "printedName": "init(configuration:)",
+            "usr": "s:So22PHPickerViewControllerC8PhotosUIE13configurationAbC0A13ConfigurationV_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Update",
+                "printedName": "PhotosUI.PHPickerConfiguration.Update",
+                "usr": "s:8PhotosUI21PHPickerConfigurationV6UpdateV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22PHPickerViewControllerC8PhotosUIE12updatePicker5usingyAC0A13ConfigurationV6UpdateV_tF",
+            "moduleName": "PhotosUI",
+            "name": "updatePicker",
+            "printedName": "updatePicker(using:)",
+            "usr": "s:So22PHPickerViewControllerC8PhotosUIE12updatePicker5usingyAC0A13ConfigurationV6UpdateV_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIContentContainer",
+            "printedName": "UIContentContainer",
+            "usr": "c:objc(pl)UIContentContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSExtensionRequestHandling",
+            "printedName": "NSExtensionRequestHandling",
+            "usr": "c:objc(pl)NSExtensionRequestHandling"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIStateRestoring",
+            "printedName": "UIStateRestoring",
+            "usr": "c:objc(pl)UIStateRestoring"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "14",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "moduleName": "PhotosUI",
+        "name": "PHPickerViewController",
+        "objc_name": "PHPickerViewController",
+        "printedName": "PHPickerViewController",
+        "superclassNames": [
+          "UIKit.UIViewController",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIViewController",
+        "usr": "c:objc(cs)PHPickerViewController"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "PhotosUI",
+    "printedName": "PhotosUI"
+  }
+}

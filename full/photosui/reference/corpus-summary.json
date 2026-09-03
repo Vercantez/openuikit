@@ -1,0 +1,146 @@
+{
+  "module": "PhotosUI",
+  "moduleRecord": {
+    "app_coverage_count": 11,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 48,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 20,
+    "iphoneos_runtime_focus_launch_build_rank": 28,
+    "module": "PhotosUI",
+    "occurrence_count": 48,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "cda8f28d95a640520b8d7321b20721738933964dac7c292f749ed6158dab57d7",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/InboxComposer/Sources/Composer/Views/Attachments/PhotosPickerItemHandler.swift",
+          "Modules/InboxComposer/Sources/Composer/Views/ComposerView/ComposerModel.swift",
+          "Modules/InboxComposer/Sources/Composer/Views/ComposerView/ComposerView.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "92f5ab14c6191df50c00e3a6f5ebd3d6c514fb0be3cc37ae5e65de048989767e",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Signal/Usernames/Links/UsernameLinkScanQRCodeViewController.swift",
+          "Signal/src/ViewControllers/Attachment Keyboard/RecentPhotoCollectionView.swift",
+          "Signal/src/ViewControllers/HomeView/Stories/MyStoriesViewController.swift",
+          "Signal/src/ViewControllers/Photos/SendMediaNavigationController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "c9ef8ad8da6351580c8e3e04b983e70d8cbaef8e70f3303f0f53f6d7f453be06",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/LegacyComponents/Sources/TGMediaAssetsController.m",
+          "submodules/MediaPickerUI/Sources/MediaPickerScreen.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "53cc9da9df4177a289d343366fe2bc292552da827c9d9914e05ee2c1e8583ce6",
+        "file_count": 18,
+        "occurrence_count": 18,
+        "sample_paths": [
+          "Modules/Sources/Support/UI/Support Conversations/ScreenshotPicker.swift",
+          "Modules/Sources/Support/UI/Support Conversations/SupportConversationReplyView.swift",
+          "Modules/Sources/Support/UI/Support Conversations/SupportForm.swift",
+          "WordPress/Classes/Services/MediaImportService.swift",
+          "WordPress/Classes/Utility/In-App Feedback/ZendeskAttachmentsSection.swift",
+          "WordPress/Classes/Utility/Media/ItemProviderMediaExporter.swift",
+          "WordPress/Classes/ViewRelated/Aztec/ViewControllers/AztecPostViewController.swift",
+          "WordPress/Classes/ViewRelated/Blog/My Site/Header/HomeSiteHeaderViewController+SiteIcon.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "bdd5d907b23240ab454efce2a9cf3e4fb50f6b04eebff46e6bdf623e6981a40a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/NativeModules/ARPHPhotoPickerModule.h"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "4c7e557d5c8f739a76d0b00b1042cfd327e8776794d1a28232e470bb942c5dec",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/MediaPickerV2/MediaPickerPresenter.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "05f36dae7f18c7dc3f80081617493fdc8fae9ef993fd8648ece2ae862ef033fc",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "firefox-ios/Client/Coordinators/Browser/BrowserCoordinator.swift",
+          "firefox-ios/Client/Coordinators/PhotoPickerCoordinator.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "94860daad8e730c21ab117ca514d0649dbf23c1ac668a89b15002ddae5bc7c1b",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "Mastodon/In Progress New Layout and Datamodel/Common Components/Views/PhotoCropperView.swift",
+          "Mastodon/In Progress New Layout and Datamodel/Profile/ProfileEditingView.swift",
+          "Mastodon/In Progress New Layout and Datamodel/Profile/ProfileView.swift",
+          "Mastodon/In Progress New Layout and Datamodel/Profile/ProfileViewModel.swift",
+          "Mastodon/Scene/Compose/ComposeViewController.swift",
+          "Mastodon/Scene/Onboarding/Register/MastodonRegisterViewController.swift",
+          "MastodonSDK/Sources/MastodonCore/Extension/NSItemProvider.swift",
+          "MastodonSDK/Sources/MastodonCore/Service/MastodonAttachment/MastodonAttachmentService.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "ca104bf83f685e870155009a50337c35ceac793df6cccae5ddf682c4e72fec13",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "iOSClient/Utility/NCUtilityFileSystem.swift",
+          "iOSClient/Viewer/NCViewerMedia/Content/Image/NCLivePhotoViewerContentView.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "a2c1af5fe018c029f397e1afe38d439b832327629acec43ee7028ce96a56d0b8",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "podcasts/Share Profile/ProfilePhotoMenu.swift",
+          "podcasts/Share Profile/ShareProfileView.swift",
+          "podcasts/Share Profile/ShareProfileViewModel.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "e5c9adacbfe9bdf555a9c2c00110b2e47550858b1671f735b7353271d7ac53e4",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Network/Photos/VLCPhotoLibraryController.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 20,
+    "byFocusLaunchBuildRelevance": 28
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

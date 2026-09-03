@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 19,
+  "duplicateOccurrenceCount": 19,
+  "duplicateRelationshipOccurrenceCount": 18,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/LocalAuthentication.symbols.json",
+      "relationshipCount": 392,
+      "sha256": "0579f4f16901e7b006f5acec501e43d2c3661ea6f98cee7045d3ab257a9e5994",
+      "symbolCount": 266
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "LocalAuthentication",
+  "relationshipCount": 392,
+  "relationshipMultisetSHA256": "7715f6703e039380475f653cf4bdfeec4dfe0c2483974961d1930a6eef652c45",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 247,
+  "symbolMultisetSHA256": "6f9af161c44844e49c6c24f071985f61e6320a3d2c75d2b2313b309b2086a3c0",
+  "target": "arm64-apple-ios26.0"
+}

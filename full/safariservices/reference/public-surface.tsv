@@ -1,0 +1,159 @@
+precise	kind	title	path	declaration
+c:@E@SFAuthenticationError	swift.enum	SFAuthenticationError.Code	SFAuthenticationError.Code	enum Code
+c:@E@SFAuthenticationError@SFAuthenticationErrorCanceledLogin	swift.enum.case	SFAuthenticationError.Code.canceledLogin	SFAuthenticationError.Code.canceledLogin	case canceledLogin
+c:@E@SFContentBlockerErrorCode	swift.enum	SFContentBlockerErrorCode	SFContentBlockerErrorCode	enum SFContentBlockerErrorCode
+c:@E@SFContentBlockerErrorCode@SFContentBlockerLoadingInterrupted	swift.enum.case	SFContentBlockerErrorCode.loadingInterrupted	SFContentBlockerErrorCode.loadingInterrupted	case loadingInterrupted
+c:@E@SFContentBlockerErrorCode@SFContentBlockerNoAttachmentFound	swift.enum.case	SFContentBlockerErrorCode.noAttachmentFound	SFContentBlockerErrorCode.noAttachmentFound	case noAttachmentFound
+c:@E@SFContentBlockerErrorCode@SFContentBlockerNoExtensionFound	swift.enum.case	SFContentBlockerErrorCode.noExtensionFound	SFContentBlockerErrorCode.noExtensionFound	case noExtensionFound
+c:@E@SFErrorCode	swift.enum	SFError.Code	SFError.Code	enum Code
+c:@E@SFErrorCode@SFErrorInternalError	swift.enum.case	SFError.Code.internalError	SFError.Code.internalError	case internalError
+c:@E@SFErrorCode@SFErrorLoadingInterrupted	swift.enum.case	SFError.Code.loadingInterrupted	SFError.Code.loadingInterrupted	case loadingInterrupted
+c:@E@SFErrorCode@SFErrorMissingEntitlement	swift.enum.case	SFError.Code.missingEntitlement	SFError.Code.missingEntitlement	case missingEntitlement
+c:@E@SFErrorCode@SFErrorNoAttachmentFound	swift.enum.case	SFError.Code.noAttachmentFound	SFError.Code.noAttachmentFound	case noAttachmentFound
+c:@E@SFErrorCode@SFErrorNoExtensionFound	swift.enum.case	SFError.Code.noExtensionFound	SFError.Code.noExtensionFound	case noExtensionFound
+c:@E@SFSafariViewControllerDismissButtonStyle	swift.enum	SFSafariViewController.DismissButtonStyle	SFSafariViewController.DismissButtonStyle	enum DismissButtonStyle
+c:@E@SFSafariViewControllerDismissButtonStyle@SFSafariViewControllerDismissButtonStyleCancel	swift.enum.case	SFSafariViewController.DismissButtonStyle.cancel	SFSafariViewController.DismissButtonStyle.cancel	case cancel
+c:@E@SFSafariViewControllerDismissButtonStyle@SFSafariViewControllerDismissButtonStyleClose	swift.enum.case	SFSafariViewController.DismissButtonStyle.close	SFSafariViewController.DismissButtonStyle.close	case close
+c:@E@SFSafariViewControllerDismissButtonStyle@SFSafariViewControllerDismissButtonStyleDone	swift.enum.case	SFSafariViewController.DismissButtonStyle.done	SFSafariViewController.DismissButtonStyle.done	case done
+c:@E@SSReadingListErrorCode	swift.enum	SSReadingListError.Code	SSReadingListError.Code	enum Code
+c:@E@SSReadingListErrorCode@SSReadingListErrorURLSchemeNotAllowed	swift.enum.case	SSReadingListError.Code.urlSchemeNotAllowed	SSReadingListError.Code.urlSchemeNotAllowed	case urlSchemeNotAllowed
+c:@SFAuthenticationErrorDomain	swift.var	SFAuthenticationErrorDomain	SFAuthenticationErrorDomain	let SFAuthenticationErrorDomain: String
+c:@SFContentBlockerErrorDomain	swift.var	SFContentBlockerErrorDomain	SFContentBlockerErrorDomain	let SFContentBlockerErrorDomain: String
+c:@SFErrorDomain	swift.var	SFErrorDomain	SFErrorDomain	let SFErrorDomain: String
+c:@SFExtensionMessageKey	swift.var	SFExtensionMessageKey	SFExtensionMessageKey	let SFExtensionMessageKey: String
+c:@SFExtensionProfileKey	swift.var	SFExtensionProfileKey	SFExtensionProfileKey	let SFExtensionProfileKey: String
+c:@SSReadingListErrorDomain	swift.var	SSReadingListErrorDomain	SSReadingListErrorDomain	let SSReadingListErrorDomain: String
+c:@T@SFAuthenticationCompletionHandler	swift.typealias	SFAuthenticationSession.CompletionHandler	SFAuthenticationSession.CompletionHandler	typealias CompletionHandler = (URL?, (any Error)?) -> Void
+c:objc(cs)SFAddToHomeScreenInfo	swift.class	SFAddToHomeScreenInfo	SFAddToHomeScreenInfo	class SFAddToHomeScreenInfo
+c:objc(cs)SFAddToHomeScreenInfo(im)initWithManifest:	swift.init	init(manifest:)	SFAddToHomeScreenInfo.init(manifest:)	init(manifest: BEWebAppManifest)
+c:objc(cs)SFAddToHomeScreenInfo(py)manifest	swift.property	manifest	SFAddToHomeScreenInfo.manifest	@NSCopying var manifest: BEWebAppManifest { get }
+c:objc(cs)SFAddToHomeScreenInfo(py)websiteCookies	swift.property	websiteCookies	SFAddToHomeScreenInfo.websiteCookies	var websiteCookies: [HTTPCookie] { get set }
+c:objc(cs)SFAuthenticationSession	swift.class	SFAuthenticationSession	SFAuthenticationSession	class SFAuthenticationSession
+c:objc(cs)SFAuthenticationSession(im)cancel	swift.method	cancel()	SFAuthenticationSession.cancel()	func cancel()
+c:objc(cs)SFAuthenticationSession(im)initWithURL:callbackURLScheme:completionHandler:	swift.init	init(url:callbackURLScheme:completionHandler:)	SFAuthenticationSession.init(url:callbackURLScheme:completionHandler:)	init(url URL: URL, callbackURLScheme: String?, completionHandler: @escaping SFAuthenticationSession.CompletionHandler)
+c:objc(cs)SFAuthenticationSession(im)initWithURL:callbackURLScheme:completionHandler:::SYNTHESIZED::c:objc(cs)SFAuthenticationSession	swift.init	init(URL:callbackURLScheme:completionHandler:)	SFAuthenticationSession.init(URL:callbackURLScheme:completionHandler:)	init(URL: URL, callbackURLScheme: String?, completionHandler: @escaping SFAuthenticationSession.CompletionHandler)
+c:objc(cs)SFAuthenticationSession(im)start	swift.method	start()	SFAuthenticationSession.start()	func start() -> Bool
+c:objc(cs)SFContentBlockerManager	swift.class	SFContentBlockerManager	SFContentBlockerManager	class SFContentBlockerManager
+c:objc(cs)SFContentBlockerManager(cm)getStateOfContentBlockerWithIdentifier:completionHandler:	swift.type.method	getStateOfContentBlocker(withIdentifier:completionHandler:)	SFContentBlockerManager.getStateOfContentBlocker(withIdentifier:completionHandler:)	class func getStateOfContentBlocker(withIdentifier identifier: String, completionHandler: @escaping (SFContentBlockerState?, (any Error)?) -> Void)
+c:objc(cs)SFContentBlockerManager(cm)reloadContentBlockerWithIdentifier:completionHandler:	swift.type.method	reloadContentBlocker(withIdentifier:)	SFContentBlockerManager.reloadContentBlocker(withIdentifier:)	class func reloadContentBlocker(withIdentifier identifier: String) async throws
+c:objc(cs)SFContentBlockerState	swift.class	SFContentBlockerState	SFContentBlockerState	class SFContentBlockerState
+c:objc(cs)SFContentBlockerState(py)enabled	swift.property	isEnabled	SFContentBlockerState.isEnabled	var isEnabled: Bool { get }
+c:objc(cs)SFSafariSettings	swift.class	SFSafariSettings	SFSafariSettings	class SFSafariSettings
+c:objc(cs)SFSafariSettings(cm)openExportBrowsingDataSettingsWithCompletionHandler:	swift.type.method	openExportBrowsingDataSettings(completionHandler:)	SFSafariSettings.openExportBrowsingDataSettings(completionHandler:)	class func openExportBrowsingDataSettings(completionHandler: (@MainActor ((any Error)?) -> Void)? = nil)
+c:objc(cs)SFSafariViewController	swift.class	SFSafariViewController	SFSafariViewController	@MainActor class SFSafariViewController
+c:objc(cs)SFSafariViewController(cm)prewarmConnectionsToURLs:	swift.type.method	prewarmConnections(to:)	SFSafariViewController.prewarmConnections(to:)	@MainActor class func prewarmConnections(to URLs: [URL]) -> SFSafariViewController.PrewarmingToken
+c:objc(cs)SFSafariViewController(im)initWithURL:	swift.init	init(url:)	SFSafariViewController.init(url:)	@MainActor convenience init(url URL: URL)
+c:objc(cs)SFSafariViewController(im)initWithURL:::SYNTHESIZED::c:objc(cs)SFSafariViewController	swift.init	init(URL:)	SFSafariViewController.init(URL:)	@MainActor convenience init(URL: URL)
+c:objc(cs)SFSafariViewController(im)initWithURL:configuration:	swift.init	init(url:configuration:)	SFSafariViewController.init(url:configuration:)	@MainActor init(url URL: URL, configuration: SFSafariViewController.Configuration)
+c:objc(cs)SFSafariViewController(im)initWithURL:configuration:::SYNTHESIZED::c:objc(cs)SFSafariViewController	swift.init	init(URL:configuration:)	SFSafariViewController.init(URL:configuration:)	@MainActor init(URL: URL, configuration: SFSafariViewController.Configuration)
+c:objc(cs)SFSafariViewController(im)initWithURL:entersReaderIfAvailable:	swift.init	init(url:entersReaderIfAvailable:)	SFSafariViewController.init(url:entersReaderIfAvailable:)	@MainActor init(url URL: URL, entersReaderIfAvailable: Bool)
+c:objc(cs)SFSafariViewController(im)initWithURL:entersReaderIfAvailable:::SYNTHESIZED::c:objc(cs)SFSafariViewController	swift.init	init(URL:entersReaderIfAvailable:)	SFSafariViewController.init(URL:entersReaderIfAvailable:)	@MainActor init(URL: URL, entersReaderIfAvailable: Bool)
+c:objc(cs)SFSafariViewController(py)configuration	swift.property	configuration	SFSafariViewController.configuration	@NSCopying @MainActor var configuration: SFSafariViewController.Configuration { get }
+c:objc(cs)SFSafariViewController(py)delegate	swift.property	delegate	SFSafariViewController.delegate	@MainActor weak var delegate: (any SFSafariViewControllerDelegate)? { get set }
+c:objc(cs)SFSafariViewController(py)dismissButtonStyle	swift.property	dismissButtonStyle	SFSafariViewController.dismissButtonStyle	@MainActor var dismissButtonStyle: SFSafariViewController.DismissButtonStyle { get set }
+c:objc(cs)SFSafariViewController(py)preferredBarTintColor	swift.property	preferredBarTintColor	SFSafariViewController.preferredBarTintColor	@MainActor var preferredBarTintColor: UIColor? { get set }
+c:objc(cs)SFSafariViewController(py)preferredControlTintColor	swift.property	preferredControlTintColor	SFSafariViewController.preferredControlTintColor	@MainActor var preferredControlTintColor: UIColor? { get set }
+c:objc(cs)SFSafariViewControllerActivityButton	swift.class	SFSafariViewController.ActivityButton	SFSafariViewController.ActivityButton	class ActivityButton
+c:objc(cs)SFSafariViewControllerActivityButton(im)initWithTemplateImage:extensionIdentifier:	swift.init	init(templateImage:extensionIdentifier:)	SFSafariViewController.ActivityButton.init(templateImage:extensionIdentifier:)	init(templateImage: UIImage, extensionIdentifier: String)
+c:objc(cs)SFSafariViewControllerActivityButton(py)extensionIdentifier	swift.property	extensionIdentifier	SFSafariViewController.ActivityButton.extensionIdentifier	var extensionIdentifier: String? { get }
+c:objc(cs)SFSafariViewControllerActivityButton(py)templateImage	swift.property	templateImage	SFSafariViewController.ActivityButton.templateImage	@NSCopying var templateImage: UIImage? { get }
+c:objc(cs)SFSafariViewControllerConfiguration	swift.class	SFSafariViewController.Configuration	SFSafariViewController.Configuration	class Configuration
+c:objc(cs)SFSafariViewControllerConfiguration(py)activityButton	swift.property	activityButton	SFSafariViewController.Configuration.activityButton	@NSCopying var activityButton: SFSafariViewController.ActivityButton? { get set }
+c:objc(cs)SFSafariViewControllerConfiguration(py)barCollapsingEnabled	swift.property	barCollapsingEnabled	SFSafariViewController.Configuration.barCollapsingEnabled	var barCollapsingEnabled: Bool { get set }
+c:objc(cs)SFSafariViewControllerConfiguration(py)entersReaderIfAvailable	swift.property	entersReaderIfAvailable	SFSafariViewController.Configuration.entersReaderIfAvailable	var entersReaderIfAvailable: Bool { get set }
+c:objc(cs)SFSafariViewControllerConfiguration(py)eventAttribution	swift.property	eventAttribution	SFSafariViewController.Configuration.eventAttribution	@NSCopying var eventAttribution: UIEventAttribution? { get set }
+c:objc(cs)SFSafariViewControllerDataStore	swift.class	SFSafariViewController.DataStore	SFSafariViewController.DataStore	class DataStore
+c:objc(cs)SFSafariViewControllerDataStore(cpy)defaultDataStore	swift.type.property	default	SFSafariViewController.DataStore.default	class var `default`: SFSafariViewController.DataStore { get }
+c:objc(cs)SFSafariViewControllerDataStore(im)clearWebsiteDataWithCompletionHandler:	swift.method	clearWebsiteData(completionHandler:)	SFSafariViewController.DataStore.clearWebsiteData(completionHandler:)	func clearWebsiteData(completionHandler completion: (() -> Void)? = nil)
+c:objc(cs)SFSafariViewControllerPrewarmingToken	swift.class	SFSafariViewController.PrewarmingToken	SFSafariViewController.PrewarmingToken	class PrewarmingToken
+c:objc(cs)SFSafariViewControllerPrewarmingToken(im)invalidate	swift.method	invalidate()	SFSafariViewController.PrewarmingToken.invalidate()	func invalidate()
+c:objc(cs)SSReadingList	swift.class	SSReadingList	SSReadingList	class SSReadingList
+c:objc(cs)SSReadingList(cm)defaultReadingList	swift.type.method	default()	SSReadingList.default()	class func `default`() -> SSReadingList?
+c:objc(cs)SSReadingList(cm)supportsURL:	swift.type.method	supportsURL(_:)	SSReadingList.supportsURL(_:)	class func supportsURL(_ URL: URL) -> Bool
+c:objc(cs)SSReadingList(im)addReadingListItemWithURL:title:previewText:error:	swift.method	addItem(with:title:previewText:)	SSReadingList.addItem(with:title:previewText:)	func addItem(with URL: URL, title: String?, previewText: String?) throws
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SFSafariViewControllerActivityButton	swift.init	init(coder:)	SFSafariViewController.ActivityButton.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)SFAddToHomeScreenActivityItem	swift.protocol	SFAddToHomeScreenActivityItem	SFAddToHomeScreenActivityItem	protocol SFAddToHomeScreenActivityItem : NSObjectProtocol
+c:objc(pl)SFAddToHomeScreenActivityItem(im)getHomeScreenWebAppInfoWithCompletionHandler:	swift.method	getHomeScreenWebAppInfo(completionHandler:)	SFAddToHomeScreenActivityItem.getHomeScreenWebAppInfo(completionHandler:)	optional func getHomeScreenWebAppInfo(completionHandler: @escaping (SFAddToHomeScreenInfo?) -> Void)
+c:objc(pl)SFAddToHomeScreenActivityItem(im)getWebAppManifestWithCompletionHandler:	swift.method	getWebAppManifest(completionHandler:)	SFAddToHomeScreenActivityItem.getWebAppManifest(completionHandler:)	optional func getWebAppManifest(completionHandler: @escaping (BEWebAppManifest?) -> Void)
+c:objc(pl)SFAddToHomeScreenActivityItem(py)URL	swift.property	url	SFAddToHomeScreenActivityItem.url	var url: URL { get }
+c:objc(pl)SFAddToHomeScreenActivityItem(py)iconItemProvider	swift.property	iconItemProvider	SFAddToHomeScreenActivityItem.iconItemProvider	optional var iconItemProvider: NSItemProvider? { get }
+c:objc(pl)SFAddToHomeScreenActivityItem(py)title	swift.property	title	SFAddToHomeScreenActivityItem.title	var title: String { get }
+c:objc(pl)SFSafariViewControllerDelegate	swift.protocol	SFSafariViewControllerDelegate	SFSafariViewControllerDelegate	protocol SFSafariViewControllerDelegate : NSObjectProtocol
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:activityItemsForURL:title:	swift.method	safariViewController(_:activityItemsFor:title:)	SFSafariViewControllerDelegate.safariViewController(_:activityItemsFor:title:)	optional func safariViewController(_ controller: SFSafariViewController, activityItemsFor URL: URL, title: String?) -> [UIActivity]
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:didCompleteInitialLoad:	swift.method	safariViewController(_:didCompleteInitialLoad:)	SFSafariViewControllerDelegate.safariViewController(_:didCompleteInitialLoad:)	optional func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool)
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:excludedActivityTypesForURL:title:	swift.method	safariViewController(_:excludedActivityTypesFor:title:)	SFSafariViewControllerDelegate.safariViewController(_:excludedActivityTypesFor:title:)	optional func safariViewController(_ controller: SFSafariViewController, excludedActivityTypesFor URL: URL, title: String?) -> [UIActivity.ActivityType]
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:initialLoadDidRedirectToURL:	swift.method	safariViewController(_:initialLoadDidRedirectTo:)	SFSafariViewControllerDelegate.safariViewController(_:initialLoadDidRedirectTo:)	optional func safariViewController(_ controller: SFSafariViewController, initialLoadDidRedirectTo URL: URL)
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewControllerDidFinish:	swift.method	safariViewControllerDidFinish(_:)	SFSafariViewControllerDelegate.safariViewControllerDidFinish(_:)	optional func safariViewControllerDidFinish(_ controller: SFSafariViewController)
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewControllerWillOpenInBrowser:	swift.method	safariViewControllerWillOpenInBrowser(_:)	SFSafariViewControllerDelegate.safariViewControllerWillOpenInBrowser(_:)	optional func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SFAuthenticationError	swift.type.property	errorDomain	SFAuthenticationError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SFErrorCode	swift.type.property	errorDomain	SFError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.type.property	errorDomain	SSReadingListError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	errorUserInfo	SFAuthenticationError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	errorUserInfo	SFError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	errorUserInfo	SSReadingListError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	errorCode	SFAuthenticationError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	errorCode	SFError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	errorCode	SSReadingListError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SFAuthenticationError	swift.func.op	~=(_:_:)	SFAuthenticationError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SFErrorCode	swift.func.op	~=(_:_:)	SFError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.func.op	~=(_:_:)	SSReadingListError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	errorUserInfo	SFAuthenticationError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	errorUserInfo	SFError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	errorUserInfo	SSReadingListError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SFAuthenticationError	swift.func.op	==(_:_:)	SFAuthenticationError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SFErrorCode	swift.func.op	==(_:_:)	SFError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.func.op	==(_:_:)	SSReadingListError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	code	SFAuthenticationError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	code	SFError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	code	SSReadingListError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFAuthenticationError	swift.method	hash(into:)	SFAuthenticationError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFErrorCode	swift.method	hash(into:)	SFError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.method	hash(into:)	SSReadingListError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	userInfo	SFAuthenticationError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	userInfo	SFError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	userInfo	SSReadingListError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	errorCode	SFAuthenticationError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	errorCode	SFError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	errorCode	SSReadingListError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	hashValue	SFAuthenticationError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	hashValue	SFError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	hashValue	SSReadingListError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SFAuthenticationError	swift.init	init(_:userInfo:)	SFAuthenticationError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SFErrorCode	swift.init	init(_:userInfo:)	SFError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.init	init(_:userInfo:)	SSReadingListError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11SFErrorCodeLeV	swift.struct	SFError	SFError	struct SFError
+s:SC11SFErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	SFError.errorDomain	static var errorDomain: String { get }
+s:SC11SFErrorCodeLeV13internalErrorSoAAVvpZ	swift.type.property	internalError	SFError.internalError	static var internalError: SFError.Code { get }
+s:SC11SFErrorCodeLeV16noExtensionFoundSoAAVvpZ	swift.type.property	noExtensionFound	SFError.noExtensionFound	static var noExtensionFound: SFError.Code { get }
+s:SC11SFErrorCodeLeV17noAttachmentFoundSoAAVvpZ	swift.type.property	noAttachmentFound	SFError.noAttachmentFound	static var noAttachmentFound: SFError.Code { get }
+s:SC11SFErrorCodeLeV18loadingInterruptedSoAAVvpZ	swift.type.property	loadingInterrupted	SFError.loadingInterrupted	static var loadingInterrupted: SFError.Code { get }
+s:SC11SFErrorCodeLeV18missingEntitlementSoAAVvpZ	swift.type.property	missingEntitlement	SFError.missingEntitlement	static var missingEntitlement: SFError.Code { get }
+s:SC21SFAuthenticationErrorLeV	swift.struct	SFAuthenticationError	SFAuthenticationError	struct SFAuthenticationError
+s:SC21SFAuthenticationErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	SFAuthenticationError.errorDomain	static var errorDomain: String { get }
+s:SC21SFAuthenticationErrorLeV13canceledLoginSoAAVvpZ	swift.type.property	canceledLogin	SFAuthenticationError.canceledLogin	static var canceledLogin: SFAuthenticationError.Code { get }
+s:SC22SSReadingListErrorCodeLeV	swift.struct	SSReadingListError	SSReadingListError	struct SSReadingListError
+s:SC22SSReadingListErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	SSReadingListError.errorDomain	static var errorDomain: String { get }
+s:SC22SSReadingListErrorCodeLeV19urlSchemeNotAllowedSoAAVvpZ	swift.type.property	urlSchemeNotAllowed	SSReadingListError.urlSchemeNotAllowed	static var urlSchemeNotAllowed: SSReadingListError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFAuthenticationError	swift.func.op	!=(_:_:)	SFAuthenticationError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFContentBlockerErrorCode	swift.func.op	!=(_:_:)	SFContentBlockerErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFErrorCode	swift.func.op	!=(_:_:)	SFError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFSafariViewControllerDismissButtonStyle	swift.func.op	!=(_:_:)	SFSafariViewController.DismissButtonStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.func.op	!=(_:_:)	SSReadingListError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	hashValue	SFAuthenticationError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFContentBlockerErrorCode	swift.property	hashValue	SFContentBlockerErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	hashValue	SFError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFSafariViewControllerDismissButtonStyle	swift.property	hashValue	SFSafariViewController.DismissButtonStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	hashValue	SSReadingListError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFAuthenticationError	swift.method	hash(into:)	SFAuthenticationError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFContentBlockerErrorCode	swift.method	hash(into:)	SFContentBlockerErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFErrorCode	swift.method	hash(into:)	SFError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFSafariViewControllerDismissButtonStyle	swift.method	hash(into:)	SFSafariViewController.DismissButtonStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.method	hash(into:)	SSReadingListError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11SFErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SFError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So21SFAuthenticationErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SFAuthenticationError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So22SSReadingListErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SSReadingListError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So25SFContentBlockerErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SFContentBlockerErrorCode.init(rawValue:)	init?(rawValue: Int)
+s:So40SFSafariViewControllerDismissButtonStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SFSafariViewController.DismissButtonStyle.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SFAuthenticationError	swift.property	localizedDescription	SFAuthenticationError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SFErrorCode	swift.property	localizedDescription	SFError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	swift.property	localizedDescription	SSReadingListError.localizedDescription	var localizedDescription: String { get }

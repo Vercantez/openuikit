@@ -1,0 +1,236 @@
+{
+  "module": "UniformTypeIdentifiers",
+  "moduleRecord": {
+    "app_coverage_count": 13,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 128,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 13,
+    "iphoneos_runtime_focus_launch_build_rank": 24,
+    "module": "UniformTypeIdentifiers",
+    "occurrence_count": 128,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "222e12e79c6b21b59bbbc8fbedd3bfe92303d90217668ad7bffbf18627d39345",
+        "file_count": 15,
+        "occurrence_count": 15,
+        "sample_paths": [
+          "Mac/MainWindow/OPML/ExportOPMLWindowController.swift",
+          "Mac/MainWindow/OPML/ImportOPMLWindowController.swift",
+          "Mac/Preferences/General/GeneralPrefencesViewController.swift",
+          "Mac/ShareExtension/ShareViewController.swift",
+          "Modules/Images/Sources/Images/FaviconDownloader.swift",
+          "Modules/RSCore/Sources/RSCore/RSImage.swift",
+          "Modules/RSCore/Sources/RSCore/UniformTypeIdentifiers+RSCore.swift",
+          "Modules/RSWeb/Sources/RSWeb/MacWebBrowser.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "7b8247f9086f8c875c3d16726a1fabea4aa2fae080bcd82e87a235345340d00a",
+        "file_count": 14,
+        "occurrence_count": 14,
+        "sample_paths": [
+          "Signal/Attachments/PasteboardAttachment.swift",
+          "Signal/ConversationView/ConversationViewController+ConversationInputToolbarDelegate.swift",
+          "Signal/ConversationView/VoiceMessage/VoiceMessageSendableDraft.swift",
+          "Signal/src/ViewControllers/AppSettings/Notifications/NotificationSettingsSoundViewController.swift",
+          "Signal/src/ViewControllers/Avatars/AvatarSettingsViewController.swift",
+          "Signal/src/ViewControllers/LocationPicker.swift",
+          "Signal/src/ViewControllers/Wallpapers/SetWallpaperViewController.swift",
+          "SignalServiceKit/Network/API/Giphy/GiphyImageInfo.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "c5f51fc44f0474709191d909f9d5c7396edeff87baca35f8e6f4d8a3dca2c20d",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Telegram/NotificationService/Sources/NotificationService.swift",
+          "submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode/Sources/ChatTextInputPanelNode.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "e1d09bdfa58bd81656f244ca62cbdcee5960a33dd1a63ededfa9bd7139ef8e80",
+        "file_count": 33,
+        "occurrence_count": 33,
+        "sample_paths": [
+          "Modules/Sources/JetpackStats/Screens/ChartDataListView.swift",
+          "Modules/Sources/JetpackStats/Screens/TopListScreenView.swift",
+          "Modules/Sources/Support/Model/ApplicationLog.swift",
+          "Modules/Sources/TextBundle/TextBundleWrapper.m",
+          "Modules/Sources/WordPressData/Swift/Media.swift",
+          "Modules/Sources/WordPressData/Swift/SearchableActivityConvertable.swift",
+          "Modules/Sources/WordPressData/Swift/SearchableItemConvertable.swift",
+          "Modules/Sources/WordPressMediaLibrary/Models/MediaKind.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "6b9dbde7ed09f1ee9ffba9776c32004ec7c57bb0accbb50f3e3831dd4e229f32",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "DuckDuckGo/BookmarksViewController.swift",
+          "DuckDuckGo/DownloadManager.swift",
+          "DuckDuckGo/EditableShortcutsView.swift",
+          "DuckDuckGo/FavoriteItem.swift",
+          "DuckDuckGo/FavoritesView.swift",
+          "DuckDuckGo/ReorderableForEach.swift",
+          "DuckDuckGo/ShortcutsView.swift",
+          "OpenAction/ActionViewController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "ea5ff80312f6cfb0e78ced6462dfe06a70ce9ad46190c31bf137c15f160d926f",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "BrowserKit/Sources/ActionExtensionKit/ActionShareItem.swift",
+          "firefox-ios/Client/Extensions/UIPasteboard+Extension.swift",
+          "firefox-ios/Client/Frontend/Browser/DownloadHelper/MIMEType.swift",
+          "firefox-ios/Client/Frontend/Share/ShareManager.swift",
+          "firefox-ios/Client/Frontend/Share/ShareTelemetryActivityItemProvider.swift",
+          "firefox-ios/Client/Frontend/Share/TitleSubtitleActivityItemProvider.swift",
+          "firefox-ios/Client/Frontend/Share/URLActivityItemProvider.swift",
+          "firefox-ios/Extensions/ActionExtension/ActionViewController.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "56ca88f7263e964b569fa0f742f793124d98598b4e94c3b258f50805099fb2d9",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "Sources/App/Onboarding/API/OnboardingAuthStepClientCertificate.swift",
+          "Sources/App/Onboarding/Views/ClientCertificateOnboardingView.swift",
+          "Sources/App/Settings/ConfigurationTransfer/ImportExportConfigurationView.swift",
+          "Sources/App/Settings/Connection/ConnectionSettingsView.swift",
+          "Sources/App/Settings/DebugDatabaseTransferSection.swift",
+          "Sources/App/Settings/Notifications/NotificationSoundsView.swift",
+          "Sources/Extensions/AppIntents/GetCameraSnapshotAppIntent.swift",
+          "Sources/Extensions/NotificationContent/ImageAttachmentViewController.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "a8c6dd380656aa9b1aae547e80fa22d593cd66a6338994230348f5466e15f6be",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "MastodonSDK/Sources/MastodonCore/Extension/NSItemProvider.swift",
+          "MastodonSDK/Sources/MastodonUI/Scene/ComposeContent/Attachment/AttachmentViewModel+DragAndDrop.swift",
+          "MastodonSDK/Sources/MastodonUI/Scene/ComposeContent/Attachment/AttachmentViewModel+Load.swift",
+          "MastodonSDK/Sources/MastodonUI/Scene/ComposeContent/Attachment/AttachmentViewModel+Upload.swift",
+          "MastodonSDK/Sources/MastodonUI/Vendor/ReorderableForEach.swift",
+          "OpenInActionExtension/ActionRequestHandler.swift",
+          "ShareActionExtension/Scene/ShareViewController.swift",
+          "ShareActionExtension/Scene/ShareViewModel.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "b0f44984646d71cea194ad25fbbe0077a9a508700cedc90bd3318de7a0d5a51c",
+        "file_count": 15,
+        "occurrence_count": 15,
+        "sample_paths": [
+          "Action Assistant/ActionViewController.swift",
+          "File Provider Extension/FileProviderExtension.swift",
+          "File Provider Extension/FileProviderItem.swift",
+          "Share/NCShareExtension+Files.swift",
+          "Share/NCShareExtension.swift",
+          "iOSClient/Login/NCLogin.swift",
+          "iOSClient/Main/Collection Common/NCCollectionViewCommon+UIEditMenuInteractionDelegate.swift",
+          "iOSClient/Main/Create/Upload Assets/NCUploadAssetsView.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "9f99775f8cd6562ecbdf8806e2e6d0a11c34c075bd15862fba601d08696569a5",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Modules/Sources/EndOfYear/ShareableMetadataProvider.swift",
+          "Share Extension/ShareViewController.swift",
+          "podcasts/FileTypeUtil.swift",
+          "podcasts/LogsView.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "bd5a21fde5c301780ad7c8b0adbbb9d62e52db52d74ac147352a586e72137b88",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Simplenote/Classes/CSSearchable+Helpers.swift",
+          "Simplenote/RecoveryUnarchiver.swift",
+          "SimplenoteShare/Extractors/PlainTextExtractor.swift",
+          "SimplenoteShare/Extractors/URLExtractor.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "55beabd67fd269f0622f83732d1674b47320c76122e8a24035298cd9cc35ed56",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/Cloud/Document Picker/VLCDocumentPickerController.m",
+          "Sources/Network/Photos/VLCPhotoLibraryController.m"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "df2751e7a1835b5e3bd44a62c1c7ea9dd9f29e62afb9fcde5d5b187ad0a230b6",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "WMF Framework/Third Party/FLAnimatedImage/FLAnimatedImage/FLAnimatedImage.m",
+          "Wikipedia/Code/NSString+WMFExtras.m",
+          "Wikipedia/Code/WMFImageGalleryViewController.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 13,
+    "byFocusLaunchBuildRelevance": 24
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 17,
+      "apps": [
+        "Hackers",
+        "NetNewsWire",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "element-ios",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "ios-oss",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios",
+        "vlc-ios",
+        "wikipedia-ios"
+      ],
+      "family": "MobileCoreServices / UTType",
+      "file_count": 218,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 2,
+      "modules": [
+        "MobileCoreServices",
+        "UniformTypeIdentifiers"
+      ],
+      "note": "legacy UTI APIs and modern UTType (UTType is a type, not an importable module)"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

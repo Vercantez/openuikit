@@ -1,0 +1,48 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 6,
+  "duplicateOccurrenceCount": 6,
+  "duplicateRelationshipOccurrenceCount": 5,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AVKit.symbols.json",
+      "relationshipCount": 352,
+      "sha256": "a946f062e36f798a0886243132c14077ade981eecdc3329d89a13900cbe00a10",
+      "symbolCount": 204
+    },
+    {
+      "path": "reference/symbol-graphs/AVKit@AVFAudio.symbols.json",
+      "relationshipCount": 16,
+      "sha256": "a46a1ab848fdc908510f1499f9d8d1ebc1dc03ee28105449a83d593dfeee0fe1",
+      "symbolCount": 10
+    },
+    {
+      "path": "reference/symbol-graphs/AVKit@AVFoundation.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "f80883c39e9b5f49ddcf83d7ebb79f959e7facc61979cbc00d7e57f6142d0feb",
+      "symbolCount": 2
+    },
+    {
+      "path": "reference/symbol-graphs/_AVKit_SwiftUI@AVKit.symbols.json",
+      "relationshipCount": 797,
+      "sha256": "55d070cb9d6c0afe7cdedd6fa1a841d4e0f4d96bb9e3341de8ad19f559e9eaf0",
+      "symbolCount": 795
+    },
+    {
+      "path": "reference/symbol-graphs/_AVKit_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 6,
+      "sha256": "88dc1ab5b3708ae9cb6a6c4a294d25c884e2aae86c2665338f66e9db0918bc96",
+      "symbolCount": 6
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AVKit",
+  "relationshipCount": 1173,
+  "relationshipMultisetSHA256": "2573047759b14920b45f5180c737230fd5c434b6847ea7352673fbd638bb3db0",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1011,
+  "symbolMultisetSHA256": "7b7a02a2c8ef780a849e0b6d245fee9dfaf701e5985c4a772d2c49a59574b810",
+  "target": "arm64-apple-ios26.0"
+}

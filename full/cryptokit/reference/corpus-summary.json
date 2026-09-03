@@ -1,0 +1,159 @@
+{
+  "module": "CryptoKit",
+  "moduleRecord": {
+    "app_coverage_count": 12,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 65,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 19,
+    "iphoneos_runtime_focus_launch_build_rank": 26,
+    "module": "CryptoKit",
+    "occurrence_count": 65,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "b074e401758e263f5b7035416bcedea0f71e53acb041ff41ee7c50f3bf732b55",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/RSCore/Sources/RSCore/Data+RSCore.swift",
+          "Modules/RSCore/Sources/RSCore/String+RSCore.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "b2fb38f467b882028e75d937ec7dee8ffb92a2d9a0cb77359daa8397fe227056",
+        "file_count": 32,
+        "occurrence_count": 32,
+        "sample_paths": [
+          "Signal/AppLaunch/AppDelegate.swift",
+          "Signal/Calls/CallingAssetsFetcher.swift",
+          "Signal/DeviceTransfer/DeviceTransfer.swift",
+          "Signal/DeviceTransfer/MultiPeerConnectivity/MPCDeviceTransferSession.swift",
+          "Signal/DeviceTransfer/OutgoingDeviceTransferTask.swift",
+          "Signal/DeviceTransfer/SelfSignedIdentity.swift",
+          "SignalServiceKit/Account/MasterKey.swift",
+          "SignalServiceKit/Avatars/AvatarBuilder.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "4682efc6ef95aab813a02c0836c71a2892dd4f431aa0c5b280cacb001fc50805",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "submodules/WebUI/Sources/WebAppController.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "63eace14b66fe9fd41b90a8b8d8bfbbba8d1bf72b7fd6180d9ab93c2d14bb97f",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Modules/Sources/AsyncImageKit/ImageDownloader.swift",
+          "Modules/Sources/Support/Model/SupportUser.swift",
+          "Modules/Sources/WordPressData/Swift/Blog+SelfHosted.swift",
+          "Modules/Sources/WordPressData/Swift/NSManagedObject.swift",
+          "WordPress/Classes/Services/BlockEditorCache.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "e796dcb0c913baebaf26ea290b1ed0f416bd4ae2d5935fc894c98132e2922bff",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Riot/Experiments/Experiment.swift",
+          "Riot/Modules/Home/VerificationRequiredBanner/VerificationRequiredBannerChecker.swift",
+          "Riot/Modules/Rendezvous/RendezvousService.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "87c83b95ae76533fa26cc459642449dd10e1e66d0b8f1bf6e051688a49912ab6",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "BrowserKit/Sources/JWTKit/JWTHS256Algorithm.swift",
+          "firefox-ios/Client/ContentBlocker/ContentBlocker.swift",
+          "firefox-ios/Client/Frontend/TrackingProtection/CertificatesHelpers/CertificatesFetcher.swift",
+          "firefox-ios/Client/Frontend/TrackingProtection/CertificatesViewController.swift",
+          "firefox-ios/Client/Frontend/TrackingProtection/TrackigProtectionRedux/TrackingProtectionModel.swift",
+          "focus-ios/Blockzilla/Utilities/LocalContentBlocker.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "ef6b0799825f0f52578688436dbb2cc5d3785ca64f75545aa29de34f4f9ee9ef",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Sources/App/Utilities/Spotlight/SpotlightEntityIndexer.swift",
+          "Sources/HANetworking/Sources/ClientCertificate.swift",
+          "Sources/Shared/Notifications/NotificationSender/NotificationIconCache.swift",
+          "Sources/Shared/Watch/WatchDatabaseMirror.swift",
+          "Sources/WatchApp/ExtensionDelegate.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "da18cb08c7dc93fb40797904ed20f707710f79b5c7c45a336e7206ecc91306e9",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "KsApi/Sources/KsApi/Data+PKCE.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "723c16439dd628fdcb4c961d1c4a6700924106cad622663bc4ffbb0509269bab",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "MastodonSDK/Sources/MastodonCommon/Preference/Preference+Notification.swift",
+          "MastodonSDK/Sources/MastodonCore/AppSecret.swift",
+          "NotificationService/NotificationService+Decrypt.swift",
+          "NotificationService/NotificationService.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "078de21e6a9d5454de7aaa20f7a80a818f0024dbaeaf26deccdac9cc1550df2e",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Extensions/String+Extension.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "7803155870f59cc0578d61839e3ad9597a929abbaf3b3c3a03fa5e3ae927fe69",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Modules/Sources/PocketCastsServer/Private/Hashing/String+Hashing.swift",
+          "Modules/Sources/PocketCastsUtils/Extensions/String+SHA256.swift",
+          "podcasts/Extensions/String+MD5.swift",
+          "podcasts/Fingerprint/FingerprintMappingCache.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "30c7ff071d4965cb75a919fcca18a1407309ea1c80ab268233fef75365603a9e",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Network/Radio/VLCRadioAlarmService.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 19,
+    "byFocusLaunchBuildRelevance": 26
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,600 @@
+precise	kind	title	path	declaration
+c:@CSActionIdentifier	swift.var	CSActionIdentifier	CSActionIdentifier	let CSActionIdentifier: String
+c:@CSIndexErrorDomain	swift.var	CSIndexErrorDomain	CSIndexErrorDomain	let CSIndexErrorDomain: String
+c:@CSMailboxArchive	swift.var	CSMailboxArchive	CSMailboxArchive	let CSMailboxArchive: String
+c:@CSMailboxDrafts	swift.var	CSMailboxDrafts	CSMailboxDrafts	let CSMailboxDrafts: String
+c:@CSMailboxInbox	swift.var	CSMailboxInbox	CSMailboxInbox	let CSMailboxInbox: String
+c:@CSMailboxJunk	swift.var	CSMailboxJunk	CSMailboxJunk	let CSMailboxJunk: String
+c:@CSMailboxSent	swift.var	CSMailboxSent	CSMailboxSent	let CSMailboxSent: String
+c:@CSMailboxTrash	swift.var	CSMailboxTrash	CSMailboxTrash	let CSMailboxTrash: String
+c:@CSQueryContinuationActionType	swift.var	CSQueryContinuationActionType	CSQueryContinuationActionType	let CSQueryContinuationActionType: String
+c:@CSSearchQueryErrorDomain	swift.var	CSSearchQueryErrorDomain	CSSearchQueryErrorDomain	let CSSearchQueryErrorDomain: String
+c:@CSSearchQueryString	swift.var	CSSearchQueryString	CSSearchQueryString	let CSSearchQueryString: String
+c:@CSSearchableItemActionType	swift.var	CSSearchableItemActionType	CSSearchableItemActionType	let CSSearchableItemActionType: String
+c:@CSSearchableItemActivityIdentifier	swift.var	CSSearchableItemActivityIdentifier	CSSearchableItemActivityIdentifier	let CSSearchableItemActivityIdentifier: String
+c:@CSSuggestionHighlightAttributeName	swift.type.property	suggestionHighlight	NSAttributedString.Key.suggestionHighlight	static let suggestionHighlight: NSAttributedString.Key
+c:@E@CSIndexErrorCode	swift.enum	CSIndexError.Code	CSIndexError.Code	enum Code
+c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexUnavailableError	swift.enum.case	CSIndexError.Code.indexUnavailableError	CSIndexError.Code.indexUnavailableError	case indexUnavailableError
+c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexingUnsupported	swift.enum.case	CSIndexError.Code.indexingUnsupported	CSIndexError.Code.indexingUnsupported	case indexingUnsupported
+c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidClientStateError	swift.enum.case	CSIndexError.Code.invalidClientStateError	CSIndexError.Code.invalidClientStateError	case invalidClientStateError
+c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidItemError	swift.enum.case	CSIndexError.Code.invalidItemError	CSIndexError.Code.invalidItemError	case invalidItemError
+c:@E@CSIndexErrorCode@CSIndexErrorCodeMismatchedClientState	swift.enum.case	CSIndexError.Code.mismatchedClientState	CSIndexError.Code.mismatchedClientState	case mismatchedClientState
+c:@E@CSIndexErrorCode@CSIndexErrorCodeQuotaExceeded	swift.enum.case	CSIndexError.Code.quotaExceeded	CSIndexError.Code.quotaExceeded	case quotaExceeded
+c:@E@CSIndexErrorCode@CSIndexErrorCodeRemoteConnectionError	swift.enum.case	CSIndexError.Code.remoteConnectionError	CSIndexError.Code.remoteConnectionError	case remoteConnectionError
+c:@E@CSIndexErrorCode@CSIndexErrorCodeUnknownError	swift.enum.case	CSIndexError.Code.unknownError	CSIndexError.Code.unknownError	case unknownError
+c:@E@CSSearchQueryErrorCode	swift.enum	CSSearchQueryError.Code	CSSearchQueryError.Code	enum Code
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeCancelled	swift.enum.case	CSSearchQueryError.Code.cancelled	CSSearchQueryError.Code.cancelled	case cancelled
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeIndexUnreachable	swift.enum.case	CSSearchQueryError.Code.indexUnreachable	CSSearchQueryError.Code.indexUnreachable	case indexUnreachable
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeInvalidQuery	swift.enum.case	CSSearchQueryError.Code.invalidQuery	CSSearchQueryError.Code.invalidQuery	case invalidQuery
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeUnknown	swift.enum.case	CSSearchQueryError.Code.unknown	CSSearchQueryError.Code.unknown	case unknown
+c:@E@CSSearchQuerySourceOptions	swift.struct	CSSearchQueryContext.SourceOptions	CSSearchQueryContext.SourceOptions	struct SourceOptions
+c:@E@CSSearchQuerySourceOptions@CSSearchQuerySourceOptionAllowMail	swift.type.property	allowMail	CSSearchQueryContext.SourceOptions.allowMail	static var allowMail: CSSearchQueryContext.SourceOptions { get }
+c:@E@CSSearchableItemUpdateListenerOptions	swift.struct	CSSearchableItem.UpdateListenerOptions	CSSearchableItem.UpdateListenerOptions	struct UpdateListenerOptions
+c:@E@CSSearchableItemUpdateListenerOptions@CSSearchableItemUpdateListenerOptionPriority	swift.type.property	priority	CSSearchableItem.UpdateListenerOptions.priority	static var priority: CSSearchableItem.UpdateListenerOptions { get }
+c:@E@CSSearchableItemUpdateListenerOptions@CSSearchableItemUpdateListenerOptionSummarization	swift.type.property	summarization	CSSearchableItem.UpdateListenerOptions.summarization	static var summarization: CSSearchableItem.UpdateListenerOptions { get }
+c:@E@CSSuggestionKind	swift.enum	CSSuggestion.SuggestionKind	CSSuggestion.SuggestionKind	enum SuggestionKind
+c:@E@CSSuggestionKind@CSSuggestionKindCustom	swift.enum.case	CSSuggestion.SuggestionKind.custom	CSSuggestion.SuggestionKind.custom	case custom
+c:@E@CSSuggestionKind@CSSuggestionKindDefault	swift.enum.case	CSSuggestion.SuggestionKind.default	CSSuggestion.SuggestionKind.default	case `default`
+c:@E@CSSuggestionKind@CSSuggestionKindNone	swift.enum.case	CSSuggestion.SuggestionKind.none	CSSuggestion.SuggestionKind.none	case none
+c:@E@CSUserInteraction	swift.enum	CSUserQuery.UserInteractionKind	CSUserQuery.UserInteractionKind	enum UserInteractionKind
+c:@E@CSUserInteraction@CSUserInteractionDefault	swift.type.property	default	CSUserQuery.UserInteractionKind.default	static var `default`: CSUserQuery.UserInteractionKind { get }
+c:@E@CSUserInteraction@CSUserInteractionFocus	swift.enum.case	CSUserQuery.UserInteractionKind.focus	CSUserQuery.UserInteractionKind.focus	case focus
+c:@E@CSUserInteraction@CSUserInteractionSelect	swift.enum.case	CSUserQuery.UserInteractionKind.select	CSUserQuery.UserInteractionKind.select	case select
+c:@macro@CoreSpotlightAPIVersion	swift.var	CoreSpotlightAPIVersion	CoreSpotlightAPIVersion	var CoreSpotlightAPIVersion: Int32 { get }
+c:objc(cs)CSCustomAttributeKey	swift.class	CSCustomAttributeKey	CSCustomAttributeKey	class CSCustomAttributeKey
+c:objc(cs)CSCustomAttributeKey(im)initWithKeyName:	swift.init	init(keyName:)	CSCustomAttributeKey.init(keyName:)	convenience init?(keyName: String)
+c:objc(cs)CSCustomAttributeKey(im)initWithKeyName:searchable:searchableByDefault:unique:multiValued:	swift.init	init(keyName:searchable:searchableByDefault:unique:multiValued:)	CSCustomAttributeKey.init(keyName:searchable:searchableByDefault:unique:multiValued:)	init?(keyName: String, searchable: Bool, searchableByDefault: Bool, unique: Bool, multiValued: Bool)
+c:objc(cs)CSCustomAttributeKey(py)keyName	swift.property	keyName	CSCustomAttributeKey.keyName	var keyName: String { get }
+c:objc(cs)CSCustomAttributeKey(py)multiValued	swift.property	isMultiValued	CSCustomAttributeKey.isMultiValued	var isMultiValued: Bool { get }
+c:objc(cs)CSCustomAttributeKey(py)searchable	swift.property	isSearchable	CSCustomAttributeKey.isSearchable	var isSearchable: Bool { get }
+c:objc(cs)CSCustomAttributeKey(py)searchableByDefault	swift.property	isSearchableByDefault	CSCustomAttributeKey.isSearchableByDefault	var isSearchableByDefault: Bool { get }
+c:objc(cs)CSCustomAttributeKey(py)unique	swift.property	isUnique	CSCustomAttributeKey.isUnique	var isUnique: Bool { get }
+c:objc(cs)CSImportExtension	swift.class	CSImportExtension	CSImportExtension	class CSImportExtension
+c:objc(cs)CSImportExtension(im)updateAttributes:forFileAtURL:error:	swift.method	update(_:forFileAt:)	CSImportExtension.update(_:forFileAt:)	func update(_ attributes: CSSearchableItemAttributeSet, forFileAt contentURL: URL) throws
+c:objc(cs)CSIndexExtensionRequestHandler	swift.class	CSIndexExtensionRequestHandler	CSIndexExtensionRequestHandler	class CSIndexExtensionRequestHandler
+c:objc(cs)CSLocalizedString	swift.class	CSLocalizedString	CSLocalizedString	class CSLocalizedString
+c:objc(cs)CSLocalizedString(im)initWithLocalizedStrings:	swift.init	init(localizedStrings:)	CSLocalizedString.init(localizedStrings:)	init(localizedStrings: [AnyHashable : Any])
+c:objc(cs)CSLocalizedString(im)localizedString	swift.method	localizedString()	CSLocalizedString.localizedString()	func localizedString() -> String
+c:objc(cs)CSPerson	swift.class	CSPerson	CSPerson	class CSPerson
+c:objc(cs)CSPerson(im)initWithDisplayName:handles:handleIdentifier:	swift.init	init(displayName:handles:handleIdentifier:)	CSPerson.init(displayName:handles:handleIdentifier:)	init(displayName: String?, handles: [String], handleIdentifier: String)
+c:objc(cs)CSPerson(py)contactIdentifier	swift.property	contactIdentifier	CSPerson.contactIdentifier	var contactIdentifier: String? { get set }
+c:objc(cs)CSPerson(py)displayName	swift.property	displayName	CSPerson.displayName	var displayName: String? { get }
+c:objc(cs)CSPerson(py)handleIdentifier	swift.property	handleIdentifier	CSPerson.handleIdentifier	var handleIdentifier: String { get }
+c:objc(cs)CSPerson(py)handles	swift.property	handles	CSPerson.handles	var handles: [String] { get }
+c:objc(cs)CSSearchQuery	swift.class	CSSearchQuery	CSSearchQuery	class CSSearchQuery
+c:objc(cs)CSSearchQuery(im)cancel	swift.method	cancel()	CSSearchQuery.cancel()	func cancel()
+c:objc(cs)CSSearchQuery(im)initWithQueryString:attributes:	swift.init	init(queryString:attributes:)	CSSearchQuery.init(queryString:attributes:)	convenience init(queryString: String, attributes: [String]?)
+c:objc(cs)CSSearchQuery(im)initWithQueryString:queryContext:	swift.init	init(queryString:queryContext:)	CSSearchQuery.init(queryString:queryContext:)	init(queryString: String, queryContext: CSSearchQueryContext?)
+c:objc(cs)CSSearchQuery(im)start	swift.method	start()	CSSearchQuery.start()	func start()
+c:objc(cs)CSSearchQuery(py)cancelled	swift.property	isCancelled	CSSearchQuery.isCancelled	var isCancelled: Bool { get }
+c:objc(cs)CSSearchQuery(py)completionHandler	swift.property	completionHandler	CSSearchQuery.completionHandler	var completionHandler: (((any Error)?) -> Void)? { get set }
+c:objc(cs)CSSearchQuery(py)foundItemCount	swift.property	foundItemCount	CSSearchQuery.foundItemCount	var foundItemCount: Int { get }
+c:objc(cs)CSSearchQuery(py)foundItemsHandler	swift.property	foundItemsHandler	CSSearchQuery.foundItemsHandler	var foundItemsHandler: (([CSSearchableItem]) -> Void)? { get set }
+c:objc(cs)CSSearchQuery(py)protectionClasses	swift.property	protectionClasses	CSSearchQuery.protectionClasses	var protectionClasses: [FileProtectionType] { get set }
+c:objc(cs)CSSearchQueryContext	swift.class	CSSearchQueryContext	CSSearchQueryContext	class CSSearchQueryContext
+c:objc(cs)CSSearchQueryContext(py)fetchAttributes	swift.property	fetchAttributes	CSSearchQueryContext.fetchAttributes	var fetchAttributes: [String] { get set }
+c:objc(cs)CSSearchQueryContext(py)filterQueries	swift.property	filterQueries	CSSearchQueryContext.filterQueries	var filterQueries: [String] { get set }
+c:objc(cs)CSSearchQueryContext(py)keyboardLanguage	swift.property	keyboardLanguage	CSSearchQueryContext.keyboardLanguage	var keyboardLanguage: String? { get set }
+c:objc(cs)CSSearchQueryContext(py)sourceOptions	swift.property	sourceOptions	CSSearchQueryContext.sourceOptions	var sourceOptions: CSSearchQueryContext.SourceOptions { get set }
+c:objc(cs)CSSearchableIndex	swift.class	CSSearchableIndex	CSSearchableIndex	class CSSearchableIndex
+c:objc(cs)CSSearchableIndex(cm)defaultSearchableIndex	swift.type.method	default()	CSSearchableIndex.default()	class func `default`() -> Self
+c:objc(cs)CSSearchableIndex(cm)isIndexingAvailable	swift.type.method	isIndexingAvailable()	CSSearchableIndex.isIndexingAvailable()	class func isIndexingAvailable() -> Bool
+c:objc(cs)CSSearchableIndex(im)beginIndexBatch	swift.method	beginBatch()	CSSearchableIndex.beginBatch()	func beginBatch()
+c:objc(cs)CSSearchableIndex(im)deleteAllSearchableItemsWithCompletionHandler:	swift.method	deleteAllSearchableItems(completionHandler:)	CSSearchableIndex.deleteAllSearchableItems(completionHandler:)	func deleteAllSearchableItems(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)CSSearchableIndex(im)deleteSearchableItemsWithDomainIdentifiers:completionHandler:	swift.method	deleteSearchableItems(withDomainIdentifiers:)	CSSearchableIndex.deleteSearchableItems(withDomainIdentifiers:)	func deleteSearchableItems(withDomainIdentifiers domainIdentifiers: [String]) async throws
+c:objc(cs)CSSearchableIndex(im)deleteSearchableItemsWithIdentifiers:completionHandler:	swift.method	deleteSearchableItems(withIdentifiers:)	CSSearchableIndex.deleteSearchableItems(withIdentifiers:)	func deleteSearchableItems(withIdentifiers identifiers: [String]) async throws
+c:objc(cs)CSSearchableIndex(im)endIndexBatchWithClientState:completionHandler:	swift.method	endBatch(withClientState:)	CSSearchableIndex.endBatch(withClientState:)	func endBatch(withClientState clientState: Data) async throws
+c:objc(cs)CSSearchableIndex(im)endIndexBatchWithExpectedClientState:newClientState:completionHandler:	swift.method	endIndexBatch(expectedClientState:newClientState:)	CSSearchableIndex.endIndexBatch(expectedClientState:newClientState:)	func endIndexBatch(expectedClientState: Data?, newClientState: Data) async throws
+c:objc(cs)CSSearchableIndex(im)fetchDataForBundleIdentifier:itemIdentifier:contentType:completionHandler:	swift.method	fetchData(forBundleIdentifier:itemIdentifier:contentType:)	CSSearchableIndex.fetchData(forBundleIdentifier:itemIdentifier:contentType:)	func fetchData(forBundleIdentifier bundleIdentifier: String, itemIdentifier: String, contentType: UTType) async throws -> Data
+c:objc(cs)CSSearchableIndex(im)fetchLastClientStateWithCompletionHandler:	swift.method	fetchLastClientState(completionHandler:)	CSSearchableIndex.fetchLastClientState(completionHandler:)	func fetchLastClientState(completionHandler: @escaping (Data?, (any Error)?) -> Void)
+c:objc(cs)CSSearchableIndex(im)indexSearchableItems:completionHandler:	swift.method	indexSearchableItems(_:)	CSSearchableIndex.indexSearchableItems(_:)	func indexSearchableItems(_ items: [CSSearchableItem]) async throws
+c:objc(cs)CSSearchableIndex(im)initWithName:	swift.init	init(name:)	CSSearchableIndex.init(name:)	init(name: String)
+c:objc(cs)CSSearchableIndex(im)initWithName:protectionClass:	swift.init	init(name:protectionClass:)	CSSearchableIndex.init(name:protectionClass:)	init(name: String, protectionClass: FileProtectionType?)
+c:objc(cs)CSSearchableIndex(py)indexDelegate	swift.property	indexDelegate	CSSearchableIndex.indexDelegate	weak var indexDelegate: (any CSSearchableIndexDelegate)? { get set }
+c:objc(cs)CSSearchableItem	swift.class	CSSearchableItem	CSSearchableItem	class CSSearchableItem
+c:objc(cs)CSSearchableItem(im)compareByRank:	swift.method	compare(byRank:)	CSSearchableItem.compare(byRank:)	func compare(byRank other: CSSearchableItem) -> ComparisonResult
+c:objc(cs)CSSearchableItem(im)initWithUniqueIdentifier:domainIdentifier:attributeSet:	swift.init	init(uniqueIdentifier:domainIdentifier:attributeSet:)	CSSearchableItem.init(uniqueIdentifier:domainIdentifier:attributeSet:)	init(uniqueIdentifier: String?, domainIdentifier: String?, attributeSet: CSSearchableItemAttributeSet)
+c:objc(cs)CSSearchableItem(py)attributeSet	swift.property	attributeSet	CSSearchableItem.attributeSet	var attributeSet: CSSearchableItemAttributeSet { get set }
+c:objc(cs)CSSearchableItem(py)domainIdentifier	swift.property	domainIdentifier	CSSearchableItem.domainIdentifier	var domainIdentifier: String? { get set }
+c:objc(cs)CSSearchableItem(py)expirationDate	swift.property	expirationDate	CSSearchableItem.expirationDate	var expirationDate: Date! { get set }
+c:objc(cs)CSSearchableItem(py)isUpdate	swift.property	isUpdate	CSSearchableItem.isUpdate	var isUpdate: Bool { get set }
+c:objc(cs)CSSearchableItem(py)uniqueIdentifier	swift.property	uniqueIdentifier	CSSearchableItem.uniqueIdentifier	var uniqueIdentifier: String { get set }
+c:objc(cs)CSSearchableItem(py)updateListenerOptions	swift.property	updateListenerOptions	CSSearchableItem.updateListenerOptions	var updateListenerOptions: CSSearchableItem.UpdateListenerOptions { get set }
+c:objc(cs)CSSearchableItemAttributeSet	swift.class	CSSearchableItemAttributeSet	CSSearchableItemAttributeSet	class CSSearchableItemAttributeSet
+c:objc(cs)CSSearchableItemAttributeSet(im)initWithContentType:	swift.init	init(contentType:)	CSSearchableItemAttributeSet.init(contentType:)	init(contentType: UTType)
+c:objc(cs)CSSearchableItemAttributeSet(im)initWithItemContentType:	swift.init	init(itemContentType:)	CSSearchableItemAttributeSet.init(itemContentType:)	init(itemContentType: String)
+c:objc(cs)CSSearchableItemAttributeSet(im)moveFrom:	swift.method	move(from:)	CSSearchableItemAttributeSet.move(from:)	func move(from sourceAttributeSet: CSSearchableItemAttributeSet)
+c:objc(cs)CSSearchableItemAttributeSet(im)setValue:forCustomKey:	swift.method	setValue(_:forCustomKey:)	CSSearchableItemAttributeSet.setValue(_:forCustomKey:)	func setValue(_ value: (any NSSecureCoding)?, forCustomKey key: CSCustomAttributeKey)
+c:objc(cs)CSSearchableItemAttributeSet(im)valueForCustomKey:	swift.method	value(forCustomKey:)	CSSearchableItemAttributeSet.value(forCustomKey:)	func value(forCustomKey key: CSCustomAttributeKey) -> (any NSSecureCoding)?
+c:objc(cs)CSSearchableItemAttributeSet(py)EXIFGPSVersion	swift.property	exifgpsVersion	CSSearchableItemAttributeSet.exifgpsVersion	var exifgpsVersion: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)EXIFVersion	swift.property	exifVersion	CSSearchableItemAttributeSet.exifVersion	var exifVersion: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSAreaInformation	swift.property	gpsAreaInformation	CSSearchableItemAttributeSet.gpsAreaInformation	var gpsAreaInformation: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDOP	swift.property	gpsdop	CSSearchableItemAttributeSet.gpsdop	var gpsdop: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDateStamp	swift.property	gpsDateStamp	CSSearchableItemAttributeSet.gpsDateStamp	var gpsDateStamp: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestBearing	swift.property	gpsDestBearing	CSSearchableItemAttributeSet.gpsDestBearing	var gpsDestBearing: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestDistance	swift.property	gpsDestDistance	CSSearchableItemAttributeSet.gpsDestDistance	var gpsDestDistance: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestLatitude	swift.property	gpsDestLatitude	CSSearchableItemAttributeSet.gpsDestLatitude	var gpsDestLatitude: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestLongitude	swift.property	gpsDestLongitude	CSSearchableItemAttributeSet.gpsDestLongitude	var gpsDestLongitude: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDifferental	swift.property	gpsDifferental	CSSearchableItemAttributeSet.gpsDifferental	var gpsDifferental: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSMapDatum	swift.property	gpsMapDatum	CSSearchableItemAttributeSet.gpsMapDatum	var gpsMapDatum: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSMeasureMode	swift.property	gpsMeasureMode	CSSearchableItemAttributeSet.gpsMeasureMode	var gpsMeasureMode: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSProcessingMethod	swift.property	gpsProcessingMethod	CSSearchableItemAttributeSet.gpsProcessingMethod	var gpsProcessingMethod: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSStatus	swift.property	gpsStatus	CSSearchableItemAttributeSet.gpsStatus	var gpsStatus: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSTrack	swift.property	gpsTrack	CSSearchableItemAttributeSet.gpsTrack	var gpsTrack: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)HTMLContentData	swift.property	htmlContentData	CSSearchableItemAttributeSet.htmlContentData	var htmlContentData: Data? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)ISOSpeed	swift.property	isoSpeed	CSSearchableItemAttributeSet.isoSpeed	var isoSpeed: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)URL	swift.property	url	CSSearchableItemAttributeSet.url	var url: URL? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)accountHandles	swift.property	accountHandles	CSSearchableItemAttributeSet.accountHandles	var accountHandles: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)accountIdentifier	swift.property	accountIdentifier	CSSearchableItemAttributeSet.accountIdentifier	var accountIdentifier: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)acquisitionMake	swift.property	acquisitionMake	CSSearchableItemAttributeSet.acquisitionMake	var acquisitionMake: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)acquisitionModel	swift.property	acquisitionModel	CSSearchableItemAttributeSet.acquisitionModel	var acquisitionModel: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)actionIdentifiers	swift.property	actionIdentifiers	CSSearchableItemAttributeSet.actionIdentifiers	var actionIdentifiers: [String] { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)addedDate	swift.property	addedDate	CSSearchableItemAttributeSet.addedDate	var addedDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)additionalRecipients	swift.property	additionalRecipients	CSSearchableItemAttributeSet.additionalRecipients	var additionalRecipients: [CSPerson]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)album	swift.property	album	CSSearchableItemAttributeSet.album	var album: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)allDay	swift.property	allDay	CSSearchableItemAttributeSet.allDay	var allDay: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)alternateNames	swift.property	alternateNames	CSSearchableItemAttributeSet.alternateNames	var alternateNames: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)altitude	swift.property	altitude	CSSearchableItemAttributeSet.altitude	var altitude: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)aperture	swift.property	aperture	CSSearchableItemAttributeSet.aperture	var aperture: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)artist	swift.property	artist	CSSearchableItemAttributeSet.artist	var artist: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)audiences	swift.property	audiences	CSSearchableItemAttributeSet.audiences	var audiences: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)audioBitRate	swift.property	audioBitRate	CSSearchableItemAttributeSet.audioBitRate	var audioBitRate: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)audioChannelCount	swift.property	audioChannelCount	CSSearchableItemAttributeSet.audioChannelCount	var audioChannelCount: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)audioEncodingApplication	swift.property	audioEncodingApplication	CSSearchableItemAttributeSet.audioEncodingApplication	var audioEncodingApplication: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)audioSampleRate	swift.property	audioSampleRate	CSSearchableItemAttributeSet.audioSampleRate	var audioSampleRate: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)audioTrackNumber	swift.property	audioTrackNumber	CSSearchableItemAttributeSet.audioTrackNumber	var audioTrackNumber: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)authorAddresses	swift.property	authorAddresses	CSSearchableItemAttributeSet.authorAddresses	var authorAddresses: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)authorEmailAddresses	swift.property	authorEmailAddresses	CSSearchableItemAttributeSet.authorEmailAddresses	var authorEmailAddresses: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)authorNames	swift.property	authorNames	CSSearchableItemAttributeSet.authorNames	var authorNames: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)authors	swift.property	authors	CSSearchableItemAttributeSet.authors	var authors: [CSPerson]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)bitsPerSample	swift.property	bitsPerSample	CSSearchableItemAttributeSet.bitsPerSample	var bitsPerSample: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)cameraOwner	swift.property	cameraOwner	CSSearchableItemAttributeSet.cameraOwner	var cameraOwner: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)city	swift.property	city	CSSearchableItemAttributeSet.city	var city: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)codecs	swift.property	codecs	CSSearchableItemAttributeSet.codecs	var codecs: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)colorSpace	swift.property	colorSpace	CSSearchableItemAttributeSet.colorSpace	var colorSpace: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)comment	swift.property	comment	CSSearchableItemAttributeSet.comment	var comment: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)completionDate	swift.property	completionDate	CSSearchableItemAttributeSet.completionDate	var completionDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)composer	swift.property	composer	CSSearchableItemAttributeSet.composer	var composer: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contactKeywords	swift.property	contactKeywords	CSSearchableItemAttributeSet.contactKeywords	var contactKeywords: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)containerDisplayName	swift.property	containerDisplayName	CSSearchableItemAttributeSet.containerDisplayName	var containerDisplayName: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)containerIdentifier	swift.property	containerIdentifier	CSSearchableItemAttributeSet.containerIdentifier	var containerIdentifier: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)containerOrder	swift.property	containerOrder	CSSearchableItemAttributeSet.containerOrder	var containerOrder: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)containerTitle	swift.property	containerTitle	CSSearchableItemAttributeSet.containerTitle	var containerTitle: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentCreationDate	swift.property	contentCreationDate	CSSearchableItemAttributeSet.contentCreationDate	var contentCreationDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentDescription	swift.property	contentDescription	CSSearchableItemAttributeSet.contentDescription	var contentDescription: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentModificationDate	swift.property	contentModificationDate	CSSearchableItemAttributeSet.contentModificationDate	var contentModificationDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentRating	swift.property	contentRating	CSSearchableItemAttributeSet.contentRating	var contentRating: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentSources	swift.property	contentSources	CSSearchableItemAttributeSet.contentSources	var contentSources: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentType	swift.property	contentType	CSSearchableItemAttributeSet.contentType	var contentType: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentTypeTree	swift.property	contentTypeTree	CSSearchableItemAttributeSet.contentTypeTree	var contentTypeTree: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contentURL	swift.property	contentURL	CSSearchableItemAttributeSet.contentURL	var contentURL: URL? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)contributors	swift.property	contributors	CSSearchableItemAttributeSet.contributors	var contributors: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)copyright	swift.property	copyright	CSSearchableItemAttributeSet.copyright	var copyright: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)country	swift.property	country	CSSearchableItemAttributeSet.country	var country: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)coverage	swift.property	coverage	CSSearchableItemAttributeSet.coverage	var coverage: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)creator	swift.property	creator	CSSearchableItemAttributeSet.creator	var creator: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)darkThumbnailURL	swift.property	darkThumbnailURL	CSSearchableItemAttributeSet.darkThumbnailURL	var darkThumbnailURL: URL? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)deliveryType	swift.property	deliveryType	CSSearchableItemAttributeSet.deliveryType	var deliveryType: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)director	swift.property	director	CSSearchableItemAttributeSet.director	var director: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)displayName	swift.property	displayName	CSSearchableItemAttributeSet.displayName	var displayName: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)domainIdentifier	swift.property	domainIdentifier	CSSearchableItemAttributeSet.domainIdentifier	var domainIdentifier: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)downloadedDate	swift.property	downloadedDate	CSSearchableItemAttributeSet.downloadedDate	var downloadedDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)dueDate	swift.property	dueDate	CSSearchableItemAttributeSet.dueDate	var dueDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)duration	swift.property	duration	CSSearchableItemAttributeSet.duration	var duration: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)editors	swift.property	editors	CSSearchableItemAttributeSet.editors	var editors: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)emailAddresses	swift.property	emailAddresses	CSSearchableItemAttributeSet.emailAddresses	var emailAddresses: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)emailHeaders	swift.property	emailHeaders	CSSearchableItemAttributeSet.emailHeaders	var emailHeaders: [String : [Any]]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)encodingApplications	swift.property	encodingApplications	CSSearchableItemAttributeSet.encodingApplications	var encodingApplications: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)endDate	swift.property	endDate	CSSearchableItemAttributeSet.endDate	var endDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureMode	swift.property	exposureMode	CSSearchableItemAttributeSet.exposureMode	var exposureMode: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureProgram	swift.property	exposureProgram	CSSearchableItemAttributeSet.exposureProgram	var exposureProgram: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureTime	swift.property	exposureTime	CSSearchableItemAttributeSet.exposureTime	var exposureTime: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureTimeString	swift.property	exposureTimeString	CSSearchableItemAttributeSet.exposureTimeString	var exposureTimeString: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)fNumber	swift.property	fNumber	CSSearchableItemAttributeSet.fNumber	var fNumber: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)fileSize	swift.property	fileSize	CSSearchableItemAttributeSet.fileSize	var fileSize: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)flashOn	swift.property	flashOn	CSSearchableItemAttributeSet.flashOn	var flashOn: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)focalLength	swift.property	focalLength	CSSearchableItemAttributeSet.focalLength	var focalLength: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)focalLength35mm	swift.property	focalLength35mm	CSSearchableItemAttributeSet.focalLength35mm	var focalLength35mm: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)fontNames	swift.property	fontNames	CSSearchableItemAttributeSet.fontNames	var fontNames: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)fullyFormattedAddress	swift.property	fullyFormattedAddress	CSSearchableItemAttributeSet.fullyFormattedAddress	var fullyFormattedAddress: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)generalMIDISequence	swift.property	generalMIDISequence	CSSearchableItemAttributeSet.generalMIDISequence	var generalMIDISequence: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)genre	swift.property	genre	CSSearchableItemAttributeSet.genre	var genre: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)hasAlphaChannel	swift.property	hasAlphaChannel	CSSearchableItemAttributeSet.hasAlphaChannel	var hasAlphaChannel: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)headline	swift.property	headline	CSSearchableItemAttributeSet.headline	var headline: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)hiddenAdditionalRecipients	swift.property	hiddenAdditionalRecipients	CSSearchableItemAttributeSet.hiddenAdditionalRecipients	var hiddenAdditionalRecipients: [CSPerson]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)identifier	swift.property	identifier	CSSearchableItemAttributeSet.identifier	var identifier: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)imageDirection	swift.property	imageDirection	CSSearchableItemAttributeSet.imageDirection	var imageDirection: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)importantDates	swift.property	importantDates	CSSearchableItemAttributeSet.importantDates	var importantDates: [Date]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)information	swift.property	information	CSSearchableItemAttributeSet.information	var information: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)instantMessageAddresses	swift.property	instantMessageAddresses	CSSearchableItemAttributeSet.instantMessageAddresses	var instantMessageAddresses: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)instructions	swift.property	instructions	CSSearchableItemAttributeSet.instructions	var instructions: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)isPriority	swift.property	isPriority	CSSearchableItemAttributeSet.isPriority	var isPriority: NSNumber? { get }
+c:objc(cs)CSSearchableItemAttributeSet(py)keySignature	swift.property	keySignature	CSSearchableItemAttributeSet.keySignature	var keySignature: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)keywords	swift.property	keywords	CSSearchableItemAttributeSet.keywords	var keywords: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)kind	swift.property	kind	CSSearchableItemAttributeSet.kind	var kind: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)languages	swift.property	languages	CSSearchableItemAttributeSet.languages	var languages: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)lastUsedDate	swift.property	lastUsedDate	CSSearchableItemAttributeSet.lastUsedDate	var lastUsedDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)latitude	swift.property	latitude	CSSearchableItemAttributeSet.latitude	var latitude: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)layerNames	swift.property	layerNames	CSSearchableItemAttributeSet.layerNames	var layerNames: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)lensModel	swift.property	lensModel	CSSearchableItemAttributeSet.lensModel	var lensModel: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)likelyJunk	swift.property	likelyJunk	CSSearchableItemAttributeSet.likelyJunk	var likelyJunk: NSNumber { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)local	swift.property	local	CSSearchableItemAttributeSet.local	var local: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)longitude	swift.property	longitude	CSSearchableItemAttributeSet.longitude	var longitude: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)lyricist	swift.property	lyricist	CSSearchableItemAttributeSet.lyricist	var lyricist: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)mailboxIdentifiers	swift.property	mailboxIdentifiers	CSSearchableItemAttributeSet.mailboxIdentifiers	var mailboxIdentifiers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)maxAperture	swift.property	maxAperture	CSSearchableItemAttributeSet.maxAperture	var maxAperture: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)mediaTypes	swift.property	mediaTypes	CSSearchableItemAttributeSet.mediaTypes	var mediaTypes: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)metadataModificationDate	swift.property	metadataModificationDate	CSSearchableItemAttributeSet.metadataModificationDate	var metadataModificationDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)meteringMode	swift.property	meteringMode	CSSearchableItemAttributeSet.meteringMode	var meteringMode: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)musicalGenre	swift.property	musicalGenre	CSSearchableItemAttributeSet.musicalGenre	var musicalGenre: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)musicalInstrumentCategory	swift.property	musicalInstrumentCategory	CSSearchableItemAttributeSet.musicalInstrumentCategory	var musicalInstrumentCategory: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)musicalInstrumentName	swift.property	musicalInstrumentName	CSSearchableItemAttributeSet.musicalInstrumentName	var musicalInstrumentName: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)namedLocation	swift.property	namedLocation	CSSearchableItemAttributeSet.namedLocation	var namedLocation: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)organizations	swift.property	organizations	CSSearchableItemAttributeSet.organizations	var organizations: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)orientation	swift.property	orientation	CSSearchableItemAttributeSet.orientation	var orientation: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)originalFormat	swift.property	originalFormat	CSSearchableItemAttributeSet.originalFormat	var originalFormat: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)originalSource	swift.property	originalSource	CSSearchableItemAttributeSet.originalSource	var originalSource: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)pageCount	swift.property	pageCount	CSSearchableItemAttributeSet.pageCount	var pageCount: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)pageHeight	swift.property	pageHeight	CSSearchableItemAttributeSet.pageHeight	var pageHeight: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)pageWidth	swift.property	pageWidth	CSSearchableItemAttributeSet.pageWidth	var pageWidth: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)participants	swift.property	participants	CSSearchableItemAttributeSet.participants	var participants: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)path	swift.property	path	CSSearchableItemAttributeSet.path	var path: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)performers	swift.property	performers	CSSearchableItemAttributeSet.performers	var performers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)phoneNumbers	swift.property	phoneNumbers	CSSearchableItemAttributeSet.phoneNumbers	var phoneNumbers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)pixelCount	swift.property	pixelCount	CSSearchableItemAttributeSet.pixelCount	var pixelCount: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)pixelHeight	swift.property	pixelHeight	CSSearchableItemAttributeSet.pixelHeight	var pixelHeight: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)pixelWidth	swift.property	pixelWidth	CSSearchableItemAttributeSet.pixelWidth	var pixelWidth: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)playCount	swift.property	playCount	CSSearchableItemAttributeSet.playCount	var playCount: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)postalCode	swift.property	postalCode	CSSearchableItemAttributeSet.postalCode	var postalCode: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)primaryRecipients	swift.property	primaryRecipients	CSSearchableItemAttributeSet.primaryRecipients	var primaryRecipients: [CSPerson]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)producer	swift.property	producer	CSSearchableItemAttributeSet.producer	var producer: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)profileName	swift.property	profileName	CSSearchableItemAttributeSet.profileName	var profileName: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)projects	swift.property	projects	CSSearchableItemAttributeSet.projects	var projects: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)providerDataTypeIdentifiers	swift.property	providerDataTypeIdentifiers	CSSearchableItemAttributeSet.providerDataTypeIdentifiers	var providerDataTypeIdentifiers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)providerFileTypeIdentifiers	swift.property	providerFileTypeIdentifiers	CSSearchableItemAttributeSet.providerFileTypeIdentifiers	var providerFileTypeIdentifiers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)providerInPlaceFileTypeIdentifiers	swift.property	providerInPlaceFileTypeIdentifiers	CSSearchableItemAttributeSet.providerInPlaceFileTypeIdentifiers	var providerInPlaceFileTypeIdentifiers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)publishers	swift.property	publishers	CSSearchableItemAttributeSet.publishers	var publishers: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)rankingHint	swift.property	rankingHint	CSSearchableItemAttributeSet.rankingHint	var rankingHint: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)rating	swift.property	rating	CSSearchableItemAttributeSet.rating	var rating: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)ratingDescription	swift.property	ratingDescription	CSSearchableItemAttributeSet.ratingDescription	var ratingDescription: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)recipientAddresses	swift.property	recipientAddresses	CSSearchableItemAttributeSet.recipientAddresses	var recipientAddresses: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)recipientEmailAddresses	swift.property	recipientEmailAddresses	CSSearchableItemAttributeSet.recipientEmailAddresses	var recipientEmailAddresses: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)recipientNames	swift.property	recipientNames	CSSearchableItemAttributeSet.recipientNames	var recipientNames: [String]? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)recordingDate	swift.property	recordingDate	CSSearchableItemAttributeSet.recordingDate	var recordingDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)redEyeOn	swift.property	redEyeOn	CSSearchableItemAttributeSet.redEyeOn	var redEyeOn: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)relatedUniqueIdentifier	swift.property	relatedUniqueIdentifier	CSSearchableItemAttributeSet.relatedUniqueIdentifier	var relatedUniqueIdentifier: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)resolutionHeightDPI	swift.property	resolutionHeightDPI	CSSearchableItemAttributeSet.resolutionHeightDPI	var resolutionHeightDPI: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)resolutionWidthDPI	swift.property	resolutionWidthDPI	CSSearchableItemAttributeSet.resolutionWidthDPI	var resolutionWidthDPI: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)rights	swift.property	rights	CSSearchableItemAttributeSet.rights	var rights: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)role	swift.property	role	CSSearchableItemAttributeSet.role	var role: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)securityMethod	swift.property	securityMethod	CSSearchableItemAttributeSet.securityMethod	var securityMethod: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)sharedItemContentType	swift.property	sharedItemContentType	CSSearchableItemAttributeSet.sharedItemContentType	var sharedItemContentType: UTType? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)speed	swift.property	speed	CSSearchableItemAttributeSet.speed	var speed: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)startDate	swift.property	startDate	CSSearchableItemAttributeSet.startDate	var startDate: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)stateOrProvince	swift.property	stateOrProvince	CSSearchableItemAttributeSet.stateOrProvince	var stateOrProvince: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)streamable	swift.property	streamable	CSSearchableItemAttributeSet.streamable	var streamable: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)subThoroughfare	swift.property	subThoroughfare	CSSearchableItemAttributeSet.subThoroughfare	var subThoroughfare: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)subject	swift.property	subject	CSSearchableItemAttributeSet.subject	var subject: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)supportsNavigation	swift.property	supportsNavigation	CSSearchableItemAttributeSet.supportsNavigation	var supportsNavigation: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)supportsPhoneCall	swift.property	supportsPhoneCall	CSSearchableItemAttributeSet.supportsPhoneCall	var supportsPhoneCall: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)tempo	swift.property	tempo	CSSearchableItemAttributeSet.tempo	var tempo: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)textContent	swift.property	textContent	CSSearchableItemAttributeSet.textContent	var textContent: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)textContentSummary	swift.property	textContentSummary	CSSearchableItemAttributeSet.textContentSummary	var textContentSummary: String? { get }
+c:objc(cs)CSSearchableItemAttributeSet(py)theme	swift.property	theme	CSSearchableItemAttributeSet.theme	var theme: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)thoroughfare	swift.property	thoroughfare	CSSearchableItemAttributeSet.thoroughfare	var thoroughfare: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)thumbnailData	swift.property	thumbnailData	CSSearchableItemAttributeSet.thumbnailData	var thumbnailData: Data? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)thumbnailURL	swift.property	thumbnailURL	CSSearchableItemAttributeSet.thumbnailURL	var thumbnailURL: URL? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)timeSignature	swift.property	timeSignature	CSSearchableItemAttributeSet.timeSignature	var timeSignature: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)timestamp	swift.property	timestamp	CSSearchableItemAttributeSet.timestamp	var timestamp: Date? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)title	swift.property	title	CSSearchableItemAttributeSet.title	var title: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)totalBitRate	swift.property	totalBitRate	CSSearchableItemAttributeSet.totalBitRate	var totalBitRate: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)transcribedTextContent	swift.property	transcribedTextContent	CSSearchableItemAttributeSet.transcribedTextContent	var transcribedTextContent: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)userCreated	swift.property	userCreated	CSSearchableItemAttributeSet.userCreated	var userCreated: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)userCurated	swift.property	userCurated	CSSearchableItemAttributeSet.userCurated	var userCurated: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)userOwned	swift.property	userOwned	CSSearchableItemAttributeSet.userOwned	var userOwned: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)version	swift.property	version	CSSearchableItemAttributeSet.version	var version: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)videoBitRate	swift.property	videoBitRate	CSSearchableItemAttributeSet.videoBitRate	var videoBitRate: NSNumber? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)weakRelatedUniqueIdentifier	swift.property	weakRelatedUniqueIdentifier	CSSearchableItemAttributeSet.weakRelatedUniqueIdentifier	var weakRelatedUniqueIdentifier: String? { get set }
+c:objc(cs)CSSearchableItemAttributeSet(py)whiteBalance	swift.property	whiteBalance	CSSearchableItemAttributeSet.whiteBalance	var whiteBalance: NSNumber? { get set }
+c:objc(cs)CSSuggestion	swift.class	CSSuggestion	CSSuggestion	class CSSuggestion
+c:objc(cs)CSSuggestion(im)compare:	swift.method	compare(_:)	CSSuggestion.compare(_:)	func compare(_ other: CSSuggestion) -> ComparisonResult
+c:objc(cs)CSSuggestion(im)compareByRank:	swift.method	compare(byRank:)	CSSuggestion.compare(byRank:)	func compare(byRank other: CSSuggestion) -> ComparisonResult
+c:objc(cs)CSSuggestion(py)suggestionKind	swift.property	suggestionKind	CSSuggestion.suggestionKind	var suggestionKind: CSSuggestion.SuggestionKind { get }
+c:objc(cs)CSUserQuery	swift.class	CSUserQuery	CSUserQuery	class CSUserQuery
+c:objc(cs)CSUserQuery(cm)prepare	swift.type.method	prepare()	CSUserQuery.prepare()	class func prepare()
+c:objc(cs)CSUserQuery(cm)prepareProtectionClasses:	swift.type.method	prepareProtectionClasses(_:)	CSUserQuery.prepareProtectionClasses(_:)	class func prepareProtectionClasses(_ protectionClasses: [FileProtectionType])
+c:objc(cs)CSUserQuery(im)cancel	swift.method	cancel()	CSUserQuery.cancel()	func cancel()
+c:objc(cs)CSUserQuery(im)initWithUserQueryString:userQueryContext:	swift.init	init(userQueryString:userQueryContext:)	CSUserQuery.init(userQueryString:userQueryContext:)	init(userQueryString: String?, userQueryContext: CSUserQueryContext?)
+c:objc(cs)CSUserQuery(im)start	swift.method	start()	CSUserQuery.start()	func start()
+c:objc(cs)CSUserQuery(py)foundSuggestionCount	swift.property	foundSuggestionCount	CSUserQuery.foundSuggestionCount	var foundSuggestionCount: Int { get }
+c:objc(cs)CSUserQuery(py)foundSuggestionsHandler	swift.property	foundSuggestionsHandler	CSUserQuery.foundSuggestionsHandler	var foundSuggestionsHandler: (([CSSuggestion]) -> Void)? { get set }
+c:objc(cs)CSUserQueryContext	swift.class	CSUserQueryContext	CSUserQueryContext	class CSUserQueryContext
+c:objc(cs)CSUserQueryContext(cm)userQueryContextWithCurrentSuggestion:	swift.init	init(currentSuggestion:)	CSUserQueryContext.init(currentSuggestion:)	init(currentSuggestion: CSSuggestion?)
+c:objc(cs)CSUserQueryContext(py)disableSemanticSearch	swift.property	disableSemanticSearch	CSUserQueryContext.disableSemanticSearch	var disableSemanticSearch: Bool { get set }
+c:objc(cs)CSUserQueryContext(py)enableRankedResults	swift.property	enableRankedResults	CSUserQueryContext.enableRankedResults	var enableRankedResults: Bool { get set }
+c:objc(cs)CSUserQueryContext(py)maxRankedResultCount	swift.property	maxRankedResultCount	CSUserQueryContext.maxRankedResultCount	var maxRankedResultCount: Int { get set }
+c:objc(cs)CSUserQueryContext(py)maxResultCount	swift.property	maxResultCount	CSUserQueryContext.maxResultCount	var maxResultCount: Int { get set }
+c:objc(cs)CSUserQueryContext(py)maxSuggestionCount	swift.property	maxSuggestionCount	CSUserQueryContext.maxSuggestionCount	var maxSuggestionCount: Int { get set }
+c:objc(cs)NSUserActivity(py)contentAttributeSet	swift.property	contentAttributeSet	NSUserActivity.contentAttributeSet	@NSCopying var contentAttributeSet: CSSearchableItemAttributeSet? { get set }
+c:objc(pl)CSSearchableIndexDelegate	swift.protocol	CSSearchableIndexDelegate	CSSearchableIndexDelegate	protocol CSSearchableIndexDelegate : NSObjectProtocol
+c:objc(pl)CSSearchableIndexDelegate(im)dataForSearchableIndex:itemIdentifier:typeIdentifier:error:	swift.method	data(for:itemIdentifier:typeIdentifier:)	CSSearchableIndexDelegate.data(for:itemIdentifier:typeIdentifier:)	optional func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data
+c:objc(pl)CSSearchableIndexDelegate(im)fileURLForSearchableIndex:itemIdentifier:typeIdentifier:inPlace:error:	swift.method	fileURL(for:itemIdentifier:typeIdentifier:inPlace:)	CSSearchableIndexDelegate.fileURL(for:itemIdentifier:typeIdentifier:inPlace:)	optional func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler:	swift.method	searchableIndex(_:reindexAllSearchableItemsWithAcknowledgementHandler:)	CSSearchableIndexDelegate.searchableIndex(_:reindexAllSearchableItemsWithAcknowledgementHandler:)	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void)
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:	swift.method	searchableIndex(_:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:)	CSSearchableIndexDelegate.searchableIndex(_:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:)	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void)
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndexDidFinishThrottle:	swift.method	searchableIndexDidFinishThrottle(_:)	CSSearchableIndexDelegate.searchableIndexDidFinishThrottle(_:)	optional func searchableIndexDidFinishThrottle(_ searchableIndex: CSSearchableIndex)
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndexDidThrottle:	swift.method	searchableIndexDidThrottle(_:)	CSSearchableIndexDelegate.searchableIndexDidThrottle(_:)	optional func searchableIndexDidThrottle(_ searchableIndex: CSSearchableIndex)
+c:objc(pl)CSSearchableIndexDelegate(im)searchableItemsDidUpdate:	swift.method	searchableItemsDidUpdate(_:)	CSSearchableIndexDelegate.searchableItemsDidUpdate(_:)	optional func searchableItemsDidUpdate(_ items: [CSSearchableItem])
+c:objc(pl)CSSearchableIndexDelegate(im)searchableItemsForIdentifiers:searchableItemsHandler:	swift.method	searchableItems(forIdentifiers:searchableItemsHandler:)	CSSearchableIndexDelegate.searchableItems(forIdentifiers:searchableItemsHandler:)	optional func searchableItems(forIdentifiers identifiers: [String], searchableItemsHandler: @escaping ([CSSearchableItem]) -> Void)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSCustomAttributeKey	swift.init	init(coder:)	CSCustomAttributeKey.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSPerson	swift.init	init(coder:)	CSPerson.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSearchQueryContext	swift.init	init(coder:)	CSSearchQueryContext.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSearchableItem	swift.init	init(coder:)	CSSearchableItem.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSearchableItemAttributeSet	swift.init	init(coder:)	CSSearchableItemAttributeSet.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSuggestion	swift.init	init(coder:)	CSSuggestion.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.type.property	errorDomain	CSIndexError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.type.property	errorDomain	CSSearchQueryError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	errorUserInfo	CSIndexError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	errorUserInfo	CSSearchQueryError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	errorCode	CSIndexError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	errorCode	CSSearchQueryError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.func.op	~=(_:_:)	CSIndexError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.func.op	~=(_:_:)	CSSearchQueryError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	errorUserInfo	CSIndexError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	errorUserInfo	CSSearchQueryError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.func.op	==(_:_:)	CSIndexError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.func.op	==(_:_:)	CSSearchQueryError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	code	CSIndexError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	code	CSSearchQueryError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.method	hash(into:)	CSIndexError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.method	hash(into:)	CSSearchQueryError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	userInfo	CSIndexError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	userInfo	CSSearchQueryError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	errorCode	CSIndexError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	errorCode	CSSearchQueryError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	hashValue	CSIndexError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	hashValue	CSSearchQueryError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.init	init(_:userInfo:)	CSIndexError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.init	init(_:userInfo:)	CSSearchQueryError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC16CSIndexErrorCodeLeV	swift.struct	CSIndexError	CSIndexError	struct CSIndexError
+s:SC16CSIndexErrorCodeLeV011invalidItemB0SoAAVvpZ	swift.type.property	invalidItemError	CSIndexError.invalidItemError	static var invalidItemError: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV016indexUnavailableB0SoAAVvpZ	swift.type.property	indexUnavailableError	CSIndexError.indexUnavailableError	static var indexUnavailableError: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV016remoteConnectionB0SoAAVvpZ	swift.type.property	remoteConnectionError	CSIndexError.remoteConnectionError	static var remoteConnectionError: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV018invalidClientStateB0SoAAVvpZ	swift.type.property	invalidClientStateError	CSIndexError.invalidClientStateError	static var invalidClientStateError: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV07unknownB0SoAAVvpZ	swift.type.property	unknownError	CSIndexError.unknownError	static var unknownError: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CSIndexError.errorDomain	static var errorDomain: String { get }
+s:SC16CSIndexErrorCodeLeV13quotaExceededSoAAVvpZ	swift.type.property	quotaExceeded	CSIndexError.quotaExceeded	static var quotaExceeded: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV19indexingUnsupportedSoAAVvpZ	swift.type.property	indexingUnsupported	CSIndexError.indexingUnsupported	static var indexingUnsupported: CSIndexError.Code { get }
+s:SC16CSIndexErrorCodeLeV21mismatchedClientStateSoAAVvpZ	swift.type.property	mismatchedClientState	CSIndexError.mismatchedClientState	static var mismatchedClientState: CSIndexError.Code { get }
+s:SC22CSSearchQueryErrorCodeLeV	swift.struct	CSSearchQueryError	CSSearchQueryError	struct CSSearchQueryError
+s:SC22CSSearchQueryErrorCodeLeV07invalidB0SoAAVvpZ	swift.type.property	invalidQuery	CSSearchQueryError.invalidQuery	static var invalidQuery: CSSearchQueryError.Code { get }
+s:SC22CSSearchQueryErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CSSearchQueryError.errorDomain	static var errorDomain: String { get }
+s:SC22CSSearchQueryErrorCodeLeV16indexUnreachableSoAAVvpZ	swift.type.property	indexUnreachable	CSSearchQueryError.indexUnreachable	static var indexUnreachable: CSSearchQueryError.Code { get }
+s:SC22CSSearchQueryErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	CSSearchQueryError.unknown	static var unknown: CSSearchQueryError.Code { get }
+s:SC22CSSearchQueryErrorCodeLeV9cancelledSoAAVvpZ	swift.type.property	cancelled	CSSearchQueryError.cancelled	static var cancelled: CSSearchQueryError.Code { get }
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	>(_:_:)	CSUserQuery.Suggestion.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	>(_:_:)	CSUserQuery.Item.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	>(_:_:)	CSSearchQuery.Results.Item.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	>=(_:_:)	CSUserQuery.Suggestion.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	>=(_:_:)	CSUserQuery.Item.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	>=(_:_:)	CSSearchQuery.Results.Item.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	<=(_:_:)	CSUserQuery.Suggestion.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	<=(_:_:)	CSUserQuery.Item.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	<=(_:_:)	CSSearchQuery.Results.Item.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	..<(_:_:)	CSUserQuery.Suggestion...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	..<(_:_:)	CSUserQuery.Item...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	..<(_:_:)	CSSearchQuery.Results.Item...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	..<(_:)	CSUserQuery.Suggestion...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	..<(_:)	CSUserQuery.Item...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	..<(_:)	CSSearchQuery.Results.Item...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	...(_:)	CSUserQuery.Suggestion....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	...(_:)	CSUserQuery.Item....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	...(_:)	CSSearchQuery.Results.Item....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	...(_:_:)	CSUserQuery.Suggestion....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	...(_:_:)	CSUserQuery.Item....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	...(_:_:)	CSSearchQuery.Results.Item....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	...(_:)	CSUserQuery.Suggestion....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	...(_:)	CSUserQuery.Item....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	...(_:)	CSSearchQuery.Results.Item....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.func.op	!=(_:_:)	CSIndexError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.func.op	!=(_:_:)	CSSearchQueryError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.func.op	!=(_:_:)	CSSearchQueryContext.SourceOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.func.op	!=(_:_:)	CSSearchableItem.UpdateListenerOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSuggestionKind	swift.func.op	!=(_:_:)	CSSuggestion.SuggestionKind.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSUserInteraction	swift.func.op	!=(_:_:)	CSUserQuery.UserInteractionKind.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.func.op	!=(_:_:)	CSUserQuery.Suggestion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.func.op	!=(_:_:)	CSUserQuery.Item.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO	swift.func.op	!=(_:_:)	CSUserQuery.Responses.Response.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.func.op	!=(_:_:)	CSSearchQuery.Results.Item.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	hashValue	CSIndexError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	hashValue	CSSearchQueryError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSSuggestionKind	swift.property	hashValue	CSSuggestion.SuggestionKind.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSUserInteraction	swift.property	hashValue	CSUserQuery.UserInteractionKind.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.method	hash(into:)	CSIndexError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.method	hash(into:)	CSSearchQueryError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSSuggestionKind	swift.method	hash(into:)	CSSuggestion.SuggestionKind.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSUserInteraction	swift.method	hash(into:)	CSUserQuery.UserInteractionKind.hash(into:)	func hash(into hasher: inout Hasher)
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV	swift.method	next()	CSUserQuery.Suggestions.Iterator.next()	mutating func next() async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV	swift.method	next()	CSUserQuery.Responses.Iterator.next()	mutating func next() async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV	swift.method	next()	CSSearchQuery.Results.Iterator.next()	mutating func next() async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV	swift.method	next(isolation:)	CSUserQuery.Suggestions.Iterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV	swift.method	next(isolation:)	CSUserQuery.Responses.Iterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV	swift.method	next(isolation:)	CSSearchQuery.Results.Iterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	allSatisfy(_:)	CSUserQuery.Suggestions.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	allSatisfy(_:)	CSUserQuery.Responses.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	allSatisfy(_:)	CSSearchQuery.Results.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	compactMap(_:)	CSUserQuery.Suggestions.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	compactMap(_:)	CSUserQuery.Responses.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	compactMap(_:)	CSSearchQuery.Results.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	compactMap(_:)	CSUserQuery.Suggestions.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	compactMap(_:)	CSUserQuery.Responses.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	compactMap(_:)	CSSearchQuery.Results.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	map(_:)	CSUserQuery.Suggestions.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	map(_:)	CSUserQuery.Responses.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	map(_:)	CSSearchQuery.Results.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	map(_:)	CSUserQuery.Suggestions.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	map(_:)	CSUserQuery.Responses.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	map(_:)	CSSearchQuery.Results.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	max(by:)	CSUserQuery.Suggestions.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	max(by:)	CSUserQuery.Responses.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	max(by:)	CSSearchQuery.Results.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	min(by:)	CSUserQuery.Suggestions.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	min(by:)	CSUserQuery.Responses.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	min(by:)	CSSearchQuery.Results.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	drop(while:)	CSUserQuery.Suggestions.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	drop(while:)	CSUserQuery.Responses.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	drop(while:)	CSSearchQuery.Results.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	first(where:)	CSUserQuery.Suggestions.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	first(where:)	CSUserQuery.Responses.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	first(where:)	CSSearchQuery.Results.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	filter(_:)	CSUserQuery.Suggestions.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	filter(_:)	CSUserQuery.Responses.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	filter(_:)	CSSearchQuery.Results.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	prefix(while:)	CSUserQuery.Suggestions.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	prefix(while:)	CSUserQuery.Responses.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	prefix(while:)	CSSearchQuery.Results.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	prefix(_:)	CSUserQuery.Suggestions.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	prefix(_:)	CSUserQuery.Responses.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	prefix(_:)	CSSearchQuery.Results.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	reduce(into:_:)	CSUserQuery.Suggestions.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	reduce(into:_:)	CSUserQuery.Responses.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	reduce(into:_:)	CSSearchQuery.Results.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	reduce(_:_:)	CSUserQuery.Suggestions.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	reduce(_:_:)	CSUserQuery.Responses.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	reduce(_:_:)	CSSearchQuery.Results.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	flatMap(_:)	CSUserQuery.Suggestions.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	flatMap(_:)	CSUserQuery.Responses.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	flatMap(_:)	CSSearchQuery.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	flatMap(_:)	CSUserQuery.Suggestions.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	flatMap(_:)	CSUserQuery.Responses.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	flatMap(_:)	CSSearchQuery.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	flatMap(_:)	CSUserQuery.Suggestions.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	flatMap(_:)	CSUserQuery.Responses.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	flatMap(_:)	CSSearchQuery.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	flatMap(_:)	CSUserQuery.Suggestions.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	flatMap(_:)	CSUserQuery.Responses.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	flatMap(_:)	CSSearchQuery.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	contains(where:)	CSUserQuery.Suggestions.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	contains(where:)	CSUserQuery.Responses.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	contains(where:)	CSSearchQuery.Results.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	dropFirst(_:)	CSUserQuery.Suggestions.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	dropFirst(_:)	CSUserQuery.Responses.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	dropFirst(_:)	CSSearchQuery.Results.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:Sci12_ConcurrencySL7ElementRpzrlE3maxACSgyYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	max()	CSUserQuery.Suggestions.max()	@warn_unqualified_access func max() async rethrows -> Self.Element?
+s:Sci12_ConcurrencySL7ElementRpzrlE3maxACSgyYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	max()	CSSearchQuery.Results.max()	@warn_unqualified_access func max() async rethrows -> Self.Element?
+s:Sci12_ConcurrencySL7ElementRpzrlE3minACSgyYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	min()	CSUserQuery.Suggestions.min()	@warn_unqualified_access func min() async rethrows -> Self.Element?
+s:Sci12_ConcurrencySL7ElementRpzrlE3minACSgyYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	min()	CSSearchQuery.Results.min()	@warn_unqualified_access func min() async rethrows -> Self.Element?
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.method	contains(_:)	CSUserQuery.Suggestions.contains(_:)	func contains(_ search: Self.Element) async rethrows -> Bool
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.method	contains(_:)	CSUserQuery.Responses.contains(_:)	func contains(_ search: Self.Element) async rethrows -> Bool
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.method	contains(_:)	CSSearchQuery.Results.contains(_:)	func contains(_ search: Self.Element) async rethrows -> Bool
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	swift.struct	CSUserQuery.Suggestion	CSUserQuery.Suggestion	struct Suggestion
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvp	swift.property	suggestion	CSUserQuery.Suggestion.suggestion	var suggestion: CSSuggestion
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV1goiySbAE_AEtFZ	swift.func.op	>(_:_:)	CSUserQuery.Suggestion.>(_:_:)	static func > (lhs: CSUserQuery.Suggestion, rhs: CSUserQuery.Suggestion) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV1loiySbAE_AEtFZ	swift.func.op	<(_:_:)	CSUserQuery.Suggestion.<(_:_:)	static func < (lhs: CSUserQuery.Suggestion, rhs: CSUserQuery.Suggestion) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2IDa	swift.typealias	CSUserQuery.Suggestion.ID	CSUserQuery.Suggestion.ID	typealias ID = String
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	CSUserQuery.Suggestion.==(_:_:)	static func == (lhs: CSUserQuery.Suggestion, rhs: CSUserQuery.Suggestion) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2idSSvp	swift.property	id	CSUserQuery.Suggestion.id	var id: String { get }
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CSUserQuery.Suggestion.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV9hashValueSivp	swift.property	hashValue	CSUserQuery.Suggestion.hashValue	var hashValue: Int { get }
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	swift.struct	CSUserQuery.Suggestions	CSUserQuery.Suggestions	struct Suggestions
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV13AsyncIteratora	swift.typealias	CSUserQuery.Suggestions.AsyncIterator	CSUserQuery.Suggestions.AsyncIterator	typealias AsyncIterator = CSUserQuery.Suggestions.Iterator
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV17makeAsyncIteratorAE0H0VyF	swift.method	makeAsyncIterator()	CSUserQuery.Suggestions.makeAsyncIterator()	func makeAsyncIterator() -> CSUserQuery.Suggestions.Iterator
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV7Elementa	swift.typealias	CSUserQuery.Suggestions.Element	CSUserQuery.Suggestions.Element	typealias Element = CSUserQuery.Suggestion
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV	swift.struct	CSUserQuery.Suggestions.Iterator	CSUserQuery.Suggestions.Iterator	struct Iterator
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV4nextAbCE10SuggestionVSgyYaKF	swift.method	next()	CSUserQuery.Suggestions.Iterator.next()	mutating func next() async throws -> CSUserQuery.Suggestions.Element?
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV7Elementa	swift.typealias	CSUserQuery.Suggestions.Iterator.Element	CSUserQuery.Suggestions.Iterator.Element	typealias Element = CSUserQuery.Suggestions.Element
+s:So11CSUserQueryC13CoreSpotlightE11suggestionsAbCE11SuggestionsVvp	swift.property	suggestions	CSUserQuery.suggestions	var suggestions: CSUserQuery.Suggestions { get }
+s:So11CSUserQueryC13CoreSpotlightE11userEngaged_12visibleItems11interactionyAbCE4ItemV_SayAHGSo0A11InteractionVtF	swift.method	userEngaged(_:visibleItems:interaction:)	CSUserQuery.userEngaged(_:visibleItems:interaction:)	func userEngaged(_ item: CSUserQuery.Item, visibleItems: [CSUserQuery.Item], interaction: CSUserQuery.UserInteractionKind)
+s:So11CSUserQueryC13CoreSpotlightE11userEngaged_18visibleSuggestions11interactionyAbCE10SuggestionV_SayAHGSo0A11InteractionVtF	swift.method	userEngaged(_:visibleSuggestions:interaction:)	CSUserQuery.userEngaged(_:visibleSuggestions:interaction:)	func userEngaged(_ suggestion: CSUserQuery.Suggestion, visibleSuggestions: [CSUserQuery.Suggestion], interaction: CSUserQuery.UserInteractionKind)
+s:So11CSUserQueryC13CoreSpotlightE4ItemV	swift.struct	CSUserQuery.Item	CSUserQuery.Item	struct Item
+s:So11CSUserQueryC13CoreSpotlightE4ItemV1goiySbAE_AEtFZ	swift.func.op	>(_:_:)	CSUserQuery.Item.>(_:_:)	static func > (lhs: CSUserQuery.Item, rhs: CSUserQuery.Item) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE4ItemV1loiySbAE_AEtFZ	swift.func.op	<(_:_:)	CSUserQuery.Item.<(_:_:)	static func < (lhs: CSUserQuery.Item, rhs: CSUserQuery.Item) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE4ItemV2IDa	swift.typealias	CSUserQuery.Item.ID	CSUserQuery.Item.ID	typealias ID = String
+s:So11CSUserQueryC13CoreSpotlightE4ItemV2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	CSUserQuery.Item.==(_:_:)	static func == (lhs: CSUserQuery.Item, rhs: CSUserQuery.Item) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE4ItemV2idSSvp	swift.property	id	CSUserQuery.Item.id	var id: String { get }
+s:So11CSUserQueryC13CoreSpotlightE4ItemV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CSUserQuery.Item.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvp	swift.property	item	CSUserQuery.Item.item	var item: CSSearchableItem
+s:So11CSUserQueryC13CoreSpotlightE4ItemV9hashValueSivp	swift.property	hashValue	CSUserQuery.Item.hashValue	var hashValue: Int { get }
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	swift.struct	CSUserQuery.Responses	CSUserQuery.Responses	struct Responses
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV13AsyncIteratora	swift.typealias	CSUserQuery.Responses.AsyncIterator	CSUserQuery.Responses.AsyncIterator	typealias AsyncIterator = CSUserQuery.Responses.Iterator
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV17makeAsyncIteratorAE0H0VyF	swift.method	makeAsyncIterator()	CSUserQuery.Responses.makeAsyncIterator()	func makeAsyncIterator() -> CSUserQuery.Responses.Iterator
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV7Elementa	swift.typealias	CSUserQuery.Responses.Element	CSUserQuery.Responses.Element	typealias Element = CSUserQuery.Responses.Response
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV	swift.struct	CSUserQuery.Responses.Iterator	CSUserQuery.Responses.Iterator	struct Iterator
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV4nextAE8ResponseOSgyYaKF	swift.method	next()	CSUserQuery.Responses.Iterator.next()	mutating func next() async throws -> CSUserQuery.Responses.Element?
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV7Elementa	swift.typealias	CSUserQuery.Responses.Iterator.Element	CSUserQuery.Responses.Iterator.Element	typealias Element = CSUserQuery.Responses.Element
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO	swift.enum	CSUserQuery.Responses.Response	CSUserQuery.Responses.Response	enum Response
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO10suggestionyAgbCE10SuggestionVcAGmF	swift.enum.case	CSUserQuery.Responses.Response.suggestion(_:)	CSUserQuery.Responses.Response.suggestion(_:)	case suggestion(CSUserQuery.Suggestion)
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2IDa	swift.typealias	CSUserQuery.Responses.Response.ID	CSUserQuery.Responses.Response.ID	typealias ID = String
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	CSUserQuery.Responses.Response.==(_:_:)	static func == (a: CSUserQuery.Responses.Response, b: CSUserQuery.Responses.Response) -> Bool
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2idSSvp	swift.property	id	CSUserQuery.Responses.Response.id	var id: String { get }
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CSUserQuery.Responses.Response.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4itemyAgbCE4ItemVcAGmF	swift.enum.case	CSUserQuery.Responses.Response.item(_:)	CSUserQuery.Responses.Response.item(_:)	case item(CSUserQuery.Item)
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO9hashValueSivp	swift.property	hashValue	CSUserQuery.Responses.Response.hashValue	var hashValue: Int { get }
+s:So11CSUserQueryC13CoreSpotlightE9responsesAbCE9ResponsesVvp	swift.property	responses	CSUserQuery.responses	var responses: CSUserQuery.Responses { get }
+s:So12CSSuggestionC13CoreSpotlightE29localizedAttributedSuggestion10Foundation0E6StringVvp	swift.property	localizedAttributedSuggestion	CSSuggestion.localizedAttributedSuggestion	var localizedAttributedSuggestion: AttributedString { get }
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	swift.struct	CSSearchQuery.Results	CSSearchQuery.Results	struct Results
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV13AsyncIteratora	swift.typealias	CSSearchQuery.Results.AsyncIterator	CSSearchQuery.Results.AsyncIterator	typealias AsyncIterator = CSSearchQuery.Results.Iterator
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV17makeAsyncIteratorAE0H0VyF	swift.method	makeAsyncIterator()	CSSearchQuery.Results.makeAsyncIterator()	func makeAsyncIterator() -> CSSearchQuery.Results.Iterator
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	swift.struct	CSSearchQuery.Results.Item	CSSearchQuery.Results.Item	struct Item
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1goiySbAG_AGtFZ	swift.func.op	>(_:_:)	CSSearchQuery.Results.Item.>(_:_:)	static func > (lhs: CSSearchQuery.Results.Item, rhs: CSSearchQuery.Results.Item) -> Bool
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1loiySbAG_AGtFZ	swift.func.op	<(_:_:)	CSSearchQuery.Results.Item.<(_:_:)	static func < (lhs: CSSearchQuery.Results.Item, rhs: CSSearchQuery.Results.Item) -> Bool
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2IDa	swift.typealias	CSSearchQuery.Results.Item.ID	CSSearchQuery.Results.Item.ID	typealias ID = String
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	CSSearchQuery.Results.Item.==(_:_:)	static func == (lhs: CSSearchQuery.Results.Item, rhs: CSSearchQuery.Results.Item) -> Bool
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2idSSvp	swift.property	id	CSSearchQuery.Results.Item.id	var id: String { get }
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CSSearchQuery.Results.Item.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvp	swift.property	item	CSSearchQuery.Results.Item.item	var item: CSSearchableItem
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV9hashValueSivp	swift.property	hashValue	CSSearchQuery.Results.Item.hashValue	var hashValue: Int { get }
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV7Elementa	swift.typealias	CSSearchQuery.Results.Element	CSSearchQuery.Results.Element	typealias Element = CSSearchQuery.Results.Item
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV	swift.struct	CSSearchQuery.Results.Iterator	CSSearchQuery.Results.Iterator	struct Iterator
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV4nextAE4ItemVSgyYaKF	swift.method	next()	CSSearchQuery.Results.Iterator.next()	mutating func next() async throws -> CSSearchQuery.Results.Item?
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV7Elementa	swift.typealias	CSSearchQuery.Results.Iterator.Element	CSSearchQuery.Results.Iterator.Element	typealias Element = CSSearchQuery.Results.Item
+s:So13CSSearchQueryC13CoreSpotlightE7resultsAbCE7ResultsVvp	swift.property	results	CSSearchQuery.results	var results: CSSearchQuery.Results { get }
+s:So16CSIndexErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CSIndexError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So16CSSuggestionKindV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CSSuggestion.SuggestionKind.init(rawValue:)	init?(rawValue: Int)
+s:So17CSUserInteractionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CSUserQuery.UserInteractionKind.init(rawValue:)	init?(rawValue: Int)
+s:So22CSSearchQueryErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CSSearchQueryError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So26CSSearchQuerySourceOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CSSearchQueryContext.SourceOptions.init(rawValue:)	init(rawValue: UInt)
+s:So37CSSearchableItemUpdateListenerOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CSSearchableItem.UpdateListenerOptions.init(rawValue:)	init(rawValue: UInt)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.init	init(arrayLiteral:)	CSSearchQueryContext.SourceOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.init	init(arrayLiteral:)	CSSearchableItem.UpdateListenerOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	isDisjoint(with:)	CSSearchQueryContext.SourceOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	isDisjoint(with:)	CSSearchableItem.UpdateListenerOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	isSuperset(of:)	CSSearchQueryContext.SourceOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	isSuperset(of:)	CSSearchableItem.UpdateListenerOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	subtracting(_:)	CSSearchQueryContext.SourceOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	subtracting(_:)	CSSearchableItem.UpdateListenerOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	isStrictSubset(of:)	CSSearchQueryContext.SourceOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	isStrictSubset(of:)	CSSearchableItem.UpdateListenerOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	isStrictSuperset(of:)	CSSearchQueryContext.SourceOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	isStrictSuperset(of:)	CSSearchableItem.UpdateListenerOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.property	isEmpty	CSSearchQueryContext.SourceOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.property	isEmpty	CSSearchableItem.UpdateListenerOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	isSubset(of:)	CSSearchQueryContext.SourceOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	isSubset(of:)	CSSearchableItem.UpdateListenerOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	subtract(_:)	CSSearchQueryContext.SourceOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	subtract(_:)	CSSearchableItem.UpdateListenerOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.init	init(_:)	CSSearchQueryContext.SourceOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.init	init(_:)	CSSearchableItem.UpdateListenerOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CSIndexErrorCode	swift.property	localizedDescription	CSIndexError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	swift.property	localizedDescription	CSSearchQueryError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	insert(_:)	CSSearchQueryContext.SourceOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	insert(_:)	CSSearchableItem.UpdateListenerOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	remove(_:)	CSSearchQueryContext.SourceOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	remove(_:)	CSSearchableItem.UpdateListenerOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	update(with:)	CSSearchQueryContext.SourceOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	update(with:)	CSSearchableItem.UpdateListenerOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	contains(_:)	CSSearchQueryContext.SourceOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	contains(_:)	CSSearchableItem.UpdateListenerOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	intersection(_:)	CSSearchQueryContext.SourceOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	intersection(_:)	CSSearchableItem.UpdateListenerOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	symmetricDifference(_:)	CSSearchQueryContext.SourceOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	symmetricDifference(_:)	CSSearchableItem.UpdateListenerOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	union(_:)	CSSearchQueryContext.SourceOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	union(_:)	CSSearchableItem.UpdateListenerOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	formIntersection(_:)	CSSearchQueryContext.SourceOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	formIntersection(_:)	CSSearchableItem.UpdateListenerOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	formSymmetricDifference(_:)	CSSearchQueryContext.SourceOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	formSymmetricDifference(_:)	CSSearchableItem.UpdateListenerOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.method	formUnion(_:)	CSSearchQueryContext.SourceOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.method	formUnion(_:)	CSSearchableItem.UpdateListenerOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	swift.init	init()	CSSearchQueryContext.SourceOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	swift.init	init()	CSSearchableItem.UpdateListenerOptions.init()	init()

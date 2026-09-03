@@ -1,0 +1,54 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 19,
+  "duplicateOccurrenceCount": 19,
+  "duplicateRelationshipOccurrenceCount": 64,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/StoreKit.symbols.json",
+      "relationshipCount": 2081,
+      "sha256": "6bee0e9885f67875733bf00383d543dbfed68b0c1ff842f21d8bd4b339ff84c7",
+      "symbolCount": 1435
+    },
+    {
+      "path": "reference/symbol-graphs/StoreKit@Foundation.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "4851011a13703a0f603a7853e2edf1a89e72e1d1583fde0df3783fa63a402ab2",
+      "symbolCount": 4
+    },
+    {
+      "path": "reference/symbol-graphs/_StoreKit_SwiftUI@StoreKit.symbols.json",
+      "relationshipCount": 14318,
+      "sha256": "7086257a9bf00cb2ad3715af463f409e7b202d53f13e4978bbd6d3d33bd6d723",
+      "symbolCount": 14211
+    },
+    {
+      "path": "reference/symbol-graphs/_StoreKit_SwiftUI@Swift.symbols.json",
+      "relationshipCount": 24,
+      "sha256": "ceaae43419454442e1dc3ac5f49623c73558f40fc1b8a0da5fe17509319954b8",
+      "symbolCount": 20
+    },
+    {
+      "path": "reference/symbol-graphs/_StoreKit_SwiftUI@SwiftUI.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "37ce8beeef9b2a0e103b5b58e1843d12f5469443e6195720ad3f2acabaa6e824",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/_StoreKit_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 41,
+      "sha256": "885edf2140f3f36bf6121751c360243a6983fe37d920a49c9d6932af08f3a6d5",
+      "symbolCount": 41
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "StoreKit",
+  "relationshipCount": 16471,
+  "relationshipMultisetSHA256": "0cf74849371558a2784a37d4a2448fce60cf7e2562003c4a2bb876dc6cf80828",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 15695,
+  "symbolMultisetSHA256": "ae45530bcc26dcbc81debf02d75c12382a5a6ed666ef47a334eebc07bf0d06d3",
+  "target": "arm64-apple-ios26.0"
+}

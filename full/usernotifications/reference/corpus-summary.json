@@ -1,0 +1,255 @@
+{
+  "module": "UserNotifications",
+  "moduleRecord": {
+    "app_coverage_count": 15,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 127,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 7,
+    "iphoneos_runtime_focus_launch_build_rank": 19,
+    "module": "UserNotifications",
+    "occurrence_count": 127,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "4d4d1f8b04bc705fa0c4dcb3493e50f192498e40f11c6b0b83dd6b88ce1d64c4",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Mac/AppDelegate.swift",
+          "Mac/Inspector/FeedInspectorViewController.swift",
+          "Mac/MainWindow/MainWindowController.swift",
+          "Mac/MainWindow/Sidebar/SidebarViewController+ContextualMenus.swift",
+          "Mac/Preferences/General/GeneralPrefencesViewController.swift",
+          "Shared/UserNotifications/UserNotificationManager.swift",
+          "iOS/Account/AccountNotificationInspectorView.swift",
+          "iOS/Inspector/FeedInspectorViewController.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "79c30e9810f5d13915f0395a45d597a84b8305837375f86b0a060a2fcc5e2472",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Modules/App/Sources/Model/Actions/NotificationQuickAction.swift",
+          "Modules/App/Sources/Notifications/AppIconBadgeService.swift",
+          "Modules/App/Sources/Notifications/NotificationCleanupService.swift",
+          "Modules/App/Sources/Notifications/UserNotificationCenterDelegate.swift",
+          "Modules/App/Sources/Testability/UserNotificationCenter.swift",
+          "Modules/App/Sources/UI/Onboarding/NotificationAuthorizationStore.swift",
+          "Modules/App/Sources/Utils/NotificationScheduler.swift",
+          "Modules/NotificationService/Sources/NotificationService.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "f9123a69fce4dfd6d574d5fccff06138f492666fbe6694373637c13b478d2c4e",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "SignalNSE/NotificationService.swift",
+          "SignalServiceKit/Notifications/UserNotificationsPresenter.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "e66cc4ab83cbc1cd01524fdf0e28d55864f5cdc4a69d4efbece0b2661ee63f6d",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "Telegram/NotificationContent/NotificationViewController.swift",
+          "Telegram/NotificationService/Sources/NotificationService.swift",
+          "Telegram/Watch/Extension/TGNotificationController.m",
+          "submodules/DeviceAccess/Sources/DeviceAccess.swift",
+          "submodules/TelegramUI/Sources/AppDelegate.swift",
+          "submodules/TelegramUI/Sources/NotificationContentContext.swift",
+          "submodules/TelegramUI/Sources/SharedNotificationManager.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "4c6fc37e50377dc70dc4e3fb4abbbb8ce2352da028343088c615a9bfd3a74002",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "WordPress/Classes/Jetpack/JetpackMigration/Common/Navigation/MigrationFlowCoordinator.swift",
+          "WordPress/Classes/Jetpack/JetpackMigration/NotificationsPermission/MigrationNotificationsViewModel.swift",
+          "WordPress/Classes/Utility/Blogging Prompts/PromptRemindersScheduler.swift",
+          "WordPress/Classes/Utility/Blogging Prompts/ReminderScheduleCoordinator.swift",
+          "WordPress/Classes/Utility/Notifications/InteractiveNotificationsManager.swift",
+          "WordPress/Classes/Utility/Notifications/PushNotificationsManager.swift",
+          "WordPress/Classes/ViewRelated/Notifications/Controllers/NotificationSettingDetailsViewController.swift",
+          "WordPress/Classes/ViewRelated/System/Notices/NoticePresenter.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "c8bd506c554a92905a666d0f789ee1bd89ab6d02dd2860a7015cf5224da977cb",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "DuckDuckGo/NetworkProtectionVPNSettingsViewModel.swift",
+          "DuckDuckGo/NotificationsAuthorizationController.swift",
+          "DuckDuckGo/Onboarding.swift",
+          "DuckDuckGo/WaitlistExtensions.swift",
+          "LocalPackages/Waitlist/Sources/Waitlist/NotificationService.swift",
+          "LocalPackages/Waitlist/Sources/Waitlist/Waitlist.swift",
+          "LocalPackages/Waitlist/Sources/WaitlistMocks/MockNotificationService.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "a8e1365108e9c4a0b312120a2a0ab129b66a63e59caf22b4efd2d1e07c07e723",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "ios/Artsy/App/AppDelegateCategories/AppDelegate+Notifications.h",
+          "ios/Artsy/AppDelegate.swift",
+          "ios/Artsy/NativeModules/ARTemporaryAPIModule.m",
+          "ios/BrazePushServiceExtension/NotificationService.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "21264d1608e24f4da93d06ec12c26b132b77954ab9cd7c0ccff1aefe7f674cc2",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Riot/Categories/UNUserNotificationCenter.swift",
+          "Riot/Managers/PushNotification/PushNotificationService.h",
+          "RiotNSE/NotificationService.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "d234968b89a2d8107c60b16ba9e9c7a781735b0467869bc289cb7cca5df2b156",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "firefox-ios/Client/Application/AppDelegate+PushNotifications.swift",
+          "firefox-ios/Client/Application/AppDelegate+SyncSentTabs.swift",
+          "firefox-ios/Client/Application/SceneDelegate.swift",
+          "firefox-ios/Client/NotificationManager.swift",
+          "firefox-ios/Client/UserNotificationCenterProtocol.swift",
+          "firefox-ios/Extensions/NotificationService/NotificationService.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "4a91326f462b1eb9e5798c06ab30c620ec82ba769db87885b82db673d69a15cb",
+        "file_count": 43,
+        "occurrence_count": 43,
+        "sample_paths": [
+          "Sources/App/Notifications/NotificationManager.swift",
+          "Sources/App/Settings/Notifications/NotificationCategoryEditorView.swift",
+          "Sources/App/Settings/Notifications/NotificationSettingsView.swift",
+          "Sources/App/Settings/Observation/NotificationCategory+Observation.swift",
+          "Sources/App/Settings/Sensors/Permissions/SensorPermissionStatus.swift",
+          "Sources/App/Settings/Sensors/Permissions/SensorPermissionsViewModel.swift",
+          "Sources/App/Utilities/Permissions.swift",
+          "Sources/Extensions/NotificationContent/CameraViewController.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "94da77df450a3fb57ac118abe4c378b6bc1c4ab4a39a9e6c079849fd2e1ec3cd",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/AppDelegateViewModel.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/DebugPushNotifications/Controller/DebugPushNotificationsViewController.swift",
+          "Kickstarter-iOS/AppDelegate.swift",
+          "Library/Sources/Library/Library/OnboardingViewModel.swift",
+          "Library/Sources/Library/Library/PushRegistration.swift",
+          "Library/Sources/Library/Library/PushRegistrationType.swift",
+          "Library/Sources/Library/Library/SharedFunctions.swift",
+          "RichPushNotifications/NotificationService.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "115d5e8830134076391d05a3311300a312b39c224242f97a6a01e99d31b6ef5c",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Mastodon/Supporting Files/AppDelegate.swift",
+          "NotificationService/NotificationService.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "516b98308216d21107ddf9b093c1ea5892c19d05e581659038396e80092b29d3",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Notification Service Extension/NotificationService.swift",
+          "iOSClient/PushNotification/NCPushNotification.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "0535ecb1adbc44588d75bddf8bd71f52d0a0fbc50379a41faeb6aa57522a8d2f",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "NotificationContent/NotificationViewController.swift",
+          "NotificationExtension/NotificationService.swift",
+          "Pocket Casts App Clip/AppClipAppDelegate.swift",
+          "Pocket Casts App Clip/NowPlayingView.swift",
+          "Pocket Casts Watch App/UI/NotificationController.swift",
+          "podcasts/Utilities/BadgeHelper.swift",
+          "podcasts/Utilities/NotificationsHelper.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "38550918daf2802b148bdcb6c72a5424e8697c30ad7da53e23ea951fcf2088a2",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "NotificationServiceExtension/NotificationService.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Settings/Push Notifications/WMFPushNotificationsSettingsViewModel.swift",
+          "Wikipedia/Code/ExploreCardViewController.swift",
+          "Wikipedia/Code/SettingsCoordinator.swift",
+          "Wikipedia/Code/WMFAppViewController.swift",
+          "Wikipedia/Code/WMFNotificationsController.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 7,
+    "byFocusLaunchBuildRelevance": 19
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 15,
+      "apps": [
+        "NetNewsWire",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "eigen",
+        "element-ios",
+        "firefox-ios",
+        "home-assistant-ios",
+        "ios-oss",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "wikipedia-ios"
+      ],
+      "family": "UserNotifications",
+      "file_count": 137,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 0,
+      "modules": [
+        "UserNotifications",
+        "UserNotificationsUI"
+      ],
+      "note": "notification delivery and extension UI"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

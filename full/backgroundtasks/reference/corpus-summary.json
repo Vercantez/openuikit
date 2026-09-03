@@ -1,0 +1,168 @@
+{
+  "module": "BackgroundTasks",
+  "moduleRecord": {
+    "app_coverage_count": 11,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 33,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 22,
+    "iphoneos_runtime_focus_launch_build_rank": 27,
+    "module": "BackgroundTasks",
+    "occurrence_count": 33,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "47e9eaab26c071aedc34267724becf1196f6ef8b701e626a82f39b3110932639",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOS/AppDelegate.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "0a6d02d1b922fbb252e515883aea84b692337c8060a1b0bcf5e90a2b24362b5b",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Modules/App/Sources/Utils/BackgroundExecution/BackgroundTask.swift",
+          "Modules/App/Sources/Utils/BackgroundExecution/BackgroundTaskRegistration.swift",
+          "Modules/App/Sources/Utils/BackgroundExecution/BackgroundTaskScheduler.swift",
+          "Modules/App/Sources/Utils/BackgroundExecution/RecurringBackgroundTaskScheduler.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "0dafb6f6472b803bf8a57c9520e2c8d16f8ccafad635289f82a859f63d2ec482",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Signal/Notifications/MessageFetchBGRefreshTask.swift",
+          "Signal/Storage/BGProcessingTaskRunner.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "01f511ffd0b73e4ae748141186465ed48e750edeb2e38add364eee3a66627019",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "submodules/TelegramUI/Components/MediaEditor/Sources/MediaEditorVideoExport.swift",
+          "submodules/TelegramUI/Sources/AppDelegate.swift",
+          "submodules/TelegramUI/Sources/SharedWakeupManager.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "bcd2827cb7a4923c34e47c67122a8d16f158e7a752acef62c1229390eac35641",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "WordPress/Classes/Utility/BackgroundTasks/BackgroundTasksCoordinator.swift",
+          "WordPress/Classes/ViewRelated/Developer/WeeklyRoundupDebugScreen.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "1a8c1e909fa97a23dbd3e1e35401c4b36d3a13b33211e623587019ce41e7f0f8",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "DuckDuckGo/AppConfigurationFetch.swift",
+          "DuckDuckGo/AppServices/ConfigurationService.swift",
+          "DuckDuckGo/AppServices/RemoteMessagingService.swift",
+          "DuckDuckGo/ConfigurationDebugViewController.swift",
+          "DuckDuckGo/EmailWaitlist.swift",
+          "DuckDuckGo/MaliciousSiteProtection/Services/MaliciousSiteProtectionDatasetsFetcher.swift",
+          "DuckDuckGo/RemoteMessagingClient.swift",
+          "DuckDuckGo/SyncDebugViewController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "e8da22c9d7ee922e4eeafca6b9c081f70f9b93dc6deefc60fe7d69d0b697e805",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "firefox-ios/Client/Application/BackgroundFetchAndProcessingUtility.swift",
+          "firefox-ios/Client/Application/BackgroundFirefoxSuggestIngestUtility.swift",
+          "firefox-ios/Client/Application/BackgroundNotificationSurfaceUtility.swift",
+          "firefox-ios/Client/Application/BackgroundSyncUtility.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "48493bc06535b9b35c9da5549664f6a8f275b9375ac823920d899aeabdf76c78",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/App/BackgroundRefreshManager.swift",
+          "Sources/App/Utilities/RemindersSync/RemindersSyncBackgroundRefresher.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "0f36895597397a51d048e9fe0a9459879e7c1a1e642c7b2161ddf6b3432371b6",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "iOSClient/AppDelegate.swift",
+          "iOSClient/Processor/AppDelegate+AppProcessing.swift",
+          "iOSClient/Refresh/AppDelegate+AppRefresh.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "1716f9c099b341771a941f16db1dd24f0638644668175750058627f79f50324c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "podcasts/AppDelegate.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "eeee6513a7ec471293701554d64d53263f5c4bd3293095fcd9c685524a23cca1",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Wikipedia/Code/AppDelegate.swift",
+          "Wikipedia/Code/SceneDelegate.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 22,
+    "byFocusLaunchBuildRelevance": 27
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 11,
+      "apps": [
+        "NetNewsWire",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "firefox-ios",
+        "home-assistant-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "wikipedia-ios"
+      ],
+      "family": "BackgroundTasks",
+      "file_count": 33,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 0,
+      "modules": [
+        "BackgroundTasks"
+      ],
+      "note": "background scheduling and task lifecycle"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

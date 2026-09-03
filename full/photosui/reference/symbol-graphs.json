@@ -1,0 +1,54 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 2,
+  "duplicateOccurrenceCount": 2,
+  "duplicateRelationshipOccurrenceCount": 6,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/PhotosUI.symbols.json",
+      "relationshipCount": 288,
+      "sha256": "1ccdcb6cb63d05209a0f459f6c0cdc10598c13c055de40e6266ab6ac1e680a6a",
+      "symbolCount": 188
+    },
+    {
+      "path": "reference/symbol-graphs/PhotosUI@Photos.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "d6e54732beb3b74659f7ad612c34641f8792653ad04918a88dc04faf46e465b1",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/_PhotosUI_SwiftUI@Photos.symbols.json",
+      "relationshipCount": 15,
+      "sha256": "00691562b247c78888c8345076da01ebdbf5fe79d826ec98d86252d99eb984ff",
+      "symbolCount": 11
+    },
+    {
+      "path": "reference/symbol-graphs/_PhotosUI_SwiftUI@PhotosUI.symbols.json",
+      "relationshipCount": 843,
+      "sha256": "b96d0cb19a90f4c7023109b0b17da9b86b6c8a3ec2295fcc6a6b697710c9518c",
+      "symbolCount": 828
+    },
+    {
+      "path": "reference/symbol-graphs/_PhotosUI_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 9,
+      "sha256": "1ac7e22e7d134e848c0a243c89cd6991dbdcca49c4c0f27be3af4c34a2b9229c",
+      "symbolCount": 9
+    },
+    {
+      "path": "reference/symbol-graphs/_PhotosUI_WidgetKit.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "a3c8c69a0ca6252cf982c84d5f8db820e0a1ee3f70fc15841975a040f3ae7650",
+      "symbolCount": 0
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "PhotosUI",
+  "relationshipCount": 1158,
+  "relationshipMultisetSHA256": "0e11e985d596ae5381557e3e387d05f9e67ecb3126846f10d966db08704afc73",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1037,
+  "symbolMultisetSHA256": "004ee524d27a0fda58d0b35ca5364bdca08dc87db40066a8fe1b9e91f2876f0b",
+  "target": "arm64-apple-ios26.0"
+}

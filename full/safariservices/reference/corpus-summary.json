@@ -1,0 +1,261 @@
+{
+  "module": "SafariServices",
+  "moduleRecord": {
+    "app_coverage_count": 17,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 133,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "1f71553718b42873a53fc375667fb426bb106941faefb589522c3d98a79e50d4",
+      "main_target_file_count": 2,
+      "repository_file_count": 2
+    },
+    "iphoneos_runtime_app_coverage_rank": 6,
+    "iphoneos_runtime_focus_launch_build_rank": 8,
+    "module": "SafariServices",
+    "occurrence_count": 133,
+    "per_app": {
+      "Hackers": {
+        "evidence_sha256": "8f8968acabcb875bd8fbe57bbb3b970808f5291195c0216cefb4587e6072b2c0",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Shared/Sources/Shared/Services/LinkOpener.swift"
+        ]
+      },
+      "NetNewsWire": {
+        "evidence_sha256": "c0efd63a32c6220d52a011cb31961f532e1a8826f30eb57447373aa74ba9a821",
+        "file_count": 16,
+        "occurrence_count": 16,
+        "sample_paths": [
+          "Mac/SafariExtension/SafariExtensionHandler.swift",
+          "Modules/RSCore/Sources/RSCore/UIKit/SafariView+RSCore.swift",
+          "iOS/Account/CloudKitAccountViewController.swift",
+          "iOS/Account/FeedbinAccountViewController.swift",
+          "iOS/Account/NewsBlurAccountViewController.swift",
+          "iOS/Account/ReaderAPIAccountViewController.swift",
+          "iOS/Article/ArticleViewController.swift",
+          "iOS/Article/WebViewController.swift"
+        ]
+      },
+      "ProtonMail-ios": {
+        "evidence_sha256": "e91240eaa41b6a823da46a660670718e6f53aec2542a0746f15e5ce87b13dd68",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/InboxContacts/Sources/Screens/Contacts/Views/SafariWebView.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "8c740f77a188f3143dd0d1b5d0a04c9561e941db24ce253f40fc96436b712e8e",
+        "file_count": 28,
+        "occurrence_count": 28,
+        "sample_paths": [
+          "Signal/ConversationView/ConversationViewController+MessageRequest.swift",
+          "Signal/Megaphones/UserInterface/InactivePrimaryDeviceReminderMegaphone.swift",
+          "Signal/Megaphones/UserInterface/IntroducingPINsMegaphone.swift",
+          "Signal/Provisioning/UserInterface/LinkAndSyncProvisioningProgressViewController.swift",
+          "Signal/Provisioning/UserInterface/ProvisioningSplashViewController.swift",
+          "Signal/Registration/RegistrationCoordinatorBackupErrorPresenter.swift",
+          "Signal/Registration/UserInterface/RegistrationEnterAccountEntropyPoolViewController.swift",
+          "Signal/Registration/UserInterface/RegistrationPinAttemptsExhaustedAndMustCreateNewPinViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "38a6babcc7ebeceffc7f8c2e897fdcac3381ae862f30221512d77aabcea337d9",
+        "file_count": 21,
+        "occurrence_count": 21,
+        "sample_paths": [
+          "submodules/BrowserUI/Sources/BrowserDocumentContent.swift",
+          "submodules/BrowserUI/Sources/BrowserInstantPageContent.swift",
+          "submodules/BrowserUI/Sources/BrowserPdfContent.swift",
+          "submodules/BrowserUI/Sources/BrowserWebContent.swift",
+          "submodules/GalleryUI/Sources/GalleryController.swift",
+          "submodules/InstantPageUI/Sources/InstantPageControllerNode.swift",
+          "submodules/InstantPageUI/Sources/InstantPageGalleryController.swift",
+          "submodules/InstantPageUI/Sources/InstantPageReferenceControllerNode.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "3efcc3f4776633f676af3b7f0287b4675dbe322f0710f10cd586334775ebe4aa",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Modules/Sources/JetpackStats/StatsRouter.swift",
+          "WordPress/Classes/Plugins/Views/PluginListItemView.swift",
+          "WordPress/Classes/ViewRelated/Blog/Blog Dashboard/Cards/Prompts/DashboardPromptsCardCell.swift",
+          "WordPress/Classes/ViewRelated/NewGutenberg/CustomPostEditorViewController.swift",
+          "WordPress/Classes/ViewRelated/NewGutenberg/NewGutenbergViewController.swift",
+          "WordPress/Classes/ViewRelated/NewGutenberg/PostGBKEditorViewController.swift",
+          "WordPress/Classes/ViewRelated/Reader/Controllers/ReaderPostActions/ReaderPostMenu.swift",
+          "WordPress/Classes/ViewRelated/Reader/Detail/ReaderDetailCoordinator.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "6818fed9d58ad93bd5ff48dba5182761cce4a4a38288af4155ce360339b8f00c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "DuckDuckGo/TabViewControllerLongPressMenuExtension.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "16badf57c1427117b3b26f976a2293baecef8d51ac12676f1e2889dcd513ba02",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/App/ARAppDelegateHelper.mm"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "a432a889b55d59ad183754b7ddf594f6f25864b5cf8cb15a8fe2c9e7d17ebd08",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Riot/Modules/Authentication/SSO/SSOAuthenticationPresenter.swift",
+          "Riot/Modules/Settings/DeactivateAccount/DeactivateAccountViewController.m",
+          "Riot/Modules/SideMenu/SideMenuCoordinator.swift",
+          "RiotSwiftUI/Modules/Authentication/Terms/Coordinator/AuthenticationTermsCoordinator.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "523c9264e1030e7de28a33e5ec61c41830fc81040bbad037001cf019787b06d2",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Browser/BrowserViewController/Extensions/BrowserViewController+WebViewDelegates.swift",
+          "firefox-ios/Client/Frontend/Reader/Resources/FSReadingList.m",
+          "firefox-ios/Client/Utils/Swizzling.m",
+          "focus-ios/Blockzilla/Settings/Helpers/BlockerEnabledDetector.swift",
+          "focus-ios/Shared/Utils.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "1f71553718b42873a53fc375667fb426bb106941faefb589522c3d98a79e50d4",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "focus-ios/Blockzilla/Settings/Helpers/BlockerEnabledDetector.swift",
+          "focus-ios/Shared/Utils.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "8f4c72863b3cf17d1252e0482fea61c7ff204e16c29f0d828b0e97b0c263ef94",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Sources/App/AppDelegate.swift",
+          "Sources/App/Frontend/IncomingURLHandler.swift",
+          "Sources/App/Onboarding/Views/SafariWebView.swift",
+          "Sources/App/Utilities/Utils.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "85e255250b735f8c17abf37d925f2784d6132650211b3181b44195a5a814b7a1",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/BetaTools/Controller/BetaToolsViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/ProjectCreatorViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/ProjectPage/Controller/ProjectUpdatesViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/SettingsPrivacy/Controller/SettingsPrivacyViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/Update/Controller/UpdateViewController.swift",
+          "Kickstarter-iOS/AppDelegate.swift",
+          "Library/Sources/Library/Library/UIViewController+URL.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "41cbe389a3c28bad504c72d2944d88c35b0d85361a07a78cd4f771cb539e1796",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Mastodon/Coordinator/SceneCoordinator.swift",
+          "Mastodon/In Progress New Layout and Datamodel/MastodonMainTabView.swift",
+          "Mastodon/Scene/Onboarding/Privacy/PrivacyTableViewController.swift",
+          "Mastodon/Scene/Onboarding/ServerRules/MastodonServerRulesViewController.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "969729ca55a21e77c875b597cf9fd0a791426c475575971db719ce6b05903453",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Login/NCLogin.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "c2a73d8883a245a8a3241c68ddcd6de8d0f2f7d67f54bbe1b3c2920eb2097b07",
+        "file_count": 21,
+        "occurrence_count": 21,
+        "sample_paths": [
+          "podcasts/AccountViewController+TableView.swift",
+          "podcasts/CancelInfoViewController.swift",
+          "podcasts/ChaptersViewController+Table.swift",
+          "podcasts/Episode/EpisodeDetailViewController+ShowNotes.swift",
+          "podcasts/Episode/EpisodeDetailViewController.swift",
+          "podcasts/ExpandedCollectionViewController.swift",
+          "podcasts/ExpandedEpisodeListViewController.swift",
+          "podcasts/Extensions/SFSafariViewController+Creation.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "b7c105ae44675cda8aac852dfa80a7a3ae95d992dd5b1d97bf12efcbd3fda8b8",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "Simplenote/Classes/SPAuthHandler.swift",
+          "Simplenote/Classes/SPAuthViewController.swift",
+          "Simplenote/Classes/SPMarkdownPreviewViewController.m",
+          "Simplenote/Classes/SPNoteEditorViewController.m",
+          "Simplenote/Classes/SPOnboardingViewController.swift",
+          "Simplenote/Classes/WPAuthHandler.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 6,
+    "byFocusLaunchBuildRelevance": 8
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 17,
+      "apps": [
+        "Hackers",
+        "NetNewsWire",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "eigen",
+        "element-ios",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "ios-oss",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios"
+      ],
+      "family": "SafariServices",
+      "file_count": 133,
+      "focus_main_target_file_count": 2,
+      "focus_repository_file_count": 2,
+      "modules": [
+        "SafariServices"
+      ],
+      "note": "Safari view and content-blocker APIs"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "module": "LocalAuthentication",
+  "moduleRecord": {
+    "app_coverage_count": 11,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 43,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "75d63c18820bdc9ebcc946b909041476c8e6b598be410f59f9809010c3e5cc48",
+      "main_target_file_count": 2,
+      "repository_file_count": 2
+    },
+    "iphoneos_runtime_app_coverage_rank": 21,
+    "iphoneos_runtime_focus_launch_build_rank": 9,
+    "module": "LocalAuthentication",
+    "occurrence_count": 43,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "5aea965e6ccd3b399b04523febd0b818c910baa6a6c7c47fb9e4fb2c12a65eac",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Modules/App/Sources/UI/Screens/AppSettings/AppProtection/AppProtectionSelectionStore.swift",
+          "Modules/InboxCoreUI/Sources/Lock/Biometric/AlertModel+PolicyUnavailableAlert.swift",
+          "Modules/InboxCoreUI/Sources/Lock/Biometric/BiometricAuthenticator.swift",
+          "Modules/InboxCoreUI/Sources/Lock/Biometric/BiometricLockStore.swift",
+          "Modules/InboxCoreUI/Sources/Utils/SupportedBiometry.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "3be7461769a539b75b297b82239d286859accda324ea1d922aed96b7056f9f59",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Signal/src/ViewControllers/AppSettings/Linked Devices/LinkedDevicesView.swift",
+          "SignalServiceKit/LocalDeviceAuth/LocalDeviceAuthentication.swift",
+          "SignalServiceKit/Util/DeviceOwnerAuthenticationType.swift",
+          "SignalServiceKit/Util/OWSPaymentsLock.swift",
+          "SignalServiceKit/Util/ScreenLock.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "2ed2cb7fa8bc7e4b9a10768f4edf0cb6afaa29f882d5bd0641e897c0c65d87e2",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/LocalAuth/Sources/LocalAuth.swift",
+          "submodules/SettingsUI/Sources/Privacy and Security/PasscodeOptionsController.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "f2e45e8390137eceab8180e5e87150cc9c31da61d203e1d54dd1295901e2d612",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "Core/UserAuthenticator.swift",
+          "DuckDuckGo/Authenticator.swift",
+          "DuckDuckGo/AutofillContentScopeFeatureToggles.swift",
+          "DuckDuckGo/AutofillLoginListAuthenticator.swift",
+          "DuckDuckGo/AutofillLoginPromptViewController.swift",
+          "DuckDuckGo/AutofillSettingStatus.swift",
+          "DuckDuckGo/SaveLoginViewModel.swift",
+          "DuckDuckGo/TabViewController.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "7a7b50f415dd4a59f76314f221e95c1f273cf6b8f7e644521394188bafbebca2",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Riot/Modules/SetPinCode/PinCodePreferences.swift",
+          "Riot/Modules/SetPinCode/SetupBiometrics/BiometricsAuthenticationPresenter.swift",
+          "Riot/Modules/SetPinCode/SetupBiometrics/SetupBiometricsViewModel.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "91556179faa0f3e1763401614f9e4b1f74c9e3933a6a34f57c9a894cfdc30430",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/AuthenticationManager/AppAuthenticator.swift",
+          "firefox-ios/Client/Frontend/AuthenticationManager/LAContextProtocol.swift",
+          "firefox-ios/CredentialProvider/CredentialProviderViewController.swift",
+          "focus-ios/Blockzilla/Pro Tips/TipManager.swift",
+          "focus-ios/Blockzilla/Utilities/AuthenticationManager.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "75d63c18820bdc9ebcc946b909041476c8e6b598be410f59f9809010c3e5cc48",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "focus-ios/Blockzilla/Pro Tips/TipManager.swift",
+          "focus-ios/Blockzilla/Utilities/AuthenticationManager.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "01ed6b631c00d4a5d740d5d42d3df13806cb0f175e4173c46869f1ca8d4fe2b5",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/Settings/Kiosk/KioskSettingsViewModel.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "db043e6c8fbcfd62247811ad8ebbc3048af3fc9a91a512523fc75c74bd8b2dde",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "iOSClient/AppDelegate.swift",
+          "iOSClient/Main/NCPasscode.swift",
+          "iOSClient/Settings/E2EE/NCManageE2EEModel.swift",
+          "iOSClient/Settings/Settings/NCSettingsModel.swift",
+          "iOSClient/Settings/Settings/SetupPasscodeView.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "5ab4c6b604e34622256bcc95fd4ddda84d562ae008ceba30bd013884ae5f3a75",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Simplenote/Classes/BiometricAuthentication.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "02caf3ccf285f5e04e618055f5eceb8a751a0923cede2bf7d6cd88a94f8e1b4a",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Sources/Helpers/KeychainCoordinator.swift",
+          "Sources/Helpers/ParentalControlCoordinator.swift",
+          "Sources/Settings/Controller/PasscodeLockController.swift",
+          "Sources/Settings/Controller/SettingsController.swift",
+          "Sources/Settings/Model/SettingsSection.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 21,
+    "byFocusLaunchBuildRelevance": 9
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

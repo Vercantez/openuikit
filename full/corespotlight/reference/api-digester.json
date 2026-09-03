@@ -1,0 +1,4980 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSBase",
+        "printedName": "CoreSpotlight.CSBase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSImportExtension",
+        "printedName": "CoreSpotlight.CSImportExtension"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSIndexExtensionRequestHandler",
+        "printedName": "CoreSpotlight.CSIndexExtensionRequestHandler"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSPerson",
+        "printedName": "CoreSpotlight.CSPerson"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSSearchQuery",
+        "printedName": "CoreSpotlight.CSSearchQuery"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSSearchableIndex",
+        "printedName": "CoreSpotlight.CSSearchableIndex"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSSearchableItem",
+        "printedName": "CoreSpotlight.CSSearchableItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSSearchableItemAttributeSet",
+        "printedName": "CoreSpotlight.CSSearchableItemAttributeSet"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSSearchableItemAttributeSet_Categories",
+        "printedName": "CoreSpotlight.CSSearchableItemAttributeSet_Categories"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSSuggestion",
+        "printedName": "CoreSpotlight.CSSuggestion"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight.CSUserQuery",
+        "printedName": "CoreSpotlight.CSUserQuery"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC16CSIndexErrorCodeLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC16CSIndexErrorCodeLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "CoreSpotlight",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC16CSIndexErrorCodeLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CSIndexError",
+                "printedName": "CoreSpotlight.CSIndexError",
+                "usr": "c:@E@CSIndexErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC16CSIndexErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "CoreSpotlight",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC16CSIndexErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC16CSIndexErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "CoreSpotlight",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC16CSIndexErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "CoreSpotlight.CSIndexError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo16CSIndexErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "CoreSpotlight",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So16CSIndexErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo16CSIndexErrorCodeV8rawValueSivg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So16CSIndexErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo16CSIndexErrorCodeV8rawValueSivp",
+                "moduleName": "CoreSpotlight",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So16CSIndexErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo16CSIndexErrorCodeV8RawValuea",
+                "moduleName": "CoreSpotlight",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So16CSIndexErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CSIndexError",
+                    "printedName": "CoreSpotlight.CSIndexError",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "CoreSpotlight",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@CSIndexErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "unknownError",
+                "printedName": "unknownError",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeUnknownError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "indexUnavailableError",
+                "printedName": "indexUnavailableError",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexUnavailableError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "invalidItemError",
+                "printedName": "invalidItemError",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidItemError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "invalidClientStateError",
+                "printedName": "invalidClientStateError",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidClientStateError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "remoteConnectionError",
+                "printedName": "remoteConnectionError",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeRemoteConnectionError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "quotaExceeded",
+                "printedName": "quotaExceeded",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeQuotaExceeded"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "indexingUnsupported",
+                "printedName": "indexingUnsupported",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexingUnsupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSIndexError.Code",
+                        "usr": "c:@E@CSIndexErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSIndexError.Code",
+                            "usr": "c:@E@CSIndexErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSIndexError.Code.Type) -> CoreSpotlight.CSIndexError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "mismatchedClientState",
+                "printedName": "mismatchedClientState",
+                "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeMismatchedClientState"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "CoreSpotlight.CSIndexError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "9.0",
+            "kind": "TypeDecl",
+            "moduleName": "CoreSpotlight",
+            "name": "Code",
+            "objc_name": "CSIndexErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@CSIndexErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV07unknownB0SoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV07unknownB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "unknownError",
+            "printedName": "unknownError",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeUnknownError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV016indexUnavailableB0SoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV016indexUnavailableB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "indexUnavailableError",
+            "printedName": "indexUnavailableError",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexUnavailableError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV011invalidItemB0SoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV011invalidItemB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "invalidItemError",
+            "printedName": "invalidItemError",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidItemError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV018invalidClientStateB0SoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV018invalidClientStateB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "invalidClientStateError",
+            "printedName": "invalidClientStateError",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidClientStateError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV016remoteConnectionB0SoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV016remoteConnectionB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "remoteConnectionError",
+            "printedName": "remoteConnectionError",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeRemoteConnectionError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV13quotaExceededSoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV13quotaExceededSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "quotaExceeded",
+            "printedName": "quotaExceeded",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeQuotaExceeded"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV19indexingUnsupportedSoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV19indexingUnsupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "indexingUnsupported",
+            "printedName": "indexingUnsupported",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexingUnsupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSIndexError.Code",
+                    "usr": "c:@E@CSIndexErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16CSIndexErrorCodeLeV21mismatchedClientStateSoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16CSIndexErrorCodeLeV21mismatchedClientStateSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSIndexError.Code",
+                "usr": "c:@E@CSIndexErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "mismatchedClientState",
+            "printedName": "mismatchedClientState",
+            "static": true,
+            "usr": "c:@E@CSIndexErrorCode@CSIndexErrorCodeMismatchedClientState"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "9.0",
+        "kind": "TypeDecl",
+        "moduleName": "CoreSpotlight",
+        "name": "CSIndexError",
+        "printedName": "CSIndexError",
+        "usr": "c:@E@CSIndexErrorCode"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC22CSSearchQueryErrorCodeLeV03_nsC0So7NSErrorCvg",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC22CSSearchQueryErrorCodeLeV03_nsC0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC22CSSearchQueryErrorCodeLeV03_nsC0So7NSErrorCvp",
+            "moduleName": "CoreSpotlight",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC22CSSearchQueryErrorCodeLeV03_nsC0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CSSearchQueryError",
+                "printedName": "CoreSpotlight.CSSearchQueryError",
+                "usr": "c:@E@CSSearchQueryErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC22CSSearchQueryErrorCodeLeV03_nsC0ABSo7NSErrorC_tcfc",
+            "moduleName": "CoreSpotlight",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC22CSSearchQueryErrorCodeLeV03_nsC0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC22CSSearchQueryErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC22CSSearchQueryErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC22CSSearchQueryErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "CoreSpotlight",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC22CSSearchQueryErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                        "usr": "c:@E@CSSearchQueryErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "CoreSpotlight.CSSearchQueryError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo22CSSearchQueryErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "CoreSpotlight",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So22CSSearchQueryErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo22CSSearchQueryErrorCodeV8rawValueSivg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So22CSSearchQueryErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo22CSSearchQueryErrorCodeV8rawValueSivp",
+                "moduleName": "CoreSpotlight",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So22CSSearchQueryErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo22CSSearchQueryErrorCodeV8RawValuea",
+                "moduleName": "CoreSpotlight",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So22CSSearchQueryErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CSSearchQueryError",
+                    "printedName": "CoreSpotlight.CSSearchQueryError",
+                    "usr": "c:@E@CSSearchQueryErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "CoreSpotlight",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@CSSearchQueryErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                        "usr": "c:@E@CSSearchQueryErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                            "usr": "c:@E@CSSearchQueryErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSSearchQueryError.Code.Type) -> CoreSpotlight.CSSearchQueryError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                        "usr": "c:@E@CSSearchQueryErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                            "usr": "c:@E@CSSearchQueryErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSSearchQueryError.Code.Type) -> CoreSpotlight.CSSearchQueryError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "indexUnreachable",
+                "printedName": "indexUnreachable",
+                "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeIndexUnreachable"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                        "usr": "c:@E@CSSearchQueryErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                            "usr": "c:@E@CSSearchQueryErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSSearchQueryError.Code.Type) -> CoreSpotlight.CSSearchQueryError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "invalidQuery",
+                "printedName": "invalidQuery",
+                "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeInvalidQuery"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                        "usr": "c:@E@CSSearchQueryErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                            "usr": "c:@E@CSSearchQueryErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreSpotlight.CSSearchQueryError.Code.Type) -> CoreSpotlight.CSSearchQueryError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreSpotlight",
+                "name": "cancelled",
+                "printedName": "cancelled",
+                "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeCancelled"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "CoreSpotlight.CSSearchQueryError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "10.0",
+            "kind": "TypeDecl",
+            "moduleName": "CoreSpotlight",
+            "name": "Code",
+            "objc_name": "CSSearchQueryErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@CSSearchQueryErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                    "usr": "c:@E@CSSearchQueryErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC22CSSearchQueryErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC22CSSearchQueryErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                "usr": "c:@E@CSSearchQueryErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                    "usr": "c:@E@CSSearchQueryErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC22CSSearchQueryErrorCodeLeV16indexUnreachableSoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC22CSSearchQueryErrorCodeLeV16indexUnreachableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                "usr": "c:@E@CSSearchQueryErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "indexUnreachable",
+            "printedName": "indexUnreachable",
+            "static": true,
+            "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeIndexUnreachable"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                    "usr": "c:@E@CSSearchQueryErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC22CSSearchQueryErrorCodeLeV07invalidB0SoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC22CSSearchQueryErrorCodeLeV07invalidB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                "usr": "c:@E@CSSearchQueryErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "invalidQuery",
+            "printedName": "invalidQuery",
+            "static": true,
+            "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeInvalidQuery"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                    "usr": "c:@E@CSSearchQueryErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC22CSSearchQueryErrorCodeLeV9cancelledSoAAVvgZ",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC22CSSearchQueryErrorCodeLeV9cancelledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreSpotlight.CSSearchQueryError.Code",
+                "usr": "c:@E@CSSearchQueryErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreSpotlight",
+            "name": "cancelled",
+            "printedName": "cancelled",
+            "static": true,
+            "usr": "c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeCancelled"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "10.0",
+        "kind": "TypeDecl",
+        "moduleName": "CoreSpotlight",
+        "name": "CSSearchQueryError",
+        "printedName": "CSSearchQueryError",
+        "usr": "c:@E@CSSearchQueryErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Double",
+            "printedName": "Swift.Double",
+            "usr": "s:Sd"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "kind": "Var",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlightVersionNumber",
+        "printedName": "CoreSpotlightVersionNumber",
+        "usr": "c:@CoreSpotlightVersionNumber"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Error",
+            "printedName": "<<error type>>"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlightVersionString",
+        "printedName": "CoreSpotlightVersionString",
+        "usr": "c:@CoreSpotlightVersionString"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlight",
+        "printedName": "CoreSpotlight"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreSpotlight",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC23CoreSpotlightAPIVersions5Int32Vvg",
+            "moduleName": "CoreSpotlight",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC23CoreSpotlightAPIVersions5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreSpotlight",
+        "name": "CoreSpotlightAPIVersion",
+        "printedName": "CoreSpotlightAPIVersion",
+        "usr": "c:@macro@CoreSpotlightAPIVersion"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "kind": "Accessor",
+                        "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2idSSvg",
+                        "moduleName": "CoreSpotlight",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2idSSvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Var",
+                    "kind": "Var",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2idSSvp",
+                    "moduleName": "CoreSpotlight",
+                    "name": "id",
+                    "printedName": "id",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2idSSvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CSSearchableItem",
+                            "printedName": "CoreSpotlight.CSSearchableItem",
+                            "usr": "c:objc(cs)CSSearchableItem"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvg",
+                        "moduleName": "CoreSpotlight",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvg"
+                      },
+                      {
+                        "accessorKind": "set",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Void",
+                            "printedName": "()"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CSSearchableItem",
+                            "printedName": "CoreSpotlight.CSSearchableItem",
+                            "usr": "c:objc(cs)CSSearchableItem"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvs",
+                        "moduleName": "CoreSpotlight",
+                        "name": "Set",
+                        "printedName": "Set()",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvs"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CSSearchableItem",
+                        "printedName": "CoreSpotlight.CSSearchableItem",
+                        "usr": "c:objc(cs)CSSearchableItem"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "kind": "Var",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvp",
+                    "moduleName": "CoreSpotlight",
+                    "name": "item",
+                    "printedName": "item",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvp"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1loiySbAG_AGtFZ",
+                    "moduleName": "CoreSpotlight",
+                    "name": "<",
+                    "printedName": "<(_:_:)",
+                    "static": true,
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1loiySbAG_AGtFZ"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1goiySbAG_AGtFZ",
+                    "moduleName": "CoreSpotlight",
+                    "name": ">",
+                    "printedName": ">(_:_:)",
+                    "static": true,
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1goiySbAG_AGtFZ"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2eeoiySbAG_AGtFZ",
+                    "moduleName": "CoreSpotlight",
+                    "name": "==",
+                    "printedName": "==(_:_:)",
+                    "static": true,
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2eeoiySbAG_AGtFZ"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Hasher",
+                        "paramValueOwnership": "InOut",
+                        "printedName": "Swift.Hasher",
+                        "usr": "s:s6HasherV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4hash4intoys6HasherVz_tF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "hash",
+                    "printedName": "hash(into:)",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4hash4intoys6HasherVz_tF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "13.0",
+                    "intro_iOS": "16.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2IDa",
+                    "moduleName": "CoreSpotlight",
+                    "name": "ID",
+                    "printedName": "ID",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2IDa"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "kind": "Accessor",
+                        "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV9hashValueSivg",
+                        "moduleName": "CoreSpotlight",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV9hashValueSivg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Var",
+                    "kind": "Var",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV9hashValueSivp",
+                    "moduleName": "CoreSpotlight",
+                    "name": "hashValue",
+                    "printedName": "hashValue",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV9hashValueSivp"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "ID",
+                            "printedName": "CoreSpotlight.CSSearchQuery.Results.Item.ID"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "ID",
+                        "printedName": "ID"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$ss12IdentifiableP",
+                    "name": "Identifiable",
+                    "printedName": "Identifiable",
+                    "usr": "s:s12IdentifiableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSH",
+                    "name": "Hashable",
+                    "printedName": "Hashable",
+                    "usr": "s:SH"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSQ",
+                    "name": "Equatable",
+                    "printedName": "Equatable",
+                    "usr": "s:SQ"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSL",
+                    "name": "Comparable",
+                    "printedName": "Comparable",
+                    "usr": "s:SL"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8SendableP",
+                    "name": "Sendable",
+                    "printedName": "Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss16SendableMetatypeP",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV",
+                "moduleName": "CoreSpotlight",
+                "name": "Item",
+                "printedName": "Item",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "CoreSpotlight.CSSearchQuery.Results.Iterator",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV13AsyncIteratora",
+                "moduleName": "CoreSpotlight",
+                "name": "AsyncIterator",
+                "printedName": "AsyncIterator",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV13AsyncIteratora"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV7Elementa",
+                "moduleName": "CoreSpotlight",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Item",
+                            "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                            "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "Mutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV4nextAE4ItemVSgyYaKF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "next",
+                    "printedName": "next()",
+                    "throwing": true,
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV4nextAE4ItemVSgyYaKF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Item",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                        "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "13.0",
+                    "intro_iOS": "16.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV7Elementa",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Element",
+                    "printedName": "Element",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV7Elementa"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Item",
+                                "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "CoreSpotlight.CSSearchQuery.Results.Iterator.Element"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Element",
+                        "printedName": "Element"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "__AsyncIteratorProtocol_Failure",
+                            "printedName": "CoreSpotlight.CSSearchQuery.Results.Iterator.__AsyncIteratorProtocol_Failure"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Failure",
+                        "printedName": "Failure"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$sScI",
+                    "name": "AsyncIteratorProtocol",
+                    "printedName": "AsyncIteratorProtocol",
+                    "usr": "s:ScI"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV",
+                "moduleName": "CoreSpotlight",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "CoreSpotlight.CSSearchQuery.Results.Iterator",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV17makeAsyncIteratorAE0H0VyF",
+                "moduleName": "CoreSpotlight",
+                "name": "makeAsyncIterator",
+                "printedName": "makeAsyncIterator()",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV17makeAsyncIteratorAE0H0VyF"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Iterator",
+                            "printedName": "CoreSpotlight.CSSearchQuery.Results.Iterator",
+                            "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AsyncIterator",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.AsyncIterator"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AsyncIterator",
+                    "printedName": "AsyncIterator"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Item",
+                            "printedName": "CoreSpotlight.CSSearchQuery.Results.Item",
+                            "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__AsyncSequence_Failure",
+                        "printedName": "CoreSpotlight.CSSearchQuery.Results.__AsyncSequence_Failure"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Failure",
+                    "printedName": "Failure"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSci",
+                "name": "AsyncSequence",
+                "printedName": "AsyncSequence",
+                "usr": "s:Sci"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7ResultsV",
+            "moduleName": "CoreSpotlight",
+            "name": "Results",
+            "printedName": "Results",
+            "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Results",
+                    "printedName": "CoreSpotlight.CSSearchQuery.Results",
+                    "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7resultsAbCE7ResultsVvg",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7resultsAbCE7ResultsVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Results",
+                "printedName": "CoreSpotlight.CSSearchQuery.Results",
+                "usr": "s:So13CSSearchQueryC13CoreSpotlightE7ResultsV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo13CSSearchQueryC13CoreSpotlightE7resultsAbCE7ResultsVvp",
+            "moduleName": "CoreSpotlight",
+            "name": "results",
+            "printedName": "results",
+            "usr": "s:So13CSSearchQueryC13CoreSpotlightE7resultsAbCE7ResultsVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "10.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "CoreSpotlight",
+        "name": "CSSearchQuery",
+        "objc_name": "CSSearchQuery",
+        "printedName": "CSSearchQuery",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)CSSearchQuery"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV2idSSvg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV2idSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV2idSSvp",
+                "moduleName": "CoreSpotlight",
+                "name": "id",
+                "printedName": "id",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV2idSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CSSearchableItem",
+                        "printedName": "CoreSpotlight.CSSearchableItem",
+                        "usr": "c:objc(cs)CSSearchableItem"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CSSearchableItem",
+                        "printedName": "CoreSpotlight.CSSearchableItem",
+                        "usr": "c:objc(cs)CSSearchableItem"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvs",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CSSearchableItem",
+                    "printedName": "CoreSpotlight.CSSearchableItem",
+                    "usr": "c:objc(cs)CSSearchableItem"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvp",
+                "moduleName": "CoreSpotlight",
+                "name": "item",
+                "printedName": "item",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV1loiySbAE_AEtFZ",
+                "moduleName": "CoreSpotlight",
+                "name": "<",
+                "printedName": "<(_:_:)",
+                "static": true,
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV1loiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV1goiySbAE_AEtFZ",
+                "moduleName": "CoreSpotlight",
+                "name": ">",
+                "printedName": ">(_:_:)",
+                "static": true,
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV1goiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV2eeoiySbAE_AEtFZ",
+                "moduleName": "CoreSpotlight",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV4hash4intoys6HasherVz_tF",
+                "moduleName": "CoreSpotlight",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "13.0",
+                "intro_iOS": "16.0",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV2IDa",
+                "moduleName": "CoreSpotlight",
+                "name": "ID",
+                "printedName": "ID",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV2IDa"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV9hashValueSivg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV9hashValueSivp",
+                "moduleName": "CoreSpotlight",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ID",
+                        "printedName": "CoreSpotlight.CSUserQuery.Item.ID"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ID",
+                    "printedName": "ID"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss12IdentifiableP",
+                "name": "Identifiable",
+                "printedName": "Identifiable",
+                "usr": "s:s12IdentifiableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSL",
+                "name": "Comparable",
+                "printedName": "Comparable",
+                "usr": "s:SL"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE4ItemV",
+            "moduleName": "CoreSpotlight",
+            "name": "Item",
+            "printedName": "Item",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV2idSSvg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2idSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV2idSSvp",
+                "moduleName": "CoreSpotlight",
+                "name": "id",
+                "printedName": "id",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2idSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CSSuggestion",
+                        "printedName": "CoreSpotlight.CSSuggestion",
+                        "usr": "c:objc(cs)CSSuggestion"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CSSuggestion",
+                        "printedName": "CoreSpotlight.CSSuggestion",
+                        "usr": "c:objc(cs)CSSuggestion"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvs",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CSSuggestion",
+                    "printedName": "CoreSpotlight.CSSuggestion",
+                    "usr": "c:objc(cs)CSSuggestion"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvp",
+                "moduleName": "CoreSpotlight",
+                "name": "suggestion",
+                "printedName": "suggestion",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV1loiySbAE_AEtFZ",
+                "moduleName": "CoreSpotlight",
+                "name": "<",
+                "printedName": "<(_:_:)",
+                "static": true,
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV1loiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV1goiySbAE_AEtFZ",
+                "moduleName": "CoreSpotlight",
+                "name": ">",
+                "printedName": ">(_:_:)",
+                "static": true,
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV1goiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV2eeoiySbAE_AEtFZ",
+                "moduleName": "CoreSpotlight",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV4hash4intoys6HasherVz_tF",
+                "moduleName": "CoreSpotlight",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "13.0",
+                "intro_iOS": "16.0",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV2IDa",
+                "moduleName": "CoreSpotlight",
+                "name": "ID",
+                "printedName": "ID",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2IDa"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV9hashValueSivg",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV9hashValueSivp",
+                "moduleName": "CoreSpotlight",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ID",
+                        "printedName": "CoreSpotlight.CSUserQuery.Suggestion.ID"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ID",
+                    "printedName": "ID"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss12IdentifiableP",
+                "name": "Identifiable",
+                "printedName": "Identifiable",
+                "usr": "s:s12IdentifiableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSL",
+                "name": "Comparable",
+                "printedName": "Comparable",
+                "usr": "s:SL"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE10SuggestionV",
+            "moduleName": "CoreSpotlight",
+            "name": "Suggestion",
+            "printedName": "Suggestion",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Response",
+                                "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Item",
+                                "printedName": "CoreSpotlight.CSUserQuery.Item",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "(CoreSpotlight.CSUserQuery.Item) -> CoreSpotlight.CSUserQuery.Responses.Response"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Response",
+                                "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Response.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(CoreSpotlight.CSUserQuery.Responses.Response.Type) -> (CoreSpotlight.CSUserQuery.Item) -> CoreSpotlight.CSUserQuery.Responses.Response"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4itemyAgbCE4ItemVcAGmF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "item",
+                    "printedName": "item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4itemyAgbCE4ItemVcAGmF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Response",
+                                "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Suggestion",
+                                "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "(CoreSpotlight.CSUserQuery.Suggestion) -> CoreSpotlight.CSUserQuery.Responses.Response"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Response",
+                                "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Response.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(CoreSpotlight.CSUserQuery.Responses.Response.Type) -> (CoreSpotlight.CSUserQuery.Suggestion) -> CoreSpotlight.CSUserQuery.Responses.Response"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO10suggestionyAgbCE10SuggestionVcAGmF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "suggestion",
+                    "printedName": "suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO10suggestionyAgbCE10SuggestionVcAGmF"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "kind": "Accessor",
+                        "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2idSSvg",
+                        "moduleName": "CoreSpotlight",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2idSSvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Var",
+                    "kind": "Var",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2idSSvp",
+                    "moduleName": "CoreSpotlight",
+                    "name": "id",
+                    "printedName": "id",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2idSSvp"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Response",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                        "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Response",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                        "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2eeoiySbAG_AGtFZ",
+                    "moduleName": "CoreSpotlight",
+                    "name": "==",
+                    "printedName": "==(_:_:)",
+                    "static": true,
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2eeoiySbAG_AGtFZ"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "13.0",
+                    "intro_iOS": "16.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2IDa",
+                    "moduleName": "CoreSpotlight",
+                    "name": "ID",
+                    "printedName": "ID",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2IDa"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Hasher",
+                        "paramValueOwnership": "InOut",
+                        "printedName": "Swift.Hasher",
+                        "usr": "s:s6HasherV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4hash4intoys6HasherVz_tF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "hash",
+                    "printedName": "hash(into:)",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4hash4intoys6HasherVz_tF"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "kind": "Accessor",
+                        "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO9hashValueSivg",
+                        "moduleName": "CoreSpotlight",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO9hashValueSivg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Var",
+                    "kind": "Var",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO9hashValueSivp",
+                    "moduleName": "CoreSpotlight",
+                    "name": "hashValue",
+                    "printedName": "hashValue",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO9hashValueSivp"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "ID",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Response.ID"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "ID",
+                        "printedName": "ID"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$ss12IdentifiableP",
+                    "name": "Identifiable",
+                    "printedName": "Identifiable",
+                    "usr": "s:s12IdentifiableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSH",
+                    "name": "Hashable",
+                    "printedName": "Hashable",
+                    "usr": "s:SH"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSQ",
+                    "name": "Equatable",
+                    "printedName": "Equatable",
+                    "usr": "s:SQ"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8SendableP",
+                    "name": "Sendable",
+                    "printedName": "Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss16SendableMetatypeP",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Enum",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO",
+                "moduleName": "CoreSpotlight",
+                "name": "Response",
+                "printedName": "Response",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "CoreSpotlight.CSUserQuery.Responses.Iterator",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV13AsyncIteratora",
+                "moduleName": "CoreSpotlight",
+                "name": "AsyncIterator",
+                "printedName": "AsyncIterator",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV13AsyncIteratora"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Response",
+                    "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV7Elementa",
+                "moduleName": "CoreSpotlight",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Response",
+                                "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.Element?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "Mutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV4nextAE8ResponseOSgyYaKF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "next",
+                    "printedName": "next()",
+                    "throwing": true,
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV4nextAE8ResponseOSgyYaKF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Response",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                            "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.Element"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "13.0",
+                    "intro_iOS": "16.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV7Elementa",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Element",
+                    "printedName": "Element",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV7Elementa"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Response",
+                                    "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                                  }
+                                ],
+                                "kind": "TypeNameAlias",
+                                "name": "Element",
+                                "printedName": "CoreSpotlight.CSUserQuery.Responses.Element"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Iterator.Element"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Element",
+                        "printedName": "Element"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "__AsyncIteratorProtocol_Failure",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Iterator.__AsyncIteratorProtocol_Failure"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Failure",
+                        "printedName": "Failure"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$sScI",
+                    "name": "AsyncIteratorProtocol",
+                    "printedName": "AsyncIteratorProtocol",
+                    "usr": "s:ScI"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV",
+                "moduleName": "CoreSpotlight",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "CoreSpotlight.CSUserQuery.Responses.Iterator",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV17makeAsyncIteratorAE0H0VyF",
+                "moduleName": "CoreSpotlight",
+                "name": "makeAsyncIterator",
+                "printedName": "makeAsyncIterator()",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV17makeAsyncIteratorAE0H0VyF"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Iterator",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Iterator",
+                            "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AsyncIterator",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.AsyncIterator"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AsyncIterator",
+                    "printedName": "AsyncIterator"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Response",
+                            "printedName": "CoreSpotlight.CSUserQuery.Responses.Response",
+                            "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__AsyncSequence_Failure",
+                        "printedName": "CoreSpotlight.CSUserQuery.Responses.__AsyncSequence_Failure"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Failure",
+                    "printedName": "Failure"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSci",
+                "name": "AsyncSequence",
+                "printedName": "AsyncSequence",
+                "usr": "s:Sci"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9ResponsesV",
+            "moduleName": "CoreSpotlight",
+            "name": "Responses",
+            "printedName": "Responses",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Iterator",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV13AsyncIteratora",
+                "moduleName": "CoreSpotlight",
+                "name": "AsyncIterator",
+                "printedName": "AsyncIterator",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV13AsyncIteratora"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV7Elementa",
+                "moduleName": "CoreSpotlight",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Suggestion",
+                                "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Element?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "Mutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV4nextAbCE10SuggestionVSgyYaKF",
+                    "moduleName": "CoreSpotlight",
+                    "name": "next",
+                    "printedName": "next()",
+                    "throwing": true,
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV4nextAbCE10SuggestionVSgyYaKF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Suggestion",
+                            "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                            "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Element"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "13.0",
+                    "intro_iOS": "16.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV7Elementa",
+                    "moduleName": "CoreSpotlight",
+                    "name": "Element",
+                    "printedName": "Element",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV7Elementa"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Suggestion",
+                                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                                  }
+                                ],
+                                "kind": "TypeNameAlias",
+                                "name": "Element",
+                                "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Element"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Iterator.Element"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Element",
+                        "printedName": "Element"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "__AsyncIteratorProtocol_Failure",
+                            "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Iterator.__AsyncIteratorProtocol_Failure"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Failure",
+                        "printedName": "Failure"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$sScI",
+                    "name": "AsyncIteratorProtocol",
+                    "printedName": "AsyncIteratorProtocol",
+                    "usr": "s:ScI"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV",
+                "moduleName": "CoreSpotlight",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Iterator",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV17makeAsyncIteratorAE0H0VyF",
+                "moduleName": "CoreSpotlight",
+                "name": "makeAsyncIterator",
+                "printedName": "makeAsyncIterator()",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV17makeAsyncIteratorAE0H0VyF"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Iterator",
+                            "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Iterator",
+                            "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AsyncIterator",
+                        "printedName": "CoreSpotlight.CSUserQuery.Suggestions.AsyncIterator"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AsyncIterator",
+                    "printedName": "AsyncIterator"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Suggestion",
+                            "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                            "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "CoreSpotlight.CSUserQuery.Suggestions.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__AsyncSequence_Failure",
+                        "printedName": "CoreSpotlight.CSUserQuery.Suggestions.__AsyncSequence_Failure"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Failure",
+                    "printedName": "Failure"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSci",
+                "name": "AsyncSequence",
+                "printedName": "AsyncSequence",
+                "usr": "s:Sci"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11SuggestionsV",
+            "moduleName": "CoreSpotlight",
+            "name": "Suggestions",
+            "printedName": "Suggestions",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Responses",
+                    "printedName": "CoreSpotlight.CSUserQuery.Responses",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9responsesAbCE9ResponsesVvg",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9responsesAbCE9ResponsesVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Responses",
+                "printedName": "CoreSpotlight.CSUserQuery.Responses",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE9ResponsesV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE9responsesAbCE9ResponsesVvp",
+            "moduleName": "CoreSpotlight",
+            "name": "responses",
+            "printedName": "responses",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE9responsesAbCE9ResponsesVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestions",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestions",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11suggestionsAbCE11SuggestionsVvg",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE11suggestionsAbCE11SuggestionsVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Suggestions",
+                "printedName": "CoreSpotlight.CSUserQuery.Suggestions",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11suggestionsAbCE11SuggestionsVvp",
+            "moduleName": "CoreSpotlight",
+            "name": "suggestions",
+            "printedName": "suggestions",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE11suggestionsAbCE11SuggestionsVvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Item",
+                "printedName": "CoreSpotlight.CSUserQuery.Item",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Item",
+                    "printedName": "CoreSpotlight.CSUserQuery.Item",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE4ItemV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CoreSpotlight.CSUserQuery.Item]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UserInteractionKind",
+                "printedName": "CoreSpotlight.CSUserQuery.UserInteractionKind",
+                "usr": "c:@E@CSUserInteraction"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11userEngaged_12visibleItems11interactionyAbCE4ItemV_SayAHGSo0A11InteractionVtF",
+            "moduleName": "CoreSpotlight",
+            "name": "userEngaged",
+            "printedName": "userEngaged(_:visibleItems:interaction:)",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE11userEngaged_12visibleItems11interactionyAbCE4ItemV_SayAHGSo0A11InteractionVtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Suggestion",
+                "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Suggestion",
+                    "printedName": "CoreSpotlight.CSUserQuery.Suggestion",
+                    "usr": "s:So11CSUserQueryC13CoreSpotlightE10SuggestionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CoreSpotlight.CSUserQuery.Suggestion]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UserInteractionKind",
+                "printedName": "CoreSpotlight.CSUserQuery.UserInteractionKind",
+                "usr": "c:@E@CSUserInteraction"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11CSUserQueryC13CoreSpotlightE11userEngaged_18visibleSuggestions11interactionyAbCE10SuggestionV_SayAHGSo0A11InteractionVtF",
+            "moduleName": "CoreSpotlight",
+            "name": "userEngaged",
+            "printedName": "userEngaged(_:visibleSuggestions:interaction:)",
+            "usr": "s:So11CSUserQueryC13CoreSpotlightE11userEngaged_18visibleSuggestions11interactionyAbCE10SuggestionV_SayAHGSo0A11InteractionVtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "CoreSpotlight",
+        "name": "CSUserQuery",
+        "objc_name": "CSUserQuery",
+        "printedName": "CSUserQuery",
+        "superclassNames": [
+          "CoreSpotlight.CSSearchQuery",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)CSSearchQuery",
+        "usr": "c:objc(cs)CSUserQuery"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AttributedString",
+                    "printedName": "Foundation.AttributedString",
+                    "usr": "s:10Foundation16AttributedStringV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo12CSSuggestionC13CoreSpotlightE29localizedAttributedSuggestion10Foundation0E6StringVvg",
+                "moduleName": "CoreSpotlight",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So12CSSuggestionC13CoreSpotlightE29localizedAttributedSuggestion10Foundation0E6StringVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AttributedString",
+                "printedName": "Foundation.AttributedString",
+                "usr": "s:10Foundation16AttributedStringV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo12CSSuggestionC13CoreSpotlightE29localizedAttributedSuggestion10Foundation0E6StringVvp",
+            "moduleName": "CoreSpotlight",
+            "name": "localizedAttributedSuggestion",
+            "printedName": "localizedAttributedSuggestion",
+            "usr": "s:So12CSSuggestionC13CoreSpotlightE29localizedAttributedSuggestion10Foundation0E6StringVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "CoreSpotlight",
+        "name": "CSSuggestion",
+        "objc_name": "CSSuggestion",
+        "printedName": "CSSuggestion",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)CSSuggestion"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CoreSpotlight",
+    "printedName": "CoreSpotlight"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 64,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CryptoKit.symbols.json",
+      "relationshipCount": 1723,
+      "sha256": "9eed6f5beb9a9470935b4431e9fd95c1f9f38a8fadceb2ca70f74c2b7bd9b72c",
+      "symbolCount": 1287
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CryptoKit",
+  "relationshipCount": 1723,
+  "relationshipMultisetSHA256": "dd31d92a46577bc12b52ce6d349b65907cf4a59fb889663fe6edeb93baab6053",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1287,
+  "symbolMultisetSHA256": "8d72756853a006b3697cfdfe51fa664d0e9c545a0b032ea6b5e2a4c6b90f4cc3",
+  "target": "arm64-apple-ios26.0"
+}

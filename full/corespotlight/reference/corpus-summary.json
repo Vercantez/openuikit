@@ -1,0 +1,163 @@
+{
+  "module": "CoreSpotlight",
+  "moduleRecord": {
+    "app_coverage_count": 10,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 35,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 24,
+    "iphoneos_runtime_focus_launch_build_rank": 29,
+    "module": "CoreSpotlight",
+    "occurrence_count": 35,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "d1a05dcbf0a6e9660274c44d4de19d41a10b0dda4a07880cf384dd1c53f04cd4",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Shared/Activity/ActivityManager.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "3da896c9e2b154d5c79f749c89c3211b635ec37d9db28213cf940df0905e84cb",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/TelegramUI/Sources/AppDelegate.swift",
+          "submodules/TelegramUI/Sources/SpotlightContacts.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "9240c019a81951e0739d2ab06c355acbf9716a828ac454928646c1dc39f8d788",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Sources/WordPressData/Swift/SearchableActivityConvertable.swift",
+          "Modules/Sources/WordPressData/Swift/SearchableItemConvertable.swift",
+          "WordPress/Classes/Utility/Spotlight/SearchManager.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "19b312a2518ceee22759c38422544b0e6aa7a41b539fc222854216ee0f2cb40d",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "ios/Artsy/App/ARUserActivity.m",
+          "ios/Artsy/App/AppDelegateCategories/AppDelegate+ActivityContinuation.m"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "ea8de27b2547c320a09088d097a0998d2221bf56ed1bdda7e33e7f432b85110b",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "firefox-ios/Client/Application/AppDelegate.swift",
+          "firefox-ios/Client/Application/SceneDelegate.swift",
+          "firefox-ios/Client/Coordinators/Router/RouteBuilder.swift",
+          "firefox-ios/Client/Frontend/Settings/Clearables.swift",
+          "firefox-ios/Client/Helpers/UserActivityHandler.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "41744a9cc51fa973a5b17e10aae9b8a2becbe0467298ae950d0c87dfd6dc5aa5",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Sources/App/Frontend/IncomingURLHandler.swift",
+          "Sources/App/HAApp.swift",
+          "Sources/App/Utilities/Spotlight/HAAppEntityAppIntentEntity+IndexedEntity.swift",
+          "Sources/App/Utilities/Spotlight/HACalendarAppEntity+IndexedEntity.swift",
+          "Sources/App/Utilities/Spotlight/SpotlightEntityIndexer.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "cc7d0767be053bf8689d89c9d12b4f1a207c1faa4671a53c63c7c9346a08cc92",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "PodcastsIntents/ChapterIntentHandler.swift",
+          "PodcastsIntents/ExtendSleepTimerIntentHandler.swift",
+          "PodcastsIntents/OpenFilterIntentHandler.swift",
+          "PodcastsIntents/PlayMediaIntentHandler.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "fc94b78b47777cb168985a8f238d9bf7a5a0ccbef20bdde6e92f8e0892f74ce3",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "Simplenote/Classes/CSSearchable+Helpers.swift",
+          "Simplenote/Classes/NSUserActivity+Shortcuts.swift",
+          "Simplenote/Classes/NSUserActivity+Simplenote.swift",
+          "Simplenote/Classes/SPNoteEditorViewController+Extensions.swift",
+          "Simplenote/Classes/SPNoteListViewController+Extensions.swift",
+          "Simplenote/Classes/ShortcutsHandler.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "089d6dc617e7c7828def632c97aff2063813c9603d93971d25f59c365fe407b3",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Sources/App/VLCAppCoordinator.m",
+          "Sources/App/iOS/VideoEntities.swift",
+          "Sources/Media Library/MediaLibraryModel/MediaModel.swift",
+          "Sources/Media Library/MediaLibraryService.swift",
+          "Sources/Settings/Controller/SettingsController.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "52e786b696b92821d69f4fdce7c6519e03a63e98ed33ffd27ade08da18c5ac1d",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Wikipedia/Code/NSUserActivity+WMFExtensions.m",
+          "Wikipedia/Code/SavedPageSpotlightManager.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 24,
+    "byFocusLaunchBuildRelevance": 29
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 10,
+      "apps": [
+        "NetNewsWire",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "eigen",
+        "firefox-ios",
+        "home-assistant-ios",
+        "pocket-casts-ios",
+        "simplenote-ios",
+        "vlc-ios",
+        "wikipedia-ios"
+      ],
+      "family": "CoreSpotlight",
+      "file_count": 35,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 0,
+      "modules": [
+        "CoreSpotlight"
+      ],
+      "note": "system search indexing"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

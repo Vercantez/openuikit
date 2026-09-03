@@ -1,0 +1,3890 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHPhotoLibrary",
+        "printedName": "Photos.PHPhotoLibrary"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PhotosTypes",
+        "printedName": "Photos.PhotosTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHError",
+        "printedName": "Photos.PHError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHObject",
+        "printedName": "Photos.PHObject"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAsset",
+        "printedName": "Photos.PHAsset"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHLivePhoto",
+        "printedName": "Photos.PHLivePhoto"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHCollection",
+        "printedName": "Photos.PHCollection"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHFetchOptions",
+        "printedName": "Photos.PHFetchOptions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHFetchResult",
+        "printedName": "Photos.PHFetchResult"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHChange",
+        "printedName": "Photos.PHChange"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHPersistentChange",
+        "printedName": "Photos.PHPersistentChange"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHPersistentChangeToken",
+        "printedName": "Photos.PHPersistentChangeToken"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHPersistentChangeFetchResult",
+        "printedName": "Photos.PHPersistentChangeFetchResult"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHPersistentObjectChangeDetails",
+        "printedName": "Photos.PHPersistentObjectChangeDetails"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetChangeRequest",
+        "printedName": "Photos.PHAssetChangeRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetCreationRequest",
+        "printedName": "Photos.PHAssetCreationRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetCollectionChangeRequest",
+        "printedName": "Photos.PHAssetCollectionChangeRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetResourceUploadJob",
+        "printedName": "Photos.PHAssetResourceUploadJob"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetResourceUploadJobChangeRequest",
+        "printedName": "Photos.PHAssetResourceUploadJobChangeRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHCollectionListChangeRequest",
+        "printedName": "Photos.PHCollectionListChangeRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHLivePhotoEditingContext",
+        "printedName": "Photos.PHLivePhotoEditingContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHImageManager",
+        "printedName": "Photos.PHImageManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetResourceManager",
+        "printedName": "Photos.PHAssetResourceManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAssetResource",
+        "printedName": "Photos.PHAssetResource"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHAdjustmentData",
+        "printedName": "Photos.PHAdjustmentData"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHContentEditingInput",
+        "printedName": "Photos.PHContentEditingInput"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHContentEditingOutput",
+        "printedName": "Photos.PHContentEditingOutput"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHProject",
+        "printedName": "Photos.PHProject"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHProjectChangeRequest",
+        "printedName": "Photos.PHProjectChangeRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos.PHCloudIdentifier",
+        "printedName": "Photos.PHCloudIdentifier"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC13PHPhotosErrorLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC13PHPhotosErrorLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "Photos",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC13PHPhotosErrorLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHPhotosError",
+                "printedName": "Photos.PHPhotosError",
+                "usr": "c:@E@PHPhotosError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC13PHPhotosErrorLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "Photos",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC13PHPhotosErrorLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV11errorDomainSSvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC13PHPhotosErrorLeV11errorDomainSSvpZ",
+            "moduleName": "Photos",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC13PHPhotosErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Photos.PHPhotosError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo13PHPhotosErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "Photos",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So13PHPhotosErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo13PHPhotosErrorV8rawValueSivg",
+                    "moduleName": "Photos",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So13PHPhotosErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo13PHPhotosErrorV8rawValueSivp",
+                "moduleName": "Photos",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So13PHPhotosErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo13PHPhotosErrorV8RawValuea",
+                "moduleName": "Photos",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So13PHPhotosErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPhotosError",
+                    "printedName": "Photos.PHPhotosError",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "Photos",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@PHPhotosError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "13",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "internalError",
+                "printedName": "internalError",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorInternalError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "13",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "userCancelled",
+                "printedName": "userCancelled",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorUserCancelled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "13",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "libraryVolumeOffline",
+                "printedName": "libraryVolumeOffline",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorLibraryVolumeOffline"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "13",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "relinquishingLibraryBundleToWriter",
+                "printedName": "relinquishingLibraryBundleToWriter",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorRelinquishingLibraryBundleToWriter"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "13",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "switchingSystemPhotoLibrary",
+                "printedName": "switchingSystemPhotoLibrary",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorSwitchingSystemPhotoLibrary"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "14",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "networkAccessRequired",
+                "printedName": "networkAccessRequired",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorNetworkAccessRequired"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "networkError",
+                "printedName": "networkError",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorNetworkError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "identifierNotFound",
+                "printedName": "identifierNotFound",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorIdentifierNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "multipleIdentifiersFound",
+                "printedName": "multipleIdentifiersFound",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorMultipleIdentifiersFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "changeNotSupported",
+                "printedName": "changeNotSupported",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorChangeNotSupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "operationInterrupted",
+                "printedName": "operationInterrupted",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorOperationInterrupted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "invalidResource",
+                "printedName": "invalidResource",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorInvalidResource"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "missingResource",
+                "printedName": "missingResource",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorMissingResource"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "notEnoughSpace",
+                "printedName": "notEnoughSpace",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorNotEnoughSpace"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "requestNotSupportedForAsset",
+                "printedName": "requestNotSupportedForAsset",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorRequestNotSupportedForAsset"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "26.1",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "limitExceeded",
+                "printedName": "limitExceeded",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorLimitExceeded"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "accessRestricted",
+                "printedName": "accessRestricted",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorAccessRestricted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "accessUserDenied",
+                "printedName": "accessUserDenied",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorAccessUserDenied"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "15.4",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "libraryInFileProviderSyncRoot",
+                "printedName": "libraryInFileProviderSyncRoot",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorLibraryInFileProviderSyncRoot"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "persistentChangeTokenExpired",
+                "printedName": "persistentChangeTokenExpired",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorPersistentChangeTokenExpired"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Photos.PHPhotosError.Code",
+                            "usr": "c:@E@PHPhotosError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Photos.PHPhotosError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Photos.PHPhotosError.Code.Type) -> Photos.PHPhotosError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "persistentChangeDetailsUnavailable",
+                "printedName": "persistentChangeDetailsUnavailable",
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorPersistentChangeDetailsUnavailable"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Photos.PHPhotosError.Code",
+                        "usr": "c:@E@PHPhotosError"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo13PHPhotosErrorV7invalidABvgZ",
+                    "moduleName": "Photos",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So13PHPhotosErrorV7invalidABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "deprecated": true,
+                "intro_iOS": "13",
+                "kind": "Var",
+                "moduleName": "Photos",
+                "name": "invalid",
+                "printedName": "invalid",
+                "static": true,
+                "usr": "c:@E@PHPhotosError@PHPhotosErrorInvalid"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "Photos.PHPhotosError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "13",
+            "kind": "TypeDecl",
+            "moduleName": "Photos",
+            "name": "Code",
+            "objc_name": "PHPhotosError",
+            "printedName": "Code",
+            "usr": "c:@E@PHPhotosError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV08internalB0SoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV08internalB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "13",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "internalError",
+            "printedName": "internalError",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorInternalError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV13userCancelledSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV13userCancelledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "13",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "userCancelled",
+            "printedName": "userCancelled",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorUserCancelled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV20libraryVolumeOfflineSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV20libraryVolumeOfflineSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "13",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "libraryVolumeOffline",
+            "printedName": "libraryVolumeOffline",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorLibraryVolumeOffline"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV34relinquishingLibraryBundleToWriterSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV34relinquishingLibraryBundleToWriterSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "13",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "relinquishingLibraryBundleToWriter",
+            "printedName": "relinquishingLibraryBundleToWriter",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorRelinquishingLibraryBundleToWriter"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV27switchingSystemPhotoLibrarySoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV27switchingSystemPhotoLibrarySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "13",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "switchingSystemPhotoLibrary",
+            "printedName": "switchingSystemPhotoLibrary",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorSwitchingSystemPhotoLibrary"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV21networkAccessRequiredSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV21networkAccessRequiredSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "networkAccessRequired",
+            "printedName": "networkAccessRequired",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorNetworkAccessRequired"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV07networkB0SoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV07networkB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "networkError",
+            "printedName": "networkError",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorNetworkError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV18identifierNotFoundSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV18identifierNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "identifierNotFound",
+            "printedName": "identifierNotFound",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorIdentifierNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV24multipleIdentifiersFoundSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV24multipleIdentifiersFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "multipleIdentifiersFound",
+            "printedName": "multipleIdentifiersFound",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorMultipleIdentifiersFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV18changeNotSupportedSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV18changeNotSupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "changeNotSupported",
+            "printedName": "changeNotSupported",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorChangeNotSupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV20operationInterruptedSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV20operationInterruptedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "operationInterrupted",
+            "printedName": "operationInterrupted",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorOperationInterrupted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV15invalidResourceSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV15invalidResourceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "invalidResource",
+            "printedName": "invalidResource",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorInvalidResource"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV15missingResourceSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV15missingResourceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "missingResource",
+            "printedName": "missingResource",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorMissingResource"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV14notEnoughSpaceSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV14notEnoughSpaceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "notEnoughSpace",
+            "printedName": "notEnoughSpace",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorNotEnoughSpace"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV27requestNotSupportedForAssetSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV27requestNotSupportedForAssetSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "requestNotSupportedForAsset",
+            "printedName": "requestNotSupportedForAsset",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorRequestNotSupportedForAsset"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV13limitExceededSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV13limitExceededSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.1",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "limitExceeded",
+            "printedName": "limitExceeded",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorLimitExceeded"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV16accessRestrictedSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV16accessRestrictedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "accessRestricted",
+            "printedName": "accessRestricted",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorAccessRestricted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV16accessUserDeniedSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV16accessUserDeniedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "accessUserDenied",
+            "printedName": "accessUserDenied",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorAccessUserDenied"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV29libraryInFileProviderSyncRootSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV29libraryInFileProviderSyncRootSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.4",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "libraryInFileProviderSyncRoot",
+            "printedName": "libraryInFileProviderSyncRoot",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorLibraryInFileProviderSyncRoot"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV28persistentChangeTokenExpiredSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV28persistentChangeTokenExpiredSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "persistentChangeTokenExpired",
+            "printedName": "persistentChangeTokenExpired",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorPersistentChangeTokenExpired"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV34persistentChangeDetailsUnavailableSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV34persistentChangeDetailsUnavailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "persistentChangeDetailsUnavailable",
+            "printedName": "persistentChangeDetailsUnavailable",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorPersistentChangeDetailsUnavailable"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Photos.PHPhotosError.Code",
+                    "usr": "c:@E@PHPhotosError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC13PHPhotosErrorLeV7invalidSoAAVvgZ",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC13PHPhotosErrorLeV7invalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Photos.PHPhotosError.Code",
+                "usr": "c:@E@PHPhotosError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "intro_iOS": "13",
+            "kind": "Var",
+            "moduleName": "Photos",
+            "name": "invalid",
+            "printedName": "invalid",
+            "static": true,
+            "usr": "c:@E@PHPhotosError@PHPhotosErrorInvalid"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "13",
+        "kind": "TypeDecl",
+        "moduleName": "Photos",
+        "name": "PHPhotosError",
+        "printedName": "PHPhotosError",
+        "usr": "c:@E@PHPhotosError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "Photos",
+        "printedName": "Photos"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Photos",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHBackgroundResourceUploadProcessingResult",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                    "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHBackgroundResourceUploadProcessingResult",
+                        "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                        "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Photos.PHBackgroundResourceUploadProcessingResult.Type) -> Photos.PHBackgroundResourceUploadProcessingResult"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO7failureyA2CmF",
+            "moduleName": "Photos",
+            "name": "failure",
+            "printedName": "failure",
+            "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO7failureyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHBackgroundResourceUploadProcessingResult",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                    "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHBackgroundResourceUploadProcessingResult",
+                        "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                        "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Photos.PHBackgroundResourceUploadProcessingResult.Type) -> Photos.PHBackgroundResourceUploadProcessingResult"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO10processingyA2CmF",
+            "moduleName": "Photos",
+            "name": "processing",
+            "printedName": "processing",
+            "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO10processingyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHBackgroundResourceUploadProcessingResult",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                    "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHBackgroundResourceUploadProcessingResult",
+                        "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                        "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Photos.PHBackgroundResourceUploadProcessingResult.Type) -> Photos.PHBackgroundResourceUploadProcessingResult"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO9completedyA2CmF",
+            "moduleName": "Photos",
+            "name": "completed",
+            "printedName": "completed",
+            "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO9completedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHBackgroundResourceUploadProcessingResult",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                    "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Photos.PHBackgroundResourceUploadProcessingResult?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueACSgSi_tcfc",
+            "moduleName": "Photos",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueACSgSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "26.1",
+            "kind": "TypeAlias",
+            "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO8RawValuea",
+            "moduleName": "Photos",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO8RawValuea"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueSivg",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueSivp",
+            "moduleName": "Photos",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO8rawValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Photos.PHBackgroundResourceUploadProcessingResult.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "enumRawTypeName": "Int",
+        "intro_iOS": "26.1",
+        "kind": "TypeDecl",
+        "mangledName": "$s6Photos42PHBackgroundResourceUploadProcessingResultO",
+        "moduleName": "Photos",
+        "name": "PHBackgroundResourceUploadProcessingResult",
+        "printedName": "PHBackgroundResourceUploadProcessingResult",
+        "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHBackgroundResourceUploadProcessingResult",
+                "printedName": "Photos.PHBackgroundResourceUploadProcessingResult",
+                "usr": "s:6Photos42PHBackgroundResourceUploadProcessingResultO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : Photos.PHBackgroundResourceUploadExtension>",
+            "kind": "Function",
+            "mangledName": "$s6Photos35PHBackgroundResourceUploadExtensionP7processAA0bcD16ProcessingResultOyF",
+            "moduleName": "Photos",
+            "name": "process",
+            "printedName": "process()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:6Photos35PHBackgroundResourceUploadExtensionP7processAA0bcD16ProcessingResultOyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : Photos.PHBackgroundResourceUploadExtension>",
+            "kind": "Function",
+            "mangledName": "$s6Photos35PHBackgroundResourceUploadExtensionP17notifyTerminationyyF",
+            "moduleName": "Photos",
+            "name": "notifyTermination",
+            "printedName": "notifyTermination()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:6Photos35PHBackgroundResourceUploadExtensionP17notifyTerminationyyF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionConfiguration",
+                        "printedName": "ExtensionFoundation.AppExtensionConfiguration",
+                        "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some ExtensionFoundation.AppExtensionConfiguration"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : Photos.PHBackgroundResourceUploadExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s6Photos35PHBackgroundResourceUploadExtensionPAAE13configurationQrvg",
+                "moduleName": "Photos",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6Photos35PHBackgroundResourceUploadExtensionPAAE13configurationQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionConfiguration",
+                    "printedName": "ExtensionFoundation.AppExtensionConfiguration",
+                    "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionFoundation.AppExtensionConfiguration"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s6Photos35PHBackgroundResourceUploadExtensionPAAE13configurationQrvp",
+            "moduleName": "Photos",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:6Photos35PHBackgroundResourceUploadExtensionPAAE13configurationQrvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension>",
+        "intro_iOS": "26.1",
+        "kind": "TypeDecl",
+        "mangledName": "$s6Photos35PHBackgroundResourceUploadExtensionP",
+        "moduleName": "Photos",
+        "name": "PHBackgroundResourceUploadExtension",
+        "printedName": "PHBackgroundResourceUploadExtension",
+        "usr": "s:6Photos35PHBackgroundResourceUploadExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "T"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "PHObjectChangeDetails",
+                    "printedName": "Photos.PHObjectChangeDetails<T>",
+                    "usr": "c:objc(cs)PHObjectChangeDetails"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Photos.PHObjectChangeDetails<T>?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "T"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<T where T : Photos.PHObject>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8PHChangeC6PhotosE13changeDetails3forSo014PHObjectChangeD0CyxGSgx_tSo0F0CRbzlF",
+            "moduleName": "Photos",
+            "name": "changeDetails",
+            "printedName": "changeDetails(for:)",
+            "usr": "s:So8PHChangeC6PhotosE13changeDetails3forSo014PHObjectChangeD0CyxGSgx_tSo0F0CRbzlF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "T"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "PHFetchResultChangeDetails",
+                    "printedName": "Photos.PHFetchResultChangeDetails<T>",
+                    "usr": "c:objc(cs)PHFetchResultChangeDetails"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Photos.PHFetchResultChangeDetails<T>?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "T"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "PHFetchResult",
+                "printedName": "Photos.PHFetchResult<T>",
+                "usr": "c:objc(cs)PHFetchResult"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<T where T : Photos.PHObject>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8PHChangeC6PhotosE13changeDetails3forSo019PHFetchResultChangeD0CyxGSgSo0fG0CyxG_tSo8PHObjectCRbzlF",
+            "moduleName": "Photos",
+            "name": "changeDetails",
+            "printedName": "changeDetails(for:)",
+            "usr": "s:So8PHChangeC6PhotosE13changeDetails3forSo019PHFetchResultChangeD0CyxGSgSo0fG0CyxG_tSo8PHObjectCRbzlF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "8",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "Photos",
+        "name": "PHChange",
+        "objc_name": "PHChange",
+        "printedName": "PHChange",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)PHChange"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PHCloudIdentifier",
+                        "printedName": "Photos.PHCloudIdentifier",
+                        "usr": "c:objc(cs)PHCloudIdentifier"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<Photos.PHCloudIdentifier, any Swift.Error>",
+                    "usr": "s:s6ResultO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Swift.Result<Photos.PHCloudIdentifier, any Swift.Error>]",
+                "usr": "s:SD"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo14PHPhotoLibraryC6PhotosE23cloudIdentifierMappings19forLocalIdentifiersSDySSs6ResultOySo07PHCloudE0Cs5Error_pGGSaySSG_tF",
+            "moduleName": "Photos",
+            "name": "cloudIdentifierMappings",
+            "printedName": "cloudIdentifierMappings(forLocalIdentifiers:)",
+            "usr": "s:So14PHPhotoLibraryC6PhotosE23cloudIdentifierMappings19forLocalIdentifiersSDySSs6ResultOySo07PHCloudE0Cs5Error_pGGSaySSG_tF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHCloudIdentifier",
+                    "printedName": "Photos.PHCloudIdentifier",
+                    "usr": "c:objc(cs)PHCloudIdentifier"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<Swift.String, any Swift.Error>",
+                    "usr": "s:s6ResultO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Photos.PHCloudIdentifier : Swift.Result<Swift.String, any Swift.Error>]",
+                "usr": "s:SD"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHCloudIdentifier",
+                    "printedName": "Photos.PHCloudIdentifier",
+                    "usr": "c:objc(cs)PHCloudIdentifier"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Photos.PHCloudIdentifier]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo14PHPhotoLibraryC6PhotosE23localIdentifierMappings3forSDySo07PHCloudE0Cs6ResultOySSs5Error_pGGSayAGG_tF",
+            "moduleName": "Photos",
+            "name": "localIdentifierMappings",
+            "printedName": "localIdentifierMappings(for:)",
+            "usr": "s:So14PHPhotoLibraryC6PhotosE23localIdentifierMappings3forSDySo07PHCloudE0Cs6ResultOySSs5Error_pGGSayAGG_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "8",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "Photos",
+        "name": "PHPhotoLibrary",
+        "objc_name": "PHPhotoLibrary",
+        "printedName": "PHPhotoLibrary",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)PHPhotoLibrary"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPersistentChange",
+                    "printedName": "Photos.PHPersistentChange",
+                    "usr": "c:objc(cs)PHPersistentChange"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo29PHPersistentChangeFetchResultC6PhotosE8IteratorC7Elementa",
+                "moduleName": "Photos",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Photos.PHPersistentChangeFetchResult.Iterator",
+                    "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPersistentChangeFetchResult",
+                    "printedName": "Photos.PHPersistentChangeFetchResult",
+                    "usr": "c:objc(cs)PHPersistentChangeFetchResult"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo29PHPersistentChangeFetchResultC6PhotosE8IteratorC05fetchD0AeB_tcfc",
+                "moduleName": "Photos",
+                "name": "init",
+                "printedName": "init(fetchResult:)",
+                "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC05fetchD0AeB_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PHPersistentChange",
+                            "printedName": "Photos.PHPersistentChange",
+                            "usr": "c:objc(cs)PHPersistentChange"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "Photos.PHPersistentChangeFetchResult.Iterator.Element"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Photos.PHPersistentChangeFetchResult.Iterator.Element?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo29PHPersistentChangeFetchResultC6PhotosE8IteratorC4nextSo0aB0CSgyF",
+                "moduleName": "Photos",
+                "name": "next",
+                "printedName": "next()",
+                "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC4nextSo0aB0CSgyF"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PHPersistentChange",
+                            "printedName": "Photos.PHPersistentChange",
+                            "usr": "c:objc(cs)PHPersistentChange"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "Photos.PHPersistentChangeFetchResult.Iterator.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSt",
+                "name": "IteratorProtocol",
+                "printedName": "IteratorProtocol",
+                "usr": "s:St"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Class",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo29PHPersistentChangeFetchResultC6PhotosE8IteratorC",
+            "moduleName": "Photos",
+            "name": "Iterator",
+            "printedName": "Iterator",
+            "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Iterator",
+                "printedName": "Photos.PHPersistentChangeFetchResult.Iterator",
+                "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo29PHPersistentChangeFetchResultC6PhotosE12makeIteratorAbCE0G0CyF",
+            "moduleName": "Photos",
+            "name": "makeIterator",
+            "printedName": "makeIterator()",
+            "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE12makeIteratorAbCE0G0CyF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHPersistentChange",
+                    "printedName": "Photos.PHPersistentChange",
+                    "usr": "c:objc(cs)PHPersistentChange"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Element",
+                "printedName": "Photos.PHPersistentChangeFetchResult.Iterator.Element"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13",
+            "intro_iOS": "16",
+            "intro_tvOS": "16",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo29PHPersistentChangeFetchResultC6PhotosE7Elementa",
+            "moduleName": "Photos",
+            "name": "Element",
+            "printedName": "Element",
+            "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE7Elementa"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PHPersistentChange",
+                            "printedName": "Photos.PHPersistentChange",
+                            "usr": "c:objc(cs)PHPersistentChange"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "Photos.PHPersistentChangeFetchResult.Iterator.Element"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Element",
+                    "printedName": "Photos.PHPersistentChangeFetchResult.Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Photos.PHPersistentChangeFetchResult.Iterator",
+                    "usr": "s:So29PHPersistentChangeFetchResultC6PhotosE8IteratorC"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sST",
+            "name": "Sequence",
+            "printedName": "Sequence",
+            "usr": "s:ST"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "Photos",
+        "name": "PHPersistentChangeFetchResult",
+        "objc_name": "PHPersistentChangeFetchResult",
+        "printedName": "PHPersistentChangeFetchResult",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)PHPersistentChangeFetchResult"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "Photos",
+    "printedName": "Photos"
+  }
+}

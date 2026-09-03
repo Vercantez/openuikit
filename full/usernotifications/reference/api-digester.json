@@ -1,0 +1,1637 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.NSString_UserNotifications",
+        "printedName": "UserNotifications.NSString_UserNotifications"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNError",
+        "printedName": "UserNotifications.UNError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotification",
+        "printedName": "UserNotifications.UNNotification"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationAction",
+        "printedName": "UserNotifications.UNNotificationAction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationActionIcon",
+        "printedName": "UserNotifications.UNNotificationActionIcon"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationAttachment",
+        "printedName": "UserNotifications.UNNotificationAttachment"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationAttributedMessageContext",
+        "printedName": "UserNotifications.UNNotificationAttributedMessageContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationCategory",
+        "printedName": "UserNotifications.UNNotificationCategory"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationContent",
+        "printedName": "UserNotifications.UNNotificationContent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationRequest",
+        "printedName": "UserNotifications.UNNotificationRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationResponse",
+        "printedName": "UserNotifications.UNNotificationResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationServiceExtension",
+        "printedName": "UserNotifications.UNNotificationServiceExtension"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationSettings",
+        "printedName": "UserNotifications.UNNotificationSettings"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationSound",
+        "printedName": "UserNotifications.UNNotificationSound"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNNotificationTrigger",
+        "printedName": "UserNotifications.UNNotificationTrigger"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "UserNotifications",
+        "name": "UserNotifications.UNUserNotificationCenter",
+        "printedName": "UserNotifications.UNUserNotificationCenter"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11UNErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11UNErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "UserNotifications",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11UNErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UNError",
+                "printedName": "UserNotifications.UNError",
+                "usr": "c:@E@UNErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11UNErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "UserNotifications",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11UNErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11UNErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "UserNotifications",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11UNErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UserNotifications.UNError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11UNErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "UserNotifications",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11UNErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11UNErrorCodeV8rawValueSivg",
+                    "moduleName": "UserNotifications",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11UNErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11UNErrorCodeV8rawValueSivp",
+                "moduleName": "UserNotifications",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11UNErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11UNErrorCodeV8RawValuea",
+                "moduleName": "UserNotifications",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11UNErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UNError",
+                    "printedName": "UserNotifications.UNError",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "UserNotifications",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@UNErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "notificationsNotAllowed",
+                "printedName": "notificationsNotAllowed",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeNotificationsNotAllowed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "attachmentInvalidURL",
+                "printedName": "attachmentInvalidURL",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentInvalidURL"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "attachmentUnrecognizedType",
+                "printedName": "attachmentUnrecognizedType",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentUnrecognizedType"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "attachmentInvalidFileSize",
+                "printedName": "attachmentInvalidFileSize",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentInvalidFileSize"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "attachmentNotInDataStore",
+                "printedName": "attachmentNotInDataStore",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentNotInDataStore"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "attachmentMoveIntoDataStoreFailed",
+                "printedName": "attachmentMoveIntoDataStoreFailed",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentMoveIntoDataStoreFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "attachmentCorrupt",
+                "printedName": "attachmentCorrupt",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentCorrupt"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "notificationInvalidNoDate",
+                "printedName": "notificationInvalidNoDate",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeNotificationInvalidNoDate"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "notificationInvalidNoContent",
+                "printedName": "notificationInvalidNoContent",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeNotificationInvalidNoContent"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "contentProvidingObjectNotAllowed",
+                "printedName": "contentProvidingObjectNotAllowed",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeContentProvidingObjectNotAllowed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "contentProvidingInvalid",
+                "printedName": "contentProvidingInvalid",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeContentProvidingInvalid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "UserNotifications.UNError.Code",
+                        "usr": "c:@E@UNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "UserNotifications.UNError.Code",
+                            "usr": "c:@E@UNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "UserNotifications.UNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(UserNotifications.UNError.Code.Type) -> UserNotifications.UNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "UserNotifications",
+                "name": "badgeInputInvalid",
+                "printedName": "badgeInputInvalid",
+                "usr": "c:@E@UNErrorCode@UNErrorCodeBadgeInputInvalid"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "UserNotifications.UNError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "10.0",
+            "kind": "TypeDecl",
+            "moduleName": "UserNotifications",
+            "name": "Code",
+            "objc_name": "UNErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@UNErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV23notificationsNotAllowedSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV23notificationsNotAllowedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "notificationsNotAllowed",
+            "printedName": "notificationsNotAllowed",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeNotificationsNotAllowed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV20attachmentInvalidURLSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV20attachmentInvalidURLSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "attachmentInvalidURL",
+            "printedName": "attachmentInvalidURL",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentInvalidURL"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV26attachmentUnrecognizedTypeSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV26attachmentUnrecognizedTypeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "attachmentUnrecognizedType",
+            "printedName": "attachmentUnrecognizedType",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentUnrecognizedType"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV25attachmentInvalidFileSizeSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV25attachmentInvalidFileSizeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "attachmentInvalidFileSize",
+            "printedName": "attachmentInvalidFileSize",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentInvalidFileSize"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV24attachmentNotInDataStoreSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV24attachmentNotInDataStoreSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "attachmentNotInDataStore",
+            "printedName": "attachmentNotInDataStore",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentNotInDataStore"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV33attachmentMoveIntoDataStoreFailedSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV33attachmentMoveIntoDataStoreFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "attachmentMoveIntoDataStoreFailed",
+            "printedName": "attachmentMoveIntoDataStoreFailed",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentMoveIntoDataStoreFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV17attachmentCorruptSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV17attachmentCorruptSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "attachmentCorrupt",
+            "printedName": "attachmentCorrupt",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeAttachmentCorrupt"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV25notificationInvalidNoDateSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV25notificationInvalidNoDateSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "notificationInvalidNoDate",
+            "printedName": "notificationInvalidNoDate",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeNotificationInvalidNoDate"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV28notificationInvalidNoContentSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV28notificationInvalidNoContentSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "notificationInvalidNoContent",
+            "printedName": "notificationInvalidNoContent",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeNotificationInvalidNoContent"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV32contentProvidingObjectNotAllowedSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV32contentProvidingObjectNotAllowedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "contentProvidingObjectNotAllowed",
+            "printedName": "contentProvidingObjectNotAllowed",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeContentProvidingObjectNotAllowed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV23contentProvidingInvalidSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV23contentProvidingInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "contentProvidingInvalid",
+            "printedName": "contentProvidingInvalid",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeContentProvidingInvalid"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "UserNotifications.UNError.Code",
+                    "usr": "c:@E@UNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11UNErrorCodeLeV17badgeInputInvalidSoAAVvgZ",
+                "moduleName": "UserNotifications",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11UNErrorCodeLeV17badgeInputInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "UserNotifications.UNError.Code",
+                "usr": "c:@E@UNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "UserNotifications",
+            "name": "badgeInputInvalid",
+            "printedName": "badgeInputInvalid",
+            "static": true,
+            "usr": "c:@E@UNErrorCode@UNErrorCodeBadgeInputInvalid"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "10.0",
+        "kind": "TypeDecl",
+        "moduleName": "UserNotifications",
+        "name": "UNError",
+        "printedName": "UNError",
+        "usr": "c:@E@UNErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "UserNotifications",
+    "printedName": "UserNotifications"
+  }
+}

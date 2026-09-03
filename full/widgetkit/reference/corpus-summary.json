@@ -1,0 +1,256 @@
+{
+  "module": "WidgetKit",
+  "moduleRecord": {
+    "app_coverage_count": 14,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 301,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 9,
+    "iphoneos_runtime_focus_launch_build_rank": 17,
+    "module": "WidgetKit",
+    "occurrence_count": 301,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "5157a4a746d3f059096e46d69be139816126ad88b777d0b5f488d0e31fcaa5a7",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Shared/Widget/WidgetDataEncoder.swift",
+          "Widget/TimelineProvider.swift",
+          "Widget/Widget Views/LockScreenSummaryWidget.swift",
+          "Widget/Widget Views/StarredWidget.swift",
+          "Widget/Widget Views/TodayWidget.swift",
+          "Widget/Widget Views/UnreadWidget.swift",
+          "Widget/WidgetBundle.swift",
+          "iOS/AppDelegate.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "459b023773043c2c996bd6d3eac16c601cf01b2529b40fe30897ff390596b6c9",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Telegram/WidgetKitWidget/TodayViewController.swift",
+          "submodules/TelegramUI/Sources/WidgetDataContext.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "2607531a3e461f0f093e615b944096ed179bb9ac41d3c57209791d0734004e0b",
+        "file_count": 30,
+        "occurrence_count": 30,
+        "sample_paths": [
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenAllTimePostsBestViewsStatWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenAllTimeViewsStatWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenAllTimeViewsVisitorsStatWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenStatsWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenTodayLikesCommentsStatWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenTodayViewsStatWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/Configs/LockScreenTodayViewsVisitorsStatWidgetConfig.swift",
+          "Sources/JetpackStatsWidgets/Sources/LockScreenWidgets/LockScreenSiteListProvider.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "c9717d908c46c40b17cb2b6e4832d9deeb8cb667496f1c89360ddd26adb46f30",
+        "file_count": 29,
+        "occurrence_count": 29,
+        "sample_paths": [
+          "Core/SyncBookmarksAdapter.swift",
+          "DuckDuckGo/AddOrEditBookmarkViewController.swift",
+          "DuckDuckGo/AppLifecycle/AppStates/Launching.swift",
+          "DuckDuckGo/AppServices/ReportingService.swift",
+          "DuckDuckGo/AppUserDefaults.swift",
+          "DuckDuckGo/BookmarksViewController.swift",
+          "DuckDuckGo/Favicons.swift",
+          "DuckDuckGo/FavoritesHomeViewSectionRenderer.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "c70f55875344591a32d5dde27eece948942b24492846411d161d6778b8bb1805",
+        "file_count": 14,
+        "occurrence_count": 14,
+        "sample_paths": [
+          "ios/ArtsyWidget/ArtsyWidgets.swift",
+          "ios/ArtsyWidget/FullBleed/FullBleed+Entry.swift",
+          "ios/ArtsyWidget/FullBleed/FullBleed+Provider.swift",
+          "ios/ArtsyWidget/FullBleed/FullBleed+Timeline.swift",
+          "ios/ArtsyWidget/FullBleed/FullBleed+View.swift",
+          "ios/ArtsyWidget/FullBleed/FullBleed+Widget.swift",
+          "ios/ArtsyWidget/LatestArticles/LatestArticles+Entry.swift",
+          "ios/ArtsyWidget/LatestArticles/LatestArticles+Provider.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "376e463b4b9fd23624e7a911659246e9bb524fdd745800c2ac267ef5cef49880",
+        "file_count": 15,
+        "occurrence_count": 15,
+        "sample_paths": [
+          "firefox-ios/Client/Application/WindowManager.swift",
+          "firefox-ios/Client/Frontend/Browser/BrowserViewController/Views/BrowserViewController.swift",
+          "firefox-ios/Client/Frontend/Browser/DownloadHelper/DownloadLiveActivityWrapper.swift",
+          "firefox-ios/Client/TabManagement/WindowSimpleTabsCoordinator.swift",
+          "firefox-ios/Client/Utils/DownloadLiveActivityUtil.swift",
+          "firefox-ios/Providers/TopSitesWidgetManager.swift",
+          "firefox-ios/WidgetKit/DownloadManager/DownloadLiveActivity.swift",
+          "firefox-ios/WidgetKit/OpenTabs/OpenTabsWidget.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "f6ab4db51096721029d2cc9562fcffef5189e06cc7056a0602f6c2e1bc76b2cd",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Widgets/Widgets.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "72c070becaef28584b94efb3bf6edfae2742c113c5432cb3bbefcece1d372b55",
+        "file_count": 124,
+        "occurrence_count": 124,
+        "sample_paths": [
+          "Sources/App/AppDelegate.swift",
+          "Sources/App/Settings/Widgets/Builder/WidgetBuilderViewModel.swift",
+          "Sources/App/Settings/Widgets/Builder/WidgetCreationView.swift",
+          "Sources/Extensions/AppIntents/Widget/Details/WidgetDetailsAppIntentTimelineProvider.swift",
+          "Sources/Extensions/AppIntents/Widget/Energy/WidgetEnergyAppIntentTimelineProvider.swift",
+          "Sources/Extensions/AppIntents/Widget/Energy/WidgetEnergyEntry.swift",
+          "Sources/Extensions/AppIntents/Widget/Gauge/WidgetGaugeAppIntentTimelineProvider.swift",
+          "Sources/Extensions/AppIntents/Widget/ReloadWidgetsAppIntent.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "62a4bc5aecd43b637aa325fa9cc3c74ff884a5d45e3e5895adb2b78f1805196e",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "WidgetExtension/Variants/FollowersCount/FollowersCountWidget.swift",
+          "WidgetExtension/Variants/FollowersCount/FollowersCountWidgetView.swift",
+          "WidgetExtension/Variants/Hashtag/HashtagWidget.swift",
+          "WidgetExtension/Variants/LatestFollowers/LatestFollowersWidget.swift",
+          "WidgetExtension/Variants/LatestFollowers/LatestFollowersWidgetView.swift",
+          "WidgetExtension/Variants/MultiFollowersCount/MultiFollowersCountWidget.swift",
+          "WidgetExtension/Variants/MultiFollowersCount/MultiFollowersCountWidgetView.swift",
+          "WidgetExtension/WidgetExtensionBundle.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "94af910bb72d1c34ea1640e5758f96217cca4b7fda01f05bc78da07cd47ee94f",
+        "file_count": 15,
+        "occurrence_count": 15,
+        "sample_paths": [
+          "Widget/Dashboard/DashboardData.swift",
+          "Widget/Dashboard/DashboardWidgetProvider.swift",
+          "Widget/Dashboard/DashboardWidgetView.swift",
+          "Widget/Files/FilesData.swift",
+          "Widget/Files/FilesWidgetProvider.swift",
+          "Widget/Files/FilesWidgetView.swift",
+          "Widget/Lockscreen/LockscreenData.swift",
+          "Widget/Lockscreen/LockscreenWidgetProvider.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "dc580ffd1a52ff00dceb86c4de162eee466990aa51bb1615c1dbc9f6ae5682d2",
+        "file_count": 20,
+        "occurrence_count": 20,
+        "sample_paths": [
+          "WidgetExtension/App Icon/AppIconWidget.swift",
+          "WidgetExtension/App Icon/StaticWidgetProvider.swift",
+          "WidgetExtension/Common/Widget+Accentable.swift",
+          "WidgetExtension/Common/Widget+contentMarginsDisabled.swift",
+          "WidgetExtension/Now Playing/NowPlayingEntry.swift",
+          "WidgetExtension/Now Playing/NowPlayingEntryView.swift",
+          "WidgetExtension/Now Playing/NowPlayingLockScreenWidget.swift",
+          "WidgetExtension/Now Playing/NowPlayingProvider.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "873d0dfb4bf7c4f94cfbb371e70397cbb3d4e1d2fd1c626bf927e9e1b67b2cea",
+        "file_count": 17,
+        "occurrence_count": 17,
+        "sample_paths": [
+          "Simplenote/Controllers/WidgetController.swift",
+          "Simplenote/SPAppDelegate+Extensions.swift",
+          "SimplenoteWidgets/Extensions/Text+Simplenote.swift",
+          "SimplenoteWidgets/Providers/ListWidgetProvider.swift",
+          "SimplenoteWidgets/Providers/NewNoteWidgetProvider.swift",
+          "SimplenoteWidgets/Providers/NoteWidgetProvider.swift",
+          "SimplenoteWidgets/SimplenoteWidgets.swift",
+          "SimplenoteWidgets/Views/ListWidgetHeaderView.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "83beea21138b939c4504a5a62277539324791e09be8b14849984b54dea368e57",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "MediaLibraryWidget/AppIntent.swift",
+          "MediaLibraryWidget/MediaLibraryWidget.swift",
+          "MediaLibraryWidget/MediaLibraryWidgetBundle.swift",
+          "Sources/Playback/Player/AudioPlayer/AudioPlayerViewController.swift",
+          "Sources/Playback/Player/MiniPlayer-iOS/AudioMiniPlayer.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "17216c7e3af0721ebe50326bc51376dc7a4b222be553db2ebbba6a523eaa23f8",
+        "file_count": 13,
+        "occurrence_count": 13,
+        "sample_paths": [
+          "WMF Framework/Widget/WidgetController.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Reading Challenge Widget/WMFRandomWidgetView.swift",
+          "WMFData/Sources/WMFData/Data Controllers/Shared/WMFPageViewsDataController.swift",
+          "Widgets/Extension/Widgets.swift",
+          "Widgets/Widgets/FeaturedArticleWidget.swift",
+          "Widgets/Widgets/LockscreenSearchWidget.swift",
+          "Widgets/Widgets/OnThisDayView.swift",
+          "Widgets/Widgets/OnThisDayWidget.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 9,
+    "byFocusLaunchBuildRelevance": 17
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 14,
+      "apps": [
+        "NetNewsWire",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "eigen",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios",
+        "vlc-ios",
+        "wikipedia-ios"
+      ],
+      "family": "WidgetKit",
+      "file_count": 301,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 1,
+      "modules": [
+        "WidgetKit"
+      ],
+      "note": "widget extension runtime"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
