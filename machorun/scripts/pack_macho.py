@@ -18,6 +18,7 @@ then packs file bytes tightly.
                                                 [--sparse | --gap N]
     scripts/pack_macho.py rename IN -o OUT --from STR --to STR
     scripts/pack_macho.py oversize IN -o OUT [--segment NAME]
+    scripts/pack_macho.py strip-fixups IN.dylib -o OUT.dylib [--id INSTALL_NAME]
     scripts/pack_macho.py inspect FILE
     scripts/pack_macho.py --selftest
 """
@@ -816,6 +817,38 @@ def oversize_bytes(data: bytes, segment: str = "__LINKEDIT") -> bytes:
     return bytes(out)
 
 
+def strip_fixup_lcs(data: bytes) -> bytes:
+    """Drop LC_DYLD_INFO / LC_DYLD_INFO_ONLY / LC_DYLD_CHAINED_FIXUPS.
+
+    Cache extracts keep LC_DYLD_EXPORTS_TRIE and the DATA pointers dyld already
+    resolved inside the cache, with no rebase or bind stream for a loader to
+    apply. The fixture that exercises machorun's refusal is this rewrite of an
+    otherwise ordinary dylib.
+    """
+    img = Image(data)
+    keep: list[tuple[int, int]] = []
+    stripped = 0
+    drop = {LC_DYLD_CHAINED_FIXUPS, LC_DYLD_INFO, LC_DYLD_INFO_ONLY}
+    for off, cmd, cs in img.cmd_offs:
+        if cmd in drop:
+            stripped += 1
+            continue
+        keep.append((off, cs))
+    if stripped == 0:
+        raise ValueError("no LC_DYLD_INFO / LC_DYLD_CHAINED_FIXUPS to strip")
+    blob = bytearray()
+    for off, cs in keep:
+        blob += data[off:off + cs]
+    orig_sizeof = img.sizeofcmds
+    if len(blob) > orig_sizeof:
+        raise ValueError("stripped load commands grew")
+    out = bytearray(data)
+    struct.pack_into("<II", out, 16, len(keep), len(blob))
+    out[32:32 + orig_sizeof] = bytes(orig_sizeof)
+    out[32:32 + len(blob)] = blob
+    return bytes(out)
+
+
 def inspect(path: str) -> None:
     data = open(path, "rb").read()
     img = Image(data)
@@ -825,6 +858,29 @@ def inspect(path: str) -> None:
         fo = "aligned" if aligned(seg.fileoff) or seg.filesize == 0 else f"UNALIGNED +{seg.fileoff & (HOST_PAGE-1):#x}"
         print(f"  {seg.name:14s} vm={seg.vmaddr:#014x}+{seg.vmsize:#x}  "
               f"file={seg.fileoff}+{seg.filesize}  vmaddr={va}  fileoff={fo}")
+    info = img.find_cmd(LC_DYLD_INFO) + img.find_cmd(LC_DYLD_INFO_ONLY)
+    chained = img.find_cmd(LC_DYLD_CHAINED_FIXUPS)
+    exports = img.find_cmd(LC_DYLD_EXPORTS_TRIE)
+    if info:
+        for off, _ in info:
+            fields = struct.unpack_from("<10I", data, off + 8)
+            print(f"  LC_DYLD_INFO  rebase={fields[0]}+{fields[1]}  bind={fields[2]}+{fields[3]}  "
+                  f"weak={fields[4]}+{fields[5]}  lazy={fields[6]}+{fields[7]}  "
+                  f"export={fields[8]}+{fields[9]}")
+    if chained:
+        for off, _ in chained:
+            dataoff, datasize = struct.unpack_from("<II", data, off + 8)
+            print(f"  LC_DYLD_CHAINED_FIXUPS  dataoff={dataoff} datasize={datasize}")
+    if exports:
+        for off, _ in exports:
+            dataoff, datasize = struct.unpack_from("<II", data, off + 8)
+            print(f"  LC_DYLD_EXPORTS_TRIE  dataoff={dataoff} datasize={datasize}")
+    if not info and not chained:
+        print("  fixups: none (no LC_DYLD_INFO / LC_DYLD_CHAINED_FIXUPS)")
+    dc = next((s for s in img.segs if s.name == "__DATA_CONST"), None)
+    if dc and dc.filesize >= 8:
+        sample, = struct.unpack_from("<Q", data, dc.fileoff)
+        print(f"  __DATA_CONST[0] = {sample:#018x}")
 
 
 def cmd_pack(args: argparse.Namespace) -> int:
@@ -858,6 +914,26 @@ def cmd_oversize(args: argparse.Namespace) -> int:
 
 def cmd_inspect(args: argparse.Namespace) -> int:
     inspect(args.input)
+    return 0
+
+
+def cmd_strip_fixups(args: argparse.Namespace) -> int:
+    data = open(args.input, "rb").read()
+    out = strip_fixup_lcs(data)
+    if args.id is not None:
+        buf = bytearray(out)
+        img = Image(out)
+        for off, cs in img.find_cmd(LC_ID_DYLIB):
+            name_off, = struct.unpack_from("<I", out, off + 8)
+            cur = out[off + name_off:off + cs].split(b"\0", 1)[0].decode("ascii", "replace")
+            if cur != args.id:
+                n = set_lc_string(buf, cur, args.id)
+                if n == 0:
+                    raise ValueError(f"failed to set LC_ID_DYLIB to {args.id!r}")
+        out = bytes(buf)
+    os.makedirs(os.path.dirname(os.path.abspath(args.output)) or ".", exist_ok=True)
+    open(args.output, "wb").write(out)
+    inspect(args.output)
     return 0
 
 
@@ -976,6 +1052,14 @@ def _selftest() -> int:
     le = next(s for s in oimg.segs if s.name == "__LINKEDIT")
     assert le.fileoff + le.filesize > len(oversized)
 
+    nofix = strip_fixup_lcs(data)
+    nimg = Image(nofix)
+    assert not nimg.find_cmd(LC_DYLD_CHAINED_FIXUPS), "strip-fixups left LC_DYLD_CHAINED_FIXUPS"
+    assert not nimg.find_cmd(LC_DYLD_INFO) and not nimg.find_cmd(LC_DYLD_INFO_ONLY)
+    assert nimg.find_cmd(LC_DYLD_EXPORTS_TRIE), "strip-fixups dropped LC_DYLD_EXPORTS_TRIE"
+    ndc = next(s for s in nimg.segs if s.name == "__DATA_CONST")
+    assert ndc.filesize > 0
+
     # rename round-trip
     buf = bytearray(data)
     n = set_lc_string(buf, "@rpath/libdylib_greet.dylib", "@rpath/libcache_layout.dylib")
@@ -1022,7 +1106,15 @@ def main(argv: list[str] | None = None) -> int:
     so.add_argument("-o", "--output", required=True)
     so.add_argument("--segment", default="__LINKEDIT")
 
-    si = sub.add_parser("inspect", help="print segment alignment")
+    sf = sub.add_parser(
+        "strip-fixups",
+        help="drop LC_DYLD_INFO / LC_DYLD_CHAINED_FIXUPS (cache-extract refusal fixture)",
+    )
+    sf.add_argument("input")
+    sf.add_argument("-o", "--output", required=True)
+    sf.add_argument("--id", help="set LC_ID_DYLIB to this install name")
+
+    si = sub.add_parser("inspect", help="print segment alignment and fixup load commands")
     si.add_argument("input")
 
     p.add_argument("--selftest", action="store_true")
@@ -1035,6 +1127,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_rename(args)
     if args.cmd == "oversize":
         return cmd_oversize(args)
+    if args.cmd == "strip-fixups":
+        return cmd_strip_fixups(args)
     if args.cmd == "inspect":
         return cmd_inspect(args)
     p.print_help()

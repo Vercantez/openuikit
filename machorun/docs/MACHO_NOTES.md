@@ -78,9 +78,16 @@ dylibs extracted from the macOS dyld shared cache (`ipsw dyld extract`) keep
 the cache's packing. `libswiftObjectiveC.dylib` `__DATA_CONST vmaddr
 0x7ff843287720` — not page-aligned, and the TEXT-to-DATA gap is tens of
 megabytes. Apple's `dsc_extractor.bundle` SIGBUSes on macOS 26.5.2 caches, so
-these files cannot be rebuilt as standalone dylibs. machorun maps them by
-copy (`src/map.c`); the fixtures are `cache_layout_packed` (contiguous
-stand-in) and `cache_layout_sparse` (TEXT-to-DATA 0x22256720) — FIXTURES.md g′.
+these files cannot be rebuilt as standalone dylibs. machorun maps a
+**legitimate** packed image (one that still carries chained or classic
+fixups) by copy (`src/map.c`); the fixtures are `cache_layout_packed`
+(contiguous stand-in) and `cache_layout_sparse` (TEXT-to-DATA 0x22256720).
+Measured 2026-09-03 on both `ipsw dyld extract` and `ipsw dyld extract
+--slide --objc --stubs`: Apple's x86_64 overlays have **no**
+`LC_DYLD_INFO` and **no** `LC_DYLD_CHAINED_FIXUPS`, only
+`LC_DYLD_EXPORTS_TRIE`. dyld already applied rebases and binds inside the
+cache. Those images are refused before mapping (`MR_EXIT_DSC_NO_FIXUPS` /
+`cache_layout_nofix`) — FIXTURES.md g′.
 
 ### `__PAGEZERO`
 

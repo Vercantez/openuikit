@@ -7,7 +7,9 @@
  * scripts/pack_macho.py into packed, non-page-aligned vmaddr/fileoff
  * (contiguous cache data); `libcache_sparse.dylib` is the same rewrite
  * with Apple's cache-wide TEXT-to-DATA gap (0x22256720). All three
- * executables must print the same bytes. See docs/FIXTURES.md.
+ * executables must print the same bytes. `libcache_nofix.dylib` is the
+ * aligned dylib with rebase/bind load commands stripped — the loader
+ * must refuse it. See docs/FIXTURES.md.
  */
 #include <stdio.h>
 
