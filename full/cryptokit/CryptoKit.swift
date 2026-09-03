@@ -1,16 +1,34 @@
 @_exported import Foundation
 
-// A portable CryptoKit-compatible core. Hashing is implemented directly in
-// Swift so the guest dylib has no dependency on an Apple crypto framework or
-// an ELF library. Public-key verification currently fails closed until the
-// platform's native Ed25519 provider is connected.
+// A portable CryptoKit-compatible core. Hashing, HMAC, HKDF, and the
+// symmetric AEAD primitives are implemented directly in Swift so the guest
+// dylib has no dependency on an Apple crypto framework or an ELF library.
+// Public-key, post-quantum, HPKE, and Secure Enclave operations fail closed
+// until a native provider is connected and an Apple-runtime oracle confirms
+// remaining encoding/behavior details.
 
-public enum CryptoKitError: Error, Equatable, Sendable {
+public enum CryptoKitError: Error, Hashable, Sendable {
     case incorrectKeySize
     case incorrectParameterSize
     case authenticationFailure
     case underlyingCoreCryptoError(error: Int32)
+    case wrapFailure
+    case unwrapFailure
+    case invalidParameter
 }
+
+public enum CryptoKitASN1Error: Error, Hashable, Sendable {
+    case invalidFieldIdentifier
+    case unexpectedFieldType
+    case invalidObjectIdentifier
+    case invalidASN1Object
+    case invalidASN1IntegerEncoding
+    case invalidPEMDocument
+    case truncatedASN1Field
+    case unsupportedFieldLength
+}
+
+public typealias CryptoKitMetaError = any Error
 
 public protocol Digest: ContiguousBytes, CustomStringConvertible, Hashable,
     Sequence, Sendable
@@ -21,6 +39,48 @@ where Element == UInt8 {
 public extension Digest {
     func makeIterator() -> Array<UInt8>.Iterator {
         withUnsafeBytes { Array($0) }.makeIterator()
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.withUnsafeBytes { left in
+            rhs.withUnsafeBytes { right in
+                _ckEqual(left, right)
+            }
+        }
+    }
+
+    static func == <D: DataProtocol>(lhs: Self, rhs: D) -> Bool {
+        let right = Array(rhs)
+        return lhs.withUnsafeBytes { left in
+            right.withUnsafeBytes { raw in _ckEqual(left, raw) }
+        }
+    }
+}
+
+public protocol MessageAuthenticationCode: ContiguousBytes, CustomStringConvertible,
+    Hashable, Sequence, Sendable
+where Element == UInt8 {
+    var byteCount: Int { get }
+}
+
+public extension MessageAuthenticationCode {
+    func makeIterator() -> Array<UInt8>.Iterator {
+        withUnsafeBytes { Array($0) }.makeIterator()
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.withUnsafeBytes { left in
+            rhs.withUnsafeBytes { right in
+                _ckEqual(left, right)
+            }
+        }
+    }
+
+    static func == <D: DataProtocol>(lhs: Self, rhs: D) -> Bool {
+        let right = Array(rhs)
+        return lhs.withUnsafeBytes { left in
+            right.withUnsafeBytes { raw in _ckEqual(left, raw) }
+        }
     }
 }
 
@@ -46,64 +106,442 @@ public extension HashFunction {
     }
 }
 
-private func _digestDescription(_ bytes: [UInt8]) -> String {
+func _digestDescription(_ bytes: [UInt8]) -> String {
     bytes.map { String(format: "%02x", $0) }.joined()
 }
 
+func _ckEqual(_ left: UnsafeRawBufferPointer, _ right: UnsafeRawBufferPointer) -> Bool {
+    guard left.count == right.count else { return false }
+    var diff: UInt8 = 0
+    for index in 0..<left.count {
+        diff |= left[index] ^ right[index]
+    }
+    return diff == 0
+}
+
+func _ckEqualBytes(_ left: [UInt8], _ right: [UInt8]) -> Bool {
+    left.withUnsafeBytes { a in
+        right.withUnsafeBytes { b in _ckEqual(a, b) }
+    }
+}
+
+func _ckRandomBytes(_ count: Int) -> [UInt8] {
+    var generator = SystemRandomNumberGenerator()
+    return (0..<count).map { _ in UInt8.random(in: .min ... .max, using: &generator) }
+}
+
+func _ckData<D: ContiguousBytes>(_ value: D) -> Data {
+    value.withUnsafeBytes { Data($0) }
+}
+
+func _ckBytes<D: DataProtocol>(_ value: D) -> [UInt8] {
+    Array(value)
+}
+
+func _ckUnavailableCrypto() -> CryptoKitError {
+    .underlyingCoreCryptoError(error: -1)
+}
+
+public struct SymmetricKeySize: Sendable {
+    public let bitCount: Int
+    public init(bitCount: Int) { self.bitCount = bitCount }
+    public static var bits128: SymmetricKeySize { SymmetricKeySize(bitCount: 128) }
+    public static var bits192: SymmetricKeySize { SymmetricKeySize(bitCount: 192) }
+    public static var bits256: SymmetricKeySize { SymmetricKeySize(bitCount: 256) }
+}
+
+public struct SymmetricKey: ContiguousBytes, Equatable, Sendable {
+    private let bytes: [UInt8]
+
+    public init<D: ContiguousBytes>(data: D) {
+        bytes = Array(_ckData(data))
+    }
+
+    public init(size: SymmetricKeySize) {
+        bytes = _ckRandomBytes((size.bitCount + 7) / 8)
+    }
+
+    init(rawBytes: [UInt8]) {
+        bytes = rawBytes
+    }
+
+    public var bitCount: Int { bytes.count * 8 }
+
+    public func withUnsafeBytes<R>(
+        _ body: (UnsafeRawBufferPointer) throws -> R
+    ) rethrows -> R {
+        try bytes.withUnsafeBytes(body)
+    }
+
+    public static func == (lhs: SymmetricKey, rhs: SymmetricKey) -> Bool {
+        _ckEqualBytes(lhs.bytes, rhs.bytes)
+    }
+}
+
+public struct HashedAuthenticationCode<H: HashFunction>: MessageAuthenticationCode {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
+    fileprivate let bytes: [UInt8]
+
+    init(_ bytes: [UInt8]) { self.bytes = bytes }
+
+    public var byteCount: Int { bytes.count }
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(bytes)
+    }
+
+    public func withUnsafeBytes<R>(
+        _ body: (UnsafeRawBufferPointer) throws -> R
+    ) rethrows -> R {
+        try bytes.withUnsafeBytes(body)
+    }
+}
+
+public struct HMAC<H: HashFunction>: Sendable {
+    public typealias Key = SymmetricKey
+    public typealias MAC = HashedAuthenticationCode<H>
+
+    private let keyBytes: [UInt8]
+    private var message: [UInt8]
+
+    public init(key: SymmetricKey) {
+        keyBytes = Array(_ckData(key))
+        message = []
+    }
+
+    public mutating func update<D: DataProtocol>(data: D) {
+        message.append(contentsOf: data)
+    }
+
+    public func finalize() -> HMAC<H>.MAC {
+        HashedAuthenticationCode(_hmac(H.self, key: keyBytes, message: message))
+    }
+
+    public static func authenticationCode<D: DataProtocol>(
+        for data: D,
+        using key: SymmetricKey
+    ) -> HMAC<H>.MAC {
+        var hmac = HMAC(key: key)
+        hmac.update(data: data)
+        return hmac.finalize()
+    }
+
+    public static func isValidAuthenticationCode(
+        _ mac: HMAC<H>.MAC,
+        authenticating bufferPointer: UnsafeRawBufferPointer,
+        using key: SymmetricKey
+    ) -> Bool {
+        let expected = authenticationCode(for: Data(bufferPointer), using: key)
+        return expected == mac
+    }
+
+    public static func isValidAuthenticationCode<D: DataProtocol>(
+        _ authenticationCode: HMAC<H>.MAC,
+        authenticating authenticatedData: D,
+        using key: SymmetricKey
+    ) -> Bool {
+        Self.authenticationCode(for: authenticatedData, using: key) == authenticationCode
+    }
+
+    public static func isValidAuthenticationCode<C: ContiguousBytes, D: DataProtocol>(
+        _ authenticationCode: C,
+        authenticating authenticatedData: D,
+        using key: SymmetricKey
+    ) -> Bool {
+        let expected = Self.authenticationCode(for: authenticatedData, using: key)
+        return expected.withUnsafeBytes { left in
+            authenticationCode.withUnsafeBytes { right in _ckEqual(left, right) }
+        }
+    }
+}
+
+public struct HKDF<H: HashFunction>: Sendable {
+    public static func extract<Salt: DataProtocol>(
+        inputKeyMaterial: SymmetricKey,
+        salt: Salt?
+    ) -> HashedAuthenticationCode<H> {
+        let saltBytes: [UInt8]
+        if let salt {
+            saltBytes = _ckBytes(salt)
+        } else {
+            saltBytes = [UInt8](repeating: 0, count: H.Digest.byteCount)
+        }
+        return HMAC<H>.authenticationCode(
+            for: Data(_ckData(inputKeyMaterial)),
+            using: SymmetricKey(rawBytes: saltBytes)
+        )
+    }
+
+    public static func expand<PRK: ContiguousBytes, Info: DataProtocol>(
+        pseudoRandomKey prk: PRK,
+        info: Info?,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        let infoBytes = info.map(_ckBytes) ?? []
+        let hashLen = H.Digest.byteCount
+        let n = max(1, (outputByteCount + hashLen - 1) / hashLen)
+        var output: [UInt8] = []
+        var previous: [UInt8] = []
+        let key = SymmetricKey(data: prk)
+        for index in 1...n {
+            var block = previous
+            block.append(contentsOf: infoBytes)
+            block.append(UInt8(index))
+            let mac = HMAC<H>.authenticationCode(for: Data(block), using: key)
+            previous = mac.withUnsafeBytes { Array($0) }
+            output.append(contentsOf: previous)
+        }
+        return SymmetricKey(rawBytes: Array(output.prefix(outputByteCount)))
+    }
+
+    public static func deriveKey(
+        inputKeyMaterial: SymmetricKey,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        deriveKey(
+            inputKeyMaterial: inputKeyMaterial,
+            salt: Data(),
+            info: Data(),
+            outputByteCount: outputByteCount
+        )
+    }
+
+    public static func deriveKey<Info: DataProtocol>(
+        inputKeyMaterial: SymmetricKey,
+        info: Info,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        deriveKey(
+            inputKeyMaterial: inputKeyMaterial,
+            salt: Data(),
+            info: info,
+            outputByteCount: outputByteCount
+        )
+    }
+
+    public static func deriveKey<Salt: DataProtocol>(
+        inputKeyMaterial: SymmetricKey,
+        salt: Salt,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        deriveKey(
+            inputKeyMaterial: inputKeyMaterial,
+            salt: salt,
+            info: Data(),
+            outputByteCount: outputByteCount
+        )
+    }
+
+    public static func deriveKey<Salt: DataProtocol, Info: DataProtocol>(
+        inputKeyMaterial: SymmetricKey,
+        salt: Salt,
+        info: Info,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        let prk = extract(inputKeyMaterial: inputKeyMaterial, salt: Optional(salt))
+        return expand(pseudoRandomKey: prk, info: Optional(info), outputByteCount: outputByteCount)
+    }
+}
+
+public struct SharedSecret: ContiguousBytes, Hashable, Sendable {
+    let bytes: [UInt8]
+
+    init(bytes: [UInt8]) { self.bytes = bytes }
+
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(bytes)
+    }
+
+    public func withUnsafeBytes<R>(
+        _ body: (UnsafeRawBufferPointer) throws -> R
+    ) rethrows -> R {
+        try bytes.withUnsafeBytes(body)
+    }
+
+    public static func == (lhs: SharedSecret, rhs: SharedSecret) -> Bool {
+        _ckEqualBytes(lhs.bytes, rhs.bytes)
+    }
+
+    public static func == <D: DataProtocol>(lhs: SharedSecret, rhs: D) -> Bool {
+        _ckEqualBytes(lhs.bytes, _ckBytes(rhs))
+    }
+
+    public func hkdfDerivedSymmetricKey<H: HashFunction, Salt: DataProtocol, SI: DataProtocol>(
+        using hashFunction: H.Type,
+        salt: Salt,
+        sharedInfo: SI,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        _ = hashFunction
+        return HKDF<H>.deriveKey(
+            inputKeyMaterial: SymmetricKey(rawBytes: bytes),
+            salt: salt,
+            info: sharedInfo,
+            outputByteCount: outputByteCount
+        )
+    }
+
+    public func x963DerivedSymmetricKey<H: HashFunction, SI: DataProtocol>(
+        using hashFunction: H.Type,
+        sharedInfo: SI,
+        outputByteCount: Int
+    ) -> SymmetricKey {
+        _ = hashFunction
+        let info = _ckBytes(sharedInfo)
+        let hashLen = H.Digest.byteCount
+        let n = max(1, (outputByteCount + hashLen - 1) / hashLen)
+        var output: [UInt8] = []
+        for counter in 1...n {
+            var block = bytes
+            block.append(UInt8((counter >> 24) & 0xff))
+            block.append(UInt8((counter >> 16) & 0xff))
+            block.append(UInt8((counter >> 8) & 0xff))
+            block.append(UInt8(counter & 0xff))
+            block.append(contentsOf: info)
+            output.append(contentsOf: H.hash(data: Data(block)))
+        }
+        return SymmetricKey(rawBytes: Array(output.prefix(outputByteCount)))
+    }
+}
+
+func _hmac<H: HashFunction>(_ type: H.Type, key: [UInt8], message: [UInt8]) -> [UInt8] {
+    _ = type
+    var keyBytes = key
+    if keyBytes.count > H.blockByteCount {
+        keyBytes = Array(H.hash(data: Data(keyBytes)))
+    }
+    if keyBytes.count < H.blockByteCount {
+        keyBytes += [UInt8](repeating: 0, count: H.blockByteCount - keyBytes.count)
+    }
+    let innerPad = keyBytes.map { $0 ^ 0x36 }
+    let outerPad = keyBytes.map { $0 ^ 0x5c }
+    let inner = H.hash(data: Data(innerPad + message))
+    return Array(H.hash(data: Data(outerPad) + Data(inner)))
+}
+
 public struct SHA256Digest: Digest {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
     public static let byteCount = 32
     private let bytes: [UInt8]
     fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
     public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
         try bytes.withUnsafeBytes(body)
     }
-    public var description: String { _digestDescription(bytes) }
 }
 
 public struct SHA384Digest: Digest {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
     public static let byteCount = 48
     private let bytes: [UInt8]
     fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
     public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
         try bytes.withUnsafeBytes(body)
     }
-    public var description: String { _digestDescription(bytes) }
 }
 
 public struct SHA512Digest: Digest {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
     public static let byteCount = 64
     private let bytes: [UInt8]
     fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
     public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
         try bytes.withUnsafeBytes(body)
     }
+}
+
+public struct SHA3_256Digest: Digest {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
+    public static let byteCount = 32
+    private let bytes: [UInt8]
+    fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
     public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
+    public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
+        try bytes.withUnsafeBytes(body)
+    }
+}
+
+public struct SHA3_384Digest: Digest {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
+    public static let byteCount = 48
+    private let bytes: [UInt8]
+    fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
+    public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
+        try bytes.withUnsafeBytes(body)
+    }
+}
+
+public struct SHA3_512Digest: Digest {
+    public typealias Element = UInt8
+    public typealias Iterator = Array<UInt8>.Iterator
+    public static let byteCount = 64
+    private let bytes: [UInt8]
+    fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+    public var description: String { _digestDescription(bytes) }
+    public var hashValue: Int { bytes.hashValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
+    public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
+        try bytes.withUnsafeBytes(body)
+    }
 }
 
 public enum Insecure {
     public struct SHA1Digest: Digest {
+        public typealias Element = UInt8
+        public typealias Iterator = Array<UInt8>.Iterator
         public static let byteCount = 20
         private let bytes: [UInt8]
         fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+        public var description: String { _digestDescription(bytes) }
+        public var hashValue: Int { bytes.hashValue }
+        public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
         public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
             try bytes.withUnsafeBytes(body)
         }
-        public var description: String { _digestDescription(bytes) }
     }
 
     public struct MD5Digest: Digest {
+        public typealias Element = UInt8
+        public typealias Iterator = Array<UInt8>.Iterator
         public static let byteCount = 16
         private let bytes: [UInt8]
         fileprivate init(_ bytes: [UInt8]) { self.bytes = bytes }
+        public var description: String { _digestDescription(bytes) }
+        public var hashValue: Int { bytes.hashValue }
+        public func hash(into hasher: inout Hasher) { hasher.combine(bytes) }
         public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
             try bytes.withUnsafeBytes(body)
         }
-        public var description: String { _digestDescription(bytes) }
     }
 
     public struct SHA1: HashFunction {
         public typealias Digest = SHA1Digest
         public static let blockByteCount = 64
+        public static let byteCount = 20
         private var bytes: [UInt8] = []
 
         public init() {}
@@ -116,6 +554,7 @@ public enum Insecure {
     public struct MD5: HashFunction {
         public typealias Digest = MD5Digest
         public static let blockByteCount = 64
+        public static let byteCount = 16
         private var bytes: [UInt8] = []
 
         public init() {}
@@ -129,6 +568,7 @@ public enum Insecure {
 public struct SHA256: HashFunction {
     public typealias Digest = SHA256Digest
     public static let blockByteCount = 64
+    public static let byteCount = 32
     private var bytes: [UInt8] = []
 
     public init() {}
@@ -141,6 +581,7 @@ public struct SHA256: HashFunction {
 public struct SHA384: HashFunction {
     public typealias Digest = SHA384Digest
     public static let blockByteCount = 128
+    public static let byteCount = 48
     private var bytes: [UInt8] = []
 
     public init() {}
@@ -155,6 +596,7 @@ public struct SHA384: HashFunction {
 public struct SHA512: HashFunction {
     public typealias Digest = SHA512Digest
     public static let blockByteCount = 128
+    public static let byteCount = 64
     private var bytes: [UInt8] = []
 
     public init() {}
@@ -166,62 +608,98 @@ public struct SHA512: HashFunction {
     }
 }
 
-public enum ChaChaPoly {
-    public struct Nonce: ContiguousBytes, Sequence, Sendable {
-        public typealias Iterator = Array<UInt8>.Iterator
-        public typealias Element = UInt8
-        public static let byteCount = 12
-        private let bytes: [UInt8]
+public typealias SHA2_256 = SHA256
+public typealias SHA2_384 = SHA384
+public typealias SHA2_512 = SHA512
 
-        public init() {
-            var generator = SystemRandomNumberGenerator()
-            bytes = (0..<Self.byteCount).map { _ in
-                UInt8.random(in: .min ... .max, using: &generator)
-            }
-        }
+public struct SHA3_256: HashFunction {
+    public typealias Digest = SHA3_256Digest
+    public static let blockByteCount = 136
+    public static let byteCount = 32
+    private var bytes: [UInt8] = []
 
-        public init<D: DataProtocol>(data: D) throws {
-            let candidate = Array(data)
-            guard candidate.count == Self.byteCount else {
-                throw CryptoKitError.incorrectParameterSize
-            }
-            bytes = candidate
-        }
-
-        public var count: Int { bytes.count }
-        public func makeIterator() -> Iterator { bytes.makeIterator() }
-        public func withUnsafeBytes<R>(
-            _ body: (UnsafeRawBufferPointer) throws -> R
-        ) rethrows -> R {
-            try bytes.withUnsafeBytes(body)
-        }
+    public init() {}
+    public mutating func update(bufferPointer: UnsafeRawBufferPointer) {
+        bytes.append(contentsOf: bufferPointer)
+    }
+    public func finalize() -> SHA3_256Digest {
+        SHA3_256Digest(_sha3(bytes, rate: 136, outputByteCount: 32))
     }
 }
 
-public enum Curve25519 {
-    public enum Signing {
-        public struct PublicKey: Sendable {
-            public let rawRepresentation: Data
+public struct SHA3_384: HashFunction {
+    public typealias Digest = SHA3_384Digest
+    public static let blockByteCount = 104
+    public static let byteCount = 48
+    private var bytes: [UInt8] = []
 
-            public init<D: ContiguousBytes>(rawRepresentation: D) throws {
-                let value = rawRepresentation.withUnsafeBytes { Data($0) }
-                guard value.count == 32 else {
-                    throw CryptoKitError.incorrectKeySize
-                }
-                self.rawRepresentation = value
-            }
-
-            public func isValidSignature<S: DataProtocol, D: DataProtocol>(
-                _ signature: S,
-                for data: D
-            ) -> Bool {
-                // Truthful fail-closed behavior: never report an unverified
-                // signature as authentic while Ed25519 is unavailable.
-                _ = data
-                return signature.count == 64 && false
-            }
-        }
+    public init() {}
+    public mutating func update(bufferPointer: UnsafeRawBufferPointer) {
+        bytes.append(contentsOf: bufferPointer)
     }
+    public func finalize() -> SHA3_384Digest {
+        SHA3_384Digest(_sha3(bytes, rate: 104, outputByteCount: 48))
+    }
+}
+
+public struct SHA3_512: HashFunction {
+    public typealias Digest = SHA3_512Digest
+    public static let blockByteCount = 72
+    public static let byteCount = 64
+    private var bytes: [UInt8] = []
+
+    public init() {}
+    public mutating func update(bufferPointer: UnsafeRawBufferPointer) {
+        bytes.append(contentsOf: bufferPointer)
+    }
+    public func finalize() -> SHA3_512Digest {
+        SHA3_512Digest(_sha3(bytes, rate: 72, outputByteCount: 64))
+    }
+}
+
+public protocol DiffieHellmanKeyAgreement: Sendable {
+    associatedtype PublicKey: Sendable
+    var publicKey: PublicKey { get }
+    func sharedSecretFromKeyAgreement(with publicKeyShare: PublicKey) throws -> SharedSecret
+}
+
+public protocol HPKEPublicKeySerialization: Sendable {
+    func hpkeRepresentation(kem: HPKE.KEM) throws -> Data
+    init<D: ContiguousBytes>(_ serialization: D, kem: HPKE.KEM) throws
+}
+
+public protocol HPKEDiffieHellmanPublicKey: HPKEPublicKeySerialization {
+    associatedtype EphemeralPrivateKey: HPKEDiffieHellmanPrivateKeyGeneration
+    where Self == Self.EphemeralPrivateKey.PublicKey
+}
+
+public protocol HPKEDiffieHellmanPrivateKey: DiffieHellmanKeyAgreement
+where PublicKey: HPKEDiffieHellmanPublicKey {}
+
+public protocol HPKEDiffieHellmanPrivateKeyGeneration: HPKEDiffieHellmanPrivateKey {
+    init()
+}
+
+public protocol KEMPublicKey: Sendable {
+    func encapsulate() throws -> KEM.EncapsulationResult
+}
+
+public protocol KEMPrivateKey: Sendable {
+    associatedtype PublicKey: KEMPublicKey
+    var publicKey: PublicKey { get }
+    func decapsulate(_ encapsulated: Data) throws -> SymmetricKey
+    static func generate() throws -> Self
+}
+
+public protocol HPKEKEMPublicKey: HPKEPublicKeySerialization, KEMPublicKey {
+    associatedtype EphemeralPrivateKey: HPKEKEMPrivateKeyGeneration
+    where Self == Self.EphemeralPrivateKey.PublicKey
+}
+
+public protocol HPKEKEMPrivateKey: KEMPrivateKey where PublicKey: HPKEKEMPublicKey {}
+
+public protocol HPKEKEMPrivateKeyGeneration: HPKEKEMPrivateKey {
+    init() throws
 }
 
 private extension UInt32 {
@@ -518,4 +996,104 @@ private func _sha512(_ input: [UInt8], variant384: Bool) -> [UInt8] {
     var result: [UInt8] = []
     for value in state { _appendUInt64BE(value, to: &result) }
     return result
+}
+
+private let _keccakRoundConstants: [UInt64] = [
+    0x0000000000000001, 0x0000000000008082, 0x800000000000808A,
+    0x8000000080008000, 0x000000000000808B, 0x0000000080000001,
+    0x8000000080008081, 0x8000000000008009, 0x000000000000008A,
+    0x0000000000000088, 0x0000000080008009, 0x000000008000000A,
+    0x000000008000808B, 0x800000000000008B, 0x8000000000008089,
+    0x8000000000008003, 0x8000000000008002, 0x8000000000000080,
+    0x000000000000800A, 0x800000008000000A, 0x8000000080008081,
+    0x8000000000008080, 0x0000000080000001, 0x8000000080008008,
+]
+
+private func _keccakRotateLeft(_ value: UInt64, _ amount: Int) -> UInt64 {
+    (value << amount) | (value >> (64 - amount))
+}
+
+private func _keccakPermute(_ state: inout [UInt64]) {
+    let rotationOffsets: [[Int]] = [
+        [0, 36, 3, 41, 18],
+        [1, 44, 10, 45, 2],
+        [62, 6, 43, 15, 61],
+        [28, 55, 25, 21, 56],
+        [27, 20, 39, 8, 14],
+    ]
+    for round in 0..<24 {
+        var c = [UInt64](repeating: 0, count: 5)
+        var d = [UInt64](repeating: 0, count: 5)
+        for x in 0..<5 {
+            c[x] = state[x] ^ state[x + 5] ^ state[x + 10] ^ state[x + 15] ^ state[x + 20]
+        }
+        for x in 0..<5 {
+            d[x] = c[(x + 4) % 5] ^ _keccakRotateLeft(c[(x + 1) % 5], 1)
+        }
+        for x in 0..<5 {
+            for y in 0..<5 {
+                state[x + 5 * y] ^= d[x]
+            }
+        }
+        var b = [UInt64](repeating: 0, count: 25)
+        for x in 0..<5 {
+            for y in 0..<5 {
+                b[y + 5 * ((2 * x + 3 * y) % 5)] =
+                    _keccakRotateLeft(state[x + 5 * y], rotationOffsets[x][y])
+            }
+        }
+        for x in 0..<5 {
+            for y in 0..<5 {
+                state[x + 5 * y] = b[x + 5 * y] ^ ((~b[(x + 1) % 5 + 5 * y]) & b[(x + 2) % 5 + 5 * y])
+            }
+        }
+        state[0] ^= _keccakRoundConstants[round]
+    }
+}
+
+func _sha3(_ input: [UInt8], rate: Int, outputByteCount: Int) -> [UInt8] {
+    var state = [UInt64](repeating: 0, count: 25)
+
+    func xorRateBlock(_ block: ArraySlice<UInt8>) {
+        let bytes = Array(block)
+        for lane in 0..<(rate / 8) {
+            var word: UInt64 = 0
+            for byte in 0..<8 {
+                word |= UInt64(bytes[lane * 8 + byte]) << (8 * byte)
+            }
+            state[lane] ^= word
+        }
+    }
+
+    var offset = 0
+    while offset + rate <= input.count {
+        xorRateBlock(input[offset..<(offset + rate)])
+        _keccakPermute(&state)
+        offset += rate
+    }
+
+    var last = [UInt8](repeating: 0, count: rate)
+    let remaining = input.count - offset
+    if remaining > 0 {
+        for index in 0..<remaining { last[index] = input[offset + index] }
+    }
+    last[remaining] ^= 0x06
+    last[rate - 1] ^= 0x80
+    xorRateBlock(last[0..<rate])
+    _keccakPermute(&state)
+
+    var output: [UInt8] = []
+    output.reserveCapacity(outputByteCount)
+    while output.count < outputByteCount {
+        for lane in 0..<(rate / 8) {
+            var word = state[lane]
+            for _ in 0..<8 {
+                output.append(UInt8(truncatingIfNeeded: word))
+                word >>= 8
+                if output.count == outputByteCount { return output }
+            }
+        }
+        _keccakPermute(&state)
+    }
+    return Array(output.prefix(outputByteCount))
 }
