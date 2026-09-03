@@ -60,7 +60,13 @@ if [ "$LIB" = libswiftDarwin ]; then
                libswift_DarwinFoundation2 libswift_DarwinFoundation3; do
     sp=$B/lib/swift/${SWIFTCORE_STDLIB_DIR}/$shell.dylib
     [ -f "$sp" ] || { echo "link_macho_dylib: CANNOT_DARWIN_REEXPORT missing $sp" >&2; exit 2; }
-    REEXPORT_FLAGS+=(-Wl,-reexport_library,"$sp")
+    # -reexport-l<name>, not -reexport_library <path>: the Darwin objects
+    # autolink -l<shell> too, and the path form gave every shell TWO load
+    # commands (LC_LOAD_DYLIB + LC_REEXPORT_DYLIB) while lld numbered bind
+    # ordinals over its deduplicated list -- Bool metadata bound to
+    # "libswift_DarwinFoundation2" and machorun refused (2026-09-03).
+    # Apple's libswiftDarwin has exactly one LC_REEXPORT_DYLIB per shell.
+    REEXPORT_FLAGS+=(-Wl,-reexport-l"${shell#lib}")
   done
   LINK_TARGET=$(printf '%s' "$SWIFTCORE_CLANG_TARGET" | sed -E 's/-macosx[0-9.]+$/-macosx15.0/')
   echo "link_macho_dylib: libswiftDarwin target=$LINK_TARGET reexport=4 shells"
@@ -84,6 +90,20 @@ echo "linked: $OUT"
 if [ "$LIB" = libswiftDarwin ]; then
   have=$(/usr/lib/llvm-18/bin/llvm-otool -l "$OUT" 2>/dev/null \
     | awk '/LC_REEXPORT_DYLIB/{r=1} r&&/^ *name /{print $2; r=0}' | sort -u | paste -sd, -)
+  # ld64.lld 18-20 emit LC_LOAD_DYLIB + LC_REEXPORT_DYLIB per re-exported
+  # dylib but number bind ordinals per file (see dedupe_reexport_loads.py):
+  # drop the redundant LC_LOAD_DYLIB so ordinals match load-command order
+  # the way ld64 / lld main lay it out, then prove it on the binds.
+  python3 "$SCRIPT_DIR/dedupe_reexport_loads.py" "$OUT" || exit 2
+  dups=$(/usr/lib/llvm-18/bin/llvm-otool -L "$OUT" 2>/dev/null | tail -n +2 | awk '{print $1}' | sort | uniq -d | paste -sd, -)
+  [ -z "$dups" ] || { echo "link_macho_dylib: CANNOT_DARWIN_REEXPORT duplicate load commands: $dups" >&2; exit 2; }
+  # Every bind attributed to a re-exported shell must be that shell's own
+  # FORCE_LOAD symbol; anything else means the ordinals are still off.
+  stray=$(/usr/lib/llvm-18/bin/llvm-objdump --macho --bind "$OUT" 2>/dev/null \
+    | awk 'NF>=7 && $6 ~ /libswift_(Builtin_float|DarwinFoundation[123])$/ && $7 !~ /FORCE_LOAD/ {print $6":"$7}' | head -5 | paste -sd, -)
+  [ -z "$stray" ] || { echo "link_macho_dylib: CANNOT_DARWIN_REEXPORT bind ordinals still off: $stray" >&2; exit 2; }
+  core_binds=$(/usr/lib/llvm-18/bin/llvm-objdump --macho --bind "$OUT" 2>/dev/null | awk 'NF>=7 && $6=="libswiftCore"' | wc -l | tr -d ' ')
+  echo "link_macho_dylib: libswiftDarwin binds to libswiftCore=$core_binds, no stray shell binds"
   want=/usr/lib/swift/libswift_Builtin_float.dylib,/usr/lib/swift/libswift_DarwinFoundation1.dylib,/usr/lib/swift/libswift_DarwinFoundation2.dylib,/usr/lib/swift/libswift_DarwinFoundation3.dylib
   [ "$have" = "$want" ] || { echo "link_macho_dylib: CANNOT_DARWIN_REEXPORT have=[$have]" >&2; exit 2; }
   echo "link_macho_dylib: libswiftDarwin LC_REEXPORT_DYLIB = Apple's four"
