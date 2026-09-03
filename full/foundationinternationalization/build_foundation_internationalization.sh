@@ -13,6 +13,7 @@ SWIFT_FOUNDATION_ICU=${SWIFT_FOUNDATION_ICU:?SWIFT_FOUNDATION_ICU is required}
 STAGE=${STAGE:?STAGE is required}
 WORK=${WORK:?WORK is required}
 TARGET=${TARGET:-arm64-apple-macos15.0}
+LINK_ARCH=${TARGET%%-*}
 MIN_OS=${MIN_OS:-15.0}
 LINK_PLATFORM=${LINK_PLATFORM:-macos}
 LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MIN_OS}
@@ -245,7 +246,7 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -o "$INTL_WORK/open-foundation-internationalization-bridge.o"
 
 INTL_DARWIN=$STAGE/guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
-ld64.lld-18 -arch arm64 \
+ld64.lld-18 -arch "$LINK_ARCH" \
     -platform_version "$LINK_PLATFORM" "$MIN_OS" "$LINK_SDK_VERSION" \
     -syslibroot "$STAGE/sdk" -dylib -dead_strip -undefined dynamic_lookup \
     -install_name /usr/lib/libOpenFoundationInternationalization.dylib \
@@ -297,7 +298,7 @@ mapfile -d '' -t ICU_OBJECTS < <(
     find "$ICU_OBJECT_ROOT" -type f -name '*.o' -print0 | LC_ALL=C sort -z
 )
 RUNTIME_LIB=$STAGE/guest-root/darwin/usr/lib
-ld64.lld-18 -arch arm64 \
+ld64.lld-18 -arch "$LINK_ARCH" \
     -platform_version "$LINK_PLATFORM" "$MIN_OS" "$LINK_SDK_VERSION" \
     -syslibroot "$STAGE/guest-root/darwin" -dylib -dead_strip \
     -install_name "$DYLIB_INSTALL_PREFIX/lib_FoundationICU.dylib" \
@@ -353,7 +354,7 @@ mapfile -d '' -t INTL_SOURCES < <(
     -emit-object -o "$INTL_WORK/FoundationInternationalization.o" \
     "${INTL_SOURCES[@]}"
 
-ld64.lld-18 -arch arm64 \
+ld64.lld-18 -arch "$LINK_ARCH" \
     -platform_version "$LINK_PLATFORM" "$MIN_OS" "$LINK_SDK_VERSION" \
     -syslibroot "$STAGE/sdk" -dylib -dead_strip -ignore_auto_link \
     -install_name "$DYLIB_INSTALL_PREFIX/libFoundationInternationalization.dylib" \

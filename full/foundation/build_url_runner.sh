@@ -21,6 +21,7 @@ SYS=${SYS:-$W/scratch/sysroot_fe4}
 ROOTDIR=${ROOTDIR:-$W/scratch/mrroot_full}
 OUT=${OUT:-$W/scratch/fe4_out}
 TARGET=${TARGET:-arm64-apple-macos15.0}
+LINK_ARCH=${TARGET%%-*}
 mkdir -p "$OUT"
 
 swiftc -target "$TARGET" -sdk "$SYS" -wmo \
@@ -77,7 +78,7 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -nostdinc \
 # machorun/scripts/stage_swiftcore.sh already knows how to stage.  Its
 # artifacts/ holds neither today.  Bounded work in a repo that has done it
 # twice -- not a new problem.
-ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0 -syslibroot "$SYS" \
+ld64.lld-18 -arch "$LINK_ARCH" -platform_version macos 15.0 15.0 -syslibroot "$SYS" \
     -rpath /usr/lib/swift -rpath @loader_path -dead_strip \
     -exported_symbol __mh_execute_header \
     -L"$ROOTDIR/darwin/usr/lib" \
