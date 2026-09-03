@@ -1,0 +1,367 @@
+precise	status	evidence	notes
+c:@CXCallDirectoryPhoneNumberMax	declared	CallKit.swift	compiles as Int64.max; Apple payload unobserved
+c:@CXErrorDomain	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@CXErrorDomainCallDirectoryManager	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@CXErrorDomainIncomingCall	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@CXErrorDomainNotificationServiceExtension	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@CXErrorDomainRequestTransaction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallDirectoryEnabledStatus	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallDirectoryEnabledStatus@CXCallDirectoryEnabledStatusDisabled	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallDirectoryEnabledStatus@CXCallDirectoryEnabledStatusEnabled	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallDirectoryEnabledStatus@CXCallDirectoryEnabledStatusUnknown	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallEndedReason	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallEndedReason@CXCallEndedReasonAnsweredElsewhere	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallEndedReason@CXCallEndedReasonDeclinedElsewhere	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallEndedReason@CXCallEndedReasonFailed	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallEndedReason@CXCallEndedReasonRemoteEnded	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXCallEndedReason@CXCallEndedReasonUnanswered	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCode@CXErrorCodeInvalidArgument	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCode@CXErrorCodeMissingVoIPBackgroundMode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCode@CXErrorCodeUnentitled	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCode@CXErrorCodeUnknownError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorCurrentlyLoading	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorDuplicateEntries	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorEntriesOutOfOrder	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorExtensionDisabled	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorLoadingInterrupted	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorMaximumEntriesExceeded	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorNoExtensionFound	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorUnexpectedIncrementalRemoval	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorUnknown	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorCallIsProtected	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorCallUUIDAlreadyExists	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredByBlockList	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredByDoNotDisturb	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredBySensitiveParticipants	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredDuringRestrictedSharingMode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorUnentitled	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorUnknown	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeNotificationServiceExtensionError@CXErrorCodeNotificationServiceExtensionErrorInvalidClientProcess	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeNotificationServiceExtensionError@CXErrorCodeNotificationServiceExtensionErrorMissingNotificationFilteringEntitlement	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeNotificationServiceExtensionError@CXErrorCodeNotificationServiceExtensionErrorUnknown	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorCallIsProtected	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorCallUUIDAlreadyExists	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorEmptyTransaction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorInvalidAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorMaximumCallGroupsReached	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnentitled	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnknown	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnknownCallProvider	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnknownCallUUID	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXHandleType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXHandleType@CXHandleTypeEmailAddress	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXHandleType@CXHandleTypeGeneric	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXHandleType@CXHandleTypePhoneNumber	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXPlayDTMFCallActionType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXPlayDTMFCallActionType@CXPlayDTMFCallActionTypeHardPause	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXPlayDTMFCallActionType@CXPlayDTMFCallActionTypeSingleTone	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXPlayDTMFCallActionType@CXPlayDTMFCallActionTypeSoftPause	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXTranslationEngine	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXTranslationEngine@CXTranslationEngineCustom	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@E@CXTranslationEngine@CXTranslationEngineDefault	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:@T@CXCallDirectoryPhoneNumber	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction(im)fail	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction(im)fulfill	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction(im)init	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXAction(py)UUID	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction(py)complete	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAction(py)timeoutDate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAnswerCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXAnswerCallAction(im)fulfillWithDateConnected:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCall	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCall(py)UUID	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCall(py)hasConnected	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCall(py)hasEnded	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCall(py)onHold	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCall(py)outgoing	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallAction(im)initWithCallUUID:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallAction(im)initWithCallUUID:::SYNTHESIZED::c:objc(cs)CXCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXCallAction(py)callUUID	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController(im)init	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController(im)initWithQueue:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController(im)requestTransaction:completion:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController(im)requestTransactionWithAction:completion:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController(im)requestTransactionWithActions:completion:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallController(py)callObserver	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)addBlockingEntryWithNextSequentialPhoneNumber:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)addIdentificationEntryWithNextSequentialPhoneNumber:label:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)completeRequestWithCompletionHandler:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeAllBlockingEntries	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeAllIdentificationEntries	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeBlockingEntryWithPhoneNumber:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeIdentificationEntryWithPhoneNumber:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(py)delegate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryExtensionContext(py)incremental	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryManager	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryManager(cpy)sharedInstance	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryManager(im)getEnabledStatusForExtensionWithIdentifier:completionHandler:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryManager(im)openSettingsWithCompletionHandler:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryManager(im)reloadExtensionWithIdentifier:completionHandler:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryProvider	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallDirectoryProvider(im)beginRequestWithExtensionContext:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallObserver	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallObserver(im)setDelegate:queue:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallObserver(py)calls	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)hasVideo	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)localizedCallerName	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)remoteHandle	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)supportsDTMF	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)supportsGrouping	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)supportsHolding	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXCallUpdate(py)supportsUngrouping	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXEndCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXEndCallAction(im)fulfillWithDateEnded:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXHandle	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXHandle(im)initWithType:value:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXHandle(py)type	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXHandle(py)value	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXPlayDTMFCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXPlayDTMFCallAction(im)initWithCallUUID:digits:type:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXPlayDTMFCallAction(im)initWithCallUUID:digits:type:::SYNTHESIZED::c:objc(cs)CXPlayDTMFCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXPlayDTMFCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXPlayDTMFCallAction(py)digits	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXPlayDTMFCallAction(py)type	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(cm)reportNewIncomingVoIPPushPayload:completion:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)initWithConfiguration:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)invalidate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)pendingCallActionsOfClass:withCallUUID:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)reportCallWithUUID:endedAtDate:reason:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)reportCallWithUUID:updated:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)reportNewIncomingCallWithUUID:update:completion:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)reportOutgoingCallWithUUID:connectedAtDate:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)reportOutgoingCallWithUUID:startedConnectingAtDate:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(im)setDelegate:queue:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(py)configuration	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProvider(py)pendingTransactions	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(im)init	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(im)initWithLocalizedName:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)iconTemplateImageData	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)includesCallsInRecents	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)localizedName	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)maximumCallGroups	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)maximumCallsPerCallGroup	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)ringtoneSound	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)supportsAudioTranslation	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXProviderConfiguration(py)supportsVideo	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetGroupCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetGroupCallAction(im)initWithCallUUID:callUUIDToGroupWith:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetGroupCallAction(im)initWithCallUUID:callUUIDToGroupWith:::SYNTHESIZED::c:objc(cs)CXSetGroupCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetGroupCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXSetGroupCallAction(py)callUUIDToGroupWith	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetHeldCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetHeldCallAction(im)initWithCallUUID:onHold:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetHeldCallAction(im)initWithCallUUID:onHold:::SYNTHESIZED::c:objc(cs)CXSetHeldCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetHeldCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXSetHeldCallAction(py)onHold	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetMutedCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetMutedCallAction(im)initWithCallUUID:muted:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetMutedCallAction(im)initWithCallUUID:muted:::SYNTHESIZED::c:objc(cs)CXSetMutedCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetMutedCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXSetMutedCallAction(py)muted	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction(im)fulfillUsingTranslationEngine:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction(im)initWithCallUUID:isTranslating:localLanguage:remoteLanguage:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction(im)initWithCallUUID:isTranslating:localLanguage:remoteLanguage:::SYNTHESIZED::c:objc(cs)CXSetTranslatingCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXSetTranslatingCallAction(py)isTranslating	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction(py)localLanguage	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXSetTranslatingCallAction(py)remoteLanguage	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction(im)fulfillWithDateStarted:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction(im)initWithCallUUID:handle:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction(im)initWithCallUUID:handle:::SYNTHESIZED::c:objc(cs)CXStartCallAction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction(im)initWithCoder:	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+c:objc(cs)CXStartCallAction(py)contactIdentifier	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction(py)handle	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXStartCallAction(py)video	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction(im)addAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction(im)initWithAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction(im)initWithActions:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction(py)UUID	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction(py)actions	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CXTransaction(py)complete	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXCallDirectoryExtensionContextDelegate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXCallDirectoryExtensionContextDelegate(im)requestFailedForExtensionContext:withError:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXCallObserverDelegate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXCallObserverDelegate(im)callObserver:callChanged:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:didActivateAudioSession:	deferred		isolated gate cannot import AVFoundation; no module-local AVAudioSession
+c:objc(pl)CXProviderDelegate(im)provider:didDeactivateAudioSession:	deferred		isolated gate cannot import AVFoundation; no module-local AVAudioSession
+c:objc(pl)CXProviderDelegate(im)provider:executeTransaction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performAnswerCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performEndCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performPlayDTMFCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performSetGroupCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performSetHeldCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performSetMutedCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performSetTranslatingCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:performStartCallAction:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)provider:timedOutPerformingAction:	declared	CXProvider.swift	default empty; Apple timeout scheduling unobserved
+c:objc(pl)CXProviderDelegate(im)providerDidBegin:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CXProviderDelegate(im)providerDidReset:	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CXHandle	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CXTransaction	declared	CXActions.swift	failable NSCoder path compiles; full action round-trip unobserved
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCode	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	declared	CXErrors.swift	CustomNSError overlay; not Apple _BridgedStoredNSError
+s:SC11CXErrorCodeLeV	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC11CXErrorCodeLeV10unentitledSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC11CXErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC11CXErrorCodeLeV12unknownErrorSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC11CXErrorCodeLeV15invalidArgumentSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC11CXErrorCodeLeV25missingVoIPBackgroundModeSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV10unentitledSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV15callIsProtectedSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV19filteredByBlockListSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV21callUUIDAlreadyExistsSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV22filteredByDoNotDisturbSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV31filteredBySensitiveParticipantsSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV35filteredDuringRestrictedSharingModeSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC28CXErrorCodeIncomingCallErrorLeV7unknownSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV05emptyD0SoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV10unentitledSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV13invalidActionSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV15callIsProtectedSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV15unknownCallUUIDSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV19unknownCallProviderSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV21callUUIDAlreadyExistsSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV24maximumCallGroupsReachedSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC34CXErrorCodeRequestTransactionErrorLeV7unknownSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV16currentlyLoadingSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV16duplicateEntriesSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV16noExtensionFoundSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV17entriesOutOfOrderSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV17extensionDisabledSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV18loadingInterruptedSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV22maximumEntriesExceededSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV28unexpectedIncrementalRemovalSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV7unknownSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV07missingC20FilteringEntitlementSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV20invalidClientProcessSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV7unknownSoAAVvpZ	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXCallDirectoryEnabledStatus	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXCallEndedReason	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXHandleType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXPlayDTMFCallActionType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXTranslationEngine	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXCallDirectoryEnabledStatus	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXCallEndedReason	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXHandleType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXPlayDTMFCallActionType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXTranslationEngine	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXCallDirectoryEnabledStatus	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXCallEndedReason	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXHandleType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXPlayDTMFCallActionType	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXTranslationEngine	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So11CXErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So12CXHandleTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So17CXCallEndedReasonV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So19CXTranslationEngineV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So23CXProviderConfigurationC7CallKitE20supportedHandleTypesShySo12CXHandleTypeVGvp	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So24CXPlayDTMFCallActionTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So28CXCallDirectoryEnabledStatusV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So28CXErrorCodeIncomingCallErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So34CXErrorCodeRequestTransactionErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So36CXErrorCodeCallDirectoryManagerErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:So44CXErrorCodeNotificationServiceExtensionErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCode	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	implemented	tests/agent/CallKitRuntime.swift	focused Linux runtime evidence
