@@ -306,7 +306,12 @@ static int mr_remove_path(const char *path, removefile_state_t state,
         root_device = attributes.st_dev;
     }
 
-    if (!is_root && attributes.st_dev != root_device &&
+    /* Darwin CROSS_MOUNT is a directory mount-point policy. Overlayfs
+     * reports a different st_dev for non-directories than for directories
+     * on the same mount, so comparing every entry against the walk root
+     * would skip ordinary files and leave ENOTEMPTY on rmdir. */
+    if (!is_root && S_ISDIR(attributes.st_mode) &&
+        attributes.st_dev != root_device &&
         (flags & REMOVEFILE_CROSS_MOUNT) == 0) {
         return MR_REMOVE_SKIPPED;
     }
