@@ -87,14 +87,14 @@ export GIT_COMMITTER_EMAIL=ops-test@example.com
 
 echo "== run_box --dry-run prints the SSM document"
 doc=$(bash "$ROOT/scripts/ops/run_box.sh" --dry-run x86 cycle HEAD)
-if printf '%s\n' "$doc" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["DocumentName"]=="AWS-RunShellScript"; assert len(d["Comment"])<=100; assert d["InstanceIds"]==["i-0a2e25f3895c819b3"]; cmds=d["Parameters"]["commands"][0]; assert "x86_cycle.sh" in cmds; assert "OPENUIKIT_BUNDLE_URI" in cmds; assert "OPENUIKIT_S3_REGION" in cmds; assert "git checkout" not in cmds'; then
+if printf '%s\n' "$doc" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["DocumentName"]=="AWS-RunShellScript"; assert len(d["Comment"])<=100; assert d["InstanceIds"]==["i-0a2e25f3895c819b3"]; cmds=d["Parameters"]["commands"][0]; assert "x86_cycle.sh" in cmds; assert "OPENUIKIT_BUNDLE_URI" in cmds; assert "OPENUIKIT_S3_REGION" in cmds; assert "refs/ops/bundle" in cmds; assert cmds.index("git checkout") < cmds.index("x86_cycle.sh")'; then
     ok "x86 cycle dry-run document names instance and x86_cycle.sh"
 else
     die_test "x86 cycle dry-run document: $(printf '%s' "$doc" | head -c 400)"
 fi
 
 doc=$(bash "$ROOT/scripts/ops/run_box.sh" --dry-run arm64 verify HEAD)
-if printf '%s\n' "$doc" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["InstanceIds"]==["i-00da4d9ca172eb1ff"]; c=d["Parameters"]["commands"][0]; assert "difftest.sh" in c; assert "GATE_B_PASS" in c'; then
+if printf '%s\n' "$doc" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["InstanceIds"]==["i-00da4d9ca172eb1ff"]; c=d["Parameters"]["commands"][0]; assert "arm64_verify.sh" in c; assert c.index("git checkout") < c.index("arm64_verify.sh"); drv=open("scripts/ops/arm64_verify.sh").read(); assert "difftest.sh" in drv and "GATE_B_PASS" in drv and "build_full.sh" in drv and "stage_swiftcore.sh" in drv'; then
     ok "arm64 verify dry-run document names authority instance and GATE_B_PASS"
 else
     die_test "arm64 verify dry-run: $(printf '%s' "$doc" | head -c 400)"

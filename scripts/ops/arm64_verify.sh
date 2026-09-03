@@ -1,0 +1,43 @@
+#!/bin/bash
+# On-box arm64 verify. Runs INSIDE the checked-out tree (run_box.sh's document
+# has already fetched the bundle and checked out the sha). This is the operator's
+# proven sequence from 2026-09-02/03 (formerly /tmp/verify_m45.sh), committed so
+# the runner cannot drift from it:
+#   stash libswiftCore + remove the staged libswiftcompat (a stale copy
+#   duplicates real darwin definitions in build.sh's CHECK 4) → build.sh all →
+#   park test → gen_tbd --check → check_stale → run_linux → difftest →
+#   restore libswiftCore → stage_swiftcore → build_full → refresh the sysroot
+#   libSystem.tbd → Gate B (Focus widget) with the box-staged resource bundle.
+set -u
+export HOME=${HOME:-/root}
+export PATH=/opt/swift624/usr/bin:/usr/local/bin:/usr/bin:/bin
+TREE=${1:-$(pwd)}
+cd "$TREE" || exit 2
+W=$(dirname "$TREE")
+H=$(git rev-parse HEAD)
+echo "main $H"
+echo "pins: uikit=$(grep EXPECTED_INREPO_UIKIT_TREE scripts/vendor_pins.sh | cut -d= -f2 | cut -c1-8) live=$(git rev-parse HEAD:uikit | cut -c1-8) machorun=$(git rev-parse HEAD:machorun | cut -c1-8)"
+cd machorun || exit 2
+SC=darwin/usr/lib/swift/libswiftCore.dylib
+[ -f "$SC" ] && mv "$SC" /tmp/libswiftCore.stash && echo "stashed libswiftCore (not part of master darwin tree)"
+[ -f darwin/usr/lib/libswiftcompat.dylib ] && rm -f darwin/usr/lib/libswiftcompat.dylib && echo "removed staged libswiftcompat before build.sh (re-staged by stage_swiftcore after the tests)"
+echo "== build.sh all"; bash scripts/build.sh > "$W/verify-build.log" 2>&1 && echo BUILD_OK || { echo BUILD_FAIL; grep -E '^!!|PLAIN|CHECK' "$W/verify-build.log" | tail -6; }
+echo "== test_check_undefined_park"; bash scripts/test_check_undefined_park.sh > "$W/verify-park.log" 2>&1; echo "park rc=$?"; tail -1 "$W/verify-park.log"
+echo "== gen_tbd --check"; bash scripts/gen_tbd.sh --check > "$W/verify-tbd.log" 2>&1 && echo TBD_CHECK_OK || { echo TBD_CHECK_FAIL; grep -E '^!!|CHECK [0-9]' "$W/verify-tbd.log" | tail -6; }
+echo "== check_stale"; bash scripts/check_stale.sh 2>&1 | tail -1
+echo "== run_linux"; bash harness/run_linux.sh > "$W/verify-runlinux.log" 2>&1; echo "run_linux rc=$?"; tail -3 "$W/verify-runlinux.log"
+echo "== difftest"; bash scripts/difftest.sh > "$W/verify-difftest.log" 2>&1; echo "difftest rc=$?"
+grep -E ' FAIL ' "$W/verify-difftest.log" | head -10
+grep -E '^pass ' "$W/verify-difftest.log"
+[ -f /tmp/libswiftCore.stash ] && install -d darwin/usr/lib/swift && mv /tmp/libswiftCore.stash "$SC" && echo "restored libswiftCore for the platform gate"
+echo "== stage_swiftcore (libswiftcompat + libswiftCore from swiftcore-macho/artifacts)"
+bash scripts/stage_swiftcore.sh "$TREE/swiftcore-macho/artifacts" > "$W/verify-stage.log" 2>&1; echo "stage_swiftcore rc=$?"; tail -4 "$W/verify-stage.log"
+cd "$TREE"
+echo "== build_full.sh (stage mrroot_full from this machorun; rebuild umbrellas)"
+bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1; echo "build_full rc=$?"; grep -E "^build_full:|error:|FAIL|umbrella|OK$" "$W/build_full.log" | tail -8
+cp machorun/sdk/usr/lib/libSystem.tbd scratch/sysroot_fe4/usr/lib/libSystem.tbd
+P=$(ls -d /tmp/focus-widget-res.* 2>/dev/null | head -1); B="$P/output/bundles/Focus_Widget.bundle"
+[ -d "$B" ] || { echo "GATE_B_FAIL rc=2 (no staged Focus_Widget.bundle under /tmp/focus-widget-res.*)"; exit 2; }
+echo "== GATE B (widget guest) on $H"
+if bash full/swiftui/build_focus_widget_guest.sh "$B" > "$W/widget-gate.log" 2>&1; then echo GATE_B_PASS; else echo "GATE_B_FAIL rc=$?"; fi
+grep -vE 'warning:|^ *[0-9]+ \||^ *\|' "$W/widget-gate.log" | tail -22

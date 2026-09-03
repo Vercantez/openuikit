@@ -59,53 +59,32 @@ bundle_key="$PREFIX/${SHA}.bundle"
 bundle_s3="s3://$BUCKET/$bundle_key"
 
 remote_cmd() {
+    # Every mode: fetch the pinned ref, check out the named sha, then run the
+    # COMMITTED on-box driver from that checkout. The driver cannot be run
+    # before the checkout that contains it (measured 2026-09-03: the first
+    # cycle run failed with "scripts/ops/x86_cycle.sh: No such file").
+    local driver
     case "$MODE" in
-        cycle)
-            cat <<EOF
+        cycle)      driver="bash scripts/ops/x86_cycle.sh $TREE" ;;
+        verify)     driver="bash scripts/ops/arm64_verify.sh $TREE" ;;
+        onboarding) driver="bash scripts/ops/arm64_onboarding.sh $TREE" ;;
+        *) echo "run_box: unknown mode $MODE" >&2; exit 2 ;;
+    esac
+    cat <<EOF
 set -eu
+export HOME=/root
 cd $TREE
 export OPENUIKIT_BUNDLE_URI='$bundle_s3'
 export OPENUIKIT_SHA='$SHA'
 export OPENUIKIT_S3_REGION='$REGION'
-bash scripts/ops/x86_cycle.sh $TREE
+aws s3 cp '$bundle_s3' /tmp/openuikit-$SHA.bundle --region $REGION --only-show-errors
+git stash push -q -m "run_box \$(date -u +%FT%TZ)" >/dev/null 2>&1 || true
+git fetch -q /tmp/openuikit-$SHA.bundle refs/ops/bundle
+[ "\$(git rev-parse FETCH_HEAD)" = '$SHA' ] || { echo "run_box: bundle ref is \$(git rev-parse FETCH_HEAD), expected $SHA"; exit 2; }
+git checkout -q --force --detach '$SHA'
+echo "checked out \$(git rev-parse HEAD)"
+$driver
 EOF
-            ;;
-        verify)
-            cat <<EOF
-set -eu
-cd $TREE
-aws s3 cp '$bundle_s3' /tmp/openuikit-$SHA.bundle --region $REGION
-git fetch /tmp/openuikit-$SHA.bundle refs/ops/bundle && [ "$(git rev-parse FETCH_HEAD)" = '$SHA' ]
-git checkout --force '$SHA'
-python3 scripts/env/prepare.py
-sh machorun/scripts/build.sh
-sh machorun/scripts/difftest.sh
-echo BUILD_OK
-if bash full/swiftui/build_focus_widget_guest.sh; then
-  echo GATE_B_PASS
-else
-  echo GATE_B_FAIL
-  exit 2
-fi
-EOF
-            ;;
-        onboarding)
-            cat <<EOF
-set -eu
-cd $TREE
-aws s3 cp '$bundle_s3' /tmp/openuikit-$SHA.bundle --region $REGION
-git fetch /tmp/openuikit-$SHA.bundle refs/ops/bundle && [ "$(git rev-parse FETCH_HEAD)" = '$SHA' ]
-git checkout --force '$SHA'
-python3 scripts/env/prepare.py
-if bash full/swiftui/build_focus_onboarding_guest.sh; then
-  echo GATE_ONBOARDING_PASS
-else
-  echo GATE_ONBOARDING_FAIL
-  exit 2
-fi
-EOF
-            ;;
-    esac
 }
 
 build_document() {
