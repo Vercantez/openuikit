@@ -135,10 +135,12 @@ because a chained/classic pair shares a rung. Duplicate one and the cost is a
 repeated label in a document, not an overwritten baseline.
 
 ### (a) `exit_raw` — no libSystem calls at all
-`tests/src/exit_raw.s` · classic · **xfail, on purpose**
+`tests/src/exit_raw.s` (arm64) · `tests/src/exit_raw_x86_64.s` (x86_64) · classic · **xfail, on purpose**
 
-Entry is `_start` via `LC_MAIN`. Writes to fd 1 and exits with `svc #0x80`,
-syscall number in `x16`, BSD numbering (`write`=4, `exit`=1). libSystem is
+Entry is `_start` via `LC_MAIN`. Writes to fd 1 and exits with a raw Darwin
+syscall: arm64 is `svc #0x80` with the BSD number in `x16` (`write`=4,
+`exit`=1); x86_64 is `syscall` with `0x2000000|BSD_number` in `%eax`
+(`mov $0x2000001, %eax; syscall` is Darwin's BSD exit). libSystem is
 linked but never called. macOS: prints `raw syscall ok`, exits 7.
 
 Load commands: `LC_SEGMENT_64`×3, `LC_DYLD_INFO_ONLY`, `LC_SYMTAB`,
@@ -147,15 +149,16 @@ Load commands: `LC_SEGMENT_64`×3, `LC_DYLD_INFO_ONLY`, `LC_SYMTAB`,
 `LC_CODE_SIGNATURE`, `LC_LOAD_DYLIB`.
 
 **Loader must implement:** nothing new — and that is the point. This fixture
-marks the boundary of the README's core bet. On Linux/arm64 `svc` traps to the
-Linux kernel, which takes its syscall number from `x8` and uses Linux
-numbering; Darwin's `x16` + BSD numbers land somewhere arbitrary. Supporting it
-would need seccomp-based trapping or binary rewriting, i.e. exactly the
+marks the boundary of the README's core bet. On Linux the instruction traps
+to the Linux kernel (arm64: number from `x8`; x86_64: number from `%rax`)
+with Linux numbering, so Darwin's BSD numbers land somewhere arbitrary.
+`src/crash.c` diagnoses the instruction; it does not emulate it. Supporting
+it would need seccomp-based trapping or binary rewriting, i.e. exactly the
 Darwin-syscall-emulation road this project chose not to take. Kept as a
 permanent, labelled wall — see `docs/UNIMPLEMENTED.md`.
 
 ### (a′) `exit_unixthread` — static, `LC_UNIXTHREAD`
-same source · no fixups · **no oracle**
+arm64: same source as `exit_raw.s` · x86_64: `tests/src/exit_unixthread_x86_64.s` (beside, not instead) · no fixups · **no oracle**
 
 Built `-static`: no `LC_LOAD_DYLINKER`, no dyld, no fixups, and entry is an
 `LC_UNIXTHREAD` register-state block instead of `LC_MAIN`.
@@ -169,8 +172,9 @@ and it can never be graded PASS; the harness reports `NO-ORACLE`. It stays in
 the corpus because `LC_UNIXTHREAD` is a real entry form the loader's parser
 must handle, and because a parse-only fixture is still a test.
 
-**Loader must implement:** `LC_UNIXTHREAD` entry (`arm_thread_state64_t`, `pc`
-field), and segment mapping with no dynamic linking at all.
+**Loader must implement:** `LC_UNIXTHREAD` entry (`arm_thread_state64_t` `pc`
+on arm64; `x86_thread_state64_t` RIP at uint64 index 16 on x86_64), and
+segment mapping with no dynamic linking at all.
 
 ### (b) `main_ret` / `main_ret_classic` — LC_MAIN, return a value
 `tests/src/main_ret.c` · chained + classic
@@ -355,10 +359,18 @@ page). `cache_layout_sparse` is the same rewrite with `--sparse`: DATA_CONST
 lands at TEXT+`0x22256720` so the copy-map cannot cheat by reserving one
 union. The rewriter patches vmaddr/fileoff/section addr and offset, chained
 starts `segment_offset`, export-trie image offsets, nlist `n_value`, ARM64
-`ADRP`/`LDR` page immediates in `__text`/`__stubs`, load command dataoffs —
-consistently. All three must print identical output. Darwin cannot execute
-the packed or sparse dylib (arm64 dyld SIGKILLs unaligned segments), so those
-rows are `oracle=norun` with the control's baseline copied into
+`ADRP`/`LDR` page immediates and x86_64 RIP-relative `disp32` (`lea`/`mov`
+/`jmpq *got(%rip)`) in `__text`/`__stubs`, load command dataoffs —
+consistently. RIP-relative displacements are rewritten rather than keeping
+the original TEXT-to-DATA distance: `--sparse` places DATA at
+TEXT+`0x22256720`, which is representable in a signed 32-bit disp32 but is
+not the layout the linker emitted, so leaving the bytes alone would be the
+x86 twin of the 2026-09-03 packed-fixture SIGSEGV (stubs still targeting
+the pre-pack GOT page). A relocation shape `pack_macho.py` does not handle
+is a named `CANNOT_*`, never a silently broken image. All three must print
+identical output. Darwin cannot execute the packed or sparse dylib (arm64
+dyld SIGKILLs unaligned segments), so those rows are `oracle=norun` with
+the control's baseline copied into
 `tests/expected/cache_layout_{packed,sparse}.*`; `difftest.sh` still grades
 Linux against that expected. After `--record cache_layout`, copy those three
 files onto the packed and sparse names.
