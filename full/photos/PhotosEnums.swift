@@ -45,7 +45,7 @@ public enum PHAssetCollectionSubtype: Int, Sendable {
     case smartAlbumCinematic = 218
     case smartAlbumSpatial = 219
     case smartAlbumScreenRecordings = 220
-    case any = Int.max
+    case any = 9223372036854775807
 }
 
 public enum PHAssetCollectionType: Int, Sendable {
@@ -139,7 +139,7 @@ public enum PHCollectionListSubtype: Int, Sendable {
     case regularFolder = 100
     case smartFolderEvents = 200
     case smartFolderFaces = 201
-    case any = Int.max
+    case any = 9223372036854775807
 }
 
 public enum PHCollectionListType: Int, Sendable {
@@ -287,14 +287,15 @@ public struct PHPhotosError: Error, Hashable {
         lhs.code == rhs.code
     }
 
-    public static func ~= (match: Code, error: any Error) -> Bool {
-        (error as? PHPhotosError)?.code == match
-            || (error as? Code) == match
-            || ((error as NSError).domain == PHPhotosErrorDomain
-                && (error as NSError).code == match.rawValue)
-    }
 }
 
 extension PHPhotosError.Code {
     public var hashValue: Int { rawValue }
+
+    public static func ~= (match: Self, error: any Error) -> Bool {
+        (error as? PHPhotosError)?.code == match
+            || (error as? Self) == match
+            || ((error as NSError).domain == PHPhotosErrorDomain
+                && (error as NSError).code == match.rawValue)
+    }
 }
