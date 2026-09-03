@@ -970,6 +970,61 @@ elif [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
         "ud_guest linked but no run root at $MRROOT to stage libCFTest.dylib into"
 fi
 
+# Linux Dispatch host bridge + Darwin runtime image. Reuse the Reminder/Focus
+# helper (BASE_MRROOT/host from phase2_build_x86_host_helpers) when it already
+# ran. Do not mutate mrroot_full; the runner clones a run-local overlay.
+echo "==== ud-guest-dispatch (Linux host bridge + Darwin OpenDispatch) ===="
+UD_DISPATCH_HOST=
+UD_DISPATCH_DARWIN=
+if [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
+    dispatch_report=$(phase2_ud_guest_ensure_dispatch \
+        "$W" \
+        "${UD_GUEST_W:-$W/scratch/ud-guest-x86_64}" \
+        "$SYS" \
+        "$TARGET" \
+        "$BASE_MRROOT/host/libOpenDispatchHost.so" \
+        || true)
+    case "$dispatch_report" in
+        status=satisfied\ bridge=*)
+            UD_DISPATCH_HOST=${dispatch_report#*bridge=}
+            UD_DISPATCH_HOST=${UD_DISPATCH_HOST%% *}
+            UD_DISPATCH_DARWIN=${dispatch_report#*runtime=}
+            UD_DISPATCH_DARWIN=${UD_DISPATCH_DARWIN%% *}
+            export UD_DISPATCH_HOST UD_DISPATCH_DARWIN
+            note ud-guest-dispatch satisfied "${dispatch_report#status=satisfied }"
+            ;;
+        status=cold-built\ bridge=*)
+            UD_DISPATCH_HOST=${dispatch_report#*bridge=}
+            UD_DISPATCH_HOST=${UD_DISPATCH_HOST%% *}
+            UD_DISPATCH_DARWIN=${dispatch_report#*runtime=}
+            UD_DISPATCH_DARWIN=${UD_DISPATCH_DARWIN%% *}
+            export UD_DISPATCH_HOST UD_DISPATCH_DARWIN
+            note ud-guest-dispatch cold-built "${dispatch_report#status=cold-built }"
+            ;;
+        *)
+            cannot ud-guest-dispatch UD_GUEST_DISPATCH \
+                "${dispatch_report:-empty}. Reuse $BASE_MRROOT/host/libOpenDispatchHost.so when already ELF; otherwise full/dispatch/build_host_bridge.sh. Darwin image is OpenDispatchBridge.c with LC_ID /usr/lib/libOpenDispatch.dylib."
+            ;;
+    esac
+fi
+
+# Rung a does not invoke build_full.sh, whose `-nt` copy is what refreshes
+# $MRROOT/machorun for rungs b/c. The mrroot-x86 "satisfied" path also skips
+# the copy. Refresh here so rung a execs the loader just built, not a stale
+# $MRROOT/machorun from an earlier tree (the DF2 exit-74 vs manual-run split).
+echo "==== run-root loader refresh (build_full -nt rule, before rung a) ===="
+if [ -x "$MACHORUN/build/machorun" ] && [ -d "$MRROOT" ]; then
+    if [ ! -x "$MRROOT/machorun" ] \
+        || [ "$MACHORUN/build/machorun" -nt "$MRROOT/machorun" ]
+    then
+        cp -f "$MACHORUN/build/machorun" "$MRROOT/machorun"
+        chmod a+x "$MRROOT/machorun"
+        echo "  refreshed $MRROOT/machorun from $MACHORUN/build/machorun sha256=$(sha256sum "$MRROOT/machorun" | awk '{print $1}')"
+    else
+        echo "  $MRROOT/machorun is current sha256=$(sha256sum "$MRROOT/machorun" | awk '{print $1}')"
+    fi
+fi
+
 # ---------------------------------------------------------------------------
 # 7. Rungs. Reuse committed gates. Never invent new denominators.
 echo "==== rungs (committed runners only) ===="
@@ -1033,6 +1088,8 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
             R=$ud_r \
             BIN=$ud_bin \
             MRUN=$MRROOT/machorun \
+            DISPATCH_HOST=${UD_DISPATCH_HOST:-} \
+            DISPATCH_DARWIN=${UD_DISPATCH_DARWIN:-} \
             bash "$ud_r/scripts/run_ud_guest.sh" "$MRROOT" \
             2>&1 | tee "$W/scratch/phase2-rung-a-smoke.log"
         smoke_rc=${PIPESTATUS[0]}
@@ -1046,6 +1103,8 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
                     R=$ud_r \
                     BIN=$ud_score \
                     MRUN=$MRROOT/machorun \
+                    DISPATCH_HOST=${UD_DISPATCH_HOST:-} \
+                    DISPATCH_DARWIN=${UD_DISPATCH_DARWIN:-} \
                     bash "$ud_r/scripts/run_ud_persist.sh" "$MRROOT" \
                     2>&1 | tee "$W/scratch/phase2-rung-a-persist.log"
                 persist_rc=${PIPESTATUS[0]}

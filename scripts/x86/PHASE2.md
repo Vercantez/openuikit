@@ -267,6 +267,29 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    libCFTest). Prints `ENV_PREPARE libCFTest-run-root … path=… sha256=…`.
    Never copies onto the CoreFoundation.framework slot (byte-identical
    copy there is the duplicate-image refusal in `run_ud_guest.sh`).
+   Then `ud-guest-dispatch` reuses the Reminder/Focus Linux Dispatch host
+   bridge (`full/dispatch/build_host_bridge.sh` → `libOpenDispatchHost.so`,
+   already built into `scratch/mrroot-x86_64/host/` when
+   `mrroot-host-x86` ran) and links the Darwin facade
+   (`OpenDispatchBridge.c`, LC_ID `/usr/lib/libOpenDispatch.dylib`).
+   Prints `ENV_PREPARE ud-guest-dispatch … bridge=… runtime=… sha256=…`.
+   `run_ud_guest.sh` / `run_ud_persist.sh` take `DISPATCH_HOST` (Reminder
+   name; `OPENUI_DISPATCH_HOST` is an alias) and `DISPATCH_DARWIN`,
+   `LD_PRELOAD` the bridge, and clone the named root to `$W/runroot`
+   rather than mutating `mrroot_full`. The Darwin image sits at
+   `runroot/darwin/usr/lib/libOpenDispatch.dylib` because libCFTest's
+   `_dispatch_*` binds are **flat** (`-undefined dynamic_lookup`,
+   libSystem.B does not re-export libdispatch) and libCFTest itself is
+   `is_runtime` (`/usr/lib/libCFTest.dylib`), so `host_lookup` resolves
+   them against the preloaded Linux libdispatch; the facade's
+   `_glibc_openui_dispatch_host_v1_*` binds use the same gate.
+   Without those variables the runners are the #87 container path
+   (`MACHORUN_ROOT=$ROOT "$MRUN" "$BIN"`, default
+   `MRUN=/stage/machorun-bin`). The `== binary` line prints
+   `loader=$MRUN sha256=…` of the file about to be exec'd. Before rung a,
+   phase2 copies `$MACHORUN/build/machorun` onto `$MRROOT/machorun` when
+   newer (the same `-nt` rule `build_full.sh` uses for rungs b/c); the
+   mrroot-x86 "satisfied" path otherwise leaves a stale loader in place.
    `link_ud_guest.sh` stays the only ud_guest linker. Any other
    missing piece is `CANNOT_UD_GUEST_<FILE> file=<basename>`. On success the
    binary is exported as `UD_GUEST_BIN` for rung a, with

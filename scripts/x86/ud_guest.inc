@@ -9,6 +9,9 @@
 #     scratch/mrroot_full-x86_64/darwin/usr/lib/libCFTest.dylib
 #     (arm64 analogue: build_cftest_harness.sh -> $W/root; not build_full.sh)
 #   libswiftcompat.dylib in that tree's lib/
+#   Linux Dispatch host bridge + Darwin libOpenDispatch.dylib (Reminder/Focus
+#     mechanism) via phase2_ud_guest_ensure_dispatch; rung a LD_PRELOADs the
+#     bridge against a run-local overlay that contains the Darwin image
 #   link via foundation-macho/scripts/link_ud_guest.sh  (no second linker)
 #   binary at $W/scratch/ud-guest-x86_64/bin/ud_guest, handed to rung a as
 #   UD_GUEST_BIN.
@@ -678,6 +681,126 @@ phase2_stage_cftest_into_run_root() {
         printf 'status=satisfied path=%s sha256=%s\n' "$dest" "$sha"
     else
         printf 'status=cold-built path=%s sha256=%s\n' "$dest" "$sha"
+    fi
+}
+
+# Linux Dispatch host bridge + Darwin OpenDispatch facade for rung a.
+# Reuses scratch/mrroot-x86_64/host/libOpenDispatchHost.so when that file is
+# already ELF x86-64 (phase2_build_x86_host_helpers / Reminder script).
+# Builds the Darwin image with the same clang/ld64 argv as
+# full/swiftui/build_focus_onboarding_guest.sh / build_core_guest_package.sh:
+# install_name /usr/lib/libOpenDispatch.dylib, -undefined dynamic_lookup.
+# Prints: status=cold-built|satisfied bridge=… runtime=… sha256=…
+phase2_ud_guest_ensure_dispatch() {
+    local repo=$1 ud_w=$2 sys=$3 target=$4
+    local existing_host=${5:-}
+    local host_dir host dest obj log st arch darwin_sha host_ok=0 darwin_ok=0
+    local built_host=0 built_darwin=0
+
+    phase2_ud_guest_refuse_unsuffixed "$ud_w" || return 1
+    mkdir -p "$ud_w/lib" "$ud_w/host" "$ud_w/host-work"
+
+    host=$ud_w/host/libOpenDispatchHost.so
+    if [ -f "$existing_host" ] && [ ! -L "$existing_host" ] \
+        && phase2_is_elf_x86_so "$existing_host"
+    then
+        host=$existing_host
+        host_ok=1
+    elif [ -f "$host" ] && [ ! -L "$host" ] && phase2_is_elf_x86_so "$host"; then
+        host_ok=1
+    fi
+
+    if [ "$host_ok" -ne 1 ]; then
+        host_dir=$ud_w/host
+        rm -f "$host_dir/libOpenDispatchHost.so"
+        log=$ud_w/host-work/build_host_bridge.log
+        set +e
+        bash "$repo/full/dispatch/build_host_bridge.sh" \
+            --repo "$repo" \
+            --host-dir "$host_dir" \
+            --work-dir "$ud_w/host-work" \
+            --skip-runtime-pin \
+            --host-abi "ELF64-$(uname -m)" \
+            --refuse-prefix 'ud-guest-dispatch: ' \
+            >"$log" 2>&1
+        st=$?
+        set -e
+        host=$host_dir/libOpenDispatchHost.so
+        if [ "$st" -ne 0 ] || [ ! -f "$host" ] || [ -L "$host" ] \
+            || ! phase2_is_elf_x86_so "$host"
+        then
+            phase2_ud_guest_cannot DISPATCH libOpenDispatchHost.so \
+                "build_host_bridge.sh exit $st log=$log"
+            return 1
+        fi
+        built_host=1
+        host_ok=1
+    fi
+
+    dest=$ud_w/lib/libOpenDispatch.dylib
+    case "$target" in
+        x86_64-*) arch=x86_64 ;;
+        arm64-*|aarch64-*) arch=arm64 ;;
+        *)
+            phase2_ud_guest_cannot DISPATCH libOpenDispatch.dylib \
+                "cannot derive ld64 -arch from target=$target"
+            return 1
+            ;;
+    esac
+    if [ -f "$dest" ] && phase2_is_x86_macho "$dest" \
+        && [ "$(llvm-otool-18 -D "$dest" 2>/dev/null | tail -n 1)" = \
+            /usr/lib/libOpenDispatch.dylib ]
+    then
+        darwin_ok=1
+    fi
+    if [ "$darwin_ok" -ne 1 ]; then
+        if [ ! -d "$sys/usr/lib" ]; then
+            phase2_ud_guest_cannot DISPATCH libOpenDispatch.dylib \
+                "no Darwin sysroot at $sys to link OpenDispatchBridge.c"
+            return 1
+        fi
+        obj=$ud_w/lib/open-dispatch-bridge.o
+        log=$ud_w/lib/open-dispatch-bridge.log
+        set +e
+        clang-18 -target "$target" -isysroot "$sys" -std=c11 -O2 \
+            -fvisibility=hidden -Wall -Wextra -Werror \
+            -I "$repo/full/dispatch/include" \
+            -c "$repo/full/dispatch/OpenDispatchBridge.c" \
+            -o "$obj" >"$log" 2>&1
+        st=$?
+        set -e
+        if [ "$st" -ne 0 ] || [ ! -f "$obj" ]; then
+            phase2_ud_guest_cannot DISPATCH libOpenDispatch.dylib \
+                "OpenDispatchBridge.c clang exit $st log=$log"
+            return 1
+        fi
+        set +e
+        ld64.lld-18 -arch "$arch" -platform_version macos 15.0 15.0 \
+            -syslibroot "$sys" \
+            -dylib -dead_strip -undefined dynamic_lookup \
+            -install_name /usr/lib/libOpenDispatch.dylib \
+            -o "$dest" "$obj" >>"$log" 2>&1
+        st=$?
+        set -e
+        if [ "$st" -ne 0 ] || [ ! -f "$dest" ] || ! phase2_is_x86_macho "$dest" \
+            || [ "$(llvm-otool-18 -D "$dest" 2>/dev/null | tail -n 1)" != \
+                /usr/lib/libOpenDispatch.dylib ]
+        then
+            phase2_ud_guest_cannot DISPATCH libOpenDispatch.dylib \
+                "ld64 OpenDispatchBridge exit $st log=$log"
+            return 1
+        fi
+        built_darwin=1
+        darwin_ok=1
+    fi
+
+    darwin_sha=$(sha256sum "$dest" | awk '{print $1}')
+    if [ "$built_host" -eq 0 ] && [ "$built_darwin" -eq 0 ]; then
+        printf 'status=satisfied bridge=%s runtime=%s sha256=%s\n' \
+            "$host" "$dest" "$darwin_sha"
+    else
+        printf 'status=cold-built bridge=%s runtime=%s sha256=%s\n' \
+            "$host" "$dest" "$darwin_sha"
     fi
 }
 

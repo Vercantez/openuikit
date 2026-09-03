@@ -26,6 +26,10 @@
 #                 this is the run that proves it does not here.
 set -uo pipefail
 
+HERE=$(cd "$(dirname "$0")" && pwd)
+# shellcheck source=ud_dispatch_run.inc
+. "$HERE/ud_dispatch_run.inc"
+
 W=${W:-/work}
 R=${R:-/repo}
 ROOT=${1:-$W/root}
@@ -38,6 +42,10 @@ OTHER=$PREFS/$SUITE.other.plist
 
 hr() { echo; echo "########## $*"; }
 
+echo "== root   $ROOT"
+ud_dispatch_loader_line "$BIN"
+ud_dispatch_prepare_root || exit $?
+
 hr "0. clean slate"
 rm -f "$PLIST" "$OTHER"
 echo "  removed $PLIST"
@@ -45,7 +53,7 @@ echo "  removed $PLIST"
 echo "  confirmed absent"
 
 hr "1. WRITE (a process that scores nothing)"
-UD_MODE=persist-write MACHORUN_ROOT="$ROOT" "$MRUN" "$BIN" 2>&1 | grep -vE "_CFGetHostUUIDString"
+UD_MODE=persist-write ud_dispatch_run "$BIN" 2>&1 | grep -vE "_CFGetHostUUIDString"
 rc=${PIPESTATUS[0]}
 [ "$rc" -eq 0 ] || { echo "  write phase exited $rc" >&2; exit 3; }
 
@@ -73,7 +81,7 @@ else
 fi
 
 hr "3. READ (a FRESH process; nothing it reads was written by it)"
-UD_MODE=persist-read MACHORUN_ROOT="$ROOT" "$MRUN" "$BIN" 2>&1 \
+UD_MODE=persist-read ud_dispatch_run "$BIN" 2>&1 \
   | grep -vE "_CFGetHostUUIDString" | tail -30
 read_rc=${PIPESTATUS[0]}
 echo "  read phase exit $read_rc"
@@ -84,7 +92,7 @@ rm -f "$PLIST" "$OTHER"
 [ -e "$PLIST" ] && { echo "  REFUSING: the mutation did not take effect" >&2; exit 5; }
 echo "  store deleted and confirmed absent (the mutation TOOK -- #89 lost two"
 echo "  teeth tests to mutations that silently did not)"
-UD_MODE=persist-read MACHORUN_ROOT="$ROOT" "$MRUN" "$BIN" 2>&1 \
+UD_MODE=persist-read ud_dispatch_run "$BIN" 2>&1 \
   | grep -vE "_CFGetHostUUIDString" \
   | grep -E "presence:|witness:|✗|✓ every written|PORT: scored|GUEST SCOREBOARD"
 ctl_rc=${PIPESTATUS[0]}
