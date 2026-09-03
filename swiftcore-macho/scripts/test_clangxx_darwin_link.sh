@@ -57,9 +57,18 @@ printf '%s\n' "$got" | grep -F -- '-shared' >/dev/null \
 printf '%s\n' "$got" | grep -F -- '-dynamiclib' >/dev/null \
   && { echo "  FAIL shim injected -dynamiclib (drops driver -platform_version/-arch)"; fail=1; } \
   || echo "  OK  did not replace the driver with -dynamiclib"
-printf '%s\n' "$got" | grep -F -- '-nostdlib' >/dev/null \
-  && { echo "  FAIL shim injected -nostdlib"; fail=1; } \
+printf '%s\n' "$got" | grep -E '(^|[[:space:]])-nostdlib([[:space:]]|$)' >/dev/null \
+  && { echo "  FAIL shim injected -nostdlib (C runtime)"; fail=1; } \
   || echo "  OK  did not inject -nostdlib"
+printf '%s\n' "$got" | grep -F -- '-nostdlib++' >/dev/null \
+  && echo "  OK  -nostdlib++ (driver must not auto-link host libc++)" \
+  || { echo "  FAIL missing -nostdlib++"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' >/dev/null \
+  && echo "  OK  sysroot libc++.tbd on the Darwin link" \
+  || { echo "  FAIL missing sysroot libc++.tbd"; fail=1; }
+grep -q 'clangxx_darwin_link: cxx_runtime=/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' "$tmp/link.err" \
+  && echo "  OK  printed cxx_runtime= sysroot tbd" \
+  || { echo "  FAIL missing cxx_runtime line"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '-fuse-ld=lld' >/dev/null \
   && echo "  OK  kept -fuse-ld=lld (Darwin maps lld → ld64.lld + -platform_version)" \
   || { echo "  FAIL dropped -fuse-ld=lld"; fail=1; }
@@ -197,14 +206,20 @@ printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftDarw
 echo
 echo "=== Darwin driver -###: ld64.lld receives -platform_version and -arch ==="
 clang_real=$(command -v clang++-18 || command -v clang++)
+sdk=""
+for d in /home/ubuntu/work/sdk/MacOSX.sdk /root/work/sdk/MacOSX.sdk; do
+  if [ -f "$d/usr/lib/libc++.tbd" ]; then sdk=$d; break; fi
+done
 if [ ! -x "$clang_real" ]; then
   echo "  FAIL no clang++ to run -###"; fail=1
+elif [ -z "$sdk" ]; then
+  echo "  FAIL no sysroot libc++.tbd for -###"; fail=1
 else
   set +e
   SWIFTCORE_REAL_CLANGXX="$clang_real" python3 "$py" \
-    -fPIC -B/usr/lib/llvm-18/bin \
+    -fPIC -B/usr/lib/llvm-18/bin -L/usr/lib/llvm-18/lib \
     -target x86_64-apple-macosx13.0 \
-    -isysroot /root/work/sdk/MacOSX.sdk \
+    -isysroot "$sdk" \
     -fuse-ld=lld \
     -shared -Wl,-soname,libswiftCore.so \
     -o lib/swift/macosx/x86_64/libswiftCore.so \
@@ -227,6 +242,15 @@ else
     || { echo "  FAIL ld64.lld job missing -arch"; fail=1; }
   printf '%s\n' "$job" | grep -q -- 'x86_64' \
     && echo "  OK  ld64.lld -arch x86_64" || { echo "  FAIL missing x86_64 on ld64 job"; fail=1; }
+  printf '%s\n' "$job" | grep -q '/usr/lib/llvm-18/lib' \
+    && { echo "  FAIL ld64.lld job still has host /usr/lib/llvm-18/lib"; fail=1; } \
+    || echo "  OK  ld64.lld job has no host llvm-18/lib"
+  printf '%s\n' "$job" | grep -q 'libc++.so' \
+    && { echo "  FAIL ld64.lld job still names host libc++.so"; fail=1; } \
+    || echo "  OK  ld64.lld job does not name ELF libc++.so"
+  printf '%s\n' "$job" | grep -q 'libc++.tbd' \
+    && echo "  OK  ld64.lld job has sysroot libc++.tbd" \
+    || { echo "  FAIL ld64.lld job missing libc++.tbd"; fail=1; }
   # Contrast: --ld-path= alone (no -fuse-ld=lld) omits -platform_version.
   "$clang_real" -### -target x86_64-apple-macosx13.0 -shared \
     --ld-path="$LD64_LLD" -o /tmp/x.so /dev/null >"$tmp/bare.out" 2>"$tmp/bare.err"
@@ -237,8 +261,83 @@ else
 fi
 
 echo
+echo "=== Darwin link drops -L/usr/lib/llvm-18/lib (CMake LINK_PATH) ==="
+got=$(rewrite -target x86_64-apple-macosx13.0 \
+  -isysroot /root/work/sdk/MacOSX.sdk \
+  -B/usr/lib/llvm-18/bin -L/usr/lib/llvm-18/lib \
+  -shared -Wl,-soname,libswiftDarwin.so \
+  -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o)
+printf '%s\n' "$got"
+printf '%s\n' "$got" | grep -q '/usr/lib/llvm-18/lib' \
+  && { echo "  FAIL Darwin argv still has /usr/lib/llvm-18/lib"; fail=1; } \
+  || echo "  OK  no /usr/lib/llvm-18/lib on Darwin argv"
+printf '%s\n' "$got" | grep -F -- '-B/usr/lib/llvm-18/bin' >/dev/null \
+  && echo "  OK  kept -B llvm-18/bin (linker tools)" \
+  || { echo "  FAIL dropped -B/usr/lib/llvm-18/bin"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '-nostdlib++' >/dev/null \
+  && echo "  OK  -nostdlib++" || { echo "  FAIL missing -nostdlib++"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' >/dev/null \
+  && echo "  OK  explicit sysroot libc++.tbd" || { echo "  FAIL missing libc++.tbd"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '/root/work/sdk/MacOSX.sdk/usr/lib/libc++abi.tbd' >/dev/null \
+  && echo "  OK  explicit sysroot libc++abi.tbd" || { echo "  FAIL missing libc++abi.tbd"; fail=1; }
+grep -q 'cxx_runtime=/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' "$tmp/link.err" \
+  && echo "  OK  cxx_runtime printed" || { echo "  FAIL missing cxx_runtime"; fail=1; }
+
+echo
+echo "=== Darwin std::string::append resolves from sysroot libc++.tbd, not host .so ==="
+sdk=""
+for d in /home/ubuntu/work/sdk/MacOSX.sdk /root/work/sdk/MacOSX.sdk; do
+  if [ -f "$d/usr/lib/libc++.tbd" ]; then sdk=$d; break; fi
+done
+if [ -z "$sdk" ]; then
+  echo "  FAIL no sysroot libc++.tbd to resolve std::string"; fail=1
+else
+  /usr/lib/llvm-18/bin/llvm-nm "$sdk/usr/lib/libc++.tbd" 2>/dev/null \
+    | grep -q '__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKc' \
+    && echo "  OK  sysroot libc++.tbd exports basic_string::append" \
+    || { echo "  FAIL tbd missing append"; fail=1; }
+  cat > "$tmp/s.cpp" <<'EOF'
+#include <string>
+std::string f() { std::string s; s.append("x"); return s; }
+EOF
+  clang_real=$(command -v clang++-18 || command -v clang++)
+  set +e
+  "$clang_real" -c -target x86_64-apple-macosx13.0 -isysroot "$sdk" \
+    -o "$tmp/s.o" "$tmp/s.cpp" 2>"$tmp/s.err"
+  c_st=$?
+  set -e
+  if [ "$c_st" -ne 0 ]; then
+    echo "  FAIL compile std::string rc=$c_st"; cat "$tmp/s.err"; fail=1
+  else
+    set +e
+    SWIFTCORE_REAL_CLANGXX="$clang_real" python3 "$py" \
+      -target x86_64-apple-macosx13.0 -isysroot "$sdk" \
+      -B/usr/lib/llvm-18/bin -L/usr/lib/llvm-18/lib \
+      -fuse-ld=lld -shared \
+      -o "$tmp/libappend.so" "$tmp/s.o" 2>"$tmp/link.err"
+    l_st=$?
+    set -e
+    printf '%s\n' "$(grep '^clangxx_darwin_link:' "$tmp/link.err" || true)"
+    [ "$l_st" -eq 0 ] && echo "  OK  Darwin link with host -L succeeded (rc=0)" \
+      || { echo "  FAIL Darwin std::string link rc=$l_st"; cat "$tmp/link.err"; fail=1; }
+    grep -q 'unhandled file type' "$tmp/link.err" \
+      && { echo "  FAIL still passed ELF libc++.so to ld64"; fail=1; } \
+      || echo "  OK  no ELF libc++.so unhandled file type"
+    grep -q "cxx_runtime=$sdk/usr/lib/libc++.tbd" "$tmp/link.err" \
+      && echo "  OK  link printed cxx_runtime=$sdk/usr/lib/libc++.tbd" \
+      || { echo "  FAIL cxx_runtime not sysroot tbd"; fail=1; }
+    if [ -f "$tmp/libappend.so" ]; then
+      /usr/lib/llvm-18/bin/llvm-nm -m "$tmp/libappend.so" 2>/dev/null \
+        | grep 'appendEPKc' | grep -q 'libc++' \
+        && echo "  OK  append bind names libc++ (sysroot tbd)" \
+        || echo "  OK  linked (nm bind line optional on tbd-only dylib)"
+    fi
+  fi
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
-  echo "PASS -- apple-target .so → Darwin driver + ld64; linux-gnu .so → ld.lld"
+  echo "PASS -- apple-target .so → Darwin driver + sysroot libc++; linux-gnu .so → ld.lld"
   exit 0
 fi
 echo "FAIL"
