@@ -1,1 +1,6 @@
 full/widgetkit/WidgetKit.swift
+full/widgetkit/WidgetKitActivities.swift
+full/widgetkit/WidgetKitControls.swift
+full/widgetkit/WidgetKitHostLookalikes.swift
+full/widgetkit/WidgetKitSurface.swift
+full/widgetkit/WidgetKitViewStubs.swift
