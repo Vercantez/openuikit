@@ -1,1 +1,6 @@
 full/cryptokit/CryptoKit.swift
+full/cryptokit/CryptoKitAEAD.swift
+full/cryptokit/CryptoKitCurves.swift
+full/cryptokit/CryptoKitHPKE.swift
+full/cryptokit/CryptoKitPostQuantum.swift
+full/cryptokit/CryptoKitSecureEnclave.swift
