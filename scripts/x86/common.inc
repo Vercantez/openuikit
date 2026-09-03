@@ -258,6 +258,17 @@ phase2_install_darwin_modulemaps() {
     return 1
 }
 
+# One directory spelling per inode. phase2's /w -> $W symlink makes
+# $W/scratch/modcache_fe4 and /w/scratch/modcache_fe4 the same files; clang
+# then reports '_DarwinFoundation2' defined in both .pcm paths.
+phase2_canonical_dir() {
+    local d=$1 p
+    mkdir -p "$d"
+    p=$(realpath -P "$d" 2>/dev/null || readlink -f "$d")
+    [ -n "$p" ] || { echo "phase2_canonical_dir: empty realpath for $d" >&2; return 1; }
+    printf '%s\n' "$p"
+}
+
 # Swift overlay or local -I module for $name, requiring the guest module triple
 # (x86_64-apple-macos), never an arm64 slice under an x86 name.
 phase2_swift_module_present() {

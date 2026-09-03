@@ -26,7 +26,7 @@ usage() {
 [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ] && usage
 [ $# -eq 1 ] || usage
 
-W=$(cd "$1" && pwd)
+W=$(cd "$1" && pwd -P)
 [ -f "$W/machorun/scripts/build.sh" ] || {
     echo "phase2: $W is not an openuikit tree (missing machorun/scripts/build.sh)" >&2
     exit 2
@@ -56,6 +56,12 @@ OPENCOMBINE_ROOT=$W/scratch/opencombine-core-durable-20260828-r2
 SF=$W/scratch/swift-foundation
 SC=$W/scratch/swift-collections
 FOCUS_REPO=$W/scratch/ladder-corpus/focus-ios/focus-ios
+# Dedicated per-target cache, physical spelling only. host-w-layout's
+# /w -> $W symlink makes $W/scratch/modcache_fe4 and /w/scratch/modcache_fe4
+# the same files; clang then reports '_DarwinFoundation2' defined in both .pcm
+# paths. Never mix those spellings in one build; pass this MC to every x86 swiftc.
+MC=$(phase2_canonical_dir "$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}")
+export MC
 UD_SMOKE_CHECKS=14
 UD_RUNNER=$W/foundation-macho/tests/ud_guest_runner.swift
 
@@ -65,16 +71,22 @@ COLT_N=0
 declare -A ITEM_STATUS=()
 
 note() {
-    local name=$1 status=$2
+    local name=$1 status=$2 extra=${3:-}
     ITEM_STATUS[$name]=$status
     case "$status" in
-        satisfied) SATISFIED_N=$((SATISFIED_N + 1)); phase2_prepare "$name" satisfied ;;
-        cold-built) COLT_N=$((COLT_N + 1)); phase2_prepare "$name" cold-built ;;
+        satisfied)
+            SATISFIED_N=$((SATISFIED_N + 1))
+            phase2_prepare "$name" "satisfied${extra:+ $extra}"
+            ;;
+        cold-built)
+            COLT_N=$((COLT_N + 1))
+            phase2_prepare "$name" "cold-built${extra:+ $extra}"
+            ;;
         CANNOT_*)
             CANNOT_N=$((CANNOT_N + 1))
-            phase2_prepare "$name" "$status${3:+ reason=$3}"
+            phase2_prepare "$name" "$status${extra:+ $extra}"
             ;;
-        *) phase2_prepare "$name" "$status${3:+ reason=$3}" ;;
+        *) phase2_prepare "$name" "$status${extra:+ $extra}" ;;
     esac
 }
 
@@ -88,7 +100,7 @@ cannot() {
 have() { [ -e "$1" ]; }
 
 # ---------------------------------------------------------------------------
-echo "==== PHASE 2  host=$(uname -m)  W=$W  TARGET=$TARGET ===="
+echo "==== PHASE 2  host=$(uname -m)  W=$W  TARGET=$TARGET  MC=$MC ===="
 
 # 0. Host + toolchain
 if [ "$(uname -m)" != x86_64 ]; then
@@ -98,6 +110,7 @@ if [ "$(uname -m)" != x86_64 ]; then
     exit 2
 fi
 note host-arch satisfied
+note module-cache satisfied "path=$MC"
 
 missing_tools=()
 for t in clang-18 clang++-18 ld64.lld-18 llvm-otool-18 llvm-nm-18 swiftc git python3 perl patch file sha256sum; do
@@ -407,12 +420,11 @@ OS_OK=0
 FE_IMPORTS_OK=0
 FE_OUT=$W/build/full${FULL_OUT_SUFFIX}/foundation
 OSMOD=$FE_OUT/os
-MC=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}
 
 try_collections() {
     local out=$FE_OUT/collections
     if [ -f "$out/OrderedCollections.o" ] && phase2_is_x86_macho "$out/OrderedCollections.o"; then
-        note collections-x86 satisfied
+        note collections-x86 satisfied "mc=$MC"
         COL_OK=1
         return 0
     fi
@@ -424,16 +436,16 @@ try_collections() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SC="$SC" SYS="$SYS" OUT="$out" TARGET="$TARGET" \
+    W="$W" SC="$SC" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
         bash "$W/full/foundation/build_collections.sh"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/OrderedCollections.o"; then
-        note collections-x86 cold-built
+        note collections-x86 cold-built "mc=$MC"
         COL_OK=1
         return 0
     fi
-    cannot collections-x86 BUILD_COLLECTIONS "build_collections.sh exit $st"
+    cannot collections-x86 BUILD_COLLECTIONS "build_collections.sh exit $st mc=$MC"
     return 1
 }
 
@@ -467,7 +479,7 @@ try_cshims() {
 try_os_module() {
     local out=$OSMOD
     if [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" && [ -f "$out/os.swiftmodule" ]; then
-        note os-module-x86 satisfied
+        note os-module-x86 satisfied "mc=$MC"
         OS_OK=1
         return 0
     fi
@@ -487,12 +499,12 @@ try_os_module() {
     set -e
     if [ "$st" -eq 0 ] && [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" \
         && [ -f "$out/os.swiftmodule" ]; then
-        note os-module-x86 cold-built
+        note os-module-x86 cold-built "mc=$MC"
         OS_OK=1
         return 0
     fi
     cannot os-module-x86 BUILD_OS_MODULE \
-        "build_os_module.sh exit $st OUT=$out (beside arm64 scratch/fe4_os, never overwrite). Calendar.swift import os is live because canImport(Darwin) is true."
+        "build_os_module.sh exit $st OUT=$out mc=$MC (beside arm64 scratch/fe4_os, never overwrite). Calendar.swift import os is live because canImport(Darwin) is true."
     return 1
 }
 
@@ -516,7 +528,7 @@ try_fe_imports() {
 try_fe() {
     local out=$FE_OUT/essentials
     if [ -f "$out/FoundationEssentials.o" ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
-        note foundationessentials-x86 satisfied
+        note foundationessentials-x86 satisfied "mc=$MC"
         FE_OK=1
         return 0
     fi
@@ -539,18 +551,18 @@ try_fe() {
     mkdir -p "$out"
     set +e
     W="$W" SF="$SF" SYS="$SYS" TARGET="$TARGET" OSMOD="$OSMOD" \
-        COLLECTIONS="$FE_OUT/collections" \
+        COLLECTIONS="$FE_OUT/collections" MC="$MC" \
         bash "$W/full/foundation/build_fe.sh" \
             -emit-module -emit-module-path "$out/FoundationEssentials.swiftmodule" \
             -c -o "$out/FoundationEssentials.o"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
-        note foundationessentials-x86 cold-built
+        note foundationessentials-x86 cold-built "mc=$MC"
         FE_OK=1
         return 0
     fi
-    cannot foundationessentials-x86 BUILD_FE "build_fe.sh exit $st"
+    cannot foundationessentials-x86 BUILD_FE "build_fe.sh exit $st mc=$MC"
     return 1
 }
 
@@ -566,20 +578,20 @@ echo "==== OpenCombine x86 (beside $OPENCOMBINE_ROOT/export) ===="
 OC_OK=0
 oc_obj=$OPENCOMBINE_ROOT/export-x86_64/artifacts/OpenCombine.o
 if [ -f "$oc_obj" ] && phase2_is_x86_macho "$oc_obj"; then
-    note opencombine-x86 satisfied
+    note opencombine-x86 satisfied "mc=$MC"
     OC_OK=1
 else
     set +e
-    W="$W" SYS="$SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" \
+    W="$W" SYS="$SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" MC="$MC" \
         bash "$HERE/build_opencombine.sh"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -f "$oc_obj" ] && phase2_is_x86_macho "$oc_obj"; then
-        note opencombine-x86 cold-built
+        note opencombine-x86 cold-built "mc=$MC"
         OC_OK=1
     else
         cannot opencombine-x86 X86_OPENCOMBINE \
-            "NEEDS_X86_OPENCOMBINE unresolved: x86 OpenCombine.o not produced (blocked by libswiftCore-x86=$LIBSWIFTCORE_X86 sysroot=$SYSROOT_OK). arm64 durable SHA in export/artifacts still stands; this runner writes only export-x86_64/"
+            "NEEDS_X86_OPENCOMBINE unresolved: x86 OpenCombine.o not produced (blocked by libswiftCore-x86=$LIBSWIFTCORE_X86 sysroot=$SYSROOT_OK mc=$MC). arm64 durable SHA in export/artifacts still stands; this runner writes only export-x86_64/"
     fi
 fi
 # Arm64 pin must still be beside, never rewritten.

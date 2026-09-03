@@ -119,6 +119,15 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    fe-imports` probes Darwin/os/Swift/_Builtin_float/_StringProcessing/_Concurrency
    (required) and Synchronization (optional/`canImport`) in the x86 sysroot
    and refuses in one line if any required module is absent.
-6. Guest harness fonts still open `/w/build/swiftui-guest/fonts`. The widget
+6. Module cache: one canonical path per target, `scratch/modcache_fe4-x86_64`
+   (beside arm64 `scratch/modcache_fe4`). `phase2` resolves `W` with `pwd -P`
+   and the cache with `realpath -P`, prints
+   `ENV_PREPARE module-cache satisfied path=…`, and passes that `MC` into
+   every x86 `swiftc` (os-module, collections, FE, OpenCombine). Mixing `/w`
+   and `$W` spellings of the same cache makes clang report
+   `_DarwinFoundation2` defined in both `.pcm` paths (host-w-layout's
+   `ln -sfn $W /w` is the same inode).
+7. Guest harness fonts still open `/w/build/swiftui-guest/fonts`. The widget
    script stages fonts there and under `$W/build/swiftui-guest/fonts`; phase2
-   tries `ln -sfn $W /w` and CANNOT if it cannot.
+   tries `ln -sfn $W /w` and CANNOT if it cannot. Compiler argv never uses
+   the `/w` spelling for `-module-cache-path`.

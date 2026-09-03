@@ -12,6 +12,7 @@ HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 . "$HERE/common.inc"
 
 W=${W:?set W to the openuikit tree}
+W=$(cd "$W" && pwd -P)
 # shellcheck disable=SC1091
 . "$W/full/scripts/guest_arch.inc"
 [ "$ARCH" = x86_64 ] || {
@@ -65,6 +66,13 @@ CORE_COUNT=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["co
 
 rm -rf "$OUT"
 mkdir -p "$OUT/artifacts" "$OUT/work"
+# Shared per-target cache when the caller passes MC (phase2: modcache_fe4-x86_64).
+# Default stays under $OUT/work so a standalone run cannot collide with arm64's
+# $W/scratch/modcache_fe4. Never mix /w and $W spellings: realpath -P.
+MC=${MC:-$OUT/work/modcache}
+mkdir -p "$MC"
+MC=$(realpath -P "$MC" 2>/dev/null || readlink -f "$MC")
+[ -d "$SYS" ] && SYS=$(realpath -P "$SYS")
 cp "$SRC/$HELPER_REL" "$OUT/work/COpenCombineHelpers.cpp"
 patch --batch --forward --fuzz=0 "$OUT/work/COpenCombineHelpers.cpp" "$PATCH" >/dev/null
 [ "$(sha "$OUT/work/COpenCombineHelpers.cpp")" = "$PATCHED_SHA" ] || {
@@ -90,7 +98,7 @@ COMMON_SWIFT=(
     -Xcc -fmodule-map-file="$HELPER_INCLUDE/module.modulemap"
     -Xcc -I"$HELPER_INCLUDE"
     -module-name OpenCombine
-    -module-cache-path "$OUT/work/modcache"
+    -module-cache-path "$MC"
 )
 swiftc -emit-module -emit-module-path "$OUT/artifacts/OpenCombine.swiftmodule" \
     -emit-object -o "$OUT/artifacts/OpenCombine.o" \

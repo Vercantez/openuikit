@@ -327,6 +327,8 @@ expect_grep 'try_os_module || true' "$PHASE2" \
 expect_grep 'os.swiftmodule|os.swiftmodule/\*' "$STAGE" \
     "stager skips Apple os overlay (FE uses os-module)"
 OSMOD_SH=$ROOT/full/foundation/build_os_module.sh
+COL_SH=$ROOT/full/foundation/build_collections.sh
+FE_SH=$ROOT/full/foundation/build_fe.sh
 expect_grep 'TARGET:-arm64-apple-macos15.0' "$OSMOD_SH" \
     "os-module script is TARGET-retargetable"
 expect_grep 'MC:-$W/scratch/modcache_fe4' "$OSMOD_SH" \
@@ -341,6 +343,100 @@ awk '
     }
 ' "$PHASE2" | grep -q OK && ok "os-module step is before build_fe.sh" \
     || die_test "os-module is not before build_fe.sh"
+
+echo "== one canonical module-cache path per target (no /w vs \$W pcm collision)"
+expect_grep 'pwd -P' "$PHASE2" \
+    "phase2 resolves W to a physical path (pwd -P)"
+expect_grep 'phase2_canonical_dir' "$PHASE2" \
+    "phase2 canonicalizes the per-target module cache"
+expect_grep 'modcache_fe4${FULL_OUT_SUFFIX}' "$PHASE2" \
+    "x86 module cache is scratch/modcache_fe4-x86_64 beside arm64 modcache_fe4"
+expect_grep 'note module-cache satisfied' "$PHASE2" \
+    "ENV_PREPARE module-cache prints the cache path"
+expect_grep 'MC="$MC"' "$PHASE2" \
+    "phase2 passes MC into the x86 swiftc chain"
+mc_n=$(grep -c 'MC="$MC"' "$PHASE2" || true)
+if [ "$mc_n" -ge 4 ]; then
+    ok "phase2 passes MC= to os-module, collections, FE, and OpenCombine ($mc_n assignments)"
+else
+    die_test "expected >=4 MC=\"\$MC\" assignments in phase2 (got $mc_n)"
+fi
+expect_grep 'mc=$MC' "$PHASE2" \
+    "os-module/collections/FE/OpenCombine ENV_PREPARE lines include mc="
+expect_grep 'MC:-$W/scratch/modcache_fe4' "$COL_SH" \
+    "collections cache is overridable (x86 passes the suffixed canonical MC)"
+expect_grep 'MC:-$W/scratch/modcache_fe4' "$FE_SH" \
+    "FE cache is overridable (x86 passes the suffixed canonical MC)"
+expect_grep '-module-cache-path "$MC"' "$COL_SH" \
+    "collections swiftc uses -module-cache-path \$MC"
+expect_grep '-module-cache-path "$MC"' "$FE_SH" \
+    "FE swiftc uses -module-cache-path \$MC"
+expect_grep '-module-cache-path "$MC"' "$OSMOD_SH" \
+    "os-module swiftc uses -module-cache-path \$MC"
+expect_grep '-module-cache-path "$MC"' "$OC" \
+    "OpenCombine swiftc uses -module-cache-path \$MC"
+expect_grep 'realpath -P' "$OSMOD_SH" \
+    "os-module realpath-canonicalizes MC (hand-run without MC still one spelling)"
+expect_grep 'realpath -P' "$COL_SH" \
+    "collections realpath-canonicalizes MC"
+expect_grep 'realpath -P' "$FE_SH" \
+    "FE realpath-canonicalizes MC"
+expect_grep 'realpath -P' "$OC" \
+    "OpenCombine realpath-canonicalizes MC"
+expect_not_grep '-module-cache-path "$W/scratch/modcache_fe4"' "$COL_SH" \
+    "collections no longer hardcodes unsuffixed cache on the swiftc line"
+expect_not_grep '-module-cache-path "$W/scratch/modcache_fe4"' "$FE_SH" \
+    "FE no longer hardcodes unsuffixed cache on the swiftc line"
+for s in "$OSMOD_SH" "$COL_SH" "$FE_SH"; do
+    if bash -n "$s"; then
+        ok "bash -n $(basename "$s")"
+    else
+        die_test "bash -n $(basename "$s")"
+    fi
+done
+# /w -> physical tree is the same inode; clang treats two spellings as two pcm defs.
+MCWORK=$(mktemp -d /tmp/phase2-modcache.XXXXXX)
+mkdir -p "$MCWORK/physical/scratch/modcache_fe4-x86_64"
+ln -sfn "$MCWORK/physical" "$MCWORK/wlink"
+via_w=$(phase2_canonical_dir "$MCWORK/wlink/scratch/modcache_fe4-x86_64")
+via_phys=$(phase2_canonical_dir "$MCWORK/physical/scratch/modcache_fe4-x86_64")
+if [ -n "$via_w" ] && [ "$via_w" = "$via_phys" ]; then
+    ok "phase2_canonical_dir collapses /w-style symlink and physical cache to one path"
+else
+    die_test "canonical cache mismatch via_w=$via_w via_phys=$via_phys"
+fi
+case "$via_w" in
+    "$MCWORK/wlink"*) die_test "canonical cache still uses symlink spelling $via_w" ;;
+    "$MCWORK/physical"*) ok "canonical cache is the physical spelling ($via_w)" ;;
+    *) die_test "canonical cache is neither symlink nor physical: $via_w" ;;
+esac
+# Same canonicalize the os-module script applies on a hand-run with W=/w.
+hand=$(
+    unset MC
+    W=$MCWORK/wlink
+    W=$(cd "$W" && pwd -P)
+    MC=${MC:-$W/scratch/modcache_fe4-x86_64}
+    mkdir -p "$MC"
+    realpath -P "$MC"
+)
+if [ "$hand" = "$via_phys" ]; then
+    ok "os-module W=pwd -P + realpath MC matches canonical cache under a /w-style W"
+else
+    die_test "hand-run canonicalize $hand != $via_phys"
+fi
+handed_symlink=$(
+    W=$MCWORK/wlink
+    W=$(cd "$W" && pwd -P)
+    MC=$MCWORK/wlink/scratch/modcache_fe4-x86_64
+    mkdir -p "$MC"
+    realpath -P "$MC"
+)
+if [ "$handed_symlink" = "$via_phys" ]; then
+    ok "realpath MC collapses an explicitly passed /w-style cache path"
+else
+    die_test "passed /w-style MC $handed_symlink != $via_phys"
+fi
+rm -rf "$MCWORK"
 
 FEWORK=$(mktemp -d /tmp/phase2-fe-imports.XXXXXX)
 mkdir -p "$FEWORK/sys/usr/include" \
