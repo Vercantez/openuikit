@@ -61,6 +61,9 @@ echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/foundation/fe_sysroot_measurement.inc" \
     "$ROOT/full/dispatch/swift_linux_lib.inc" \
+    "$ROOT/full/urltransport/build_host_helper.sh" \
+    "$ROOT/full/relativetime/build_host_helper.sh" \
+    "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc"; do
     if bash -n "$s"; then
         ok "bash -n $(basename "$s")"
@@ -765,6 +768,39 @@ expect_not_grep 'src=/usr/lib/swift/linux/$name' "$COMMON" \
     "host stager no longer hardcodes /usr/lib/swift/linux"
 expect_not_grep 'X86_HOST_RUNTIME' "$ROOT/scripts/env/markers.py" \
     "CANNOT_X86_HOST_RUNTIME is not a PR3 CURSOR_ENV_CANNOT_* marker"
+expect_file "$ROOT/full/urltransport/build_host_helper.sh"
+expect_file "$ROOT/full/relativetime/build_host_helper.sh"
+expect_file "$ROOT/full/foundationinternationalization/build_host_helper.sh"
+expect_grep 'openuikit_host_runtime_toolchain_files' "$COMMON" \
+    "host stager copies only toolchain names"
+expect_grep 'openuikit_host_runtime_built_files' "$COMMON" \
+    "host stager distinguishes built Open* names"
+expect_grep 'urltransport/build_host_helper.sh' "$COMMON" \
+    "phase2 builds libOpenURLTransportHost.so via committed helper script"
+expect_grep 'relativetime/build_host_helper.sh' "$COMMON" \
+    "phase2 builds libOpenRelativeTimeHost.so via committed helper script"
+expect_grep 'foundationinternationalization/build_host_helper.sh' "$COMMON" \
+    "phase2 builds libOpenFoundationInternationalizationHost.so via committed helper script"
+expect_grep 'urltransport/build_host_helper.sh' \
+    "$ROOT/full/frameworks/build_core_guest_package.sh" \
+    "core-package host URL recipe is the shared helper script"
+expect_grep 'relativetime/build_host_helper.sh' \
+    "$ROOT/full/frameworks/build_core_guest_package.sh" \
+    "core-package host relative-time recipe is the shared helper script"
+expect_grep 'foundationinternationalization/build_host_helper.sh' \
+    "$ROOT/full/foundationinternationalization/build_foundation_internationalization.sh" \
+    "intl lane host recipe is the shared helper script"
+expect_grep -- '-lcurl -pthread' "$ROOT/full/urltransport/build_host_helper.sh" \
+    "URL host helper keeps committed -lcurl -pthread"
+expect_grep -- '-licui18n -licuuc -lm' \
+    "$ROOT/full/relativetime/build_host_helper.sh" \
+    "relative-time host helper keeps committed ICU libs"
+expect_not_grep 'OpenURLTransportHost.c' "$COMMON" \
+    "phase2 does not inline the URL host clang recipe"
+expect_not_grep 'OpenRelativeTimeHost.c' "$COMMON" \
+    "phase2 does not inline the relative-time host clang recipe"
+expect_not_grep 'OpenFoundationInternationalizationHost.c' "$COMMON" \
+    "phase2 does not inline the intl host clang recipe"
 # Host check must appear in phase2.sh before the widget/build_full invocation.
 awk '
     /cannot mrroot-host-x86 X86_HOST_RUNTIME/ { h=NR }
@@ -788,15 +824,27 @@ do
     expect_grep "$host_name" "$BUILD_FULL" "build_full.sh names $host_name"
 done
 
+OPEN_HOST_NAMES='libOpenDispatchHost.so,libOpenFoundationInternationalizationHost.so,libOpenURLTransportHost.so,libOpenRelativeTimeHost.so'
 saved_toolchain=${SWIFT_TOOLCHAIN:-}
+unset SWIFT_TOOLCHAIN
+real_linux=$(openuikit_resolve_swift_linux_lib)
+if [ ! -f "$real_linux/libdispatch.so" ] || [ ! -f "$real_linux/libBlocksRuntime.so" ]; then
+    die_test "no ELF toolchain libdispatch/libBlocksRuntime under $real_linux"
+fi
+
 HOST_FIX=$(mktemp -d /tmp/phase2-host-fix.XXXXXX)
 HOST_DEST=$(mktemp -d /tmp/phase2-host-dest.XXXXXX)
 mkdir -p "$HOST_FIX/opt/swift/usr/lib/swift/linux"
-for host_name in libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so \
+cp -fL "$real_linux/libdispatch.so" "$HOST_FIX/opt/swift/usr/lib/swift/linux/libdispatch.so"
+cp -fL "$real_linux/libBlocksRuntime.so" \
+    "$HOST_FIX/opt/swift/usr/lib/swift/linux/libBlocksRuntime.so"
+# Dummy Open* in the linux dir must never be copied (including fake arm64 ELF).
+for host_name in libOpenDispatchHost.so \
     libOpenFoundationInternationalizationHost.so libOpenURLTransportHost.so \
     libOpenRelativeTimeHost.so
 do
-    printf 'fixture-%s\n' "$host_name" > "$HOST_FIX/opt/swift/usr/lib/swift/linux/$host_name"
+    printf 'not-x86-open-%s\n' "$host_name" \
+        > "$HOST_FIX/opt/swift/usr/lib/swift/linux/$host_name"
 done
 export SWIFT_TOOLCHAIN=$HOST_FIX/opt/swift/usr
 resolved=$(openuikit_resolve_swift_linux_lib)
@@ -805,32 +853,74 @@ if [ "$resolved" = "$HOST_FIX/opt/swift/usr/lib/swift/linux" ]; then
 else
     die_test "resolver got $resolved want $HOST_FIX/opt/swift/usr/lib/swift/linux"
 fi
-host_ok=$(phase2_stage_x86_host_runtime "$HOST_DEST" || true)
-if [ "$host_ok" = OK ]; then
+
+host_copy=$(phase2_stage_x86_host_runtime "$HOST_DEST" || true)
+expected_open_missing="MISSING=$OPEN_HOST_NAMES"
+if [ "$host_copy" = "$expected_open_missing" ] \
+    && phase2_is_elf_x86_so "$HOST_DEST/host/libdispatch.so" \
+    && phase2_is_elf_x86_so "$HOST_DEST/host/libBlocksRuntime.so"; then
+    open_copied=0
+    for host_name in libOpenDispatchHost.so \
+        libOpenFoundationInternationalizationHost.so libOpenURLTransportHost.so \
+        libOpenRelativeTimeHost.so
+    do
+        if [ -e "$HOST_DEST/host/$host_name" ]; then
+            open_copied=1
+        fi
+    done
+    if [ "$open_copied" -eq 0 ]; then
+        ok "without repo, toolchain copies are ELF x86-64 and each Open* is named missing"
+    else
+        die_test "Open* leaked into dest without a build: $(ls -l "$HOST_DEST/host")"
+    fi
+else
+    die_test "copy-only host stage expected $expected_open_missing got: $host_copy"
+fi
+
+# Build uses the real Swift linux dir for dispatch.h; the fixture has only .so files.
+if [ -z "${saved_toolchain}" ]; then
+    unset SWIFT_TOOLCHAIN
+else
+    export SWIFT_TOOLCHAIN=$saved_toolchain
+fi
+
+# Leftover non-x86 Open* in dest must be rebuilt, not kept.
+printf 'arm64-leftover\n' > "$HOST_DEST/host/libOpenURLTransportHost.so"
+host_built=$(phase2_stage_x86_host_runtime "$HOST_DEST" "$ROOT" || true)
+if [ "$host_built" = OK ]; then
     host_all=1
     for host_name in libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so \
         libOpenFoundationInternationalizationHost.so libOpenURLTransportHost.so \
         libOpenRelativeTimeHost.so
     do
-        if [ ! -f "$HOST_DEST/host/$host_name" ] || [ -L "$HOST_DEST/host/$host_name" ]; then
+        if ! phase2_is_elf_x86_so "$HOST_DEST/host/$host_name"; then
             host_all=0
         fi
         if ! grep -q "$host_name" "$HOST_DEST/host/SHA256SUMS"; then
             host_all=0
         fi
         want=$(sha256sum "$HOST_DEST/host/$host_name" | awk '{print $1}')
-        got=$(awk -v n="$host_name" '$2 ~ n { print $1; exit }' "$HOST_DEST/host/SHA256SUMS")
+        got=$(grep -F "/$host_name" "$HOST_DEST/host/SHA256SUMS" | awk '{print $1}')
         if [ "$want" != "$got" ]; then
             host_all=0
         fi
     done
+    if grep -q arm64-leftover "$HOST_DEST/host/libOpenURLTransportHost.so"; then
+        host_all=0
+    fi
+    dummy_url=$(sha256sum "$HOST_FIX/opt/swift/usr/lib/swift/linux/libOpenURLTransportHost.so" \
+        | awk '{print $1}')
+    built_url=$(sha256sum "$HOST_DEST/host/libOpenURLTransportHost.so" | awk '{print $1}')
+    if [ "$dummy_url" = "$built_url" ]; then
+        host_all=0
+    fi
     if [ "$host_all" -eq 1 ]; then
-        ok "fixture /opt/swift/usr layout fills host/ with sha256 recorded"
+        ok "with repo, four Open* are built ELF x86-64 (not copied) and sha256 recorded"
     else
-        die_test "fixture host/ incomplete under $HOST_DEST/host: $(ls -l "$HOST_DEST/host")"
+        die_test "built host/ incomplete under $HOST_DEST/host: $(ls -l "$HOST_DEST/host"); $(file "$HOST_DEST/host"/*.so)"
     fi
 else
-    die_test "fixture host stage expected OK got: $host_ok"
+    die_test "repo host stage expected OK got: $host_built logs=$(ls "$HOST_DEST/host-work" 2>/dev/null); $(tail -n 20 "$HOST_DEST/host-work"/*.log 2>/dev/null)"
 fi
 
 EMPTY_FIX=$(mktemp -d /tmp/phase2-host-empty.XXXXXX)
@@ -840,16 +930,31 @@ export SWIFT_TOOLCHAIN=$EMPTY_FIX/opt/swift/usr
 host_miss=$(phase2_stage_x86_host_runtime "$EMPTY_DEST" || true)
 expected_host_missing="MISSING=$HOST_NAMES"
 if [ "$host_miss" = "$expected_host_missing" ]; then
-    ok "empty host/ is MISSING listing every HOST_RUNTIME_FILES name"
+    ok "empty toolchain without repo is MISSING listing every HOST_RUNTIME_FILES name"
 else
     die_test "empty host MISSING expected $expected_host_missing got: $host_miss"
 fi
+
+EMPTY_BUILD=$(mktemp -d /tmp/phase2-host-empty-build.XXXXXX)
+mkdir -p "$EMPTY_BUILD/host"
+host_empty_build=$(phase2_stage_x86_host_runtime "$EMPTY_BUILD" "$ROOT" || true)
+expected_dispatch_missing='MISSING=libdispatch.so,libBlocksRuntime.so,libOpenDispatchHost.so'
+if [ "$host_empty_build" = "$expected_dispatch_missing" ] \
+    && phase2_is_elf_x86_so \
+        "$EMPTY_BUILD/host/libOpenFoundationInternationalizationHost.so" \
+    && phase2_is_elf_x86_so "$EMPTY_BUILD/host/libOpenURLTransportHost.so" \
+    && phase2_is_elf_x86_so "$EMPTY_BUILD/host/libOpenRelativeTimeHost.so"; then
+    ok "empty toolchain with repo names each unbuilt helper (dispatch) and builds the other three"
+else
+    die_test "empty+repo expected $expected_dispatch_missing plus three ELF Open* got: $host_empty_build $(ls -l "$EMPTY_BUILD/host"); $(file "$EMPTY_BUILD/host"/* 2>/dev/null)"
+fi
+
 if [ -z "${saved_toolchain}" ]; then
     unset SWIFT_TOOLCHAIN
 else
     export SWIFT_TOOLCHAIN=$saved_toolchain
 fi
-rm -rf "$HOST_FIX" "$HOST_DEST" "$EMPTY_FIX" "$EMPTY_DEST"
+rm -rf "$HOST_FIX" "$HOST_DEST" "$EMPTY_FIX" "$EMPTY_DEST" "$EMPTY_BUILD"
 
 echo "== env-prepare with FULL_OUT_SUFFIX=-x86_64 never resolves unsuffixed arm64 trees"
 PREP_FIX=$(mktemp -d /tmp/phase2-prepare-suffix.XXXXXX)
