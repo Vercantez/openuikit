@@ -18,6 +18,8 @@ _phase2_tree=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 . "$_phase2_tree/full/dispatch/swift_linux_lib.inc"
 PHASE2_REPO=$_phase2_tree
 unset _phase2_tree
+# shellcheck source=stamp.inc
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/stamp.inc"
 
 phase2_prepare() {
     printf 'ENV_PREPARE %s %s\n' "$1" "$2"
@@ -1349,10 +1351,15 @@ phase2_fill_x86_loud_abort_stubs() {
     local work=$dest/shim-work
     local log=$work/build_runtime_shims.log
     mkdir -p "$fw/Foundation.framework" "$fw/CoreFoundation.framework" "$work"
-    if phase2_is_x86_macho "$fw/Foundation.framework/Foundation" \
-        && phase2_is_x86_macho "$fw/CoreFoundation.framework/CoreFoundation"; then
+    local stub_key
+    stub_key=$(stamp_key "$fw/Foundation.framework/Foundation" \
+        "$repo/scripts/build_runtime_shims.sh" \
+        "$sys" "${TARGET:-x86_64-apple-macos15.0}")
+    if stamp_reuse "$fw/Foundation.framework/Foundation" "$stub_key" \
+        && stamp_reuse "$fw/CoreFoundation.framework/CoreFoundation" "$stub_key"; then
         return 0
     fi
+    stamp_rebuild_reason "$fw/Foundation.framework/Foundation" "$stub_key"
     rm -f "$fw/Foundation.framework/Foundation" \
         "$fw/CoreFoundation.framework/CoreFoundation"
     set +e
@@ -1373,6 +1380,11 @@ phase2_fill_x86_loud_abort_stubs() {
     fi
     if ! phase2_is_x86_macho "$fw/CoreFoundation.framework/CoreFoundation"; then
         rm -f "$fw/CoreFoundation.framework/CoreFoundation"
+    fi
+    if phase2_is_x86_macho "$fw/Foundation.framework/Foundation" \
+        && phase2_is_x86_macho "$fw/CoreFoundation.framework/CoreFoundation"; then
+        stamp_write "$fw/Foundation.framework/Foundation" "$stub_key"
+        stamp_write "$fw/CoreFoundation.framework/CoreFoundation" "$stub_key"
     fi
 }
 
@@ -1420,16 +1432,16 @@ phase2_fill_x86_libswiftcompat() {
     # changed at 09:25, so FoundationEssentials bound strtod_l/strtof_l from
     # libSystem on x86_64 while arm64 bound them from libswiftcompat and the
     # link-map inventory diverged.
-    local stamp=$out.source-sha256 want
-    want=$(cat "$src_dir/swiftcompat.c" "$src_dir/shim.cpp" "$repo/swiftcore-macho/scripts/build_compat.sh" 2>/dev/null | sha256sum | awk '{print $1}')
-    if phase2_is_x86_macho "$out" && [ -f "$stamp" ] && [ "$(cat "$stamp")" = "$want" ]; then
-        echo "phase2: libswiftcompat reused=1 source-sha256=${want:0:12}" >&2
+    local want
+    want=$(stamp_key "$out" \
+        "$src_dir/swiftcompat.c" \
+        "$src_dir/shim.cpp" \
+        "$repo/swiftcore-macho/scripts/build_compat.sh")
+    if stamp_reuse "$out" "$want"; then
         return 0
     fi
-    if [ -f "$out" ]; then
-        echo "phase2: libswiftcompat rebuilt reason=$([ -f "$stamp" ] && echo "source-sha256 $(cut -c1-12 "$stamp")->${want:0:12}" || echo no-stamp)" >&2
-    fi
-    rm -f "$out" "$stamp"
+    stamp_rebuild_reason "$out" "$want"
+    rm -f "$out" "$(stamp_file "$out")" "$out.source-sha256"
     phase2_prepare_compat_alias_sdk "$sys" "$alias"
     set +e
     W="$dest" SDK="$alias" SRC="$src_dir" MRLIB="$mrlib" LOADER="$loader" \
@@ -1440,7 +1452,7 @@ phase2_fill_x86_libswiftcompat() {
         rm -f "$out"
         return 1
     fi
-    printf '%s\n' "$want" > "$stamp"
+    stamp_write "$out" "$want"
 }
 
 # Stage BASE swift runtime dylibs from the overlay search. Always overwrite
