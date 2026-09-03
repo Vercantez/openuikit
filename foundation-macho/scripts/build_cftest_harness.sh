@@ -321,7 +321,8 @@ awk "/^k[A-Z]/ || /^OBJC_CLASS/ {print > \"$W/stub-data.txt\"; next} {print > \"
 [ -s "$W/stub-func.txt" ] || : > "$W/stub-func.txt"
 [ -s "$W/stub-data.txt" ] || : > "$W/stub-data.txt"
 
-llvm-nm-18 --defined-only "$W/probe_sysctl.o" | awk '$2=="T"{print substr($3,2)}' | sort -u > "$W/probe-defines.txt"
+llvm-nm-18 --defined-only "$W/probe_sysctl.o" 2>/dev/null \
+  | awk '$2=="T"{print substr($3,2)}' | sort -u > "$W/probe-defines.txt" || true
 comm -23 "$W/stub-func.txt" "$W/probe-defines.txt" > "$W/stub-func-active.txt"
 
 # The stub set is derived every run, then pinned against

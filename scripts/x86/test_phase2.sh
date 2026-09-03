@@ -1714,6 +1714,43 @@ expect_not_grep 'Operator: stage CF+FE objects, link_ud_guest.sh, then re-run' \
 echo "== ud-guest-x86 refusal + staging resolution"
 UDWORK=$(mktemp -d /tmp/phase2-ud-guest.XXXXXX)
 SYS=${SYS:-$ROOT/scratch/sysroot_fe4-x86_64}
+if [ ! -d "$SYS/usr/include" ]; then
+    SYS=$UDWORK/fake-x86-sdk
+    mkdir -p "$SYS/usr/include" "$SYS/usr/lib"
+    emit_tbd() {
+        local dest=$1 install=$2
+        cat >"$dest" <<EOF
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ x86_64-macos ]
+install-name:    '$install'
+current-version: 1
+compatibility-version: 1
+exports:
+  - targets:   [ x86_64-macos ]
+    symbols:   [ '_dummy_tbd' ]
+...
+EOF
+    }
+    emit_tbd "$SYS/usr/lib/libSystem.B.tbd" "/usr/lib/libSystem.B.dylib"
+    ln -sfn libSystem.B.tbd "$SYS/usr/lib/libSystem.tbd"
+    emit_tbd "$SYS/usr/lib/libobjc.A.tbd" "/usr/lib/libobjc.A.dylib"
+    ln -sfn libobjc.A.tbd "$SYS/usr/lib/libobjc.tbd"
+    mkdir -p "$SYS/usr/include/objc"
+    cat >"$SYS/usr/include/objc/NSObject.h" <<'EOF'
+#ifndef _TEST_NSOBJECT_H_
+#define _TEST_NSOBJECT_H_
+typedef struct objc_class *Class;
+typedef struct objc_object { Class isa; } *id;
+typedef struct objc_selector *SEL;
+@interface NSObject
++ (void)initialize;
+- (void)doesNotRecognizeSelector:(SEL)s;
+@end
+#endif
+EOF
+    echo "NOTE: scratch/sysroot_fe4-x86_64 absent; dummy Mach-O fixtures use $SYS"
+fi
 # shellcheck source=common.inc
 . "$COMMON"
 
@@ -1930,9 +1967,9 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     echo "== libCFTest reuse is stamp-keyed, not sibling stub files"
     mkdir -p "$wt/cfobjc/obj" "$wt/nscfobj" "$wt/lib"
     echo 'int cfobjc_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
-        -isysroot "$SYS" -c -o "$wt/cfobjc/obj/CFString.o" -x c -
+        -c -o "$wt/cfobjc/obj/CFString.o" -x c -
     echo 'int nscf_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
-        -isysroot "$SYS" -c -o "$wt/nscfobj/NSCFConstantString.o" -x c -
+        -c -o "$wt/nscfobj/NSCFConstantString.o" -x c -
     cp "$ROOT/foundation-macho/docs/cf-census/cftest-stub-func-active.txt" \
         "$wt/stub-func-active.txt"
     cp "$ROOT/foundation-macho/docs/cf-census/cftest-stub-data.txt" \
@@ -1979,9 +2016,9 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     STAMPW=$(mktemp -d /tmp/phase2-cftest-stamp.XXXXXX)
     mkdir -p "$STAMPW/cfobjc/obj" "$STAMPW/nscfobj" "$STAMPW/lib"
     echo 'int cfobjc_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
-        -isysroot "$SYS" -c -o "$STAMPW/cfobjc/obj/CFString.o" -x c -
+        -c -o "$STAMPW/cfobjc/obj/CFString.o" -x c -
     echo 'int nscf_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
-        -isysroot "$SYS" -c -o "$STAMPW/nscfobj/NSCFConstantString.o" -x c -
+        -c -o "$STAMPW/nscfobj/NSCFConstantString.o" -x c -
     : > "$STAMPW/expect-func.txt"
     : > "$STAMPW/expect-data.txt"
     set +e
