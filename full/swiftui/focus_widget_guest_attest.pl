@@ -506,8 +506,10 @@ sub conformance_classifier_selftest {
         OpenCombine => 'libOpenCombine',
     );
 
-    # Authority reverse-ownership failure on main 8e12b714: libSwiftUI
-    # defines this Mc for `extension CGFloat: _OpenVectorArithmetic`.
+    # Authority reverse-ownership failures on the same SwiftUI extension of
+    # OpenCoreGraphics.CGFloat: Mc/WP/Wp for `_OpenVectorArithmetic` (main
+    # 8e12b714) and the property descriptor `MV` for `magnitudeSquared`
+    # (main 473b3860). Extension members are SwiftUI's, not the type's.
     my @positive = (
         [
             '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc',
@@ -521,6 +523,20 @@ sub conformance_classifier_selftest {
         ],
         [
             '_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADWp',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s16OpenCoreGraphics7CGFloatV7SwiftUIE16magnitudeSquaredSdvpMV',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        # TextAttributes.swift `extension AttributeScopes { var swiftUI }`.
+        # Compact demangle uses Double as a parseable value encoding; ARM64
+        # may emit the nested SwiftUIAttributes metatype. Owner is the
+        # `(extension in SwiftUI):` clause either way.
+        [
+            '_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvpMV',
             'SwiftUI',
             'libSwiftUI',
         ],
@@ -572,46 +588,45 @@ sub framework_tokens {
         qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine);
 }
 
-# Protocol-conformance descriptors (`Mc`) and witness tables (`WP` / `Wp`)
-# mangle the conforming TYPE's module first. The module that emitted the
-# symbol is the one that declared the conformance; classify by the PROTOCOL
-# module from swift-demangle, not by slicing the mangled name. Reverse
-# ownership then treats a matching defining dylib as the symbol's owner.
-sub conformance_protocol_module {
+sub demangle_compact {
     my ($demangle, $symbol) = @_;
-    return (undef, undef) unless $symbol =~ /(?:Mc|WP|Wp)\z/;
     my $expanded = capture_command($demangle, '--compact', $symbol);
     $expanded =~ s/[\r\n]+\z//;
     fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
+    return $expanded;
+}
+
+# Owning module from compact demangle, in this order:
+#   1. `(extension in M):` anywhere → M (SwiftUI's CGFloat.magnitudeSquared MV
+#      and AttributeScopes.swiftUI; compact form is often
+#      `property descriptor for (extension in SwiftUI):…`, not a leading match)
+#   2. `… : M.Protocol in M2` conformance/witness (Mc/WP/Wp) → protocol module M
+#   3. otherwise undef (caller falls back to the leading nominal-type module)
+sub owning_module_from_demangle {
+    my ($expanded) = @_;
+    return undef unless defined $expanded && length $expanded;
     my $modules = join('|', map { quotemeta($_->[0]) } @FRAMEWORK_MODULES);
-    if ($expanded =~
-        /^(?:protocol conformance descriptor|protocol witness table(?: pattern)?) for .+ : ($modules)\./)
-    {
-        return ($1, $expanded);
-    }
-    return (undef, $expanded);
+    return $1 if $expanded =~ /\(extension in ($modules)\):/;
+    return $1 if $expanded =~
+        /^(?:protocol conformance descriptor|protocol witness table(?: pattern)?) for .+ : ($modules)\./;
+    return undef;
 }
 
 sub classify_framework_symbol {
     my ($demangle, $symbol) = @_;
-    my ($conformance_module, $conformance_expanded) =
-        conformance_protocol_module($demangle, $symbol);
-    return ($conformance_module, $conformance_expanded)
-        if defined $conformance_module;
-
     my $prefix = prefixed_swift_module($symbol);
-    return ($prefix, undef) if defined $prefix;
-
     my @mentioned = framework_tokens($symbol);
-    return (undef, undef) unless @mentioned;
-    my $expanded = capture_command($demangle, '--compact', $symbol);
-    $expanded =~ s/[\r\n]+\z//;
-    fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
+    return (undef, undef) unless defined $prefix || @mentioned;
+
+    my $expanded = demangle_compact($demangle, $symbol);
+    my $from_demangle = owning_module_from_demangle($expanded);
+    return ($from_demangle, $expanded) if defined $from_demangle;
+    return ($prefix, $expanded) if defined $prefix;
+
     my @owners;
     for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
         push @owners, $module
-            if $expanded =~ /\(extension in \Q$module\E\):/
-            || $expanded =~ /^associated type descriptor for \Q$module\E\./
+            if $expanded =~ /^associated type descriptor for \Q$module\E\./
             || $expanded =~ /\bin \Q$module\E\z/;
     }
     fail("ambiguous framework owner [@owners] for $symbol ($expanded)") if @owners > 1;
@@ -688,17 +703,6 @@ sub provider_command {
         my @undefined = symbol_records($demangle, capture_command($nm, '-u', $paths{$image}));
         for my $record (@defined) {
             my ($symbol, $module) = @$record;
-            # A method declared in one framework as an extension of a type
-            # owned by another begins with the extended type's module.  Only
-            # definitions outside that default owner need the more expensive
-            # demangle; require an explicit `(extension in Module):` result.
-            if ($definition_owner{$module} ne $image) {
-                my $expanded = capture_command($demangle, '--compact', $symbol);
-                $expanded =~ s/[\r\n]+\z//;
-                if ($expanded =~ /^\(extension in (SwiftUI|OpenUIKit|OpenCoreGraphics|Combine|OpenCombine)\):/) {
-                    $module = $1;
-                }
-            }
             $definitions{$image}{$symbol} = 1;
             $symbol_module{$symbol} = $module;
             $counts{$image}{defined}{$module}++;

@@ -513,7 +513,9 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         self.assertIn("extension in", helper)
         self.assertIn("protocol conformance descriptor", helper)
         self.assertIn("protocol witness table", helper)
-        self.assertIn("conformance_protocol_module", helper)
+        self.assertIn("owning_module_from_demangle", helper)
+        self.assertNotIn("conformance_protocol_module", helper)
+        self.assertNotIn("/^\\(extension in", helper)
         self.assertIn("^_OBJC_(?:CLASS|METACLASS)_\\$__TtC", helper)
         self.assertIn("^_OBJC_IVAR_\\$__TtC", helper)
         self.assertIn("for (1 .. $nested_count + 2)", helper)
@@ -539,8 +541,17 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
             "_$s16OpenCoreGraphics7CGFloatV7SwiftUI01_A16VectorArithmeticADMc"
         )
         self.assertIn(exact, helper)
+        self.assertIn(
+            "_$s16OpenCoreGraphics7CGFloatV7SwiftUIE16magnitudeSquaredSdvpMV",
+            helper,
+        )
+        self.assertIn(
+            "_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvpMV",
+            helper,
+        )
         self.assertIn("_$s16OpenCoreGraphics7CGFloatVMn", helper)
         self.assertIn("conformance-classifier-selftest", helper)
+        self.assertIn("owning_module_from_demangle", helper)
         result = subprocess.run(
             ["perl", str(ATTEST), "conformance-classifier-selftest"],
             check=True,
@@ -549,7 +560,7 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         )
         self.assertEqual(
             result.stdout,
-            "CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=3 negatives=1\n",
+            "CONFORMANCE_CLASSIFIER_SELFTEST_OK positives=5 negatives=1\n",
         )
         self.assertEqual(result.stderr, "")
 
