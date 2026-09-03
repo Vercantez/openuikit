@@ -95,6 +95,23 @@ trap '_on_err' ERR
 
 # Stamp restage can rewrite $W/shims without +x. chmod before every ninja
 # so the driver wrap is executable; still ls -l so a leftover 126 is obvious.
+ensure_compiler_rt_osx() {
+  # Fake ninja harnesses must not require a Darwin SDK compile of compiler-rt.
+  if [ "${SWIFTCORE_NINJA_HARNESS:-0}" = 1 ]; then
+    return 0
+  fi
+  local sdk="${SWIFTCORE_SDKROOT:-${SWIFTCORE_DARWIN_SDK:-$W/sdk/MacOSX.sdk}}"
+  if [ ! -d "$sdk" ]; then
+    echo "build_stdlib: skip compiler-rt osx (no SDK at $sdk)"
+    return 0
+  fi
+  local out="${SWIFTCORE_COMPILER_RT_OSX:-$W/build/libclang_rt.osx.a}"
+  export SWIFTCORE_SDKROOT="$sdk"
+  export SWIFTCORE_WORK="$W"
+  export SWIFTCORE_COMPILER_RT_OSX="$out"
+  bash "$SCRIPT_DIR/build_compiler_rt_osx.sh" "$out"
+}
+
 ensure_compiler_shims() {
   local s
   mkdir -p "$W/shims"
@@ -107,6 +124,7 @@ ensure_compiler_shims() {
   echo "build_stdlib: compiler shims (ls -l):"
   ls -l "$W/shims/clang++" "$W/shims/clang" "$W/shims/lipo" \
     "$SCRIPT_DIR/clangxx_darwin_link.py" 2>&1 | sed 's/^/  /' || true
+  ensure_compiler_rt_osx
 }
 
 # Dry path: dump cmake argv and exit. Does not touch MACHORUN/darwin, does not

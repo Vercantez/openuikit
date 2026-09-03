@@ -6,7 +6,7 @@
 # Not ninja targets (stdlib/public/CMakeLists.txt:359). Compile with the
 # Darwin overlay argv shape (no -parse-stdlib; -autolink-force-load) and
 # link with the Darwin clang++ shim so ld64.lld gets sysroot libc++.tbd,
-# never /usr/lib/llvm-18/lib.
+# never /usr/lib/llvm-18/lib, plus libclang_rt.osx.a for availability checks.
 #
 # Prefer a sysroot .swiftinterface when present (scratch/sysroot_fe4[-x86_64]
 # usr/lib/swift/<module>.swiftmodule/<triple>.swiftinterface). Otherwise
@@ -38,6 +38,15 @@ else
 fi
 
 mkdir -p "$work" "$out_lib" "$out_mod" "$work/modcache"
+
+# Overlay links are NOUNDEFS; clang's __isPlatformVersionAtLeast lives in
+# compiler-rt builtins, not gen_tbd libSystem.
+if [ -d "$SDK" ] && [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
+  export SWIFTCORE_SDKROOT="$SDK"
+  export SWIFTCORE_WORK="$W"
+  export SWIFTCORE_COMPILER_RT_OSX="${SWIFTCORE_COMPILER_RT_OSX:-$B/libclang_rt.osx.a}"
+  bash "$SCRIPT_DIR/build_compiler_rt_osx.sh" "$SWIFTCORE_COMPILER_RT_OSX"
+fi
 
 # Sidecar Clang maps live outside the SDK; -I is required so header "errno.h"
 # resolves to $SDK/usr/include, not overlays/clang/.

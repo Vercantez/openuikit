@@ -66,9 +66,17 @@ printf '%s\n' "$got" | grep -F -- '-nostdlib++' >/dev/null \
 printf '%s\n' "$got" | grep -F -- '/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' >/dev/null \
   && echo "  OK  sysroot libc++.tbd on the Darwin link" \
   || { echo "  FAIL missing sysroot libc++.tbd"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '-Wl,-force_load,' >/dev/null \
+  && printf '%s\n' "$got" | grep -F -- 'libclang_rt.osx.a' >/dev/null \
+  && echo "  OK  force-load Darwin compiler-rt builtins archive" \
+  || { echo "  FAIL missing -Wl,-force_load,libclang_rt.osx.a"; fail=1; }
 grep -q 'clangxx_darwin_link: cxx_runtime=/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' "$tmp/link.err" \
   && echo "  OK  printed cxx_runtime= sysroot tbd" \
   || { echo "  FAIL missing cxx_runtime line"; fail=1; }
+grep -q 'clangxx_darwin_link: compiler_rt=' "$tmp/link.err" \
+  && grep -q 'libclang_rt.osx.a' "$tmp/link.err" \
+  && echo "  OK  printed compiler_rt= builtins archive" \
+  || { echo "  FAIL missing compiler_rt line"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '-fuse-ld=lld' >/dev/null \
   && echo "  OK  kept -fuse-ld=lld (Darwin maps lld → ld64.lld + -platform_version)" \
   || { echo "  FAIL dropped -fuse-ld=lld"; fail=1; }
@@ -111,6 +119,9 @@ printf '%s\n' "$got" | grep -F -- "--ld-path=${LD_LLD}" >/dev/null \
 printf '%s\n' "$got" | grep -F -- 'ld64.lld' >/dev/null \
   && { echo "  FAIL linux-target .so selected ld64.lld"; fail=1; } \
   || echo "  OK  did not select ld64.lld"
+printf '%s\n' "$got" | grep -F -- 'libclang_rt.osx.a' >/dev/null \
+  && { echo "  FAIL ELF link force-loaded Darwin compiler-rt"; fail=1; } \
+  || echo "  OK  ELF link has no Darwin compiler-rt archive"
 assert_decision libswiftCore.so elf ld.lld
 
 echo
@@ -336,8 +347,89 @@ EOF
 fi
 
 echo
+echo "=== Darwin availability check resolves from compiler-rt builtins archive ==="
+sdk=""
+for d in /home/ubuntu/work/sdk/MacOSX.sdk /root/work/sdk/MacOSX.sdk; do
+  if [ -f "$d/usr/lib/libc++.tbd" ]; then sdk=$d; break; fi
+done
+rt_a=""
+work=${SWIFTCORE_WORK:-$HOME/work}
+if [ -n "$sdk" ]; then
+  rt_a=$work/build/libclang_rt.osx.a
+  SWIFTCORE_SDKROOT="$sdk" SWIFTCORE_WORK="$work" \
+    SWIFTCORE_COMPILER_RT_OSX="$rt_a" \
+    bash "$SCRIPT_DIR/build_compiler_rt_osx.sh" "$rt_a"
+fi
+if [ -z "$sdk" ]; then
+  echo "  FAIL no sysroot for availability Darwin link"; fail=1
+elif [ ! -f "$rt_a" ]; then
+  echo "  FAIL compiler-rt archive missing at $rt_a"; fail=1
+else
+  /usr/lib/llvm-18/bin/llvm-nm "$rt_a" 2>/dev/null \
+    | grep -q 'isPlatformVersionAtLeast' \
+    && echo "  OK  archive defines isPlatformVersionAtLeast" \
+    || { echo "  FAIL archive missing isPlatformVersionAtLeast"; fail=1; }
+  /usr/lib/llvm-18/bin/llvm-nm "$rt_a" 2>/dev/null \
+    | grep -q 'isPlatformOrVariantPlatformVersionAtLeast' \
+    && echo "  OK  archive defines isPlatformOrVariantPlatformVersionAtLeast" \
+    || { echo "  FAIL archive missing variant hook"; fail=1; }
+  cat > "$tmp/avail.c" <<'EOF'
+int probe(void) {
+  if (__builtin_available(macOS 11.0, *))
+    return 1;
+  return 0;
+}
+EOF
+  clang_c=$(command -v clang-18 || command -v clang)
+  clang_real=$(command -v clang++-18 || command -v clang++)
+  set +e
+  "$clang_c" -c -target x86_64-apple-macosx13.0 -isysroot "$sdk" \
+    -o "$tmp/avail.o" "$tmp/avail.c" 2>"$tmp/avail.err"
+  c_st=$?
+  set -e
+  if [ "$c_st" -ne 0 ]; then
+    echo "  FAIL compile __builtin_available rc=$c_st"; cat "$tmp/avail.err"; fail=1
+  else
+    /usr/lib/llvm-18/bin/llvm-nm "$tmp/avail.o" 2>/dev/null \
+      | grep -E 'isPlatformVersionAtLeast' \
+      && echo "  OK  availability object refs isPlatformVersionAtLeast" \
+      || echo "  OK  compile (nm ref optional)"
+    set +e
+    SWIFTCORE_REAL_CLANGXX="$clang_real" \
+      SWIFTCORE_WORK="$work" \
+      SWIFTCORE_COMPILER_RT_OSX="$rt_a" \
+      python3 "$py" \
+      -target x86_64-apple-macosx13.0 -isysroot "$sdk" \
+      -B/usr/lib/llvm-18/bin -L/usr/lib/llvm-18/lib \
+      -fuse-ld=lld -shared \
+      -o "$tmp/libavail.dylib" "$tmp/avail.o" 2>"$tmp/avail.link.err"
+    l_st=$?
+    set -e
+    printf '%s\n' "$(grep '^clangxx_darwin_link:' "$tmp/avail.link.err" || true)"
+    [ "$l_st" -eq 0 ] && echo "  OK  Darwin availability link rc=0" \
+      || { echo "  FAIL Darwin availability link rc=$l_st"; cat "$tmp/avail.link.err"; fail=1; }
+    grep -q "undefined symbol:.*isPlatformVersionAtLeast" "$tmp/avail.link.err" \
+      && { echo "  FAIL still undefined isPlatformVersionAtLeast"; fail=1; } \
+      || echo "  OK  no undefined isPlatformVersionAtLeast"
+    grep -q "compiler_rt=$rt_a" "$tmp/avail.link.err" \
+      && echo "  OK  link printed compiler_rt=$rt_a" \
+      || { echo "  FAIL compiler_rt not the builtins archive"; fail=1; }
+    grep -q 'unhandled file type' "$tmp/avail.link.err" \
+      && { echo "  FAIL still passed ELF libc++.so to ld64"; fail=1; } \
+      || echo "  OK  no ELF libc++.so unhandled file type"
+    if [ -f "$tmp/libavail.dylib" ]; then
+      /usr/lib/llvm-18/bin/llvm-nm -m "$tmp/libavail.dylib" 2>/dev/null \
+        | grep -E 'isPlatformVersionAtLeast' \
+        | grep -qv 'undefined' \
+        && echo "  OK  dylib defines isPlatformVersionAtLeast (from archive)" \
+        || echo "  OK  linked (nm defined line optional)"
+    fi
+  fi
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
-  echo "PASS -- apple-target .so → Darwin driver + sysroot libc++; linux-gnu .so → ld.lld"
+  echo "PASS -- apple-target .so → Darwin driver + sysroot libc++ + compiler-rt; linux-gnu .so → ld.lld"
   exit 0
 fi
 echo "FAIL"

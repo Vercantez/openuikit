@@ -476,6 +476,10 @@ printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q '/usr/lib/llvm
 printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: cxx_runtime=/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' \
   && echo "  OK  cxx_runtime= sysroot libc++.tbd" \
   || { echo "  FAIL missing cxx_runtime tbd"; fail=1; }
+printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: compiler_rt=' \
+  && printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q 'libclang_rt.osx.a' \
+  && echo "  OK  driver argv force-loads compiler-rt builtins" \
+  || { echo "  FAIL missing compiler_rt / libclang_rt.osx.a on Darwin link"; fail=1; }
 
 echo
 echo "=== cmake : && clang++ && : wrapper is stripped before rewrite ==="
