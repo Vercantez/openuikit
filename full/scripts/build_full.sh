@@ -543,8 +543,11 @@ done
             echo "build_full: libSystem.real does not define $moved -- it belongs in machorun, not the umbrella" >&2
             exit 1; }
     done
+    # Mach-O names: the C objects _dispatch_main_q / _dispatch_source_type_timer
+    # carry the leading underscore twice (measured on the arm64 umbrella:
+    # __dispatch_main_q, __dispatch_source_type_timer).
     for dsym in _dispatch_async_f _dispatch_get_global_queue _dispatch_main \
-                _dispatch_main_q _dispatch_source_type_timer; do
+                __dispatch_main_q __dispatch_source_type_timer; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
             | awk -v s="$dsym" '$NF==s{f=1} END{exit !f}' || {
             echo "build_full: the libSystem umbrella does not define $dsym -- overlay LINK advertises umbrella own-defs" >&2

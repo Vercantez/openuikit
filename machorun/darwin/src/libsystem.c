@@ -1967,18 +1967,24 @@ EXPORT int memset_s(void *s, size_t smax, int c, size_t n)
 {
     if (s == NULL) return 22; /* EINVAL */
     if (n > smax) {
+        /* Darwin returns EOVERFLOW (84) here, not ERANGE: recorded on
+         * macOS 26.5.2 by the overlay_libsystem fixture
+         * ("memset_s_erange rc=84 ERANGE=0"). Still wipes smax bytes. */
         glibc_memset(s, c, smax);
-        return 34; /* ERANGE */
+        return 84; /* EOVERFLOW */
     }
     glibc_memset(s, c, n);
     return 0;
 }
 
-/* QOS_CLASS_DEFAULT from <sys/qos.h> (0x15). The Linux host does not
- * translate thread priorities into Darwin QoS classes. */
+/* <sys/qos.h>: the main thread runs at QOS_CLASS_USER_INTERACTIVE (0x21)
+ * on Darwin (recorded on macOS 26.5.2 by the overlay_libsystem fixture);
+ * every other thread answers QOS_CLASS_DEFAULT (0x15). The Linux host does
+ * not translate thread priorities into Darwin QoS classes. */
+int pthread_main_np(void); /* darwin/src/posix.c */
 EXPORT unsigned qos_class_self(void)
 {
-    return 0x15;
+    return pthread_main_np() ? 0x21u : 0x15u;
 }
 
 /* Darwin vouchers are unavailable. NULL is the only value this libSystem
