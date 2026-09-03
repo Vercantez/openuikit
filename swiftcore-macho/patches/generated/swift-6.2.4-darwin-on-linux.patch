@@ -58,10 +58,24 @@ index 8ec33e9a..a539b01f 100644
      if(SWIFT_PREBUILT_SWIFT)
        set(swift_compiler_tool "${SWIFT_NATIVE_SWIFT_TOOLS_PATH}/swiftc${HOST_EXECUTABLE_SUFFIX}")
 diff --git a/stdlib/public/Concurrency/CMakeLists.txt b/stdlib/public/Concurrency/CMakeLists.txt
-index d3a50110..f5b14cce 100644
+index d3a50110..8c7aafc2 100644
 --- a/stdlib/public/Concurrency/CMakeLists.txt
 +++ b/stdlib/public/Concurrency/CMakeLists.txt
-@@ -161,7 +161,9 @@ set(SWIFT_RUNTIME_CONCURRENCY_SWIFT_SOURCES
+@@ -24,7 +24,12 @@ endif()
+ set(swift_concurrency_incorporate_object_libraries_so swiftThreading)
+ 
+ if("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "dispatch")
+-  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
++  # Darwin host: SDK <dispatch.h> + libSystem re-exports. Linux host + Darwin
++  # *target* (SWIFT_PRIMARY_VARIANT_SDK in SWIFT_DARWIN_PLATFORMS): same —
++  # Libdispatch.cmake will not create a `dispatch` CMake target for OSX.
++  # Keep SWIFT_ENABLE_DISPATCH ON so the dispatch executor sources compile.
++  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND
++     NOT "${SWIFT_PRIMARY_VARIANT_SDK}" IN_LIST SWIFT_DARWIN_PLATFORMS)
+     include_directories(AFTER
+                           ${SWIFT_PATH_TO_LIBDISPATCH_SOURCE})
+ 
+@@ -161,7 +166,9 @@ set(SWIFT_RUNTIME_CONCURRENCY_SWIFT_SOURCES
    TaskSleepDuration.swift
    UnimplementedExecutor.swift
    CooperativeExecutor.swift
@@ -72,7 +86,7 @@ index d3a50110..f5b14cce 100644
    PlatformExecutorLinux.swift
    PlatformExecutorWindows.swift
    PlatformExecutorOpenBSD.swift
-@@ -182,6 +184,7 @@ if("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "dispatch")
+@@ -182,6 +189,7 @@ if("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "dispatch")
    set(SWIFT_RUNTIME_CONCURRENCY_NONEMBEDDED_SWIFT_SOURCES
      DispatchExecutor.swift
      CFExecutor.swift
