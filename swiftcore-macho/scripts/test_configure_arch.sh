@@ -44,6 +44,8 @@ need "$x86" "SWIFTCORE_NINJA_CORE=swiftCore-macosx-x86_64" "x86 ninja target"
 
 need "$arm" "SWIFT_USE_LINKER=lld" "arm64 dump records lld"
 need "$x86" "SWIFT_USE_LINKER=lld" "x86 dump records lld"
+need "$arm" "CMAKE_CXX_COMPILER=/tmp/swiftcore-print/shims/clang++" "arm64 CXX is Darwin-link shim"
+need "$x86" "CMAKE_CXX_COMPILER=/tmp/swiftcore-print/shims/clang++" "x86 CXX is Darwin-link shim"
 
 printf '%s\n' "$arm" | grep -F -- "-DSWIFT_USE_LINKER=gold" >/dev/null \
   && { echo "  FAIL arm64 dump still asks for gold"; fail=1; } \

@@ -24,6 +24,9 @@ W=${W:-$HOME/work}
 B=${B:-$W/build}
 SDK=$W/sdk/MacOSX.sdk
 OUT=${OUT:-$B/lib/swift/${SWIFTCORE_STDLIB_DIR}/$LIB.dylib}
+# Ninja's Linux CMake graph names the same file .so. Stage both so overlay
+# targets that depend on lib/swift/macosx/<arch>/$LIB.so can proceed.
+OUT_SO=${OUT_SO:-$B/lib/swift/${SWIFTCORE_STDLIB_DIR}/$LIB.so}
 
 NEEDLE_ARCH=${SWIFTCORE_DARWIN_ARCH}
 OBJS=$(LOG="$LOG" LIB="$LIB" NEEDLE_ARCH="$NEEDLE_ARCH" python3 - <<'PY'
@@ -58,4 +61,8 @@ cd "$B"
   -o "$OUT" "$@"
 
 echo "linked: $OUT"
+if [ "$OUT_SO" != "$OUT" ]; then
+  cp -f "$OUT" "$OUT_SO"
+  echo "linked: $OUT_SO (ninja .so name)"
+fi
 /usr/lib/llvm-18/bin/llvm-otool -hv "$OUT" 2>/dev/null | tail -3

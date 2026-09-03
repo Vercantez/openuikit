@@ -39,6 +39,8 @@ swift_Concurrency-macosx-x86_64: phony
 swiftSynchronization-macosx-x86_64: phony
 swift_StringProcessing-macosx-x86_64: phony
 swift_Builtin_float-macosx-x86_64: phony
+swift_RegexParser-macosx-x86_64: phony
+swiftObservation-macosx-x86_64: phony
 swiftDarwin-macosx-x86_64: phony
 T
   exit 0
@@ -109,6 +111,8 @@ swift_Concurrency-macosx-x86_64: phony
 swiftSynchronization-macosx-x86_64: phony
 swift_StringProcessing-macosx-x86_64: phony
 swift_Builtin_float-macosx-x86_64: phony
+swift_RegexParser-macosx-x86_64: phony
+swiftObservation-macosx-x86_64: phony
 swiftDarwin-macosx-x86_64: phony
 T
   exit 0
@@ -145,6 +149,7 @@ printf '%s\n' "$out" | grep -E 'ninja overlay swiftObjectiveC|will ninja.*swiftO
 # Fail-fast is gone: every selected overlay is still attempted.
 for t in swift_Concurrency-macosx-x86_64 swiftSynchronization-macosx-x86_64 \
          swift_StringProcessing-macosx-x86_64 swift_Builtin_float-macosx-x86_64 \
+         swift_RegexParser-macosx-x86_64 swiftObservation-macosx-x86_64 \
          swiftDarwin-macosx-x86_64; do
   printf '%s\n' "$out" | grep -q "ninja overlay $t" \
     && echo "  OK  attempted $t" \
@@ -156,6 +161,9 @@ done
 printf '%s\n' "$out" | grep -q 'OVERLAY swiftObjectiveC-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
   && echo "  OK  scoreboard ObjectiveC CANNOT" \
   || { echo "  FAIL missing ObjectiveC scoreboard CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation1-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  scoreboard DarwinFoundation1 CANNOT" \
+  || { echo "  FAIL missing DarwinFoundation1 scoreboard CANNOT"; fail=1; }
 
 echo
 echo "=== core gold wall is NOT allowed (lld is the linker) ==="

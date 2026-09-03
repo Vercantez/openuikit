@@ -76,9 +76,15 @@ printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_EXPERIMENTAL_STRING_PROCESSIN
 printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_SYNCHRONIZATION=ON" >/dev/null \
   && echo "  OK  SYNCHRONIZATION=ON" \
   || { echo "  FAIL SYNCHRONIZATION not ON"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_EXPERIMENTAL_OBSERVATION=ON" >/dev/null \
+  && echo "  OK  OBSERVATION=ON" \
+  || { echo "  FAIL OBSERVATION not ON"; fail=1; }
 printf '%s\n' "$dump" | grep -F -- "-DSWIFT_USE_LINKER=lld" >/dev/null \
   && echo "  OK  SWIFT_USE_LINKER=lld with overlays=1" \
   || { echo "  FAIL missing SWIFT_USE_LINKER=lld"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "CMAKE_CXX_COMPILER=$fake/shims/clang++" >/dev/null \
+  && echo "  OK  CXX compiler is Darwin-link shim" \
+  || { echo "  FAIL missing shim CXX"; fail=1; }
 
 echo
 echo "=== default (overlays off) dump has no empty string-processing -D ==="

@@ -53,9 +53,11 @@ done
 # given to target") forty lines into the log. Refuse *before* cmake.
 OVERLAY_STRING=OFF
 OVERLAY_SYNC=OFF
+OVERLAY_OBS=OFF
 if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
   OVERLAY_STRING=ON
   OVERLAY_SYNC=ON
+  OVERLAY_OBS=ON
   SWIFTCORE_BUILD_DISPATCH=${SWIFTCORE_BUILD_DISPATCH:-1}
 fi
 
@@ -141,6 +143,20 @@ if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ]; then
   )
 fi
 
+# Darwin-target shared links: wrap clang++ so ninja's Linux -shared rule
+# becomes -dynamiclib -fuse-ld=lld -nostdlib -lSystem (not gold, not host
+# ELF libc++). Compile / host-ELF links pass through.
+SHIM_CXX=$W/shims/clang++
+mkdir -p "$W/shims"
+{
+  printf '#!/bin/bash\n'
+  printf 'export SWIFTCORE_REAL_CLANGXX=%q\n' "${TC}/bin/clang++"
+  printf 'export LLD_BIN=%q\n' "${LLD_BIN}"
+  printf 'export TC=%q\n' "${TC}"
+  printf 'exec python3 %q "$@"\n' "$SCRIPT_DIR/clangxx_darwin_link.py"
+} > "$SHIM_CXX"
+chmod +x "$SHIM_CXX"
+
 LINKER_B_FLAGS=()
 if [ -n "${LLD_BIN:-}" ]; then
   LINKER_B_FLAGS=(
@@ -155,7 +171,7 @@ CMAKE_ARGS=(
   -G Ninja "$SRC"
   -DCMAKE_BUILD_TYPE=Release
   -DCMAKE_C_COMPILER="${TC}/bin/clang"
-  -DCMAKE_CXX_COMPILER="${TC}/bin/clang++"
+  -DCMAKE_CXX_COMPILER="${SHIM_CXX}"
   -DSWIFT_USE_LINKER=lld
   "${LINKER_B_FLAGS[@]}"
   -DSWIFT_INCLUDE_TOOLS=OFF
@@ -195,7 +211,7 @@ CMAKE_ARGS=(
   -DSWIFT_ENABLE_EXPERIMENTAL_DIFFERENTIABLE_PROGRAMMING=OFF
   -DSWIFT_ENABLE_EXPERIMENTAL_DISTRIBUTED=OFF
   -DSWIFT_ENABLE_EXPERIMENTAL_STRING_PROCESSING="${OVERLAY_STRING}"
-  -DSWIFT_ENABLE_EXPERIMENTAL_OBSERVATION=OFF
+  -DSWIFT_ENABLE_EXPERIMENTAL_OBSERVATION="${OVERLAY_OBS}"
   -DSWIFT_ENABLE_SYNCHRONIZATION="${OVERLAY_SYNC}"
   -DSWIFT_ENABLE_VOLATILE=OFF
   -DSWIFT_ENABLE_BACKTRACING=OFF
@@ -224,6 +240,8 @@ if [ "$PRINT_FLAGS" = 1 ]; then
   printf 'LLD_BIN=%s\n' "${LLD_BIN:-}"
   printf 'LD_LLD=%s\n' "${LD_LLD:-}"
   printf 'LD64_LLD=%s\n' "${LD64_LLD:-}"
+  printf 'CMAKE_CXX_COMPILER=%s\n' "${SHIM_CXX}"
+  printf 'SWIFT_ENABLE_EXPERIMENTAL_OBSERVATION=%s\n' "${OVERLAY_OBS}"
   printf 'cmake'
   for a in "${CMAKE_ARGS[@]}"; do
     printf ' %q' "$a"

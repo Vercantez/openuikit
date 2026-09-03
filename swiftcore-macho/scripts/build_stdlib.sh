@@ -70,11 +70,24 @@ run_stdlib_ninja() {
     "$SWIFTCORE_NINJA_CORE" || core_st=$?
   obj_n=$(find "$B" -name '*.o' 2>/dev/null | wc -l)
   echo "objects=$obj_n"
+  so=$B/lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/libswiftCore.so
+  dylib=$B/lib/swift/${SWIFTCORE_STDLIB_DIR}/libswiftCore.dylib
   if [ "$core_st" -ne 0 ]; then
     overlay_rc=$core_st
-    so=$B/lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/libswiftCore.so
     if [ ! -e "$so" ]; then
-      echo "CANNOT_ELF_SO_LLD: ninja $SWIFTCORE_NINJA_CORE rc=$core_st did not produce $so (lld is configured; this is a real link wall, not gold)" >&2
+      # Linux CMake still emits -shared; the clang++ shim rewrites it. If
+      # ninja did not produce .so, try the recorded Mach-O link from the
+      # object list (same recipe) so overlay deps are not stuck on gold.
+      if grep -q -- "-o lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/libswiftCore.so" "$W/build.log" 2>/dev/null; then
+        bash "$SCRIPT_DIR/link_macho_dylib.sh" "$W/build.log" libswiftCore || true
+      fi
+    fi
+    if [ ! -e "$so" ] && [ -f "$dylib" ]; then
+      cp -f "$dylib" "$so"
+      echo "staged ninja .so from $dylib"
+    fi
+    if [ ! -e "$so" ]; then
+      echo "CANNOT_ELF_SO_LINUX_SHARED: ninja $SWIFTCORE_NINJA_CORE rc=$core_st did not produce $so. Linker is lld (not gold). Linux CMake still emits -shared/-soname; Darwin objects need the clang++ shim (-dynamiclib -nostdlib -lSystem) or link_macho_dylib.sh." >&2
     fi
   fi
   if [ "$STOP_AFTER" = ninja-first ]; then
@@ -236,7 +249,10 @@ run_stdlib_ninja
 step "link Mach-O dylibs"
 for lib in libswiftCore libswift_Concurrency libswiftSynchronization \
            libswift_StringProcessing libswift_Builtin_float \
-           libswiftDarwin libswiftObjectiveC; do
+           libswift_RegexParser libswiftObservation \
+           libswiftDarwin libswiftObjectiveC \
+           libswift_DarwinFoundation1 libswift_DarwinFoundation2 \
+           libswift_DarwinFoundation3 libswift_errno; do
   if grep -q -- "-o lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/${lib}.so" "$W/build.log" 2>/dev/null; then
     bash "$SCRIPT_DIR/link_macho_dylib.sh" "$W/build.log" "$lib" || echo "link $lib failed (recorded)"
   else

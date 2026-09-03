@@ -42,6 +42,8 @@ swift_Concurrency-macosx-x86_64: phony
 swiftSynchronization-macosx-x86_64: phony
 swift_StringProcessing-macosx-x86_64: phony
 swift_Builtin_float-macosx-x86_64: phony
+swift_RegexParser-macosx-x86_64: phony
+swiftObservation-macosx-x86_64: phony
 swiftDarwin-macosx-x86_64: phony
 T
   exit 0
@@ -70,6 +72,12 @@ case "$target" in
     echo "built $target" ;;
   swift_Builtin_float-*)
     touch "$prod/libswift_Builtin_float.so"
+    echo "built $target" ;;
+  swift_RegexParser-*)
+    touch "$prod/libswift_RegexParser.so"
+    echo "built $target" ;;
+  swiftObservation-*)
+    touch "$prod/libswiftObservation.so"
     echo "built $target" ;;
   swiftDarwin-*)
     touch "$prod/libswiftDarwin.so"
@@ -101,9 +109,10 @@ printf '%s\n' "$out" | grep -q 'build_stdlib done' \
   && { echo "  FAIL printed done after overlay failure"; fail=1; } \
   || echo "  OK  did not claim done"
 
-# Attempt order: all five selected names, Concurrency first, others still run.
+# Attempt order: all selected in-tree names, Concurrency first, others still run.
 for t in swift_Concurrency-macosx-x86_64 swiftSynchronization-macosx-x86_64 \
          swift_StringProcessing-macosx-x86_64 swift_Builtin_float-macosx-x86_64 \
+         swift_RegexParser-macosx-x86_64 swiftObservation-macosx-x86_64 \
          swiftDarwin-macosx-x86_64; do
   printf '%s\n' "$out" | grep -q "ninja overlay $t" \
     && echo "  OK  attempted $t" \
@@ -114,7 +123,8 @@ printf '%s\n' "$out" | grep -q 'OVERLAY swift_Concurrency-macosx-x86_64 FAILED' 
   && echo "  OK  Concurrency FAILED" \
   || { echo "  FAIL Concurrency not FAILED"; fail=1; }
 for t in swiftSynchronization-macosx-x86_64 swift_StringProcessing-macosx-x86_64 \
-         swift_Builtin_float-macosx-x86_64 swiftDarwin-macosx-x86_64; do
+         swift_Builtin_float-macosx-x86_64 swift_RegexParser-macosx-x86_64 \
+         swiftObservation-macosx-x86_64 swiftDarwin-macosx-x86_64; do
   printf '%s\n' "$out" | grep -q "OVERLAY $t built" \
     && echo "  OK  $t built" \
     || { echo "  FAIL missing OVERLAY $t built"; fail=1; }
@@ -122,6 +132,12 @@ done
 printf '%s\n' "$out" | grep -q 'OVERLAY swiftObjectiveC-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
   && echo "  OK  ObjectiveC CANNOT" \
   || { echo "  FAIL missing ObjectiveC CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation1-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  DarwinFoundation1 CANNOT" \
+  || { echo "  FAIL missing DarwinFoundation1 CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_errno-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  _errno CANNOT" \
+  || { echo "  FAIL missing _errno CANNOT"; fail=1; }
 
 printf '%s\n' "$out" | grep -q 'libswiftSynchronization.so' \
   && echo "  OK  ls lists Synchronization so" \
@@ -152,8 +168,8 @@ fi
 if printf '%s\n' "$out" | grep -q 'ninja: FAILED rc='; then
   # Count overlay ninja invocations via the step banner.
   n_overlay=$(printf '%s\n' "$out" | grep -c '^==== ninja overlay ' || true)
-  [ "$n_overlay" -eq 5 ] && echo "  OK  5 overlay ninja steps (not fail-fast)" \
-    || { echo "  FAIL overlay ninja steps=$n_overlay want 5"; fail=1; }
+  [ "$n_overlay" -eq 7 ] && echo "  OK  7 overlay ninja steps (not fail-fast)" \
+    || { echo "  FAIL overlay ninja steps=$n_overlay want 7"; fail=1; }
 fi
 
 echo

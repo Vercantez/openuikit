@@ -45,6 +45,12 @@ printf '%s\n' "$out" | grep -q -- '-DSWIFT_ENABLE_DISPATCH=ON' \
 printf '%s\n' "$out" | grep -q -- '-DSWIFT_USE_LINKER=lld' \
   && echo "  OK  print-flags has SWIFT_USE_LINKER=lld" \
   || { echo "  FAIL missing SWIFT_USE_LINKER=lld"; fail=1; }
+printf '%s\n' "$out" | grep -q -- 'CMAKE_CXX_COMPILER=.*/shims/clang++' \
+  && echo "  OK  print-flags CXX is Darwin-link shim" \
+  || { echo "  FAIL missing shim CXX compiler"; fail=1; }
+printf '%s\n' "$out" | grep -q -- '-DSWIFT_ENABLE_EXPERIMENTAL_OBSERVATION=ON' \
+  && echo "  OK  overlays pass OBSERVATION=ON" \
+  || { echo "  FAIL missing OBSERVATION=ON"; fail=1; }
 printf '%s\n' "$out" | grep -qi 'check_undefined' \
   && { echo "  FAIL invoked check_undefined"; fail=1; } \
   || echo "  OK  did not run check_undefined"
