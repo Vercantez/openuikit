@@ -1110,19 +1110,22 @@ expected_combine_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$OUT/combine.o" \
     "$SYS/usr/lib/libSystem.tbd")
+# libswiftcompat.dylib is on libSymbols' link line and in its load commands,
+# but symbols.o binds nothing from it, so lld's map omits it (the map lists
+# inputs that contributed symbols, not the command line).
 expected_symbols_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$OUT/symbols.o" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     "$SYS/usr/lib/libSystem.tbd")
+# libSymbols.dylib is a guest load command (expected_guest_loads) but the
+# widget binds no Symbols symbol, so it is absent from the guest link map.
 expected_guest_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$PACKAGE/libSwiftUI.dylib" \
     "$PACKAGE/libOpenUIKit.dylib" \
     "$PACKAGE/libFoundationEssentials.dylib" \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
-    "$PACKAGE/libSymbols.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
