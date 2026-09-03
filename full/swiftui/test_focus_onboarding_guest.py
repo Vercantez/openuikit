@@ -211,12 +211,72 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )
         self.assertIn("_glibc_openui_relative_time_v1_format", text)
         self.assertIn(
-            "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$RELATIVE_TIME_HOST",
+            "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST",
             text,
         )
         self.assertIn("@rpath/libOpenRelativeTime.dylib", text)
         self.assertNotIn(
             "-install_name /usr/lib/libOpenRelativeTime.dylib",
+            text,
+        )
+
+    def test_foundation_intl_bridge_is_packaged_preloaded_and_in_closure(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn(
+            "== build the OpenFoundationInternationalization Darwin bridge and Linux host helper",
+            text,
+        )
+        self.assertIn(
+            "full/foundationinternationalization/OpenFoundationInternationalizationBridge.c",
+            text,
+        )
+        self.assertIn(
+            "full/foundationinternationalization/OpenFoundationInternationalizationHost.c",
+            text,
+        )
+        self.assertIn(
+            "full/foundationinternationalization/build_host_helper.sh",
+            text,
+        )
+        self.assertIn("run_link libOpenFoundationInternationalization ", text)
+        self.assertIn(
+            "FOUNDATION_INTL_DARWIN=$PACKAGE/libOpenFoundationInternationalization.dylib",
+            text,
+        )
+        self.assertIn(
+            "FOUNDATION_INTL_HOST=$HOST_BRIDGE_DIR/libOpenFoundationInternationalizationHost.so",
+            text,
+        )
+        self.assertIn(
+            "-install_name @rpath/libOpenFoundationInternationalization.dylib",
+            text,
+        )
+        self.assertNotIn(
+            "-install_name /usr/lib/libOpenFoundationInternationalization.dylib",
+            text,
+        )
+        self.assertIn("full/xcodeplan/rewrite_macho_dependency.py", text)
+        self.assertIn(
+            'python3 -B "$MACHO_DEPENDENCY_REWRITER" "$PACKAGE/lib_FoundationICU.dylib"',
+            text,
+        )
+        self.assertIn("/usr/lib/libOpenFoundationInternationalization.dylib", text)
+        self.assertIn("@rpath/libOpenFoundationInternationalization.dylib", text)
+        self.assertNotIn("install_name_tool", text)
+        self.assertIn(
+            "OPEN_FOUNDATION_INTERNATIONALIZATION_HOST_OK realpath=bounded,versioned",
+            text,
+        )
+        self.assertIn(
+            "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST",
+            text,
+        )
+        self.assertIn(
+            'package/libOpenFoundationInternationalization.dylib',
+            text,
+        )
+        self.assertIn(
+            "runtime-closure inventory omitted package/libOpenFoundationInternationalization.dylib",
             text,
         )
 
