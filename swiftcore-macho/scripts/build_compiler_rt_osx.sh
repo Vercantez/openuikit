@@ -53,7 +53,20 @@ cflags=(
 
 mkdir -p "$(dirname "$out")"
 rm -f "$out"
-ar rcs "$out" "$tmpdir/os_version_check.o"
+# GNU ar writes no Mach-O table of contents; ld64.lld then says
+# "archive has no index; run ranlib to add one". llvm-ar indexes Mach-O.
+ar_bin=""
+for cand in /usr/lib/llvm-18/bin/llvm-ar llvm-ar-18 llvm-ar; do
+  if [[ -x "$cand" ]] || command -v "$cand" >/dev/null 2>&1; then
+    ar_bin=$cand
+    break
+  fi
+done
+if [[ -z "$ar_bin" ]]; then
+  echo "build_compiler_rt_osx.sh: need llvm-ar (GNU ar has no Darwin index)" >&2
+  exit 1
+fi
+"$ar_bin" rcs "$out" "$tmpdir/os_version_check.o"
 # Confirm the Darwin availability hooks landed; llvm-nm understands Mach-O.
 nm_bin=""
 for cand in /usr/lib/llvm-18/bin/llvm-nm llvm-nm nm; do

@@ -38,12 +38,24 @@
 #include <TargetConditionals.h>
 #include <assert.h>
 #include <stdbool.h>
-#include <dispatch/dispatch.h>
-#include <dlfcn.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dlfcn.h>
+
+/* gen_tbd libSystem.tbd does not export dispatch_once_f (Apple puts it in
+ * libdispatch via libSystem). A local once keeps this TU self-contained so
+ * overlay NOUNDEFS links do not grow a new undefined. Semantics match
+ * dispatch_once for a single-threaded init of the always-yes checker. */
+typedef intptr_t dispatch_once_t;
+static void dispatch_once_f(dispatch_once_t *predicate, void *context,
+                            void (*function)(void *)) {
+  if (*predicate == 0) {
+    function(context);
+    *predicate = ~((dispatch_once_t)0);
+  }
+}
 
 // These three variables hold the host's OS version.
 static int32_t GlobalMajor, GlobalMinor, GlobalSubminor;

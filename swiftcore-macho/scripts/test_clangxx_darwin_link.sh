@@ -67,9 +67,11 @@ printf '%s\n' "$got" | grep -F -- '/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd'
   && echo "  OK  sysroot libc++.tbd on the Darwin link" \
   || { echo "  FAIL missing sysroot libc++.tbd"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '-Wl,-force_load,' >/dev/null \
-  && printf '%s\n' "$got" | grep -F -- 'libclang_rt.osx.a' >/dev/null \
-  && echo "  OK  force-load Darwin compiler-rt builtins archive" \
-  || { echo "  FAIL missing -Wl,-force_load,libclang_rt.osx.a"; fail=1; }
+  && { echo "  FAIL Darwin force-loads compiler-rt (pulls the TU into every dylib)"; fail=1; } \
+  || echo "  OK  did not -force_load compiler-rt"
+printf '%s\n' "$got" | grep -F -- 'libclang_rt.osx.a' >/dev/null \
+  && echo "  OK  Darwin compiler-rt builtins archive on the link" \
+  || { echo "  FAIL missing libclang_rt.osx.a"; fail=1; }
 grep -q 'clangxx_darwin_link: cxx_runtime=/root/work/sdk/MacOSX.sdk/usr/lib/libc++.tbd' "$tmp/link.err" \
   && echo "  OK  printed cxx_runtime= sysroot tbd" \
   || { echo "  FAIL missing cxx_runtime line"; fail=1; }
@@ -374,10 +376,17 @@ else
     && echo "  OK  archive defines isPlatformOrVariantPlatformVersionAtLeast" \
     || { echo "  FAIL archive missing variant hook"; fail=1; }
   cat > "$tmp/avail.c" <<'EOF'
+/* Deployment target is macosx13.0; 14.0 must go through the runtime hook. */
 int probe(void) {
-  if (__builtin_available(macOS 11.0, *))
+  if (__builtin_available(macOS 14.0, *))
     return 1;
   return 0;
+}
+int variant_ref(void) {
+  extern int __isPlatformOrVariantPlatformVersionAtLeast(
+      unsigned, unsigned, unsigned, unsigned,
+      unsigned, unsigned, unsigned, unsigned);
+  return __isPlatformOrVariantPlatformVersionAtLeast(1, 14, 0, 0, 1, 14, 0, 0);
 }
 EOF
   clang_c=$(command -v clang-18 || command -v clang)
@@ -391,9 +400,9 @@ EOF
     echo "  FAIL compile __builtin_available rc=$c_st"; cat "$tmp/avail.err"; fail=1
   else
     /usr/lib/llvm-18/bin/llvm-nm "$tmp/avail.o" 2>/dev/null \
-      | grep -E 'isPlatformVersionAtLeast' \
+      | grep -q 'isPlatformVersionAtLeast' \
       && echo "  OK  availability object refs isPlatformVersionAtLeast" \
-      || echo "  OK  compile (nm ref optional)"
+      || { echo "  FAIL availability object has no isPlatformVersionAtLeast ref"; fail=1; }
     set +e
     SWIFTCORE_REAL_CLANGXX="$clang_real" \
       SWIFTCORE_WORK="$work" \
@@ -419,10 +428,13 @@ EOF
       || echo "  OK  no ELF libc++.so unhandled file type"
     if [ -f "$tmp/libavail.dylib" ]; then
       /usr/lib/llvm-18/bin/llvm-nm -m "$tmp/libavail.dylib" 2>/dev/null \
-        | grep -E 'isPlatformVersionAtLeast' \
-        | grep -qv 'undefined' \
+        | grep -E 'isPlatformVersionAtLeast' | grep -q 'undefined' \
+        && { echo "  FAIL dylib still has undefined isPlatformVersionAtLeast"; fail=1; } \
+        || echo "  OK  dylib has no undefined isPlatformVersionAtLeast"
+      /usr/lib/llvm-18/bin/llvm-nm "$tmp/libavail.dylib" 2>/dev/null \
+        | grep -q 'isPlatformVersionAtLeast' \
         && echo "  OK  dylib defines isPlatformVersionAtLeast (from archive)" \
-        || echo "  OK  linked (nm defined line optional)"
+        || { echo "  FAIL dylib missing isPlatformVersionAtLeast"; fail=1; }
     fi
   fi
 fi

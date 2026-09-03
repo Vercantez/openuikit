@@ -15,7 +15,7 @@ Apple triple → exec the real clang++ with the original argv plus
 `-L/usr/lib/llvm-18/lib`; drop that on Darwin links and pass
 `-nostdlib++` plus the sysroot `usr/lib/libc++.tbd` / `libc++abi.tbd`
 so ld64 never opens the host ELF `libc++.so`. Print
-`cxx_runtime=<tbd>`. Force-load `libclang_rt.osx.a` (compiler-rt
+`cxx_runtime=<tbd>`. Pass `libclang_rt.osx.a` (compiler-rt
 `os_version_check.c` for `__isPlatformVersionAtLeast`) and print
 `compiler_rt=<archive>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
 `-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
@@ -381,17 +381,22 @@ def darwin_compiler_rt_osx_path() -> str:
 
 
 def darwin_compiler_rt_link_flags(argv: list[str]) -> list[str]:
-    """Force-load Darwin compiler-rt builtins so availability checks resolve.
+    """Pass Darwin compiler-rt builtins so availability checks resolve.
 
     Linux clang has no libclang_rt.osx.a in its resource dir. Overlay links
     are NOUNDEFS (no -undefined dynamic_lookup), so clang's
     __isPlatformVersionAtLeast must come from this archive — not libSystem
     (gen_tbd CHECK 4 vs libswiftcompat) and not a glibc host-bind.
+
+    Do not -force_load: that would pull the member into every Darwin dylib
+    (including ones that never emit an availability check) and surface any
+    leftover undefineds from the TU. Regular archive search is enough when
+    the object refs the symbol.
     """
     path = darwin_compiler_rt_osx_path()
     if any("libclang_rt.osx.a" in a for a in argv):
         return []
-    return [f"-Wl,-force_load,{path}"]
+    return [path]
 
 
 def darwin_driver_argv(argv: list[str]) -> list[str]:
