@@ -10,10 +10,16 @@ leaves Darwin symbols undefined because the recipe never passed -lSystem.
 This wrapper leaves compile / host-ELF links alone. Darwin-target -shared /
 -dynamiclib invocations are rewritten to the recipe in link_macho_dylib.sh:
 -dynamiclib -fuse-ld=lld -nostdlib -lSystem -lc++ -Wl,-undefined,dynamic_lookup.
+
+Linux CMake concatenates $SONAME_FLAG$SONAME (`-Wl,-soname,` + `libswiftX.so`)
+or emits `-Xlinker -soname`. ld64.lld does not accept `-soname`; rewrite to
+`-install_name` and drop `--as-needed` / `-rpath-link`. Always print the
+ninja argv and the rewritten argv so the operator log shows both.
 """
 from __future__ import annotations
 
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -45,7 +51,7 @@ def _is_compile(argv: list[str]) -> bool:
 
 def _target(argv: list[str]) -> str | None:
     for i, a in enumerate(argv):
-        if a == "-target" and i + 1 < len(argv):
+        if a in ("-target", "--target") and i + 1 < len(argv):
             return argv[i + 1]
         if a.startswith("--target="):
             return a.split("=", 1)[1]
@@ -53,16 +59,62 @@ def _target(argv: list[str]) -> str | None:
 
 
 def _is_shared(argv: list[str]) -> bool:
-    return "-shared" in argv or "-dynamiclib" in argv
+    return (
+        "-shared" in argv
+        or "-dynamiclib" in argv
+        or any(a == "-Wl,-dylib" or a.startswith("-Wl,-dylib,") for a in argv)
+    )
+
+
+def _is_darwin_target(argv: list[str]) -> bool:
+    t = _target(argv)
+    if t and APPLE_MARKER in t:
+        return True
+    for a in argv:
+        if APPLE_MARKER in a:
+            return True
+        if "MacOSX.sdk" in a:
+            return True
+        if a.startswith("-mmacosx-version-min"):
+            return True
+    return False
+
+
+def _soname_payload(tok: str) -> str | None:
+    """GNU soname flag → payload. Empty string means the value is the next argv."""
+    if tok in ("-soname", "-Wl,-soname", "--soname"):
+        return ""
+    for prefix in (
+        "-Wl,-soname,",
+        "-Wl,-soname=",
+        "-soname,",
+        "-soname=",
+        "--soname=",
+        "--soname,",
+    ):
+        if tok.startswith(prefix):
+            return tok[len(prefix) :]
+    return None
+
+
+def _has_soname_flag(argv: list[str]) -> bool:
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if _soname_payload(a) is not None:
+            return True
+        if a == "-Xlinker" and i + 1 < len(argv) and _soname_payload(argv[i + 1]) is not None:
+            return True
+        i += 1
+    return False
 
 
 def is_darwin_shared_link(argv: list[str]) -> bool:
     if _is_compile(argv):
         return False
-    if not _is_shared(argv):
+    if not _is_darwin_target(argv):
         return False
-    t = _target(argv)
-    return bool(t and APPLE_MARKER in t)
+    return _is_shared(argv) or _has_soname_flag(argv)
 
 
 def _is_host_elf_input(arg: str) -> bool:
@@ -105,6 +157,25 @@ def _darwin_install_name(soname: str) -> str:
     return soname
 
 
+_ELF_DROP = {
+    "--as-needed",
+    "-as-needed",
+    "-Wl,--as-needed",
+    "-Wl,-as-needed",
+    "--no-as-needed",
+    "-Wl,--no-as-needed",
+}
+
+
+def _take_next_value(argv: list[str], i: int) -> tuple[str, int]:
+    """Consume the next argv as a linker value, unwrapping a leading -Xlinker."""
+    if i >= len(argv):
+        return "", i
+    if argv[i] == "-Xlinker" and i + 1 < len(argv):
+        return argv[i + 1], i + 2
+    return argv[i], i + 1
+
+
 def rewrite_darwin_shared(argv: list[str]) -> list[str]:
     """Return clang++ argv for a Mach-O dylib link (same intent as link_macho_dylib.sh)."""
     out: list[str] = []
@@ -143,27 +214,40 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
             have_B = True
             out.append(f"-B{_lld_bin()}")
             continue
-        if a == "-Wl,-soname" or a == "-soname":
-            # Convert GNU soname to Darwin install_name; consume the next arg.
-            if i < len(argv):
-                soname = argv[i]
-                i += 1
-                out.append(f"-Wl,-install_name,{_darwin_install_name(soname)}")
+        if a in _ELF_DROP:
             continue
-        if a.startswith("-Wl,-soname,"):
-            out.append(
-                "-Wl,-install_name," + _darwin_install_name(a[len("-Wl,-soname,"):])
-            )
+        if a.startswith("-Wl,-rpath-link") or a in ("-rpath-link", "-Wl,-rpath-link"):
+            if a in ("-rpath-link", "-Wl,-rpath-link") and not a.startswith("-Wl,-rpath-link,"):
+                skip_next = True
+            continue
+        if a == "-Xlinker" and i < len(argv):
+            nxt = argv[i]
+            sn = _soname_payload(nxt)
+            if sn is not None:
+                i += 1
+                if sn == "":
+                    sn, i = _take_next_value(argv, i)
+                if sn:
+                    out.append(f"-Wl,-install_name,{_darwin_install_name(sn)}")
+                continue
+            if nxt in _ELF_DROP or nxt.startswith("-rpath-link") or nxt.startswith("--rpath-link"):
+                i += 1
+                continue
+            out.append(a)
+            out.append(nxt)
+            i += 1
+            continue
+        sn = _soname_payload(a)
+        if sn is not None:
+            if sn == "":
+                sn, i = _take_next_value(argv, i)
+            if sn:
+                out.append(f"-Wl,-install_name,{_darwin_install_name(sn)}")
             continue
         if a.startswith("-Wl,-install_name,"):
             out.append(
                 "-Wl,-install_name," + _darwin_install_name(a[len("-Wl,-install_name,"):])
             )
-            continue
-        if a.startswith("-Wl,-rpath-link"):
-            continue
-        if a == "-Wl,-rpath-link":
-            skip_next = True
             continue
         if a in ("-lstdc++", "-lgcc_s", "-lgcc", "-lc", "-ldl", "-lpthread", "-lm"):
             continue
@@ -214,10 +298,46 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
     if not have_undef:
         extra.append("-Wl,-undefined,dynamic_lookup")
 
-    # Insert Darwin link extras after the compiler's own flags but before objects.
-    # Putting them at the end is what link_macho_dylib.sh does and is enough
-    # for ld64.lld to resolve -lSystem from the sysroot -L path already in argv.
-    return out + extra
+    rewritten = out + extra
+    return _drop_leftover_elf_link_flags(rewritten)
+
+
+def _drop_leftover_elf_link_flags(argv: list[str]) -> list[str]:
+    """Last pass: ld64.lld must never see -soname / --as-needed / -rpath-link."""
+    out: list[str] = []
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        i += 1
+        if a in _ELF_DROP:
+            continue
+        if a.startswith("-Wl,-rpath-link") or a in ("-rpath-link",):
+            continue
+        if _soname_payload(a) is not None:
+            if _soname_payload(a) == "":
+                if i < len(argv) and argv[i] == "-Xlinker":
+                    i += 1
+                if i < len(argv):
+                    i += 1
+            continue
+        if a == "-Xlinker" and i < len(argv):
+            nxt = argv[i]
+            if _soname_payload(nxt) is not None or nxt in _ELF_DROP or nxt.startswith("-rpath-link"):
+                i += 1
+                if _soname_payload(nxt) == "":
+                    if i < len(argv) and argv[i] == "-Xlinker":
+                        i += 1
+                    if i < len(argv):
+                        i += 1
+                continue
+        out.append(a)
+    return out
+
+
+def log_darwin_rewrite(original: list[str], rewritten: list[str]) -> None:
+    sys.stderr.write("clangxx_darwin_link: ninja argv: " + shlex.join(original) + "\n")
+    sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
+    sys.stderr.flush()
 
 
 def _output_path(argv: list[str]) -> str | None:
@@ -247,16 +367,14 @@ def main(argv: list[str]) -> int:
     # argv[0] is this script; clang++ driver args follow.
     args = argv[1:]
     if is_darwin_shared_link(args):
-        args = rewrite_darwin_shared(args)
-        if os.environ.get("SWIFTCORE_CLANGXX_LOG"):
-            sys.stderr.write("clangxx_darwin_link: Darwin shared rewrite\n")
-            sys.stderr.write("  " + " ".join(args) + "\n")
+        rewritten = rewrite_darwin_shared(args)
+        log_darwin_rewrite(args, rewritten)
         if os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"):
-            print(" ".join(args))
+            print(" ".join(rewritten))
             return 0
-        rc = subprocess.call([real] + args)
+        rc = subprocess.call([real] + rewritten)
         if rc == 0:
-            mirror_so_to_dylib(args)
+            mirror_so_to_dylib(rewritten)
         return rc
     if os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"):
         print(" ".join(args))

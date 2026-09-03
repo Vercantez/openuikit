@@ -21,6 +21,8 @@ SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/guest_arch.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_sysroot.inc"
 
 SDK=${1:-${SDK:-$HOME/work/sdk/MacOSX.sdk}}
 SRC=$SWIFTCORE_ROOT/sdk/overlay-darwin
@@ -257,6 +259,12 @@ else
   write_darwin_modulemap
 fi
 ensure_module_modulemap
+
+# FE copy writes DarwinFoundation*.modulemap which name headers (complex.h)
+# the error-enumerated FE header list does not copy. Fill every quoted
+# `header "…"` from the same places the FE sysroot does, then the
+# overlay_sysroot refuse-before-cmake gate can require closure.
+overlay_sysroot_fill_modulemap_headers "$SDK"
 
 echo "stage_overlay_darwin: done sysroot=$SDK"
 echo "  Darwin.modulemap: $([ -f "$SDK/usr/include/Darwin.modulemap" ] && echo present || echo ABSENT)"

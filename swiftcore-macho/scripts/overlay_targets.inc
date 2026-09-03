@@ -226,6 +226,85 @@ for f in flags:
 PY
 }
 
+# Print the exact Darwin overlay dylib link ninja will run, and the argv
+# clangxx_darwin_link.py rewrites it to (no -soname). Operator log must
+# show both: the Linux CMake line and the ld64.lld line.
+# overlay_print_darwin_link_from_ninja <build_dir> <arch>
+overlay_print_darwin_link_from_ninja() {
+    local build_dir=${1:?overlay_print_darwin_link_from_ninja: build dir}
+    local arch=${2:?overlay_print_darwin_link_from_ninja: arch}
+    local ninja_bin=${NINJA:-ninja}
+    local py
+    py=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/clangxx_darwin_link.py
+    local node="lib/swift/macosx/${arch}/libswiftDarwin.so"
+    local cmds=""
+    echo "overlay_link: ninja -t commands for Darwin dylib (arch=$arch node=$node)"
+    cmds=$("$ninja_bin" -C "$build_dir" -t commands "$node" 2>/dev/null) || cmds=""
+    if [ -z "$cmds" ]; then
+        cmds=$("$ninja_bin" -C "$build_dir" -t commands "swiftDarwin-macosx-${arch}" 2>/dev/null) || cmds=""
+    fi
+    if [ -z "$cmds" ]; then
+        echo "overlay_link: ninja Darwin dylib command ABSENT"
+        return 0
+    fi
+    python3 - "$py" "$cmds" <<'PY'
+import os, shlex, subprocess, sys
+
+def compiler_args(line):
+    argv = shlex.split(line)
+    if not argv:
+        return []
+    # CMake CXX_SHARED_LIBRARY rules wrap as: : && <compiler> ... && :
+    if argv[0] == ":" and len(argv) > 2 and argv[1] == "&&":
+        argv = argv[2:]
+    while len(argv) >= 2 and argv[-2] == "&&" and argv[-1] == ":":
+        argv = argv[:-2]
+    i = 0
+    for j, t in enumerate(argv):
+        base = os.path.basename(t.rstrip("\\"))
+        if base in ("clang++", "clang", "clangxx_darwin_link.py") or t.endswith("/clang++"):
+            i = j
+            break
+    return argv[i + 1 :]
+
+py, text = sys.argv[1], sys.argv[2]
+line = None
+for raw in text.splitlines():
+    if "libswiftDarwin.so" in raw and " -o " in raw and (
+        "clang++" in raw or "clang " in raw or raw.lstrip().startswith("clang")
+    ):
+        line = raw
+        break
+if line is None:
+    for raw in text.splitlines():
+        if "libswiftDarwin.so" in raw and ("-shared" in raw or "-dynamiclib" in raw or "soname" in raw):
+            line = raw
+            break
+if line is None:
+    print("overlay_link: ninja Darwin dylib command ABSENT (no clang++ link line)")
+    sys.exit(0)
+print("overlay_link: ninja", line)
+args = compiler_args(line)
+env = os.environ.copy()
+env["SWIFTCORE_CLANGXX_PRINT_REWRITTEN"] = "1"
+proc = subprocess.run(
+    [sys.executable, py, *args], env=env, text=True, capture_output=True
+)
+rewritten = (proc.stdout or "").strip()
+err = (proc.stderr or "").strip()
+if err:
+    for eline in err.splitlines():
+        print(eline)
+print("overlay_link: rewritten", rewritten if rewritten else "ABSENT")
+if "soname" in rewritten:
+    print("overlay_link: rewritten still has soname")
+    sys.exit(1)
+if rewritten and "-install_name" not in rewritten and "-Wl,-install_name" not in rewritten:
+    print("overlay_link: rewritten missing -install_name")
+    sys.exit(1)
+PY
+}
+
 # Resolve the phony overlay target to its libswift*.so and see whether that
 # node's ninja inputs include the Darwin overlay (libswiftDarwin / Darwin.swiftmodule).
 # overlay_ninja_depends_on_darwin <build_dir> <target> → 0 if yes.

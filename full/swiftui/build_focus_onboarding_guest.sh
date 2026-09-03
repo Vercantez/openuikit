@@ -89,6 +89,34 @@ tree_digest() {
     ) | hash_stream
 }
 
+assert_exact_text() {
+    local label=$1 got=$2 expected=$3
+    [ "$got" = "$expected" ] || {
+        echo "focus_onboarding_guest: $label changed" >&2
+        diff -u <(printf '%s\n' "$expected") <(printf '%s\n' "$got") >&2 || true
+        exit 2
+    }
+}
+
+link_map_inputs() {
+    awk '
+        /^# Object files:/ { in_inputs = 1; next }
+        /^# Sections:/ { in_inputs = 0 }
+        in_inputs { sub(/^\[[^]]+\][[:space:]]+/, ""); print }
+    ' "$1"
+}
+
+run_link() {
+    local name=$1
+    shift
+    {
+        printf '%s-link' "$name"
+        printf ' %q' "$@"
+        printf '\n'
+    }
+    "$@"
+}
+
 assert_clean_commit() {
     local repo=$1 expected=$2 label=$3 expected_tree=${4:-} actual status actual_tree
     [ -d "$repo/.git" ] || die "$label is not a Git checkout: $repo"
@@ -204,9 +232,9 @@ validate_bundle "$WIDGET_INPUT" "$EXPECTED_WIDGET_FILES" \
 rm -rf -- "$OUT"
 mkdir -p "$PACKAGE/include/CPortableIO" "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/CHostClock" "$PACKAGE/include/COpenCombineHelpers" \
-    "$PACKAGE/include/COpenDispatch" \
+    "$PACKAGE/include/COpenDispatch" "$PACKAGE/include/COpenRelativeTime" \
     "$PACKAGE/include/CQuartz" "$PACKAGE/include/CoreFoundation" \
-    "$MODULE_CACHE" "$AUDIT" "$OUT/fonts"
+    "$MODULE_CACHE" "$AUDIT" "$OUT/fonts" "$OUT/host"
 
 git -C "$FOCUS_ROOT" ls-tree -r -z "$EXPECTED_FOCUS_COMMIT" -- focus-ios \
     | while IFS= read -r -d '' record; do
@@ -304,6 +332,7 @@ cp -a "$W/full/foundation/include/COpenFoundationCore" \
 cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
     "$OPENCOMBINE_HELPERS/include/module.modulemap" "$PACKAGE/include/COpenCombineHelpers/"
 cp -a "$W/full/dispatch/include/." "$PACKAGE/include/COpenDispatch/"
+cp -a "$W/full/relativetime/include/." "$PACKAGE/include/COpenRelativeTime/"
 # Darwin CoreFoundation clang module: the header comes from the Darwin sysroot
 # only. Never -I the host toolchain's lib/swift (that is the Linux overlay
 # that pulls /usr/lib/swift/CoreFoundation/CoreFoundation.h and setjmp.h).
@@ -339,6 +368,9 @@ PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -I"$PACKAGE/include/COpenFoundationCore"
     -Xcc -fmodule-map-file="$PACKAGE/include/CoreFoundation/module.modulemap"
     -Xcc -I"$PACKAGE/include/CoreFoundation")
+HOST_BRIDGE_DIR=$OUT/host
+RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib
+RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so
 FE_OUT=$FULL/foundation/essentials
 FE_COLLECTIONS=$FULL/foundation/collections
 FE_OS=$FULL/foundation/os
@@ -362,6 +394,8 @@ FE_OBJECTS=(
 FOUNDATION_RUNTIME_BASENAMES=(
     libswift_StringProcessing
     libswiftSynchronization
+    libswiftDarwin
+    libswift_Concurrency
 )
 FOUNDATION_RUNTIME_LINK_FLAGS=(
     -lswift_StringProcessing
@@ -370,12 +404,14 @@ FOUNDATION_RUNTIME_LINK_FLAGS=(
 FOUNDATION_RUNTIME_INSTALL_NAMES=(
     /usr/lib/swift/libswift_StringProcessing.dylib
     /usr/lib/swift/libswiftSynchronization.dylib
+    /usr/lib/swift/libswiftDarwin.dylib
+    /usr/lib/swift/libswift_Concurrency.dylib
 )
-[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 2 ] \
+[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 4 ] \
     && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 2 ] \
-    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 2 ] \
+    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 4 ] \
     || die 'Foundation runtime closure cardinality drifted'
-for index in 0 1; do
+for index in "${!FOUNDATION_RUNTIME_BASENAMES[@]}"; do
     library=${FOUNDATION_RUNTIME_BASENAMES[$index]}
     install_name=${FOUNDATION_RUNTIME_INSTALL_NAMES[$index]}
     link_input=$SYS/usr/lib/swift/$library.tbd
@@ -407,8 +443,9 @@ require_hash "$OUT/COpenCombineHelpers.cpp" "$EXPECTED_OPENCOMBINE_PATCHED_HELPE
 clang++-18 -target "$TARGET" -isysroot "$SYS" -stdlib=libc++ -std=c++17 -O2 \
     -I "$PACKAGE/include/COpenCombineHelpers" -c "$OUT/COpenCombineHelpers.cpp" \
     -o "$OUT/copencombinehelpers.o"
-"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+run_link libOpenCombine "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libOpenCombine.dylib -rpath @loader_path \
+    -map "$AUDIT/libOpenCombine.link-map" \
     -o "$PACKAGE/libOpenCombine.dylib" \
     "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$OUT/copencombinehelpers.o" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" "$SYS/usr/lib/swift/libswiftCore.tbd" \
@@ -417,9 +454,10 @@ clang++-18 -target "$TARGET" -isysroot "$SYS" -stdlib=libc++ -std=c++17 -O2 \
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" \
     -module-name Combine -emit-module -emit-module-path "$PACKAGE/Combine.swiftmodule" \
     -emit-object -o "$OUT/combine.o" "$W/full/oracle-opencombine/Combine.swift"
-"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+run_link libCombine "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libCombine.dylib -rpath @loader_path \
     -reexport_library "$PACKAGE/libOpenCombine.dylib" \
+    -map "$AUDIT/libCombine.link-map" \
     -o "$PACKAGE/libCombine.dylib" "$OUT/combine.o" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" "$SYS/usr/lib/libSystem.tbd"
 
@@ -439,8 +477,9 @@ done
     -emit-module -emit-module-path "$PACKAGE/Symbols.swiftmodule" \
     -emit-object -o "$OUT/symbols.o" \
     "${symbols_sources[@]}"
-"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+run_link libSymbols "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSymbols.dylib -rpath @loader_path \
+    -map "$AUDIT/libSymbols.link-map" \
     -o "$PACKAGE/libSymbols.dylib" "$OUT/symbols.o" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
@@ -552,8 +591,9 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
     -module-name Dispatch -module-link-name Dispatch -emit-module \
     -emit-module-path "$PACKAGE/Dispatch.swiftmodule" \
     -emit-object -o "$OUT/dispatch.o" "$W/full/dispatch/Dispatch.swift"
-"${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
+run_link libDispatch "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
+    -map "$AUDIT/libDispatch.link-map" \
     -o "$PACKAGE/libDispatch.dylib" \
     "$OUT/dispatch.o" "$OUT/open-dispatch-bridge.o" \
     -L"$PACKAGE" -lOpenCombine \
@@ -649,37 +689,102 @@ onboarding_sources=(
     -emit-object -o "$OUT/onboarding.o" \
     "${onboarding_sources[@]}" "$W/full/swiftui/FocusOnboardingBundle.generated.swift"
 
+echo '== build the OpenRelativeTime Darwin bridge and Linux host helper'
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$PACKAGE/include/COpenRelativeTime" \
+    -c "$W/full/relativetime/OpenRelativeTimeBridge.c" \
+    -o "$OUT/open-relative-time-bridge.o"
+run_link libOpenRelativeTime "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name @rpath/libOpenRelativeTime.dylib -rpath @loader_path \
+    -map "$AUDIT/libOpenRelativeTime.link-map" \
+    -o "$RELATIVE_TIME_DARWIN" "$OUT/open-relative-time-bridge.o"
+clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$PACKAGE/include/COpenRelativeTime" -shared \
+    "$W/full/relativetime/OpenRelativeTimeHost.c" \
+    -o "$RELATIVE_TIME_HOST" -licui18n -licuuc -lm
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$PACKAGE/include/COpenRelativeTime" \
+    "$W/full/relativetime/OpenRelativeTimeHost.c" \
+    "$W/full/relativetime/OpenRelativeTimeHostTests.c" \
+    -o "$OUT/open-relative-time-host-tests" -licui18n -licuuc -lm
+"$OUT/open-relative-time-host-tests" \
+    > "$OUT/open-relative-time-host-test.log"
+grep -Fx \
+    'OPEN_RELATIVE_TIME_HOST_OK icu=real locale=en,fr,de,ja styles=4 bounds=hard' \
+    "$OUT/open-relative-time-host-test.log" >/dev/null \
+    || die 'native relative-time semantic marker is missing'
+[ -f "$RELATIVE_TIME_DARWIN" ] && [ ! -L "$RELATIVE_TIME_DARWIN" ] \
+    || die 'libOpenRelativeTime.dylib is missing after build'
+[ -f "$RELATIVE_TIME_HOST" ] && [ ! -L "$RELATIVE_TIME_HOST" ] \
+    || die 'libOpenRelativeTimeHost.so is missing after build'
+printf 'openui_relative_time_v1_format\n' \
+    > "$AUDIT/relative-time-expected-elf.txt"
+printf '_openui_relative_time_v1_format\n' \
+    > "$AUDIT/relative-time-expected-mach-exports.txt"
+printf '_glibc_openui_relative_time_v1_format\n' \
+    > "$AUDIT/relative-time-expected-mach-imports.txt"
+readelf --wide --syms "$RELATIVE_TIME_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_relative_time_v1_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$AUDIT/relative-time-elf-exports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$RELATIVE_TIME_DARWIN" | LC_ALL=C sort -u \
+    > "$AUDIT/relative-time-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$RELATIVE_TIME_DARWIN" | LC_ALL=C sort -u \
+    > "$AUDIT/relative-time-mach-imports.txt"
+cmp "$AUDIT/relative-time-expected-elf.txt" \
+    "$AUDIT/relative-time-elf-exports.txt" \
+    || die 'Linux relative-time helper exports drifted'
+cmp "$AUDIT/relative-time-expected-mach-exports.txt" \
+    "$AUDIT/relative-time-mach-exports.txt" \
+    || die 'Mach-O relative-time bridge exports drifted'
+cmp "$AUDIT/relative-time-expected-mach-imports.txt" \
+    "$AUDIT/relative-time-mach-imports.txt" \
+    || die 'Mach-O relative-time host imports drifted'
+
 echo '== package ten reusable guest dylibs'
-"${LD[@]}" -dylib -dead_strip -install_name @rpath/libFoundationEssentials.dylib \
-    -rpath @loader_path -L"$MRROOT/darwin/usr/lib" \
+run_link libFoundationEssentials "${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
+    -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libFoundationEssentials.link-map" \
     -o "$PACKAGE/libFoundationEssentials.dylib" \
     "${FE_OBJECTS[@]}" "$FULL/swiftcorepatch.o"
-"${LD[@]}" -dylib -dead_strip -install_name @rpath/libOpenCoreGraphics.dylib \
-    -rpath @loader_path -L"$MRROOT/darwin/usr/lib" \
+run_link libOpenCoreGraphics "${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libOpenCoreGraphics.dylib -rpath @loader_path \
+    -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libOpenCoreGraphics.link-map" \
     -o "$PACKAGE/libOpenCoreGraphics.dylib" "$FULL/opencoregraphics.o"
-"${LD[@]}" -dylib -dead_strip -install_name @rpath/libOpenUIKit.dylib \
-    -rpath @loader_path -L"$PACKAGE" -lFoundationEssentials -lOpenCoreGraphics \
+run_link libOpenUIKit "${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libOpenUIKit.dylib -rpath @loader_path \
+    -L"$PACKAGE" -lFoundationEssentials -lOpenCoreGraphics \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libOpenUIKit.link-map" \
     -o "$PACKAGE/libOpenUIKit.dylib" "$FULL/openuikit.o" \
     "$FULL/cportableio.o" "$FULL/cstbtruetype.o" "$FULL/hostclock.o" \
     "$FULL/swiftcorepatch.o"
-"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+run_link libFoundation "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
+    -map "$AUDIT/libFoundation.link-map" \
     -o "$PACKAGE/libFoundation.dylib" "$OUT/foundation.o" "$OUT/corefoundation.o" \
     "${FE_OBJECTS[@]}" \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L"$PACKAGE" -lFoundationEssentials -lFoundationInternationalization \
     -lDispatch -lOpenUIKit -lCombine -lOpenCombine \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
+    "$RELATIVE_TIME_DARWIN" \
     -L"$SYS/usr/lib/swift" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" \
+    "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
@@ -688,31 +793,211 @@ for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
     [ "$load_count" -eq 1 ] \
         || die "libFoundation runtime load count $load_count for $install_name, expected 1"
 done
-"${LD[@]}" -dylib -dead_strip -install_name @rpath/libSwiftUI.dylib \
-    -rpath @loader_path -L"$PACKAGE" \
+foundation_graphics_load_count=$(llvm-otool-18 -L "$PACKAGE/libFoundation.dylib" \
+    | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
+[ "$foundation_graphics_load_count" -eq 1 ] \
+    || die "libFoundation OpenCoreGraphics load count $foundation_graphics_load_count, expected 1"
+foundation_relative_time_load_count=$(llvm-otool-18 -L "$PACKAGE/libFoundation.dylib" \
+    | awk '$1 == "@rpath/libOpenRelativeTime.dylib" { count++ } END { print count + 0 }')
+[ "$foundation_relative_time_load_count" -eq 1 ] \
+    || die "libFoundation relative-time load count $foundation_relative_time_load_count, expected 1"
+run_link libSwiftUI "${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
+    -L"$PACKAGE" \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols -lFoundationEssentials \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libSwiftUI.link-map" \
     -o "$PACKAGE/libSwiftUI.dylib" "$OUT/swiftui.o"
-"${LD[@]}" -dylib -dead_strip -install_name @rpath/libWidget.dylib \
-    -rpath @loader_path -L"$PACKAGE" \
+run_link libWidget "${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libWidget.dylib -rpath @loader_path \
+    -L"$PACKAGE" \
     -lSwiftUI -lOpenUIKit -lFoundationEssentials \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libWidget.link-map" \
     -o "$PACKAGE/libWidget.dylib" "$OUT/widget.o"
-"${LD[@]}" -dylib -dead_strip -install_name @rpath/libOnboarding.dylib \
-    -rpath @loader_path -L"$PACKAGE" \
+run_link libOnboarding "${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libOnboarding.dylib -rpath @loader_path \
+    -L"$PACKAGE" \
     -lFoundation -lFoundationEssentials -lSwiftUI -lWidget -lOpenUIKit \
     -lCombine -lOpenCombine \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libOnboarding.link-map" \
     -o "$PACKAGE/libOnboarding.dylib" "$OUT/onboarding.o"
+
+expected_openuikit_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$PACKAGE/libFoundationEssentials.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd" \
+    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$FULL/openuikit.o" \
+    "$FULL/cportableio.o" \
+    "$FULL/cstbtruetype.o" \
+    "$FULL/hostclock.o" \
+    "$FULL/swiftcorepatch.o" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd")
+# removefile_compat.o is in FE_OBJECTS for the onboarding FE/umbrella
+# command lines, but the widget FE map omits inputs that contribute no
+# symbols (lld lists contributors, not the argv). Keep that object off the
+# inventory until a real map shows it.
+expected_foundationessentials_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$FE_OUT/FoundationEssentials.o" \
+    "$FE_COLLECTIONS/InternalCollectionsUtilities.o" \
+    "$FE_COLLECTIONS/OrderedCollections.o" \
+    "$FE_COLLECTIONS/_RopeModule.o" \
+    "$FE_OS/os.o" \
+    "$FE_CSHIMS/platform_shims.o" \
+    "$FE_CSHIMS/string_shims.o" \
+    "$FE_CSHIMS/uuid.o" \
+    "$FE_OUT/fm_unimplemented.o" \
+    "$FE_OUT/removefile_compat.o" \
+    "$FE_OUT/uuid_compat.o" \
+    "$FULL/swiftcorepatch.o" \
+    "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
+    "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
+    "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
+    "$SYS/usr/lib/libobjc.tbd")
+expected_opencoregraphics_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$FULL/opencoregraphics.o" \
+    "$SYS/usr/lib/libobjc.tbd")
+expected_swiftui_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
+    "$PACKAGE/libCombine.dylib" \
+    "$PACKAGE/libSymbols.dylib" \
+    "$PACKAGE/libFoundationEssentials.dylib" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$OUT/swiftui.o" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
+    "$SYS/usr/lib/swift/libswiftObservation.tbd")
+expected_opencombine_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" \
+    "$OUT/copencombinehelpers.o" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$MRROOT/darwin/usr/lib/libc++abi.dylib" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd")
+expected_combine_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$OUT/combine.o" \
+    "$SYS/usr/lib/libSystem.tbd")
+expected_symbols_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$OUT/symbols.o" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd")
+# Umbrella objects plus the four input classes the failed link named:
+# libswift_Concurrency.tbd, libswiftDarwin.tbd, libOpenCoreGraphics.dylib,
+# and the packaged OpenRelativeTime Darwin dylib. -ignore_auto_link means
+# Darwin/Concurrency cannot ride in through autolink the way they do on FE.
+expected_foundation_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$OUT/foundation.o" \
+    "$OUT/corefoundation.o" \
+    "$FE_OUT/FoundationEssentials.o" \
+    "$FE_COLLECTIONS/InternalCollectionsUtilities.o" \
+    "$FE_COLLECTIONS/OrderedCollections.o" \
+    "$FE_COLLECTIONS/_RopeModule.o" \
+    "$FE_OS/os.o" \
+    "$FE_CSHIMS/platform_shims.o" \
+    "$FE_CSHIMS/string_shims.o" \
+    "$FE_CSHIMS/uuid.o" \
+    "$FE_OUT/fm_unimplemented.o" \
+    "$FE_OUT/removefile_compat.o" \
+    "$FE_OUT/uuid_compat.o" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
+    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libCombine.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
+    "$RELATIVE_TIME_DARWIN" \
+    "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
+    "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
+    "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd")
+expected_widget_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$PACKAGE/libSwiftUI.dylib" \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libFoundationEssentials.dylib" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$OUT/widget.o" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+expected_onboarding_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$PACKAGE/libFoundation.dylib" \
+    "$PACKAGE/libSwiftUI.dylib" \
+    "$PACKAGE/libWidget.dylib" \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libCombine.dylib" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$OUT/onboarding.o" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+assert_exact_text "libOpenUIKit linker inputs" \
+    "$(link_map_inputs "$AUDIT/libOpenUIKit.link-map")" "$expected_openuikit_inputs"
+assert_exact_text "libFoundationEssentials linker inputs" \
+    "$(link_map_inputs "$AUDIT/libFoundationEssentials.link-map")" \
+    "$expected_foundationessentials_inputs"
+assert_exact_text "libOpenCoreGraphics linker inputs" \
+    "$(link_map_inputs "$AUDIT/libOpenCoreGraphics.link-map")" \
+    "$expected_opencoregraphics_inputs"
+assert_exact_text "libSwiftUI linker inputs" \
+    "$(link_map_inputs "$AUDIT/libSwiftUI.link-map")" "$expected_swiftui_inputs"
+assert_exact_text "libOpenCombine linker inputs" \
+    "$(link_map_inputs "$AUDIT/libOpenCombine.link-map")" "$expected_opencombine_inputs"
+assert_exact_text "libCombine linker inputs" \
+    "$(link_map_inputs "$AUDIT/libCombine.link-map")" "$expected_combine_inputs"
+assert_exact_text "libSymbols linker inputs" \
+    "$(link_map_inputs "$AUDIT/libSymbols.link-map")" "$expected_symbols_inputs"
+assert_exact_text "libFoundation linker inputs" \
+    "$(link_map_inputs "$AUDIT/libFoundation.link-map")" "$expected_foundation_inputs"
+assert_exact_text "libWidget linker inputs" \
+    "$(link_map_inputs "$AUDIT/libWidget.link-map")" "$expected_widget_inputs"
+assert_exact_text "libOnboarding linker inputs" \
+    "$(link_map_inputs "$AUDIT/libOnboarding.link-map")" "$expected_onboarding_inputs"
+for required in libswift_Concurrency.tbd libswiftDarwin.tbd \
+    libOpenCoreGraphics.dylib libOpenRelativeTime.dylib; do
+    grep -Fq "$required" "$AUDIT/libFoundation.link-map" || \
+        die "libFoundation link map omitted $required"
+done
 
 echo '== compile and link the project-owned guest harness'
 clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
@@ -731,8 +1016,8 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-    FoundationInternationalization Dispatch OpenCombine Combine Symbols SwiftUI Widget \
-    Onboarding; do
+    FoundationInternationalization Dispatch OpenRelativeTime OpenCombine Combine \
+    Symbols SwiftUI Widget Onboarding; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
         | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
         || die "lib$dylib is not a $ARCH Mach-O dylib"
@@ -751,9 +1036,8 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
 
 echo '== run exact Focus interaction path on Linux/machorun'
 echo '== build Linux Dispatch host bridge'
-HOST_BRIDGE_DIR=$OUT/host
 DISPATCH_HOST=$HOST_BRIDGE_DIR/libOpenDispatchHost.so
-EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$RELATIVE_TIME_HOST
 host_bridge_args=(
     --repo "$W"
     --host-dir "$HOST_BRIDGE_DIR"
@@ -810,7 +1094,7 @@ validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
     printf 'widget-bundle-accessor\t%s\n' \
         "$(hash_file "$W/full/swiftui/FocusWidgetBundle.generated.swift")"
     for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-        Dispatch OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
+        Dispatch OpenRelativeTime OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
         printf 'lib%s\t%s\n' "$dylib" "$(hash_file "$PACKAGE/lib$dylib.dylib")"
     done
     printf 'onboarding-resources\t%s\n' "$(tree_digest "$OUT/Focus_Onboarding.bundle")"
