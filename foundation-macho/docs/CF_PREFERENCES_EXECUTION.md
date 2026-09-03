@@ -83,13 +83,46 @@ is running**: 86 objects compiled, but 32 differed from the shipped ones, with
 supply. Reporting that build's behaviour as "CF's behaviour" would have been a
 measurement of a different library. It was deleted.
 
-**Which exposes a third thing worth its own line: `/work/cfobjc` is not
-reproducible from any committed script.** The flags that built it exist only in
-a shell history. `cf_census.sh`'s flags reproduce *one* file
+**Which exposes a third thing worth its own line: `/work/cfobjc` is now
+reproducible from `scripts/build_cfobjc.sh`.** The flags that built it used
+to exist only in a shell history. `cf_census.sh`'s flags reproduce *one* file
 (`CFPreferences.o`, symbol-for-symbol) and diverge on 32 — and checking one
-file and generalising is exactly how I got it wrong the first time. This is
-`generator-not-in-the-gates`: the artifact passes every check while the recipe
-that made it has rotted out of the repo.
+file and generalising is exactly how I got it wrong the first time. The
+committed recipe is that census argv **plus** every flag and patch this tree
+already named as load-bearing (recipe id `cfobjc.1`). `--print-argv` prints
+`CFOBJC_ARGV:` with:
+
+- `-target $TRIPLE` — `guest_arch.inc`; `cf_census.sh`
+- `-isysroot $SDK` — `cf_census.sh`
+- `-x objective-c` — `patch_cf_objc.py` (76/82 vs 77/82 as C)
+- `-fobjc-runtime=macosx-13.0` — `classify_ns_names.sh`, `build_cf_probes.sh`
+- `-fno-objc-arc` — every ObjC compile in this lane
+- `-DINCLUDE_OBJC=1` — `patch_cf_objc.py`; `CoreFoundation_Prefix.h:87`
+- `-DCF_BUILDING_CF` — `cf_census.sh`
+- `-DDEPLOYMENT_RUNTIME_SWIFT=0` — `cf_census.sh`; `docs/DECISION.md`
+- `-DHAVE_STRUCT_TIMESPEC` — `cf_census.sh`
+- `-DSWIFT_CORELIBS_FOUNDATION_HAS_THREADS=1` — `docs/cf-census/nine-own-exports.md`
+- `-fblocks -fconstant-cfstrings` — `cf_census.sh`; `NSCF_DESIGN.md`
+- `-fdollars-in-identifiers -fno-common` — `cf_census.sh`
+- `-fcf-runtime-abi=objc` — `cf_census.sh`; `CF_TRIAGE.md` §7 (NOT `=swift`)
+- `-fexceptions -Os` — `cf_census.sh`
+- `-include CoreFoundation_Prefix.h` — `cf_census.sh`
+- `-include CFShimCarbon.h` — `cf_census.sh`; `cf_shims.sh`
+- `-include CFNSForwards.h` — `gen_ns_forwards.py`
+- `-include CFFoundationInterfaces.h` — its own comment: FORCE-included
+- `-Dd_fileno=d_ino` — `cf_census.sh`
+- `-DDISPATCH_APPLY_AUTO=((dispatch_queue_t)0)` — `cf_census.sh`
+- `-idirafter $X` — `cf_census.sh` (`cfextra` shims)
+- `-I $CF/include -I $CF/internalInclude` — `cf_census.sh`
+- `-I $OURINC` — `classify_ns_names.sh`
+- `-I $ICU_INC` — `cf_census.sh` (unblocks ICU TUs)
+
+Sources are `$CF/*.c` only (the 86-file census glob). Patches apply to a
+**copy** under `$OUT/src`: `patch_cf_objc.py`, `patch_cf_runloop.py`,
+`patch_cf_prefs_binary.py`, `patch_cf_knownlocations.py`,
+`gen_alias_shims.py`. `build_cftest_harness.sh` remains the only `libCFTest`
+linker; it consumes `cfobjc/obj/*.o`. This is no longer
+`generator-not-in-the-gates`.
 
 ---
 
