@@ -145,6 +145,13 @@ def macos_overlay_autolink_inputs(items: tuple[str, ...], arch: str) -> tuple[st
     return _replace_once(items, ARM64_OVERLAY_AUTOLINK_TBD, X86_OVERLAY_AUTOLINK_TBD)
 
 
+# libswiftcompat is on every link line but, since the arm64 artifact was
+# rebuilt disjoint from libSystem on the authority (b59dfd0f: strtod_l,
+# strtof_l, getline... now come from libSystem), FoundationEssentials binds
+# nothing from it and the link map no longer lists it (measured arm64 Gate B
+# at f93fa617: "libFoundationEssentials linker inputs changed -{MRROOT}/darwin/
+# usr/lib/libswiftcompat.dylib"). LC_LOAD_DYLIB still records it. x86_64 had
+# measured the same since its shim was always built disjoint on the box.
 # --- widget LC_LOAD_DYLIB inventories (otool -L, no path binds) ---
 
 WIDGET_LOADS_ARM64: dict[str, tuple[str, ...]] = {
@@ -257,7 +264,6 @@ WIDGET_INPUTS_ARM64: dict[str, tuple[str, ...]] = {
     "foundationessentials": (
         "linker synthesized",
         "{SYS}/usr/lib/swift/libswiftCore.tbd",
-        "{MRROOT}/darwin/usr/lib/libswiftcompat.dylib",
         "{SYS}/usr/lib/libSystem.tbd",
         "{MRROOT}/darwin/usr/lib/libSystem.B.dylib",
         "{FE_OUT}/FoundationEssentials.o",
@@ -361,7 +367,6 @@ ONBOARDING_INPUTS_ARM64: dict[str, tuple[str, ...]] = {
     "foundationessentials": (
         "linker synthesized",
         "{SYS}/usr/lib/swift/libswiftCore.tbd",
-        "{MRROOT}/darwin/usr/lib/libswiftcompat.dylib",
         "{SYS}/usr/lib/libSystem.tbd",
         "{MRROOT}/darwin/usr/lib/libSystem.B.dylib",
         "{FE_OUT}/FoundationEssentials.o",
