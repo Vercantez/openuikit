@@ -1423,11 +1423,11 @@ phase2_fill_x86_libswiftcompat() {
     local stamp=$out.source-sha256 want
     want=$(cat "$src_dir/swiftcompat.c" "$src_dir/shim.cpp" "$repo/swiftcore-macho/scripts/build_compat.sh" 2>/dev/null | sha256sum | awk '{print $1}')
     if phase2_is_x86_macho "$out" && [ -f "$stamp" ] && [ "$(cat "$stamp")" = "$want" ]; then
-        echo "phase2: libswiftcompat reused=1 source-sha256=${want:0:12}"
+        echo "phase2: libswiftcompat reused=1 source-sha256=${want:0:12}" >&2
         return 0
     fi
     if [ -f "$out" ]; then
-        echo "phase2: libswiftcompat rebuilt reason=$([ -f "$stamp" ] && echo "source-sha256 $(cut -c1-12 "$stamp")->${want:0:12}" || echo no-stamp)"
+        echo "phase2: libswiftcompat rebuilt reason=$([ -f "$stamp" ] && echo "source-sha256 $(cut -c1-12 "$stamp")->${want:0:12}" || echo no-stamp)" >&2
     fi
     rm -f "$out" "$stamp"
     phase2_prepare_compat_alias_sdk "$sys" "$alias"
