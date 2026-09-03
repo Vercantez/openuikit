@@ -9,8 +9,11 @@ Forcing ld.lld at that argv made:
 
     ld.lld: error: unknown argument '-dynamic' / '-dylib' / '-arch' / '-syslibroot'
 
-Apple triple → leave the driver's flags alone, only resolve ld64.lld via
-`--ld-path=`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
+Apple triple → exec the real clang++ with the original argv plus
+`--ld-path=` and keep `-fuse-ld=lld` so the Darwin driver still emits
+`-platform_version`/`-arch`. Replacing `-fuse-ld=lld` with `--ld-path=`
+alone made ld64.lld fail `must specify -platform_version`.
+Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
 `-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
 flag; nothing else is rewritten (PR #40's -dynamiclib/-nostdlib pass
 dropped -platform_version/-arch).
@@ -100,7 +103,10 @@ def _is_linker_select_flag(tok: str) -> bool:
 
 
 def _set_ld_path(argv: list[str], linker_path: str) -> list[str]:
-    """Drop -fuse-ld=* / --ld-path=* and set `--ld-path=<absolute linker>` once."""
+    """Drop -fuse-ld=* / --ld-path=* and set `--ld-path=<absolute linker>` once.
+
+    ELF only. Darwin must keep `-fuse-ld=lld` (see darwin_driver_argv).
+    """
     out: list[str] = []
     replaced = False
     flag = _ld_path_flag(linker_path)
@@ -264,28 +270,75 @@ def rewrite_darwin_soname(argv: list[str]) -> list[str]:
     return out
 
 
-def rewrite_darwin_shared(argv: list[str]) -> list[str]:
-    """Do not re-compose the Mach-O link. Only pick ld64.lld and translate -soname.
+def darwin_driver_argv(argv: list[str]) -> list[str]:
+    """Exec clang++ with the original driver argv plus linker resolution.
 
-    Clang's Darwin driver turns -target/-isysroot/-shared into
-    -dynamic/-dylib/-arch/-syslibroot/-platform_version for ld64. Replacing
-    -shared with -dynamiclib and injecting -nostdlib (PR #40) dropped those
-    driver-provided arguments.
+    Do not re-issue the Mach-O link. Clang's Darwin driver turns
+    -target/-isysroot/-shared/-fuse-ld=lld into
+    -dynamic/-dylib/-arch/-syslibroot/-platform_version for ld64.
+    Replacing `-fuse-ld=lld` with `--ld-path=<ld64.lld>` alone made the
+    driver emit `-macosx_version_min` instead of `-platform_version`, so
+    ld64.lld failed with `must specify -platform_version` / `missing -arch`.
+    Keep `-fuse-ld=lld` (drop gold) and add `--ld-path=` so resolution
+    hits ld64.lld. Translate GNU `-soname` only if it is still in argv.
     """
-    return _set_ld_path(rewrite_darwin_soname(argv), _ld64_lld())
+    out = rewrite_darwin_soname(argv) if _has_soname_flag(argv) else list(argv)
+    kept: list[str] = []
+    saw_fuse_lld = False
+    saw_ld64_path = False
+    ld_path = _ld_path_flag(_ld64_lld())
+    for a in out:
+        if a.startswith("-fuse-ld="):
+            val = a.split("=", 1)[1]
+            base = os.path.basename(val.rstrip("/"))
+            if val == "lld" or base in ("ld64.lld", "ld64.lld-18"):
+                if not saw_fuse_lld:
+                    kept.append("-fuse-ld=lld")
+                    saw_fuse_lld = True
+            # gold / bfd / -fuse-ld=<absolute path>: drop. Darwin maps
+            # the name `lld` to ld64.lld; an absolute -fuse-ld= is deprecated
+            # and skips -platform_version the same way --ld-path-alone does.
+            continue
+        if a.startswith("--ld-path="):
+            path = a.split("=", 1)[1]
+            if "ld64" in os.path.basename(path):
+                if not saw_ld64_path:
+                    kept.append(ld_path)
+                    saw_ld64_path = True
+            continue
+        kept.append(a)
+    if not saw_fuse_lld:
+        kept.append("-fuse-ld=lld")
+    if not saw_ld64_path:
+        kept.append(ld_path)
+    return kept
+
+
+def rewrite_darwin_shared(argv: list[str]) -> list[str]:
+    """Back-compat name: Darwin is driver pass-through, not a Mach-O rewrite."""
+    return darwin_driver_argv(argv)
 
 
 def log_link(
     kind: str,
     linker: str,
     original: list[str],
+    *,
+    driver_argv: list[str] | None = None,
     rewritten: list[str] | None = None,
 ) -> None:
     out = _output_path(original) or "ABSENT"
     # One line the operator can grep: -o and the decision together.
     sys.stderr.write(f"clangxx_darwin_link: -o {out} decision={kind} linker={linker}\n")
     sys.stderr.write("clangxx_darwin_link: ninja argv: " + shlex.join(original) + "\n")
-    if rewritten is not None:
+    if kind == "darwin":
+        # Never log "rewritten argv" for Darwin — that was the re-issued
+        # link that dropped driver -platform_version/-arch.
+        if driver_argv is not None:
+            sys.stderr.write(
+                "clangxx_darwin_link: driver argv: " + shlex.join(driver_argv) + "\n"
+            )
+    elif rewritten is not None:
         sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
     sys.stderr.flush()
 
@@ -335,18 +388,18 @@ def main(argv: list[str]) -> int:
     flavor = link_flavor(args)
     print_rewritten = bool(os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"))
     if flavor == "darwin":
-        rewritten = rewrite_darwin_shared(args)
-        log_link("darwin", linker_label(_ld64_lld()), args, rewritten)
+        driver_argv = darwin_driver_argv(args)
+        log_link("darwin", linker_label(_ld64_lld()), args, driver_argv=driver_argv)
         if print_rewritten:
-            print(" ".join(rewritten))
+            print(" ".join(driver_argv))
             return 0
-        rc = _run_compiler(real, rewritten)
+        rc = _run_compiler(real, driver_argv)
         if rc == 0:
-            mirror_so_to_dylib(rewritten)
+            mirror_so_to_dylib(driver_argv)
         return rc
     if flavor == "elf":
         rewritten = rewrite_elf_shared(args)
-        log_link("elf", linker_label(_ld_lld()), args, rewritten)
+        log_link("elf", linker_label(_ld_lld()), args, rewritten=rewritten)
         if print_rewritten:
             print(" ".join(rewritten))
             return 0

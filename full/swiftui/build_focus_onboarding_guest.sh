@@ -959,7 +959,7 @@ run_link libFoundation "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -L"$PACKAGE" -lFoundationEssentials -lFoundationInternationalization \
     -lDispatch -lOpenUIKit -lCombine -lOpenCombine \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
-    -L"$RUNROOT/darwin/usr/lib" "$RELATIVE_TIME_DARWIN" \
+    "$RELATIVE_TIME_RUNTIME" \
     -L"$SYS/usr/lib/swift" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" \
     "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
@@ -976,7 +976,7 @@ foundation_graphics_load_count=$(llvm-otool-18 -L "$PACKAGE/libFoundation.dylib"
 [ "$foundation_graphics_load_count" -eq 1 ] \
     || die "libFoundation OpenCoreGraphics load count $foundation_graphics_load_count, expected 1"
 foundation_relative_time_load_count=$(llvm-otool-18 -L "$PACKAGE/libFoundation.dylib" \
-    | awk '$1 == "@rpath/libOpenRelativeTime.dylib" { count++ } END { print count + 0 }')
+    | awk '$1 == "/usr/lib/libOpenRelativeTime.dylib" { count++ } END { print count + 0 }')
 [ "$foundation_relative_time_load_count" -eq 1 ] \
     || die "libFoundation relative-time load count $foundation_relative_time_load_count, expected 1"
 run_link libSwiftUI "${LD[@]}" -dylib -dead_strip \
@@ -1096,9 +1096,13 @@ expected_symbols_inputs=$(printf '%s\n' \
     "$SYS/usr/lib/libSystem.tbd")
 # Umbrella objects plus the four input classes the failed link named:
 # libswift_Concurrency.tbd, libswiftDarwin.tbd, libOpenCoreGraphics.dylib,
-# and the packaged OpenRelativeTime facade (which reexports the run-local
-# /usr/lib Darwin-root bridge). -ignore_auto_link means Darwin/Concurrency
-# cannot ride in through autolink the way they do on FE.
+# and the run-local OpenRelativeTime Darwin-root image. The package @rpath
+# facade re-exports /usr/lib/libOpenRelativeTime.dylib, but ld64.lld's
+# re-export search hits -L$PACKAGE first (same basename as the empty
+# facade) and never reaches -L$RUNROOT. List the runtime dylib itself;
+# that keeps LC_ID /usr/lib (machorun is_runtime) and binds the symbol.
+# -ignore_auto_link means Darwin/Concurrency cannot ride in through autolink
+# the way they do on FE.
 expected_foundation_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$OUT/foundation.o" \
@@ -1120,7 +1124,7 @@ expected_foundation_inputs=$(printf '%s\n' \
     "$PACKAGE/libOpenUIKit.dylib" \
     "$PACKAGE/libCombine.dylib" \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
-    -L"$RUNROOT/darwin/usr/lib" "$RELATIVE_TIME_DARWIN" \
+    "$RELATIVE_TIME_RUNTIME" \
     "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
     "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
     "$SYS/usr/lib/swift/libswiftDarwin.tbd" \

@@ -453,17 +453,20 @@ printf '%s\n' "$out" | grep -q 'overlay_link: ninja' \
   && echo "  OK  printed ninja Darwin link" || { echo "  FAIL missing ninja link"; fail=1; }
 printf '%s\n' "$out" | grep -q -- '-Wl,-soname,libswiftDarwin.so' \
   && echo "  OK  ninja line has -soname" || { echo "  FAIL ninja line missing -soname"; fail=1; }
-printf '%s\n' "$out" | grep -q 'overlay_link: rewritten' \
-  && echo "  OK  printed rewritten link" || { echo "  FAIL missing rewritten"; fail=1; }
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -Eq -- '(^|[[:space:]])(-Wl,)?-?-soname' \
-  && { echo "  FAIL rewritten still has GNU -soname"; fail=1; } \
-  || echo "  OK  rewritten dropped GNU -soname"
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-Wl,-install_name,/usr/lib/swift/libswiftDarwin.dylib' \
-  && echo "  OK  rewritten has -install_name" \
-  || { echo "  FAIL rewritten missing -install_name"; fail=1; }
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-dynamiclib' \
-  && { echo "  FAIL rewritten injected -dynamiclib"; fail=1; } \
+printf '%s\n' "$out" | grep -q 'overlay_link: driver argv' \
+  && echo "  OK  printed driver argv" || { echo "  FAIL missing driver argv"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -Eq -- '(^|[[:space:]])(-Wl,)?-?-soname' \
+  && { echo "  FAIL driver argv still has GNU -soname"; fail=1; } \
+  || echo "  OK  driver argv dropped GNU -soname"
+printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q -- '-Wl,-install_name,/usr/lib/swift/libswiftDarwin.dylib' \
+  && echo "  OK  driver argv has -install_name" \
+  || { echo "  FAIL driver argv missing -install_name"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q -- '-dynamiclib' \
+  && { echo "  FAIL driver argv injected -dynamiclib"; fail=1; } \
   || echo "  OK  did not inject -dynamiclib"
+printf '%s\n' "$out" | grep -q 'rewritten argv:' \
+  && { echo "  FAIL Darwin logged rewritten argv"; fail=1; } \
+  || echo "  OK  no rewritten argv for Darwin"
 printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: -o lib/swift/macosx/x86_64/libswiftDarwin.so decision=darwin linker=ld64.lld' \
   && echo "  OK  apple-target .so printed decision=darwin linker=ld64.lld" \
   || { echo "  FAIL missing -o decision=darwin line"; fail=1; }
@@ -497,12 +500,53 @@ st=$?
 set -e
 printf '%s\n' "$out"
 [ "$st" -eq 0 ] && echo "  OK  cmake-wrapper print rc=0" || { echo "  FAIL cmake-wrapper rc=$st"; fail=1; }
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q '&&' \
-  && { echo "  FAIL rewritten kept cmake && wrapper"; fail=1; } \
-  || echo "  OK  rewritten dropped cmake && wrapper"
+printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q '&&' \
+  && { echo "  FAIL driver argv kept cmake && wrapper"; fail=1; } \
+  || echo "  OK  driver argv dropped cmake && wrapper"
 printf '%s\n' "$out" | grep -q 'decision=darwin linker=ld64.lld' \
   && echo "  OK  wrapper line classifies apple-target .so as darwin" \
   || { echo "  FAIL wrapper rewrite"; fail=1; }
+
+echo
+echo "=== ninja -t commands >2MB is not passed as python argv (E2BIG→126) ==="
+# ARG_MAX is 2 MiB on this host. Passing ninja -t commands as sys.argv
+# made python3 die with "Argument list too long" and bash rc=126.
+cat > "$fake/ninja" <<'EOF'
+#!/bin/bash
+args=("$@")
+i=0
+tool=""
+while [ $i -lt ${#args[@]} ]; do
+  a=${args[$i]}
+  case "$a" in
+    -C) i=$((i+2)); continue ;;
+    -t)
+      i=$((i+1)); tool=${args[$i]:-}; i=$((i+1)); continue ;;
+    *) i=$((i+1)); continue ;;
+  esac
+done
+if [ "$tool" = commands ]; then
+  python3 -c 'import sys; sys.stdout.write("padding " * 400000); sys.stdout.write("\n")'
+  echo "clang++ -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o"
+  exit 0
+fi
+exit 0
+EOF
+chmod +x "$fake/ninja"
+set +e
+out=$(NINJA="$fake/ninja" overlay_print_darwin_link_from_ninja "$tmp/ninjabuild" x86_64)
+st=$?
+set -e
+printf '%s\n' "$out" | grep '^overlay_link:' | head -5
+[ "$st" -eq 0 ] && echo "  OK  >2MB commands print rc=0 (not 126)" \
+  || { echo "  FAIL >2MB commands rc=$st"; fail=1; }
+[ "$st" -eq 126 ] && { echo "  FAIL E2BIG still reported as rc=126"; fail=1; } || true
+printf '%s\n' "$out" | grep -q 'Argument list too long' \
+  && { echo "  FAIL python still got E2BIG"; fail=1; } \
+  || echo "  OK  no Argument list too long"
+printf '%s\n' "$out" | grep -q 'decision=darwin linker=ld64.lld' \
+  && echo "  OK  huge commands still classified Darwin" \
+  || { echo "  FAIL huge commands lost the clang++ line"; fail=1; }
 
 echo
 echo "=== overlay FAILED dep=swiftDarwin vs first_error from the graph ==="

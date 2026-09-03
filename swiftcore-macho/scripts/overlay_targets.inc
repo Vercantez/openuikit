@@ -17,6 +17,19 @@ if [ -n "${SWIFTCORE_OVERLAY_TARGETS_INC:-}" ]; then
 fi
 SWIFTCORE_OVERLAY_TARGETS_INC=1
 
+# ninja -t commands for a dylib node is megabytes (every object). Passing
+# that string as a python argv is E2BIG; bash then reports rc=126 and
+# CANNOT_NOT_EXECUTABLE blames /usr/bin/python3. Write a temp file.
+overlay_write_ninja_commands() {
+    local dest=${1:?overlay_write_ninja_commands: dest}
+    local build_dir=${2:?overlay_write_ninja_commands: build dir}
+    local node=${3:?overlay_write_ninja_commands: node}
+    local ninja_bin=${NINJA:-ninja}
+    if ! "$ninja_bin" -C "$build_dir" -t commands "$node" >"$dest" 2>/dev/null; then
+        : > "$dest"
+    fi
+}
+
 overlay_candidate_targets() {
     local arch=${1:?overlay_candidate_targets: arch}
     printf '%s\n' \
@@ -178,24 +191,25 @@ overlay_flatten_unarch() {
 overlay_print_isysroot_from_ninja() {
     local build_dir=${1:?overlay_print_isysroot_from_ninja: build dir}
     local arch=${2:?overlay_print_isysroot_from_ninja: arch}
-    local ninja_bin=${NINJA:-ninja}
     local darwin_o="stdlib/public/Platform/OSX/${arch}/Darwin.o"
-    local cmds="" node
+    local cmds_file node
+    cmds_file=$(mktemp)
     echo "overlay_sysroot: ninja -t commands for Darwin overlay compile (arch=$arch)"
     for node in "$darwin_o" "swiftDarwin-macosx-${arch}"; do
-        cmds=$("$ninja_bin" -C "$build_dir" -t commands "$node" 2>/dev/null) || cmds=""
-        if [ -n "$cmds" ]; then
+        overlay_write_ninja_commands "$cmds_file" "$build_dir" "$node"
+        if [ -s "$cmds_file" ]; then
             echo "overlay_sysroot: ninja -t commands node=$node"
             break
         fi
     done
-    if [ -z "$cmds" ]; then
+    if [ ! -s "$cmds_file" ]; then
         echo "overlay_sysroot: ninja -t commands Darwin.o ABSENT (no -isysroot/-sdk in graph yet)"
+        rm -f "$cmds_file"
         return 0
     fi
-    python3 - "$cmds" <<'PY'
-import sys
-text = sys.argv[1]
+    python3 - "$cmds_file" <<'PY'
+import pathlib, sys
+text = pathlib.Path(sys.argv[1]).read_text(errors="replace")
 tokens = text.split()
 flags = ("-isysroot", "-sdk")
 seen = {f: [] for f in flags}
@@ -224,6 +238,7 @@ for f in flags:
     else:
         print("overlay_sysroot: ninja Darwin.o %s=ABSENT" % f)
 PY
+    rm -f "$cmds_file"
 }
 
 # Prove overlay compiles load Darwin via -sdk, not libc++ via -fmodule-map-file.
@@ -273,27 +288,30 @@ overlay_print_overlay_module_evidence() {
 
 # Print the ninja link for libswiftDarwin.so and the argv the shim would
 # run. Classify by `-target` (apple → Darwin/ld64.lld even when CMake names
-# the output .so). GNU -soname becomes -install_name; driver flags stay.
+# the output .so). Darwin is driver pass-through (no rewritten argv);
+# GNU -soname becomes -install_name. ninja -t commands is read from a
+# temp file (never argv — E2BIG is bash rc=126).
 # overlay_print_darwin_link_from_ninja <build_dir> <arch>
 overlay_print_darwin_link_from_ninja() {
     local build_dir=${1:?overlay_print_darwin_link_from_ninja: build dir}
     local arch=${2:?overlay_print_darwin_link_from_ninja: arch}
-    local ninja_bin=${NINJA:-ninja}
     local py
     py=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/clangxx_darwin_link.py
     local node="lib/swift/macosx/${arch}/libswiftDarwin.so"
-    local cmds=""
+    local cmds_file
+    cmds_file=$(mktemp)
     echo "overlay_link: ninja -t commands for Darwin dylib (arch=$arch node=$node)"
-    cmds=$("$ninja_bin" -C "$build_dir" -t commands "$node" 2>/dev/null) || cmds=""
-    if [ -z "$cmds" ]; then
-        cmds=$("$ninja_bin" -C "$build_dir" -t commands "swiftDarwin-macosx-${arch}" 2>/dev/null) || cmds=""
+    overlay_write_ninja_commands "$cmds_file" "$build_dir" "$node"
+    if [ ! -s "$cmds_file" ]; then
+        overlay_write_ninja_commands "$cmds_file" "$build_dir" "swiftDarwin-macosx-${arch}"
     fi
-    if [ -z "$cmds" ]; then
+    if [ ! -s "$cmds_file" ]; then
         echo "overlay_link: ninja Darwin dylib command ABSENT"
+        rm -f "$cmds_file"
         return 0
     fi
-    python3 - "$py" "$cmds" <<'PY'
-import os, shlex, subprocess, sys
+    python3 - "$py" "$cmds_file" <<'PY'
+import os, pathlib, shlex, subprocess, sys
 
 def compiler_args(line):
     argv = shlex.split(line)
@@ -312,7 +330,8 @@ def compiler_args(line):
             break
     return argv[i + 1 :]
 
-py, text = sys.argv[1], sys.argv[2]
+py, cmds_path = sys.argv[1], sys.argv[2]
+text = pathlib.Path(cmds_path).read_text(errors="replace")
 line = None
 for raw in text.splitlines():
     if "libswiftDarwin.so" in raw and " -o " in raw and (
@@ -335,12 +354,14 @@ env["SWIFTCORE_CLANGXX_PRINT_REWRITTEN"] = "1"
 proc = subprocess.run(
     [sys.executable, py, *args], env=env, text=True, capture_output=True
 )
-rewritten = (proc.stdout or "").strip()
+executed = (proc.stdout or "").strip()
 err = (proc.stderr or "").strip()
 if err:
     for eline in err.splitlines():
         print(eline)
-print("overlay_link: rewritten", rewritten if rewritten else "ABSENT")
+        if "rewritten argv:" in eline:
+            print("overlay_link: Darwin must not log rewritten argv")
+            sys.exit(1)
 
 def flavor_from_argv(tokens):
     for i, tok in enumerate(tokens):
@@ -366,32 +387,45 @@ if not decision:
     sys.exit(1)
 flavor = flavor_from_argv(args)
 if flavor == "elf":
+    print("overlay_link: rewritten", executed if executed else "ABSENT")
     if "decision=elf" not in decision or "linker=ld.lld" not in decision:
         print("overlay_link: linux-target .so must be decision=elf linker=ld.lld")
         sys.exit(1)
-    if "soname" not in rewritten:
+    if "soname" not in executed:
         print("overlay_link: ELF rewritten dropped soname")
         sys.exit(1)
-    if "ld64.lld" in rewritten:
+    if "ld64.lld" in executed:
         print("overlay_link: ELF linux-target link still targets ld64.lld")
         sys.exit(1)
 else:
+    print("overlay_link: driver argv", executed if executed else "ABSENT")
     if "decision=darwin" not in decision or "linker=ld64.lld" not in decision:
         print("overlay_link: apple-target .so must be decision=darwin linker=ld64.lld")
         sys.exit(1)
-    if "soname" in rewritten:
-        print("overlay_link: Darwin rewritten still has GNU -soname")
+    if "soname" in executed:
+        print("overlay_link: Darwin driver argv still has GNU -soname")
         sys.exit(1)
-    if rewritten and "-install_name" not in rewritten and "-Wl,-install_name" not in rewritten:
-        print("overlay_link: rewritten missing -install_name")
+    if executed and "-install_name" not in executed and "-Wl,-install_name" not in executed:
+        print("overlay_link: driver argv missing -install_name")
         sys.exit(1)
-    if "ld64.lld" not in rewritten:
-        print("overlay_link: Darwin rewritten missing ld64.lld")
+    if "ld64.lld" not in executed:
+        print("overlay_link: Darwin driver argv missing ld64.lld")
         sys.exit(1)
-    if "-dynamiclib" in rewritten.split() or "-nostdlib" in rewritten.split():
-        print("overlay_link: Darwin rewritten injected -dynamiclib/-nostdlib")
+    if "-fuse-ld=lld" not in executed:
+        print("overlay_link: Darwin driver argv missing -fuse-ld=lld")
+        sys.exit(1)
+    if "-dynamiclib" in executed.split() or "-nostdlib" in executed.split():
+        print("overlay_link: Darwin driver argv injected -dynamiclib/-nostdlib")
+        sys.exit(1)
+    if "-platform_version" in executed.split() or (
+        "-arch" in executed.split() and "ld64" not in executed
+    ):
+        print("overlay_link: Darwin shim injected linker flags the driver should compose")
         sys.exit(1)
 PY
+    local st=$?
+    rm -f "$cmds_file"
+    return "$st"
 }
 
 # Resolve the phony overlay target to its libswift*.so and see whether that

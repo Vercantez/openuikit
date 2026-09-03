@@ -60,11 +60,26 @@ printf '%s\n' "$got" | grep -F -- '-dynamiclib' >/dev/null \
 printf '%s\n' "$got" | grep -F -- '-nostdlib' >/dev/null \
   && { echo "  FAIL shim injected -nostdlib"; fail=1; } \
   || echo "  OK  did not inject -nostdlib"
+printf '%s\n' "$got" | grep -F -- '-fuse-ld=lld' >/dev/null \
+  && echo "  OK  kept -fuse-ld=lld (Darwin maps lld → ld64.lld + -platform_version)" \
+  || { echo "  FAIL dropped -fuse-ld=lld"; fail=1; }
 printf '%s\n' "$got" | grep -F -- "--ld-path=${LD64_LLD}" >/dev/null \
   && echo "  OK  --ld-path=ld64.lld" || { echo "  FAIL missing --ld-path=ld64.lld"; fail=1; }
 printf '%s\n' "$got" | grep -F -- "--ld-path=${LD_LLD}" >/dev/null \
   && { echo "  FAIL apple-target .so selected ld.lld"; fail=1; } \
   || echo "  OK  did not select ld.lld"
+printf '%s\n' "$got" | grep -F -- '-platform_version' >/dev/null \
+  && { echo "  FAIL shim injected -platform_version (driver must compose it)"; fail=1; } \
+  || echo "  OK  did not inject -platform_version into clang argv"
+printf '%s\n' "$got" | grep -E '(^|[[:space:]])-arch[[:space:]]' >/dev/null \
+  && { echo "  FAIL shim injected -arch (driver must compose it)"; fail=1; } \
+  || echo "  OK  did not inject -arch into clang argv"
+grep -q 'rewritten argv:' "$tmp/link.err" \
+  && { echo "  FAIL Darwin logged rewritten argv (re-issued the link)"; fail=1; } \
+  || echo "  OK  no rewritten argv log for Darwin"
+grep -q 'clangxx_darwin_link: driver argv:' "$tmp/link.err" \
+  && echo "  OK  logged driver argv" \
+  || { echo "  FAIL missing driver argv log"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '-isysroot /root/work/sdk/MacOSX.sdk' >/dev/null \
   && echo "  OK  kept -isysroot for the Darwin driver" \
   || { echo "  FAIL dropped -isysroot"; fail=1; }
@@ -99,7 +114,7 @@ printf '%s\n' "$got" | grep -F -- '-c' >/dev/null \
   && echo "  OK  still -c" || { echo "  FAIL lost -c"; fail=1; }
 
 echo
-echo "=== Darwin gold -fuse-ld becomes --ld-path=ld64; -shared kept ==="
+echo "=== Darwin gold -fuse-ld becomes -fuse-ld=lld plus --ld-path; -shared kept ==="
 got=$(rewrite -target x86_64-apple-macosx13.0 -isysroot /sdk \
   -fuse-ld=gold -B/usr/bin -shared -Wl,-soname,libswiftDarwin.dylib \
   -o libswiftDarwin.dylib foo.o)
@@ -109,6 +124,9 @@ printf '%s\n' "$got" | grep -F -- '-shared' >/dev/null \
 printf '%s\n' "$got" | grep -F -- "-fuse-ld=gold" >/dev/null \
   && { echo "  FAIL gold survived"; fail=1; } \
   || echo "  OK  gold dropped"
+printf '%s\n' "$got" | grep -F -- '-fuse-ld=lld' >/dev/null \
+  && echo "  OK  -fuse-ld=lld (required for -platform_version)" \
+  || { echo "  FAIL missing -fuse-ld=lld after dropping gold"; fail=1; }
 printf '%s\n' "$got" | grep -F -- "--ld-path=${LD64_LLD}" >/dev/null \
   && echo "  OK  --ld-path=ld64.lld" || { echo "  FAIL missing ld64 --ld-path"; fail=1; }
 printf '%s\n' "$got" | grep -E -- '-fuse-ld=/' >/dev/null \
@@ -177,8 +195,50 @@ printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftDarw
   && echo "  OK  -Xlinker -soname -> install_name" || { echo "  FAIL -Xlinker soname"; fail=1; }
 
 echo
+echo "=== Darwin driver -###: ld64.lld receives -platform_version and -arch ==="
+clang_real=$(command -v clang++-18 || command -v clang++)
+if [ ! -x "$clang_real" ]; then
+  echo "  FAIL no clang++ to run -###"; fail=1
+else
+  set +e
+  SWIFTCORE_REAL_CLANGXX="$clang_real" python3 "$py" \
+    -fPIC -B/usr/lib/llvm-18/bin \
+    -target x86_64-apple-macosx13.0 \
+    -isysroot /root/work/sdk/MacOSX.sdk \
+    -fuse-ld=lld \
+    -shared -Wl,-soname,libswiftCore.so \
+    -o lib/swift/macosx/x86_64/libswiftCore.so \
+    foo.o \
+    -### >"$tmp/hash.out" 2>"$tmp/hash.err"
+  set -e
+  grep '^clangxx_darwin_link:' "$tmp/hash.err" || true
+  grep -q 'rewritten argv:' "$tmp/hash.err" \
+    && { echo "  FAIL -### path logged rewritten argv"; fail=1; } \
+    || echo "  OK  -### path has no rewritten argv"
+  job=$(grep -E 'ld64\.lld' "$tmp/hash.err" | tail -1 || true)
+  printf '%s\n' "$job"
+  printf '%s\n' "$job" | grep -q 'ld64.lld' \
+    && echo "  OK  -### invoked ld64.lld" || { echo "  FAIL no ld64.lld in -###"; fail=1; }
+  printf '%s\n' "$job" | grep -q -- '-platform_version' \
+    && echo "  OK  ld64.lld received -platform_version from the Darwin driver" \
+    || { echo "  FAIL ld64.lld job missing -platform_version"; fail=1; }
+  printf '%s\n' "$job" | grep -q -- '"-arch"' \
+    && echo "  OK  ld64.lld received -arch from the Darwin driver" \
+    || { echo "  FAIL ld64.lld job missing -arch"; fail=1; }
+  printf '%s\n' "$job" | grep -q -- 'x86_64' \
+    && echo "  OK  ld64.lld -arch x86_64" || { echo "  FAIL missing x86_64 on ld64 job"; fail=1; }
+  # Contrast: --ld-path= alone (no -fuse-ld=lld) omits -platform_version.
+  "$clang_real" -### -target x86_64-apple-macosx13.0 -shared \
+    --ld-path="$LD64_LLD" -o /tmp/x.so /dev/null >"$tmp/bare.out" 2>"$tmp/bare.err"
+  bare=$(grep -E 'ld64\.lld' "$tmp/bare.err" | tail -1 || true)
+  printf '%s\n' "$bare" | grep -q -- '-platform_version' \
+    && { echo "  FAIL expected --ld-path= alone to omit -platform_version"; fail=1; } \
+    || echo "  OK  control: --ld-path= alone does not emit -platform_version"
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
-  echo "PASS -- apple-target .so → ld64 (driver flags kept); linux-gnu .so → ld.lld"
+  echo "PASS -- apple-target .so → Darwin driver + ld64; linux-gnu .so → ld.lld"
   exit 0
 fi
 echo "FAIL"
