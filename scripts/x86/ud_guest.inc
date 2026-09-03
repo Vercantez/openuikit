@@ -34,6 +34,15 @@ fi
 PHASE2_UD_GUEST_INC=1
 
 PHASE2_UD_GUEST_LINKER=foundation-macho/scripts/link_ud_guest.sh
+# Census comparison pin (PR #50 arm64 rebuild). Tagged swift-6.2.4-RELEASE.
+# Clone the full git tree so HEAD^{tree} matches env/contract.json; the recipe
+# compiles only Sources/CoreFoundation.
+PHASE2_UD_GUEST_CF_ID=swift-corelibs-foundation
+PHASE2_UD_GUEST_CF_REPO=https://github.com/swiftlang/swift-corelibs-foundation.git
+PHASE2_UD_GUEST_CF_COMMIT=f3a7a34302317a95665bf4ff1a62ee1b459c1695
+PHASE2_UD_GUEST_CF_TREE=2f9136f253a51406f2bcb0a612bcb6a9eba03570
+PHASE2_UD_GUEST_CF_DEST_REL=scratch/ud-guest-x86_64/cf
+PHASE2_UD_GUEST_CF_SOURCES_REL=Sources/CoreFoundation
 PHASE2_UD_GUEST_EXPECTED_LOADS=(
     libswiftCore
     libswiftDarwin
@@ -378,26 +387,93 @@ phase2_ud_guest_ensure_swiftcompat() {
     rm -f "$log"
 }
 
-# Same search list as foundation-macho/scripts/build_cfobjc.sh find_cf.
-# Keep the two in sync; this copy exists so a missing-CF refusal does not
-# invoke clang.
-phase2_ud_guest_find_cf() {
+# Pin from env/contract.json. dest is the full git checkout; CF TUs are under
+# Sources/CoreFoundation. An existing dest whose HEAD^{tree} differs is a
+# refusal that names the commit — not a silent restage.
+phase2_ud_guest_ensure_cf_checkout() {
     local ud_w=$1 repo=$2
-    local c
-    for c in \
-        "${CF:-}" \
-        "$ud_w/cf" \
-        /work/cf \
-        "$HOME/scf-full/Sources/CoreFoundation" \
-        "$repo/scratch/swift-corelibs-foundation/Sources/CoreFoundation" \
-        "$repo/scratch/scf/Sources/CoreFoundation"
-    do
-        [ -n "$c" ] || continue
-        [ -f "$c/CFRuntime.c" ] && [ -f "$c/CFPreferences.c" ] || continue
-        printf '%s\n' "$c"
-        return 0
-    done
-    return 1
+    local dest=$ud_w/cf
+    local commit=$PHASE2_UD_GUEST_CF_COMMIT
+    local tree=$PHASE2_UD_GUEST_CF_TREE
+    local origin=$PHASE2_UD_GUEST_CF_REPO
+    local cloner=$repo/.cursor/clone-pinned-repo.sh
+    local live_commit live_tree tree_root lock_dir lock log st
+    local sources=$dest/$PHASE2_UD_GUEST_CF_SOURCES_REL
+
+    if [ -e "$dest" ]; then
+        if [ -d "$dest/.git" ]; then
+            live_commit=$(git -c "safe.directory=$dest" -C "$dest" rev-parse HEAD 2>/dev/null || true)
+            live_tree=$(git -c "safe.directory=$dest" -C "$dest" rev-parse 'HEAD^{tree}' 2>/dev/null || true)
+            if [ "$live_commit" = "$commit" ] && [ "$live_tree" = "$tree" ]; then
+                if [ -f "$sources/CFRuntime.c" ] && [ -f "$sources/CFPreferences.c" ]; then
+                    return 0
+                fi
+                phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                    "no x86_64 Mach-O. pinned CF checkout $commit at $dest is missing $PHASE2_UD_GUEST_CF_SOURCES_REL (recipe compiles only that directory). Will not invent a stub dylib."
+                return 1
+            fi
+            # Existing dest with a different tree is a refusal that names the
+            # pin. clone-pinned-repo.sh would replace it; we must not.
+            phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                "no x86_64 Mach-O. CF checkout tree differs at $dest live_commit=${live_commit:-unreadable} want=$commit live_tree=${live_tree:-unreadable} want=$tree (env/contract.json $PHASE2_UD_GUEST_CF_ID). Will not invent a stub dylib."
+            return 1
+        fi
+        if [ -d "$dest" ] && [ -z "$(ls -A "$dest" 2>/dev/null || true)" ]; then
+            rmdir "$dest" || {
+                phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                    "no x86_64 Mach-O. empty $dest could not be cleared to fetch $commit (env/contract.json $PHASE2_UD_GUEST_CF_ID). Will not invent a stub dylib."
+                return 1
+            }
+        else
+            phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                "no x86_64 Mach-O. $dest exists and is not a git checkout of $commit (env/contract.json $PHASE2_UD_GUEST_CF_ID). Will not invent a stub dylib."
+            return 1
+        fi
+    fi
+
+    if [ ! -f "$cloner" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. missing $cloner; cannot fetch $PHASE2_UD_GUEST_CF_ID commit=$commit. Will not invent a stub dylib."
+        return 1
+    fi
+    tree_root=$(CDPATH= cd -- "$ud_w/../.." && pwd)
+    lock_dir=$(mktemp -d "$ud_w/.cf-pin-lock.XXXXXX")
+    lock=$lock_dir/lock.json
+    printf '%s\n' "{
+  \"sources\": [{
+    \"id\": \"$PHASE2_UD_GUEST_CF_ID\",
+    \"repository\": \"$origin\",
+    \"commit\": \"$commit\",
+    \"tree\": \"$tree\",
+    \"destination\": \"$PHASE2_UD_GUEST_CF_DEST_REL\"
+  }]
+}" >"$lock"
+    log=$ud_w/lib/cf-checkout.log
+    mkdir -p "$ud_w/lib"
+    set +e
+    bash "$cloner" --lock "$lock" --id "$PHASE2_UD_GUEST_CF_ID" --repo-root "$tree_root" \
+        >"$log" 2>&1
+    st=$?
+    set -e
+    rm -rf "$lock_dir"
+    if [ "$st" -ne 0 ] || [ ! -d "$dest/.git" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. failed to fetch $PHASE2_UD_GUEST_CF_ID commit=$commit tree=$tree dest=$PHASE2_UD_GUEST_CF_DEST_REL log=$log. Will not invent a stub dylib."
+        return 1
+    fi
+    live_commit=$(git -c "safe.directory=$dest" -C "$dest" rev-parse HEAD)
+    live_tree=$(git -c "safe.directory=$dest" -C "$dest" rev-parse 'HEAD^{tree}')
+    if [ "$live_commit" != "$commit" ] || [ "$live_tree" != "$tree" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. CF checkout tree differs at $dest live_commit=$live_commit want=$commit live_tree=$live_tree want=$tree (env/contract.json $PHASE2_UD_GUEST_CF_ID). Will not invent a stub dylib."
+        return 1
+    fi
+    if [ ! -f "$sources/CFRuntime.c" ] || [ ! -f "$sources/CFPreferences.c" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. pinned CF checkout $commit at $dest is missing $PHASE2_UD_GUEST_CF_SOURCES_REL. Will not invent a stub dylib."
+        return 1
+    fi
+    return 0
 }
 
 phase2_ud_guest_find_icu() {
@@ -436,7 +512,7 @@ phase2_ud_guest_ensure_cftest() {
     linker=$repo/foundation-macho/scripts/build_cftest_harness.sh
     if [ ! -f "$recipe" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. missing committed recipe $recipe. Will not invent a stub dylib. Operator: set CF= to Sources/CoreFoundation or UD_CFTEST_DYLIB=x86_64 libCFTest.dylib."
+            "no x86_64 Mach-O. missing committed recipe $recipe. Will not invent a stub dylib."
         return 1
     fi
     if [ ! -f "$linker" ]; then
@@ -445,10 +521,13 @@ phase2_ud_guest_ensure_cftest() {
         return 1
     fi
 
-    cf=$(phase2_ud_guest_find_cf "$ud_w" "$repo" || true)
-    if [ -z "$cf" ]; then
+    if ! phase2_ud_guest_ensure_cf_checkout "$ud_w" "$repo"; then
+        return 1
+    fi
+    cf=$ud_w/cf/$PHASE2_UD_GUEST_CF_SOURCES_REL
+    if [ ! -f "$cf/CFRuntime.c" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. CF sources missing (looked at \$CF, $ud_w/cf, /work/cf, \$HOME/scf-full/Sources/CoreFoundation, $repo/scratch/swift-corelibs-foundation, $repo/scratch/scf). Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib. Operator: set CF= to Sources/CoreFoundation or UD_CFTEST_DYLIB=x86_64 libCFTest.dylib."
+            "no x86_64 Mach-O. pinned CF checkout $PHASE2_UD_GUEST_CF_COMMIT missing $cf. Will not invent a stub dylib."
         return 1
     fi
     if [ ! -d "$sys/usr/include" ]; then
