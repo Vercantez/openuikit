@@ -114,7 +114,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.5
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.6
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -152,6 +152,18 @@ phase2_render_full_objc_undefs() {
         _objc_getClassList \
         _objc_getClass \
         __objc_empty_cache
+}
+
+# Named $SYS/usr/lib/swift/*.tbd the widget gate lstat()s. Dylib stand-ins
+# do not satisfy focus_widget_guest_attest. libswiftCore plus the twelve
+# overlays (nine FE + _Concurrency + ObjectiveC + Observation).
+phase2_required_swift_tbd_relpaths() {
+    local name
+    printf 'usr/lib/swift/libswiftCore.tbd\n'
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        printf 'usr/lib/swift/%s\n' "${name%.dylib}.tbd"
+    done < <(phase2_twelve_overlay_names)
 }
 
 phase2_sysroot_tbd_relpaths() {
@@ -206,44 +218,14 @@ phase2_tbd_is_x86_target() {
     grep -q 'x86_64-macos' "$tbd"
 }
 
-# tapi-v4, same shape as machorun/scripts/gen_tbd.sh emit_tbd. Never copy
+# TAPI v4 from an x86 Swift dylib via the committed writer. Never copy
 # an arm64 .tbd and rewrite the target; symbols come from this x86 dylib.
+# $install is unused (otool -D); kept so existing call sites stay valid.
 phase2_emit_tbd_from_dylib() {
-    local dylib=$1 install=$2 dest=$3
-    local nm c tmp
+    local dylib=$1 dest=$3
     [ -f "$dylib" ] || return 1
     phase2_is_x86_macho "$dylib" || return 1
-    nm=
-    for c in llvm-nm-18 llvm-nm nm; do
-        command -v "$c" >/dev/null 2>&1 && { nm=$c; break; }
-    done
-    [ -n "$nm" ] || return 1
-    tmp=$(mktemp)
-    "$nm" --defined-only --extern-only --format=just-symbols "$dylib" 2>/dev/null \
-        | sed 's/[[:space:]]*$//' \
-        | grep -vE '^$|\(for architecture .*\):$|^[^ ]*:$' \
-        | sort -u > "$tmp"
-    if [ ! -s "$tmp" ]; then
-        rm -f "$tmp"
-        return 1
-    fi
-    mkdir -p "$(dirname "$dest")"
-    {
-        echo "--- !tapi-tbd"
-        echo "tbd-version:     4"
-        echo "targets:         [ x86_64-macos ]"
-        echo "install-name:    '$install'"
-        echo "current-version: 1"
-        echo "compatibility-version: 1"
-        echo "exports:"
-        echo "  - targets:   [ x86_64-macos ]"
-        echo "    symbols:   ["
-        sed "s/^/                  '/; s/\$/',/" "$tmp"
-        echo "               ]"
-        echo "..."
-    } > "$dest"
-    rm -f "$tmp"
-    [ -s "$dest" ]
+    bash "$PHASE2_REPO/scripts/x86/gen_swift_tbd.sh" "$dylib" "$dest" >/dev/null
 }
 
 # Copy machorun gen_tbd output into the x86 sysroot, including the unsuffixed
@@ -308,12 +290,9 @@ phase2_stage_overlay_tbds_into_sysroot() {
         src=$(phase2_find_x86_overlay "$name" || true)
         [ -n "$src" ] || continue
         _phase2_emit_overlay_tbd "$src"
-    done < <(phase2_fe_overlay_names)
-    for extra in libswiftCore.dylib libswiftObjectiveC.dylib libswift_Concurrency.dylib; do
-        src=$(phase2_find_x86_overlay "$extra" || true)
-        [ -n "$src" ] || continue
-        _phase2_emit_overlay_tbd "$src"
-    done
+    done < <(phase2_twelve_overlay_names)
+    src=$(phase2_find_x86_overlay libswiftCore.dylib || true)
+    [ -n "$src" ] && _phase2_emit_overlay_tbd "$src"
     return 0
 }
 
@@ -326,6 +305,7 @@ phase2_sysroot_tbd_resolve() {
     want=$(
         {
             phase2_required_darwin_tbd_relpaths
+            phase2_required_swift_tbd_relpaths
             if [ -n "$arm" ] && [ -d "$arm" ]; then
                 phase2_sysroot_tbd_relpaths "$arm"
             fi
@@ -847,6 +827,19 @@ phase2_fe_overlay_names() {
         libswift_errno.dylib
 }
 
+# Durable x86 overlay set: nine FE + the three build_full / widget-gate loads
+# (expected_swiftui_loads: _Concurrency, ObjectiveC, Observation). Each needs
+# an x86 .tbd under sysroot usr/lib/swift and the dylib in both mrroot-x86_64
+# and mrroot_fe-x86_64. Sources: cross-built artifacts first, then
+# scratch/apple-x86-overlays (ObjectiveC / _DarwinFoundation* / _errno).
+phase2_twelve_overlay_names() {
+    phase2_fe_overlay_names
+    printf '%s\n' \
+        libswift_Concurrency.dylib \
+        libswiftObjectiveC.dylib \
+        libswiftObservation.dylib
+}
+
 # scratch/apple-x86-overlays is operator-staged (never committed): Apple's
 # x86_64 overlays extracted from the operator Mac's dyld shared cache with a
 # PROVENANCE.txt (macOS build, tool, sha256s). It is the only source for the
@@ -888,7 +881,7 @@ phase2_stage_x86_fe_overlays() {
         else
             missing+=("$name")
         fi
-    done < <(phase2_fe_overlay_names)
+    done < <(phase2_twelve_overlay_names)
     if [ "${#missing[@]}" -eq 0 ]; then
         printf 'OK\n'
         return 0
@@ -1100,7 +1093,8 @@ phase2_base_layout_macho_names() {
         darwin/usr/lib/libswiftcompat.dylib \
         darwin/usr/lib/swift/libswiftCore.dylib \
         darwin/usr/lib/swift/libswiftObjectiveC.dylib \
-        darwin/usr/lib/swift/libswift_Concurrency.dylib
+        darwin/usr/lib/swift/libswift_Concurrency.dylib \
+        darwin/usr/lib/swift/libswiftObservation.dylib
 }
 
 phase2_layout_leaf() {
@@ -1205,7 +1199,8 @@ phase2_fill_x86_base_swift_dylibs() {
     local swift=$dest/darwin/usr/lib/swift
     local name src
     mkdir -p "$swift"
-    for name in libswift_Concurrency.dylib libswiftObjectiveC.dylib; do
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
         if phase2_is_x86_macho "$swift/$name"; then
             continue
         fi
@@ -1213,7 +1208,7 @@ phase2_fill_x86_base_swift_dylibs() {
         if src=$(phase2_find_x86_overlay "$name"); then
             cp -f "$src" "$swift/$name"
         fi
-    done
+    done < <(phase2_twelve_overlay_names)
 }
 
 # Fill what the committed recipes can produce, then print OK or MISSING=…
@@ -1244,17 +1239,21 @@ phase2_stage_x86_mrroot_layout() {
 
     while IFS= read -r name; do
         [ -n "$name" ] || continue
+        if ! phase2_is_x86_macho "$dest/darwin/usr/lib/swift/$name"; then
+            missing+=("$name")
+        fi
         if ! phase2_is_x86_macho "$fe/darwin/usr/lib/swift/$name"; then
             missing+=("$name")
         fi
-    done < <(phase2_fe_overlay_names)
+    done < <(phase2_twelve_overlay_names)
 
     if [ "${#missing[@]}" -eq 0 ]; then
         printf 'OK\n'
         return 0
     fi
-    local IFS=,
-    printf 'MISSING=%s\n' "${missing[*]}"
+    local uniq
+    uniq=$(printf '%s\n' "${missing[@]}" | sort -u)
+    printf 'MISSING=%s\n' "$(printf '%s\n' "$uniq" | paste -sd, -)"
     return 1
 }
 

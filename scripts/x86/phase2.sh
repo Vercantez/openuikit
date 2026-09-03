@@ -750,7 +750,7 @@ case "$overlay_report" in
         ;;
     MISSING=*)
         cannot mrroot-fe-overlays-x86 X86_OVERLAYS_NOT_BUILT \
-            "$overlay_report; x86 overlays come from swiftcore-macho/artifacts/swift-macosx/x86_64 (PR #20 stdlib staging) or \$HOME/work/build/lib/swift/macosx/x86_64, not CoreSimulator"
+                "$overlay_report; x86 overlays come from swiftcore-macho/artifacts/swift-macosx/x86_64 (PR #20 stdlib staging) or \$HOME/work/build/lib/swift/macosx/x86_64 or scratch/apple-x86-overlays. Durable set is twelve (nine FE + _Concurrency + ObjectiveC + Observation)."
         ;;
     *)
         cannot mrroot-fe-overlays-x86 X86_OVERLAYS_NOT_BUILT \
@@ -800,7 +800,7 @@ case "$tbd_report" in
         ;;
     *)
         cannot sysroot-tbds-x86 X86_SYSROOT_TBDS \
-            "${tbd_report:-empty}; every .tbd in arm64 $ARM_SYS usr/lib and usr/lib/swift must exist for x86 and name x86_64-macos. Generated from the x86 darwin tree by machorun gen_tbd and from x86 overlay dylibs (never copied arm64 tbds). render_full.o link needs -lobjc (_objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache)."
+            "${tbd_report:-empty}; darwin usr/lib tbds from machorun gen_tbd; Swift usr/lib/swift tbds from scripts/x86/gen_swift_tbd.sh (libswiftCore + twelve overlays). Widget gate lstat()s named .tbd paths (dylib stand-ins fail focus_widget_guest_attest). Never copy arm64 tbds. render_full.o link needs -lobjc (_objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache) then _swift_task_*/\$sScP (libswift_Concurrency) and ObjectiveC."
         ;;
 esac
 

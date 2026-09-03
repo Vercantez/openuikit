@@ -65,6 +65,8 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/full/relativetime/build_host_helper.sh" \
     "$ROOT/full/foundationinternationalization/build_host_helper.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
+    "$ROOT/scripts/x86/gen_swift_tbd.sh" \
+    "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
     "$ROOT/scripts/build_runtime_shims.sh" \
     "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; do
     if bash -n "$s"; then
@@ -264,7 +266,7 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.5' "$COMMON" \
+expect_grep 'stage_fe_sysroot_x86.6' "$COMMON" \
     "recipe bump restages a sysroot that lacked libobjc.tbd aliases"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
@@ -314,6 +316,12 @@ expect_not_grep 'find "$MACHORUN/sdk/usr/lib" -maxdepth 1 -type f -name '\''*.tb
     "stager no longer copies only regular .tbd files (that skipped libobjc.tbd)"
 expect_grep 'phase2_stage_overlay_tbds_into_sysroot' "$STAGE" \
     "stager emits overlay tbds from x86 dylibs"
+expect_grep 'phase2_twelve_overlay_names' "$COMMON" \
+    "durable overlay set is twelve (nine FE + Concurrency/ObjectiveC/Observation)"
+expect_grep 'gen_swift_tbd.sh' "$COMMON" \
+    "overlay tbds come from the committed TAPI writer"
+expect_grep 'usr/lib/swift/libswiftCore.tbd' "$COMMON" \
+    "resolve requires the named libswiftCore.tbd the widget gate lstat()s"
 expect_grep 'never copy arm64' "$STAGE" "stager comment refuses arm64 tbd copies"
 expect_grep 'phase2_sysroot_tbd_resolve' "$PHASE2" \
     "phase2 resolves the tbd set before build_full"
@@ -545,8 +553,14 @@ if [ -f "$core_src" ] && phase2_is_x86_macho "$core_src"; then
     fi
     overlay_ok=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
     case "$overlay_ok" in
-        OK) ok "resolve OK after gen_tbd aliases + x86 overlay tbd" ;;
-        *) die_test "expected OK after emitting overlay tbd, got: $overlay_ok" ;;
+        OK) ok "resolve OK after gen_tbd aliases + twelve overlay tbds" ;;
+        MISSING=*libswiftObjectiveC.tbd*)
+            if echo "$overlay_ok" | grep -q 'usr/lib/swift/libswiftCore.tbd'; then
+                die_test "libswiftCore.tbd still missing after emit: $overlay_ok"
+            fi
+            ok "resolve names remaining Apple-SDK overlay tbds after Core ($overlay_ok)"
+            ;;
+        *) die_test "expected OK or MISSING ObjectiveC after emitting overlay tbd, got: $overlay_ok" ;;
     esac
 else
     ok "skip live libswiftCore overlay emit (no x86 dylib in artifacts)"
@@ -583,7 +597,10 @@ if [ -d "$ROOT/scratch/sysroot_fe4-x86_64/usr/lib" ] \
         "$ROOT/scratch/sysroot_fe4-x86_64" "$ROOT/scratch/sysroot_fe4" || true)
     case "$live_res" in
         OK) ok "live x86 sysroot tbd resolve vs arm64 inventory: OK" ;;
-        *) die_test "live resolve not OK (required darwin aliases must pass when arm64 inventory is empty): $live_res" ;;
+        MISSING=*libswiftObjectiveC.tbd*)
+            ok "live resolve names Apple-SDK overlay holes (ObjectiveC/_DarwinFoundation/_errno): $live_res"
+            ;;
+        *) die_test "live resolve unexpected: $live_res" ;;
     esac
     W=$ROOT
 else
@@ -945,7 +962,7 @@ HOME=$OVERLAY_HOME
 # shellcheck source=common.inc
 . "$COMMON"
 overlay_report=$(phase2_stage_x86_fe_overlays "$OVERLAY_DEST/mrroot_fe-x86_64" || true)
-expected_missing='MISSING=libswiftDarwin.dylib,libswiftSynchronization.dylib,libswift_Builtin_float.dylib,libswift_DarwinFoundation1.dylib,libswift_DarwinFoundation2.dylib,libswift_DarwinFoundation3.dylib,libswift_RegexParser.dylib,libswift_StringProcessing.dylib,libswift_errno.dylib'
+expected_missing='MISSING=libswiftDarwin.dylib,libswiftSynchronization.dylib,libswift_Builtin_float.dylib,libswift_DarwinFoundation1.dylib,libswift_DarwinFoundation2.dylib,libswift_DarwinFoundation3.dylib,libswift_RegexParser.dylib,libswift_StringProcessing.dylib,libswift_errno.dylib,libswift_Concurrency.dylib,libswiftObjectiveC.dylib,libswiftObservation.dylib'
 if [ "$overlay_report" = "$expected_missing" ]; then
     ok "overlay stage lists every missing FE dylib ($overlay_report)"
 else
@@ -1213,6 +1230,8 @@ do
     expect_grep "$layout_name" "$COMMON" "layout inventory names $layout_name"
     expect_grep "$layout_name" "$BUILD_FULL" "build_full.sh names $layout_name"
 done
+expect_grep 'libswiftObservation.dylib' "$COMMON" \
+    "layout inventory names libswiftObservation.dylib (widget expected_swiftui_loads)"
 
 LAYOUT_HOME=$(mktemp -d /tmp/phase2-layout-home.XXXXXX)
 LAYOUT_W=$(mktemp -d /tmp/phase2-layout-w.XXXXXX)
@@ -1224,7 +1243,7 @@ layout_miss=$(phase2_stage_x86_mrroot_layout \
     "$LAYOUT_DEST" "$LAYOUT_FE" "$LAYOUT_W" "$LAYOUT_W/sys" "$LAYOUT_W/loader" || true)
 W=$ROOT
 case "$layout_miss" in
-    MISSING=*Foundation*CoreFoundation*)
+    MISSING=*)
         if echo "$layout_miss" | grep -q 'libswiftcompat.dylib' \
             && echo "$layout_miss" | grep -q 'libswiftObjectiveC.dylib' \
             && echo "$layout_miss" | grep -q 'Foundation' \
@@ -1518,6 +1537,13 @@ else
     die_test "port compile log-spill got: $port_report"
 fi
 rm -rf "$UDWORK"
+
+echo "== gen_swift_tbd.sh round-trip (libswiftCore + overlays)"
+if bash "$ROOT/scripts/x86/test_gen_swift_tbd.sh"; then
+    ok "test_gen_swift_tbd.sh"
+else
+    die_test "test_gen_swift_tbd.sh"
+fi
 
 echo
 echo "test_phase2: pass=$pass fail=$fail"
