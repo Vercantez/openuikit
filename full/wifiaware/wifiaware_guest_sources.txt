@@ -1,0 +1,5 @@
+full/wifiaware/WADiscovery.swift
+full/wifiaware/WAError.swift
+full/wifiaware/WAPairedDevice.swift
+full/wifiaware/WAService.swift
+full/wifiaware/WiFiAware.swift
