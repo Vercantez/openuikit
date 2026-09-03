@@ -6,4 +6,4 @@
 # ("Drive SwiftUI apps from the paced host loop"), 30 commits after the old
 # external pin 62dea0d97a3b9074e5c016820492bd0656b9a35a.
 EXPECTED_INREPO_UIKIT_TREE=e737cdd02e89f8aa7446ee69a6464ac1c2108335
-EXPECTED_INREPO_MACHORUN_TREE=b6d66d09fb15b37be358ea38ff95f14a33ec1e40
+EXPECTED_INREPO_MACHORUN_TREE=9d4fdacc7b0f0890a7d6559daff291448eaef95f
