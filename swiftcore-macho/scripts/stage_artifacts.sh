@@ -143,7 +143,7 @@ payload = {
             "commit": dispatch_commit,
         },
     },
-    "patches": "scripts/apply_patches.py 1-5+7; patch 5 via SWIFTCORE_MACHO_LEGACY_IMAGE_REG=1; patch 6 (isa widen) off",
+    "patches": "scripts/apply_patches.py 1-5+7+8; patch 5 via SWIFTCORE_MACHO_LEGACY_IMAGE_REG=1; patch 6 (isa widen) off; patch 8 Darwin-target skips CMake dispatch link lib",
     "flags": {
         "SWIFTCORE_DARWIN_ARCH": arch,
         "SWIFT_SDK_OSX_ARCHITECTURES": arch,
@@ -155,6 +155,7 @@ payload = {
         "SWIFTCORE_MACHO_LEGACY_IMAGE_REG": "1",
         "SWIFT_PATH_TO_STRING_PROCESSING_SOURCE": "pinned sibling",
         "SWIFT_PATH_TO_LIBDISPATCH_SOURCE": "pinned sibling",
+        "SWIFT_ENABLE_DISPATCH": "ON",
     },
     "toolchain": "Swift version 6.2.4 (swift-6.2.4-RELEASE)",
     "host": os.uname().machine + "-unknown-linux-gnu",
