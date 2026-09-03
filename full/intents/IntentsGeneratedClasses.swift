@@ -1582,8 +1582,10 @@ open class INPlaybackRepeatModeResolutionResult: INIntentResolutionResult, @unch
 }
 
 open class INPreferences: NSObject, @unchecked Sendable {
-    open class func requestSiriAuthorization(_ handler: @escaping (INSiriAuthorizationStatus) -> Void) { fatalError("Intents.INPreferences.requestSiriAuthorization is fail-closed on Linux") }
-    open class func siriAuthorizationStatus() -> INSiriAuthorizationStatus { fatalError("Intents.INPreferences.siriAuthorizationStatus is fail-closed on Linux") }
+    open class func requestSiriAuthorization(_ handler: @escaping (INSiriAuthorizationStatus) -> Void) {
+        handler(.restricted)
+    }
+    open class func siriAuthorizationStatus() -> INSiriAuthorizationStatus { .restricted }
     open class func siriLanguageCode() -> String { "" }
     public required override init() { super.init() }
 }
