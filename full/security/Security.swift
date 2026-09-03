@@ -50,18 +50,7 @@ private final class _PortableKeychain: @unchecked Sendable {
 }
 
 private func _securityDictionary(_ value: CFDictionary) -> [String: Any] {
-#if OPENUIKIT_PORTABLE_FOUNDATION
-    return value
-#else
-    let bridged = value as NSDictionary
-    var result: [String: Any] = [:]
-    bridged.forEach { rawKey, rawValue in
-        if let key = rawKey as? String {
-            result[key] = rawValue
-        }
-    }
-    return result
-#endif
+    value
 }
 
 private func _securityCFDictionary(_ value: [String: Any]) -> [CFString: Any] {
