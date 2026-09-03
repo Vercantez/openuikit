@@ -42,6 +42,9 @@ printf '%s\n' "$out" | grep -q -- '-DSWIFT_SDKS=OSX' \
 printf '%s\n' "$out" | grep -q -- '-DSWIFT_ENABLE_DISPATCH=ON' \
   && echo "  OK  overlays pass ENABLE_DISPATCH=ON" \
   || { echo "  FAIL missing ENABLE_DISPATCH=ON"; fail=1; }
+printf '%s\n' "$out" | grep -q -- '-DSWIFT_USE_LINKER=lld' \
+  && echo "  OK  print-flags has SWIFT_USE_LINKER=lld" \
+  || { echo "  FAIL missing SWIFT_USE_LINKER=lld"; fail=1; }
 printf '%s\n' "$out" | grep -qi 'check_undefined' \
   && { echo "  FAIL invoked check_undefined"; fail=1; } \
   || echo "  OK  did not run check_undefined"

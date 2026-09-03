@@ -48,9 +48,8 @@ T
 fi
 
 if [[ "$target" == swiftCore-* ]]; then
-  echo "clang++: error: invalid linker name in argument '-fuse-ld=gold'"
-  echo "ninja: build stopped: subcommand failed."
-  exit 1
+  echo "built $target"
+  exit 0
 fi
 
 prod=${builddir:-.}/lib/swift/macosx/x86_64

@@ -18,13 +18,13 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/guest_arch.inc"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/probe_lld.inc"
 
 W=${W:-$HOME/work}
 SDK=$W/sdk/MacOSX.sdk
 SRC=$W/swift
 B=${B:-$W/build}
-
-export PATH="${W}/shims:${TC}/bin:/usr/lib/llvm-18/bin:${PATH}"
 
 PRINT_FLAGS=0
 CMAKE_EXTRA=()
@@ -112,6 +112,21 @@ if [ "$PRINT_FLAGS" != 1 ]; then
   fi
 fi
 
+# Linux-host ELF / Darwin-target shared links: lld, not gold. Probe before
+# cmake so a missing ld.lld is CANNOT_LINKER_LLD rather than ninja's
+# "invalid linker name in argument '-fuse-ld=gold'". --print-flags still
+# dumps -DSWIFT_USE_LINKER=lld even if this VM has no lld (the dry dump
+# must not require the operator box).
+if [ "$PRINT_FLAGS" != 1 ]; then
+  probe_lld || exit 2
+else
+  probe_lld || true
+fi
+LLD_BIN=${LLD_BIN:-/usr/lib/llvm-18/bin}
+export LLD_BIN LD_LLD LD64_LLD
+# Ubuntu ld64.lld before ${TC}/bin: the swift.org lld refuses platform macOS.
+export PATH="${W}/shims:${LLD_BIN}:${TC}/bin:${PATH}"
+
 if [ "$OVERLAY_STRING" = ON ]; then
   STRING_FLAG=(-DSWIFT_PATH_TO_STRING_PROCESSING_SOURCE="$STRING_PROCESSING_SRC")
 fi
@@ -126,11 +141,23 @@ if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ]; then
   )
 fi
 
+LINKER_B_FLAGS=()
+if [ -n "${LLD_BIN:-}" ]; then
+  LINKER_B_FLAGS=(
+    -DCMAKE_LINKER="${LD_LLD:-$LLD_BIN/ld.lld}"
+    "-DCMAKE_EXE_LINKER_FLAGS=-B${LLD_BIN}"
+    "-DCMAKE_SHARED_LINKER_FLAGS=-B${LLD_BIN}"
+    "-DCMAKE_MODULE_LINKER_FLAGS=-B${LLD_BIN}"
+  )
+fi
+
 CMAKE_ARGS=(
   -G Ninja "$SRC"
   -DCMAKE_BUILD_TYPE=Release
   -DCMAKE_C_COMPILER="${TC}/bin/clang"
   -DCMAKE_CXX_COMPILER="${TC}/bin/clang++"
+  -DSWIFT_USE_LINKER=lld
+  "${LINKER_B_FLAGS[@]}"
   -DSWIFT_INCLUDE_TOOLS=OFF
   -DSWIFT_BUILD_STDLIB=ON
   -DSWIFT_BUILD_STDLIB_EXTRA_TOOLCHAIN_CONTENT=OFF
@@ -193,6 +220,10 @@ if [ "$PRINT_FLAGS" = 1 ]; then
   printf 'SWIFTCORE_BUILD_DISPATCH=%s\n' "${SWIFTCORE_BUILD_DISPATCH:-0}"
   printf 'STRING_PROCESSING_SRC=%s\n' "$STRING_PROCESSING_SRC"
   printf 'LIBDISPATCH_SRC=%s\n' "$LIBDISPATCH_SRC"
+  printf 'SWIFT_USE_LINKER=lld\n'
+  printf 'LLD_BIN=%s\n' "${LLD_BIN:-}"
+  printf 'LD_LLD=%s\n' "${LD_LLD:-}"
+  printf 'LD64_LLD=%s\n' "${LD64_LLD:-}"
   printf 'cmake'
   for a in "${CMAKE_ARGS[@]}"; do
     printf ' %q' "$a"

@@ -76,6 +76,9 @@ printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_EXPERIMENTAL_STRING_PROCESSIN
 printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_SYNCHRONIZATION=ON" >/dev/null \
   && echo "  OK  SYNCHRONIZATION=ON" \
   || { echo "  FAIL SYNCHRONIZATION not ON"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "-DSWIFT_USE_LINKER=lld" >/dev/null \
+  && echo "  OK  SWIFT_USE_LINKER=lld with overlays=1" \
+  || { echo "  FAIL missing SWIFT_USE_LINKER=lld"; fail=1; }
 
 echo
 echo "=== default (overlays off) dump has no empty string-processing -D ==="

@@ -42,6 +42,16 @@ need "$x86" "-DSWIFT_SDK_OSX_ARCHITECTURES=x86_64" "x86 SDK arch"
 need "$x86" "-DSWIFT_PRIMARY_VARIANT_ARCH=x86_64" "x86 primary"
 need "$x86" "SWIFTCORE_NINJA_CORE=swiftCore-macosx-x86_64" "x86 ninja target"
 
+need "$arm" "SWIFT_USE_LINKER=lld" "arm64 dump records lld"
+need "$x86" "SWIFT_USE_LINKER=lld" "x86 dump records lld"
+
+printf '%s\n' "$arm" | grep -F -- "-DSWIFT_USE_LINKER=gold" >/dev/null \
+  && { echo "  FAIL arm64 dump still asks for gold"; fail=1; } \
+  || echo "  OK  arm64 dump has no gold linker"
+printf '%s\n' "$x86" | grep -F -- "-DSWIFT_USE_LINKER=gold" >/dev/null \
+  && { echo "  FAIL x86 dump still asks for gold"; fail=1; } \
+  || echo "  OK  x86 dump has no gold linker"
+
 # Shared flags must appear in BOTH dumps (the retarget is a diff, not a rewrite).
 for flag in \
   "-DSWIFT_INCLUDE_TOOLS=OFF" \
@@ -49,7 +59,8 @@ for flag in \
   "-DSWIFT_STDLIB_ENABLE_OBJC_INTEROP=ON" \
   "-DSWIFT_ENABLE_EXPERIMENTAL_CONCURRENCY=ON" \
   "-DSWIFT_INCLUDE_APINOTES=ON" \
-  "-DSWIFT_SDKS=OSX"
+  "-DSWIFT_SDKS=OSX" \
+  "-DSWIFT_USE_LINKER=lld"
 do
   need "$arm" "$flag" "arm64 has $flag"
   need "$x86" "$flag" "x86 has $flag"
