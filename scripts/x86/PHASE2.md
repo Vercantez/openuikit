@@ -241,7 +241,10 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
     reads: extensionless `Foundation` / `CoreFoundation` loud-abort stubs
     (`scripts/build_runtime_shims.sh STUBS_ONLY=1`, `x86_64-apple-macos`),
     `libswiftcompat.dylib` (`swiftcore-macho/scripts/build_compat.sh`; never
-    the arm64 `artifacts/libswiftcompat.dylib`), `libswiftCore.dylib` (already
+    the arm64 `artifacts/libswiftcompat.dylib` — x86 unexports the nine
+    symbols x86 `libSystem` already defines via
+    `sdk/compat/x86_unexported_symbols.txt`; the arm64 artifact stays
+    byte-identical because staged arm64 `libSystem` exports none of them), `libswiftCore.dylib` (already
     from `mrroot-base-x86`), `libswift_Concurrency.dylib` /
     `libswiftObjectiveC.dylib` from the x86 overlay search (Apple-SDK
     ObjectiveC is named in `missing=` rather than stubbed). Host ELF files
