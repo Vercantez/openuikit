@@ -169,7 +169,7 @@ validate_bundle() {
     [ "$actual_digest" = "$digest" ] || die "$label tree drifted: $actual_digest"
 }
 
-[ "$OUT" = "$W/build/focus-onboarding-guest" ] \
+[ "$OUT" = "$W/build/focus-onboarding-guest${FULL_OUT_SUFFIX}" ] \
     || die "derived output path invariant changed"
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun

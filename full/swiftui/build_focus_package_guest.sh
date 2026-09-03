@@ -116,7 +116,7 @@ check_source_manifest() {
         || die "$label source manifest drifted: $actual"
 }
 
-[ "$OUT" = "$W/build/focus-package-guest" ] \
+[ "$OUT" = "$W/build/focus-package-guest${FULL_OUT_SUFFIX}" ] \
     || die "derived output path invariant changed"
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
