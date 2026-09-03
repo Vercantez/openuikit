@@ -142,8 +142,8 @@ expect_grep 'x86_64 guests on an x86_64 host are the phase-2 path' "$REMINDER" \
     "reminder documents x86-on-x86"
 expect_not_grep 'if \[ "$(uname -m)" != aarch64 \] && \[ "$(uname -m)" != arm64 \]; then' \
     "$REMINDER" "reminder no longer refuses every non-aarch64 host"
-expect_grep 'if \[ "$ARCH" = x86_64 \] && \[ "$(uname -m)" = x86_64 \]' "$REMINDER" \
-    "reminder native x86 skip-docker"
+expect_grep 'if \[ "$ARCH" = "$host_arch" \]' "$REMINDER" \
+    "reminder native host skip-docker"
 expect_grep 'if \[ "$ARCH" = arm64 \] && \[ "$(uname -m)" != aarch64 \]' \
     "$ROOT/full/frameworks/run_core_guest_package_docker.sh" \
     "core-package docker wrapper does not refuse x86-on-x86"
@@ -712,10 +712,13 @@ do
     expect_grep "$overlay" "$BUILD_FULL" "overlay $overlay named in build_full.sh"
 done
 
-# Isolate $HOME so a leftover operator stdlib tree cannot satisfy the miss case.
+# Isolate $HOME and $W so a leftover operator stdlib tree or this checkout's
+# swiftcore-macho/artifacts/swift-macosx/x86_64 (libswiftDarwin /
+# libswift_Builtin_float) cannot satisfy the miss case.
 OVERLAY_HOME=$(mktemp -d /tmp/phase2-overlay-home.XXXXXX)
 OVERLAY_DEST=$(mktemp -d /tmp/phase2-overlay-dest.XXXXXX)
-W=$ROOT
+OVERLAY_W=$(mktemp -d /tmp/phase2-overlay-w.XXXXXX)
+W=$OVERLAY_W
 HOME=$OVERLAY_HOME
 # shellcheck source=common.inc
 . "$COMMON"
@@ -726,6 +729,8 @@ if [ "$overlay_report" = "$expected_missing" ]; then
 else
     die_test "overlay MISSING list expected $expected_missing got: $overlay_report"
 fi
+W=$ROOT
+rm -rf "$OVERLAY_W"
 
 BASE_DEST=$(mktemp -d /tmp/phase2-base-mrroot.XXXXXX)
 x86_core=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
