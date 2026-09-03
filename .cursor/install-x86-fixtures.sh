@@ -44,13 +44,12 @@ mkdir -p "$W/scratch"
 tree=$(git -C "$W" rev-parse HEAD:machorun 2>/dev/null | tr -d '[:space:]') || tree=missing
 key=$(stamp_key "$SENTINEL" "$tree" "$SCRIPT" "$TBD" "$OBJC")
 
-fixtures_ready() {
+fixtures_bin_ready() {
     [ -s "$BIN/.built_count" ] || return 1
     [ "$(tr -d '[:space:]' < "$BIN/.built_count")" -gt 0 ] 2>/dev/null || return 1
-    [ -d "$SENTINEL" ] || return 1
 }
 
-if stamp_reuse "$SENTINEL" "$key" && fixtures_ready; then
+if stamp_reuse "$SENTINEL" "$key" && fixtures_bin_ready; then
     printf 'CURSOR_ENV_X86_FIXTURES reused=1 stamp=%s built=%s out=%s\n' \
         "$(printf '%s' "$key" | cut -c1-12)" \
         "$(tr -d '[:space:]' < "$BIN/.built_count")" \
@@ -62,7 +61,7 @@ stamp_rebuild_reason "$SENTINEL" "$key"
 echo "== x86 fixtures (machorun/scripts/build_fixtures_linux_x86_64.sh)"
 bash "$SCRIPT"
 
-fixtures_ready || {
+fixtures_bin_ready || {
     printf 'cursor-fixtures: builder did not produce %s/.built_count > 0\n' "$BIN" >&2
     exit 1
 }

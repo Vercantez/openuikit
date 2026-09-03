@@ -1024,12 +1024,15 @@ fi
 #     are reused from build/full-x86_64/foundation; this does not compile FE
 #     again. Link-time does not need the nine overlay dylibs (tbd-first);
 #     rung a still needs them at load.
+# Overlay SDK copies $SYS unexpanded. ud-guest swiftc -sdk must be the FE
+# clang snapshot: textual sys/time.h so Darwin.swiftinterface can see
+# SwiftOverlayShims.timeval. Compiling against $SYS fails that import.
 echo "==== ud-guest-x86 (committed $PHASE2_UD_GUEST_LINKER) ===="
 UD_GUEST_ITEM_OK=0
 ud_report=$(phase2_try_ud_guest \
     "$W" \
     "$FE_OUT" \
-    "$SYS" \
+    "$FE_CLANG_SYS" \
     "$TARGET" \
     "$MC" \
     "$MACHORUN/darwin/usr/lib" \

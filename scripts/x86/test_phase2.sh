@@ -1693,6 +1693,20 @@ echo "== ud-guest-x86 uses committed linker, suffixed tree, reused FE objects"
 expect_file "$UDINC"
 expect_grep 'ud-guest-x86' "$PHASE2" "phase2 item ud-guest-x86"
 expect_grep 'phase2_try_ud_guest' "$PHASE2" "phase2 invokes the ud-guest producer"
+expect_grep 'SwiftOverlayShims.timeval' "$PHASE2" \
+    "ud-guest -sdk comment names SwiftOverlayShims.timeval"
+python3 - "$PHASE2" <<'PY' && ok "try_ud_guest third arg is FE_CLANG_SYS" || die_test "try_ud_guest still passes overlay-copied SYS"
+import pathlib, re, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find("ud_report=$(phase2_try_ud_guest")
+if start < 0:
+    raise SystemExit("call not found")
+end = text.find("|| true)", start)
+chunk = text[start:end]
+args = re.findall(r'"\$([A-Z0-9_]+)"', chunk)
+if len(args) < 3 or args[2] != "FE_CLANG_SYS":
+    raise SystemExit(f"args={args} chunk={chunk!r}")
+PY
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
     "producer names the committed linker"
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
