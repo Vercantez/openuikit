@@ -1,6 +1,10 @@
+import Foundation
+#if canImport(CoreMedia)
 @_exported import CoreMedia
-@_exported import Foundation
+#endif
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 #if canImport(OpenUIKit)
 // The portable Foundation facade deliberately preserves OpenUIKit's
 // Notification.Name identity instead of manufacturing a second copy.
@@ -158,15 +162,21 @@ public struct AVFileType: RawRepresentable, Hashable, Sendable,
     public static let m4a = AVFileType(rawValue: "com.apple.m4a-audio")
 }
 
-public class AVAsset: NSObject, @unchecked Sendable {
+open class AVAsset: NSObject, @unchecked Sendable {
     public override init() {
         super.init()
     }
 }
 
-public final class AVURLAsset: AVAsset, @unchecked Sendable {
+open class AVURLAsset: AVAsset, @unchecked Sendable {
     public let url: URL
     public let options: [String: Any]?
+
+    public override init() {
+        self.url = URL(fileURLWithPath: "/dev/null")
+        self.options = nil
+        super.init()
+    }
 
     public init(url: URL, options: [String: Any]? = nil) {
         self.url = url
@@ -175,7 +185,7 @@ public final class AVURLAsset: AVAsset, @unchecked Sendable {
     }
 }
 
-public final class AVPlayerItem: NSObject, @unchecked Sendable {
+open class AVPlayerItem: NSObject, @unchecked Sendable {
     public let asset: AVAsset
     public var url: URL? { (asset as? AVURLAsset)?.url }
 
@@ -207,10 +217,12 @@ public enum AVPlayerAudiovisualBackgroundPlaybackPolicy: Int, Sendable {
     case continuesIfPossible = 3
 }
 
-public final class AVPlayer: NSObject, @unchecked Sendable {
+open class AVPlayer: NSObject, @unchecked Sendable {
     private let stateLock = NSLock()
     private var storedItem: AVPlayerItem?
     private var storedRate: Float = 0
+    private var storedDefaultRate: Float = 1
+    private var storedVolume: Float = 1
     private var storedTime: CMTime = .zero
     private var storedMuted = false
     private var storedPreventsDisplaySleep = true
@@ -235,7 +247,18 @@ public final class AVPlayer: NSObject, @unchecked Sendable {
     }
 
     public var rate: Float {
-        stateLock.withLock { storedRate }
+        get { stateLock.withLock { storedRate } }
+        set { stateLock.withLock { storedRate = newValue } }
+    }
+
+    public var defaultRate: Float {
+        get { stateLock.withLock { storedDefaultRate } }
+        set { stateLock.withLock { storedDefaultRate = newValue } }
+    }
+
+    public var volume: Float {
+        get { stateLock.withLock { storedVolume } }
+        set { stateLock.withLock { storedVolume = newValue } }
     }
 
     public var isMuted: Bool {
@@ -300,7 +323,7 @@ public final class AVPlayer: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioSession: NSObject, @unchecked Sendable {
+open class AVAudioSession: NSObject, @unchecked Sendable {
     public struct Category: RawRepresentable, Hashable, Sendable,
         ExpressibleByStringLiteral
     {
@@ -401,7 +424,7 @@ public let AVAssetExportPreset1280x720 = "AVAssetExportPreset1280x720"
 public let AVAssetExportPreset1920x1080 = "AVAssetExportPreset1920x1080"
 public let AVAssetExportPresetPassthrough = "AVAssetExportPresetPassthrough"
 
-public final class AVAssetExportSession: NSObject, @unchecked Sendable {
+open class AVAssetExportSession: NSObject, @unchecked Sendable {
     public enum Status: Int, Sendable {
         case unknown = 0
         case waiting = 1
@@ -489,7 +512,7 @@ public final class AVAssetExportSession: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAssetImageGenerator: NSObject, @unchecked Sendable {
+open class AVAssetImageGenerator: NSObject, @unchecked Sendable {
     public let asset: AVAsset
     public var appliesPreferredTrackTransform = false
 
