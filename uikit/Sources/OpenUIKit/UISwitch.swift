@@ -37,6 +37,24 @@ open class UISwitch: UIControl {
             : UIColor(white: 0, alpha: 66.0 / 255.0)
     })
 
+    /// Default on-track fill for the iOS cut. MEASURED 2026-09-04
+    /// (realappprobe, iPhone 16 / iOS 26.1): the on track view is
+    /// systemGreen (52, 199, 89) under a same-green sheen image and the
+    /// liquid-glass thumb, and the RENDERED track pixels are #65C466 in light
+    /// and #68CE67 in dark — the composite is what the golden shows, so the
+    /// composite is what the port paints. Catalyst's default stays
+    /// systemBlue (measured golden/switch_onoff).
+    static let iOSDefaultOnColor = UIColor(dynamicProvider: { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0x68 / 255.0, green: 0xCE / 255.0, blue: 0x67 / 255.0, alpha: 1)
+            : UIColor(red: 0x65 / 255.0, green: 0xC4 / 255.0, blue: 0x66 / 255.0, alpha: 1)
+    })
+    /// `onTintColor`, or the platform's default on fill.
+    var effectiveOnColor: UIColor {
+        if let c = onTintColor { return c }
+        return OpenUIKitRuntime.systemFontCut == .iOS ? UISwitch.iOSDefaultOnColor : tintColor
+    }
+
     public var isOn: Bool = false
     public var onTintColor: UIColor?
     public var thumbTintColor: UIColor?
@@ -190,7 +208,7 @@ open class UISwitch: UIControl {
             let trackDur = turningOn ? UISwitch.onTrackDuration
                                      : UISwitch.offTrackDuration
             if elapsed >= 0, elapsed < trackDur {
-                let onColor = (onTintColor ?? tintColor).resolvedCGColor(with: traits)
+                let onColor = effectiveOnColor.resolvedCGColor(with: traits)
                 let offColor = UISwitch.offTrackColor.resolvedCGColor(with: traits)
                 // Track: off capsule + on-color plateaus (left/right of the
                 // thumb) at the golden-fitted coverages.
@@ -238,7 +256,7 @@ open class UISwitch: UIControl {
 
         // Static state (or settled animation): the original exact drawing.
         let trackColor: CGColor = isOn
-            ? (onTintColor ?? tintColor).resolvedCGColor(with: traits)
+            ? effectiveOnColor.resolvedCGColor(with: traits)
             : UISwitch.offTrackColor.resolvedCGColor(with: traits)
         canvas.fill(trackPath, color: trackColor)
 

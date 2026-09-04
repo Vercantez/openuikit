@@ -114,6 +114,15 @@ final class _UIDimmingView: UIView {
     /// MEASURED: real iOS 26.1 installs a `UIDimmingView` with
     /// backgroundColor black at exactly alpha 0.2 behind a pageSheet.
     static let maxAlpha: CGFloat = 0.2
+    /// MEASURED 2026-09-04 (Tools/oracle2/realappprobe, iPhone 16 iOS 26.1):
+    /// in DARK mode the same UIDimmingView is black at alpha 0.48
+    /// (`bg=[0,0,0,0.48]` in the dump; the presenter's #141414 backdrop
+    /// renders #0A0A0A). Mac Catalyst keeps 0.2 in both styles.
+    static func maxAlpha(for traits: UITraitCollection) -> CGFloat {
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           traits.userInterfaceStyle == .dark { return 0.48 }
+        return maxAlpha
+    }
 }
 
 // MARK: - Sheet interaction physics (MEASURED, iOS 26.1 / iPhone 16)
@@ -352,10 +361,35 @@ public final class UISheetPresentationController: UIPresentationController {
         return max(0, v) + c.safeAreaInsets.bottom
     }
 
+    /// iOS 26 draws a non-large detent as a FLOATING card (see the
+    /// DIVERGENCE note above, now closed). MEASURED 2026-09-04 with
+    /// Tools/oracle2/realappprobe on the iPhone 16 (393x852) simulator,
+    /// iOS 26.1, detent 343 + 34 bottom safe area:
+    ///   UIDropShadowView bounds 393x377, transform [0.959 0 0 0.959 0 -0.326]
+    ///   frame [8, 482.349, 377, 361.651]  (8 pt in from each side, bottom
+    ///   8 pt above the container's bottom edge, scale (W-16)/W).
+    /// Mac Catalyst has no floating card (its sheet is edge to edge).
+    static let floatingInset: CGFloat = 8
+    var isFloatingCard: Bool {
+        sheetStyle == .pageSheet && OpenUIKitRuntime.systemFontCut == .iOS
+            && resolvedDetentHeight() != nil
+    }
+    /// The card's scale about its centre: (containerWidth - 16) / containerWidth.
+    var floatingScale: CGFloat {
+        guard let c = containerView, c.bounds.width > 0 else { return 1 }
+        return (c.bounds.width - 2 * Self.floatingInset) / c.bounds.width
+    }
+
     public override var frameOfPresentedViewInContainerView: CGRect {
         guard let c = containerView else { return .zero }
         guard sheetStyle == .pageSheet else { return c.bounds }
         if let h = resolvedDetentHeight() {
+            if isFloatingCard {
+                let s = floatingScale, inset = Self.floatingInset
+                let sh = h * s
+                return CGRect(x: inset, y: c.bounds.height - inset - sh,
+                              width: c.bounds.width * s, height: sh)
+            }
             return CGRect(x: 0, y: c.bounds.height - h,
                           width: c.bounds.width, height: h)
         }
@@ -377,9 +411,15 @@ public final class UISheetPresentationController: UIPresentationController {
         // The FINAL (presented) chrome state. A non-animated present needs
         // nothing else; the animator winds it back to the start and plays
         // forward.
-        dim.alpha = _UIDimmingView.maxAlpha
+        dim.alpha = _UIDimmingView.maxAlpha(for: container.traitCollection)
         if sheetStyle == .pageSheet { container.addSubview(dim) }
 
+        // The floating card is the unscaled sheet under a scale transform
+        // (UIView.frame's setter inverts an axis-aligned scale, so the
+        // measured frame yields the measured 393-wide bounds).
+        platter.transform = isFloatingCard
+            ? CGAffineTransform(scaleX: floatingScale, y: floatingScale) : .identity
+        platter.floating = isFloatingCard
         platter.frame = frameOfPresentedViewInContainerView
         platter.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
@@ -394,6 +434,14 @@ public final class UISheetPresentationController: UIPresentationController {
         }
         cv.frame = platter.bounds
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        if isFloatingCard {
+            // MEASURED: the presented controller's view keeps the FULL
+            // bottom safe area (34) although the card floats 8 pt up (UIKit's
+            // private wrappers report 26; the app's view reports 34).
+            var sa = UIEdgeInsets.zero
+            sa.bottom = container.safeAreaInsets.bottom
+            cv._setSafeAreaInsets(sa)
+        }
         platter.addSubview(cv)
         if sheetStyle == .pageSheet {
             platter.restY = platter.frame.minY
@@ -491,11 +539,45 @@ final class _UIPageSheetView: UIView {
     static let topInset: CGFloat = 59.0
     static let topCornerRadius: CGFloat = 37.7
     static let bottomCornerRadius: CGFloat = 58.2
+    /// MEASURED 2026-09-04 (realappprobe, iPhone 16 / iOS 26.1): the floating
+    /// card's `cornerConfiguration` is top .fixed(38), bottom
+    /// .fixed(47.7407...) (continuous curve; drawn here with circular arcs,
+    /// a known residual at the four corners).
+    static let floatingTopCornerRadius: CGFloat = 38
+    static let floatingBottomCornerRadius: CGFloat = 47.74074074074074
+    /// Drawn as the iOS 26 floating card (set by the presentation controller).
+    var floating = false {
+        didSet {
+            // MEASURED 2026-09-04 (realappprobe golden, Gaussian fit to the
+            // dimmed backdrop around the card, residual < 1/255): the card's
+            // visible shadow is black, sigma 15.5 pt on screen, opacity
+            // 0.09, offset 7.5 pt down. The layer is scaled by 377/393, so
+            // the layer-space numbers are those divided by the scale. (The
+            // private _UIRoundedRectShadowView's 9-slice image has alpha 0
+            // at capture time; this is what the pixels show.)
+            let s: CGFloat = floating ? 377.0 / 393.0 : 1
+            layer.shadowColor = floating ? UIColor.black.cgColor : nil
+            layer.shadowOpacity = floating ? 0.09 : 0
+            layer.shadowRadius = floating ? 15.5 / s : 3
+            layer.shadowOffset = floating ? CGSize(width: 0, height: 7.5 / s) : CGSize(width: 0, height: -3)
+            // Both compositors cast a layer shadow from the BACKGROUND (or
+            // border) silhouette, never from custom-drawn content, so the
+            // floating card carries its fill as a background too, rounded
+            // at the larger (bottom) radius: that rect lies entirely under
+            // the two-radius path drawn on top, so only the shadow shows it.
+            backgroundColor = floating ? fillColor : nil
+            layer.cornerRadius = floating ? _UIPageSheetView.floatingBottomCornerRadius : 0
+            setNeedsDisplay()
+        }
+    }
 
     /// Sheet background; defaults to systemBackground, resolved at draw
     /// time against the effective traits.
     var fillColor: UIColor = .systemBackground {
-        didSet { setNeedsDisplay() }
+        didSet {
+            if floating { backgroundColor = fillColor }
+            setNeedsDisplay()
+        }
     }
 
     // MARK: Interactive dismissal state
@@ -543,8 +625,10 @@ final class _UIPageSheetView: UIView {
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
         let path = _UIPageSheetView.sheetPath(
             in: bounds,
-            topRadius: _UIPageSheetView.topCornerRadius,
-            bottomRadius: _UIPageSheetView.bottomCornerRadius)
+            topRadius: floating ? _UIPageSheetView.floatingTopCornerRadius
+                                : _UIPageSheetView.topCornerRadius,
+            bottomRadius: floating ? _UIPageSheetView.floatingBottomCornerRadius
+                                   : _UIPageSheetView.bottomCornerRadius)
         let color = fillColor.resolvedColor(with: traitCollection).cgColor
         canvas.fill(path, color: color)
     }
@@ -609,7 +693,7 @@ final class _UIPageSheetView: UIView {
         dragOffset = o
         frame.origin.y = restY + o
         let progress = h > 0 ? o / h : 0
-        dim?.alpha = _UIDimmingView.maxAlpha * (1 - progress)
+        dim?.alpha = _UIDimmingView.maxAlpha(for: traitCollection) * (1 - progress)
     }
 
     func handlePan(_ pan: _UISheetPanGestureRecognizer) {
@@ -860,6 +944,11 @@ extension UIViewController {
         pc.presentingViewController = self
         pc.containerView = container
         root.addSubview(container)
+        // The sheet's detent frame reads the container's safe area (a
+        // custom detent is `value + bottom safe area`, measured), and the
+        // presentation controller computes it NOW — before any layout pass
+        // would have propagated the window's insets to the new container.
+        container._propagateSafeArea(inherited: root.safeAreaInsets)
 
         presentedViewController = vc
         vc.presentingViewController = self

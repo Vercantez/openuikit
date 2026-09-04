@@ -564,9 +564,20 @@ open class UIView: UIResponder, CALayerDelegate {
             return bbox.offsetBy(dx: center.x, dy: center.y)
         }
         set {
-            // Matches UIKit: setting frame with non-identity transform is
-            // undefined-ish; we set bounds size and center from the rect.
-            bounds.size = newValue.size
+            // UIKit: under a pure (axis-aligned) scale the frame is still
+            // meaningful and setting it sizes the BOUNDS so that the
+            // transformed box equals the new frame — a sheet scaled by
+            // 377/393 given frame width 377 keeps bounds width 393 (measured
+            // 2026-09-04: iOS 26 floating sheet card, UIDropShadowView frame
+            // [8, 482.349, 377, 361.651] with bounds 393x377). Any other
+            // transform keeps the old "size as given" behaviour.
+            var size = newValue.size
+            if !transform.isIdentity, transform.b == 0, transform.c == 0,
+               transform.a != 0, transform.d != 0 {
+                size = CGSize(width: newValue.width / abs(transform.a),
+                              height: newValue.height / abs(transform.d))
+            }
+            bounds.size = size
             center = CGPoint(x: newValue.origin.x + newValue.width / 2,
                              y: newValue.origin.y + newValue.height / 2)
         }

@@ -1538,6 +1538,22 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
         let s = v.sizeThatFits(CGSize(width: 200, height: CGFloat.greatestFiniteMagnitude))
         entry["sizeThatFits200"] = .array([.number(round3(s.width)), .number(round3(s.height))])
     }
+    // Appearance facts the real-iOS probe dumps too (Tools/oracle2/realappprobe),
+    // so the two layout files can be compared beyond frames.
+    if v.transform != .identity {
+        let t = v.transform
+        entry["transform"] = .array([t.a, t.b, t.c, t.d, t.tx, t.ty].map { .number(round3($0)) })
+    }
+    if v.layer.shadowOpacity > 0, v.layer.shadowColor != nil {
+        entry["shadow"] = .object(["opacity": .number(round3(CGFloat(v.layer.shadowOpacity))),
+                                   "radius": .number(round3(v.layer.shadowRadius)),
+                                   "offset": .array([.number(round3(v.layer.shadowOffset.width)),
+                                                     .number(round3(v.layer.shadowOffset.height))])])
+    }
+    if v.layer.cornerRadius != 0 { entry["cornerRadius"] = .number(round3(v.layer.cornerRadius)) }
+    if let sv = v as? UIScrollView {
+        entry["contentOffset"] = .array([.number(round3(sv.contentOffset.x)), .number(round3(sv.contentOffset.y))])
+    }
     out.append(.object(entry))
     for (i, sub) in v.subviews.enumerated() {
         dumpLayout(sub, path: path.isEmpty ? "\(i)" : "\(path).\(i)", into: &out)

@@ -498,6 +498,7 @@ public enum UIRenderer {
             return (layerRoundedRect(bounds, cornerRadius: radius,
                                      maskedCorners: corners), false)
         }
+
         let bw = borderWidth
         if bw > 0, let bc = v.layer.borderColor, bc.alpha > 0 {
             let innerRect = bounds.insetBy(dx: bw, dy: bw)

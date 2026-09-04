@@ -212,7 +212,14 @@ public final class UITraitChangeRegistration {
 }
 
 extension UIView {
+    // `@_optimize(none)`: keeps this generic function out of cross-module
+    // SIL serialization. Swift 6.2.4 for Linux aborts ("SILFunction type
+    // mismatch ... _NativeClass vs AnyObject" in MandatorySILLinker) when a
+    // `-default-isolation MainActor` client (RealAppProbe) deserializes its
+    // body; measured 2026-09-04 in Docker (swift:6.2-noble), and the
+    // annotation is what made `swift build --product openrender` link.
     @discardableResult
+    @_optimize(none)
     public func registerForTraitChanges<Target: UIView>(
         _ traits: [any UITraitDefinition.Type],
         handler: @escaping (Target, UITraitCollection) -> Void
@@ -276,7 +283,14 @@ extension UIViewController {
     /// drive delivery through the loaded root view's `_traitsDidChange` hook.
     @available(iOS 17.0, tvOS 17.0, *)
     @available(watchOS, unavailable)
+    // `@_optimize(none)`: keeps this generic function out of cross-module
+    // SIL serialization. Swift 6.2.4 for Linux aborts ("SILFunction type
+    // mismatch ... _NativeClass vs AnyObject" in MandatorySILLinker) when a
+    // `-default-isolation MainActor` client (RealAppProbe) deserializes its
+    // body; measured 2026-09-04 in Docker (swift:6.2-noble), and the
+    // annotation is what made `swift build --product openrender` link.
     @discardableResult
+    @_optimize(none)
     public func registerForTraitChanges<Target: UIViewController>(
         _ traits: [any UITraitDefinition.Type],
         handler: @escaping (Target, UITraitCollection) -> Void

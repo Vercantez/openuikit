@@ -32,3 +32,5 @@ Tools/oracle2/DynTypeProbe.app/
 Tools/oracle2/DetentProbe.app/
 out_realapp/
 out_host_realapp/
+Tools/oracle2/RealAppProbe.app/
+Tools/oracle2/LayoutProbe.app/

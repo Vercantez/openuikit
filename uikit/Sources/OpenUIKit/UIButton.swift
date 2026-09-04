@@ -98,7 +98,7 @@ open class UIButton: UIControl {
     /// Real UIKit exposes a persistent image view even before an image has
     /// been assigned. It is optional in the API for Objective-C history, but
     /// a live UIButton owns the same view for its lifetime.
-    public var imageView: UIImageView? { _imageView }
+    public var imageView: UIImageView? { installImageViewIfNeeded(); return _imageView }
 
     private var titles: [UInt: String] = [:]
     private var attributedTitles: [UInt: NSAttributedString] = [:]
@@ -148,11 +148,21 @@ open class UIButton: UIControl {
         // Real UIButton titles truncate in the middle (oracle-verified).
         _titleLabel.lineBreakMode = .byTruncatingMiddle
         addSubview(_titleLabel)
-        // Keep the long-standing OpenUIKit title-label ordering stable for
-        // layout dumps/tests; UIKit does not promise a public subview order.
-        addSubview(_imageView)
+        // The image view is installed lazily (see `installImageViewIfNeeded`):
+        // real UIKit creates a button's imageView on first use, and the
+        // Catalyst goldens (button_basic/dark/highlighted/states,
+        // demo_settings) list NO UIImageView under an image-less button —
+        // the unconditional subview here was the suite's only failure
+        // (5 scenes, "extra view (UIImageView)", 2026-09-04).
         updateTitleView()
         updateImageView()
+    }
+
+    /// UIKit adds the image view as a subview when an image is first set or
+    /// `imageView` is first read; until then the button has one subview.
+    private func installImageViewIfNeeded() {
+        guard _imageView.superview == nil else { return }
+        addSubview(_imageView)
     }
 
     public convenience init(type: ButtonType) {
@@ -310,6 +320,7 @@ open class UIButton: UIControl {
     }
 
     private func updateImageView() {
+        if currentImage != nil { installImageViewIfNeeded() }
         _imageView.image = currentImage
         _imageView.isHidden = currentImage == nil
     }

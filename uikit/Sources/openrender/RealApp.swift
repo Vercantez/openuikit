@@ -32,10 +32,16 @@ let realAppVariants: [RealAppVariant] = [
     }),
 ]
 
+/// Render scale; main.swift sets it from OPENUIKIT_REALAPP_SCALE.
+nonisolated(unsafe) var realAppScale: CGFloat = 2
+
 @MainActor
 func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     let size = RealAppScreen.windowSize
-    let scale: CGFloat = 2
+    // The iPhone 16 the real-iOS goldens come from is a 3x device; the
+    // default stays 2 (the Linux-vs-macOS byte-identity fixture), the
+    // golden comparison renders at 3 (OPENUIKIT_REALAPP_SCALE=3).
+    let scale = realAppScale
     Timer._reset()
     GlyphInkTable.windowCompositing = false
     OpenUIKitRuntime.systemFontCut = .iOS
@@ -46,6 +52,10 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
 
     let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+    // MEASURED (realappprobe, iPhone 16 / iOS 26.1): the window's safe area
+    // is [59, 0, 34, 0]; the sheet's detent height gets the 34 added
+    // (343 + 34 = 377), which the port could not reproduce with zero insets.
+    window._setSafeAreaInsets(UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0))
     window.overrideUserInterfaceStyle = variant.style
     let root = variant.makeRoot()
     window.rootViewController = root

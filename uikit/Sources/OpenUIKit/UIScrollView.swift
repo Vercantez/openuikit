@@ -313,7 +313,20 @@ open class UIScrollView: UIView {
         didSet { if contentSize != oldValue { setNeedsLayout() } }
     }
     public var contentInset: UIEdgeInsets = .zero {
-        didSet { if contentInset != oldValue { setNeedsLayout() } }
+        didSet {
+            guard contentInset != oldValue else { return }
+            // MEASURED 2026-09-04 (Tools/oracle2/realappprobe, iOS 26.1): a
+            // scroll view whose content sat at the top keeps it at the top
+            // when the inset grows — the app sets contentInset.top = 12 and
+            // UIKit reports contentOffset (0, -12), adjustedContentInset
+            // [12, 0, 0, 0]; the content is drawn 12 pt down. The port used
+            // to leave the offset at 0 and draw the content flush.
+            var o = contentOffset
+            if o.y <= -oldValue.top { o.y = -contentInset.top }
+            if o.x <= -oldValue.left { o.x = -contentInset.left }
+            if o != contentOffset { contentOffset = o }
+            setNeedsLayout()
+        }
     }
     /// Effective viewport inset after the view hierarchy's safe area is
     /// incorporated. This portable host currently models UIKit's automatic

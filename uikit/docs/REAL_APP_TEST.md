@@ -328,17 +328,45 @@ of the census.
 
 ## Where the render is wrong
 
-Stated up front because the screenshots look better than the fidelity claim:
+Stated up front because the screenshots look better than the fidelity claim.
+**Measured against real iOS since 2026-09-04**: `scripts/realapp_probe_sim.sh`
+runs the same unmodified app source under real UIKit on the iPhone 16 / iOS
+26.1 simulator (`Tools/oracle2/realappprobe`), writing a 3x capture and a
+layout dump per variant; `Tools/compare/compare_realapp.py` diffs
+`OPENUIKIT_REALAPP_SCALE=3 openrender realapp` against it.
 
-1. **The sheet is edge-to-edge; iOS 26's is a floating inset card.** Item 9
-   above. The *height* is right (content + bottom safe area, pinned to the
-   bottom); the shape is not.
-2. **No blur anywhere.** The sheet platter is a flat fill.
-3. **`.SFUI` vs `.SFNS`.** The harness selects the iOS cut of San Francisco
-   (`OpenUIKitRuntime.systemFontCut = .iOS`), the same route the alert and bar
-   fixtures use, so advances match real iOS below 20 pt.
-4. **No golden.** As stated above — there is no real-UIKit render of this
-   screen to diff against.
+| variant | pixel score | MAE | largest blob | sheet frames |
+|---|---|---|---|---|
+| `realapp_history_light` | 99.0 (was 92.2) | 0.7 | 3.0 pt² | all match |
+| `realapp_settings_light` | 98.5 (was 90.2) | 0.9 | 5.2 pt² | all match (UISwitch internals are private views) |
+| `realapp_settings_dark` | 98.5 (was 90.0) | 1.0 | 2.8 pt² | all match |
+
+What the measurement closed (each a measured UIKit fact, cited at the code):
+the iOS 26 **floating sheet card** (the 393-wide sheet under a (W−16)/W scale
+transform, corners 38 / 47.74, height = detent + 34 bottom safe area); the
+**dark dim** (black at 0.48, not 0.2); the **iOS cut's vertical font
+metrics** (`font_metrics_ios.json`; label line = lineHeight rounded UP to the
+pixel grid); **pixel-grid rounding** of origins and sizes on a 3x device;
+**UIStackView's zero layoutMargins**; **UIScrollView keeping content at the top
+when `contentInset` grows** (offset −12); the **UISwitch on-track colour**;
+the **Auto Layout tie-break** in a two-label row (`Tools/oracle2/layoutprobe`,
+`golden/layout_tiebreak_ios.json`: a wrapping label's intrinsic constraints
+are re-added after the first pass); and the **card shadow** (Gaussian fit to
+the golden: black, σ ≈ 15.5 pt, opacity 0.09, offset +7.5 pt down — cast from a
+background rounded at the larger radius, since neither compositor casts a
+shadow from custom-drawn content).
+
+Still wrong:
+
+1. **Circular corners where iOS draws continuous ones** (the card, the switch
+   track) — a few pixels at each corner.
+2. **The switch thumb is a flat white capsule**; iOS 26's is a liquid-glass lens
+   with highlights, and the on-track sheen image is not modelled (the flat
+   colour is the measured composite).
+3. **No blur anywhere.** The sheet platter is a flat fill.
+4. **Two tie-breaks the engine does not reproduce** (a compression tie and two
+   width preferences at 250 — "the first view takes the space"), reported by
+   `LayoutTieBreakTests`, not gated.
 
 ---
 

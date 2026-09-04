@@ -27,6 +27,8 @@ enum LayoutEngine {
     /// Global count of active constraints — fast bail-out so hierarchies
     /// without Auto Layout pay one integer compare per layoutIfNeeded.
     static var installedConstraintCount = 0
+    /// Print the intrinsic entry order per solve (tie-break debugging).
+    static var trace = false
 
     /// Solve every constraint installed in `root`'s subtree and write the
     /// solved frames to constraint-based views. Idempotent: re-solving an
@@ -123,6 +125,9 @@ enum LayoutEngine {
         }
 
         let solver = Cassowary.Solver()
+        /// Constraint-based views in ENTRY order (first reference by a
+        /// constraint), for the intrinsic-size pass below.
+        var intrinsicViews: [ViewVars] = []
 
         func addRequired(_ expr: Cassowary.Expression, _ rel: Cassowary.Relation) {
             try? solver.addConstraint(Cassowary.Constraint(expr, rel))
@@ -169,7 +174,16 @@ enum LayoutEngine {
                 continue
             }
             let v = vv.view!
-            if v === root || v.translatesAutoresizingMaskIntoConstraints {
+            // A stack's ARRANGED subview is placed and sized by the stack
+            // (UIKit does it with required constraints of its own; OpenUIKit's
+            // stack is frame-based), so it enters the solver as a FIXED frame
+            // like any frame-based view. MEASURED 2026-09-04
+            // (layoutprobe "approw_in_stack_*"): with the row's width left
+            // free, both labels could hug by shrinking the row and the
+            // tie-break never arose; real UIKit stretches "Download".
+            let arrangedByStack = (v.superview as? UIStackView)?
+                .arrangedSubviews.contains(where: { $0 === v }) ?? false
+            if v === root || v.translatesAutoresizingMaskIntoConstraints || arrangedByStack {
                 // Frame-based: required left/top/width/height from the
                 // current frame (relative to the superview's variables when
                 // involved; the root anchors at its bounds space's origin).
@@ -201,19 +215,50 @@ enum LayoutEngine {
                 }
             } else {
                 // Constraint-based: intrinsic content size at hugging (<=)
-                // and compression-resistance (>=) priorities per axis.
-                let s = v.intrinsicContentSize
-                if s.width != UIView.noIntrinsicMetric {
-                    addIntrinsic(solver, vv.width, Double(s.width),
-                                 hugging: v.contentHuggingPriority(for: .horizontal),
-                                 compression: v.contentCompressionResistancePriority(for: .horizontal))
-                }
-                if s.height != UIView.noIntrinsicMetric {
-                    addIntrinsic(solver, vv.height, Double(s.height),
-                                 hugging: v.contentHuggingPriority(for: .vertical),
-                                 compression: v.contentCompressionResistancePriority(for: .vertical))
-                }
+                // and compression-resistance (>=) priorities per axis —
+                // added AFTER the user constraints, see below.
+                intrinsicViews.append(vv)
             }
+        }
+
+        // Intrinsic content sizes — their ORDER is the tie-break. When two
+        // views' hugging (or compression) constraints have equal priority
+        // and cannot both hold, the LP has many optimal vertices and which
+        // one the solver reaches is decided by insertion order and pivoting.
+        // Real UIKit's outcomes, MEASURED 2026-09-04 with
+        // Tools/oracle2/layoutprobe on iOS 26.1 (20 scenarios,
+        // golden/layout_tiebreak_ios.json, Tests/…/LayoutTieBreakTests), are
+        // reproduced by: intrinsic constraints in ENTRY order (first
+        // reference by a constraint) BEFORE the user constraints — the view
+        // referenced first takes the space in a tie ("Download" stretches
+        // beside "Wi-Fi only"; in a compression tie it keeps its width) — and
+        // then, after the user constraints, a wrapping label (numberOfLines
+        // != 1) has its intrinsic constraints removed and re-added in entry
+        // order (UIKit's preferredMaxLayoutWidth second pass): a constraint
+        // added into a tie stays violated, which is why the app's own row
+        // (both labels numberOfLines 0) hugs "Download" and stretches
+        // "Wi-Fi only".
+        var intrinsicConstraints: [ObjectIdentifier: [Cassowary.Constraint]] = [:]
+        func addIntrinsics(_ vv: ViewVars) {
+            let v = vv.view!
+            let s = v.intrinsicContentSize
+            var cs: [Cassowary.Constraint] = []
+            if s.width != UIView.noIntrinsicMetric {
+                cs += addIntrinsic(solver, vv.width, Double(s.width),
+                                   hugging: v.contentHuggingPriority(for: .horizontal),
+                                   compression: v.contentCompressionResistancePriority(for: .horizontal))
+            }
+            if s.height != UIView.noIntrinsicMetric {
+                cs += addIntrinsic(solver, vv.height, Double(s.height),
+                                   hugging: v.contentHuggingPriority(for: .vertical),
+                                   compression: v.contentCompressionResistancePriority(for: .vertical))
+            }
+            intrinsicConstraints[ObjectIdentifier(v)] = cs
+        }
+        for vv in intrinsicViews { addIntrinsics(vv) }
+        if LayoutEngine.trace {
+            print("LayoutEngine.solve root=\(type(of: root)) entry order: " +
+                  intrinsicViews.map { "\(type(of: $0.view!))#\(($0.view as? UILabel)?.text ?? "")" }.joined(separator: ", "))
         }
 
         // Scene/user constraints.
@@ -240,6 +285,14 @@ enum LayoutEngine {
             try? solver.addConstraint(Cassowary.Constraint(expr, rel,
                                                            strength: strength))
         }
+
+        // Wrapping labels: second pass (see the intrinsic note above).
+        for vv in intrinsicViews {
+            guard let l = vv.view as? UILabel, l.numberOfLines != 1 else { continue }
+            for c in intrinsicConstraints[ObjectIdentifier(l)] ?? [] { try? solver.removeConstraint(c) }
+            addIntrinsics(vv)
+        }
+
 
         // Write back solved frames (constraint-based views only), rounding
         // per-view in LOCAL (superview) coordinates. Layout guides get the
@@ -280,20 +333,26 @@ enum LayoutEngine {
         }
     }
 
+    /// Adds the two intrinsic-size constraints of one axis and returns them
+    /// (the wrapping-label pass removes and re-adds them).
+    @discardableResult
     private static func addIntrinsic(_ solver: Cassowary.Solver,
                                      _ dim: Cassowary.Variable, _ value: Double,
                                      hugging: UILayoutPriority,
-                                     compression: UILayoutPriority) {
+                                     compression: UILayoutPriority) -> [Cassowary.Constraint] {
         func strength(_ p: UILayoutPriority) -> Double {
             p.rawValue >= 1000 ? Cassowary.requiredStrength : Double(p.rawValue)
         }
         // width <= intrinsic @ hugging; width >= intrinsic @ compression.
-        try? solver.addConstraint(Cassowary.Constraint(
+        let hug = Cassowary.Constraint(
             Cassowary.Expression(dim, constant: -value), .lessThanOrEqual,
-            strength: strength(hugging)))
-        try? solver.addConstraint(Cassowary.Constraint(
+            strength: strength(hugging))
+        let resist = Cassowary.Constraint(
             Cassowary.Expression(dim, constant: -value), .greaterThanOrEqual,
-            strength: strength(compression)))
+            strength: strength(compression))
+        try? solver.addConstraint(hug)
+        try? solver.addConstraint(resist)
+        return [hug, resist]
     }
 
     /// Expression for a UIKit attribute in root-space variables.
@@ -376,12 +435,23 @@ enum LayoutEngine {
     /// Frame ORIGIN components: nearest integer point, ties away from zero
     /// (47.5 -> 48, 113.333 -> 113, 214.667 -> 215) — NOT the pixel grid.
     static func roundOrigin(_ v: CGFloat) -> CGFloat {
-        v.rounded(.toNearestOrAwayFromZero)
+        if let s = iOSPixelScale { return (v * s).rounded(.toNearestOrAwayFromZero) / s }
+        return v.rounded(.toNearestOrAwayFromZero)
+    }
+
+    /// iOS cut, MEASURED 2026-09-04 (realappprobe, iPhone 16 3x, iOS 26.1):
+    /// origins and sizes both land on the PIXEL grid — a label centred in a
+    /// 72 pt row sits at y 25.333 ((72 - 21.667) / 2 = 25.167 -> 25.333) and
+    /// a trailing label starts at x 127.667 — where Catalyst rounds origins
+    /// to whole points. nil selects the Catalyst rules below.
+    static var iOSPixelScale: CGFloat? {
+        OpenUIKitRuntime.systemFontCut == .iOS ? max(1, UIScreen.main.scale) : nil
     }
 
     /// Frame SIZE components: nearest 0.5 pt (pixel at 2x), ties away from
     /// zero (93.333 -> 93.5, 190.667 -> 190.5; an on-grid 0.5 survives).
     static func roundSize(_ v: CGFloat) -> CGFloat {
-        (v * 2).rounded(.toNearestOrAwayFromZero) / 2
+        if let s = iOSPixelScale { return (v * s).rounded(.toNearestOrAwayFromZero) / s }
+        return (v * 2).rounded(.toNearestOrAwayFromZero) / 2
     }
 }

@@ -544,14 +544,20 @@ final class _OpenCAFilter: NSObject {
         return _OpenCAFilter(filterType: type)
     }
 
-#if canImport(Foundation)
+#if canImport(Foundation) && canImport(ObjectiveC)
     override func setValue(_ value: Any?, forKey key: String) {
         _setRetainedValue(value, forKey: key)
     }
-#else
+#elseif canImport(ObjectiveC)
     @objc(setValue:forKey:)
     func setValue(_ value: Any?, forKey rawKey: Any?) {
         guard let key = _openFilterString(rawKey) else { return }
+        _setRetainedValue(value, forKey: key)
+    }
+#else
+    // Native ELF: swift-corelibs NSObject has no KVC setter either (same
+    // failure as value(forKey:) below, measured 2026-09-04 in Docker).
+    func setValue(_ value: Any?, forKey key: String) {
         _setRetainedValue(value, forKey: key)
     }
 #endif
@@ -572,15 +578,26 @@ final class _OpenCAFilter: NSObject {
         }
     }
 
-#if canImport(Foundation)
+#if canImport(Foundation) && canImport(ObjectiveC)
+    // Apple's Foundation: NSObject has KVC, so this is an override.
     override func value(forKey key: String) -> Any? {
         _retainedValue(forKey: key)
     }
-#else
+#elseif canImport(ObjectiveC)
+    // Foundation-hidden Mach-O build: publish the selector for KVC callers.
     @objc(valueForKey:)
     func value(forKey rawKey: Any?) -> Any? {
         guard let key = _openFilterString(rawKey) else { return nil }
         return _retainedValue(forKey: key)
+    }
+#else
+    // Native ELF (swift-corelibs Foundation): NSObject has no value(forKey:),
+    // so this is a plain method. Measured 2026-09-04: the previous
+    // `#if canImport(Foundation)` override failed to compile on Linux
+    // ("method does not override any method from its superclass") and had
+    // broken scripts/linux_realapp_verify.sh since 2026-08-31.
+    func value(forKey key: String) -> Any? {
+        _retainedValue(forKey: key)
     }
 #endif
 

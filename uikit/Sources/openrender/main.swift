@@ -115,6 +115,8 @@ try MainActor.assumeIsolated {
         // source, rendered headlessly.
         let outdir = args[2]
         let assets = args.count >= 4 ? args[3] : "fixtures/realapp/assets"
+        if let v = ProcessInfo.processInfo.environment["OPENUIKIT_REALAPP_SCALE"],
+           let s = Double(v), s > 0 { realAppScale = CGFloat(s) }
         try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
         for variant in realAppVariants {
             let result = runRealApp(variant, assets: assets)

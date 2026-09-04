@@ -57,10 +57,18 @@ public enum FontEngine {
     }
 
     static let tables: Tables = loadTables()
+    /// The iOS cut's table (Resources/font_metrics_ios.json, harvested from
+    /// real iOS by Tools/oracle2/fontprobe). Its ADVANCES equal the macOS
+    /// table minus `cutDelta` to the last digit (checked 2026-09-04 for
+    /// sizes 13/16/18), so measurement keeps the delta path; what differs is
+    /// the VERTICAL metrics: SFUI 18 semibold has lineHeight 21.48 where
+    /// SFNS reports 21, ascender 17.139 vs 17.402. Empty when the file is
+    /// absent, in which case the macOS table serves both cuts as before.
+    static let tablesIOS: Tables = loadTables(resource: "font_metrics_ios.json")
 
-    static func loadTables() -> Tables {
+    static func loadTables(resource: String = "font_metrics.json") -> Tables {
         var t = Tables()
-        if let json = ResourceIO.loadJSONResource("font_metrics.json"),
+        if let json = ResourceIO.loadJSONResource(resource),
            let fonts = json["fonts"]?.arrayValue {
             for f in fonts {
                 guard let obj = f.objectValue,
@@ -148,7 +156,7 @@ public enum FontEngine {
     /// integer-size entries with a linear interpolation factor.
     /// SF switches optical family with size, so only neighbor entries are
     /// blended — the switch stays sharp.
-    static func neighbors(for font: UIFont) -> (Entry, Entry, CGFloat)? {
+    static func neighbors(for font: UIFont, in tables: Tables = FontEngine.tables) -> (Entry, Entry, CGFloat)? {
         guard let list = tables.families[familyKey(for: font)], !list.isEmpty else { return nil }
         let s = font.pointSize
         // Exact match (also covers the fractional sizes vendored in the table).
@@ -175,6 +183,17 @@ public enum FontEngine {
     }
 
     public static func metrics(for font: UIFont) -> FontMetrics {
+        // iOS cut: the vertical metrics of the SFUI build (see tablesIOS).
+        if OpenUIKitRuntime.systemFontCut == .iOS, font.design != .monospaced,
+           let (a, b, f) = neighbors(for: font, in: tablesIOS) {
+            func lerp(_ x: CGFloat, _ y: CGFloat) -> CGFloat { x + (y - x) * f }
+            return FontMetrics(ascender: lerp(a.ascender, b.ascender),
+                               descender: lerp(a.descender, b.descender),
+                               lineHeight: lerp(a.lineHeight, b.lineHeight),
+                               capHeight: lerp(a.capHeight, b.capHeight),
+                               xHeight: lerp(a.xHeight, b.xHeight),
+                               leading: lerp(a.leading, b.leading))
+        }
         guard let (a, b, f) = neighbors(for: font) else {
             // Fallback approximation if the table is unavailable.
             return FontMetrics(ascender: font.pointSize * 0.966796875,
@@ -337,6 +356,15 @@ public enum FontEngine {
     /// mono and italic.
     public static func labelLineHeight(for font: UIFont) -> CGFloat {
         let lh = metrics(for: font).lineHeight
+        // iOS cut, MEASURED 2026-09-04 (realappprobe, iPhone 16 3x, iOS 26.1):
+        // a UILabel line is the font's lineHeight rounded UP to the pixel
+        // grid — 21.48 -> 21.667, 19.094 -> 19.333, 15.514 -> 15.667 — with
+        // none of Catalyst's one-point bands.
+        if OpenUIKitRuntime.systemFontCut == .iOS, font.design != .monospaced,
+           !tablesIOS.families.isEmpty {
+            let scale = max(1, UIScreen.main.scale)
+            return (lh * scale).rounded(.up) / scale
+        }
         let s = font.pointSize
         let bonus: CGFloat =
             ((s >= 10 && s < 12) || (s >= 15 && s < 17) || (s >= 19 && s < 22)) ? 1 : 0

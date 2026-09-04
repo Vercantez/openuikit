@@ -73,6 +73,11 @@ open class UIStackView: UIView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        // MEASURED 2026-09-04 (realappprobe, iOS 26.1): a UIStackView reports
+        // layoutMargins [0, 0, 0, 0] where every plain UIView beside it
+        // reports [8, 8, 8, 8]; a header pinned to the stack's
+        // layoutMarginsGuide is 353 wide on a 393 pt sheet, not 337.
+        _baseLayoutMargins = .zero
     }
 
     /// Creates a zero-frame stack and installs `views` in their supplied
