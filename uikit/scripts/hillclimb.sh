@@ -24,7 +24,7 @@ set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
 MAXA=${1:-3}
-MODELS=(claude-opus-5-thinking-high gpt-5.3-codex-high cursor-grok-4.6-high-fast)
+MODELS=(cursor-grok-4.6-high)   # every local agent: Grok 4.6 High (not fast)
 
 echo "==> score"
 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || true
