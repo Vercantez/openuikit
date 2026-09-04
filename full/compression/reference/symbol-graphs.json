@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 6,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/Compression.symbols.json",
+      "relationshipCount": 106,
+      "sha256": "ed5d420d15611a175a504b0b3536ffc70169d55b757cf28bd24cbe4c2b35f823",
+      "symbolCount": 94
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "Compression",
+  "relationshipCount": 106,
+  "relationshipMultisetSHA256": "bcf86b622acb08bc784091a6bd515e12b76c83c4a4363a27988bd94cf8740996",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 94,
+  "symbolMultisetSHA256": "7704ab10cc6b34445685e0c235aa48fab36598a391fe721cd72083b3c76d9515",
+  "target": "arm64-apple-ios26.0"
+}

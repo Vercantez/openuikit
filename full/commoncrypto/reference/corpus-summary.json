@@ -1,0 +1,118 @@
+{
+  "module": "CommonCrypto",
+  "moduleRecord": {
+    "app_coverage_count": 8,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS SDK/system-module runtime-port allowlist",
+    "file_count": 36,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 36,
+    "iphoneos_runtime_focus_launch_build_rank": 38,
+    "module": "CommonCrypto",
+    "occurrence_count": 43,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "71aab65cbd4fa3c1d9dfc8bf381f446b24387108a2ecd73b555bf3cd0f2583ad",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/App/Sources/Services/LegacyMigration/LockedData/AES+CTR.swift",
+          "Modules/App/Sources/Services/LegacyMigration/MainKeyUnlocker.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "e515b09736b1a332d7775ea23f75bdc1b3d61e1f0dbd1b4359b046611ce477b6",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "SignalServiceKit/Attachments/PaddingBucket.swift",
+          "SignalServiceKit/Cryptography/CipherContext.swift",
+          "SignalServiceKit/Cryptography/Cryptography.swift",
+          "SignalServiceKit/Devices/ProvisioningCipher.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "e47011503828a10f8fdebe239d1846e80eae25caccad012eea1ae5f50ac1d4bb",
+        "file_count": 16,
+        "occurrence_count": 19,
+        "sample_paths": [
+          "Telegram/Watch/Extension/TGStringUtils.m",
+          "Telegram/Watch/Extension/TGWatchColor.m",
+          "Telegram/Watch/Extension/TGWatchCommon.m",
+          "submodules/BuildConfigExtra/Sources/BuildConfigExtra.m",
+          "submodules/CryptoUtils/Sources/Crypto.m",
+          "submodules/LegacyComponents/Sources/TGCache.m",
+          "submodules/LegacyComponents/Sources/TGImageUtils.mm",
+          "submodules/LegacyComponents/Sources/TGMediaAssetsController.m"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "6ee5007f82d16284aee99aefe0ffeadeb5d66d8cce17336029d4d5d3ab272095",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/Sources/WordPressKitObjC/NSString+MD5.m",
+          "Modules/Sources/WordPressSharedObjC/Utility/NSString+Helpers.m"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "bf63f5e0ab7b7f3ae32055de7efa5f061fa4a301397a360afe4b9bc88aee763e",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Managers/EncryptionKeyManager/EncryptionKeyManager.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "76ada5c6a1eb4887325e86226fab6686ac27339748c128e5b37fb9294578ac56",
+        "file_count": 5,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "BrowserKit/Sources/Common/Extensions/DataExtension.swift",
+          "BrowserKit/Sources/Shared/Extensions/Data+Extension.swift",
+          "firefox-ios/Client/Client-Bridging-Header.h",
+          "firefox-ios/FxA/FxA/NSData+SHA.m",
+          "firefox-ios/Shared/Shared-Bridging-Header.h"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "fadd23d47da6f8b2e9ed5662f931e47133097f54eb40f482a4691a7dedef0239",
+        "file_count": 4,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "iOSClient/Data/NCManageDatabase.swift",
+          "iOSClient/Networking/E2EE/NCEndToEndEncryption.m",
+          "iOSClient/PushNotification/NCPushNotificationEncryption.m",
+          "iOSClient/Utility/NYMnemonic/NYMnemonic.h"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "955244eb6c44724be3f04d2b5a66bdd3744b525ca90070397271172c2f00aa81",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "WMF Framework/NSString+SHA256.m",
+          "Wikipedia/Code/NSString+WMFExtras.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 36,
+    "byFocusLaunchBuildRelevance": 38
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
