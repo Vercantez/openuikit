@@ -1,1 +1,2 @@
 full/intentsui/IntentsUI.swift
+full/intentsui/IntentsUIHostTypes.swift
