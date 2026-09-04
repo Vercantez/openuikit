@@ -176,9 +176,17 @@ PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   # controls2. UIRefreshControl's whole subtree is private on
                   # the golden side (_UIRefreshControlModernContentView), so
                   # only its own 60 pt frame is compared structurally and the
-                  # spinner's pixels hold the rest to account. UISearchBar,
-                  # UIStepper and UIPickerView are deliberately absent: no
-                  # fixture renders them (docs/KNOWN_GAPS.md).
+                  # spinner's pixels hold the rest to account.
+                  #
+                  # UISearchBar is deliberately absent even though
+                  # `searchbar_placeholder` / `searchbar_text_clear` (v5.4)
+                  # now render it: real UIKit's first child is a bare
+                  # "UIView" wrapper around _UISearchBarSearchContainerView
+                  # where ours is the private UISearchTextField, so including
+                  # the bar would compare two unrelated trees. Its pixels hold
+                  # it to account, exactly like UIToolbar's. UIStepper and
+                  # UIPickerView are absent because no fixture renders them
+                  # (docs/KNOWN_GAPS.md).
                   "UIRefreshControl"}
 
 def visible_views(dump):

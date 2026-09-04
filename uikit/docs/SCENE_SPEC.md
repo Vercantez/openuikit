@@ -391,6 +391,27 @@ The layout dump carries `intrinsic` for text fields (roundedRect =
 Both renderers keep their private internal subviews out of the structural
 comparison (compare.py PUBLIC_CLASSES).
 
+### `UISearchBar` (v5.4 — controls2, requires `"window": true` + `"ios": true`)
+The search field's pill is a private glass material: `layer.render(in:)` draws
+it as NOTHING, so the Catalyst oracles cannot produce a golden and these
+scenes route to the iOS Simulator like the other iOS-26 chrome. The bar's own
+frame is what the layout dump compares — real UIKit's subtree
+(`UISearchBarBackground`, `_UISearchBarSearchContainerView`,
+`UISearchBarTextField`) has no counterpart in the port's, so the whole subtree
+stays out of the structural comparison and the pixels hold it to account
+(compare.py PUBLIC_CLASSES). Fixtures: `searchbar_placeholder`,
+`searchbar_text_clear`.
+
+| key | type | notes |
+|---|---|---|
+| `placeholder` | string | drawn in `secondaryLabel` on the pill when `text` is empty. |
+| `text` | string | non-empty text also brings up the clear button, with or without a first responder. |
+| `showsCancelButton` | bool | default false. NOT covered by a fixture — UIKit builds the cancel button lazily in a real window and the port's metrics for it are UIKit's documented shape, not a measurement (see `Sources/OpenUIKit/UISearchBar.swift`). |
+
+The measured iOS geometry lives in `_UISearchFieldMetrics`: the field is
+(8, (H − 44) / 2, W − 16, **44**), a capsule, filled with the flat equivalent
+of the glass material and carrying the fitted drop shadow.
+
 ### `UITextView` (v4.2 — M8 text input)
 A UIScrollView subclass. Multiline wrapped text: container inset (8, 0, 8, 0),
 line-fragment padding 5, line height = the font's integer UIFont.lineHeight.

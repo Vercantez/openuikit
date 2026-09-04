@@ -55,6 +55,48 @@
 //   * `searchBarStyle`, `barTintColor`, scope bars, bookmark/results buttons
 //     and the search-results-controller integration are not implemented.
 //     `.minimal` is honoured to the extent that it suppresses the pill.
+//
+// REAL iOS 26.1 (iPhone 16 @3x in a window — fixtures `searchbar_placeholder`
+// and `searchbar_text_clear`, plus /tmp/probe_sb_{geom,fill,dark}.json,
+// measured 2026-09-04). The windowed oracle the Catalyst run could not reach
+// (the pill DOES composite here) contradicts four of the numbers above, so
+// every one of them is guarded by the iOS cut in `_UISearchFieldMetrics`:
+//
+//   * The field is **44 pt tall**, not 36 — it fills the bar's standard
+//     height. Probed at bar heights 30/36/40/44/50/56/60/80: the field frame
+//     is (8, (H - 44) / 2, W - 16, 44) at every one of them (y = -7/-4/-2/0/
+//     3/6/8/18), so only the HEIGHT differs from the Catalyst measurement.
+//     Widths 200/320/375/393 all give W - 16.
+//   * The pill is a **capsule** — a circular-corner fit to the golden's own
+//     left edge over a black backdrop gives r = 21.75 (rms 0.175 pt) for a
+//     44 pt field, i.e. height / 2, not the 10 pt inferred offscreen.
+//   * The pill fill is a glass material. Its FLAT equivalent, read at the
+//     field's centre over eight backdrops (white / black / #808080 / #404040
+//     / #C0C0C0 / red / green / blue): light mode 252-253 on every one of
+//     them, dark mode 19-21. Modelled as the measured (253, 253, 253) /
+//     (19, 19, 19) — the same "flat equivalent of a glass platter" divergence
+//     `_UIBarMetrics.platterFill` carries (docs/KNOWN_GAPS.md): over a
+//     saturated backdrop the real material tints toward the backdrop hue by
+//     up to 6 counts and ours does not.
+//   * The magnifier, the placeholder and the clear glyph all draw in
+//     **`secondaryLabel`**, not `label` / black-at-0.25: their darkest ink is
+//     (137, 137, 141) in light mode, which is exactly (60, 60, 67) at alpha
+//     0.6 over the (253, 253, 253) pill, and (149, 149, 155) in dark, which
+//     is (235, 235, 245) at 0.6 over (19, 19, 19). Typed text stays `label`
+//     (golden ink 0 / 255).
+//   * The clear button is present with text and NO first responder, at
+//     (W - 34.333, 11.667, 20, 20) in the field (probed at field widths 359
+//     and 377), and its filled circle is 17 pt across, centred in that box.
+//
+// STILL NOT MODELLED (open questions, measured but not reproduced):
+//   * `UISearchBarBackground` is a glass material of its own — over a black
+//     backdrop the bar's own rect reads 237-242, over white 247-250. Over the
+//     backdrops the fixtures use (systemBackground) it is within 2 counts of
+//     the backdrop, so nothing is drawn for it here.
+//   * The field's drop shadow: the backdrop just above the bar reads 0.985x
+//     and just below 0.962x its own value (identical ratios over white / 191
+//     / 127 / 63, i.e. a black shadow at low alpha), fading out over ~25 pt.
+//     Not fitted yet.
 
 // M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
 // defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
@@ -114,27 +156,118 @@ public enum UISearchBarStyle: Int, Sendable {
     case minimal = 2
 }
 
+/// Everything the windowed iOS 26.1 oracle measured about the search field
+/// that the Catalyst offscreen oracle could not (file header). Every member
+/// falls back to the Catalyst number off the iOS cut, so the macOS goldens
+/// are untouched.
+@preconcurrency @MainActor
+enum _UISearchFieldMetrics {
+    static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+    static var pixel: CGFloat { 1 / max(1, UIScreen.main.scale) }
+    static func ceilToPixel(_ v: CGFloat) -> CGFloat { (v / pixel).rounded(.up) * pixel }
+    static func floorToPixel(_ v: CGFloat) -> CGFloat { (v / pixel).rounded(.down) * pixel }
+
+    /// Field height: 44 on iOS (probed at eight bar heights), 36 on Catalyst.
+    static var fieldHeight: CGFloat { isIOS ? 44 : 36 }
+
+    /// Flat equivalent of the pill's glass material (file header): the
+    /// measured centre reading over eight backdrops.
+    static let pillFill = UIColor(.dynamic { t in
+        t.userInterfaceStyle == .dark
+            ? CGColor(red: 19 / 255, green: 19 / 255, blue: 19 / 255, alpha: 1)
+            : CGColor(red: 253 / 255, green: 253 / 255, blue: 253 / 255, alpha: 1)
+    })
+
+    /// Magnifier / placeholder / clear-glyph ink.
+    static var glyphColor: UIColor { isIOS ? .secondaryLabel : .label }
+
+    /// The magnifier's box inside the field: MEASURED (12, 12, 20.667,
+    /// 19.333) at 3x in the 44 pt field, against Catalyst's (12, 7.5, 20.5,
+    /// 20) in the 36 pt one.
+    static var iconFrame: CGRect {
+        isIOS
+            ? CGRect(x: 12, y: 12, width: 20.667, height: 19.333)
+            : CGRect(x: 12, y: 7.5, width: 20.5, height: 20)
+    }
+    /// The magnifier vector, in icon-box coordinates. The iOS numbers come
+    /// off the golden's own ink (`searchbar_placeholder` at 3x): the ring's
+    /// outer edge spans x 22.0 … 35.333 and y 41.333 … 54.667 in scene
+    /// points, i.e. centre (8.833, 8.0) in the box with outer radius 6.667,
+    /// and the handle runs to (18.0, 17.667). Every stroke is 6 device
+    /// pixels = 2 pt wide, as on Catalyst.
+    static var ringCenter: CGPoint {
+        isIOS ? CGPoint(x: 8.833, y: 8) : CGPoint(x: 8.5, y: 8.5)
+    }
+    static var ringOuterRadius: CGFloat { isIOS ? 6.667 : 6.5 }
+    static var handleEnd: CGPoint {
+        isIOS ? CGPoint(x: 18, y: 17.667) : CGPoint(x: 17.5, y: 17.5)
+    }
+
+    /// Text/placeholder left inset. Both oracles put it 7 pt after the
+    /// magnifier, and the magnifier's width is the symbol rounded to the
+    /// DEVICE pixel — 39.5 exactly at 2x, 39.667 at 3x — so the Catalyst
+    /// number ceiled to the pixel grid reproduces both.
+    static var textLeftInset: CGFloat { isIOS ? ceilToPixel(39.5) : 39.5 }
+
+    /// Clear button box in the field: MEASURED (W - 34.333, 11.667, 20, 20)
+    /// at 3x in fields 359 and 377 wide (`searchbar_text_clear` and
+    /// probe_sb_geom). Catalyst measured the same 34.5 pt trailing edge at
+    /// 2x, so the inset is that value floored to the device pixel. The
+    /// 11.667 top centres the box on 21.667 — the field's 22 pt mid-line one
+    /// device pixel up, the same mid-line the magnifier's 19.333-tall image
+    /// sits on.
+    static var clearSize: CGFloat { isIOS ? 20 : 20.5 }
+    static var clearTrailingInset: CGFloat { isIOS ? floorToPixel(34.5) : 34.5 }
+    static var clearTop: CGFloat {
+        isIOS ? floorToPixel(fieldHeight / 2) - pixel - clearSize / 2 : 7.5
+    }
+    /// Gap the text box keeps clear of the button: the golden's text canvas
+    /// ends at 333 in a 377 pt field, 9.667 before the button.
+    static var clearTextGap: CGFloat { isIOS ? ceilToPixel(9.5) : 0 }
+    /// The filled circle is 17 pt across inside the 20 pt box (measured: the
+    /// glyph spans y 41.167 … 58.167 of a box at 39.667), and the knocked-out
+    /// cross runs 7 pt tip to tip inside it (the golden's arms break the disc
+    /// from y 46.2 to 53.3).
+    static let clearCircleDiameter: CGFloat = 17
+    static let clearCrossSpan: CGFloat = 7
+
+    /// The pill's drop shadow. Least-squares fit of (opacity, sigma, dy) to
+    /// the `searchbar_placeholder` golden's own falloff everywhere outside
+    /// the capsule (`python3 /tmp/fit_search_shadow.py`, the search-field
+    /// twin of Tools/compare/fit_bar_shadow.py): rms residual 1.09 counts
+    /// over the whole 393 x 100 scene. It is a plain black shadow — the
+    /// backdrop reads 0.985x its own value just above the bar and 0.962x
+    /// just below, the same two ratios over white, 191, 127 and 63.
+    static let shadowOpacity: Float = 0.07
+    static let shadowRadius: CGFloat = 16
+    static let shadowOffset = CGSize(width: 0, height: 7.5)
+}
+
 /// The search bar's text field. UIKit exposes the same class name and it is
 /// an ordinary `UITextField` there too; the magnifier is drawn by this
 /// subclass rather than by a separate image view, because OpenUIKit has no
 /// SF Symbols to load one from (the geometry is the measured one).
 @preconcurrency @MainActor
 open class UISearchTextField: UITextField {
-    /// Measured icon frame inside the field.
-    public static let iconFrame = CGRect(x: 12, y: 7.5, width: 20.5, height: 20)
+    /// Measured icon frame inside the field (per cut — `_UISearchFieldMetrics`).
+    public static var iconFrame: CGRect { _UISearchFieldMetrics.iconFrame }
     /// Measured ring: centre (8.5, 8.5) in the icon box, outer radius 6.5,
-    /// 2 pt stroke; the handle ends at (17.5, 17.5).
-    static let ringCenter = CGPoint(x: 8.5, y: 8.5)
-    static let ringOuterRadius: CGFloat = 6.5
+    /// 2 pt stroke; the handle ends at (17.5, 17.5). iOS 26 draws the same
+    /// vector a third of a point wider and half a point higher.
+    static var ringCenter: CGPoint { _UISearchFieldMetrics.ringCenter }
+    static var ringOuterRadius: CGFloat { _UISearchFieldMetrics.ringOuterRadius }
     static let strokeWidth: CGFloat = 2
-    static let handleEnd = CGPoint(x: 17.5, y: 17.5)
+    static var handleEnd: CGPoint { _UISearchFieldMetrics.handleEnd }
     /// Measured: the placeholder and the text both start 39.5 pt in.
-    public static let textLeftInset: CGFloat = 39.5
+    public static var textLeftInset: CGFloat { _UISearchFieldMetrics.textLeftInset }
     /// Measured: 14 pt from the field's trailing edge to the clear button,
     /// which is itself 20.5 pt wide.
-    public static let clearButtonInset: CGFloat = 14
-    public static let clearButtonWidth: CGFloat = 20.5
-    /// Inferred, NOT measured (file header).
+    public static var clearButtonInset: CGFloat {
+        _UISearchFieldMetrics.clearTrailingInset - _UISearchFieldMetrics.clearSize
+    }
+    public static var clearButtonWidth: CGFloat { _UISearchFieldMetrics.clearSize }
+    /// Inferred, NOT measured, on Catalyst (file header); on iOS the pill is
+    /// a capsule fitted to the golden's own edge.
     public static let fieldCornerRadius: CGFloat = 10
 
     /// Whether the private material pill is drawn. `false` reproduces what
@@ -144,17 +277,73 @@ open class UISearchTextField: UITextField {
     weak var _searchBar: UISearchBar?
 
     /// Measured text box: 39.5 pt in from the left, and 14 + 20.5 pt in from
-    /// the right once a clear button is present.
+    /// the right once a clear button is present (iOS: 34.333 + a 9.667 pt
+    /// gap, so the canvas ends at 333 in a 377 pt field).
     public override func textRect(forBounds bounds: CGRect) -> CGRect {
         let right = (text ?? "").isEmpty ? 0
-            : UISearchTextField.clearButtonInset + UISearchTextField.clearButtonWidth
-        return CGRect(x: bounds.minX + UISearchTextField.textLeftInset, y: bounds.minY,
-                      width: max(0, bounds.width - UISearchTextField.textLeftInset - right),
+            : _UISearchFieldMetrics.clearTrailingInset + _UISearchFieldMetrics.clearTextGap
+        let left = UISearchTextField.textLeftInset
+        return CGRect(x: bounds.minX + left, y: bounds.minY,
+                      width: max(0, bounds.width - left - right),
                       height: bounds.height)
     }
 
+    /// MEASURED (iOS 26.1, `searchbar_placeholder` at 3x): the placeholder's
+    /// darkest ink is (137, 137, 141) on the (253, 253, 253) pill, i.e.
+    /// `secondaryLabel` — (60, 60, 67) at alpha 0.6, twice the alpha of
+    /// `placeholderText`, which is what a plain field uses and what this
+    /// field drew before (ink 195 where the golden has 137).
+    override var defaultPlaceholderColor: UIColor {
+        _UISearchFieldMetrics.isIOS ? .secondaryLabel : super.defaultPlaceholderColor
+    }
+
+    /// Measured clear-button box (`_UISearchFieldMetrics.clear*`); UITextField's
+    /// own hook is the plain-field geometry and does not apply here.
+    public override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+        let size = _UISearchFieldMetrics.clearSize
+        return CGRect(x: bounds.maxX - _UISearchFieldMetrics.clearTrailingInset,
+                      y: bounds.minY + _UISearchFieldMetrics.clearTop,
+                      width: size, height: size)
+    }
+
+    /// The search field's clear glyph is `secondaryLabel` on the pill, not
+    /// `tertiaryLabel` on `systemBackground` (measured ink (137, 137, 141)
+    /// light / (149, 149, 155) dark — file header).
+    override var clearButtonPalette: (circle: UIColor, knockout: UIColor) {
+        _UISearchFieldMetrics.isIOS
+            ? (_UISearchFieldMetrics.glyphColor, _UISearchFieldMetrics.pillFill)
+            : super.clearButtonPalette
+    }
+
+    /// Measured: the filled circle is 17 pt across inside the 20 pt box.
+    override var clearButtonCircleDiameter: CGFloat {
+        _UISearchFieldMetrics.isIOS
+            ? _UISearchFieldMetrics.clearCircleDiameter : super.clearButtonCircleDiameter
+    }
+
+    override var clearButtonCrossSpan: CGFloat {
+        _UISearchFieldMetrics.isIOS
+            ? _UISearchFieldMetrics.clearCrossSpan : super.clearButtonCrossSpan
+    }
+
+    /// iOS draws the pill as a real layer (capsule corner radius + fill)
+    /// rather than as ink, because the measured drop shadow is cast by the
+    /// layer's silhouette — the same shape `_UIBarMetrics` gives a bar
+    /// platter. Catalyst keeps the ink-only pill it was measured with.
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        guard _UISearchFieldMetrics.isIOS else { return }
+        let visible = drawsFieldBackground
+        layer.cornerRadius = visible ? bounds.height / 2 : 0
+        backgroundColor = visible ? _UISearchFieldMetrics.pillFill : nil
+        layer.shadowColor = visible ? CGColor(red: 0, green: 0, blue: 0, alpha: 1) : nil
+        layer.shadowOpacity = visible ? _UISearchFieldMetrics.shadowOpacity : 0
+        layer.shadowRadius = _UISearchFieldMetrics.shadowRadius
+        layer.shadowOffset = _UISearchFieldMetrics.shadowOffset
+    }
+
     public override func drawContent(in canvas: Canvas, bounds: CGRect) {
-        if drawsFieldBackground {
+        if drawsFieldBackground, !_UISearchFieldMetrics.isIOS {
             let fill = UIColor.tertiarySystemFill.resolvedCGColor(with: traitCollection)
             canvas.fill(Path.roundedRect(bounds,
                                          cornerRadius: UISearchTextField.fieldCornerRadius),
@@ -168,7 +357,8 @@ open class UISearchTextField: UITextField {
         let box = UISearchTextField.iconFrame.offsetBy(dx: bounds.minX, dy: bounds.minY)
         let c = CGPoint(x: box.minX + UISearchTextField.ringCenter.x,
                         y: box.minY + UISearchTextField.ringCenter.y)
-        let color = (_tintColor ?? UIColor.label).resolvedCGColor(with: traitCollection)
+        let color = (_tintColor ?? _UISearchFieldMetrics.glyphColor)
+            .resolvedCGColor(with: traitCollection)
         let w = UISearchTextField.strokeWidth
         let mid = UISearchTextField.ringOuterRadius - w / 2
         // A square with cornerRadius == half its side IS a circle in Path.
@@ -190,9 +380,10 @@ open class UISearchTextField: UITextField {
 open class UISearchBar: UIView {
     /// Measured: 44 pt tall whatever the frame says.
     public static let standardHeight: CGFloat = 44
-    /// Measured: the field is inset 8 pt on each side and 36 pt tall.
+    /// Measured: the field is inset 8 pt on each side and 36 pt tall on
+    /// Catalyst, 44 (the bar's whole standard height) on iOS 26.
     public static let fieldSideInset: CGFloat = 8
-    public static let fieldHeight: CGFloat = 36
+    public static var fieldHeight: CGFloat { _UISearchFieldMetrics.fieldHeight }
     /// NOT measured (file header): the cancel button's metrics.
     public static let cancelButtonFontSize: CGFloat = 17
     public static let cancelButtonGap: CGFloat = 8
@@ -219,6 +410,8 @@ open class UISearchBar: UIView {
     public var searchBarStyle: UISearchBarStyle = .default {
         didSet {
             searchTextField.drawsFieldBackground = searchBarStyle != .minimal
+            // The iOS pill is a layer, not ink: it needs a layout pass too.
+            searchTextField.setNeedsLayout()
             searchTextField.setNeedsDisplay()
         }
     }
@@ -253,11 +446,17 @@ open class UISearchBar: UIView {
     private func configureSearchField() {
         // Measured: the field's font is system MEDIUM 17, not regular.
         searchTextField.font = .systemFont(ofSize: 17, weight: .medium)
-        // Measured: black / white at alpha 0.25, not `placeholderText`.
-        searchTextField.placeholderLabel.textColor = UIColor(dynamicProvider: { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(white: 1, alpha: 0.25) : UIColor(white: 0, alpha: 0.25)
-        })
+        // The placeholder colour lives on `UISearchTextField`'s
+        // `defaultPlaceholderColor` override, not here: the label's own
+        // `textColor` is rewritten by `UITextField.refreshContent()` on every
+        // content change, so an assignment at this point never survived (the
+        // Catalyst black-at-0.25 in the file header was measured but has
+        // never actually been drawn — the field has always used the
+        // `placeholderText` a plain field uses).
+        // Real UIKit shows the clear glyph whenever the field has text, with
+        // or without a first responder (measured: `searchbar_text_clear` is
+        // captured with no keyboard and the button is there).
+        searchTextField.clearButtonMode = .always
         searchTextField._searchBar = self
         // Delegate plumbing (menus cluster): the field's own delegate is a
         // private bridge, so an app's `searchBar.delegate` can never be

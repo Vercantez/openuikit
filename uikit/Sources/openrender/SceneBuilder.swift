@@ -602,6 +602,16 @@ func makeTextField(_ j: SceneJSON) -> UITextField {
     return t
 }
 
+/// Mirror of the oracle's "UISearchBar" case (Tools/oracle/SceneKit.swift).
+@MainActor
+func makeSearchBar(_ j: SceneJSON) -> UISearchBar {
+    let s = UISearchBar()
+    s.placeholder = j["placeholder"]?.stringValue
+    if let t = j["text"]?.stringValue { s.text = t }
+    if j["showsCancelButton"]?.boolValue == true { s.showsCancelButton = true }
+    return s
+}
+
 @MainActor
 func makeTextView(_ j: SceneJSON) -> UITextView {
     let t = UITextView()
@@ -1221,6 +1231,7 @@ func buildView(_ input: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UI
     case "UITableView": v = makeTableView(j)
     case "UICollectionView": v = makeCollectionView(j)
     case "UITextField": v = makeTextField(j)
+    case "UISearchBar": v = makeSearchBar(j)
     case "UITextView": v = makeTextView(j)
     case "UINavigationStack": v = makeNavigationStack(input, scale: scale, warn: warn)
     case "UITabBarStack": v = makeTabBarStack(j, scale: scale, warn: warn)

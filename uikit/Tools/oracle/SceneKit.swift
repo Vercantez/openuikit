@@ -881,6 +881,17 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
             t.attributedText = attributedStringFrom(aj, traits: traits)
         }
         v = t
+    case "UISearchBar":
+        // Spec v5.4: the search bar's chrome only exists in a real window
+        // (the field pill is a private material `layer.render(in:)` draws as
+        // nothing), so its scenes are "window" + "ios" and this case only
+        // ever runs under SimScene / oracle2.
+        let sb = UISearchBar()
+        sb.placeholder = j["placeholder"] as? String
+        if let t = j["text"] as? String { sb.text = t }
+        if j["showsCancelButton"] as? Bool == true { sb.showsCancelButton = true }
+        sb.tintColor = sb.tintColor.resolvedColor(with: traits)
+        v = sb
     case "UITextView":
         let t = UITextView()
         // Same pinning as UIScrollView: no safe-area shifts, no indicator

@@ -203,6 +203,118 @@ final class UISearchBarTests: XCTestCase {
     }
 }
 
+/// The windowed iOS 26.1 oracle's numbers (fixtures `searchbar_placeholder`
+/// and `searchbar_text_clear` on the iPhone 16 at 3x, plus the /tmp geometry,
+/// fill and dark probes — see the `UISearchBar.swift` header). The class
+/// above pins the Catalyst cut; this one pins the iOS cut.
+@MainActor
+final class UISearchBarIOSCutTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut!
+    private var savedBounds: CGRect!
+    private var savedScale: CGFloat!
+
+    override func setUp() {
+        super.setUp()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        savedBounds = UIScreen.main.bounds
+        savedScale = UIScreen.main.scale
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 393, height: 852),
+                                     scale: 3)
+    }
+
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        super.tearDown()
+    }
+
+    /// MEASURED at eight bar heights and four widths: the field is
+    /// (8, (H - 44) / 2, W - 16, 44) — 44 tall, not the Catalyst 36.
+    func testFieldIs44TallAtEveryBarHeight() {
+        let heights: [(CGFloat, CGFloat)] = [(30, -7), (36, -4), (40, -2), (44, 0),
+                                             (50, 3), (56, 6), (60, 8), (80, 18)]
+        for (h, y) in heights {
+            let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 393, height: h))
+            sb.placeholder = "Search"
+            sb.layoutIfNeeded()
+            XCTAssertEqual(sb.searchTextField.frame,
+                           CGRect(x: 8, y: y, width: 377, height: 44), "H=\(h)")
+        }
+        for w in [200.0, 320.0, 375.0, 393.0] as [CGFloat] {
+            let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: w, height: 44))
+            sb.layoutIfNeeded()
+            XCTAssertEqual(sb.searchTextField.frame.width, w - 16, "W=\(w)")
+        }
+    }
+
+    /// MEASURED: text starts 39.667 pt in at 3x (39.5 at 2x — the Catalyst
+    /// number on its own grid), and the text box stops 44 pt short of the
+    /// trailing edge once the clear button is there (golden canvas ends at
+    /// 333 in a 377 pt field).
+    func testTextInsetsFollowTheDevicePixel() {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 393, height: 44))
+        sb.placeholder = "Search"
+        sb.layoutIfNeeded()
+        let bounds = CGRect(x: 0, y: 0, width: 377, height: 44)
+        XCTAssertEqual(sb.searchTextField.textRect(forBounds: bounds).minX,
+                       119.0 / 3, accuracy: 1e-9)
+        sb.text = "Espresso"
+        XCTAssertEqual(sb.searchTextField.textRect(forBounds: bounds).maxX, 333,
+                       accuracy: 1e-9)
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+        XCTAssertEqual(UISearchTextField.textLeftInset, 39.5, accuracy: 1e-9)
+    }
+
+    /// MEASURED: (W - 34.333, 11.667, 20, 20) in fields 359 and 377 wide.
+    func testClearButtonBox() {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 393, height: 44))
+        sb.text = "Espresso"
+        for width in [359.0, 377.0] as [CGFloat] {
+            let r = sb.searchTextField.clearButtonRect(
+                forBounds: CGRect(x: 0, y: 0, width: width, height: 44))
+            XCTAssertEqual(r.minX, width - 103.0 / 3, accuracy: 1e-9, "W=\(width)")
+            XCTAssertEqual(r.minY, 35.0 / 3, accuracy: 1e-9, "W=\(width)")
+            XCTAssertEqual(r.size, CGSize(width: 20, height: 20), "W=\(width)")
+        }
+    }
+
+    /// MEASURED ink: the magnifier, the placeholder and the clear glyph are
+    /// all `secondaryLabel` — darkest (137, 137, 141) on the light pill and
+    /// brightest (149, 149, 155) on the dark one.
+    func testGlyphsUseSecondaryLabel() {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 393, height: 44))
+        sb.placeholder = "Search"
+        sb.layoutIfNeeded()
+        let light = UITraitCollection(userInterfaceStyle: .light)
+        let expected = UIColor.secondaryLabel.resolvedCGColor(with: light)
+        let placeholder = sb.searchTextField.placeholderLabel
+            .textColor.resolvedCGColor(with: light)
+        XCTAssertEqual(placeholder.red, expected.red, accuracy: 1e-9)
+        XCTAssertEqual(placeholder.alpha, expected.alpha, accuracy: 1e-9)
+        XCTAssertEqual(_UISearchFieldMetrics.glyphColor.resolvedCGColor(with: light).alpha,
+                       expected.alpha, accuracy: 1e-9)
+    }
+
+    /// MEASURED flat equivalent of the pill's glass material: (253, 253, 253)
+    /// light, (19, 19, 19) dark, over eight backdrops.
+    func testPillFillAndCapsule() {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 393, height: 44))
+        sb.layoutIfNeeded()
+        XCTAssertEqual(sb.searchTextField.layer.cornerRadius, 22, accuracy: 1e-9)
+        let light = _UISearchFieldMetrics.pillFill
+            .resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .light))
+        XCTAssertEqual(light.red, 253.0 / 255, accuracy: 1e-9)
+        let dark = _UISearchFieldMetrics.pillFill
+            .resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .dark))
+        XCTAssertEqual(dark.red, 19.0 / 255, accuracy: 1e-9)
+        XCTAssertEqual(sb.searchTextField.layer.shadowOpacity, 0.07, accuracy: 1e-6)
+        XCTAssertEqual(sb.searchTextField.layer.shadowRadius, 16, accuracy: 1e-9)
+        XCTAssertEqual(sb.searchTextField.layer.shadowOffset.height, 7.5, accuracy: 1e-9)
+    }
+}
+
 @MainActor
 final class UIStepperTests: XCTestCase {
 
