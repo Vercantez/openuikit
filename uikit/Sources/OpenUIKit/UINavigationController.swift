@@ -1,8 +1,11 @@
 // UINavigationController. Owner: viewcontroller module (M7.5 navigation).
 //
-// Container layout: navigation bar (20pt status inset + 44pt content, see
-// UINavigationBar) above a clipped content area; child VC views fill the
-// content area (autoresized).
+// Container layout: Catalyst's inline bar sits above a clipped content
+// area (opaque 64 pt). iOS 26 inline bars are a transparent overlay —
+// content fills the container and underlaps, the same geometry large-title
+// mode already used (MEASURED Forms t200, iPhone SE 2x: table frame fills
+// the window, safeAreaInsets.top 64, adjustedContentInset [64,0,0,0],
+// contentOffset (0, -64), bar zone reads the table's grouped background).
 //
 // Push transition per docs/APP_FEEL.md (0.35s, UIKit's transition curve ≈
 // easeInOut, driven through UIView.animate so frames are deterministic and
@@ -250,10 +253,14 @@ open class UINavigationController: UIViewController {
 
     // MARK: Large-title container mode (M10)
 
-    /// Frame the bar + content area for the current bar mode. Classic mode:
-    /// opaque bar above a clipped content area. Large-title mode (iOS 26):
-    /// content fills the WHOLE view and underlaps the transparent bar; the
-    /// bar overlays the top `largeTitleExpandedInset` points.
+    /// Frame the bar + content area for the current bar mode. Classic
+    /// Catalyst inline: opaque bar above a clipped content area. Large-title
+    /// mode and iOS 26 inline: content fills the WHOLE view and underlaps
+    /// the transparent bar; the bar overlays the top of the container.
+    /// MEASURED Forms t200, iPhone SE 2x, iOS 26.1: the table's window
+    /// frame is [0, 0, 375, 667], `safeAreaInsets.top` 64,
+    /// `adjustedContentInset` [64, 0, 0, 0], `contentOffset` (0, -64);
+    /// the 64 pt bar zone is the table's grouped fill showing through.
     func updateContainerLayout() {
         guard isViewLoaded else { return }
         let v = view!
@@ -262,11 +269,13 @@ open class UINavigationController: UIViewController {
                                        height: v.bounds.height - toolbarHeight)
             navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
                                          height: UINavigationBar.barHeight)
-        } else if navigationBar.prefersLargeTitles {
+        } else if navigationBar.prefersLargeTitles || UINavigationBar.isIOS {
             contentView.frame = v.bounds
+            let overlay = navigationBar.prefersLargeTitles
+                ? navigationBar.largeTitleOverlayHeight
+                : UINavigationBar.barHeight
             navigationBar.frame = CGRect(
-                x: 0, y: 0, width: v.bounds.width,
-                height: navigationBar.largeTitleOverlayHeight)
+                x: 0, y: 0, width: v.bounds.width, height: overlay)
         } else {
             let barH = UINavigationBar.barHeight
             contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
