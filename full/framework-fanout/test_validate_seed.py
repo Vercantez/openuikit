@@ -1019,6 +1019,84 @@ class ValidatorTests(unittest.TestCase):
             errors,
         )
 
+    def test_optional_module_location_is_accepted(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        metadata_path = fixture.reference / "framework.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["moduleLocation"] = {
+            "kind": "framework",
+            "sdkRelativePath": metadata["provenance"]["frameworkSDKRelativePath"],
+            "reason": "public iPhoneOS framework bundle is present",
+        }
+        fixture.write_json(metadata_path, metadata)
+        fixture.reseal()
+        self.assertEqual([], self.validate(fixture, "seed"))
+
+    def test_unexpected_framework_metadata_key_is_rejected(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        metadata_path = fixture.reference / "framework.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["unexpected"] = True
+        fixture.write_json(metadata_path, metadata)
+        fixture.reseal()
+        errors = self.validate(fixture, "seed")
+        self.assertTrue(
+            any("reference/framework.json keys differ" in error for error in errors),
+            errors,
+        )
+
+    def test_roadmap_operator_override_is_accepted_without_module_record(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        roadmap_path = (
+            fixture.root / "full" / "framework-roadmap" / "framework-roadmap.json"
+        )
+        roadmap = json.loads(roadmap_path.read_text(encoding="utf-8"))
+        roadmap["modules"] = [{"module": "OtherKit"}]
+        roadmap["requested_roadmap_families"] = []
+        roadmap["iphoneos_runtime_port_candidate_rankings"] = {
+            "by_app_coverage": ["OtherKit"],
+            "by_focus_launch_build_relevance": ["OtherKit"],
+        }
+        fixture.write_json(roadmap_path, roadmap)
+        metadata_path = fixture.reference / "framework.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["roadmap"] = "none (operator override)"
+        metadata["provenance"]["roadmapSHA256"] = digest(roadmap_path)
+        fixture.write_json(metadata_path, metadata)
+        corpus_path = fixture.reference / "corpus-summary.json"
+        corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+        corpus["source"]["sha256"] = digest(roadmap_path)
+        corpus["moduleRecord"] = {"roadmap": "none (operator override)"}
+        corpus["requestedFamilies"] = []
+        corpus["rankings"] = {
+            "byAppCoverage": None,
+            "byFocusLaunchBuildRelevance": None,
+        }
+        fixture.write_json(corpus_path, corpus)
+        fixture.reseal()
+        self.assertEqual([], self.validate(fixture, "seed"))
+
+    def test_roadmap_operator_override_is_rejected_when_record_exists(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        metadata_path = fixture.reference / "framework.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["roadmap"] = "none (operator override)"
+        fixture.write_json(metadata_path, metadata)
+        corpus_path = fixture.reference / "corpus-summary.json"
+        corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+        corpus["moduleRecord"] = {"roadmap": "none (operator override)"}
+        fixture.write_json(corpus_path, corpus)
+        fixture.reseal()
+        errors = self.validate(fixture, "seed")
+        self.assertTrue(
+            any("operator override is invalid" in error for error in errors),
+            errors,
+        )
+
     def test_symbol_conflict_ledger_is_recomputed(self) -> None:
         temporary, fixture = self.make_fixture()
         self.addCleanup(temporary.cleanup)

@@ -22,6 +22,17 @@ from typing import Any, Iterable, Sequence
 
 SCHEMA = 1
 FRAMEWORK_SCHEMAS = {1, 2}
+OPTIONAL_FRAMEWORK_METADATA_KEYS = {"moduleLocation", "roadmap"}
+MODULE_LOCATION_KEYS = {"kind", "sdkRelativePath", "reason"}
+MODULE_LOCATION_KINDS = {
+    "framework",
+    "framework-clang-module",
+    "swift-module",
+    "clang-module",
+    "clang-submodule",
+}
+ROADMAP_OPERATOR_OVERRIDE = "none (operator override)"
+ROADMAP_OPERATOR_OVERRIDE_RECORD = {"roadmap": ROADMAP_OPERATOR_OVERRIDE}
 EXTERNAL_EVIDENCE_LOCK = "full/framework-fanout/external-evidence-sources.json"
 EXTERNAL_POLICY_KEYS = {
     "behaviorAuthority",
@@ -1039,11 +1050,13 @@ class Validator:
                 "externalEvidence",
                 "symbolConflicts",
             }
-        if set(metadata) != expected_keys:
+        actual_keys = set(metadata)
+        missing = expected_keys - actual_keys
+        extra = actual_keys - expected_keys - OPTIONAL_FRAMEWORK_METADATA_KEYS
+        if missing or extra:
             self.error(
                 f"reference/framework.json keys differ from schema v{framework_schema}: "
-                f"missing={sorted(expected_keys - set(metadata))}, "
-                f"extra={sorted(set(metadata) - expected_keys)}"
+                f"missing={sorted(missing)}, extra={sorted(extra)}"
             )
         if type(framework_schema) is not int or framework_schema not in FRAMEWORK_SCHEMAS:
             self.error(
@@ -1319,6 +1332,41 @@ class Validator:
                 self.error(
                     f"provenance digest mismatch for {relative}: "
                     f"expected {expected_digest}, got {actual}"
+                )
+
+        if "moduleLocation" in metadata:
+            location = metadata.get("moduleLocation")
+            if not isinstance(location, dict) or set(location) != MODULE_LOCATION_KEYS:
+                self.error(
+                    "moduleLocation keys differ from schema: "
+                    f"expected {sorted(MODULE_LOCATION_KEYS)}"
+                )
+            else:
+                kind = location.get("kind")
+                relative = location.get("sdkRelativePath")
+                reason = location.get("reason")
+                if kind not in MODULE_LOCATION_KINDS:
+                    self.error(f"moduleLocation.kind is invalid: {kind!r}")
+                if (
+                    not isinstance(relative, str)
+                    or not self._is_safe_relative_text(relative)
+                ):
+                    self.error("moduleLocation.sdkRelativePath must be a safe SDK path")
+                elif (
+                    isinstance(provenance, dict)
+                    and provenance.get("frameworkSDKRelativePath") != relative
+                ):
+                    self.error(
+                        "moduleLocation.sdkRelativePath does not match "
+                        "provenance.frameworkSDKRelativePath"
+                    )
+                if not isinstance(reason, str) or not reason.strip():
+                    self.error("moduleLocation.reason must be a nonempty string")
+        if "roadmap" in metadata:
+            if metadata.get("roadmap") != ROADMAP_OPERATOR_OVERRIDE:
+                self.error(
+                    "framework roadmap override must be "
+                    f"{ROADMAP_OPERATOR_OVERRIDE!r}"
                 )
 
     def _validate_symbol_graphs(self, metadata: dict[str, Any]) -> set[str]:
@@ -2934,7 +2982,20 @@ class Validator:
             for record in modules
             if isinstance(record, dict) and record.get("module") == module
         ]
-        if len(matching_modules) != 1:
+        operator_override = metadata.get("roadmap") == ROADMAP_OPERATOR_OVERRIDE
+        if operator_override:
+            if matching_modules:
+                self.error(
+                    "roadmap operator override is invalid when the roadmap "
+                    f"contains a record for module {module!r}"
+                )
+            elif corpus.get("moduleRecord") != ROADMAP_OPERATOR_OVERRIDE_RECORD:
+                self.error(
+                    "corpus moduleRecord must record "
+                    f"{ROADMAP_OPERATOR_OVERRIDE!r} when the seed uses the "
+                    "roadmap operator override"
+                )
+        elif len(matching_modules) != 1:
             self.error(f"roadmap must contain exactly one record for module {module!r}")
         elif corpus.get("moduleRecord") != matching_modules[0]:
             self.error("corpus moduleRecord is not the exact pinned roadmap record")
