@@ -47,7 +47,7 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
 import json, sys, os, shutil
 work = sys.argv[1]
 os.makedirs(work + '/scenes', exist_ok=True)
-bars, modal, plain = [], [], []
+bars, modal, alerts, plain = [], [], [], []
 for f in open(work + '/static_scenes.txt').read().split():
     d = json.load(open(f))
     big = d.get('modal') or d.get('alert') or (d.get('window') and d.get('size', [0])[0] > 375)
@@ -59,20 +59,28 @@ for f in open(work + '/static_scenes.txt').read().split():
         # or a sheet, the glass bar platters no longer render in its later
         # captures (navitem_dark came back with no platter at all, black
         # where three stand-alone captures show the (25,25,25) capsule).
-        # Bar-chrome scenes therefore get their own process, run first.
-        (bars if d.get('ios') else modal).append(dst)
+        # Bar-chrome scenes therefore get their own process, run first;
+        # sheets and other windows next; ALERTS LAST (a dismissed alert also
+        # costs the next sheet its grabber and the 12 pt the grabber adds:
+        # modal_sheet_grabber captured after alert_* had no grabber and its
+        # title at y 87, alone it has the grabber and the title at 99).
+        (bars if d.get('ios') else alerts if d.get('alert') else modal).append(dst)
     else:
         shutil.copyfile(f, dst)
         plain.append(dst)
 open(work + '/scenes_3x_bars.txt', 'w').write('\n'.join(bars) + '\n')
 open(work + '/scenes_3x_modal.txt', 'w').write('\n'.join(modal) + '\n')
+open(work + '/scenes_3x_alerts.txt', 'w').write('\n'.join(alerts) + '\n')
 open(work + '/scenes_2x.txt', 'w').write('\n'.join(plain) + '\n')
-print(f"    {len(plain)} scenes on the 2x device; on the iPhone 16 at 3x: {len(bars)} bar scenes, then {len(modal)} alert/sheet scenes")
+print(f"    {len(plain)} scenes on the 2x device; on the iPhone 16 at 3x: {len(bars)} bar scenes, {len(modal)} sheet/window scenes, then {len(alerts)} alert scenes")
 PYSPLIT
-  s2=("${(@f)$(cat "$WORK/scenes_2x.txt")}"); s3b=("${(@f)$(cat "$WORK/scenes_3x_bars.txt")}"); s3m=("${(@f)$(cat "$WORK/scenes_3x_modal.txt")}")
+  s2=("${(@f)$(cat "$WORK/scenes_2x.txt")}"); s3b=("${(@f)$(cat "$WORK/scenes_3x_bars.txt")}"); s3m=("${(@f)$(cat "$WORK/scenes_3x_modal.txt")}"); s3a=("${(@f)$(cat "$WORK/scenes_3x_alerts.txt")}")
   if (( ${#s2} > 0 )); then SIM_DEVICE=2x zsh scripts/render_sim_scenes.sh "$GOLD" "${s2[@]}" | tail -1; fi
   if (( ${#s3b} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3b[@]}" | tail -1; fi
-  if (( ${#s3m} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3m[@]}" | tail -1; fi
+  # One SimScene process PER sheet/alert scene: a dismissed sheet costs the
+  # next sheet its grabber just as a dismissed alert does (modal_sheet_grabber
+  # captured after modal_sheet: 96.7, alone: 99.7).
+  for f in "${s3m[@]}" "${s3a[@]}"; do zsh scripts/render_sim_scenes.sh "$GOLD" "$f" | tail -1; done
   # A P3-tagged capture from an older SimScene build is converted so the diff
   # is sRGB vs sRGB (SimScene itself now writes untagged straight-alpha sRGB).
   python3 - "$GOLD" <<'PYCONV'

@@ -195,8 +195,14 @@ def visible_views(dump):
         out[path] = v
     return out
 
-def compare_layout(g, o):
+def compare_layout(g, o, modal=False):
     problems = []
+    if modal:
+        # A modal scene's golden dump is the WINDOW (SimScene dumps the
+        # presented sheet's private container hierarchy: UITransitionView /
+        # UIDropShadowView / ...), so no public path lines up with the
+        # port's scene-root dump; the pixels carry the comparison.
+        return problems
     gv = visible_views(g)
     ov = visible_views(o)
     for path in sorted(set(gv) | set(ov)):
@@ -398,7 +404,8 @@ def main():
             all_pass = False
             report.append(entry)
             continue
-        problems = compare_layout(json.load(open(gl)), json.load(open(ol)))
+        problems = compare_layout(json.load(open(gl)), json.load(open(ol)),
+                                  modal=bool(scene.get("modal")))
         entry["layout_problems"] = problems
         layout_ok = not problems
 
