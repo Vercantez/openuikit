@@ -27,19 +27,22 @@ MAXA=${1:-3}
 MODELS=(cursor-grok-4.6-high)   # every local agent: Grok 4.6 High (not fast)
 
 echo "==> score"
-zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || true
+if [[ -z "${SKIP_CAPTURE:-}" ]]; then zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || true
+else SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || true; fi
 swift build -c release --product openrender >/dev/null
 rm -rf /tmp/hc_gate /tmp/hc_app
 ./.build/release/openrender render /tmp/hc_gate fixtures/scenes/*.json >/dev/null
 OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/hc_app >/dev/null
 conf=(/tmp/conformance-*)
+confargs=()
+(( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")
 python3 scripts/scoreboard.py --suite /tmp/ios_suite --realapp-out /tmp/hc_app --gate-out /tmp/hc_gate \
-  ${conf:+--conformance "${conf[@]}"} --write | tail -25
+  "${confargs[@]}" --write | tail -25
 
 echo "==> pick"
 HEAD=$(git rev-parse --short HEAD)
 mkdir -p ../scratch/hillclimb
-TASKS=../scratch/hillclimb/tasks-$HEAD.txt
+TASKS=$(cd ../scratch/hillclimb && pwd)/tasks-$HEAD.txt
 python3 - "$TASKS" "$MAXA" "${MODELS[@]}" <<'PY'
 import json, sys, collections
 tasks_path, maxa, models = sys.argv[1], int(sys.argv[2]), sys.argv[3:]
