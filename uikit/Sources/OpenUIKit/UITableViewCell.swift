@@ -167,16 +167,27 @@ open class UITableViewCell: UIView, ReusableView {
     // MARK: Measured metrics (see file header)
 
     /// Default (and value1) row height; subtitle rows are taller.
-    public static let defaultRowHeight: CGFloat = 51.5
-    public static let subtitleRowHeight: CGFloat = 70.5
+    // Catalyst-measured chrome (file header); the iOS 26 values below are
+    // MEASURED 2026-09-04 on the iPhone 16 simulator (see UITableView.swift,
+    // "iOS 26.1 chrome").
+    static var isIOSChrome: Bool { UITableView.isIOSChrome }
+    public static var defaultRowHeight: CGFloat { isIOSChrome ? 53 : 51.5 }
+    public static var subtitleRowHeight: CGFloat { isIOSChrome ? 69.333333 : 70.5 }
     static let labelX: CGFloat = 16
     static let primaryLabelY: CGFloat = 15.5
+    static var subtitlePrimaryY: CGFloat { isIOSChrome ? 15.666667 : primaryLabelY }
     static let subtitleDetailY: CGFloat = 36
-    static let trailingMargin: CGFloat = 16
-    static let disclosureSize = CGSize(width: 10.5, height: 14)
-    static let checkmarkSize = CGSize(width: 19, height: 18)
+    static var trailingMargin: CGFloat { isIOSChrome ? 20 : 16 }
+    /// Right edge of a value1 detail label with no accessory (16 in on iOS).
+    static var detailTrailingMargin: CGFloat { isIOSChrome ? 16 : 16 }
+    static var disclosureSize: CGSize { isIOSChrome ? CGSize(width: 10.333333, height: 14) : CGSize(width: 10.5, height: 14) }
+    static var checkmarkSize: CGSize { isIOSChrome ? CGSize(width: 19, height: 17.333333) : CGSize(width: 19, height: 18) }
+    /// Leading text inset (16; the table sets 20 for plain cells on iOS).
+    var _textInset: CGFloat = 16
+    /// Extra top padding of a grouped section's first row on iOS (2 pt).
+    var _leadingPadding: CGFloat = 0
     /// Checkmark trailing margin (measured 18.5, vs 16 for the chevron).
-    static let checkmarkTrailingMargin: CGFloat = 18.5
+    static var checkmarkTrailingMargin: CGFloat { isIOSChrome ? 22.5 : 18.5 }
     /// Content-edge gap between the content view and a checkmark accessory.
     static let checkmarkContentGap: CGFloat = 2.5
     /// value1 detail gap from the content edge when an accessory is present.
@@ -188,7 +199,11 @@ open class UITableViewCell: UIView, ReusableView {
     /// golden/tableview_selected); dark is the systemGray4-family
     /// approximation (unmeasured — no dark selected golden).
     public static let selectionColor = UIColor(dynamicProvider: { traits in
-        traits.userInterfaceStyle == .dark
+        // iOS 26.1, MEASURED 2026-09-04 (scripts/ios_suite.sh
+        // tableview_selected): the selected row is systemGray4 —
+        // (209, 209, 214) in light, i.e. the dynamic colour itself.
+        if UITableView.isIOSChrome { return UIColor.systemGray4.resolvedColor(with: traits) }
+        return traits.userInterfaceStyle == .dark
             ? UIColor(red: 58.0 / 255, green: 58.0 / 255, blue: 60.0 / 255, alpha: 1)
             : UIColor(red: 220.0 / 255, green: 220.0 / 255, blue: 220.0 / 255, alpha: 1)
     })
@@ -435,17 +450,20 @@ open class UITableViewCell: UIView, ReusableView {
     }
 
     /// Round up to the half-point grid (accessory centering, measured).
+    /// iOS: down to the third-point grid ((53 - 14) / 2 = 19.5 -> 19.333).
     private static func ceilHalf(_ v: CGFloat) -> CGFloat {
-        (v * 2).rounded(.up) / 2
+        if isIOSChrome { return (v * 3).rounded(.down) / 3 }
+        return (v * 2).rounded(.up) / 2
     }
 
     open override func layoutSubviews() {
         super.layoutSubviews()
         let w = bounds.width
-        let h = bounds.height
+        let pad = _leadingPadding
+        let h = bounds.height - pad
 
         selectedBackgroundView?.frame = bounds
-        contentView.frame = CGRect(x: 0, y: 0, width: contentWidth, height: h)
+        contentView.frame = CGRect(x: 0, y: pad, width: contentWidth, height: h)
 
         // Accessory. A custom view owns its size and replaces the stock glyph.
         if let custom = accessoryView {
@@ -453,7 +471,7 @@ open class UITableViewCell: UIView, ReusableView {
             let size = custom.frame.size
             custom.frame = CGRect(
                 x: w - UITableViewCell.trailingMargin - size.width,
-                y: UITableViewCell.ceilHalf((h - size.height) / 2),
+                y: pad + UITableViewCell.ceilHalf((h - size.height) / 2),
                 width: size.width, height: size.height)
         } else {
             switch accessoryType {
@@ -464,20 +482,20 @@ open class UITableViewCell: UIView, ReusableView {
                 let s = UITableViewCell.disclosureSize
                 _accessoryGlyphView.frame = CGRect(
                     x: w - UITableViewCell.trailingMargin - s.width,
-                    y: UITableViewCell.ceilHalf((h - s.height) / 2),
+                    y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),
                     width: s.width, height: s.height)
             case .checkmark:
                 _accessoryGlyphView.isHidden = false
                 let s = UITableViewCell.checkmarkSize
                 _accessoryGlyphView.frame = CGRect(
                     x: w - UITableViewCell.checkmarkTrailingMargin - s.width,
-                    y: UITableViewCell.ceilHalf((h - s.height) / 2),
+                    y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),
                     width: s.width, height: s.height)
             }
         }
 
-        // Labels.
-        var labelX = UITableViewCell.labelX
+        // Labels (inside the content view, which already carries `pad`).
+        var labelX = _textInset
         if let imageView, let image = imageView.image {
             let size = image.size
             let longestSide = max(size.width, size.height)
@@ -485,7 +503,7 @@ open class UITableViewCell: UIView, ReusableView {
             let fitted = CGSize(width: size.width * scale,
                                 height: size.height * scale)
             imageView.isHidden = false
-            imageView.frame = CGRect(x: UITableViewCell.labelX,
+            imageView.frame = CGRect(x: _textInset,
                                      y: (h - fitted.height) / 2,
                                      width: fitted.width,
                                      height: fitted.height)
@@ -493,11 +511,16 @@ open class UITableViewCell: UIView, ReusableView {
         } else {
             imageView?.isHidden = true
         }
-        let maxTextW = contentWidth - labelX - UITableViewCell.labelX
+        let maxTextW = contentWidth - labelX - _textInset
         let primary = textLabel.sizeThatFits(
             CGSize(width: CGFloat.greatestFiniteMagnitude, height: h))
+        // iOS: a single-line primary is centred exactly ((53 - 20.333) / 2 =
+        // 16.333); a subtitle cell's primary sits at 15.667.
+        let primaryY: CGFloat = UITableViewCell.isIOSChrome
+            ? (style == .subtitle ? UITableViewCell.subtitlePrimaryY : (h - primary.height) / 2)
+            : UITableViewCell.primaryLabelY
         textLabel.frame = CGRect(x: labelX,
-                                 y: UITableViewCell.primaryLabelY,
+                                 y: primaryY,
                                  width: min(primary.width, max(0, maxTextW)),
                                  height: primary.height)
         if let d = detailTextLabel {
@@ -511,10 +534,10 @@ open class UITableViewCell: UIView, ReusableView {
                                  height: s.height)
             default: // value1 / value2: right-aligned detail
                 let right = accessoryView == nil && accessoryType == .none
-                    ? bounds.width - UITableViewCell.trailingMargin
+                    ? bounds.width - UITableViewCell.detailTrailingMargin
                     : contentWidth - UITableViewCell.detailAccessoryGap
                 d.frame = CGRect(x: right - s.width,
-                                 y: UITableViewCell.primaryLabelY,
+                                 y: primaryY,
                                  width: s.width, height: s.height)
             }
         }
@@ -540,9 +563,14 @@ open class UITableViewCell: UIView, ReusableView {
 open class UITableViewHeaderFooterView: UIView, ReusableView {
     public static let headerHeight: CGFloat = 40.5
     static let headerLabelY: CGFloat = 10
-    static let footerLabelY: CGFloat = 8
+    static var footerLabelY: CGFloat { UITableView.isIOSChrome ? 7.666667 : 8 }
     /// Footer height = labelY + text height + 6 (measured 30 for one line).
-    static let footerBottomPadding: CGFloat = 6
+    static var footerBottomPadding: CGFloat { UITableView.isIOSChrome ? 6.666667 : 6 }
+    /// Header label y (iOS 26: plain 4; grouped 28.667 for the first section,
+    /// 18.667 after).
+    var _headerLabelY: CGFloat = UITableViewHeaderFooterView.headerLabelY
+    /// iOS 26 plain headers size their 17 pt semibold label to a whole 21 pt.
+    var _wholePointLabelHeight = false
 
     public internal(set) var reuseIdentifier: String?
     public let contentView = UIView()
@@ -597,9 +625,21 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         labelX = 8
     }
 
-    func configure(kind: Kind, text: String?, labelX: CGFloat) {
+    func configure(kind: Kind, text: String?, labelX: CGFloat,
+                   style: UITableView.Style = .plain, firstSection: Bool = false) {
         self.kind = kind
         self.labelX = labelX
+        if UITableView.isIOSChrome {
+            switch style {
+            case .plain: _headerLabelY = 4; _wholePointLabelHeight = true
+            case .grouped, .insetGrouped:
+                _headerLabelY = firstSection ? 28.666667 : 18.666667
+                _wholePointLabelHeight = false
+            }
+        } else {
+            _headerLabelY = UITableViewHeaderFooterView.headerLabelY
+            _wholePointLabelHeight = false
+        }
         textLabel.text = text
         switch kind {
         case .header:
@@ -618,8 +658,9 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         backgroundView?.frame = bounds
         contentView.frame = bounds
         let maxW = max(0, bounds.width - 2 * labelX)
-        let s = textLabel.sizeThatFits(CGSize(width: maxW, height: CGFloat.greatestFiniteMagnitude))
-        let y = kind == .header ? UITableViewHeaderFooterView.headerLabelY
+        var s = textLabel.sizeThatFits(CGSize(width: maxW, height: CGFloat.greatestFiniteMagnitude))
+        if _wholePointLabelHeight, kind == .header { s.height = textLabel.font.lineHeight.rounded(.up) }
+        let y = kind == .header ? _headerLabelY
                                 : UITableViewHeaderFooterView.footerLabelY
         textLabel.frame = CGRect(x: labelX, y: y,
                                  width: min(s.width, maxW), height: s.height)
