@@ -991,7 +991,7 @@ referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
 | **`UIPickerView` rows are not perspective-projected** | each row's RECTANGLE is exact (1e-6 pt); its TEXT is drawn flat — exact at the selected row, ~0.5 pt at \|d\|=1, ~4 pt at \|d\|=2 | shearing a glyph run needs a second rasterizer; the text engine draws harvested masks on an axis-aligned baseline | "UIPickerView" |
 | **`UIActivityViewController` shares nothing** | presents as the measured action-sheet shape and reports "unavailable"; no share targets exist | there is no system share service to call, on any platform we target | "Menus, actions & delegate protocols" |
 | **No SF Symbols** | of the bar system items only `.edit` and `.save` are text (exact); `.done` is the prominent checkmark; every other is a hand-fitted vector of the MEASURED size, and no golden gates those vectors | the symbol font is not redistributable and not portable | "Bars & appearance" |
-| **No fixture for the menu platter, `UISearchBar`, `UIStepper`, `UIPickerView`** | four surfaces are locked in by unit tests replaying real UIKit's numbers instead of by pixels | each is a property of the ORACLE, not a shortcut: iOS 26 draws menus in the render server; a private material draws as nothing; a SwiftUI hosting view draws nothing; a `CAGradientLayer` washes the capture out. Each section names the probe route that would close it | "controls2", "Menus" |
+| **No fixture for the menu platter, `UIStepper`, `UIPickerView`** | three surfaces are locked in by unit tests replaying real UIKit's numbers instead of by pixels (`UISearchBar` left this list on 2026-09-04 — the windowed simulator composites its pill, and `searchbar_placeholder` / `searchbar_text_clear` now gate it) | each is a property of the ORACLE, not a shortcut: iOS 26 draws menus in the render server; a SwiftUI hosting view draws nothing; a `CAGradientLayer` washes the capture out. Each section names the probe route that would close it | "controls2", "Menus" |
 | **A non-large sheet detent is edge-to-edge; iOS 26 draws a floating card** | right HEIGHT, wrong SHAPE (iOS insets 8 pt per side and scales 377/393) | the measured numbers do not decompose into inset + height without modelling the transform | "Real-app harness (M14)" |
 | **Dynamic Type is exact only at probed base values** | the 19 probed bases are exact table hits at all 12 categories; between them we interpolate linearly where UIKit's curve is piecewise with 1/3-pt quantization — worst observed ~2/3 pt at accessibility sizes | widening `baseValues` in `dyntypeprobe` closes it mechanically; nothing is hand-fitted | "Real-app harness (M14)" |
 | ~~**Three types SHADOW Foundation's**~~ **NARROWED again by the Notification successor** — `NSAttributedString` and `Timer`/`RunLoop` remain distinct; Notification values are Foundation's whenever visible and the center is Foundation's when Objective-C is also visible | native Foundation+UIKit needs no Notification disambiguation; native ELF still qualifies the custom center, and a Foundation attributed string still cannot reach a `UILabel` | Linux Foundation has no selector-form observer and the scripted Timer cannot use a wall clock; the hidden guest uses a bridged custom family | "Foundation coexistence (M15)" plus the top section |
@@ -1117,23 +1117,28 @@ offset, the 216/255 label alpha — is measured. What is not:
   `Tools/oracle2/scrollprobe.swift` already established for scroll physics.
 - `attributedTitle` is stored and never drawn.
 
-### UISearchBar and UIStepper: NO FIXTURE, and the reason is the oracle
+### UIStepper: NO FIXTURE, and the reason is the oracle
 
-- **`UISearchBar`'s field pill does not composite.**
-  `searchTextField.backgroundColor` is nil, its layer's `backgroundColor` is
-  nil and `cornerRadius` is 0; the visible rounded fill is a private material
-  that `layer.render(in:)` draws as NOTHING — the capture is transparent
-  everywhere except the magnifier and the placeholder ink. So `fieldFill`
-  (`tertiarySystemFill`) and the 10 pt corner radius are INFERRED, not
-  measured. Everything else IS measured and unit-tested: `sizeThatFits` =
-  (width, 44) at six heights, the field at (8, (H − 44)/2, W − 16, 36) over
-  six heights and three widths, the magnifier's 2 pt ring of outer radius 6.5
-  read off the golden ink at 2x, the placeholder in **system MEDIUM 17** (not
-  regular) at black/white alpha 0.25, and the 39.5 / 14 pt text insets.
-  The CANCEL BUTTON never appears offscreen at all (UIKit builds it lazily in
-  a real window), so its metrics are UIKit's documented shape, unmeasured.
-  Scope bars, bookmark/results buttons, `barTintColor` and the
-  search-results-controller integration are not implemented.
+- ~~**`UISearchBar`'s field pill does not composite.**~~ CLOSED 2026-09-04 by
+  the windowed simulator oracle: `searchbar_placeholder` and
+  `searchbar_text_clear` (spec v5.4) capture the pill on real iOS 26.1, and it
+  contradicted the offscreen numbers — the field is 44 pt tall, not 36; the
+  pill is a capsule, not a 10 pt rounded rect; the fill is the flat equivalent
+  of a glass material (253 light / 19 dark over eight backdrops), not
+  `tertiarySystemFill`; and the magnifier, placeholder and clear glyph are all
+  `secondaryLabel`. See the `UISearchBar.swift` header and the fidelity table
+  in docs/REAL_APP_TEST.md. TWO THINGS ARE STILL NOT MODELLED. The bar's own
+  `UISearchBarBackground` is a second glass material — over a black backdrop
+  the bar's rect reads 237–242, over white 247–250 — and nothing is drawn for
+  it, because over the `systemBackground` the fixtures use it is within two
+  counts of the backdrop. And the pill's fill does not tint toward a saturated
+  backdrop the way the real material does (up to 6 counts), the same
+  divergence `_UIBarMetrics.platterFill` carries.
+  The CANCEL BUTTON still never appears (UIKit builds it lazily and only for a
+  bar that is actually editing), so its metrics remain UIKit's documented
+  shape, unmeasured, and no fixture covers it. Scope bars, bookmark/results
+  buttons, `barTintColor` and the search-results-controller integration are
+  not implemented.
 - **`UIStepper` renders NOTHING offscreen** — 0 of 12032 non-transparent
   pixels — because real UIKit draws it through
   `UICoreHostingView<DesignLibraryStepper>`. It is implemented from the
@@ -1142,10 +1147,12 @@ offset, the 216/255 label alpha — is measured. What is not:
   centre divider at ~180) plus the property defaults read this pass. The bars'
   THICKNESS, the capsule's corner radius and the pressed/disabled appearances
   are NOT measured. `autorepeat` is accepted and ignored.
-- Both are blocked on the same operational wall as before: regenerating a
-  `"window": true` golden needs an ACTIVE, unlocked display session, and
-  `Tools/oracle2` fails with "window never became renderable" without one.
-  That is still true in this environment.
+- The stepper is still blocked on the same operational wall as before:
+  regenerating a `"window": true` golden through `Tools/oracle2` needs an
+  ACTIVE, unlocked display session and fails with "window never became
+  renderable" without one. The search bar got round it the way the bar-chrome
+  cluster did — a `"window": true` + `"ios": true` scene captured by SimScene
+  in the headless iOS Simulator — and the same route is open to the stepper.
 
 ### UIPickerView: the wheel is EXACT, the glyph projection is not attempted
 
