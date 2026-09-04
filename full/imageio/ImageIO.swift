@@ -1,45 +1,15 @@
-// Portable ImageIO source surface backed by CQuartz' vendored stb_image.
-// Static and incremental sources share one state model; PNG, JPEG, and every
-// composited GIF frame become the real OpenCoreGraphics bitmap type consumed
-// by SwiftUI and UIKit. Invalid input fails closed.
+// Portable ImageIO source surface. When CQuartz is present, PNG, JPEG, and
+// composited GIF frames use that decoder. On the isolated Linux host the same
+// state model is backed by the Foundation-only BMP/PNG codecs. Invalid input
+// fails closed.
 
-import CQuartz
 import Foundation
+#if canImport(CQuartz)
+import CQuartz
+#endif
+#if canImport(CoreGraphics)
 @_exported import CoreGraphics
-
-// Foundation owns the process-wide Core Foundation compatibility identities.
-// In particular, do not redeclare CFString or CFDictionary here: clients
-// commonly import Foundation and ImageIO together and Apple exposes one type.
-public typealias CFData = Data
-
-public let kCGImagePropertyPixelWidth: CFString = "PixelWidth"
-public let kCGImagePropertyPixelHeight: CFString = "PixelHeight"
-public let kCGImagePropertyOrientation: CFString = "Orientation"
-public let kCGImagePropertyGIFDictionary: CFString = "{GIF}"
-public let kCGImagePropertyGIFDelayTime: CFString = "DelayTime"
-public let kCGImagePropertyGIFUnclampedDelayTime: CFString = "UnclampedDelayTime"
-public let kCGImagePropertyGIFLoopCount: CFString = "LoopCount"
-public let kCGImagePropertyJFIFDictionary: CFString = "{JFIF}"
-public let kCGImagePropertyJFIFIsProgressive: CFString = "IsProgressive"
-public let kCGImagePropertyPNGDictionary: CFString = "{PNG}"
-public let kCGImagePropertyAPNGDelayTime: CFString = "DelayTime"
-public let kCGImagePropertyAPNGUnclampedDelayTime: CFString = "UnclampedDelayTime"
-public let kCGImagePropertyAPNGLoopCount: CFString = "LoopCount"
-public let kCGImagePropertyWebPDictionary: CFString = "{WebP}"
-public let kCGImagePropertyWebPDelayTime: CFString = "DelayTime"
-public let kCGImagePropertyWebPUnclampedDelayTime: CFString = "UnclampedDelayTime"
-public let kCGImagePropertyWebPLoopCount: CFString = "LoopCount"
-
-public let kCGImageSourceShouldCache: CFString = "ShouldCache"
-public let kCGImageSourceShouldCacheImmediately: CFString = "ShouldCacheImmediately"
-public let kCGImageSourceCreateThumbnailFromImageAlways: CFString =
-    "CreateThumbnailFromImageAlways"
-public let kCGImageSourceCreateThumbnailFromImageIfAbsent: CFString =
-    "CreateThumbnailFromImageIfAbsent"
-public let kCGImageSourceThumbnailMaxPixelSize: CFString = "ThumbnailMaxPixelSize"
-public let kCGImageSourceCreateThumbnailWithTransform: CFString =
-    "CreateThumbnailWithTransform"
-
+#endif
 /// ImageIO's public incremental decoding state, including Apple's raw values.
 public enum CGImageSourceStatus: Int32, Sendable {
     case statusUnexpectedEOF = -5
@@ -50,6 +20,7 @@ public enum CGImageSourceStatus: Int32, Sendable {
     case statusComplete = 0
 }
 
+@frozen
 public enum CGImagePropertyOrientation: UInt32, Sendable {
     case up = 1
     case upMirrored = 2
@@ -61,12 +32,12 @@ public enum CGImagePropertyOrientation: UInt32, Sendable {
     case left = 8
 }
 
-fileprivate struct DecodedImageSet {
+struct DecodedImageSet {
     let images: [CGImage]
     let frameDelays: [Double]
 }
 
-fileprivate struct ImageHeaderMetadata {
+struct ImageHeaderMetadata {
     let width: Int?
     let height: Int?
     let orientation: UInt32
@@ -78,21 +49,21 @@ fileprivate struct ImageHeaderMetadata {
 }
 
 public final class CGImageSource: @unchecked Sendable {
-    fileprivate var data = Data()
-    fileprivate var images: [CGImage] = []
-    fileprivate var frameDelays: [Double] = []
-    fileprivate var uniformType: CFString?
-    fileprivate var status: CGImageSourceStatus
-    fileprivate var metadata = ImageHeaderMetadata.empty
-    fileprivate var isFinal = false
-    fileprivate let isIncremental: Bool
+    var data = Data()
+    var images: [CGImage] = []
+    var frameDelays: [Double] = []
+    var uniformType: CFString?
+    var status: CGImageSourceStatus
+    var metadata = ImageHeaderMetadata.empty
+    var isFinal = false
+    let isIncremental: Bool
 
-    fileprivate init(incremental: Bool) {
+    init(incremental: Bool) {
         isIncremental = incremental
         status = .statusInvalidData
     }
 
-    fileprivate convenience init(
+    convenience init(
         data: Data,
         type: CFString,
         decoded: DecodedImageSet,
@@ -107,30 +78,39 @@ public final class CGImageSource: @unchecked Sendable {
         self.isFinal = true
         self.status = .statusComplete
     }
-}
 
-@inline(__always)
-private func makeImage(
-    width: Int,
-    height: Int,
-    pixels: UnsafePointer<UInt8>
-) -> CGImage? {
-    guard width > 0, height > 0,
-          width <= Int.max / 4,
-          height <= Int.max / (width * 4) else { return nil }
-    let byteCount = width * height * 4
-    let image = CGImage(width: width, height: height)
-    image.pixels.withUnsafeMutableBufferPointer { destination in
-        destination.baseAddress?.update(from: pixels, count: byteCount)
+    public static func == (left: CGImageSource, right: CGImageSource) -> Bool {
+        left === right
     }
-    return image
+
+    public static func != (left: CGImageSource, right: CGImageSource) -> Bool {
+        left !== right
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+
+    public var hashValue: Int {
+        ObjectIdentifier(self).hashValue
+    }
 }
 
-private func decodedImages(_ data: Data, type: CFString) -> DecodedImageSet? {
+func decodedImages(_ data: Data, type: CFString) -> DecodedImageSet? {
+#if canImport(CQuartz)
+    if let quartz = decodedImagesUsingCQuartz(data, type: type) {
+        return quartz
+    }
+#endif
+    return imageioDecodePortable(data, type: type)
+}
+
+#if canImport(CQuartz)
+private func decodedImagesUsingCQuartz(_ data: Data, type: CFString) -> DecodedImageSet? {
     let bytes = Array(data)
     guard !bytes.isEmpty else { return nil }
 
-    if type == "com.compuserve.gif" {
+    if type == imageioTypeGIF {
         var width: Int32 = 0
         var height: Int32 = 0
         var frameCount: Int32 = 0
@@ -159,7 +139,7 @@ private func decodedImages(_ data: Data, type: CFString) -> DecodedImageSet? {
         images.reserveCapacity(count)
         frameDelays.reserveCapacity(count)
         for index in 0..<count {
-            guard let image = makeImage(
+            guard let image = imageioMakeImage(
                 width: w,
                 height: h,
                 pixels: UnsafePointer(decoded.advanced(by: index * bytesPerFrame))
@@ -176,29 +156,16 @@ private func decodedImages(_ data: Data, type: CFString) -> DecodedImageSet? {
         QZImageDecodeRGBA(buffer.baseAddress, buffer.count, &width, &height)
     }) else { return nil }
     defer { QZImageFreeRGBA(decoded) }
-    guard let image = makeImage(
+    guard let image = imageioMakeImage(
         width: Int(width), height: Int(height), pixels: UnsafePointer(decoded)
     ) else { return nil }
     return DecodedImageSet(images: [image], frameDelays: [0])
 }
+#endif
 
 @inline(__always)
-private func imageType(_ data: Data) -> CFString? {
-    let bytes = Array(data.prefix(12))
-    if bytes.count >= 8,
-       bytes[0...7].elementsEqual([137, 80, 78, 71, 13, 10, 26, 10]) {
-        return "public.png"
-    }
-    if bytes.count >= 2, bytes[0] == 0xff, bytes[1] == 0xd8 {
-        return "public.jpeg"
-    }
-    if bytes.count >= 6,
-       bytes[0] == 0x47, bytes[1] == 0x49, bytes[2] == 0x46,
-       bytes[3] == 0x38, (bytes[4] == 0x37 || bytes[4] == 0x39),
-       bytes[5] == 0x61 {
-        return "com.compuserve.gif"
-    }
-    return nil
+func imageType(_ data: Data) -> CFString? {
+    imageioDetectType(data)
 }
 
 @inline(__always)
@@ -271,10 +238,10 @@ private func jpegOrientation(_ bytes: [UInt8]) -> UInt32 {
     return 1
 }
 
-private func imageHeaderMetadata(_ data: Data, type: CFString?) -> ImageHeaderMetadata {
+func imageHeaderMetadata(_ data: Data, type: CFString?) -> ImageHeaderMetadata {
     guard let type else { return .empty }
     let bytes = Array(data)
-    if type == "public.png" {
+    if type == imageioTypePNG {
         let width = bigEndianUInt32(bytes, 16)
         let height = bigEndianUInt32(bytes, 20)
         return ImageHeaderMetadata(
@@ -282,7 +249,7 @@ private func imageHeaderMetadata(_ data: Data, type: CFString?) -> ImageHeaderMe
             isProgressiveJPEG: false
         )
     }
-    if type == "com.compuserve.gif" {
+    if type == imageioTypeGIF {
         return ImageHeaderMetadata(
             width: littleEndianUInt16(bytes, 6),
             height: littleEndianUInt16(bytes, 8),
@@ -290,7 +257,17 @@ private func imageHeaderMetadata(_ data: Data, type: CFString?) -> ImageHeaderMe
             isProgressiveJPEG: false
         )
     }
-    if type == "public.jpeg" {
+    if type == imageioTypeBMP, bytes.count >= 26 {
+        let width = Int(Int32(bitPattern: UInt32(littleEndianUInt32(bytes, 18) ?? 0)))
+        let height32 = Int32(bitPattern: UInt32(littleEndianUInt32(bytes, 22) ?? 0))
+        return ImageHeaderMetadata(
+            width: width == 0 ? nil : abs(width),
+            height: height32 == 0 ? nil : abs(Int(height32)),
+            orientation: 1,
+            isProgressiveJPEG: false
+        )
+    }
+    if type == imageioTypeJPEG {
         var offset = 2
         while offset + 4 <= bytes.count {
             guard bytes[offset] == 0xff else { offset += 1; continue }
@@ -361,7 +338,8 @@ public func CGImageSourceCreateWithData(
     _ options: CFDictionary?
 ) -> CGImageSource? {
     _ = options
-    guard let type = imageType(data), let decoded = decodedImages(data, type: type) else {
+    guard let type = imageType(data), imageioTypeAllowed(type),
+          let decoded = decodedImages(data, type: type) else {
         return nil
     }
     return CGImageSource(
@@ -441,7 +419,7 @@ public func CGImageSourceCopyProperties(
     _ = options
     guard source.uniformType != nil else { return nil }
     var properties: CFDictionary = [:]
-    if source.uniformType == "com.compuserve.gif" {
+    if source.uniformType == imageioTypeGIF {
         var gif: [CFString: Any] = [:]
         if let loopCount = gifLoopCount(source.data) {
             gif[kCGImagePropertyGIFLoopCount] = loopCount
@@ -467,17 +445,19 @@ public func CGImageSourceCopyPropertiesAtIndex(
     if let width { properties[kCGImagePropertyPixelWidth] = width }
     if let height { properties[kCGImagePropertyPixelHeight] = height }
 
-    if source.uniformType == "com.compuserve.gif" {
+    if source.uniformType == imageioTypeGIF {
         let delay = index < source.frameDelays.count
             ? source.frameDelays[index] : 0
         properties[kCGImagePropertyGIFDictionary] = [
             kCGImagePropertyGIFDelayTime: delay,
             kCGImagePropertyGIFUnclampedDelayTime: delay,
         ] as [CFString: Any]
-    } else if source.uniformType == "public.jpeg" {
+    } else if source.uniformType == imageioTypeJPEG {
         properties[kCGImagePropertyJFIFDictionary] = [
             kCGImagePropertyJFIFIsProgressive: source.metadata.isProgressiveJPEG,
         ] as [CFString: Any]
+    } else if source.uniformType == imageioTypePNG {
+        properties[kCGImagePropertyPNGDictionary] = [:] as [CFString: Any]
     }
     return properties
 }

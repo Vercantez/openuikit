@@ -1,1 +1,9 @@
 full/imageio/ImageIO.swift
+full/imageio/ImageIOAnimation.swift
+full/imageio/ImageIOCFShims.swift
+full/imageio/ImageIOCodec.swift
+full/imageio/ImageIOConstants.swift
+full/imageio/ImageIODestination.swift
+full/imageio/ImageIOEnums.swift
+full/imageio/ImageIOMetadata.swift
+full/imageio/ImageIOSource.swift
