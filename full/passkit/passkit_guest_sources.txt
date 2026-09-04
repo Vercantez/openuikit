@@ -1,1 +1,8 @@
 full/passkit/PassKit.swift
+full/passkit/PassKitClasses.swift
+full/passkit/PassKitEnums.swift
+full/passkit/PassKitErrors.swift
+full/passkit/PassKitJPKI.swift
+full/passkit/PassKitLookalikes.swift
+full/passkit/PassKitOverlay.swift
+full/passkit/PassKitViewSurface.swift
