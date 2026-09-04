@@ -17,6 +17,7 @@
 # test_vendor_tree (chained on the attestation line), push.
 set -e
 cd "$(dirname "$0")/../.."          # monorepo root
+ROOT=$(pwd)
 BR=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
 git rev-parse --verify -q "$BR" >/dev/null || BR="origin/$BR"
@@ -56,7 +57,7 @@ echo "==> Linux build"
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender 2>&1 | grep -E "error|Build of" | tail -3' | tail -3
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1' || { echo "LINUX BUILD RED"; exit 7 }
 cd "$WT" && git merge --abort 2>/dev/null || true
-cd "$(dirname "$0")/../.." 2>/dev/null || cd ~/openuikit
+cd "$ROOT"
 [[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0 }
 
 echo "==> merging into main"
