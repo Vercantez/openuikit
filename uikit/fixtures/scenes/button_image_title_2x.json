@@ -1,0 +1,19 @@
+{
+  "name": "button_image_title_2x",
+  "size": [375, 140],
+  "scale": 2,
+  "ios": true,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 140], "backgroundColor": "#FFFFFF" },
+      {
+        "class": "UIButton",
+        "frame": [20, 44, 220, 36],
+        "title": "Upload",
+        "image": { "kind": "solid", "size": [14, 14], "colors": ["#000000"] }
+      }
+    ]
+  }
+}

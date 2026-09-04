@@ -399,6 +399,20 @@ func makeSlider(_ j: SceneJSON) -> UISlider {
 }
 
 @MainActor
+func makeStepper(_ j: SceneJSON) -> UIStepper {
+    let s = UIStepper()
+    if let v = num(j["minimumValue"]) { s.minimumValue = Double(v) }
+    if let v = num(j["maximumValue"]) { s.maximumValue = Double(v) }
+    if let v = num(j["stepValue"]) { s.stepValue = Double(v) }
+    if let v = num(j["value"]) { s.value = Double(v) }
+    if let v = j["continuous"]?.boolValue { s.isContinuous = v }
+    if let v = j["autorepeat"]?.boolValue { s.autorepeat = v }
+    if let v = j["wraps"]?.boolValue { s.wraps = v }
+    if j["enabled"]?.boolValue == false { s.isEnabled = false }
+    return s
+}
+
+@MainActor
 func makeSegmentedControl(_ j: SceneJSON) -> UISegmentedControl {
     let items = (j["segments"]?.arrayValue ?? []).compactMap { $0.stringValue }
     let s = UISegmentedControl(items: items)
@@ -609,7 +623,26 @@ func makeSwitch(_ j: SceneJSON) -> UISwitch {
 @MainActor
 func makeButton(_ j: SceneJSON) -> UIButton {
     let b = UIButton(type: .system)
-    b.setTitle(j["title"]?.stringValue, for: .normal)
+    let title = j["title"]?.stringValue
+    b.setTitle(title, for: .normal)
+    if let ij = j["image"]?.objectValue {
+        b.setImage(makeImage(ij, scale: UITraitCollection.current.displayScale)
+            .withRenderingMode(.alwaysTemplate), for: .normal)
+    }
+    if let style = j["configurationStyle"]?.stringValue {
+        var config: UIButton.Configuration
+        switch style {
+        case "filled": config = .filled()
+        case "tinted": config = .tinted()
+        case "bordered": config = .bordered()
+        case "plain": config = .plain()
+        default: fatalError("bad UIButton configurationStyle '\(style)'")
+        }
+        config.title = title
+        config.image = b.image(for: .normal)
+        if let p = num(j["imagePadding"]) { config.imagePadding = p }
+        b.configuration = config
+    }
     if j["fontSize"] != nil || j["fontWeight"] != nil { b.titleLabel?.font = fontFrom(j) }
     // Mirror the oracle: pin the dynamic tint to the scene style (it sets
     // b.tintColor = b.tintColor.resolvedColor(with: traits) at build time;
@@ -1177,6 +1210,7 @@ func buildView(_ input: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UI
     case "UIStackView": v = makeStackView(j)
     case "UISwitch": v = makeSwitch(j)
     case "UISlider": v = makeSlider(j)
+    case "UIStepper": v = makeStepper(j)
     case "UISegmentedControl": v = makeSegmentedControl(j)
     case "UIActivityIndicatorView": v = makeActivityIndicator(j)
     case "UIPageControl": v = makePageControl(j)

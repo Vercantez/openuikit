@@ -1,0 +1,453 @@
+{
+  "name" : "button_configurations_2x",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        375,
+        220
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        220
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        170,
+        36
+      ],
+      "class" : "UIButton",
+      "cornerRadius" : 17,
+      "frame" : [
+        20,
+        20,
+        170,
+        36
+      ],
+      "intrinsic" : [
+        99,
+        34.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        99,
+        34.5
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        170,
+        36
+      ],
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        170,
+        36
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        170,
+        36
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "absFrame" : [
+        67.5,
+        27.5,
+        75,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        47.5,
+        7.5,
+        75,
+        20.5
+      ],
+      "intrinsic" : [
+        75,
+        20.5
+      ],
+      "path" : "1.0.1.0",
+      "sizeThatFits200" : [
+        75,
+        20.5
+      ],
+      "text" : "Configure"
+    },
+    {
+      "absFrame" : [
+        20,
+        66,
+        170,
+        36
+      ],
+      "class" : "UIButton",
+      "cornerRadius" : 17,
+      "frame" : [
+        20,
+        66,
+        170,
+        36
+      ],
+      "intrinsic" : [
+        99,
+        34.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        99,
+        34.5
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        66,
+        170,
+        36
+      ],
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        66,
+        170,
+        36
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        0.17999999999999999
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        66,
+        170,
+        36
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "absFrame" : [
+        67.5,
+        73.5,
+        75,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        47.5,
+        7.5,
+        75,
+        20.5
+      ],
+      "intrinsic" : [
+        75,
+        20.5
+      ],
+      "path" : "2.0.1.0",
+      "sizeThatFits200" : [
+        75,
+        20.5
+      ],
+      "text" : "Configure"
+    },
+    {
+      "absFrame" : [
+        20,
+        112,
+        170,
+        36
+      ],
+      "class" : "UIButton",
+      "cornerRadius" : 17,
+      "frame" : [
+        20,
+        112,
+        170,
+        36
+      ],
+      "intrinsic" : [
+        99,
+        34.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        99,
+        34.5
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        112,
+        170,
+        36
+      ],
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "3.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        112,
+        170,
+        36
+      ],
+      "bg" : [
+        0.47099999999999997,
+        0.47099999999999997,
+        0.502,
+        0.16
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "3.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        112,
+        170,
+        36
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "3.0.1"
+    },
+    {
+      "absFrame" : [
+        67.5,
+        119.5,
+        75,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        47.5,
+        7.5,
+        75,
+        20.5
+      ],
+      "intrinsic" : [
+        75,
+        20.5
+      ],
+      "path" : "3.0.1.0",
+      "sizeThatFits200" : [
+        75,
+        20.5
+      ],
+      "text" : "Configure"
+    },
+    {
+      "absFrame" : [
+        20,
+        158,
+        170,
+        36
+      ],
+      "class" : "UIButton",
+      "cornerRadius" : 17,
+      "frame" : [
+        20,
+        158,
+        170,
+        36
+      ],
+      "intrinsic" : [
+        99,
+        34.5
+      ],
+      "path" : "4",
+      "sizeThatFits200" : [
+        99,
+        34.5
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        158,
+        170,
+        36
+      ],
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "4.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        158,
+        170,
+        36
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        170,
+        36
+      ],
+      "path" : "4.0.0"
+    },
+    {
+      "absFrame" : [
+        67.5,
+        165.5,
+        75,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        47.5,
+        7.5,
+        75,
+        20.5
+      ],
+      "intrinsic" : [
+        75,
+        20.5
+      ],
+      "path" : "4.0.0.0",
+      "sizeThatFits200" : [
+        75,
+        20.5
+      ],
+      "text" : "Configure"
+    }
+  ]
+}
