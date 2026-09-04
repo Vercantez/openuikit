@@ -1,0 +1,856 @@
+precise	status	evidence	notes
+c:@CIDetectorAccuracy	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorAccuracyHigh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorAccuracyLow	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorAspectRatio	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorEyeBlink	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorFocalLength	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorImageOrientation	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorMaxFeatureCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorMinFeatureSize	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorNumberOfAngles	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorReturnSubFeatures	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorSmile	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorTracking	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorTypeFace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorTypeQRCode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorTypeRectangle	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIDetectorTypeText	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIFeatureTypeFace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIFeatureTypeQRCode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIFeatureTypeRectangle	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIFeatureTypeText	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@CIRAWDecoderVersion6	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion6DNG	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion7	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion7DNG	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion8DNG	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion9	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersion9DNG	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@CIRAWDecoderVersionNone	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion000	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion050	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion080	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion100	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion140	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion200	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIQRCodeErrorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelH	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelL	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelM	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelQ	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIRenderDestinationAlphaMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIRenderDestinationAlphaMode@CIRenderDestinationAlphaNone	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIRenderDestinationAlphaMode@CIRenderDestinationAlphaPremultiplied	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@E@CIRenderDestinationAlphaMode@CIRenderDestinationAlphaUnpremultiplied	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+c:@T@CIContextOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@T@CIDynamicRangeOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@T@CIFormat	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@T@CIImageAutoAdjustmentOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@T@CIImageOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@T@CIImageRepresentationOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@T@CIKernelROICallback	declared	source:full/coreimage/CITypes.swift#CIKernelROICallback	source-compatible declaration; behavior not exercised by a focused test
+c:@T@CIRAWDecoderVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@T@CIRAWFilterOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIActiveKeys	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIAttributeClass	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeDefault	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeDescription	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeDisplayName	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeFilterAvailable_Mac	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeFilterAvailable_iOS	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeFilterCategories	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeFilterDisplayName	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeFilterName	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeIdentity	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeMax	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeMin	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeName	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeReferenceDocumentation	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeSliderMax	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeSliderMin	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeType	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeAngle	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeBoolean	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeDistance	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeGradient	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeInteger	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeOffset	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeOpaqueColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypePosition	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypePosition3	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeRectangle	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeScalar	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeTime	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIAttributeTypeTransform	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryBlur	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryBuiltIn	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryColorAdjustment	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryColorEffect	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryCompositeOperation	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryDistortionEffect	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryFilterGenerator	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryGenerator	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryGeometryAdjustment	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryGradient	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryHalftoneEffect	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryHighDynamicRange	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryInterlaced	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryNonSquarePixels	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryReduction	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategorySharpen	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryStillImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryStylize	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryTileEffect	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryTransition	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCICategoryVideo	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIContextAllowLowPower	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextCVMetalTextureCache	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextCacheIntermediates	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextHighQualityDownsample	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextMemoryLimit	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextName	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextOutputColorSpace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextOutputPremultiplied	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextPriorityRequestLow	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextUseSoftwareRenderer	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextWorkingColorSpace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIContextWorkingFormat	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIDynamicRangeConstrainedHigh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIDynamicRangeHigh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIDynamicRangeStandard	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIFormatA16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatA8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatABGR8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatARGB8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatAf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatAh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatBGRA8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatL16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatL8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatLA16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatLA8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatLAf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatLAh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatLf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatLh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatR16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatR8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRG16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRG8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGB10	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBA16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBA8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBAf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBAh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBX16	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBX8	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBXf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGBXh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRGh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRf	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIFormatRh	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+c:@kCIImageApplyCleanAperture	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageApplyOrientationProperty	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAutoAdjustCrop	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAutoAdjustEnhance	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAutoAdjustFeatures	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAutoAdjustLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAutoAdjustRedEye	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliaryDepth	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliaryDisparity	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliaryHDRGainMap	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliaryPortraitEffectsMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliarySemanticSegmentationGlassesMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliarySemanticSegmentationHairMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliarySemanticSegmentationSkinMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliarySemanticSegmentationSkyMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageAuxiliarySemanticSegmentationTeethMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageCacheImmediately	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageColorSpace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageContentAverageLightLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageContentHeadroom	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageExpandToHDR	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageNearestSampling	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageProperties	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageProviderTileSize	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageProviderUserInfo	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationAVDepthData	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationAVPortraitEffectsMatte	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationAVSemanticSegmentationMattes	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationDepthImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationDisparityImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationHDRGainMapAsRGB	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationHDRGainMapImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationHDRImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationPortraitEffectsMatteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationSemanticSegmentationGlassesMatteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationSemanticSegmentationHairMatteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationSemanticSegmentationSkinMatteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationSemanticSegmentationSkyMatteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageRepresentationSemanticSegmentationTeethMatteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIImageToneMapHDRtoSDR	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputAllowDraftModeKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputAngleKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputAspectRatioKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputBackgroundImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputBacksideImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputBaselineExposureKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputBiasKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputBiasVectorKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputBoostKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputBoostShadowAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputBrightnessKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputCenterKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputColor0Key	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputColor1Key	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputColorKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputColorNoiseReductionAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputColorSpaceKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputContrastKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputCountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputDecoderVersionKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputDepthImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputDisableGamutMapKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputDisparityImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputEVKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputEnableChromaticNoiseTrackingKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputEnableEDRModeKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputEnableSharpeningKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputEnableVendorLensCorrectionKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputExtentKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputExtrapolateKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputGradientImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputIgnoreImageOrientationKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputImageOrientationKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputIntensityKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputLinearSpaceFilter	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputLocalToneMapAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputLuminanceNoiseReductionAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputMaskImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputMatteImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputMoireAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNeutralChromaticityXKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNeutralChromaticityYKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNeutralLocationKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNeutralTemperatureKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNeutralTintKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNoiseReductionAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNoiseReductionContrastAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNoiseReductionDetailAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputNoiseReductionSharpnessAmountKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputPaletteImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputPerceptualKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputPoint0Key	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputPoint1Key	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputRadius0Key	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputRadius1Key	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputRadiusKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputRefractionKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputSaturationKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputScaleFactorKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIInputScaleKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputShadingImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputSharpnessKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputTargetImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputThresholdKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputTimeKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputTransformKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputVersionKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputWeightsKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIInputWidthKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIOutputImageKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIOutputNativeSizeKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIPropertiesKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCISamplerAffineMatrix	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerColorSpace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerFilterLinear	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerFilterMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerFilterNearest	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerWrapBlack	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerWrapClamp	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISamplerWrapMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCISupportedDecoderVersionsKey	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:@kCIUIParameterSet	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIUISetAdvanced	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIUISetBasic	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIUISetDevelopment	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@kCIUISetIntermediate	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllStringConstants	focused Linux runtime assertion
+c:@macro@COREIMAGE_SUPPORTS_IOSURFACE	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIMacrosAndFailClosedCodecs	focused Linux runtime assertion
+c:@macro@COREIMAGE_SUPPORTS_OPENGLES	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIMacrosAndFailClosedCodecs	focused Linux runtime assertion
+c:@macro@UNIFIED_CORE_IMAGE	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIMacrosAndFailClosedCodecs	focused Linux runtime assertion
+c:objc(cs)CIAztecCodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIAztecCodeDescriptor(im)initWithPayload:isCompact:layerCount:dataCodewordCount:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIAztecCodeDescriptor(py)dataCodewordCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIAztecCodeDescriptor(py)errorCorrectedPayload	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIAztecCodeDescriptor(py)isCompact	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIAztecCodeDescriptor(py)layerCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIBarcodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cm)kernelWithString:	declared	source:full/coreimage/CIKernel.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIBlendKernel(cpy)clear	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)color	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)colorBurn	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)colorDodge	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)componentAdd	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)componentMax	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)componentMin	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)componentMultiply	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)darken	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)darkerColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)destination	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)destinationAtop	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)destinationIn	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)destinationOut	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)destinationOver	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)difference	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)divide	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)exclusion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)exclusiveOr	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)hardLight	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)hardMix	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)hue	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)lighten	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)lighterColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)linearBurn	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)linearDodge	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)linearLight	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)luminosity	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)multiply	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)overlay	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)pinLight	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)saturation	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)screen	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)softLight	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)source	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)sourceAtop	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)sourceIn	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)sourceOut	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)sourceOver	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)subtract	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(cpy)vividLight	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(im)applyWithForeground:background:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBlendKernelIdentity	focused Linux runtime assertion
+c:objc(cs)CIBlendKernel(im)applyWithForeground:background:colorSpace:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBlendKernelIdentity	focused Linux runtime assertion
+c:objc(cs)CIColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cm)colorWithCGColor:::SYNTHESIZED::c:objc(cs)CIColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColor(cm)colorWithRed:green:blue:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cm)colorWithString:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)blackColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)blueColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)clearColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)cyanColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)grayColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)greenColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)magentaColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)redColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)whiteColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(cpy)yellowColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(im)initWithCGColor:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColor(im)initWithCGColor:::SYNTHESIZED::c:objc(cs)CIColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColor(im)initWithRed:green:blue:alpha:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(im)initWithRed:green:blue:alpha:colorSpace:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(im)initWithRed:green:blue:colorSpace:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(py)alpha	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(py)blue	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(py)colorSpace	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColor(py)components	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColor(py)green	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(py)numberOfComponents	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(py)red	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorNamedColors	focused Linux runtime assertion
+c:objc(cs)CIColor(py)stringRepresentation	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(cs)CIColorKernel	declared	source:full/coreimage/CIKernel.swift#CIColorKernel	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIColorKernel(cm)kernelWithString:	declared	source:full/coreimage/CIKernel.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIColorKernel(im)applyWithExtent:arguments:	declared	source:full/coreimage/CIKernel.swift#apply	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCILinearGradientRender	focused Linux runtime assertion
+c:objc(cs)CIContext(cm)contextWithCGContext:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithCGContext:options:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithEAGLContext:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithEAGLContext:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithEAGLContext:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithEAGLContext:options:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLDevice:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLDevice:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLDevice:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(cm)contextWithMTLDevice:options:::SYNTHESIZED::c:objc(cs)CIContext	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)HEIF10RepresentationOfImage:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIMacrosAndFailClosedCodecs	focused Linux runtime assertion
+c:objc(cs)CIContext(im)HEIFRepresentationOfImage:format:colorSpace:options:	declared	source:full/coreimage/CIContext.swift#heifRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)JPEGRepresentationOfImage:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIMacrosAndFailClosedCodecs	focused Linux runtime assertion
+c:objc(cs)CIContext(im)OpenEXRRepresentationOfImage:options:error:	declared	source:full/coreimage/CIContext.swift#openEXRRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)PNGRepresentationOfImage:format:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIMacrosAndFailClosedCodecs	focused Linux runtime assertion
+c:objc(cs)CIContext(im)TIFFRepresentationOfImage:format:colorSpace:options:	declared	source:full/coreimage/CIContext.swift#tiffRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)calculateHDRStatsForCGImage:	declared	source:full/coreimage/CIContext.swift#calculateHDRStats	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)calculateHDRStatsForCVPixelBuffer:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)calculateHDRStatsForIOSurface:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)calculateHDRStatsForImage:	declared	source:full/coreimage/CIContext.swift#calculateHDRStats	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)clearCaches	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIContextRenderToBitmap	focused Linux runtime assertion
+c:objc(cs)CIContext(im)createCGImage:fromRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCILinearGradientRender	focused Linux runtime assertion
+c:objc(cs)CIContext(im)createCGImage:fromRect:format:colorSpace:	declared	source:full/coreimage/CIContext.swift#createCGImage	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)createCGImage:fromRect:format:colorSpace:deferred:	declared	source:full/coreimage/CIContext.swift#createCGImage	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)createCGImage:fromRect:format:colorSpace:deferred:calculateHDRStats:	declared	source:full/coreimage/CIContext.swift#createCGImage	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:	declared	source:full/coreimage/CIContext.swift#depthBlurEffectFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:	declared	source:full/coreimage/CIContext.swift#depthBlurEffectFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options:	declared	source:full/coreimage/CIContext.swift#depthBlurEffectFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImageData:options:	declared	source:full/coreimage/CIContext.swift#depthBlurEffectFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImageURL:options:	declared	source:full/coreimage/CIContext.swift#depthBlurEffectFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)drawImage:inRect:fromRect:	declared	source:full/coreimage/CIContext.swift#draw	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)init	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCILinearGradientRender	focused Linux runtime assertion
+c:objc(cs)CIContext(im)initWithOptions:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIContextRenderToBitmap	focused Linux runtime assertion
+c:objc(cs)CIContext(im)inputImageMaximumSize	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIContextRenderToBitmap	focused Linux runtime assertion
+c:objc(cs)CIContext(im)outputImageMaximumSize	declared	source:full/coreimage/CIContext.swift#outputImageMaximumSize	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)prepareRender:fromRect:toDestination:atPoint:error:	declared	source:full/coreimage/CIContext.swift#prepareRender	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)render:toBitmap:rowBytes:bounds:format:colorSpace:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIContextRenderToBitmap	focused Linux runtime assertion
+c:objc(cs)CIContext(im)render:toCVPixelBuffer:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)render:toCVPixelBuffer:bounds:colorSpace:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)render:toIOSurface:bounds:colorSpace:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)render:toMTLTexture:commandBuffer:bounds:colorSpace:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIContext(im)startTaskToClear:error:	declared	source:full/coreimage/CIContext.swift#startTask	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)startTaskToRender:fromRect:toDestination:atPoint:error:	declared	source:full/coreimage/CIContext.swift#startTask	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)startTaskToRender:toDestination:error:	declared	source:full/coreimage/CIContext.swift#startTask	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)writeHEIF10RepresentationOfImage:toURL:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeHEIF10Representation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeHEIFRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)writeJPEGRepresentationOfImage:toURL:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeJPEGRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)writeOpenEXRRepresentationOfImage:toURL:options:error:	declared	source:full/coreimage/CIContext.swift#writeOpenEXRRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writePNGRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(im)writeTIFFRepresentationOfImage:toURL:format:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeTIFFRepresentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(py)workingColorSpace	declared	source:full/coreimage/CIContext.swift#workingColorSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIContext(py)workingFormat	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIContextRenderToBitmap	focused Linux runtime assertion
+c:objc(cs)CIDataMatrixCodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIDataMatrixCodeDescriptor(im)initWithPayload:rowCount:columnCount:eccVersion:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIDataMatrixCodeDescriptor(py)columnCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIDataMatrixCodeDescriptor(py)eccVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIDataMatrixCodeDescriptor(py)errorCorrectedPayload	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIDataMatrixCodeDescriptor(py)rowCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIDetector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIDetectorFailClosed	focused Linux runtime assertion
+c:objc(cs)CIDetector(cm)detectorOfType:context:options:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIDetectorFailClosed	focused Linux runtime assertion
+c:objc(cs)CIDetector(im)featuresInImage:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIDetectorFailClosed	focused Linux runtime assertion
+c:objc(cs)CIDetector(im)featuresInImage:options:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIDetectorFailClosed	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)faceAngle	declared	source:full/coreimage/CIDetector.swift#faceAngle	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)hasFaceAngle	declared	source:full/coreimage/CIDetector.swift#hasFaceAngle	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)hasLeftEyePosition	declared	source:full/coreimage/CIDetector.swift#hasLeftEyePosition	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)hasMouthPosition	declared	source:full/coreimage/CIDetector.swift#hasMouthPosition	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)hasRightEyePosition	declared	source:full/coreimage/CIDetector.swift#hasRightEyePosition	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)hasSmile	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)hasTrackingFrameCount	declared	source:full/coreimage/CIDetector.swift#hasTrackingFrameCount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)hasTrackingID	declared	source:full/coreimage/CIDetector.swift#hasTrackingID	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)leftEyeClosed	declared	source:full/coreimage/CIDetector.swift#leftEyeClosed	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)leftEyePosition	declared	source:full/coreimage/CIDetector.swift#leftEyePosition	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)mouthPosition	declared	source:full/coreimage/CIDetector.swift#mouthPosition	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)rightEyeClosed	declared	source:full/coreimage/CIDetector.swift#rightEyeClosed	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)rightEyePosition	declared	source:full/coreimage/CIDetector.swift#rightEyePosition	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)trackingFrameCount	declared	source:full/coreimage/CIDetector.swift#trackingFrameCount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFaceFeature(py)trackingID	declared	source:full/coreimage/CIDetector.swift#trackingID	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFeature	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
+c:objc(cs)CIFeature(py)bounds	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
+c:objc(cs)CIFeature(py)type	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
+c:objc(cs)CIFilter	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(cm)filterArrayFromSerializedXMP:inputImageExtent:error:	declared	source:full/coreimage/CIFilter.swift#filterArray	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)filterNamesInCategories:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(cm)filterNamesInCategory:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(cm)filterWithCVPixelBuffer:properties:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIFilter(cm)filterWithImageData:options:	declared	source:full/coreimage/CIFilter.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)filterWithImageURL:options:	declared	source:full/coreimage/CIFilter.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)filterWithName:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(cm)filterWithName:withInputParameters:	declared	source:full/coreimage/CIFilter.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)localizedDescriptionForFilterName:	declared	source:full/coreimage/CIFilter.swift#localizedDescription	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)localizedNameForCategory:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(cm)localizedNameForFilterName:	declared	source:full/coreimage/CIFilter.swift#localizedName	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)localizedReferenceDocumentationForFilterName:	declared	source:full/coreimage/CIFilter.swift#localizedReferenceDocumentation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)registerFilterName:constructor:classAttributes:	declared	source:full/coreimage/CIFilter.swift#registerName	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)serializedXMPFromFilters:inputImageExtent:	declared	source:full/coreimage/CIFilter.swift#serializedXMP	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(cm)supportedRawCameraModels	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(im)setDefaults	declared	source:full/coreimage/CIFilter.swift#setDefaults	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(py)attributes	declared	source:full/coreimage/CIFilter.swift#attributes	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(py)inputKeys	declared	source:full/coreimage/CIFilter.swift#inputKeys	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilter(py)name	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(py)outputImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
+c:objc(cs)CIFilter(py)outputKeys	declared	source:full/coreimage/CIFilter.swift#outputKeys	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIFilterShape	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)initWithRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)insetByX:Y:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)intersectWith:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)intersectWithRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)transformBy:interior:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)unionWith:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(im)unionWithRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIFilterShape(py)extent	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterShapeRects	focused Linux runtime assertion
+c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cm)emptyImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cm)imageWithCGImage:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(cm)imageWithCGImage:options:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(cm)imageWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithContentsOfURL:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIImage(cm)imageWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(cm)imageWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cm)imageWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(cpy)blackImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)blueImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)clearImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)cyanImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)grayImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)greenImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)magentaImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)redImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)whiteImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(cpy)yellowImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(im)autoAdjustmentFilters	declared	source:full/coreimage/CIImage.swift#autoAdjustmentFilters	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)autoAdjustmentFiltersWithOptions:	declared	source:full/coreimage/CIImage.swift#autoAdjustmentFilters	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingCGOrientation:	declared	source:full/coreimage/CIImage.swift#oriented	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingFilter:	declared	source:full/coreimage/CIImage.swift#applyingFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingFilter:withInputParameters:	declared	source:full/coreimage/CIImage.swift#applyingFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingGainMap:	declared	source:full/coreimage/CIImage.swift#applyingGainMap	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingGainMap:headroom:	declared	source:full/coreimage/CIImage.swift#applyingGainMap	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingGaussianBlurWithSigma:	declared	source:full/coreimage/CIImage.swift#applyingGaussianBlur	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingOrientation:	declared	source:full/coreimage/CIImage.swift#oriented	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingTransform:	declared	source:full/coreimage/CIImage.swift#transformed	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByApplyingTransform:highQualityDownsample:	declared	source:full/coreimage/CIImage.swift#transformed	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByClampingToExtent	declared	source:full/coreimage/CIImage.swift#clampedToExtent	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByClampingToRect:	declared	source:full/coreimage/CIImage.swift#clamped	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByColorMatchingColorSpaceToWorkingSpace:	declared	source:full/coreimage/CIImage.swift#matchedToWorkingSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByColorMatchingWorkingSpaceToColorSpace:	declared	source:full/coreimage/CIImage.swift#matchedFromWorkingSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByCompositingOverImage:	declared	source:full/coreimage/CIImage.swift#composited	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByConvertingLabToWorkingSpace	declared	source:full/coreimage/CIImage.swift#convertingLabToWorkingSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByConvertingWorkingSpaceToLab	declared	source:full/coreimage/CIImage.swift#convertingWorkingSpaceToLab	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByCroppingToRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByInsertingIntermediate	declared	source:full/coreimage/CIImage.swift#insertingIntermediate	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByInsertingIntermediate:	declared	source:full/coreimage/CIImage.swift#insertingIntermediate	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByInsertingTiledIntermediate	declared	source:full/coreimage/CIImage.swift#insertingTiledIntermediate	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageByPremultiplyingAlpha	declared	source:full/coreimage/CIImage.swift#premultiplyingAlpha	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageBySamplingLinear	declared	source:full/coreimage/CIImage.swift#samplingLinear	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageBySamplingNearest	declared	source:full/coreimage/CIImage.swift#samplingNearest	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageBySettingAlphaOneInExtent:	declared	source:full/coreimage/CIImage.swift#settingAlphaOne	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageBySettingContentAverageLightLevel:	declared	source:full/coreimage/CIImage.swift#settingContentAverageLightLevel	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageBySettingContentHeadroom:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageBySettingProperties:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByUnpremultiplyingAlpha	declared	source:full/coreimage/CIImage.swift#unpremultiplyingAlpha	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageTransformForCGOrientation:	declared	source:full/coreimage/CIImage.swift#orientationTransform	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)imageTransformForOrientation:	declared	source:full/coreimage/CIImage.swift#orientationTransform	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithBitmapData:bytesPerRow:size:format:colorSpace:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithCGImage:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithCGImage:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithCGImage:options:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithCGImage:options:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithCGImageSource:index:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVImageBuffer:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVImageBuffer:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithColor:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(im)initWithContentsOfURL:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIImage(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIImage(im)initWithContentsOfURL:options:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithData:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIImage(im)initWithData:options:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithDepthData:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithDepthData:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithIOSurface:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithIOSurface:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithImageProvider:size::format:colorSpace:options:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)initWithMTLTexture:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:options:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(im)initWithTexture:size:flipped:colorSpace:	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(im)regionOfInterestForImage:inRect:	declared	source:full/coreimage/CIImage.swift#regionOfInterest	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(py)CGImage	declared	source:full/coreimage/CIImage.swift#cgImage	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(py)colorSpace	declared	source:full/coreimage/CIImage.swift#colorSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(py)contentAverageLightLevel	declared	source:full/coreimage/CIImage.swift#contentAverageLightLevel	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(py)contentHeadroom	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(py)depthData	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(py)extent	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
+c:objc(cs)CIImage(py)metalTexture	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(py)opaque	declared	source:full/coreimage/CIImage.swift#isOpaque	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(py)pixelBuffer	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(py)portraitEffectsMatte	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(py)properties	declared	source:full/coreimage/CIImage.swift#properties	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImage(py)semanticSegmentationMatte	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImage(py)url	declared	source:full/coreimage/CIImage.swift#url	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageAccumulator	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(im)clear	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(im)image	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(im)initWithExtent:format:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(im)initWithExtent:format:colorSpace:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(im)setImage:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(im)setImage:dirtyRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(py)extent	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageAccumulator(py)format	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
+c:objc(cs)CIImageProcessorKernel	declared	source:full/coreimage/CIKernel.swift#CIImageProcessorKernel	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cm)applyWithExtent:inputs:arguments:error:	declared	source:full/coreimage/CIKernel.swift#apply	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cm)applyWithExtents:inputs:arguments:error:	declared	source:full/coreimage/CIKernel.swift#apply	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cm)formatForInputAtIndex:	declared	source:full/coreimage/CIKernel.swift#formatForInput	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cm)outputFormatAtIndex:arguments:	declared	source:full/coreimage/CIKernel.swift#outputFormat	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:output:error:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:outputs:error:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIImageProcessorKernel(cm)roiForInput:arguments:outputRect:	declared	source:full/coreimage/CIKernel.swift#roi	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cm)roiTileArrayForInput:arguments:outputRect:	declared	source:full/coreimage/CIKernel.swift#roiTileArray	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cpy)outputFormat	declared	source:full/coreimage/CIKernel.swift#outputFormat	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cpy)outputIsOpaque	declared	source:full/coreimage/CIKernel.swift#outputIsOpaque	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIImageProcessorKernel(cpy)synchronizeInputs	declared	source:full/coreimage/CIKernel.swift#synchronizeInputs	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBlendKernelIdentity	focused Linux runtime assertion
+c:objc(cs)CIKernel(cm)kernelNamesFromMetalLibraryData:	declared	source:full/coreimage/CIKernel.swift#kernelNames	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(cm)kernelWithFunctionName:fromMetalLibraryData:error:	declared	source:full/coreimage/CIKernel.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(cm)kernelWithFunctionName:fromMetalLibraryData:outputPixelFormat:error:	declared	source:full/coreimage/CIKernel.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(cm)kernelWithString:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBlendKernelIdentity	focused Linux runtime assertion
+c:objc(cs)CIKernel(cm)kernelWithString:::SYNTHESIZED::c:objc(cs)CIKernel	declared	source:full/coreimage/CIKernel.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(cm)kernelsWithMetalString:error:	declared	source:full/coreimage/CIKernel.swift#kernels	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(cm)kernelsWithString:	declared	source:full/coreimage/CIKernel.swift#makeKernels	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(im)applyWithExtent:roiCallback:arguments:	declared	source:full/coreimage/CIKernel.swift#apply	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIKernel(im)setROISelector:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIKernel(py)name	declared	source:full/coreimage/CIKernel.swift#name	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIPDF417CodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIPDF417CodeDescriptor(im)initWithPayload:isCompact:rowCount:columnCount:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIPDF417CodeDescriptor(py)columnCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIPDF417CodeDescriptor(py)errorCorrectedPayload	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIPDF417CodeDescriptor(py)isCompact	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIPDF417CodeDescriptor(py)rowCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeDescriptor(im)initWithPayload:symbolVersion:maskPattern:errorCorrectionLevel:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeDescriptor(py)errorCorrectedPayload	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeDescriptor(py)errorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeDescriptor(py)maskPattern	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeDescriptor(py)symbolVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature	declared	source:full/coreimage/CIDetector.swift#CIQRCodeFeature	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)bottomLeft	declared	source:full/coreimage/CIDetector.swift#bottomLeft	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)bottomRight	declared	source:full/coreimage/CIDetector.swift#bottomRight	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)messageString	declared	source:full/coreimage/CIDetector.swift#messageString	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)symbolDescriptor	declared	source:full/coreimage/CIDetector.swift#symbolDescriptor	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)topLeft	declared	source:full/coreimage/CIDetector.swift#topLeft	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIQRCodeFeature(py)topRight	declared	source:full/coreimage/CIDetector.swift#topRight	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:::SYNTHESIZED::c:objc(cs)CIRAWFilter	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRAWFilter(cm)filterWithImageData:identifierHint:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(cm)filterWithImageURL:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(cpy)supportedCameraModels	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)baselineExposure	declared	source:full/coreimage/CISupport.swift#baselineExposure	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)boostAmount	declared	source:full/coreimage/CISupport.swift#boostAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)boostShadowAmount	declared	source:full/coreimage/CISupport.swift#boostShadowAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)colorNoiseReductionAmount	declared	source:full/coreimage/CISupport.swift#colorNoiseReductionAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)colorNoiseReductionSupported	declared	source:full/coreimage/CISupport.swift#isColorNoiseReductionSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)contrastAmount	declared	source:full/coreimage/CISupport.swift#contrastAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)contrastSupported	declared	source:full/coreimage/CISupport.swift#isContrastSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)decoderVersion	declared	source:full/coreimage/CISupport.swift#decoderVersion	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)detailAmount	declared	source:full/coreimage/CISupport.swift#detailAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)detailSupported	declared	source:full/coreimage/CISupport.swift#isDetailSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)draftModeEnabled	declared	source:full/coreimage/CISupport.swift#isDraftModeEnabled	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)exposure	declared	source:full/coreimage/CISupport.swift#exposure	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)extendedDynamicRangeAmount	declared	source:full/coreimage/CISupport.swift#extendedDynamicRangeAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)gamutMappingEnabled	declared	source:full/coreimage/CISupport.swift#isGamutMappingEnabled	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)highlightRecoveryEnabled	declared	source:full/coreimage/CISupport.swift#isHighlightRecoveryEnabled	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)highlightRecoverySupported	declared	source:full/coreimage/CISupport.swift#isHighlightRecoverySupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)lensCorrectionEnabled	declared	source:full/coreimage/CISupport.swift#isLensCorrectionEnabled	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)lensCorrectionSupported	declared	source:full/coreimage/CISupport.swift#isLensCorrectionSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)linearSpaceFilter	declared	source:full/coreimage/CISupport.swift#linearSpaceFilter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)localToneMapAmount	declared	source:full/coreimage/CISupport.swift#localToneMapAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)localToneMapSupported	declared	source:full/coreimage/CISupport.swift#isLocalToneMapSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionAmount	declared	source:full/coreimage/CISupport.swift#luminanceNoiseReductionAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionSupported	declared	source:full/coreimage/CISupport.swift#isLuminanceNoiseReductionSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)moireReductionAmount	declared	source:full/coreimage/CISupport.swift#moireReductionAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)moireReductionSupported	declared	source:full/coreimage/CISupport.swift#isMoireReductionSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)nativeSize	declared	source:full/coreimage/CISupport.swift#nativeSize	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)neutralChromaticity	declared	source:full/coreimage/CISupport.swift#neutralChromaticity	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)neutralLocation	declared	source:full/coreimage/CISupport.swift#neutralLocation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)neutralTemperature	declared	source:full/coreimage/CISupport.swift#neutralTemperature	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)neutralTint	declared	source:full/coreimage/CISupport.swift#neutralTint	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)orientation	declared	source:full/coreimage/CISupport.swift#orientation	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)portraitEffectsMatte	declared	source:full/coreimage/CISupport.swift#portraitEffectsMatte	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)previewImage	declared	source:full/coreimage/CISupport.swift#previewImage	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)properties	declared	source:full/coreimage/CISupport.swift#properties	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)scaleFactor	declared	source:full/coreimage/CISupport.swift#scaleFactor	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)semanticSegmentationGlassesMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationGlassesMatte	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)semanticSegmentationHairMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationHairMatte	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)semanticSegmentationSkinMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationSkinMatte	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)semanticSegmentationSkyMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationSkyMatte	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)semanticSegmentationTeethMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationTeethMatte	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)shadowBias	declared	source:full/coreimage/CISupport.swift#shadowBias	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)sharpnessAmount	declared	source:full/coreimage/CISupport.swift#sharpnessAmount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)sharpnessSupported	declared	source:full/coreimage/CISupport.swift#isSharpnessSupported	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRAWFilter(py)supportedDecoderVersions	declared	source:full/coreimage/CISupport.swift#supportedDecoderVersions	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRectangleFeature	declared	source:full/coreimage/CIDetector.swift#CIRectangleFeature	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRectangleFeature(py)bottomLeft	declared	source:full/coreimage/CIDetector.swift#bottomLeft	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRectangleFeature(py)bottomRight	declared	source:full/coreimage/CIDetector.swift#bottomRight	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRectangleFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRectangleFeature(py)topLeft	declared	source:full/coreimage/CIDetector.swift#topLeft	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRectangleFeature(py)topRight	declared	source:full/coreimage/CIDetector.swift#topRight	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(im)initWithBitmapData:width:height:bytesPerRow:format:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:	declared	source:full/coreimage/CISupport.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:::SYNTHESIZED::c:objc(cs)CIRenderDestination	declared	source:full/coreimage/CISupport.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(im)initWithIOSurface:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRenderDestination(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIRenderDestination	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:::SYNTHESIZED::c:objc(cs)CIRenderDestination	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRenderDestination(im)initWithPixelBuffer:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRenderDestination(im)initWithWidth:height:pixelFormat:commandBuffer:mtlTextureProvider:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)CIRenderDestination(py)alphaMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)blendKernel	declared	source:full/coreimage/CISupport.swift#blendKernel	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)blendsInDestinationColorSpace	declared	source:full/coreimage/CISupport.swift#blendsInDestinationColorSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)captureTraceURL	declared	source:full/coreimage/CISupport.swift#captureTraceURL	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)clamped	declared	source:full/coreimage/CISupport.swift#isClamped	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)colorSpace	declared	source:full/coreimage/CISupport.swift#colorSpace	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)dithered	declared	source:full/coreimage/CISupport.swift#isDithered	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)flipped	declared	source:full/coreimage/CISupport.swift#isFlipped	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderDestination(py)height	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)width	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CIRenderInfo	declared	source:full/coreimage/CISupport.swift#CIRenderInfo	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderInfo(py)kernelCompileTime	declared	source:full/coreimage/CISupport.swift#kernelCompileTime	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderInfo(py)kernelExecutionTime	declared	source:full/coreimage/CISupport.swift#kernelExecutionTime	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderInfo(py)passCount	declared	source:full/coreimage/CISupport.swift#passCount	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderInfo(py)pixelsProcessed	declared	source:full/coreimage/CISupport.swift#pixelsProcessed	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderTask	declared	source:full/coreimage/CISupport.swift#CIRenderTask	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIRenderTask(im)waitUntilCompletedAndReturnError:	declared	source:full/coreimage/CISupport.swift#waitUntilCompleted	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CISampler	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CISampler(im)initWithImage:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CISampler(im)initWithImage:options:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CISampler(py)definition	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CISampler(py)extent	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
+c:objc(cs)CITextFeature	declared	source:full/coreimage/CIDetector.swift#CITextFeature	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CITextFeature(py)bottomLeft	declared	source:full/coreimage/CIDetector.swift#bottomLeft	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CITextFeature(py)bottomRight	declared	source:full/coreimage/CIDetector.swift#bottomRight	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CITextFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CITextFeature(py)subFeatures	declared	source:full/coreimage/CIDetector.swift#subFeatures	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CITextFeature(py)topLeft	declared	source:full/coreimage/CIDetector.swift#topLeft	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CITextFeature(py)topRight	declared	source:full/coreimage/CIDetector.swift#topRight	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(cm)vectorWithCGAffineTransform:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(cm)vectorWithCGPoint:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(cm)vectorWithCGRect:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(cm)vectorWithX:Y:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(cm)vectorWithX:Y:Z:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(cm)vectorWithX:Y:Z:W:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithCGAffineTransform:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithCGAffineTransform:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithCGPoint:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithCGPoint:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithCGRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithCGRect:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithString:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithValues:count:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:Y:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:Y:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:Y:Z:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:Y:Z:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:Y:Z:W:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)initWithX:Y:Z:W:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(im)valueAtIndex:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)CGAffineTransformValue	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)CGPointValue	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)CGRectValue	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)W	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)X	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)Y	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)Z	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)count	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIVector(py)stringRepresentation	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+c:objc(cs)CIWarpKernel	declared	source:full/coreimage/CIKernel.swift#CIWarpKernel	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIWarpKernel(cm)kernelWithString:	declared	source:full/coreimage/CIKernel.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)CIWarpKernel(im)applyWithExtent:roiCallback:inputImage:arguments:	declared	source:full/coreimage/CIKernel.swift#apply	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)NSObject(im)provideImageData:bytesPerRow:origin::size::userInfo:	declared	source:full/coreimage/CISupport.swift#provideImageData	source-compatible declaration; behavior not exercised by a focused test
+c:objc(cs)NSObject(im)provideImageToMTLTexture:commandBuffer:originx:originy:width:height:userInfo:	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(cs)NSUserActivity(py)detectedBarcodeDescriptor	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIFilter	declared	source:full/coreimage/CIFilter.swift#CIFilterProtocol	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)CIFilter(cm)customAttributes	declared	source:full/coreimage/CIFilter.swift#customAttributes	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)CIFilter(py)outputImage	declared	source:full/coreimage/CIFilter.swift#outputImage	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)CIFilterConstructor	declared	source:full/coreimage/CIFilter.swift#CIFilterConstructor	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)CIFilterConstructor(im)filterWithName:	declared	source:full/coreimage/CIFilter.swift#filter	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)CIImageProcessorInput	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)baseAddress	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)bytesPerRow	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)digest	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)format	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)metalTexture	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)pixelBuffer	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)region	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)roiTileCount	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)roiTileIndex	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorInput(py)surface	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)baseAddress	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)bytesPerRow	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)digest	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)format	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)metalCommandBuffer	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)metalTexture	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)pixelBuffer	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)region	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)CIImageProcessorOutput(py)surface	deferred		Requires Metal, EAGL, IOSurface, CoreVideo, AVFoundation, CGContext, CGImageSource, Selector, or CIImageProcessor Input/Output; no public lookalike is provided on the isolated Linux host.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIBarcodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIFilter	declared	source:full/coreimage/CIFilter.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIQRCodeFeature	declared	source:full/coreimage/CIDetector.swift#init	source-compatible declaration; behavior not exercised by a focused test
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIRenderDestinationAlphaMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIContextOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIDynamicRangeOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIFormat	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIImageAutoAdjustmentOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIImageOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIImageRepresentationOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIRAWDecoderVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIRAWFilterOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CIRenderDestinationAlphaMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CIRenderDestinationAlphaMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:So13CIImageOptiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So15CIContextOptiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So17CIRAWFilterOptiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So19CIRAWDecoderVersiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So20CIDynamicRangeOptiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So26CIDataMatrixCodeECCVersionV8rawValueABSgSi_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:So27CIImageAutoAdjustmentOptiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So27CIImageRepresentationOptiona8rawValueABSS_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:So28CIQRCodeErrorCorrectionLevelV8rawValueABSgSi_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:So28CIRenderDestinationAlphaModeV8rawValueABSgSu_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
+s:So8CIFormata8rawValueABs5Int32V_tcfc	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIContextOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIDynamicRangeOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIFormat	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIImageAutoAdjustmentOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIImageOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIImageRepresentationOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIRAWDecoderVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIRAWFilterOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIContextOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIDynamicRangeOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIFormat	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFormatConstants	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIImageAutoAdjustmentOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIImageOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIImageRepresentationOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIRAWDecoderVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIRAWFilterOption	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIAllOptionStatics	focused Linux runtime assertion

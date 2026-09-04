@@ -1,1 +1,12 @@
+full/coreimage/CIColor.swift
+full/coreimage/CIConstants.swift
+full/coreimage/CIContext.swift
+full/coreimage/CIDetector.swift
+full/coreimage/CIFilter.swift
+full/coreimage/CIGeometry.swift
+full/coreimage/CIImage.swift
+full/coreimage/CIKernel.swift
+full/coreimage/CISupport.swift
+full/coreimage/CITypes.swift
+full/coreimage/CIVector.swift
 full/coreimage/CoreImage.swift
