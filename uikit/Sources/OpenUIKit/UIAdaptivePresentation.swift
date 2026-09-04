@@ -115,6 +115,11 @@ public extension UIPopoverPresentationControllerDelegate {
 open class UIPopoverPresentationController: UIPresentationController {
     public weak var sourceView: UIView?
     public var sourceRect: CGRect = .zero
+    /// Anchor for a popover presented from a bar button. Stored so
+    /// `popover.barButtonItem = navigationItem.rightBarButtonItem` compiles
+    /// against both UIKits (Sources/ConformanceApps/Modal). On this device
+    /// class the popover still adapts to a sheet (see the file header).
+    public weak var barButtonItem: UIBarButtonItem?
     public var permittedArrowDirections: UIPopoverArrowDirection = .any
     /// UIKit defaults to nil. OpenUIKit retains the requested popover chrome
     /// color even though compact-width presentations adapt to a sheet and no

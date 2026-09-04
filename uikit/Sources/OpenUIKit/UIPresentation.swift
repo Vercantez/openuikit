@@ -320,11 +320,10 @@ public final class UISheetPresentationController: UIPresentationController {
         public static func large() -> Detent {
             Detent(identifier: .large, resolve: { $0.maximumDetentValue })
         }
-        /// Measured: the medium sheet's content is 425 pt on an 852 pt
-        /// container -- half the container height to within a point. The
-        /// container height is not on the resolution context, so the actual
-        /// number is computed in `resolvedDetentHeight()`; this resolver is
-        /// never consulted for `.medium`.
+        /// Measured: the medium sheet's content is 425 of `maximumDetentValue`
+        /// 759 on an 852 pt iPhone 16 (detentprobe) — not half the container.
+        /// The iOS-cut resolver in `resolvedDetentHeight()` applies that
+        /// ratio; this resolver is never consulted for `.medium`.
         public static func medium() -> Detent {
             Detent(identifier: .medium, resolve: { _ in nil })
         }
@@ -339,7 +338,7 @@ public final class UISheetPresentationController: UIPresentationController {
     /// 393x852 iPhone container).
     var maximumDetentValue: CGFloat {
         guard let c = containerView else { return 0 }
-        return max(0, c.bounds.height - _UIPageSheetView.topInset
+        return max(0, c.bounds.height - _UIPageSheetView.topInset(in: c)
                       - c.safeAreaInsets.bottom)
     }
 
@@ -350,8 +349,20 @@ public final class UISheetPresentationController: UIPresentationController {
         let detent = detents.first { $0.identifier == selectedDetentIdentifier }
             ?? detents[0]
         if detent.identifier == .medium {
-            // Measured 425 on an 852 pt container = half its height, to
-            // within a point.
+            if OpenUIKitRuntime.systemFontCut == .iOS {
+                // MEASURED detentprobe, iPhone 16 / iOS 26.1: `.medium()`
+                // detent value 425 of `maximumDetentValue` 759 (unscaled
+                // sheet 459 = 425 + 34 bottom SA). MEASURED Modal t1200,
+                // iPhone SE 2x, window SA [0,0,0,0]: unscaled height 356.5
+                // of maximumDetentValue 637 (top inset 30). Same ratio,
+                // rounded to the device pixel, plus bottom SA.
+                let scale = max(c.traitCollection.displayScale, 1)
+                let raw = maximumDetentValue * _UIPageSheetView.mediumDetentValue
+                    / _UIPageSheetView.mediumDetentMaximum
+                return (raw * scale).rounded() / scale + c.safeAreaInsets.bottom
+            }
+            // Catalyst: half the container plus bottom SA (the pre-iOS-cut
+            // reading, 1 pt off the iPhone 16 sample).
             return c.bounds.height / 2 + c.safeAreaInsets.bottom
         }
         let ctx = Detent.ResolutionContext(
@@ -395,9 +406,10 @@ public final class UISheetPresentationController: UIPresentationController {
             return CGRect(x: 0, y: c.bounds.height - h,
                           width: c.bounds.width, height: h)
         }
-        return CGRect(x: 0, y: _UIPageSheetView.topInset,
+        let top = _UIPageSheetView.topInset(in: c)
+        return CGRect(x: 0, y: top,
                       width: c.bounds.width,
-                      height: c.bounds.height - _UIPageSheetView.topInset)
+                      height: c.bounds.height - top)
     }
 
     /// Only a fullScreen presentation covers the presenter (UIKit: a
@@ -538,7 +550,28 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
 /// platter provides the background color so the corners stay rounded.
 @preconcurrency @MainActor
 final class _UIPageSheetView: UIView {
+    /// Catalyst / iPhone 16 large-sheet top (detentprobe, 393×852, SA 59).
     static let topInset: CGFloat = 59.0
+    /// MEASURED Modal t3200, iPhone SE 2x / iOS 26.1, window SA [0,0,0,0]:
+    /// large pageSheet `[0, 30, 375, 637]`. A notched window uses its
+    /// `safeArea.top` instead (iPhone 16: 59).
+    static let iOSMinimumTopInset: CGFloat = 30
+    /// MEASURED detentprobe, iPhone 16 / iOS 26.1: `.medium()` detent
+    /// value over `maximumDetentValue` (425 / 759). Modal t1200 on the
+    /// SE 2x is the same ratio (356.5 / 637).
+    static let mediumDetentValue: CGFloat = 425
+    static let mediumDetentMaximum: CGFloat = 759
+
+    /// Large-sheet top edge. iOS cut: `max(safeArea.top, 30)` when the
+    /// window publishes a notch inset; a zero-SA 667-tall window is the
+    /// SE (30), a taller zero-SA window keeps the iPhone 16 59.
+    static func topInset(in container: UIView) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return topInset }
+        let sa = container.safeAreaInsets.top
+        if sa > 0 { return max(sa, iOSMinimumTopInset) }
+        return container.bounds.height <= 667 ? iOSMinimumTopInset : topInset
+    }
+
     static let topCornerRadius: CGFloat = 37.7
     static let bottomCornerRadius: CGFloat = 58.2
     /// MEASURED 2026-09-04 (realappprobe, iPhone 16 / iOS 26.1): the floating
