@@ -188,8 +188,34 @@ extension UIFont {
                                      compatibleWith traits: UITraitCollection?) -> UIFont {
         let d = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style,
                                                          compatibleWith: traits)
-        return UIFont(pointSize: d.pointSize, weight: d.weight, design: .default)
+        var font = UIFont(pointSize: d.pointSize, weight: d.weight, design: .default)
+        // iOS cut, MEASURED probe_textstyle_leading + probe_feed_color_label
+        // on the iPhone SE 2x / iOS 26.1, category `.large`:
+        // `preferredFont.leading + preferredFont.lineHeight` is the integer
+        // in `iOSTextStyleLineSpacingLarge` (subheadline 20 = 17.900 + 2.100;
+        // headline/body 22). `systemFont(ofSize: 15)` of the same face
+        // reports leading 0; a 2-line subheadline UILabel at 343 pt is
+        // abs.h 38, the 15 pt system font is 36. Other categories are
+        // unmeasured and keep font-file leading.
+        let cat = (traits ?? UITraitCollection.current).preferredContentSizeCategory
+        // `.unspecified` is the empty-collection default and resolves like
+        // `.large` in DynamicTypeTable.entry.
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           cat == .large || cat == .unspecified,
+           let spacing = iOSTextStyleLineSpacingLarge[style.rawValue] {
+            font.textStyleLeading = spacing - FontEngine.metrics(for: font).lineHeight
+        }
+        return font
     }
+
+    /// `UIFont.lineHeight + UIFont.leading` for `preferredFont(forTextStyle:)`
+    /// at `.large`. MEASURED probe_textstyle_leading, iPhone SE 2x / iOS 26.1
+    /// (one-line `font.leading` dump plus 2-line `sizeThatFits` height).
+    static let iOSTextStyleLineSpacingLarge: [String: CGFloat] = [
+        "largeTitle": 41, "title1": 34, "title2": 28, "title3": 25,
+        "headline": 22, "subheadline": 20, "body": 22, "callout": 21,
+        "footnote": 18, "caption1": 16, "caption2": 13,
+    ]
 }
 
 /// Real UIKit's `UIFontMetrics`.

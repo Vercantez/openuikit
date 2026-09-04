@@ -53,6 +53,40 @@ func round3(_ v: CGFloat) -> Double {
     return r.isFinite ? r : -1
 }
 
+/// Re-encode a capture as 8-bit sRGB with STRAIGHT (non-premultiplied)
+/// alpha and no colour profile. Copied from Tools/oracle2/simscene: the
+/// extended-range renderer tags Display P3, and PIL/compare.py read the
+/// PNG bytes without converting the ICC (Feed t200 card centre: P3-raw
+/// (78, 121, 211) vs sRGB (64, 122, 217) for UIColor(0.25, 0.48, 0.85)).
+func normalizedSRGB(_ img: UIImage) -> UIImage {
+    guard let cg = img.cgImage else { return img }
+    let w = cg.width, h = cg.height
+    var premul = [UInt8](repeating: 0, count: w * h * 4)
+    let space = CGColorSpace(name: CGColorSpace.sRGB)!
+    guard let ctx = CGContext(data: &premul, width: w, height: h, bitsPerComponent: 8,
+                              bytesPerRow: w * 4, space: space,
+                              bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return img }
+    ctx.draw(cg, in: CGRect(x: 0, y: 0, width: w, height: h))
+    var straight = [UInt8](repeating: 0, count: w * h * 4)
+    for i in 0..<(w * h) {
+        let a = Int(premul[i * 4 + 3])
+        if a == 0 { continue }
+        for c in 0..<3 {
+            let v = Int(premul[i * 4 + c]) * 255 + a / 2
+            straight[i * 4 + c] = UInt8(min(255, v / a))
+        }
+        straight[i * 4 + 3] = UInt8(a)
+    }
+    let data = Data(straight)
+    guard let provider = CGDataProvider(data: data as CFData),
+          let out = CGImage(width: w, height: h, bitsPerComponent: 8, bitsPerPixel: 32,
+                            bytesPerRow: w * 4, space: space,
+                            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
+                            provider: provider, decode: nil, shouldInterpolate: false,
+                            intent: .defaultIntent) else { return img }
+    return UIImage(cgImage: out, scale: img.scale, orientation: .up)
+}
+
 func rectArr(_ r: CGRect) -> [Double] {
     [round3(r.origin.x), round3(r.origin.y), round3(r.width), round3(r.height)]
 }
@@ -229,8 +263,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         let img = UIGraphicsImageRenderer(bounds: w.bounds, format: fmt).image { _ in
             w.drawHierarchy(in: w.bounds, afterScreenUpdates: false)
         }
+        // Same re-encode SimScene uses (docs/ORACLE_FLOW.md): `.extended`
+        // hands back Display-P3-tagged bitmaps. Feed t200, iPhone SE 2x:
+        // UIColor(0.25, 0.48, 0.85) is sRGB (64, 122, 217) after this
+        // conversion and P3-raw (78, 121, 211) without it — 14 counts, over
+        // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
+        // PNG bytes without the ICC, so the golden has to be untagged sRGB.
         let suffix = captureSuffix(t)
-        try! img.pngData()!.write(to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
+        try! normalizedSRGB(img).pngData()!.write(
+            to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
 
         var views: [[String: Any]] = []
         dumpLayout(w, path: "", absOrigin: .zero, into: &views)
