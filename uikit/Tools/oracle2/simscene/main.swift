@@ -87,6 +87,12 @@ final class SimSceneRenderer {
             print("warning: scene \(spec.name) size \(sceneSize) != device \(window.bounds.size)")
         }
         let wrapper = UIView(frame: CGRect(origin: .zero, size: sceneSize))
+        // Every tint-coloured control (progress fill, checkmark, chevron,
+        // button title) rendered GREY in the goldens captured after the
+        // alert scenes: a dismissed UIAlertController leaves the host's
+        // tintAdjustmentMode dimmed. Force normal for every scene (measured
+        // 2026-09-04: progress fill (151,151,152), checkmark (155,155,155)).
+        wrapper.tintAdjustmentMode = .normal
         wrapper.backgroundColor = nil
         wrapper.overrideUserInterfaceStyle = spec.style
         wrapper.addSubview(container)

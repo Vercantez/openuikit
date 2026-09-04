@@ -734,7 +734,7 @@ func makeTableView(_ j: SceneJSON) -> UITableView {
     // offscreen Catalyst oracle (see UITableView.insetGroupedSideInset).
     // runScene has already latched the scene's "window" flag here.
     if GlyphInkTable.windowCompositing {
-        t.insetGroupedSideInset = 16
+        t.insetGroupedSideInset = OpenUIKitRuntime.systemFontCut == .iOS ? 20 : 16
     }
     let driver = SceneTableDriver(sectionsJSON: j["sections"]?.arrayValue ?? [])
     sceneTableDrivers.append(driver)   // dataSource/delegate are weak

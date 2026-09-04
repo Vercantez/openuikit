@@ -1216,7 +1216,13 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
 
 // MARK: - Layout dump
 
-func round3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
+func round3(_ v: CGFloat) -> Double {
+    // JSONSerialization throws on NaN/inf (an uncaught NSException aborted
+    // SimScene on 2026-09-04 once the dump carried absolute frames and
+    // layer facts); non-finite values are written as -1.
+    guard v.isFinite else { return -1 }
+    return (Double(v) * 1000).rounded() / 1000
+}
 
 func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
     var entry: JSON = [

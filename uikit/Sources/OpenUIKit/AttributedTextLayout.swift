@@ -220,7 +220,11 @@ enum AttributedTextLayout {
         if indices.isEmpty && t.count > 0 { indices = [t.count - 1] }
         for i in indices {
             let st = t.style(Swift.min(i, t.count - 1))
-            let a = (FontEngine.metrics(for: st.font).ascender + 0.5).rounded(.down)
+            // iOS cut: the exact ascender (UILabel's iOS path; the harvested
+            // masks are anchored to it). Catalyst: the integral baseline.
+            let a = GlyphInkTable.usesIOSTable
+                ? FontEngine.metrics(for: st.font).ascender
+                : (FontEngine.metrics(for: st.font).ascender + 0.5).rounded(.down)
             let box = t.usesFontLineHeight
                 ? FontEngine.metrics(for: st.font).lineHeight
                 : FontEngine.labelLineHeight(for: st.font)

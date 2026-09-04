@@ -189,8 +189,11 @@ open class UITableView: UIScrollView {
     static var plainSeparatorInsets: (left: CGFloat, right: CGFloat) {
         isIOSChrome ? (20, 20) : (separatorLeftInset, plainSeparatorRightInset)
     }
-    /// Extra height of a grouped section's first row (its content shifts down by it).
-    static var groupedFirstRowPadding: CGFloat { isIOSChrome ? 2 : 0 }
+    /// Extra height iOS 26 gives a value1/value2 cell that has NO accessory
+    /// (its content shifts down by it). MEASURED: "Name / Miguel" is 55 tall
+    /// while "Plan / Pro >" and "Theme / Dark >" are 53 (tableview_grouped,
+    /// tableview_dark); default and subtitle cells are unaffected.
+    static var valueCellPadding: CGFloat { isIOSChrome ? 2 : 0 }
 
     /// Side margin of the inset-grouped card. MEASURED 8 pt in the
     /// offscreen Catalyst oracle (golden/tableview_grouped) but 16 pt when
@@ -336,6 +339,7 @@ open class UITableView: UIScrollView {
     private var metricsWidth: CGFloat = -1
 
     func setNeedsMetrics() {
+        valueCellPaddingCache.removeAll()
         metricsDirty = true
         setNeedsLayout()
     }
@@ -395,7 +399,7 @@ open class UITableView: UIScrollView {
             m.rowEnds.reserveCapacity(rows)
             for r in 0..<rows {
                 y += resolveRowHeight(IndexPath(row: r, section: s))
-                if r == 0, style != .plain { y += UITableView.groupedFirstRowPadding }
+                y += valueCellPadding(IndexPath(row: r, section: s))
                 m.rowEnds.append(y)
             }
 
@@ -437,6 +441,22 @@ open class UITableView: UIScrollView {
         metricsIfNeeded()
         guard section >= 0, section < metrics.count else { return 0 }
         return metrics[section].rowEnds.count
+    }
+
+    /// iOS 26's extra 2 pt for an accessory-less value1/value2 cell (needs
+    /// the cell, so the data source is asked; nil when it cannot be built).
+    private var valueCellPaddingCache: [IndexPath: CGFloat] = [:]
+    func valueCellPadding(_ path: IndexPath) -> CGFloat {
+        guard UITableView.valueCellPadding > 0, style != .plain else { return 0 }
+        if let c = valueCellPaddingCache[path] { return c }
+        var pad: CGFloat = 0
+        if let cell = visibleCellsByPath[path] ?? dataSource?.tableView(self, cellForRowAt: path),
+           cell.style == .value1 || cell.style == .value2,
+           cell.accessoryView == nil, cell.accessoryType == .none {
+            pad = UITableView.valueCellPadding
+        }
+        valueCellPaddingCache[path] = pad
+        return pad
     }
 
     public func rectForRow(at indexPath: IndexPath) -> CGRect {
@@ -1136,8 +1156,7 @@ open class UITableView: UIScrollView {
                 cell = ds.tableView(self, cellForRowAt: path)
                 cell.tableView = self
                 cell._textInset = style == .plain ? UITableView.plainTextInset : UITableViewCell.labelX
-                cell._leadingPadding = (path.row == 0 && style != .plain)
-                    ? UITableView.groupedFirstRowPadding : 0
+                cell._leadingPadding = valueCellPadding(path)
                 cell.frame = rectForRow(at: path)
                 if style == .insetGrouped || style == .grouped {
                     // The section card draws the background.
