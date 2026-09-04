@@ -169,12 +169,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     //
     // iOS 26 bars are TRANSPARENT at rest; the expanded state reserves
     // 116 pt of content inset: 10 (top padding) + 54 (inline bar zone) +
-    // 52 (large-title zone). The 34 pt-bold large title sits at x = 20
-    // (label frame [20, 3, w, 40.5] inside the large-title zone) and
-    // scrolls away 1:1 with the content; the centered 17 pt inline title
-    // (center y = 32) fades in as the large title leaves. Content that
-    // slides under the bar region gets the scroll-edge-effect "pocket":
-    // a blurred, background-washed copy of the content (see updatePocket).
+    // 52 (large-title zone). The 34 pt-bold large title sits at x = 16
+    // (iOS) / 20 (Catalyst) and scrolls away 1:1 with the content.
+    // Catalyst fades both titles through the zone (smoothstep). iOS 26.1
+    // (MEASURED, navprobe scroll): titles stay fully on/off and swap at
+    // d = 52; the bar overlay shrinks 116 → 64; a release snaps at 36/37
+    // (not half the zone). Content that slides under the collapsed bar
+    // gets the scroll-edge-effect "pocket" (see updatePocket).
 
     /// Expanded adjusted content inset (the rest offset is -116).
     public static let largeTitleExpandedInset: CGFloat = 116
@@ -192,6 +193,16 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
     static let largeTitleFontSize: CGFloat = 34
     static let largeInlineTitleCenterY: CGFloat = 32
+    /// iOS 26.1 (MEASURED 2026-09-04, `Tools/oracle2/navprobe` scroll pass,
+    /// iPhone 16): a zero-velocity release at collapse distance 36 snaps
+    /// back to the expanded rest; at 37 it snaps collapsed. Catalyst keeps
+    /// the half-zone snap (26).
+    static let iOSSnapCollapseDistance: CGFloat = 36
+    /// Collapsed overlay on the iOS cut: 10 + 54. The expanded overlay is
+    /// `largeTitleExpandedInset` (116). MEASURED same probe: bar frame
+    /// [0, 10, 390, 106] / `_UIBarBackground` 116 through d = 51, then
+    /// [0, 10, 390, 54] / background 64 at d = 52.
+    static let iOSCollapsedBarHeight: CGFloat = 64
 
     /// Set by UINavigationController; fired on back-button touchUpInside.
     var onBackTapped: (() -> Void)?
@@ -990,6 +1001,17 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         return s.contentOffset.y + UINavigationBar.largeTitleExpandedInset
     }
 
+    /// Overlay height the navigation controller should give this bar in
+    /// large-title mode. iOS shrinks the bar at the zone boundary; Catalyst
+    /// keeps the 116 pt overlay for the whole collapse.
+    var largeTitleOverlayHeight: CGFloat {
+        guard UINavigationBar.isIOS,
+              collapseDistance >= UINavigationBar.largeTitleZoneHeight else {
+            return UINavigationBar.largeTitleExpandedInset
+        }
+        return UINavigationBar.iOSCollapsedBarHeight
+    }
+
     /// Position/fade the large + inline titles for the current tracked
     /// offset, and refresh the scroll-edge pocket. Called from
     /// layoutSubviews and from every observed scroll.
@@ -1001,12 +1023,37 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         // offset. `layoutSubviews` already stands back for the same reason.
         guard prefersLargeTitles, transition == nil else { return }
         let d = collapseDistance
+        let collapsed = d >= UINavigationBar.largeTitleZoneHeight
         if let l = largeTitleLabel {
             l.frame = largeTitleFrame(for: l, collapsedBy: d)
-            l.alpha = 1 - smoothstep01((d - 20) / 32)
+            if UINavigationBar.isIOS {
+                // MEASURED 2026-09-04, Tools/oracle2/navprobe scroll pass
+                // (variant "scroll"), iPhone 16 / iOS 26.1, rest samples at
+                // d = 0, 10, 12, …, 51, 52, 80, 200:
+                //   * large-title wrapper y = 67.667 − d (1:1 with offset)
+                //   * font stays .SFUI-Bold 34, identity transform
+                //   * `_UINavigationBarLargeTitleView` opacity = 1 through
+                //     d = 51, then 0 at d = 52
+                //   * inline `HostedViewWrapper` opacity = 0 through d = 51,
+                //     then 1 at d = 52
+                // Catalyst keeps the smoothstep cross-fade (d−20)/32 and
+                // (d−30)/26 measured off the Mac oracle.
+                l.alpha = collapsed ? 0 : 1
+            } else {
+                l.alpha = 1 - smoothstep01((d - 20) / 32)
+            }
         }
-        // Inline title fades in as the large title leaves its zone.
-        titleLabel.alpha = smoothstep01((d - 30) / 26)
+        if UINavigationBar.isIOS {
+            titleLabel.alpha = collapsed ? 1 : 0
+        } else {
+            titleLabel.alpha = smoothstep01((d - 30) / 26)
+        }
+        if UINavigationBar.isIOS {
+            let h = largeTitleOverlayHeight
+            if abs(bounds.height - h) > 0.5 {
+                _controller?.updateContainerLayout()
+            }
+        }
         updatePocket()
     }
 
@@ -1054,6 +1101,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         // Engagement: nothing to blur until content actually reaches under
         // the bar zone (d = 52 puts the content top exactly at the zone's
         // bottom edge); ramp in over the next 28 pt.
+        // iOS 26.1 (MEASURED, navprobe scroll): `ScrollEdgeEffectView`
+        // opacity flips 0 → 1 at d = 12, but that is a glass material
+        // whose fill over grouped background is 242/247 — not this
+        // content-blur pocket. Turning the pocket on at 12 would sit on
+        // the still-visible 34 pt title (alpha 1 through d = 51).
         let e = clamp01((collapseDistance - UINavigationBar.largeTitleZoneHeight) / 28)
         guard e > 0 else {
             pocketView.isHidden = true

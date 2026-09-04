@@ -1,0 +1,1025 @@
+{
+ "head": "7ed87486",
+ "date": "2026-09-04T16:23Z",
+ "suite": {
+  "pass": 96,
+  "total": 98
+ },
+ "gate": {
+  "pass": 124,
+  "total": 124
+ },
+ "rows": [
+  {
+   "scene": "attrtext_paragraph",
+   "category": "text",
+   "score": 96.076,
+   "blob": 15.2,
+   "layout_issues": 1,
+   "verdict": "FAIL",
+   "threshold": 97.0,
+   "status": "fail"
+  },
+  {
+   "scene": "attrtext_fields",
+   "category": "control",
+   "score": 96.74,
+   "blob": 14.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "textview_basic",
+   "category": "control",
+   "score": 96.799,
+   "blob": 15.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "label_truncate",
+   "category": "text",
+   "score": 97.394,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "label_align",
+   "category": "text",
+   "score": 97.47,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "imageview_aspect_edge",
+   "category": "control",
+   "score": 97.559,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "textfield_basic",
+   "category": "control",
+   "score": 97.959,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "attrtext_underline_strike",
+   "category": "text",
+   "score": 98.194,
+   "blob": 54.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "attrtext_dark",
+   "category": "text",
+   "score": 98.254,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "label_multiline",
+   "category": "text",
+   "score": 98.479,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "navitem_dark",
+   "category": "chrome",
+   "score": 98.531,
+   "blob": 2.3,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "realapp_settings_light",
+   "category": "realapp",
+   "score": 98.535,
+   "blob": 2.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.4,
+   "status": "pass"
+  },
+  {
+   "scene": "realapp_settings_dark",
+   "category": "realapp",
+   "score": 98.548,
+   "blob": 2.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.4,
+   "status": "pass"
+  },
+  {
+   "scene": "control_segmented",
+   "category": "control",
+   "score": 98.631,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "switch_dark",
+   "category": "control",
+   "score": 98.648,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "navbar_inline",
+   "category": "chrome",
+   "score": 98.663,
+   "blob": 3.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "attrtext_runs",
+   "category": "text",
+   "score": 98.702,
+   "blob": 3.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "deep_mixed",
+   "category": "control",
+   "score": 98.723,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "imageview_modes",
+   "category": "control",
+   "score": 98.769,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "control_activity",
+   "category": "control",
+   "score": 98.918,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "navitem_buttons",
+   "category": "chrome",
+   "score": 98.923,
+   "blob": 2.9,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "toolbar_basic",
+   "category": "chrome",
+   "score": 99.034,
+   "blob": 2.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "attrtext_kern_baseline",
+   "category": "text",
+   "score": 99.043,
+   "blob": 3.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "control_dark",
+   "category": "control",
+   "score": 99.083,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "realapp_history_light",
+   "category": "realapp",
+   "score": 99.137,
+   "blob": 2.6,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.0,
+   "status": "pass"
+  },
+  {
+   "scene": "stack_alignment",
+   "category": "control",
+   "score": 99.149,
+   "blob": 18.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "alert_actionsheet",
+   "category": "chrome",
+   "score": 99.21,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "alert_dark",
+   "category": "chrome",
+   "score": 99.299,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "navbar_appearance",
+   "category": "chrome",
+   "score": 99.334,
+   "blob": 2.9,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "control_refresh",
+   "category": "control",
+   "score": 99.359,
+   "blob": 32.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "switch_onoff",
+   "category": "control",
+   "score": 99.381,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "corner_radius",
+   "category": "geometry",
+   "score": 99.411,
+   "blob": 1.0,
+   "layout_issues": 0,
+   "verdict": "FAIL",
+   "threshold": 99.5,
+   "status": "open",
+   "open_reason": "99.41 vs 99.5: every rounded corner on iOS carries a near-tangent coverage ramp about r/2 pt long along the curve (measured 2026-09-04/05 at radii 2-20, 2x and 3x); no closed-form rule fit every sample. A score-targeted parameter fit (exp shoulder + 0.172 radius bias) reached exactly 99.500 and was rejected as a fudge. Needs a rasteriser-level model (filtered SDF?) derived from the per-pixel samples, not tuned to the score."
+  },
+  {
+   "scene": "collection_flow_lines",
+   "category": "chrome",
+   "score": 99.422,
+   "blob": 3.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "alert_destructive",
+   "category": "chrome",
+   "score": 99.434,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "tabbar_tinted",
+   "category": "chrome",
+   "score": 99.449,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "label_basic",
+   "category": "text",
+   "score": 99.464,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "navitem_titleview",
+   "category": "chrome",
+   "score": 99.484,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "alert_basic",
+   "category": "chrome",
+   "score": 99.51,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "navbar_dark",
+   "category": "chrome",
+   "score": 99.537,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "navbar_large",
+   "category": "chrome",
+   "score": 99.544,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "button_dark",
+   "category": "control",
+   "score": 99.554,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "collection_flow_grid",
+   "category": "chrome",
+   "score": 99.595,
+   "blob": 3.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "borders",
+   "category": "geometry",
+   "score": 99.632,
+   "blob": 0.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "collection_horizontal",
+   "category": "chrome",
+   "score": 99.637,
+   "blob": 4.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "tableview_plain",
+   "category": "chrome",
+   "score": 99.639,
+   "blob": 2.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "shadow_with_corner",
+   "category": "effects",
+   "score": 99.651,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.0,
+   "status": "pass"
+  },
+  {
+   "scene": "collection_sections",
+   "category": "chrome",
+   "score": 99.658,
+   "blob": 4.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "label_stack_mix",
+   "category": "control",
+   "score": 99.667,
+   "blob": 4.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "collection_dark",
+   "category": "chrome",
+   "score": 99.723,
+   "blob": 3.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "shadows_basic",
+   "category": "effects",
+   "score": 99.745,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.0,
+   "status": "pass"
+  },
+  {
+   "scene": "demo_settings",
+   "category": "control",
+   "score": 99.769,
+   "blob": 1.6,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "tabbar_basic",
+   "category": "chrome",
+   "score": 99.774,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "modal_sheet_grabber",
+   "category": "chrome",
+   "score": 99.791,
+   "blob": 2.6,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "modal_sheet",
+   "category": "chrome",
+   "score": 99.792,
+   "blob": 2.6,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "gradient_dark",
+   "category": "geometry",
+   "score": 99.797,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "clip_subviews",
+   "category": "geometry",
+   "score": 99.812,
+   "blob": 2.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "tableview_selected",
+   "category": "chrome",
+   "score": 99.812,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "control_slider",
+   "category": "control",
+   "score": 99.832,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "alpha_shadow_group",
+   "category": "effects",
+   "score": 99.87,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_form_row",
+   "category": "control",
+   "score": 99.886,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "hit_testing",
+   "category": "text",
+   "score": 99.886,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "nested_deep",
+   "category": "geometry",
+   "score": 99.911,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "tableview_dark",
+   "category": "chrome",
+   "score": 99.917,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_center_size",
+   "category": "geometry",
+   "score": 99.919,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "tableview_grouped",
+   "category": "chrome",
+   "score": 99.92,
+   "blob": 2.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "scroll_static",
+   "category": "geometry",
+   "score": 99.926,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "control_pagecontrol",
+   "category": "control",
+   "score": 99.932,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_nested",
+   "category": "geometry",
+   "score": 99.955,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_chain",
+   "category": "geometry",
+   "score": 99.961,
+   "blob": 30.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "progress_fractions",
+   "category": "control",
+   "score": 99.965,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "progress_views",
+   "category": "control",
+   "score": 99.975,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "button_basic",
+   "category": "control",
+   "score": 99.98,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_mixed_frames",
+   "category": "geometry",
+   "score": 99.982,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "label_mono_italic",
+   "category": "text",
+   "score": 99.983,
+   "blob": 1.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "shadows_radii",
+   "category": "effects",
+   "score": 99.999,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.0,
+   "status": "pass"
+  },
+  {
+   "scene": "alpha_blend",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "boxes_basic",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "boxes_dark",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "button_highlighted",
+   "category": "control",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "button_states",
+   "category": "control",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_aspect",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_baseline",
+   "category": "text",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_centery_multiplier",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_compression",
+   "category": "text",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_edge_pins",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_hugging",
+   "category": "text",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_inequalities",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_margins",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "constraints_safearea",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "gradient_basic",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "gradient_in_stack",
+   "category": "control",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "gradient_multi",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "label_dark",
+   "category": "text",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "label_sizes",
+   "category": "text",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "label_weights",
+   "category": "text",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "shadows_dark",
+   "category": "effects",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.0,
+   "status": "pass"
+  },
+  {
+   "scene": "stack_horizontal",
+   "category": "control",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "stack_mixed",
+   "category": "control",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "stack_vertical",
+   "category": "control",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "transforms",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "zorder_hidden",
+   "category": "geometry",
+   "score": 100.0,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.5,
+   "status": "pass"
+  }
+ ]
+}

@@ -130,6 +130,8 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UINavigationBar.largeTitleX, 16)
         XCTAssertEqual(UINavigationBar.largeTitleLabelY, 67.5)
         XCTAssertEqual(UINavigationBar.largeTitleLabelHeight, 41)
+        XCTAssertEqual(UINavigationBar.iOSSnapCollapseDistance, 36)
+        XCTAssertEqual(UINavigationBar.iOSCollapsedBarHeight, 64)
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
             XCTAssertEqual(UINavigationBar.largeTitleX, 20)

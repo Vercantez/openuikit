@@ -21,6 +21,10 @@ set -e
 cd "$(dirname "$0")/../.."          # monorepo root
 TASKS=${1:?usage: agent_fanout.sh <tasks.txt> [max-parallel]}
 MAXPAR=${2:-3}
+# The model every local agent runs on (operator's standing choice: Grok 4.6
+# High, NOT the -fast variant). A task line's model column is ignored unless
+# AGENT_MODEL_FROM_TASKS=1; AGENT_MODEL=<id> overrides for one launch.
+MODEL=${AGENT_MODEL:-cursor-grok-4.6-high}
 BRIEF=uikit/docs/AGENT_BRIEF_ORACLE.md
 mkdir -p scratch/agents
 command -v cursor-agent >/dev/null || { echo "cursor-agent not on PATH" >&2; exit 2 }
@@ -30,6 +34,7 @@ running=0
 while IFS= read -r line; do
   [[ -z "$line" || "$line" == \#* ]] && continue
   name=${line%%|*}; rest=${line#*|}; model=${rest%%|*}; task=${rest#*|}
+  [[ -z "${AGENT_MODEL_FROM_TASKS:-}" ]] && model=$MODEL
   prompt="$(cat "$BRIEF")
 
 $task

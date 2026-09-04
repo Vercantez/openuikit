@@ -1,0 +1,34 @@
+{
+  "name": "tabbar_dark",
+  "size": [375, 480],
+  "scale": 2,
+  "style": "dark",
+  "ios": true,
+  "window": true,
+  "root": {
+    "class": "UITabBarStack",
+    "selectedIndex": 1,
+    "items": [
+      {
+        "title": "Home",
+        "image": { "kind": "solid", "size": [24, 24], "colors": ["#000000"] }
+      },
+      {
+        "title": "Queue",
+        "image": { "kind": "checker", "size": [24, 24], "colors": ["#000000", "#000000"], "tile": 12 },
+        "content": {
+          "class": "UILabel",
+          "frame": [0, 200, 375, 30],
+          "text": "Queue screen",
+          "fontSize": 20,
+          "fontWeight": "semibold",
+          "textAlignment": "center"
+        }
+      },
+      {
+        "title": "Library",
+        "image": { "kind": "solid", "size": [20, 24], "colors": ["#000000"] }
+      }
+    ]
+  }
+}

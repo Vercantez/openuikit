@@ -584,6 +584,68 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         XCTAssertEqual(seen, [0])
     }
 
+    private func makeLargeScrollNav(offset: CGFloat? = nil) -> (UINavigationController, UIScrollView) {
+        let vc = UIViewController()
+        vc.title = "Library"
+        vc.view.backgroundColor = .systemGroupedBackground
+        let scroll = UIScrollView(frame: vc.view.bounds)
+        scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scroll.contentSize = CGSize(width: 390, height: 1200)
+        vc.view.addSubview(scroll)
+        vc.setContentScrollView(scroll)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.prefersLargeTitles = true
+        nav.view.frame = CGRect(x: 0, y: 0, width: 390, height: 700)
+        nav.view.layoutIfNeeded()
+        if let offset { scroll.contentOffset = CGPoint(x: 0, y: offset) }
+        return (nav, scroll)
+    }
+
+    /// MEASURED 2026-09-04, navprobe.scroll rest samples, iPhone 16 / iOS 26.1:
+    /// the 34 pt title translates 1:1 and stays alpha 1 through d = 51; the
+    /// inline title stays at effective 0. No font scale (identity transform,
+    /// pointSize 34 at every offset).
+    func testIOSCollapseKeepsTitlesOpaqueUntilTheZone() {
+        let (nav, scroll) = makeLargeScrollNav()
+        let bar = nav.navigationBar
+        XCTAssertEqual(scroll.contentOffset.y, -116)
+        XCTAssertEqual(bar.largeTitleLabel!.alpha, 1)
+        XCTAssertEqual(bar.titleLabel.alpha, 0)
+        XCTAssertEqual(bar.frame.height, 116)
+        XCTAssertEqual(bar.largeTitleLabel!.font.pointSize, 34)
+
+        scroll.contentOffset = CGPoint(x: 0, y: -116 + 36)
+        XCTAssertEqual(bar.largeTitleLabel!.frame.origin.y, 67.5 - 36, accuracy: 1e-9)
+        XCTAssertEqual(bar.largeTitleLabel!.alpha, 1)
+        XCTAssertEqual(bar.titleLabel.alpha, 0)
+        XCTAssertEqual(bar.largeTitleLabel!.font.pointSize, 34)
+        XCTAssertEqual(bar.frame.height, 116)
+    }
+
+    /// At d = 52 the bar snaps to the 64 pt overlay, the large title is
+    /// gone and the inline title is in (navprobe.scroll d052).
+    func testIOSCollapseSnapsTitlesAndBarHeightAtTheZone() {
+        let (nav, _) = makeLargeScrollNav(offset: -116 + 52)
+        let bar = nav.navigationBar
+        XCTAssertEqual(bar.largeTitleLabel!.alpha, 0)
+        XCTAssertEqual(bar.titleLabel.alpha, 1)
+        XCTAssertEqual(bar.frame.height, UINavigationBar.iOSCollapsedBarHeight)
+    }
+
+    /// Zero-velocity release: d = 36 expands, d = 37 collapses
+    /// (navprobe.scroll hold_d36 / hold_d37).
+    func testIOSSnapThresholdIs36() {
+        let (nav, scroll) = makeLargeScrollNav()
+        scroll.contentOffset = CGPoint(x: 0, y: -116 + 36)
+        nav.scrollViewDidEndDragging(scroll, willDecelerate: false)
+        XCTAssertEqual(scroll.contentOffset.y, -116)
+
+        scroll.removeAllAnimations()
+        scroll.contentOffset = CGPoint(x: 0, y: -116 + 37)
+        nav.scrollViewDidEndDragging(scroll, willDecelerate: false)
+        XCTAssertEqual(scroll.contentOffset.y, -116 + 52)
+    }
+
     /// Catalyst keeps the M7.5 cross-fade: no groups, and the old title
     /// morphs toward the back-button position.
     func testCatalystKeepsTheCrossFade() {

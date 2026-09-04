@@ -266,7 +266,7 @@ open class UINavigationController: UIViewController {
             contentView.frame = v.bounds
             navigationBar.frame = CGRect(
                 x: 0, y: 0, width: v.bounds.width,
-                height: UINavigationBar.largeTitleExpandedInset)
+                height: navigationBar.largeTitleOverlayHeight)
         } else {
             let barH = UINavigationBar.barHeight
             contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
@@ -339,9 +339,13 @@ open class UINavigationController: UIViewController {
               scroll === navigationBar.trackedScrollView else { return }
         let d = scroll.contentOffset.y + UINavigationBar.largeTitleExpandedInset
         guard d > 0.5, d < UINavigationBar.largeTitleZoneHeight - 0.5 else { return }
-        let target: CGFloat =
-            d < UINavigationBar.largeTitleZoneHeight / 2
-                ? 0 : UINavigationBar.largeTitleZoneHeight
+        // MEASURED 2026-09-04, navprobe scroll holds, iPhone 16 / iOS 26.1:
+        // zero-velocity release at d=36 retargets to the expanded rest;
+        // d=37 retargets collapsed. Catalyst keeps the half-zone (26).
+        let threshold: CGFloat = UINavigationBar.isIOS
+            ? UINavigationBar.iOSSnapCollapseDistance
+            : UINavigationBar.largeTitleZoneHeight / 2
+        let target: CGFloat = d <= threshold ? 0 : UINavigationBar.largeTitleZoneHeight
         scroll.setContentOffset(
             CGPoint(x: scroll.contentOffset.x,
                     y: target - UINavigationBar.largeTitleExpandedInset),
