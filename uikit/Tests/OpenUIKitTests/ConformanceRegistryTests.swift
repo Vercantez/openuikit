@@ -84,6 +84,37 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertFalse(scanned.isEmpty)
     }
 
+    /// MEASURED TableEditor t1350 / t2350 and Modal t600: script times
+    /// convert to a named 60 Hz frame so confprobe and openhost cannot
+    /// drift (scoreboard/open.txt three-clock split).
+    func testClockMapsMidFlightDelaysToNamedFrames() {
+        XCTAssertEqual(ConformanceClock.hz, 60)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 0.15), 9)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 0.20), 12)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 1.20), 72)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 1.35), 81)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 2.20), 132)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 2.35), 141)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 0.40), 24)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 0.60), 36)
+        XCTAssertEqual(ConformanceClock.time(of: 9), 0.15, accuracy: 1e-12)
+        XCTAssertEqual(ConformanceClock.time(of: 12), 0.20, accuracy: 1e-12)
+        XCTAssertEqual(ConformanceClock.time(of: 81), 1.35, accuracy: 1e-12)
+        XCTAssertEqual(ConformanceClock.time(of: 141), 2.35, accuracy: 1e-12)
+        // Accumulating t += 1/60 missed 2.35 (fire_n=142). Integer multiply
+        // does not.
+        var t = 0.0
+        let tick = 1.0 / 60.0
+        var n = 0
+        while t <= 2.35 + tick {
+            if 2.35 <= t { break }
+            t += tick
+            n += 1
+        }
+        XCTAssertEqual(n, 142)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 2.35), 141)
+    }
+
     @MainActor
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()

@@ -82,3 +82,28 @@ public enum ConformanceApps {
         return false
     }
 }
+
+/// Shared 60 Hz frame clock for both halves of the conformance harness.
+///
+/// Script times (`t` in script.json) map with `Int((t * 60).rounded())`,
+/// so a mid-flight capture at +0.15 s is **frame 9** after the action
+/// (TableEditor t1350 / t2350) and +0.2 s is **frame 12** (Modal t600).
+/// `Tools/oracle2/confprobe` drives that index from a CADisplayLink;
+/// openhost steps `OpenUIKitRuntime.animationTime` by the same integer
+/// frames (`Double(frame) / 60`). Wall-clock GCD `asyncAfter` is not
+/// used: the same delay landed at remaining 0.162 / 0.179 / 0.238
+/// depending on whether the capture was a GCD timer, openhost's loop,
+/// or a vsync (scoreboard/open.txt, TableEditor t1350, iPhone SE 2x /
+/// iOS 26.1). Accumulating `t += 1/60` also missed t=2.35 by one
+/// frame (fire_n=142 vs ideal 141) — integer frames do not.
+public enum ConformanceClock {
+    public static let hz: Int = 60
+
+    public static func frameIndex(for t: Double) -> Int {
+        Int((t * Double(hz)).rounded())
+    }
+
+    public static func time(of frame: Int) -> Double {
+        Double(frame) / Double(hz)
+    }
+}

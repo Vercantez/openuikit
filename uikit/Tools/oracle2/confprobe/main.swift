@@ -14,21 +14,32 @@
 //
 //   <app>.t<ms>.png          drawHierarchy(afterScreenUpdates: false) of the
 //                            WINDOW at the device scale
-//   <app>.t<ms>.layout.json  {"name", "t", "screen", "views": [...]} — the
-//                            Tools/oracle SceneKit dump shape widened with
-//                            ABSOLUTE frames and presentation-layer geometry
+//   <app>.t<ms>.layout.json  {"name", "t", "clock", "screen", "views": [...]}
+//                            — absolute MODEL frames plus presentation-layer
+//                            geometry (pframe / pabs / popacity) and the
+//                            CADisplayLink timestamp of this capture
 //
 // `openhost --app <app> --script ... --record ...` writes the same file names
-// with the same keys at the same times and the same scale
+// with the same keys at the same 60 Hz FRAME INDEX and the same scale
 // (Sources/openhost/ConformanceMode.swift); scripts/conformance_flow.sh
 // compares them.
+//
+// The timeline is a CADisplayLink at preferredFramesPerSecond = 60, not a
+// GCD wall-clock. Script times convert with ConformanceClock.frameIndex
+// (Int((t * 60).rounded())): TableEditor t1350 is frame 81 = 9 ticks after
+// delete-row-2 at frame 72; Modal t600 is frame 36 = 12 ticks after
+// sheet-medium at frame 24. The same delay on a GCD timer, openhost's
+// loop, and a vsync used to land at remaining 0.162 / 0.179 / 0.238
+// (scoreboard/open.txt). CONFPROBE_TRACE=1 also writes Documents/trace.json
+// with every tick's moving presentation frames (no PNG — a snapshot stalls
+// the link and would skip vsyncs).
 //
 // Two deliberate choices, both measured:
 //
 //   * afterScreenUpdates: FALSE — the last committed frame, i.e. what is
-//     actually on screen at t. `true` runs a fresh layout+commit pass, which
-//     would report the model state and quietly hide any capture that was
-//     taken mid-animation.
+//     actually on screen at this display-link tick. `true` runs a fresh
+//     layout+commit pass, which would report the model state and quietly
+//     hide any capture that was taken mid-animation.
 //   * The window is the capture, not a wrapper below the safe area (the trick
 //     Tools/oracle2/simscene and navprobe use for chrome scenes). A
 //     conformance app presents a pageSheet, and a pageSheet is hosted in the
@@ -93,14 +104,26 @@ func rectArr(_ r: CGRect) -> [Double] {
 }
 
 /// Mirror of Sources/openhost/ConformanceMode.swift's
-/// `dumpConformanceLayout`, key for key. `abs` accumulates frame origins
-/// (less bounds origins) to the captured root — the only geometry the two
-/// trees can be compared on, because real UIKit hangs the app's controllers
-/// off private containers the port has no counterpart for.
+/// `dumpConformanceLayout`, key for key. `abs` accumulates MODEL frame
+/// origins (less bounds origins) to the captured root — the only geometry
+/// the two trees can be compared on at rest, because real UIKit hangs the
+/// app's controllers off private containers the port has no counterpart for.
+///
+/// `pframe` / `pabs` / `popacity` are the presentation layer of THIS
+/// display-link tick (navprobe dumpPresentation). Mid-flight captures
+/// (TableEditor t1350, Modal t600) have already snapped the model to the
+/// destination (`abs` matches rest, layout 0) while the PNG shows the
+/// spring; without presentation geometry the dump cannot grade the curve.
 func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
+                pAbsOrigin: CGPoint,
                 into out: inout [[String: Any]]) {
     let origin = CGPoint(x: absOrigin.x + v.frame.origin.x - v.bounds.origin.x,
                          y: absOrigin.y + v.frame.origin.y - v.bounds.origin.y)
+    let p = v.layer.presentation()
+    let pFrame = p?.frame ?? v.layer.frame
+    let pBounds = p?.bounds ?? v.layer.bounds
+    let pOrigin = CGPoint(x: pAbsOrigin.x + pFrame.origin.x - pBounds.origin.x,
+                          y: pAbsOrigin.y + pFrame.origin.y - pBounds.origin.y)
     var entry: [String: Any] = [
         "path": path,
         "class": String(describing: type(of: v)),
@@ -109,7 +132,16 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
         "bounds": rectArr(v.bounds),
         "hidden": v.isHidden,
         "alpha": round3(v.alpha),
+        "pframe": rectArr(pFrame),
+        "pabs": rectArr(CGRect(origin: pOrigin, size: pFrame.size)),
+        "popacity": round3(CGFloat(p?.opacity ?? v.layer.opacity)),
     ]
+    // `playing` is presentation != MODEL LAYER, not view.frame: UIButtonLabel
+    // keeps view.frame.y=6 and layer.frame.y=0 at rest (TableEditor t200
+    // Edit/Done). A GCD-era dump compared p.frame != v.layer.frame.
+    if let p, p.frame != v.layer.frame {
+        entry["playing"] = true
+    }
     let sa = v.safeAreaInsets
     entry["safeAreaInsets"] = [round3(sa.top), round3(sa.left),
                                round3(sa.bottom), round3(sa.right)]
@@ -119,11 +151,31 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
         entry["transform"] = [round3(t.a), round3(t.b), round3(t.c),
                               round3(t.d), round3(t.tx), round3(t.ty)]
     }
-    // The presentation layer next to the model: a capture that caught an
-    // animation in flight differs here. Every NavFlow capture is at rest, and
-    // this is what proves it instead of assuming it.
-    if let p = v.layer.presentation(), p.frame != v.layer.frame {
-        entry["pframe"] = rectArr(p.frame)
+    if let p {
+        let tr = p.transform
+        if !CATransform3DIsIdentity(tr) {
+            entry["ptransform"] = [round3(tr.m11), round3(tr.m12),
+                                   round3(tr.m21), round3(tr.m22),
+                                   round3(tr.m41), round3(tr.m42)]
+        }
+        if let keys = v.layer.animationKeys(), !keys.isEmpty, pFrame != v.layer.frame {
+            entry["anims"] = keys.compactMap { k -> [String: Any]? in
+                guard let a = v.layer.animation(forKey: k) else { return nil }
+                var d: [String: Any] = [
+                    "key": k,
+                    "class": String(describing: type(of: a)),
+                    "duration": round3(CGFloat(a.duration)),
+                    "beginTime": round3(CGFloat(a.beginTime)),
+                ]
+                if let s = a as? CASpringAnimation {
+                    d["mass"] = round3(CGFloat(s.mass))
+                    d["stiffness"] = round3(CGFloat(s.stiffness))
+                    d["damping"] = round3(CGFloat(s.damping))
+                    d["initialVelocity"] = round3(CGFloat(s.initialVelocity))
+                }
+                return d
+            }
+        }
     }
     if let c = v.backgroundColor {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
@@ -166,7 +218,7 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
     out.append(entry)
     for (i, sub) in v.subviews.enumerated() {
         dumpLayout(sub, path: path.isEmpty ? "\(i)" : "\(path).\(i)",
-                   absOrigin: origin, into: &out)
+                   absOrigin: origin, pAbsOrigin: pOrigin, into: &out)
     }
 }
 
@@ -194,11 +246,73 @@ func captureSuffix(_ t: Double) -> String {
     String(format: "t%03d", Int((t * 1000).rounded()))
 }
 
+/// First CASpringAnimation.beginTime in the tree (absolute media time).
+func firstSpringBegin(_ v: UIView) -> CFTimeInterval? {
+    if let keys = v.layer.animationKeys() {
+        for k in keys {
+            if let a = v.layer.animation(forKey: k) as? CASpringAnimation, a.beginTime > 1 {
+                return a.beginTime
+            }
+        }
+        for k in keys {
+            if let a = v.layer.animation(forKey: k), a.beginTime > 1, a.duration > 0.05 {
+                return a.beginTime
+            }
+        }
+    }
+    for s in v.subviews {
+        if let t = firstSpringBegin(s) { return t }
+    }
+    return nil
+}
+
+/// Seek the window's layer tree to absolute media time `media` and freeze
+/// it there so dumpLayout + drawHierarchy see one sample. MEASURED: five
+/// runs that captured live at display-link timestamp action+0.15 still
+/// had CA beginTime 0.142–0.146 before the stamp (remaining 0.190–0.200);
+/// seeking to begin+N/60 is the named frame.
+func freezeLayer(_ layer: CALayer, at media: CFTimeInterval) {
+    let local = layer.convertTime(media, from: nil)
+    layer.speed = 0
+    layer.timeOffset = local
+}
+
+func unfreezeLayer(_ layer: CALayer) {
+    // Identity clock, not the pause-resume formula: we may have SEEKED into
+    // the future (begin+N/60), and a resume-from-paused-time would leave
+    // convertTime warped for the next mid-flight (TableEditor t2350 remaining
+    // 0.034 instead of env(9/60)=0.179 after the t1350 seek).
+    layer.speed = 1
+    layer.timeOffset = 0
+    layer.beginTime = 0
+}
+
 final class AppDelegate: NSObject, UIApplicationDelegate {
+    enum Item { case step(String); case capture(Double) }
+
     var window: UIWindow?
     var steps: [(t: Double, action: String)] = []
     var captures: [Double] = []
     var performAction: ((String) -> Void)?
+    var link: CADisplayLink?
+    var frameIndex = 0
+    var warmupLeft = 3
+    var timeline: [(frame: Int, order: Int, item: Item)] = []
+    var cursor = 0
+    var tracing = false
+    var trace: [[String: Any]] = []
+    var startedAt: CFTimeInterval = 0
+    var lastServicedFrame = -1
+    var lastActionTimestamp: CFTimeInterval = 0
+    var lastActionFrame = 0
+    /// Captures after an action, keyed by the action's script frame.
+    /// Mid-flight (≤ 20 frames) is a seek to spring begin+N/60; rest is
+    /// waited out on the display-link clock so a PNG stall cannot shrink
+    /// the gap (TableEditor teD-3 t900 was 0.313 s after a late edit and
+    /// scored 96.630 with 27 views still playing).
+    var capturesByActionFrame: [Int: [(t: Double, frames: Int, seek: Bool)]] = [:]
+    var armedAfterAction: [(t: Double, frames: Int, seek: Bool)] = []
+    var springBegin: CFTimeInterval?
 
     func application(_ app: UIApplication,
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -224,44 +338,170 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             print("confprobe: WARNING device \(w.bounds.size) != app \(entry.windowSize)")
         }
         (steps, captures) = loadScript()
+        tracing = ProcessInfo.processInfo.environment["CONFPROBE_TRACE"] != nil
         // Let the first frame commit before the timeline starts: UIKit skips
         // presentation work for a hierarchy that has never been displayed,
         // and afterScreenUpdates: false would hand back an empty bitmap.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [self] in run() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [self] in startLink() }
         return true
     }
 
-    /// Replay the merged timeline on the main run loop. At equal times an
-    /// action runs before a capture, the same order openhost's recorder uses.
-    func run() {
-        enum Item { case step(String); case capture(Double) }
-        var timeline: [(t: Double, order: Int, item: Item)] = []
-        for (i, s) in steps.enumerated() { timeline.append((s.t, 0, .step(s.action))); _ = i }
-        for c in captures { timeline.append((c, 1, .capture(c))) }
-        timeline.sort { ($0.t, $0.order) < ($1.t, $1.order) }
-        let t0 = CACurrentMediaTime()
-        for (i, entry) in timeline.enumerated() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + entry.t) { [self] in
-                switch entry.item {
-                case .step(let action):
-                    print("action: \(action) t=\(entry.t)")
-                    performAction?(action)
-                case .capture(let t):
-                    capture(at: t)
+    /// Replay the merged timeline on a 60 Hz CADisplayLink. Script times
+    /// become `ConformanceClock.frameIndex` (TableEditor t1350 = frame 81,
+    /// 9/60 s of *media* time after delete at frame 72). The index is
+    /// `round((timestamp − t0) × 60)`, not a callback counter: five runs
+    /// that counted callbacks still drifted remaining travel 0.189–0.209
+    /// (dt 0.122–0.147 s) because a rest PNG stall stretched later ticks
+    /// while Core Animation kept vsync time. At equal frames an action
+    /// runs before a capture, the same order openhost's recorder uses.
+    func startLink() {
+        let stepFrames = steps.map { ConformanceClock.frameIndex(for: $0.t) }
+        for (i, s) in steps.enumerated() {
+            timeline.append((stepFrames[i], 0, .step(s.action)))
+        }
+        for c in captures {
+            let cf = ConformanceClock.frameIndex(for: c)
+            var prev: Int?
+            for sf in stepFrames {
+                if sf <= cf { prev = sf }
+            }
+            if let pa = prev {
+                let d = cf - pa
+                if d > 0 {
+                    let seek = d <= 20
+                    var list = capturesByActionFrame[pa] ?? []
+                    list.append((t: c, frames: d, seek: seek))
+                    capturesByActionFrame[pa] = list
+                    continue
                 }
-                if i == timeline.count - 1 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [self] in
-                        print("confprobe: \(String(format: "%.3f", CACurrentMediaTime() - t0)) s")
-                        try? "ok".write(toFile: docsDir + "/DONE", atomically: true, encoding: .utf8)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { exit(0) }
-                    }
+            }
+            timeline.append((cf, 1, .capture(c)))
+        }
+        for pa in capturesByActionFrame.keys {
+            capturesByActionFrame[pa]!.sort { $0.frames < $1.frames }
+        }
+        timeline.sort { ($0.frame, $0.order) < ($1.frame, $1.order) }
+        let l = CADisplayLink(target: self, selector: #selector(tick(_:)))
+        l.preferredFramesPerSecond = ConformanceClock.hz
+        l.preferredFrameRateRange = CAFrameRateRange(
+            minimum: Float(ConformanceClock.hz),
+            maximum: Float(ConformanceClock.hz),
+            preferred: Float(ConformanceClock.hz))
+        l.add(to: .main, forMode: .common)
+        link = l
+    }
+
+    @objc func tick(_ l: CADisplayLink) {
+        // Three warmup ticks so the link is running at 60 Hz before frame 0
+        // of the script (navprobe records from the first tick; a cold link's
+        // first duration is not always 1/60).
+        if warmupLeft > 0 {
+            warmupLeft -= 1
+            return
+        }
+        if startedAt == 0 {
+            startedAt = l.timestamp
+            lastActionTimestamp = l.timestamp
+        }
+        // Media frame, not callback count. A 40 ms drawHierarchy stall after
+        // t900 used to be counted as one tick while CA advanced two vsyncs;
+        // the mid-flight sample then walked 0.12–0.15 s of spring.
+        let frame = Int(((l.timestamp - startedAt) * Double(ConformanceClock.hz)).rounded())
+        if frame == lastServicedFrame { return }
+        lastServicedFrame = frame
+        frameIndex = frame
+        if l.duration > 0.020 {
+            print("confprobe: WARNING dropped frame at \(frame) duration=\(l.duration)")
+        }
+        if tracing { appendTrace(link: l) }
+        while cursor < timeline.count, timeline[cursor].frame <= frame {
+            let entry = timeline[cursor]
+            switch entry.item {
+            case .step(let action):
+                print("action: \(action) t=\(ConformanceClock.time(of: entry.frame)) frame=\(frame)")
+                lastActionTimestamp = l.timestamp
+                lastActionFrame = frame
+                performAction?(action)
+                if let list = capturesByActionFrame[entry.frame] {
+                    armedAfterAction = list
+                    springBegin = nil
+                    print("armed \(list.count) capture(s) after \(action)")
+                }
+            case .capture(let t):
+                capture(at: t, frame: frame, link: l, sampleElapsed: nil, springBegin: nil)
+            }
+            cursor += 1
+        }
+        // Post-action captures: seek mid-flight to begin+N/60, wait rest
+        // out on the display-link clock from the action's timestamp.
+        if !armedAfterAction.isEmpty, frame > lastActionFrame, let w = window {
+            while let next = armedAfterAction.first {
+                if next.seek {
+                    if springBegin == nil { springBegin = firstSpringBegin(w) }
+                    let origin = springBegin ?? lastActionTimestamp
+                    let elapsed = Double(next.frames) / Double(ConformanceClock.hz)
+                    freezeLayer(w.layer, at: origin + elapsed)
+                    CATransaction.flush()
+                    capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
+                            sampleElapsed: elapsed, springBegin: springBegin)
+                    unfreezeLayer(w.layer)
+                    springBegin = nil
+                    armedAfterAction.removeFirst()
+                } else {
+                    let due = lastActionTimestamp
+                        + Double(next.frames) / Double(ConformanceClock.hz)
+                    if l.timestamp + 1e-4 < due { break }
+                    capture(at: next.t, frame: frame, link: l,
+                            sampleElapsed: nil, springBegin: nil)
+                    armedAfterAction.removeFirst()
                 }
             }
         }
+        if cursor >= timeline.count, armedAfterAction.isEmpty {
+            l.invalidate()
+            link = nil
+            finish()
+            return
+        }
     }
 
-    func capture(at t: Double) {
+    func appendTrace(link l: CADisplayLink) {
         guard let w = window else { return }
+        var views: [[String: Any]] = []
+        dumpLayout(w, path: "", absOrigin: .zero, pAbsOrigin: .zero, into: &views)
+        var moving: [[String: Any]] = []
+        for v in views {
+            guard let pframe = v["pframe"] as? [Double],
+                  let frame = v["frame"] as? [Double],
+                  pframe != frame else { continue }
+            var row: [String: Any] = [
+                "path": v["path"] as Any,
+                "class": v["class"] as Any,
+                "pabs": v["pabs"] as Any,
+                "pframe": pframe,
+                "popacity": v["popacity"] as Any,
+            ]
+            if let text = v["text"] { row["text"] = text }
+            if let anims = v["anims"] { row["anims"] = anims }
+            moving.append(row)
+        }
+        trace.append([
+            "frame": frameIndex,
+            "displayLinkTimestamp": round3(CGFloat(l.timestamp)),
+            "displayLinkDuration": round3(CGFloat(l.duration)),
+            "moving": moving,
+        ])
+    }
+
+    func capture(at t: Double, frame: Int, link: CADisplayLink,
+                 sampleElapsed: Double?, springBegin: CFTimeInterval?) {
+        guard let w = window else { return }
+        // Layout dump FIRST: presentation() is this display-link tick.
+        // drawHierarchy can stall ~40 ms and would otherwise sample a later
+        // vsync (navprobe: stamp with link.timestamp, not CACurrentMediaTime).
+        var views: [[String: Any]] = []
+        dumpLayout(w, path: "", absOrigin: .zero, pAbsOrigin: .zero, into: &views)
+
         let fmt = UIGraphicsImageRendererFormat()
         fmt.scale = UIScreen.main.scale
         // .extended keeps the private glass materials the bar platters and
@@ -284,12 +524,28 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         try! normalizedSRGB(img).pngData()!.write(
             to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
 
-        var views: [[String: Any]] = []
-        dumpLayout(w, path: "", absOrigin: .zero, into: &views)
+        var clock: [String: Any] = [
+            "frame": frame,
+            "hz": ConformanceClock.hz,
+            "scriptT": round3(CGFloat(t)),
+            "displayLinkTimestamp": round3(CGFloat(link.timestamp)),
+            "displayLinkDuration": round3(CGFloat(link.duration)),
+            "displayLinkTargetTimestamp": round3(CGFloat(link.targetTimestamp)),
+            "sinceAction": round3(CGFloat(link.timestamp - lastActionTimestamp)),
+            "sinceActionFrames": Int(((link.timestamp - lastActionTimestamp)
+                                      * Double(ConformanceClock.hz)).rounded()),
+        ]
+        if let sampleElapsed {
+            clock["sampleElapsed"] = round3(CGFloat(sampleElapsed))
+        }
+        if let springBegin {
+            clock["springBegin"] = round3(CGFloat(springBegin))
+        }
         let sa = w.safeAreaInsets
         let payload: [String: Any] = [
             "name": "\(appName).\(suffix)",
             "t": round3(CGFloat(t)),
+            "clock": clock,
             "screen": ["scale": Double(UIScreen.main.scale),
                        "bounds": [round3(w.bounds.width), round3(w.bounds.height)],
                        "windowSafeArea": [round3(sa.top), round3(sa.left),
@@ -306,7 +562,22 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             return
         }
         try! data.write(to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).layout.json"))
-        print("captured \(appName).\(suffix).png")
+        print("captured \(appName).\(suffix).png frame=\(frame) dl=\(String(format: "%.6f", link.timestamp))")
+    }
+
+    func finish() {
+        if tracing {
+            let payload: [String: Any] = ["hz": ConformanceClock.hz, "frames": trace]
+            if let data = try? JSONSerialization.data(withJSONObject: payload,
+                                                      options: [.sortedKeys]) {
+                try? data.write(to: URL(fileURLWithPath: "\(docsDir)/trace.json"))
+                print("confprobe: wrote trace.json (\(trace.count) ticks)")
+            }
+        }
+        let elapsed = startedAt == 0 ? 0 : CACurrentMediaTime() - startedAt
+        print("confprobe: \(String(format: "%.3f", elapsed)) s  frames=\(frameIndex)")
+        try? "ok".write(toFile: docsDir + "/DONE", atomically: true, encoding: .utf8)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { exit(0) }
     }
 }
 

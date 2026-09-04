@@ -1,5 +1,5 @@
 {
-  "comment": "Modal conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. The medium sheet has a mid-flight capture at +0.2 s (t=0.60). Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app Modal` (the port).",
+  "comment": "Modal conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. The medium sheet has a mid-flight capture at +0.2 s = 12 frames at 60 Hz (present t=0.40 = frame 24, capture t=0.60 = frame 36). Same file drives Tools/oracle2/confprobe (real UIKit, CADisplayLink frame index) and `openhost --app Modal` (the port, integer animationTime frames).",
   "app": "Modal",
   "events": [
     { "t": 0.40, "action": "sheet-medium" },

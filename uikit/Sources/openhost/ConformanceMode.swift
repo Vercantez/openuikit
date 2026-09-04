@@ -5,14 +5,16 @@
 //
 // boots the app through AppMode.swift, which merges ConformanceApps.registry
 // into the host app table (UIApplicationMain, a real UIWindow, the app's own
-// root controller), replays the script's named actions on a 60 Hz deterministic
-// clock and writes, at each capture time:
+// root controller), replays the script's named actions on a 60 Hz integer
+// frame clock (`ConformanceClock`: animationTime = frame / 60) and writes,
+// at each capture frame:
 //
 //   <outdir>/<app>.t<ms>.png          the window rendered at the script scale
-//   <outdir>/<app>.t<ms>.layout.json  {"name", "t", "screen", "views": [...]}
+//   <outdir>/<app>.t<ms>.layout.json  {"name", "t", "clock", "screen", "views"}
 //
-// Tools/oracle2/confprobe writes byte-compatible files from REAL UIKit at the
-// same times, and scripts/conformance_flow.sh compares them pair by pair.
+// Tools/oracle2/confprobe writes byte-compatible files from REAL UIKit at
+// the same 60 Hz frame index (CADisplayLink, not a GCD wall-clock), and
+// scripts/conformance_flow.sh compares them pair by pair.
 //
 // The dump carries ABSOLUTE frames (`abs`, origins accumulated to the
 // captured root) as well as parent-relative ones, because the two view trees
@@ -145,14 +147,18 @@ func rectJSON(_ r: CGRect) -> JSONValue {
 
 // MARK: - Scripted replay
 
-/// Replay `steps` and capture at `captures`, on a 60 Hz deterministic clock.
+/// Replay `steps` and capture at `captures`, on a 60 Hz integer frame clock.
 ///
-/// The clock is stepped every 1/60 s rather than jumped from event to event:
-/// OpenUIKit's transitions, sheet presentations and switch springs advance
-/// from `UIWindow.tick`, and a jump would collapse a whole transition into a
-/// single step — the captures would still be at rest, but nothing between
-/// them would ever run (a `UIView.animate` completion that pushes further
-/// work would be lost). Nothing renders except at capture times.
+/// Script times convert with `ConformanceClock.frameIndex` — the same
+/// mapping confprobe's CADisplayLink uses — so a mid-flight capture at
+/// +0.15 s is frame 9 after the action (TableEditor t1350 / t2350) and
+/// +0.2 s is frame 12 (Modal t600). `animationTime` is `frame / 60`, not
+/// an accumulated `t += 1/60` (that addition missed t=2.35 by one frame:
+/// fire_n=142 vs ideal 141). The clock is stepped every frame rather than
+/// jumped from event to event: OpenUIKit's transitions, sheet presentations
+/// and switch springs advance from `UIWindow.tick`, and a jump would
+/// collapse a whole transition into a single step. Nothing renders except
+/// at capture frames.
 @MainActor
 func runConformanceScripted(_ scene: HostScene, app: String,
                             steps: [ConformanceStep], captures: [Double],
@@ -160,39 +166,45 @@ func runConformanceScripted(_ scene: HostScene, app: String,
     guard let perform = ConformanceApps.registry[app]?.perform else {
         fatalError("no conformance action table for app \"\(app)\"")
     }
-    let tick = 1.0 / 60.0
-    let end = max(steps.map(\.t).max() ?? 0, captures.max() ?? 0)
     var nextStep = 0, nextCapture = 0
     let sortedSteps = steps.sorted { $0.t < $1.t }
     let sortedCaptures = captures.sorted()
     var written: [String] = []
+    let stepFrames = sortedSteps.map { ConformanceClock.frameIndex(for: $0.t) }
+    let captureFrames = sortedCaptures.map { ConformanceClock.frameIndex(for: $0) }
+    var endFrame = 0
+    for f in stepFrames { if f > endFrame { endFrame = f } }
+    for f in captureFrames { if f > endFrame { endFrame = f } }
 
     UIApplication.shared._hostDidBecomeActive()
-    var t = 0.0
-    while t <= end + tick {
+    var frame = 0
+    while frame <= endFrame {
+        let t = ConformanceClock.time(of: frame)
         OpenUIKitRuntime.animationTime = t
         scene.window.tick(timestamp: t)
-        // At equal times an action runs before a capture, as in runScripted.
-        while nextStep < sortedSteps.count, sortedSteps[nextStep].t <= t {
+        // At equal frames an action runs before a capture, as in runScripted
+        // and confprobe's display-link tick.
+        while nextStep < sortedSteps.count, stepFrames[nextStep] <= frame {
             let step = sortedSteps[nextStep]
-            print("action: \(step.action) t=\(fmt3(step.t))")
+            print("action: \(step.action) t=\(fmt3(step.t)) frame=\(frame)")
             perform(step.action)
             scene.window.layoutIfNeeded()
             nextStep += 1
         }
-        while nextCapture < sortedCaptures.count, sortedCaptures[nextCapture] <= t {
+        while nextCapture < sortedCaptures.count, captureFrames[nextCapture] <= frame {
             let ct = sortedCaptures[nextCapture]
-            written.append(try captureConformance(scene, app: app, t: ct, outdir: outdir))
+            written.append(try captureConformance(scene, app: app, t: ct,
+                                                  frame: frame, outdir: outdir))
             nextCapture += 1
         }
-        t += tick
+        frame += 1
     }
     return written
 }
 
 @MainActor
 func captureConformance(_ scene: HostScene, app: String, t: Double,
-                        outdir: String) throws -> String {
+                        frame: Int, outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
     let bmp = UIRenderer.render(scene.window, scale: scene.scale)
     let suffix = captureSuffix(t)
@@ -204,6 +216,11 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
     let layout = JSONValue.object([
         "name": .string("\(app).\(suffix)"),
         "t": .number(round3(CGFloat(t))),
+        "clock": .object([
+            "frame": .number(Double(frame)),
+            "hz": .number(Double(ConformanceClock.hz)),
+            "scriptT": .number(round3(CGFloat(t))),
+        ]),
         "screen": .object(["scale": .number(Double(scene.scale)),
                            "bounds": .array([.number(round3(scene.window.bounds.width)),
                                              .number(round3(scene.window.bounds.height))]),
@@ -215,6 +232,6 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
         "views": .array(views),
     ])
     try writeJSONFile(layout, path: "\(outdir)/\(app).\(suffix).layout.json")
-    print("captured \(png)")
+    print("captured \(png) frame=\(frame)")
     return png
 }

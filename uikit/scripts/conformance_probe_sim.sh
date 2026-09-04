@@ -5,11 +5,13 @@
 # Compiles the whole Sources/ConformanceApps tree UNCHANGED against the iOS 26
 # simulator SDK together with Tools/oracle2/confprobe/main.swift, installs the
 # app on the 2x device, looks the requested app up in ConformanceApps.registry
-# (the same table openhost reads), replays <app>/script.json on the main run
-# loop and copies out, per capture time:
+# (the same table openhost reads), replays <app>/script.json on a 60 Hz
+# CADisplayLink (ConformanceClock.frameIndex, not a GCD wall-clock) and copies
+# out, per capture frame:
 #
 #   <outdir>/<app>.t<ms>.png          drawHierarchy(afterScreenUpdates: false)
 #   <outdir>/<app>.t<ms>.layout.json  absolute frames + presentation geometry
+#                                     + display-link timestamp / frame index
 #
 # No sed, no patched copy, no adaptation ledger: a conformance app's only
 # imports are UIKit and Foundation, and OpenUIKit's `UIKit` shim re-exports
@@ -76,8 +78,14 @@ xcrun simctl uninstall "$UDID" com.openuikit.confprobe 2>/dev/null || true
 xcrun simctl install "$UDID" "$APP"
 CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.confprobe data)
 rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
-SIMCTL_CHILD_CONFPROBE_APP=$APPNAME \
-  xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
+# CONFPROBE_TRACE=1 writes Documents/trace.json (per-tick presentation
+# geometry, no extra PNG). simctl forwards SIMCTL_CHILD_* into the app.
+typeset -a LAUNCH_ENV
+LAUNCH_ENV=(SIMCTL_CHILD_CONFPROBE_APP=$APPNAME)
+if [[ -n "${CONFPROBE_TRACE:-}" ]]; then
+  LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_TRACE=1)
+fi
+env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
 [[ -f "$CONTAINER/Documents/DONE" ]] || { echo "conformance_probe_sim: no DONE marker" >&2; exit 1 }
 [[ "$(cat "$CONTAINER/Documents/DONE")" == "ok" ]] \
