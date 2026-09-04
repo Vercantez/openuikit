@@ -1,1 +1,4 @@
 full/compression/Compression.swift
+full/compression/CompressionAlgorithms.swift
+full/compression/CompressionCFunctions.swift
+full/compression/CompressionCTypes.swift

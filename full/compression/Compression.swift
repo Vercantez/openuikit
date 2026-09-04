@@ -1,4 +1,3 @@
-@_exported import COpenCompression
 import Foundation
 
 public enum Algorithm: CaseIterable, Hashable, RawRepresentable, Sendable {
@@ -8,6 +7,13 @@ public enum Algorithm: CaseIterable, Hashable, RawRepresentable, Sendable {
     case lzma
     case lzbitmap
     case brotli
+
+    public typealias RawValue = compression_algorithm
+    public typealias AllCases = [Algorithm]
+
+    nonisolated public static var allCases: [Algorithm] {
+        [.lzfse, .zlib, .lz4, .lzma, .lzbitmap, .brotli]
+    }
 
     public init?(rawValue: compression_algorithm) {
         switch rawValue {
@@ -37,6 +43,8 @@ public enum FilterOperation: Hashable, RawRepresentable, Sendable {
     case compress
     case decompress
 
+    public typealias RawValue = compression_stream_operation
+
     public init?(rawValue: compression_stream_operation) {
         switch rawValue {
         case COMPRESSION_STREAM_ENCODE: self = .compress
@@ -58,36 +66,6 @@ public enum FilterError: Error, Hashable, Sendable {
     case invalidData
 }
 
-private struct _OpenCompressionResponse {
-    var bytes: UnsafeMutablePointer<UInt8>?
-    var count: UInt64
-    var status: Int32
-    var reserved: Int32
-
-    init() {
-        bytes = nil
-        count = 0
-        status = 0
-        reserved = 0
-    }
-}
-
-@_silgen_name("openui_compression_v1_transform")
-private func _openCompressionTransform(
-    _ abiVersion: UInt32,
-    _ operation: Int32,
-    _ algorithm: Int32,
-    _ input: UnsafePointer<UInt8>?,
-    _ inputCount: UInt64,
-    _ outputLimit: UInt64,
-    _ response: UnsafeMutablePointer<_OpenCompressionResponse>
-) -> Int32
-
-@_silgen_name("openui_compression_v1_release")
-private func _openCompressionRelease(
-    _ response: UnsafeMutablePointer<_OpenCompressionResponse>
-)
-
 private let _openCompressionLimit = 256 * 1024 * 1024
 
 private func _transform(
@@ -95,27 +73,8 @@ private func _transform(
     operation: FilterOperation,
     algorithm: Algorithm
 ) throws -> Data {
-    guard algorithm == .brotli else { throw FilterError.invalidData }
-    var response = _OpenCompressionResponse()
-    defer { _openCompressionRelease(&response) }
-    let status: Int32 = data.withUnsafeBytes { bytes in
-        _openCompressionTransform(
-            1,
-            Int32(bitPattern: operation.rawValue.rawValue),
-            Int32(bitPattern: algorithm.rawValue.rawValue),
-            bytes.bindMemory(to: UInt8.self).baseAddress,
-            UInt64(bytes.count),
-            UInt64(_openCompressionLimit),
-            &response
-        )
-    }
-    guard status == 0, response.status == 0,
-          response.count <= UInt64(Int.max) else {
-        throw FilterError.invalidData
-    }
-    guard response.count != 0 else { return Data() }
-    guard let bytes = response.bytes else { throw FilterError.invalidData }
-    return Data(bytes: bytes, count: Int(response.count))
+    guard data.count <= _openCompressionLimit else { throw FilterError.invalidData }
+    return try compressionTransform(data, operation: operation, algorithm: algorithm)
 }
 
 public final class InputFilter<D> where D: DataProtocol {
