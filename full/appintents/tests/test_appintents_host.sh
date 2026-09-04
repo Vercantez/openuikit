@@ -9,7 +9,34 @@ EXPECTED_APPINTENT_SHA256=2c46aea844dbaf5a03cd8044a716a009a27d339347198d59aa0450
 EXPECTED_SF_COMMIT=e01b3d4f861412f8dcee8d93c417d2c2b0cdfd77
 EXPECTED_SF_APPINTENT_SHA256=e6e8cda6372f90957d430acd9a7ec85f84f1578518b83074073ccfb8a75e9339
 
-[ -d "$BUTTONKIT/.git" ] || { echo "missing ButtonKit repository" >&2; exit 2; }
+TMP=$(mktemp -d "${TMPDIR:-/tmp}/appintents-host-proof.XXXXXX")
+trap 'rm -rf "$TMP"' EXIT
+
+mapfile -t SOURCES < "$ROOT/full/appintents/appintents_guest_sources.txt"
+SOURCE_PATHS=()
+for relative in "${SOURCES[@]}"; do
+    SOURCE_PATHS+=("$ROOT/$relative")
+done
+
+swiftc -parse-as-library -module-name AppIntents \
+    -emit-module -emit-module-path "$TMP/AppIntents.swiftmodule" \
+    -emit-library -o "$TMP/libAppIntents.dylib" \
+    "${SOURCE_PATHS[@]}"
+
+swiftc -parse-as-library -I "$TMP" \
+    "$ROOT/full/appintents/tests/AppIntentsHostRuntime.swift" \
+    "$TMP/libAppIntents.dylib" \
+    -o "$TMP/appintents-host-runtime"
+DYLD_LIBRARY_PATH="$TMP${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}" \
+LD_LIBRARY_PATH="$TMP${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    "$TMP/appintents-host-runtime" \
+    | grep -Fxq 'APPINTENTS_HOST_RUNTIME_OK execution=1 shortcuts=2 system-registration=unavailable'
+
+if [ ! -d "$BUTTONKIT/.git" ] || [ ! -d "$SFSAFESYMBOLS/.git" ]; then
+    echo "APPINTENTS_EXACT_CONSUMERS_SKIPPED missing-buttonkit-or-sfsafesymbols-cache"
+    exit 0
+fi
+
 [ "$(git -C "$BUTTONKIT" rev-parse HEAD)" = "$EXPECTED_COMMIT" ] || {
     echo "ButtonKit commit drifted" >&2
     exit 2
@@ -23,7 +50,6 @@ EXACT_SOURCE="$BUTTONKIT/Sources/ButtonKit/Button+AppIntent.swift"
     echo "Button+AppIntent.swift hash drifted" >&2
     exit 2
 }
-[ -d "$SFSAFESYMBOLS/.git" ] || { echo "missing SFSafeSymbols repository" >&2; exit 2; }
 [ "$(git -C "$SFSAFESYMBOLS" rev-parse HEAD)" = "$EXPECTED_SF_COMMIT" ] || {
     echo "SFSafeSymbols commit drifted" >&2
     exit 2
@@ -37,20 +63,6 @@ SF_EXACT_SOURCE="$SFSAFESYMBOLS/Sources/SFSafeSymbols/Initializers/AppIntents/Di
     echo "SFSafeSymbols AppIntents source hash drifted" >&2
     exit 2
 }
-
-TMP=$(mktemp -d /private/tmp/appintents-host-proof.XXXXXX)
-trap 'rm -rf "$TMP"' EXIT
-
-swiftc -parse-as-library -module-name AppIntents \
-    -emit-module -emit-module-path "$TMP/AppIntents.swiftmodule" \
-    -emit-library -o "$TMP/libAppIntents.dylib" \
-    "$ROOT/full/appintents/AppIntents.swift"
-
-swiftc -parse-as-library -I "$TMP" -L "$TMP" -lAppIntents \
-    "$ROOT/full/appintents/tests/AppIntentsHostRuntime.swift" \
-    -o "$TMP/appintents-host-runtime"
-DYLD_LIBRARY_PATH="$TMP" "$TMP/appintents-host-runtime" \
-    | grep -Fxq 'APPINTENTS_HOST_RUNTIME_OK execution=1 shortcuts=2 system-registration=unavailable'
 
 # This is the untouched file that stopped the exact production build.  The
 # parse/typecheck deliberately runs after our module shadows Apple's module.

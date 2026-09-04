@@ -1,1 +1,10 @@
 full/appintents/AppIntents.swift
+full/appintents/AppIntentsAssistant.swift
+full/appintents/AppIntentsClasses.swift
+full/appintents/AppIntentsEnums.swift
+full/appintents/AppIntentsLookalikes.swift
+full/appintents/AppIntentsMembers.swift
+full/appintents/AppIntentsOverlays.swift
+full/appintents/AppIntentsProtocols.swift
+full/appintents/AppIntentsStructs.swift
+full/appintents/AppIntentsViewStubs.swift
