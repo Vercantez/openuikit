@@ -658,6 +658,7 @@ def _generate_one(
         risks=args.risks,
         dependencies=args.dependencies,
         output_root=str(output_root),
+        allow_no_roadmap_record=getattr(args, "allow_no_roadmap_record", False),
     )
     base.run_checked = scoped_run_checked
     try:
@@ -849,6 +850,15 @@ def argument_parser() -> argparse.ArgumentParser:
         type=int,
         default=DEFAULT_REPRODUCIBILITY_RUN_COUNT,
         help="number of fresh evidence runs to retain (minimum: 3)",
+    )
+    parser.add_argument(
+        "--allow-no-roadmap-record",
+        action="store_true",
+        help=(
+            "if the framework roadmap has no module record, record "
+            f"{base.ROADMAP_OPERATOR_OVERRIDE!r} instead of refusing; "
+            "default still refuses"
+        ),
     )
     return parser
 
