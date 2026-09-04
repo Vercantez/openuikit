@@ -35,6 +35,13 @@ if git diff --name-only main..."$BR" | grep -qE 'Package\.resolved$|\.app/'; the
   echo "REFUSED: the branch commits Package.resolved or a probe .app bundle"; exit 3
 fi
 rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks the merge
+# The Linux-hosted arm64-apple-macos GUEST route builds OpenUIKit against the
+# port's own Foundation (no DateFormatter / NumberFormatter / NSAttributedString
+# ...); the Docker check below uses corelibs and cannot see that. Refuse the
+# common traps in changed sources; the arm64/x86 authorities are the real check.
+if git diff main..."$BR" -- 'uikit/Sources/*.swift' | grep -E '^\+' | grep -qE 'DateFormatter|NumberFormatter|DateComponentsFormatter|ISO8601DateFormatter|NSRegularExpression|JSONSerialization'; then
+  echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
+fi
 
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main

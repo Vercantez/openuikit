@@ -718,15 +718,17 @@ open class UIDatePicker: UIControl {
     /// DateFormatter.dateStyle = .medium ("Sep 4, 2026" for 2026-09-04 UTC
     /// / en_US), 17 pt regular, not the `MM/dd/yyyy` compact string.
     /// `en_US_POSIX` medium produces the same reading (verified on macOS).
+    ///
+    /// Spelled with Calendar components rather than DateFormatter: the
+    /// Linux-hosted arm64-apple-macos guest compiles OpenUIKit against the
+    /// port's own Foundation, which has no DateFormatter (x86 authority,
+    /// fc0b97d8). The medium style measured was "Sep 4, 2026" (en_US).
     private var iOSCompactDateTitle: String {
-        let formatter = DateFormatter()
-        formatter.calendar = effectiveCalendar
-        formatter.timeZone = storedTimeZone ?? effectiveCalendar.timeZone
-        formatter.locale = storedLocale ?? effectiveCalendar.locale
-            ?? Locale(identifier: "en_US")
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.string(from: _date)
+        var calendar = effectiveCalendar
+        if let tz = storedTimeZone { calendar.timeZone = tz }
+        let c = calendar.dateComponents([.year, .month, .day], from: _date)
+        guard let y = c.year, let m = c.month, let d = c.day else { return "" }
+        return "\(monthTitle(m, short: true)) \(d), \(y)"
     }
 
     private var timeTitle: String {
