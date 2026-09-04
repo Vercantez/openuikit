@@ -250,33 +250,55 @@ open class UINavigationController: UIViewController {
 
     // MARK: Large-title container mode (M10)
 
-    /// Frame the bar + content area for the current bar mode. Classic mode:
-    /// opaque bar above a clipped content area. Large-title mode (iOS 26):
-    /// content fills the WHOLE view and underlaps the transparent bar; the
-    /// bar overlays the top `largeTitleExpandedInset` points.
+    /// Frame the bar + content area for the current bar mode. Classic mode
+    /// (Catalyst): opaque bar above a clipped content area. Large-title mode
+    /// and the iOS cut (iOS 26.1): content fills the WHOLE view and underlaps
+    /// the bar; the child's `safeAreaInsets.top` is the bar's bottom edge.
     func updateContainerLayout() {
         guard isViewLoaded else { return }
         let v = view!
+        let w = v.bounds.width, h = v.bounds.height
         if isNavigationBarHidden {
-            contentView.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
-                                       height: v.bounds.height - toolbarHeight)
-            navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
+            contentView.frame = CGRect(x: 0, y: 0, width: w, height: h - toolbarHeight)
+            navigationBar.frame = CGRect(x: 0, y: 0, width: w,
                                          height: UINavigationBar.barHeight)
+        } else if UINavigationBar.isIOS {
+            // MEASURED 2026-09-04, Tools/oracle2/navprobe variant "barorigin",
+            // iPhone SE 2x + iPhone 16 / iOS 26.1, at rest, with and without
+            // prefersLargeTitles:
+            //   bar.frame.y = max(nav.view.safeAreaInsets.top, 10)
+            //   bar.frame.height = 54 (inline / collapsed) or 106 (large)
+            //   _UIBarBackground = [0, −y, W, y+height] (covers from y = 0)
+            //   child view fills the container; safeAreaInsets.top = y+height
+            // The 10 is a FLOOR, not an addend: window SA 0 (SE, status bar
+            // hidden) → y 10 / overlay 64 or 116; a 20 pt status bar and a
+            // 59 pt notch set y to that inset (additionalSafeAreaInsets 20/59
+            // on a zero-SA window match the real status-bar / notch samples).
+            let pad = iOSBarTop
+            let barH = navigationBar.prefersLargeTitles
+                ? navigationBar.largeTitleOverlayHeight
+                : UINavigationBar.iOSBarContentHeight
+            contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)
+            navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
         } else if navigationBar.prefersLargeTitles {
             contentView.frame = v.bounds
             navigationBar.frame = CGRect(
-                x: 0, y: 0, width: v.bounds.width,
+                x: 0, y: 0, width: w,
                 height: navigationBar.largeTitleOverlayHeight)
         } else {
             let barH = UINavigationBar.barHeight
-            contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
-                                       height: v.bounds.height - barH - toolbarHeight)
-            navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
-                                         height: barH)
+            contentView.frame = CGRect(x: 0, y: barH, width: w,
+                                       height: h - barH - toolbarHeight)
+            navigationBar.frame = CGRect(x: 0, y: 0, width: w, height: barH)
         }
-        toolbar.frame = CGRect(x: 0, y: v.bounds.height - toolbarHeight,
-                               width: v.bounds.width, height: UIToolbar.defaultHeight)
+        toolbar.frame = CGRect(x: 0, y: h - toolbarHeight,
+                               width: w, height: UIToolbar.defaultHeight)
         updateContentSafeArea()
+    }
+
+    /// iOS 26.1 bar origin: `max(safeArea.top, 10)`. See updateContainerLayout.
+    var iOSBarTop: CGFloat {
+        max(view.safeAreaInsets.top, UINavigationBar.iOSMinimumBarTop)
     }
 
     /// The bars a child underlaps are SAFE AREA, not a scroll-view inset.

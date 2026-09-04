@@ -69,12 +69,13 @@ import UIKit
 
 let docsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
 /// "large" (prefersLargeTitles push/pop), "inline" (same, no large titles),
-/// or "scroll" (large-title root + UIScrollView collapse samples). One
-/// variant per PROCESS: a bar that has already run a large-title
+/// "scroll" (large-title root + UIScrollView collapse samples), or
+/// "barorigin" (rest layout of the bar vs window safe-area top).
+/// One variant per PROCESS: a bar that has already run a large-title
 /// transition is not a clean inline bar. scripts/nav_probe_sim.sh launches
 /// the app once per variant with SIMCTL_CHILD_NAVPROBE_VARIANT.
 let variant = ProcessInfo.processInfo.environment["NAVPROBE_VARIANT"] ?? "large"
-let prefersLarge = variant != "inline"
+let prefersLarge = variant != "inline" && variant != "barorigin"
 /// Collapse distances (pt past the expanded rest offset) sampled at rest.
 /// 12…24 find the scroll-edge glass threshold; 44…51 find the bar-height
 /// snap; 52+ is the collapsed regime (inset/bar already rebases).
@@ -452,6 +453,83 @@ func chromeSummary(from views: [[String: Any]],
     return out
 }
 
+// MARK: - Bar-origin rest oracle (variant "barorigin")
+//
+// The conformance apps run in a window whose safeAreaInsets.top is 0 (SE 2x,
+// status bar hidden). Real iOS 26.1 still puts the bar at y = 10. This pass
+// dumps the bar's frame, its chrome subviews, and the root's safe area for
+// three window configurations × prefersLargeTitles, at rest:
+//   * top 0  — status bar hidden, no additional insets (the SE probe window)
+//   * top 20 — a status bar (shown on SE, or additionalSafeAreaInsets = 20)
+//   * top 59 — the iPhone 16 notch (real window SA, or additional = 59)
+// Read the summary JSON: bar.frame.y vs window/nav/root safeAreaInsets.top
+// says whether the 10 is a minimum status-bar allowance or the bar's own
+// top inset, and how the content / child safe area follows it.
+
+final class BarOriginHostVC: UIViewController {
+    var hideStatus = true
+    override var prefersStatusBarHidden: Bool { hideStatus }
+}
+
+func barOriginSample(name: String, window: UIWindow, host: BarOriginHostVC,
+                     nav: UINavigationController) -> [String: Any] {
+    let bar = nav.navigationBar
+    let root = nav.topViewController
+    var barViews: [[String: Any]] = []
+    dumpLayout(bar, path: "bar", into: &barViews)
+    func named(_ needle: String) -> [String: Any]? {
+        barViews.first { ($0["class"] as? String ?? "").contains(needle) }
+    }
+    func titleLabel(large: Bool) -> [String: Any]? {
+        barViews.first { e in
+            guard (e["class"] as? String) == "UILabel",
+                  let font = e["font"] as? [Any],
+                  let size = font.last as? Double else { return false }
+            return large ? size >= 30 : size < 20 && size >= 15
+        }
+    }
+    var statusBar: [Double] = [0, 0, 0, 0]
+    if let scene = window.windowScene {
+        statusBar = rectArr(scene.statusBarManager?.statusBarFrame ?? .zero)
+    }
+    return [
+        "name": name,
+        "hideStatus": host.hideStatus,
+        "windowBounds": rectArr(window.bounds),
+        "windowSafeArea": [round3(window.safeAreaInsets.top),
+                           round3(window.safeAreaInsets.left),
+                           round3(window.safeAreaInsets.bottom),
+                           round3(window.safeAreaInsets.right)],
+        "statusBarFrame": statusBar,
+        "hostSafeArea": [round3(host.view.safeAreaInsets.top),
+                         round3(host.view.safeAreaInsets.bottom)],
+        "hostAdditional": round3(host.additionalSafeAreaInsets.top),
+        "navViewFrame": rectArr(nav.view.frame),
+        "navViewSafeArea": [round3(nav.view.safeAreaInsets.top),
+                            round3(nav.view.safeAreaInsets.left),
+                            round3(nav.view.safeAreaInsets.bottom),
+                            round3(nav.view.safeAreaInsets.right)],
+        "navAdditional": round3(nav.additionalSafeAreaInsets.top),
+        "barFrame": rectArr(bar.frame),
+        "barBounds": rectArr(bar.bounds),
+        "barSafeArea": [round3(bar.safeAreaInsets.top),
+                        round3(bar.safeAreaInsets.bottom)],
+        "prefersLargeTitles": bar.prefersLargeTitles,
+        "background": named("BarBackground") as Any,
+        "contentView": named("BarContent") as Any,
+        "largeTitleView": named("LargeTitle") as Any,
+        "inlineTitle": titleLabel(large: false) as Any,
+        "largeTitle": titleLabel(large: true) as Any,
+        "rootViewFrame": rectArr(root?.view.frame ?? .zero),
+        "rootViewSafeArea": [round3(root?.view.safeAreaInsets.top ?? -1),
+                             round3(root?.view.safeAreaInsets.left ?? -1),
+                             round3(root?.view.safeAreaInsets.bottom ?? -1),
+                             round3(root?.view.safeAreaInsets.right ?? -1)],
+        "rootAdditional": round3(root?.additionalSafeAreaInsets.top ?? -1),
+        "barViews": barViews,
+    ]
+}
+
 // MARK: - KIF-style UITouch injection (in-process, private UIKit API)
 // Same selectors Tools/oracle2/scrollshared.swift already verified on
 // iOS 26.1. Kept here so navprobe stays a one-file compile.
@@ -554,6 +632,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     var wrapper = UIView()
     var nav: UINavigationController!
     var root: UIViewController!
+    var barOriginHost: BarOriginHostVC?
     var scrollRoot: NavScrollRootVC?
     var link: CADisplayLink?
     var startTime: CFTimeInterval = 0
@@ -572,6 +651,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let w = UIWindow(frame: UIScreen.main.bounds)
         w.overrideUserInterfaceStyle = .light
+        if variant == "barorigin" {
+            let host = BarOriginHostVC()
+            host.view.backgroundColor = .systemBackground
+            w.rootViewController = host
+            w.makeKeyAndVisible()
+            window = w
+            barOriginHost = host
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [self] in
+                runBarOriginPass()
+            }
+            return true
+        }
         let hostVC = UIViewController()
         hostVC.view.backgroundColor = .white
         w.rootViewController = hostVC
@@ -618,6 +709,84 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// consecutive frames carrying one presentation value), pass 1 samples the
     /// pixels at `snapshotTargets` and its geometry is discarded.
     var pass = 0
+
+    // MARK: Bar-origin rest pass
+
+    func installBarOriginNav(large: Bool, additionalTop: CGFloat) -> UINavigationController {
+        let host = barOriginHost!
+        nav?.willMove(toParent: nil)
+        nav?.view.removeFromSuperview()
+        nav?.removeFromParent()
+        let rootVC = UIViewController()
+        rootVC.title = large ? "Library" : "Forms"
+        rootVC.view.backgroundColor = .systemGroupedBackground
+        let n = UINavigationController(rootViewController: rootVC)
+        n.navigationBar.prefersLargeTitles = large
+        n.additionalSafeAreaInsets.top = additionalTop
+        host.addChild(n)
+        n.view.frame = host.view.bounds
+        n.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        host.view.addSubview(n.view)
+        n.didMove(toParent: host)
+        host.view.layoutIfNeeded()
+        n.view.layoutIfNeeded()
+        nav = n
+        return n
+    }
+
+    func runBarOriginPass() {
+        guard let window, let host = barOriginHost else {
+            writeDone("barorigin: no window"); return
+        }
+        // (hideStatus, additionalTop) × prefersLargeTitles. The three
+        // *window* configurations the brief names are the ones whose
+        // measured window/nav safe-area top is 0, 20 and 59 — hide+0 on
+        // the SE, show+0 on the SE (status bar), hide+0 on the iPhone 16
+        // (notch). additionalTop 20/59 on a zero-SA window isolate whether
+        // the bar follows the view's safe area or the window/status bar.
+        let jobs: [(String, Bool, CGFloat, Bool)] = [
+            ("hide_sa0_inline", true, 0, false),
+            ("hide_sa0_large", true, 0, true),
+            ("hide_add20_inline", true, 20, false),
+            ("hide_add20_large", true, 20, true),
+            ("hide_add59_inline", true, 59, false),
+            ("hide_add59_large", true, 59, true),
+            ("show_add0_inline", false, 0, false),
+            ("show_add0_large", false, 0, true),
+        ]
+        var samples: [[String: Any]] = []
+        func next(_ i: Int) {
+            guard i < jobs.count else {
+                let payload: [String: Any] = [
+                    "variant": variant,
+                    "scale": Double(UIScreen.main.scale),
+                    "windowBounds": rectArr(window.bounds),
+                    "samples": samples,
+                ]
+                let data = try! JSONSerialization.data(withJSONObject: payload,
+                                                       options: [.sortedKeys, .prettyPrinted])
+                try! data.write(to: URL(fileURLWithPath: "\(docsDir)/\(filePrefix).summary.json"))
+                writeDone("ok")
+                return
+            }
+            let (name, hide, add, large) = jobs[i]
+            host.hideStatus = hide
+            host.setNeedsStatusBarAppearanceUpdate()
+            _ = installBarOriginNav(large: large, additionalTop: add)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [self] in
+                host.view.layoutIfNeeded()
+                nav.view.layoutIfNeeded()
+                let sample = barOriginSample(name: name, window: window,
+                                             host: host, nav: nav)
+                samples.append(sample)
+                let data = try! JSONSerialization.data(withJSONObject: sample,
+                                                       options: [.sortedKeys, .prettyPrinted])
+                try! data.write(to: URL(fileURLWithPath: "\(docsDir)/\(filePrefix).\(name).json"))
+                next(i + 1)
+            }
+        }
+        next(0)
+    }
 
     // MARK: Captures
 

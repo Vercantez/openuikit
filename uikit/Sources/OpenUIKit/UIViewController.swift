@@ -25,7 +25,14 @@
 /// UINavigationController / UITabBarController — compare.py treats it as
 /// private and prunes the subtree on both sides).
 @preconcurrency @MainActor
-final class UILayoutContainerView: UIView {}
+final class UILayoutContainerView: UIView {
+    /// The navigation bar's y is `max(safeArea.top, 10)` (MEASURED
+    /// navprobe.barorigin). Re-frame when the window's insets arrive.
+    public override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        (_managingViewController as? UINavigationController)?.updateContainerLayout()
+    }
+}
 
 /// The container contract UIViewController adopts on UIKit. The Objective-C
 /// protocol inherits NSObjectProtocol. OpenUIKit's responder classes now do
