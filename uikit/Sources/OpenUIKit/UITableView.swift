@@ -175,16 +175,31 @@ open class UITableView: UIScrollView {
     //                 16 inside the card; detail right edge 16 in; chevron
     //                 right edge 20 in; separators inset 16 / 16.
     static var isIOSChrome: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
-    static func headerHeight(style: Style, firstSection: Bool) -> CGFloat {
+    static func headerHeight(style: Style, firstSection: Bool,
+                             compact: Bool = false) -> CGFloat {
         guard isIOSChrome else { return headerHeight }
         switch style {
         case .plain: return 28
-        // 35 (first section) / 25 above the 17 pt semibold label, whose
+        // Full headers (tableview_grouped, no large title, text footers):
+        // 35 (first) / 25 (later) above the 17 pt semibold label, whose
         // height is the line height rounded up to the DEVICE pixel:
         // 55.333 / 45.333 on the iPhone 16 (3x), 55.5 / 45.5 on the SE (2x).
-        case .grouped, .insetGrouped: return (firstSection ? 35 : 25) + iOSLabelHeight17
+        // Compact 38 pt (label y = 12): MEASURED 2026-09-04, headerprobe on
+        // iPhone SE 2x / iOS 26.1 — first section under a large-title bar
+        // (safeArea.top 116, NavFlow t200) and any later section after an
+        // untitled 17.5 pt footer (noNav and navLarge alike). 12 + label
+        // + 5.5 bottom = 38 on 2x; the same 5.5 bottom the full headers
+        // already carry (29.5+20.5+5.5 / 19.5+20.5+5.5).
+        case .grouped, .insetGrouped:
+            if compact { return 12 + iOSLabelHeight17 + 5.5 }
+            return (firstSection ? 35 : 25) + iOSLabelHeight17
         }
     }
+    /// Untitled grouped/insetGrouped footer. MEASURED 2026-09-04, headerprobe
+    /// + NavFlow t200, iPhone SE 2x / iOS 26.1: `rectForFooter` is 17.5 pt
+    /// with no `UITableViewHeaderFooterView` when `titleForFooterInSection`
+    /// is nil. Catalyst and `.plain` keep 0.
+    static let untitledGroupedFooterHeight: CGFloat = 17.5
     /// The 17 pt label height under the iOS cut on the current screen
     /// (20.333 at 3x, 20.5 at 2x — FontEngine.labelLineHeight).
     static var iOSLabelHeight17: CGFloat {
@@ -406,6 +421,10 @@ open class UITableView: UIScrollView {
         var end: CGFloat = 0
         var headerTitle: String?
         var footerTitle: String?
+        /// Compact 38 pt header (label y 12). See `headerHeight(compact:)`.
+        var compactHeader = false
+        /// False for the untitled 17.5 pt grouped gap (spacing, no view).
+        var footerHasView = false
 
         var rowsEnd: CGFloat { rowEnds.last ?? rowsStart }
         func rowY(_ i: Int) -> CGFloat { i == 0 ? rowsStart : rowEnds[i - 1] }
@@ -568,8 +587,22 @@ open class UITableView: UIScrollView {
                     // `heightAnchor >= 38` the header itself installs.
                     headerH = selfSized
                 } else {
+                    // Compact when the first section underlaps a large-title
+                    // bar, or a later section follows an untitled grouped
+                    // footer. MEASURED headerprobe 2026-09-04, SE 2x:
+                    // noNav first 55.5 / later 38; navLarge first 38 / later
+                    // 38; navLargeWithFooters later 45.5 (previous footer
+                    // has text, so not compact).
+                    let underlapsLargeTitle = UITableView.isIOSChrome
+                        && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset
+                    let afterUntitledFooter = s > 0 && !metrics[s - 1].footerHasView
+                        && metrics[s - 1].footerHeight > 0
+                    let compact = UITableView.isIOSChrome && style != .plain
+                        && ((s == 0 && underlapsLargeTitle) || afterUntitledFooter)
+                    m.compactHeader = compact
                     headerH = m.headerTitle != nil
-                        ? UITableView.headerHeight(style: style, firstSection: s == 0) : 0
+                        ? UITableView.headerHeight(style: style, firstSection: s == 0,
+                                                   compact: compact) : 0
                 }
             }
             if style == .plain, headerH > 0 {
@@ -598,6 +631,7 @@ open class UITableView: UIScrollView {
                 // section's footer is 70.667 pt — its label's three wrapped
                 // lines (46.667) inside the 12 pt insets the screen installs.
                 footerH = selfSized
+                m.footerHasView = true
             } else if footerH < 0 {
                 if let t = m.footerTitle, style != .plain {
                     footerSizer.text = t
@@ -607,13 +641,23 @@ open class UITableView: UIScrollView {
                                height: CGFloat.greatestFiniteMagnitude)).height
                     footerH = UITableViewHeaderFooterView.footerLabelY + textH
                         + UITableViewHeaderFooterView.footerBottomPadding
+                    m.footerHasView = true
                 } else if m.footerTitle != nil {
                     // Plain footers: header-like chrome (unmeasured — no
                     // plain-footer golden; see docs/KNOWN_GAPS.md).
                     footerH = UITableView.headerHeight(style: style, firstSection: false)
+                    m.footerHasView = true
+                } else if UITableView.isIOSChrome, style != .plain {
+                    // Untitled grouped footer is 17.5 pt of spacing and
+                    // installs no view. MEASURED headerprobe / NavFlow t200,
+                    // SE 2x: rectForFooter 17.5, headerView(forSection) nil.
+                    footerH = UITableView.untitledGroupedFooterHeight
+                    m.footerHasView = false
                 } else {
                     footerH = 0
                 }
+            } else {
+                m.footerHasView = footerH > 0
             }
             m.footerHeight = footerH
             y += footerH
@@ -1212,6 +1256,13 @@ open class UITableView: UIScrollView {
         retile()
     }
 
+    open override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        // First-section compact headers depend on underlapping a large-title
+        // bar (safeArea.top 116). MEASURED headerprobe navLarge vs noNav.
+        if UITableView.isIOSChrome, style != .plain { setNeedsMetrics() }
+    }
+
     /// Re-entrancy guard: tiling adds subviews (→ setNeedsLayout) and can
     /// clamp offsets; never recurse.
     private var inTile = false
@@ -1292,7 +1343,8 @@ open class UITableView: UIScrollView {
             view.removeFromSuperview()
             recycleHeaderFooter(view)
         }
-        footerViews.retire(keeping: sectionSet) { _, view in
+        let footerSet = Set(neededSections.filter { metrics[$0].footerHasView })
+        footerViews.retire(keeping: footerSet) { _, view in
             view.removeFromSuperview()
             recycleHeaderFooter(view)
         }
@@ -1335,7 +1387,8 @@ open class UITableView: UIScrollView {
                     labelX: style == .plain
                         ? plainHeaderTextX
                         : groupedHeaderLabelX,
-                    style: style, firstSection: s == 0)
+                    style: style, firstSection: s == 0,
+                    compact: m.compactHeader)
                 header.backgroundColor = style == .plain ? .systemBackground : nil
                 var y = m.headerY
                 if style == .plain {
@@ -1346,7 +1399,7 @@ open class UITableView: UIScrollView {
                 header.frame = CGRect(x: 0, y: y, width: bounds.width,
                                       height: m.headerHeight)
             }
-            if m.footerHeight > 0 {
+            if m.footerHeight > 0, m.footerHasView {
                 let footer = delegateFooterView(for: s) ?? {
                     let f = UITableViewHeaderFooterView()
                     footerViews[s] = f
