@@ -1,6 +1,6 @@
 {
- "head": "a3f9e22b",
- "date": "2026-09-04T23:31Z",
+ "head": "04d65820",
+ "date": "2026-09-04T23:43Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -13,9 +13,10 @@
   {
    "scene": "Modal:t600",
    "category": "conformance",
-   "score": 92.765,
-   "blob": 103.2,
+   "score": 92.626,
+   "blob": 105.0,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "open",
@@ -24,39 +25,10 @@
   {
    "scene": "TableEditor:t2350",
    "category": "conformance",
-   "score": 94.637,
-   "blob": 14.2,
+   "score": 97.078,
+   "blob": 12.0,
    "layout_issues": 0,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t2800",
-   "category": "conformance",
-   "score": 94.666,
-   "blob": 3.5,
-   "layout_issues": 3,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t3800",
-   "category": "conformance",
-   "score": 94.679,
-   "blob": 3.5,
-   "layout_issues": 3,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t4800",
-   "category": "conformance",
-   "score": 94.679,
-   "blob": 3.5,
-   "layout_issues": 3,
+   "captured": "2026-09-04T18:42",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -64,9 +36,10 @@
   {
    "scene": "TableEditor:t1350",
    "category": "conformance",
-   "score": 95.952,
-   "blob": 32.8,
+   "score": 97.158,
+   "blob": 13.5,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -102,16 +75,6 @@
    "status": "pass"
   },
   {
-   "scene": "NavFlow:t4800",
-   "category": "conformance",
-   "score": 97.524,
-   "blob": 6.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "imageview_aspect_edge",
    "category": "control",
    "score": 97.559,
@@ -119,16 +82,6 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
-   "status": "pass"
-  },
-  {
-   "scene": "NavFlow:t3000",
-   "category": "conformance",
-   "score": 97.581,
-   "blob": 94.0,
-   "layout_issues": 2,
-   "verdict": "PASS",
-   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -147,6 +100,51 @@
    "score": 97.805,
    "blob": 4.5,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t3800",
+   "category": "conformance",
+   "score": 97.811,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t2900",
+   "category": "conformance",
+   "score": 97.822,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t900",
+   "category": "conformance",
+   "score": 97.843,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t1900",
+   "category": "conformance",
+   "score": 97.843,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -154,9 +152,10 @@
   {
    "scene": "Modal:t5200",
    "category": "conformance",
-   "score": 97.822,
+   "score": 97.902,
    "blob": 4.5,
    "layout_issues": 6,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -182,16 +181,6 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t3900",
-   "category": "conformance",
-   "score": 98.189,
-   "blob": 42.5,
-   "layout_issues": 6,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "attrtext_underline_strike",
    "category": "text",
    "score": 98.194,
@@ -202,21 +191,12 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t4800",
+   "scene": "NavFlow:t3000",
    "category": "conformance",
    "score": 98.196,
-   "blob": 42.5,
-   "layout_issues": 6,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Forms:t5700",
-   "category": "conformance",
-   "score": 98.232,
-   "blob": 17.8,
-   "layout_issues": 6,
+   "blob": 97.2,
+   "layout_issues": 2,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -252,16 +232,6 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t7200",
-   "category": "conformance",
-   "score": 98.416,
-   "blob": 6.2,
-   "layout_issues": 10,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "button_configurations_2x",
    "category": "control",
    "score": 98.437,
@@ -272,21 +242,12 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t3000",
+   "scene": "Modal:t7200",
    "category": "conformance",
-   "score": 98.45,
-   "blob": 17.8,
-   "layout_issues": 6,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "NavFlow:t3900",
-   "category": "conformance",
-   "score": 98.482,
-   "blob": 97.5,
-   "layout_issues": 2,
+   "score": 98.524,
+   "blob": 6.2,
+   "layout_issues": 10,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -362,16 +323,6 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t1200",
-   "category": "conformance",
-   "score": 98.716,
-   "blob": 40.5,
-   "layout_issues": 5,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "deep_mixed",
    "category": "control",
    "score": 98.723,
@@ -382,11 +333,12 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t200",
+   "scene": "NavFlow:t4800",
    "category": "conformance",
-   "score": 98.731,
-   "blob": 17.8,
-   "layout_issues": 5,
+   "score": 98.734,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -402,11 +354,12 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t2100",
+   "scene": "NavFlow:t3900",
    "category": "conformance",
-   "score": 98.783,
-   "blob": 17.8,
-   "layout_issues": 6,
+   "score": 98.796,
+   "blob": 97.5,
+   "layout_issues": 2,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -417,6 +370,7 @@
    "score": 98.806,
    "blob": 2.2,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -432,11 +386,23 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t4100",
+   "scene": "Forms:t1200",
    "category": "conformance",
-   "score": 98.92,
-   "blob": 4.2,
-   "layout_issues": 0,
+   "score": 98.895,
+   "blob": 17.8,
+   "layout_issues": 5,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t200",
+   "category": "conformance",
+   "score": 98.91,
+   "blob": 17.8,
+   "layout_issues": 5,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -452,21 +418,56 @@
    "status": "pass"
   },
   {
-   "scene": "TableEditor:t3800",
+   "scene": "Forms:t3900",
    "category": "conformance",
-   "score": 98.96,
-   "blob": 12.0,
-   "layout_issues": 0,
+   "score": 98.923,
+   "blob": 42.5,
+   "layout_issues": 6,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
   },
   {
-   "scene": "TableEditor:t2900",
+   "scene": "Forms:t4800",
    "category": "conformance",
-   "score": 98.971,
-   "blob": 12.0,
-   "layout_issues": 0,
+   "score": 98.931,
+   "blob": 42.5,
+   "layout_issues": 6,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t3000",
+   "category": "conformance",
+   "score": 98.943,
+   "blob": 42.0,
+   "layout_issues": 6,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t2100",
+   "category": "conformance",
+   "score": 98.962,
+   "blob": 17.8,
+   "layout_issues": 6,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t5700",
+   "category": "conformance",
+   "score": 98.966,
+   "blob": 17.8,
+   "layout_issues": 6,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -479,26 +480,6 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
-   "status": "pass"
-  },
-  {
-   "scene": "TableEditor:t900",
-   "category": "conformance",
-   "score": 98.992,
-   "blob": 12.0,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "TableEditor:t1900",
-   "category": "conformance",
-   "score": 98.992,
-   "blob": 12.0,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -522,6 +503,39 @@
    "status": "pass"
   },
   {
+   "scene": "Feed:t3800",
+   "category": "conformance",
+   "score": 99.038,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:41",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t4800",
+   "category": "conformance",
+   "score": 99.038,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:41",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t2800",
+   "category": "conformance",
+   "score": 99.042,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:41",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "attrtext_kern_baseline",
    "category": "text",
    "score": 99.043,
@@ -537,16 +551,7 @@
    "score": 99.057,
    "blob": 12.0,
    "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Feed:t700",
-   "category": "conformance",
-   "score": 99.095,
-   "blob": 32.0,
-   "layout_issues": 1,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -557,6 +562,7 @@
    "score": 99.106,
    "blob": 11.0,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -577,6 +583,7 @@
    "score": 99.116,
    "blob": 2.5,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -612,56 +619,6 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t200",
-   "category": "conformance",
-   "score": 99.167,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Modal:t2100",
-   "category": "conformance",
-   "score": 99.167,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Modal:t6100",
-   "category": "conformance",
-   "score": 99.167,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Modal:t8100",
-   "category": "conformance",
-   "score": 99.167,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Modal:t10100",
-   "category": "conformance",
-   "score": 99.167,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "navbar_inline",
    "category": "chrome",
    "score": 99.199,
@@ -677,26 +634,6 @@
    "score": 99.21,
    "blob": 0.0,
    "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Feed:t200",
-   "category": "conformance",
-   "score": 99.288,
-   "blob": 0.0,
-   "layout_issues": 2,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Feed:t1800",
-   "category": "conformance",
-   "score": 99.288,
-   "blob": 0.0,
-   "layout_issues": 2,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -813,6 +750,17 @@
    "status": "pass"
   },
   {
+   "scene": "Feed:t700",
+   "category": "conformance",
+   "score": 99.462,
+   "blob": 32.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:41",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "label_basic",
    "category": "text",
    "score": 99.464,
@@ -908,6 +856,7 @@
    "score": 99.561,
    "blob": 12.0,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -938,6 +887,7 @@
    "score": 99.624,
    "blob": 6.2,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -948,6 +898,7 @@
    "score": 99.624,
    "blob": 6.2,
    "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1008,6 +959,28 @@
    "score": 99.658,
    "blob": 4.8,
    "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t200",
+   "category": "conformance",
+   "score": 99.658,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:41",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t1800",
+   "category": "conformance",
+   "score": 99.658,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:41",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1153,6 +1126,17 @@
    "status": "pass"
   },
   {
+   "scene": "Modal:t10100",
+   "category": "conformance",
+   "score": 99.831,
+   "blob": 4.2,
+   "layout_issues": 5,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "control_slider",
    "category": "control",
    "score": 99.832,
@@ -1160,6 +1144,61 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t200",
+   "category": "conformance",
+   "score": 99.843,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t2100",
+   "category": "conformance",
+   "score": 99.843,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t4100",
+   "category": "conformance",
+   "score": 99.843,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t6100",
+   "category": "conformance",
+   "score": 99.843,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t8100",
+   "category": "conformance",
+   "score": 99.843,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-04T18:42",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
