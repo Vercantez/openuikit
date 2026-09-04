@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.19
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.20
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1714,6 +1714,101 @@ phase2_apply_darwin_modulemap_fe_mutations() {
     fi
 }
 
+# Overlay-copied SYS (scratch/sysroot_fe4-x86_64) must stay byte-identical
+# to main's stage_fe_sysroot.sh. Overlay-darwin Intel math.h, MacTypes
+# restore, overlay-posix semaphore, ioctl stub, removefile_compat, artifact
+# Darwin overlays, and SwiftOnone belong only on the FE clang sibling.
+phase2_apply_vm_only_fe_sysroot() {
+    local dest=$1
+    local repo=${2:-}
+    local machorun artifacts posix_sem ioctl_stub ioctl_dest dylib
+    local _saved _skip
+    [ -n "$repo" ] || repo="${W:-${PHASE2_REPO:-}}"
+    [ -n "$repo" ] || return 0
+    machorun=${MACHORUN:-$repo/machorun}
+    artifacts=$repo/swiftcore-macho/artifacts
+
+    if [ ! -f "$dest/usr/include/Darwin.modulemap" ]; then
+        echo "== VM-only Darwin.modulemap via stage_overlay_darwin.sh ($dest)"
+        _saved="${SWIFTCORE_FE_SYSROOT-}"
+        _skip="${SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS-}"
+        # Named dest is exclusive. *-fe-clang is skipped as a copy source, so
+        # overlay-darwin falls through to vendor pins instead of the overlay-
+        # copied SYS (or a live mutated scratch).
+        SWIFTCORE_FE_SYSROOT="$dest"
+        export SWIFTCORE_FE_SYSROOT
+        SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS=1
+        export SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS
+        unset SWIFTCORE_FE_SYSROOT_EXTRA_INSERTS
+        set +e
+        SWIFTCORE_DARWIN_ARCH=x86_64 W="$repo" \
+            bash "$repo/swiftcore-macho/scripts/stage_overlay_darwin.sh" "$dest"
+        set -e
+        if [ -n "$_saved" ]; then
+            SWIFTCORE_FE_SYSROOT="$_saved"
+            export SWIFTCORE_FE_SYSROOT
+        else
+            unset SWIFTCORE_FE_SYSROOT
+        fi
+        if [ -n "$_skip" ]; then
+            SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS="$_skip"
+            export SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS
+        else
+            unset SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS
+        fi
+    fi
+
+    if [ -f "$machorun/sdk/usr/include/MacTypes.h" ]; then
+        mkdir -p "$dest/usr/include"
+        cp -f "$machorun/sdk/usr/include/MacTypes.h" "$dest/usr/include/MacTypes.h"
+        echo "  restored machorun/sdk MacTypes.h after overlay-darwin (FE clang dest)"
+    fi
+
+    posix_sem=$repo/swiftcore-macho/sdk/overlay-posix/semaphore.h
+    if [ -f "$posix_sem" ] && [ ! -e "$dest/usr/include/semaphore.h" ]; then
+        cp "$posix_sem" "$dest/usr/include/semaphore.h"
+        echo "  + semaphore.h   [overlay-posix; FE clang dest]"
+    fi
+    ioctl_stub=$repo/scripts/x86/fe_ioctl_stub.h
+    ioctl_dest=$dest/usr/include/sys/ioctl.h
+    if [ -f "$ioctl_stub" ]; then
+        mkdir -p "$dest/usr/include/sys"
+        if [ -e "$ioctl_dest" ] && grep -q FIONBIO "$ioctl_dest"; then
+            echo "  REFUSED to replace real ioctl.h (has FIONBIO; CFSocket would compile)" >&2
+        else
+            cp -f "$ioctl_stub" "$ioctl_dest"
+            echo "  + sys/ioctl.h   [fe_ioctl_stub.h; FE clang dest]"
+        fi
+    fi
+
+    if [ ! -e "$dest/usr/include/removefile.h" ] \
+        && [ -f "$repo/full/foundation/removefile_compat.h" ]; then
+        cp "$repo/full/foundation/removefile_compat.h" "$dest/usr/include/removefile.h"
+        echo "  + removefile.h   [removefile_compat.h; FE clang dest]"
+    fi
+
+    echo "== VM-only x86 overlay modules from committed artifacts ($dest)"
+    phase2_copy_artifact_swift_overlays "$dest" "$artifacts/swift-macosx"
+    if [ -d "$artifacts/swift-macosx/x86_64" ]; then
+        mkdir -p "$dest/usr/lib/swift"
+        for dylib in "$artifacts/swift-macosx/x86_64"/*.dylib; do
+            [ -f "$dylib" ] || continue
+            if phase2_is_arm64_macho "$dylib"; then
+                echo "  skip arm64 Mach-O $(basename "$dylib")" >&2
+                continue
+            fi
+            phase2_is_x86_macho "$dylib" || continue
+            cp -a "$dylib" "$dest/usr/lib/swift/$(basename "$dylib")"
+        done
+    fi
+
+    if [ -f "$dest/usr/lib/swift/libswiftCore.dylib" ]; then
+        echo "== VM-only SwiftOnoneSupport stub ($dest)"
+        phase2_ensure_swift_onone_support "$dest" "${TARGET:-x86_64-apple-macos15.0}" \
+            || echo "  SwiftOnoneSupport stub failed; collections without -O will not compile"
+    fi
+}
+
 phase2_stage_fe_clang_sysroot() {
     local sys=$1
     local repo=${2:-}
@@ -1722,6 +1817,7 @@ phase2_stage_fe_clang_sysroot() {
     fe=$(phase2_fe_clang_sysroot "$sys")
     rm -rf "$fe"
     cp -a "$sys" "$fe"
+    phase2_apply_vm_only_fe_sysroot "$fe" "$repo"
     phase2_apply_darwin_modulemap_fe_mutations "$fe" "$repo"
     echo "phase2: FE clang sysroot $fe (Darwin.modulemap expanded; overlay SDK copies $sys unexpanded)" >&2
 }

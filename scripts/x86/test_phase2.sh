@@ -68,6 +68,7 @@ echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/scripts/x86/stamp.inc" \
     "$ROOT/scripts/x86/test_stamp.sh" \
+    "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
     "$ROOT/scripts/x86/test_no_existence_reuse.sh" \
     "$ROOT/scripts/ops/x86_cycle.sh" \
     "$ROOT/scripts/ops/run_box.sh" \
@@ -330,8 +331,10 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.19' "$COMMON" \
-    "recipe bump restages so overlay SDK does not inherit the FE Darwin.modulemap expand"
+expect_grep 'stage_fe_sysroot_x86.20' "$COMMON" \
+    "recipe bump restages so overlay-copied SYS matches main (VM extras only on *-fe-clang)"
+expect_grep 'phase2_apply_vm_only_fe_sysroot' "$COMMON" \
+    "VM-only overlay-darwin / ioctl / artifact overlays land on the FE clang sibling"
 expect_grep 'overlay-darwin.8' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay sysroot stamp recipe keys Darwin.modulemap bytes and dest sync"
 expect_grep 'overlay_sysroot_sync_darwin_modulemap' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
@@ -355,8 +358,10 @@ expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
     "every header in the FileManager/sdk-gap list is checked after restage"
 expect_grep 'FE_MEASUREMENT_HEADERS' "$PHASE2" \
     "missing measurement headers are CANNOT_FE_MEASUREMENT_HEADERS"
-expect_grep 'phase2_copy_artifact_swift_overlays' "$STAGE" \
-    "x86 stager copies Darwin overlays from committed artifacts on a fresh VM"
+expect_grep 'phase2_copy_artifact_swift_overlays' "$COMMON" \
+    "artifact Darwin overlays are a helper for the FE clang dest on a fresh VM"
+expect_not_grep 'phase2_copy_artifact_swift_overlays "$SYS"' "$STAGE" \
+    "stager does not copy artifact overlays onto the overlay-copied SYS"
 expect_grep 'phase2_stage_fe_clang_sysroot' "$STAGE" \
     "x86 stager expands Darwin.modulemap on an FE-only snapshot, not the overlay-copied sysroot"
 expect_not_grep 'phase2_expand_darwin_modulemap_for_fe "$SYS"' "$STAGE" \
@@ -365,12 +370,22 @@ expect_grep 'phase2_fe_clang_sysroot' "$PHASE2" \
     "phase2 compiles FE against the expanded clang snapshot"
 expect_grep 'SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
     "x86_cycle overlays stage points SWIFTCORE_FE_SYSROOT at the unexpanded sysroot"
-expect_grep 'phase2_ensure_swift_onone_support' "$STAGE" \
-    "x86 stager stages a SwiftOnoneSupport stub for collections without -O"
-expect_grep 'overlay-posix' "$STAGE" \
-    "x86 stager stages POSIX semaphore.h; real ioctl stays out of the Darwin sysroot"
-expect_grep 'fe_ioctl_stub.h' "$STAGE" \
-    "x86 stager stages a FIONBIO-free ioctl stub so SwiftOverlayShims builds"
+expect_grep 'phase2_ensure_swift_onone_support' "$COMMON" \
+    "SwiftOnoneSupport stub helper exists for collections without -O"
+expect_not_grep 'phase2_ensure_swift_onone_support "$SYS"' "$STAGE" \
+    "stager does not stage SwiftOnoneSupport on the overlay-copied SYS"
+expect_grep 'overlay-posix' "$COMMON" \
+    "POSIX semaphore.h is staged on the FE clang dest; real ioctl stays out of overlay-copied SYS"
+expect_not_grep 'overlay-posix' "$STAGE" \
+    "stager does not copy overlay-posix onto the overlay-copied SYS"
+expect_grep 'fe_ioctl_stub.h' "$COMMON" \
+    "ioctl stub is staged on the FE clang dest so SwiftOverlayShims builds"
+expect_not_grep 'fe_ioctl_stub.h' "$STAGE" \
+    "stager does not write fe_ioctl_stub.h into the overlay-copied SYS"
+expect_not_grep 'stage_overlay_darwin.sh "$SYS"' "$STAGE" \
+    "stager does not run overlay-darwin on the overlay-copied SYS"
+expect_grep 'stage_overlay_darwin.sh' "$COMMON" \
+    "overlay-darwin runs against the FE clang dest when Darwin.modulemap is absent"
 expect_grep 'phase2_ensure_darwin_named_submodules' "$COMMON" \
     "Darwin.modulemap grows sysdir and uuid submodules for import Darwin.sysdir"
 expect_grep 'malloc/malloc.h' "$COMMON" \
@@ -2483,11 +2498,16 @@ else
     rm -rf "$PROV_DEST" "$STALE_DEST" "$REFUSE_DEST" "$EXTRACT_W"
 fi
 
-echo "== stamp library + existence-reuse + ops"
+echo "== stamp library + existence-reuse + ops + SYS vs main"
 if bash "$ROOT/scripts/x86/test_stamp.sh"; then
     ok "test_stamp.sh"
 else
     die_test "test_stamp.sh"
+fi
+if bash "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh"; then
+    ok "test_stage_fe_sysroot_matches_main.sh"
+else
+    die_test "test_stage_fe_sysroot_matches_main.sh"
 fi
 if bash "$ROOT/scripts/x86/test_no_existence_reuse.sh"; then
     ok "test_no_existence_reuse.sh"
