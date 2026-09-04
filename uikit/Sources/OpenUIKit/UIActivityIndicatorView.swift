@@ -25,15 +25,21 @@
 // clockwise. The four trailing blades share the 69/255 floor.
 //
 // Default color: a neutral dynamic gray — white 128/255 light, 140/255 dark
-// (solved from the light/dark goldens with the ladder above; both fit every
-// blade to within 1 count).
+// on Catalyst (solved from the light/dark goldens with the ladder above).
+// iOS 26.1 light (control_activity, SE 2x, five identical captures) inverts
+// the a=217/255 core (156,156,159) over white to (139,139,142).
 //
-// NOT oracle-validated: the rotation TIMING. Core Animation discards the
-// spin animation offscreen and the windowed oracle can only sample it on
-// the wall clock, so the goldens pin the REST pose (step 0). The animation
-// implemented here is UIKit's classic discrete one — the ladder advances
-// one blade (45 degrees, clockwise) every 1/8 s, i.e. one revolution per
-// second. See docs/KNOWN_GAPS.md.
+// Rest pose: step 0 (darkest at 9 o'clock). iOS 26.1 SimScene phase is
+// NOT stable — five fresh one-scene processes were byte-identical at
+// 6 o'clock, an 88-scene suite process landed at 45°, and
+// wrapper.layer.speed = 0 pins the 9 o'clock model pose (same as
+// Catalyst). SimScene now freezes the wrapper clock so isolated and
+// suite captures agree. The 12-bin ring is the 8-spoke ladder sampled
+// twice, not a 12-spoke spinner.
+//
+// NOT oracle-validated: the rotation TIMING. The animation implemented
+// here is UIKit's classic discrete one — the ladder advances one blade
+// (45 degrees, clockwise) every 1/8 s. See docs/KNOWN_GAPS.md.
 
 public enum UIActivityIndicatorViewStyle: Sendable {
     case medium, large
@@ -64,7 +70,17 @@ open class UIActivityIndicatorView: UIView {
 
     /// The measured default color (neutral dynamic gray).
     public static let defaultColor = UIColor(dynamicProvider: { traits in
-        traits.userInterfaceStyle == .dark
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            // iOS 26.1 light (MEASURED 2026-09-04, control_activity,
+            // iPhone SE 2x, five identical captures): the a=217/255
+            // core is (156,156,159) over white, which inverts to
+            // (139,139,142). Dark was not in the capture; keep 140.
+            return traits.userInterfaceStyle == .dark
+                ? UIColor(white: 140.0 / 255.0, alpha: 1)
+                : UIColor(red: 139.0 / 255.0, green: 139.0 / 255.0,
+                          blue: 142.0 / 255.0, alpha: 1)
+        }
+        return traits.userInterfaceStyle == .dark
             ? UIColor(white: 140.0 / 255.0, alpha: 1)
             : UIColor(white: 128.0 / 255.0, alpha: 1)
     })
