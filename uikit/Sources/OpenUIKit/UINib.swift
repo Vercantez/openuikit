@@ -770,10 +770,25 @@ final class NibDecoder {
             let lower = name.lowercased()
             if lower.hasPrefix(".sfui") || lower.hasPrefix(".sfns")
                 || lower.hasPrefix(".applesystemui") {
+                // Substring test on the stdlib alone: `contains("semibold")`
+                // is Foundation's StringProtocol overload on Darwin, but the
+                // guest compiles against the port's Foundation and picked the
+                // _StringProcessing generic instead, adding
+                // libswift_StringProcessing.dylib to libOpenUIKit's load
+                // list and failing the Focus widget gate on both authorities
+                // (GATE_B_FAIL rc=2 "dylib loads changed", 54be0035).
+                func has(_ needle: String) -> Bool {
+                    var i = lower.startIndex
+                    while i < lower.endIndex {
+                        if lower[i...].hasPrefix(needle) { return true }
+                        i = lower.index(after: i)
+                    }
+                    return false
+                }
                 let weight: UIFont.Weight =
-                    lower.contains("semibold") ? .semibold
-                    : (lower.contains("bold") ? .bold
-                       : (lower.contains("medium") ? .medium : .regular))
+                    has("semibold") ? .semibold
+                    : (has("bold") ? .bold
+                       : (has("medium") ? .medium : .regular))
                 return NibFontBox(font: UIFont.systemFont(ofSize: size, weight: weight))
             }
             // A bundled custom face has no portable loader (the font engine
