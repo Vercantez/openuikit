@@ -65,6 +65,7 @@ let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewContro
     "NavFlow": (NavFlowApp.windowSize, NavFlowApp.makeRoot),
     "Forms": (FormsApp.windowSize, FormsApp.makeRoot),
     "TableEditor": (TableEditorApp.windowSize, TableEditorApp.makeRoot),
+    "Feed": (FeedApp.windowSize, FeedApp.makeRoot),
 ]
 
 /// The host's app delegate: builds the key window in didFinishLaunching and

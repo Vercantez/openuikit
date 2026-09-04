@@ -110,6 +110,14 @@ open class UICollectionViewLayout {
         collectionView?._layoutInvalidated()
     }
 
+    /// Orthogonal compositional sections scroll inside the section, not
+    /// the parent. Returns true when the layout handled the scroll (the
+    /// collection view then retiles without changing `contentOffset`).
+    func handleScrollToItem(at indexPath: IndexPath,
+                            at position: UICollectionView.ScrollPosition) -> Bool {
+        false
+    }
+
     // MARK: Internal driving
 
     var isPrepared = false

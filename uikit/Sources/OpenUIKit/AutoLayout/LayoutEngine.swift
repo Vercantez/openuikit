@@ -371,14 +371,21 @@ enum LayoutEngine {
         for vv in intrinsicViews {
             guard let l = vv.view as? UILabel, l.numberOfLines != 1 else { continue }
             for c in intrinsicConstraints[ObjectIdentifier(l)] ?? [] { try? solver.removeConstraint(c) }
-            // Only a FITTING solve re-measures at the solved width. An
-            // ordinary solve keeps the one-line intrinsic it has always used:
-            // the tie-break outcomes in golden/layout_tiebreak_ios.json were
-            // fitted to that behaviour, and re-measuring there would move
-            // every multi-line label in every existing scene. The gap for
-            // ordinary solves stays in docs/KNOWN_GAPS.md.
-            let wrapWidth = fitting != nil
-                ? CGFloat(solver.value(of: vv.width)) : nil
+            // Fitting solves always re-measure at the solved width. Ordinary
+            // solves keep the one-line intrinsic on Catalyst and for
+            // numberOfLines == 0 (the tie-break goldens). On the iOS cut a
+            // CAPPED wrapping label (numberOfLines > 1) re-measures too:
+            // Feed t200, iPhone SE 2x / iOS 26.1, a 2-line subheadline body
+            // pinned leading/trailing in a 343 pt card is abs.h 38, not
+            // the one-line 18.
+            let wrapWidth: CGFloat?
+            if fitting != nil {
+                wrapWidth = CGFloat(solver.value(of: vv.width))
+            } else if OpenUIKitRuntime.systemFontCut == .iOS, l.numberOfLines > 1 {
+                wrapWidth = CGFloat(solver.value(of: vv.width))
+            } else {
+                wrapWidth = nil
+            }
             addIntrinsics(vv, wrapAt: wrapWidth)
         }
 

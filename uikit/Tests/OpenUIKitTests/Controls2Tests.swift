@@ -112,6 +112,100 @@ final class UIRefreshControlTests: XCTestCase {
 }
 
 @MainActor
+final class UIRefreshControlIOSCutTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut!
+
+    override func setUp() {
+        super.setUp()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+    }
+
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        super.tearDown()
+    }
+
+    /// MEASURED Feed t200/t700/t2800, iPhone SE 2x / iOS 26.1: window
+    /// abs.y of the control is 64 at every contentOffset, i.e.
+    /// frame.y = contentOffset.y + 64, once the scroll view is under a
+    /// navigation overlay (adjustedContentInset.top >= 64).
+    func testIOSFrameSits64BelowTheOffsetWhenUnderANavOverlay() {
+        let sv = UIScrollView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        sv.contentSize = CGSize(width: 375, height: 2000)
+        sv._setSafeAreaInsets(UIEdgeInsets(top: 116, left: 0, bottom: 0, right: 0))
+        let rc = UIRefreshControl()
+        sv.refreshControl = rc
+        sv.contentOffset.y = -116
+        sv.layoutIfNeeded()
+        XCTAssertEqual(rc.frame, CGRect(x: 0, y: -52, width: 375, height: 60))
+        sv.contentOffset.y = -236
+        sv.layoutIfNeeded()
+        XCTAssertEqual(rc.frame, CGRect(x: 0, y: -172, width: 375, height: 60))
+        sv.contentOffset.y = 352
+        sv.layoutIfNeeded()
+        XCTAssertEqual(rc.frame, CGRect(x: 0, y: 416, width: 375, height: 60))
+    }
+
+    /// MEASURED Feed t700, iPhone SE 2x / iOS 26.1: beginRefreshing while
+    /// already overscrolled stretches the large-title bar 106 → 166
+    /// (adj 116 → 176) and rebases offset −176 → −236. Stretch first,
+    /// then subtract 60, or the safe-area rebase eats the extra 60.
+    func testIOSBeginRefreshingStretchesLargeTitleAndRebasesOffset() {
+        let vc = UIViewController()
+        vc.title = "Feed"
+        vc.navigationItem.largeTitleDisplayMode = .always
+        let scroll = UIScrollView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scroll.contentSize = CGSize(width: 375, height: 2000)
+        vc.view.addSubview(scroll)
+        vc.setContentScrollView(scroll)
+        let rc = UIRefreshControl()
+        scroll.refreshControl = rc
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.prefersLargeTitles = true
+        nav.view.frame = CGRect(x: 0, y: 0, width: 375, height: 667)
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(scroll.adjustedContentInset.top, 116, accuracy: 0.5)
+        scroll.contentOffset.y = -scroll.adjustedContentInset.top - 60
+        rc.beginRefreshing()
+        XCTAssertEqual(scroll.contentOffset.y, -236, accuracy: 0.5)
+        XCTAssertEqual(scroll.adjustedContentInset.top, 176, accuracy: 0.5)
+        XCTAssertEqual(nav.navigationBar.frame.height, 166, accuracy: 0.5)
+        XCTAssertEqual(rc.frame.origin.y, -172, accuracy: 0.5)
+        XCTAssertEqual(rc.frame.height, 60)
+    }
+
+    /// Suite `control_refresh` (iOS cut): a rest offset of 0 with adj 0
+    /// is not overscroll. beginRefreshing must leave the offset (and the
+    /// control's frame.y) at 0 — a `y < adj + 0.5` slack had subtracted 60.
+    func testIOSBeginRefreshingAtRestDoesNotMoveOffset() {
+        let sv = UIScrollView(frame: CGRect(x: 0, y: 0, width: 320, height: 140))
+        sv.contentSize = CGSize(width: 320, height: 600)
+        let rc = UIRefreshControl()
+        sv.refreshControl = rc
+        sv.layoutIfNeeded()
+        XCTAssertEqual(sv.contentOffset.y, 0)
+        rc.beginRefreshing()
+        sv.layoutIfNeeded()
+        XCTAssertEqual(sv.contentOffset.y, 0)
+        XCTAssertEqual(rc.frame.origin.y, 0)
+    }
+
+    /// A scroll view with no nav overlay keeps the Catalyst origin even
+    /// on the iOS cut (control_refresh: frame (0, offset, W, 60)).
+    func testIOSFrameWithoutNavOverlayTracksTheOffset() {
+        let sv = UIScrollView(frame: CGRect(x: 0, y: 0, width: 320, height: 140))
+        sv.contentSize = CGSize(width: 320, height: 600)
+        let rc = UIRefreshControl()
+        sv.refreshControl = rc
+        sv.contentOffset.y = -40
+        sv.layoutIfNeeded()
+        XCTAssertEqual(rc.frame, CGRect(x: 0, y: -40, width: 320, height: 60))
+    }
+}
+
+@MainActor
 final class UISearchBarTests: XCTestCase {
 
     /// Measured: (width, 44) at every height.

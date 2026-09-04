@@ -111,10 +111,31 @@ open class UIRefreshControl: UIControl {
     /// the untouched offset — golden/control_refresh.layout.json). A refresh
     /// the USER pulled for is different: that path holds the inset open, in
     /// `_scrollDidEndDrag()`.
+    ///
+    /// iOS 26.1 exception, MEASURED Feed t700, iPhone SE 2x: when the
+    /// control is ALREADY revealed (offset below `-adjustedContentInset.top`),
+    /// beginRefreshing rebases offset by −60 (the control height) and the
+    /// large-title bar stretches 106 → 166. Catalyst and a rest-offset
+    /// programmatic start are unchanged.
     public func beginRefreshing() {
         guard !isRefreshing else { return }
         isRefreshing = true
         isHidden = false
+        if OpenUIKitRuntime.systemFontCut == .iOS, let sv = _scrollView {
+            // Stretch the large-title bar FIRST (adj 116 → 176). The
+            // scroll view's safe-area rebase then pins offset to the NEW
+            // top (−176). Subtract the control height AFTER that, or the
+            // rebase eats it (Feed t700: offset −176 → −236).
+            // The −0.5 slack is so a rest offset of 0 with adj 0 (suite
+            // control_refresh) is NOT treated as overscroll — `y < 0.5`
+            // would have been true and subtracted 60 (golden frame.y 0).
+            let overscrolled = sv.contentOffset.y < -sv.adjustedContentInset.top - 0.5
+            sv._scrollObserver?.scrollViewDidScroll(sv)
+            sv.layoutIfNeeded()
+            if overscrolled {
+                sv.contentOffset.y -= UIRefreshControl.controlHeight
+            }
+        }
         setNeedsDisplay()
     }
 
@@ -125,6 +146,11 @@ open class UIRefreshControl: UIControl {
         isHidden = true
         _armed = false
         setNeedsDisplay()
+        if OpenUIKitRuntime.systemFontCut == .iOS, let sv = _scrollView {
+            // Shrink the stretched large-title bar (Feed t1800 returns to
+            // bar [0, 10, 375, 106], adj 116).
+            sv._scrollObserver?.scrollViewDidScroll(sv)
+        }
         guard _holdsInset, let sv = _scrollView else { return }
         _holdsInset = false
         let restored = _baseTopInset
@@ -230,10 +256,21 @@ extension UIScrollView {
         }
     }
 
-    /// Measured: frame = (0, contentOffset.y, width, 60).
+    /// Measured Catalyst: frame = (0, contentOffset.y, width, 60).
+    /// MEASURED iOS 26.1, Feed t200/t700/t2800, iPhone SE 2x: the modern
+    /// refresh control's window abs.y is 64 at every offset (−116, −236,
+    /// 352), i.e. `frame.y = contentOffset.y + 64` whenever the scroll view
+    /// is under a navigation overlay (`adjustedContentInset.top >= 64`).
+    /// A scroll view with no nav overlay (adj 0, fixture control_refresh)
+    /// keeps the Catalyst origin.
     func _layoutRefreshControl() {
         guard let rc = _refreshControl else { return }
-        rc.frame = CGRect(x: 0, y: contentOffset.y, width: bounds.width,
+        var y = contentOffset.y
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           adjustedContentInset.top >= UINavigationBar.barHeight - 0.5 {
+            y += UINavigationBar.barHeight
+        }
+        rc.frame = CGRect(x: 0, y: y, width: bounds.width,
                           height: UIRefreshControl.controlHeight)
     }
 

@@ -778,3 +778,142 @@ final class CollectionViewBehaviourTests: XCTestCase {
         XCTAssertNotNil(cv.cellForItem(at: IndexPath(item: 30, section: 0)))
     }
 }
+
+// MARK: - Compositional layout (Feed)
+
+@MainActor
+private final class CompSource: UICollectionViewDataSource {
+    var counts: [Int]
+    init(_ counts: [Int]) { self.counts = counts }
+    func numberOfSections(in collectionView: UICollectionView) -> Int { counts.count }
+    func collectionView(_ cv: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        counts[section]
+    }
+    func collectionView(_ cv: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        cv.dequeueReusableCell(withReuseIdentifier: "c", for: indexPath)
+    }
+    func collectionView(_ cv: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "s",
+                                           for: indexPath)
+    }
+}
+
+private var keptCompSources: [CompSource] = []
+
+@MainActor
+final class CompositionalLayoutTests: XCTestCase {
+
+    /// Feed stories: 72 pt items, 12 pt inter-group, 16 pt leading inset.
+    /// Item 0 at x 16, item 1 at x 100.
+    func testOrthogonalStoriesPackAt72With12PtGaps() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = UICollectionLayoutSectionOrthogonalScrollingBehavior.continuous
+        section.interGroupSpacing = 12
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 8, leading: 16,
+                                                                      bottom: 8, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 400),
+                                   collectionViewLayout: layout)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([8])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 16, y: 8, width: 72, height: 72))
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 1, section: 0))?.frame,
+                       CGRect(x: 100, y: 8, width: 72, height: 72))
+        XCTAssertEqual(cv.contentSize.width, 375, accuracy: 0.001)
+        XCTAssertEqual(cv.contentSize.height, 8 + 72 + 8, accuracy: 0.001)
+    }
+
+    /// scrollToItem on an orthogonal section shifts the section offset, not
+    /// the parent contentOffset.
+    func testOrthogonalScrollToItemKeepsParentOffset() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = UICollectionLayoutSectionOrthogonalScrollingBehavior.continuous
+        section.interGroupSpacing = 12
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 0, leading: 16,
+                                                                      bottom: 0, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 200),
+                                   collectionViewLayout: layout)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([8])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        let before = cv.contentOffset
+        cv.scrollToItem(at: IndexPath(item: 4, section: 0),
+                         at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
+        XCTAssertEqual(cv.contentOffset.x, before.x, accuracy: 0.001)
+        XCTAssertEqual(cv.contentOffset.y, before.y, accuracy: 0.001)
+        let frame = cv.layoutAttributesForItem(at: IndexPath(item: 4, section: 0))!.frame
+        XCTAssertEqual(frame.midX, 375 / 2, accuracy: 0.6)
+    }
+
+    /// Vertical cards: fractional-width items stack with interGroupSpacing.
+    func testVerticalCardsStackWithInterGroupSpacing() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(1.0),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(100))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 16
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 8, leading: 16,
+                                                                      bottom: 8, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                   collectionViewLayout: layout)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([3])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 16, y: 8, width: 343, height: 100))
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 1, section: 0))?.frame,
+                       CGRect(x: 16, y: 124, width: 343, height: 100))
+    }
+
+    /// Feed t200, SE 2x: 16:9 of 343 is 192.9375, snapped to 193 on the
+    /// pixel grid, so the card cell is 283 not 282.938.
+    func testFractionalHeightSnapsToPixelGrid() {
+        let screen = UIScreen.main
+        let savedBounds = screen.bounds, savedScale = screen.scale
+        screen._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667), scale: 2)
+        defer { screen._hostConfigure(bounds: savedBounds, scale: savedScale) }
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(1.0),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(9.0 / 16.0))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 0, leading: 16,
+                                                                      bottom: 0, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                   collectionViewLayout: layout)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([1])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 16, y: 0, width: 343, height: 193))
+    }
+}

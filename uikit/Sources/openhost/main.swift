@@ -101,6 +101,10 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
   TableEditor a CONFORMANCE app (Sources/ConformanceApps/TableEditor): a
             plain UITableView of subtitle rows with Edit / insert / delete /
             select. Same harness as NavFlow.
+  Feed      a CONFORMANCE app (Sources/ConformanceApps/Feed): a
+            UICollectionView with a compositional layout (stories strip,
+            card list, refresh control, section header, selection). Same
+            harness as NavFlow.
 """
 
 var scenePath: String? = nil

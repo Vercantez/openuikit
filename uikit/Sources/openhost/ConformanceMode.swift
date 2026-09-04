@@ -38,6 +38,7 @@ let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
     "NavFlow": NavFlowApp.perform,
     "Forms": FormsApp.perform,
     "TableEditor": TableEditorApp.perform,
+    "Feed": FeedApp.perform,
 ]
 
 /// Capture scale per conformance app: the scale of the simulator device its
@@ -47,6 +48,7 @@ let conformanceScaleRegistry: [String: CGFloat] = [
     "NavFlow": 2,
     "Forms": 2,
     "TableEditor": 2,
+    "Feed": 2,
 ]
 
 // MARK: - Script
