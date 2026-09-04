@@ -168,6 +168,35 @@ cmp -s "$ROOT/sdk/overlay-darwin/math.h" "$tmp/sdk5/usr/include/math.h" \
   && echo "  OK  repaired math.h is the Intel pin" || { echo "  FAIL not Intel pin"; fail=1; }
 
 echo
+echo "=== FE Darwin.modulemap is not extra-inserted (dest cmp FE) ==="
+mkdir -p "$tmp/feC/usr/include/sys" "$tmp/sdkC/usr/include" "$tmp/workC/scratch"
+# Unexpanded FE map does not name math.h as a real header line. Extra-insert
+# of `header "math.h"` made the overlay SDK copy differ from the sysroot.
+cat > "$tmp/feC/usr/include/Darwin.modulemap" <<'EOF'
+module Darwin [system] [extern_c] {
+  export *
+}
+EOF
+echo 'extern module Darwin "Darwin.modulemap"' > "$tmp/feC/usr/include/module.modulemap"
+echo 'extern float acosf(float);' > "$tmp/feC/usr/include/math.h"
+echo 'extern long double fmaxl(long double, long double);' >> "$tmp/feC/usr/include/math.h"
+echo 'struct extern_proc { int p_pid; };' > "$tmp/feC/usr/include/sys/proc.h"
+ln -sfn "$tmp/feC" "$tmp/workC/scratch/sysroot_fe4-x86_64"
+set +e
+out=$(W="$tmp/workC" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdkC" 2>&1)
+rc=$?
+set -e
+printf '%s\n' "$out" | tail -15
+[ "$rc" -eq 0 ] && echo "  OK  FE-cmp rc=0" || { echo "  FAIL FE-cmp rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -q 'Darwin.modulemap now names' \
+  && { echo "  FAIL extra-inserted into FE Darwin.modulemap copy"; fail=1; } \
+  || echo "  OK  no extra-insert into FE Darwin.modulemap copy"
+cmp -s "$tmp/feC/usr/include/Darwin.modulemap" "$tmp/sdkC/usr/include/Darwin.modulemap" \
+  && echo "  OK  SDK Darwin.modulemap cmps FE sysroot" \
+  || { echo "  FAIL SDK Darwin.modulemap differs from FE"; fail=1; }
+
+echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- overlay Darwin headers staged from Apple OSS / FE sysroot"
   exit 0

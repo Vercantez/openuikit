@@ -61,6 +61,9 @@ resolve_fe_sysroot() {
       "$OPENUIKIT_ROOT/scratch/sysroot_fe4-x86_64"
   do
     [ -n "$cand" ] || continue
+    case "${cand%/}" in
+      *-fe-clang) continue ;;
+    esac
     if [ -f "$cand/usr/include/Darwin.modulemap" ]; then
       printf '%s\n' "$cand"
       return 0
@@ -247,14 +250,20 @@ if [ -f "$PROC_PIN" ]; then
   fi
 fi
 if [ -f "$SDK/usr/include/Darwin.modulemap" ]; then
-  for h in math.h sys/proc.h; do
-    if [ -f "$SDK/usr/include/$h" ] \
-        && ! grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap"; then
-      # Insert before the last line (the outer module's closing brace).
-      sed -i '$i\  header "'"$h"'"' "$SDK/usr/include/Darwin.modulemap"
-      echo "stage_overlay_darwin: Darwin.modulemap now names $h"
-    fi
-  done
+  # Extra header lines here made sdk/MacOSX.sdk/usr/include/Darwin.modulemap
+  # differ from scratch/sysroot_fe4-$ARCH after the cycle (the FE/SYS copy
+  # already names math.h / sys/proc.h as comments). Only mutate the
+  # generated fallback map.
+  if [ -z "$FE" ]; then
+    for h in math.h sys/proc.h; do
+      if [ -f "$SDK/usr/include/$h" ] \
+          && ! grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap"; then
+        # Insert before the last line (the outer module's closing brace).
+        sed -i '$i\  header "'"$h"'"' "$SDK/usr/include/Darwin.modulemap"
+        echo "stage_overlay_darwin: Darwin.modulemap now names $h"
+      fi
+    done
+  fi
 else
   write_darwin_modulemap
 fi

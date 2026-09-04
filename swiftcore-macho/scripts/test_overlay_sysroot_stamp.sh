@@ -385,6 +385,35 @@ grep -q 'stamp MATCH' "$tmp/begin_dmap_match" \
   || { echo "  FAIL post-map-restage MATCH"; cat "$tmp/begin_dmap_match"; fail=1; }
 
 echo
+echo "=== leftover expanded dest Darwin.modulemap is overwritten to match FE (cmp) ==="
+# Stamp keys FE source bytes, so dest can stay expanded on MATCH-inputs.
+# overlay_sysroot_sync_darwin_modulemap is the dest writer the cycle needs.
+unexp_map='module Darwin [system] { header "math.h" export * }'
+exp_map='module Darwin [system] { header "math.h" header "unistd.h" export * }'
+printf '%s\n' "$unexp_map" > "$fe/usr/include/Darwin.modulemap"
+mkdir -p "$tmp/leftover/usr/include"
+printf '%s\n' "$exp_map" > "$tmp/leftover/usr/include/Darwin.modulemap"
+if cmp -s "$fe/usr/include/Darwin.modulemap" "$tmp/leftover/usr/include/Darwin.modulemap"; then
+  echo "  FAIL leftover dest already matched FE before sync"
+  fail=1
+else
+  echo "  OK  leftover dest differs from FE (expanded vs unexpanded)"
+fi
+set +e
+sync_out=$(overlay_sysroot_sync_darwin_modulemap "$tmp/leftover" 2>&1)
+sync_st=$?
+set -e
+printf '%s\n' "$sync_out"
+[ "$sync_st" -eq 0 ] && echo "  OK  sync rc=0" \
+  || { echo "  FAIL sync rc=$sync_st"; fail=1; }
+cmp -s "$fe/usr/include/Darwin.modulemap" "$tmp/leftover/usr/include/Darwin.modulemap" \
+  && echo "  OK  dest Darwin.modulemap cmps FE source after sync" \
+  || { echo "  FAIL dest still differs from FE"; fail=1; }
+printf '%s\n' "$sync_out" | grep -q 'Darwin.modulemap dest matches source' \
+  && echo "  OK  sync logged dest matches source" \
+  || { echo "  FAIL missing sync log"; fail=1; }
+
+echo
 echo "=== listed required header missing → refuse (not stamp MATCH) ==="
 mkdir -p "$tmp/noCM/usr/lib"
 fill_required_headers "$tmp/noCM"
@@ -593,6 +622,9 @@ fi
 grep -q 'overlay_sysroot_install_objc4_priv' "$SCRIPT_DIR/stage_sdk.sh" \
   && echo "  OK  stage_sdk calls overlay_sysroot_install_objc4_priv" \
   || { echo "  FAIL stage_sdk missing overlay_sysroot_install_objc4_priv"; fail=1; }
+grep -q 'overlay_sysroot_sync_darwin_modulemap' "$SCRIPT_DIR/stage_sdk.sh" \
+  && echo "  OK  stage_sdk reuse path syncs Darwin.modulemap from the FE sysroot" \
+  || { echo "  FAIL stage_sdk missing overlay_sysroot_sync_darwin_modulemap"; fail=1; }
 
 echo
 echo "=== include_next wrapper predicate: objc4 vs Apple limits.h ==="

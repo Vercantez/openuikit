@@ -60,10 +60,11 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
 # header closure, the required staged-header / tbd completeness gate, the
 # tbd / swiftmodule / HEAD:machorun stamp inputs, the FE Darwin.modulemap
-# byte hash, the include_next wrapper layout, or the include_next wrapper
+# byte hash, dest Darwin.modulemap sync (SDK copy must cmp the overlay-copied
+# sysroot), the include_next wrapper layout, or the include_next wrapper
 # predicate (first directive after comments/guard is `#include_next
 # <same-basename>`; not every `#include_next` in Apple's i386/arm limits.h).
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.7
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.8
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -176,6 +177,41 @@ overlay_sysroot_tree_has_tbds() {
     return 1
 }
 
+# FE Swift expand lives on scratch/sysroot_fe4-$ARCH-fe-clang. Overlay ninja
+# -sdk is $W/sdk/MacOSX.sdk, which must stay byte-identical to the
+# overlay-copied sysroot (scratch/sysroot_fe4-$ARCH), not that snapshot.
+overlay_sysroot_is_fe_clang_snapshot() {
+    case "${1%/}" in
+        *-fe-clang) return 0 ;;
+    esac
+    return 1
+}
+
+# Copy usr/include/Darwin.modulemap from the overlay-copied FE sysroot onto
+# dest. Stamp hashes FE *source* bytes, so a leftover expanded dest still
+# MATCH-inputs; this is the writer that makes dest cmp the sysroot.
+# overlay_sysroot_sync_darwin_modulemap <dest>
+overlay_sysroot_sync_darwin_modulemap() {
+    local dest=${1:?overlay_sysroot_sync_darwin_modulemap: dest}
+    local src map destmap
+    src=$(overlay_sysroot_resolve_source || true)
+    [ -n "$src" ] && [ "$src" != ABSENT ] || return 0
+    if overlay_sysroot_is_fe_clang_snapshot "$src"; then
+        echo "overlay_sysroot: REFUSING FE-clang snapshot as Darwin.modulemap source $src" >&2
+        return 2
+    fi
+    map=$src/usr/include/Darwin.modulemap
+    destmap=$dest/usr/include/Darwin.modulemap
+    [ -f "$map" ] || return 0
+    mkdir -p "$dest/usr/include"
+    cp -a "$map" "$destmap"
+    if ! cmp -s "$map" "$destmap"; then
+        echo "CANNOT_OVERLAY_SYSROOT_DARWIN_MODULEMAP dest=$destmap source=$map reason=SDK Darwin.modulemap differs from overlay-copied sysroot after copy" >&2
+        return 2
+    fi
+    echo "overlay_sysroot: Darwin.modulemap dest matches source $map"
+}
+
 overlay_sysroot_resolve_source() {
     local cand root
     OVERLAY_SYSROOT_SOURCE=ABSENT
@@ -183,6 +219,7 @@ overlay_sysroot_resolve_source() {
     while IFS= read -r cand; do
         [ -n "$cand" ] || continue
         [ -e "$cand" ] || [ -L "$cand" ] || continue
+        overlay_sysroot_is_fe_clang_snapshot "$cand" && continue
         overlay_sysroot_tree_has_tbds "$cand" || continue
         root=$(realpath "$cand" 2>/dev/null || printf '%s' "$cand")
         OVERLAY_SYSROOT_SOURCE=$root
@@ -1250,6 +1287,10 @@ overlay_sysroot_finish() {
     local fresh=${2:?overlay_sysroot_finish: fresh}
     local live=$parent/MacOSX.sdk
     overlay_sysroot_copy_tbds "$fresh" "$live"
+    # Dest Darwin.modulemap must match the overlay-copied sysroot *before*
+    # fill enumerates quoted headers (comments included). Extra-insert /
+    # FE-clang copies otherwise leave dest ≠ SYS after finish.
+    overlay_sysroot_sync_darwin_modulemap "$fresh" || return $?
     overlay_sysroot_fill_modulemap_headers "$fresh"
     overlay_sysroot_fill_include_next_wrappers "$fresh"
     overlay_sysroot_write_stamp "$fresh"

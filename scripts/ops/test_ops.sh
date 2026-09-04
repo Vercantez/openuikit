@@ -257,6 +257,100 @@ clean=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
     && ok "git status --short machorun is empty after ensure_machorun" \
     || die_test "machorun still dirty: $clean"
 
+echo "== ensure_machorun --layout-only removes nested machorun/machorun symlink"
+# Box residue: GNU ln -sfn "$MACHORUN" "$W/machorun" with W=$TREE nested a
+# directory-symlink (~44 bytes), not the loader ELF.
+ln -sfn "$LAYOUT/machorun" "$LAYOUT/machorun/machorun"
+[ -L "$LAYOUT/machorun/machorun" ] \
+    && ok "fixture nested symlink at machorun/machorun" \
+    || die_test "failed to nest machorun/machorun symlink"
+nested_sz=$(wc -c < "$LAYOUT/machorun/machorun" | tr -d ' ')
+# The symlink itself is small; the target path is LAYOUT/machorun.
+[ -n "$nested_sz" ] && [ "$nested_sz" -lt 200 ] \
+    && ok "nested symlink is a short path ($nested_sz bytes), not the loader ELF" \
+    || die_test "nested symlink size unexpected: $nested_sz"
+if bash "$ROOT/scripts/x86/ensure_machorun.sh" --layout-only "$LAYOUT" \
+        >"$STUBDIR/layout-sym.out" 2>"$STUBDIR/layout-sym.err"; then
+    ok "ensure_machorun --layout-only exits 0 on nested symlink"
+else
+    die_test "layout-only symlink rc!=0 err=$(cat "$STUBDIR/layout-sym.err")"
+fi
+[ ! -e "$LAYOUT/machorun/machorun" ] \
+    && ok "nested machorun/machorun symlink is gone" \
+    || die_test "nested symlink still at machorun/machorun"
+clean=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
+[ -z "$clean" ] \
+    && ok "git status --short machorun is empty after nested-symlink removal" \
+    || die_test "machorun still dirty after symlink: $clean"
+
+echo "== build_stdlib does not ln -sfn MACHORUN into an in-tree vendor dir"
+grep -qF 'if [ -d "$W/machorun" ] && [ ! -L "$W/machorun" ]' \
+    "$ROOT/swiftcore-macho/scripts/build_stdlib.sh" \
+    && ok "build_stdlib guards ln -sfn into a real \$W/machorun directory" \
+    || die_test "build_stdlib still unconditionally ln -sfn MACHORUN → W/machorun"
+# Reproduce GNU ln nesting, then the same guard the cycle uses.
+NEST=$STUBDIR/ln-nest
+mkdir -p "$NEST/machorun"
+ln -sfn "$NEST/machorun" "$NEST/machorun"
+[ -L "$NEST/machorun/machorun" ] \
+    && ok "GNU ln -sfn TARGET existing-dir nests TARGET/basename" \
+    || die_test "this ln does not nest; the box residue writer would be elsewhere"
+rm -f "$NEST/machorun/machorun"
+if [ -d "$NEST/machorun" ] && [ ! -L "$NEST/machorun" ]; then
+    [ ! -e "$NEST/machorun/machorun" ] \
+        && ok "guard skips ln when W/machorun is the vendor directory" \
+        || die_test "guard left a nested path"
+else
+    die_test "fixture W/machorun is not a real directory"
+fi
+
+echo "== x86_cycle asserts machorun git-status and Darwin.modulemap cmp at the end"
+grep -q 'x86_cycle_assert_machorun_clean' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "x86_cycle defines end-of-cycle machorun git-status assertion" \
+    || die_test "x86_cycle missing x86_cycle_assert_machorun_clean"
+grep -qF -- 'status --short --untracked-files=all -- machorun' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "x86_cycle git-status pathspec is machorun" \
+    || die_test "x86_cycle missing git status --short machorun"
+grep -q 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "x86_cycle defines Darwin.modulemap cmp assertion" \
+    || die_test "x86_cycle missing Darwin.modulemap assertion"
+grep -q 'cmp -s "$sys_map" "$sdk_map"' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "x86_cycle verifies Darwin.modulemap with cmp" \
+    || die_test "x86_cycle missing cmp of SDK vs sysroot Darwin.modulemap"
+
+# End-of-cycle assertion on a fixture tree (same checks as x86_cycle.sh).
+CYC=$STUBDIR/cycle-assert
+mkdir -p "$CYC/machorun" "$CYC/sdk/MacOSX.sdk/usr/include" \
+    "$CYC/scratch/sysroot_fe4-x86_64/usr/include"
+printf 'tracked\n' > "$CYC/machorun/README"
+cp "$ROOT/machorun/.gitignore" "$CYC/machorun/.gitignore"
+git -C "$CYC" init -q
+git -C "$CYC" add machorun/README machorun/.gitignore
+git -C "$CYC" commit -qm 'machorun pin'
+printf 'module Darwin { header "math.h" }\n' \
+    > "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap"
+printf 'module Darwin expanded { header "unistd.h" }\n' \
+    > "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"
+ln -sfn "$CYC/machorun" "$CYC/machorun/machorun"
+# Same body as x86_cycle_assert_machorun_clean / _overlay_darwin_modulemap.
+if [ -L "$CYC/machorun/machorun" ]; then
+    rm -f "$CYC/machorun/machorun"
+fi
+cyc_status=$(git -C "$CYC" status --short --untracked-files=all -- machorun)
+[ -z "$cyc_status" ] \
+    && ok "cycle-end git status --short machorun is empty after symlink removal" \
+    || die_test "cycle-end machorun dirty: $cyc_status"
+cp -a "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap" \
+    "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"
+cmp -s "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap" \
+    "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap" \
+    && ok "cycle-end cmp: SDK Darwin.modulemap matches sysroot" \
+    || die_test "cycle-end left SDK Darwin.modulemap different from sysroot"
+[ ! -e "$CYC/machorun/machorun" ] \
+    && ok "cycle-end assertion removed nested machorun/machorun" \
+    || die_test "cycle-end left nested machorun/machorun"
+
 echo "== premerge"
 cat > "$STUBDIR/gh" <<'EOF'
 #!/usr/bin/env bash

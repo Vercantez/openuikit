@@ -332,8 +332,10 @@ expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
 expect_grep 'stage_fe_sysroot_x86.19' "$COMMON" \
     "recipe bump restages so overlay SDK does not inherit the FE Darwin.modulemap expand"
-expect_grep 'overlay-darwin.7' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
-    "overlay sysroot stamp recipe keys Darwin.modulemap bytes"
+expect_grep 'overlay-darwin.8' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay sysroot stamp recipe keys Darwin.modulemap bytes and dest sync"
+expect_grep 'overlay_sysroot_sync_darwin_modulemap' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay finish copies FE Darwin.modulemap onto the SDK dest"
 expect_grep 'usr/include/Darwin.modulemap=' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay stamp hashes FE Darwin.modulemap bytes so a regenerated map restages"
 expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
@@ -341,6 +343,12 @@ expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_mach
 expect_grep 'status --short --untracked-files=all -- machorun' \
     "$ROOT/scripts/x86/ensure_machorun.sh" \
     "ensure_machorun asserts git status --short machorun is empty"
+expect_grep 'x86_cycle_assert_machorun_clean' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle asserts git status --short machorun is empty at the end"
+expect_grep 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle cmps overlay SDK Darwin.modulemap against the overlay-copied sysroot"
+expect_grep 'cmp -s "$sys_map" "$sdk_map"' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle verifies Darwin.modulemap with cmp"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \

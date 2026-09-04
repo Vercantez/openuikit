@@ -102,6 +102,52 @@ status_from_log() {
     printf 'rebuilt\n'
 }
 
+# A nested $TREE/machorun/machorun symlink is untracked (44-byte residue the
+# box graded). Overlays can write it after ensure_machorun's assertion.
+# Refuse unless `git status --short --untracked-files=all machorun` is empty.
+x86_cycle_assert_machorun_clean() {
+    local status stray=$TREE/machorun/machorun
+    if [ -L "$stray" ]; then
+        echo "x86_cycle: removing nested machorun symlink $stray" >&2
+        rm -f "$stray"
+    fi
+    if ! git -C "$TREE" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "x86_cycle: $TREE is not a git work tree" >&2
+        return 1
+    fi
+    status=$(git -C "$TREE" status --short --untracked-files=all -- machorun)
+    if [ -n "$status" ]; then
+        echo "x86_cycle: machorun subtree is dirty: $status" >&2
+        return 1
+    fi
+    return 0
+}
+
+# Overlay SDK Darwin.modulemap must cmp the overlay-copied sysroot after the
+# cycle. FE expand lives on scratch/sysroot_fe4-x86_64-fe-clang, not here.
+x86_cycle_assert_overlay_darwin_modulemap() {
+    local sdk_map=$TREE/sdk/MacOSX.sdk/usr/include/Darwin.modulemap
+    local sys_map=$TREE/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap
+    if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
+        return 0
+    fi
+    if [ ! -f "$sys_map" ]; then
+        return 0
+    fi
+    if [ ! -f "$sdk_map" ]; then
+        echo "x86_cycle: overlay SDK missing Darwin.modulemap (sysroot has $sys_map)" >&2
+        return 1
+    fi
+    cp -a "$sys_map" "$sdk_map"
+    if ! cmp -s "$sys_map" "$sdk_map"; then
+        echo "x86_cycle: Darwin.modulemap SDK copy differs from sysroot" >&2
+        echo "  sdk=$sdk_map" >&2
+        echo "  sys=$sys_map" >&2
+        return 1
+    fi
+    return 0
+}
+
 if [ "$STUB" = 1 ]; then
     mkdir -p "$TREE" 2>/dev/null || TREE=$(mktemp -d /tmp/x86-cycle-stub.XXXXXX)
     while IFS= read -r name; do
@@ -257,8 +303,12 @@ elif run_logged overlays "$LOGDIR/overlays.log" \
     emit_stage overlays "$(status_from_log "$LOGDIR/overlays.log")" "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
 else
     emit_stage overlays cannot "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
+    # build_stdlib ln -sfn may have nested $TREE/machorun/machorun before fail.
+    rm -f "$TREE/machorun/machorun"
     exit 2
 fi
+x86_cycle_assert_overlay_darwin_modulemap || exit 2
+x86_cycle_assert_machorun_clean || exit 2
 
 # 7. stage roots. Operator box lets phase2 do this; SKIP_PHASE2 callers
 # (tests, box -o) still need the trees. Cursor install no longer skips phase2.
@@ -326,4 +376,6 @@ else
     grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_' "$LOGDIR/phase2.log" || true
     exit 2
 fi
+x86_cycle_assert_overlay_darwin_modulemap || exit 2
+x86_cycle_assert_machorun_clean || exit 2
 exit 0

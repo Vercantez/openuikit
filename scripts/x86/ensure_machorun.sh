@@ -46,7 +46,13 @@ ensure_machorun_normalize_loader() {
     local bin=$MACHORUN/build/machorun
     local stray=$MACHORUN/machorun
     mkdir -p "$MACHORUN/build"
-    if [ -f "$stray" ] && [ ! -L "$stray" ]; then
+    # Overlay build_stdlib.sh `ln -sfn "$MACHORUN" "$W/machorun"` with W=$TREE
+    # nests a directory-symlink at machorun/machorun (~44 bytes). -f is false
+    # for a symlink-to-dir, so the regular-file move below never saw it.
+    if [ -L "$stray" ]; then
+        echo "ensure_machorun: removing nested symlink $stray" >&2
+        rm -f "$stray"
+    elif [ -f "$stray" ]; then
         if [ ! -x "$bin" ]; then
             echo "ensure_machorun: moving stray loader $stray -> $bin" >&2
             mv -f "$stray" "$bin"
