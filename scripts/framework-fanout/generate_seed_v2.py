@@ -1066,6 +1066,55 @@ def locate_sdk_module(sdk_root: Path, module: str) -> ModuleLocation:
     )
 
 
+def clang_include_directories(location: ModuleLocation) -> list[Path]:
+    directories: list[Path] = []
+    if location.kind == "clang-module":
+        directories.append(location.input_root)
+        parent = location.input_root.parent
+        if parent.name == "include":
+            directories.append(parent)
+    elif location.kind == "clang-submodule" and location.module_map is not None:
+        directories.append(location.module_map.parent)
+    elif location.kind == "framework-clang-module":
+        headers = location.input_root / "Headers"
+        if headers.is_dir():
+            directories.append(headers)
+    unique: list[Path] = []
+    seen: set[Path] = set()
+    for directory in directories:
+        if directory not in seen:
+            seen.add(directory)
+            unique.append(directory)
+    return unique
+
+
+def xcc_passthrough(*clang_args: str) -> list[str]:
+    """Spell Clang importer flags as argv pairs ``-Xcc``, ``<clang-arg>``.
+
+    ``swift-symbolgraph-extract`` only accepts options in the
+    SwiftSymbolGraphExtract group.  ``-fmodule-map-file`` is a Clang flag, so
+    it must be the Separate value of ``-Xcc``, never a top-level extractor
+    argument.
+    """
+
+    argv: list[str] = []
+    for clang_arg in clang_args:
+        if not clang_arg or clang_arg.startswith("-Xcc"):
+            raise SeedError(f"invalid Clang importer passthrough: {clang_arg!r}")
+        argv.extend(("-Xcc", clang_arg))
+    return argv
+
+
+def reject_bare_clang_importer_flags(argv: Sequence[str], *, tool: str) -> None:
+    for index, argument in enumerate(argv):
+        if argument.startswith("-fmodule-map-file") and (
+            index == 0 or argv[index - 1] != "-Xcc"
+        ):
+            raise SeedError(
+                f"{tool} received Clang flag {argument!r} without a preceding -Xcc"
+            )
+
+
 def extractor_clang_module_args(location: ModuleLocation) -> list[str]:
     if location.kind not in {
         "clang-module",
@@ -1077,7 +1126,84 @@ def extractor_clang_module_args(location: ModuleLocation) -> list[str]:
         raise SeedError(
             f"Clang module location is missing a module map: {location.sdk_relative_path}"
         )
-    return ["-Xcc", f"-fmodule-map-file={location.module_map}"]
+    include_dirs = clang_include_directories(location)
+    argv: list[str] = []
+    for directory in include_dirs:
+        argv.extend(("-I", str(directory)))
+    argv.extend(xcc_passthrough(f"-fmodule-map-file={location.module_map}"))
+    argv.extend(xcc_passthrough(*(f"-I{directory}" for directory in include_dirs)))
+    reject_bare_clang_importer_flags(argv, tool="swift-symbolgraph-extract")
+    return argv
+
+
+def digester_clang_module_args(location: ModuleLocation) -> list[str]:
+    """Xcode 26.1's api-digester option table does not accept ``-Xcc``."""
+
+    if location.kind not in {
+        "clang-module",
+        "clang-submodule",
+        "framework-clang-module",
+    }:
+        return []
+    argv: list[str] = []
+    for directory in clang_include_directories(location):
+        argv.extend(("-I", str(directory)))
+    return argv
+
+
+def symbol_graph_extract_command(
+    extractor: Path | str,
+    module: str,
+    sdk_root: Path,
+    output_dir: Path,
+    module_cache: Path,
+    extra_frontend_args: Sequence[str] = (),
+) -> list[str]:
+    argv = [
+        str(extractor),
+        "-module-name",
+        module,
+        "-target",
+        TARGET,
+        "-sdk",
+        str(sdk_root),
+        *extra_frontend_args,
+        "-minimum-access-level",
+        "public",
+        "-module-cache-path",
+        str(module_cache),
+        "-output-dir",
+        str(output_dir),
+    ]
+    reject_bare_clang_importer_flags(argv, tool="swift-symbolgraph-extract")
+    return argv
+
+
+def api_digester_command(
+    digester: Path | str,
+    module: str,
+    sdk_root: Path,
+    output_path: Path,
+    extra_frontend_args: Sequence[str] = (),
+) -> list[str]:
+    argv = [
+        str(digester),
+        "-dump-sdk",
+        "-module",
+        module,
+        "-o",
+        str(output_path),
+        "-target",
+        TARGET,
+        "-sdk",
+        str(sdk_root),
+        *extra_frontend_args,
+        "-avoid-location",
+        "-avoid-tool-args",
+        "-abort-on-module-fail",
+    ]
+    reject_bare_clang_importer_flags(argv, tool="swift-api-digester")
+    return argv
 
 
 def collect_located_sdk_inputs(
@@ -1315,22 +1441,14 @@ def generate_symbol_graphs(
 ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     raw_root = temp_root / "symbol-graphs"
     raw_root.mkdir()
-    command = [
-        str(extractor),
-        "-module-name",
+    command = symbol_graph_extract_command(
+        extractor,
         module,
-        "-target",
-        TARGET,
-        "-sdk",
-        str(sdk_root),
-        *extra_frontend_args,
-        "-minimum-access-level",
-        "public",
-        "-module-cache-path",
-        str(temp_root / "swift-module-cache"),
-        "-output-dir",
-        str(raw_root),
-    ]
+        sdk_root,
+        raw_root,
+        temp_root / "swift-module-cache",
+        extra_frontend_args,
+    )
     run_checked(command, env=clean_env)
     graph_files = sorted(raw_root.glob("*.symbols.json"), key=lambda item: item.name)
     if not graph_files:
@@ -1808,22 +1926,13 @@ def generate_api_digester(
     """
 
     raw_path = temp_root / f"{module}.api-digester.json"
-    command = [
-        str(digester),
-        "-dump-sdk",
-        "-module",
+    command = api_digester_command(
+        digester,
         module,
-        "-o",
-        str(raw_path),
-        "-target",
-        TARGET,
-        "-sdk",
-        str(sdk_root),
-        *extra_frontend_args,
-        "-avoid-location",
-        "-avoid-tool-args",
-        "-abort-on-module-fail",
-    ]
+        sdk_root,
+        raw_path,
+        extra_frontend_args,
+    )
     run_checked(command, env=clean_env)
     document = strict_json_load(raw_path, label=f"API-digester output for {module}")
     root, node_count, declarations = validate_api_declarations(document, module)
@@ -3616,7 +3725,8 @@ def generate(args: argparse.Namespace) -> Path:
         toolchain = validate_xcode(developer_dir, clean_env)
         sdk_root = Path(toolchain["_sdkPath"])
         location = locate_sdk_module(sdk_root, module)
-        extra_frontend_args = extractor_clang_module_args(location)
+        extract_frontend_args = extractor_clang_module_args(location)
+        digester_frontend_args = digester_clang_module_args(location)
         umbrella = detect_umbrella_reexport(
             module, location, sdk_root, require_pure=True
         )
@@ -3641,7 +3751,7 @@ def generate(args: argparse.Namespace) -> Path:
             reference_root,
             clean_env,
             Path(toolchain["_symbolGraphExtractorExecutable"]),
-            extra_frontend_args,
+            extract_frontend_args,
         )
         write_json(reference_root / "symbol-graphs.json", graph_manifest)
         write_public_surface(reference_root / "public-surface.tsv", symbols)
@@ -3658,7 +3768,7 @@ def generate(args: argparse.Namespace) -> Path:
             clean_env,
             Path(toolchain["_apiDigesterExecutable"]),
             symbols,
-            extra_frontend_args,
+            digester_frontend_args,
         )
         tbd_export_count = write_tbd_exports(
             reference_root / "tbd-exports.tsv", tbd_paths, sdk_root, clean_env

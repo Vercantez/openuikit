@@ -376,14 +376,15 @@ class NonFrameworkSeedTests(unittest.TestCase):
         )
         location = base.locate_sdk_module(sdk, "IOKit")
         self.assertEqual("framework-clang-module", location.kind)
-        self.assertEqual(
-            [
-                "-Xcc",
-                f"-fmodule-map-file={framework / 'Modules/module.modulemap'}",
-            ],
-            base.extractor_clang_module_args(location),
-        )
         self.assertIn("no Swift module", location.reason)
+        args = base.extractor_clang_module_args(location)
+        module_map = str(framework / "Modules/module.modulemap")
+        self.assertIn("-Xcc", args)
+        self.assertIn(f"-fmodule-map-file={module_map}", args)
+        self.assertEqual(
+            "-Xcc",
+            args[args.index(f"-fmodule-map-file={module_map}") - 1],
+        )
 
     def test_locator_finds_swift_only_module(self) -> None:
         _temporary, sdk = self.make_sdk()
@@ -421,16 +422,88 @@ class NonFrameworkSeedTests(unittest.TestCase):
             location.sdk_relative_path,
         )
         self.assertIn("located Clang module map", location.reason)
+        args = base.extractor_clang_module_args(location)
+        module_map = str(sdk / "usr/include/CommonCrypto/module.modulemap")
         self.assertEqual(
             [
+                "-I",
+                str(sdk / "usr/include/CommonCrypto"),
+                "-I",
+                str(sdk / "usr/include"),
                 "-Xcc",
-                f"-fmodule-map-file={sdk / 'usr/include/CommonCrypto/module.modulemap'}",
+                f"-fmodule-map-file={module_map}",
+                "-Xcc",
+                f"-I{sdk / 'usr/include/CommonCrypto'}",
+                "-Xcc",
+                f"-I{sdk / 'usr/include'}",
             ],
-            base.extractor_clang_module_args(location),
+            args,
         )
         records, _tbds = base.collect_located_sdk_inputs(location, sdk, "CommonCrypto")
         categories = {row["category"] for row in records}
         self.assertEqual({"header", "modulemap"}, categories)
+
+    def test_clang_module_map_flag_is_passed_via_xcc(self) -> None:
+        _temporary, sdk = self.make_sdk()
+        write_file(
+            sdk / "usr/include/CommonCrypto/module.modulemap",
+            'module CommonCrypto [system] [extern_c] {\n    header "CommonCrypto.h"\n    export *\n}\n',
+        )
+        write_file(
+            sdk / "usr/include/CommonCrypto/CommonCrypto.h",
+            "int CC_SHA256(const void *data, unsigned int len, unsigned char *md);\n",
+        )
+        location = base.locate_sdk_module(sdk, "CommonCrypto")
+        extract_args = base.extractor_clang_module_args(location)
+        module_map_flag = (
+            f"-fmodule-map-file={sdk / 'usr/include/CommonCrypto/module.modulemap'}"
+        )
+        self.assertIn(module_map_flag, extract_args)
+        self.assertEqual(
+            "-Xcc", extract_args[extract_args.index(module_map_flag) - 1]
+        )
+        self.assertTrue(
+            any(
+                argument == "-Xcc" and extract_args[index + 1].startswith("-I")
+                for index, argument in enumerate(extract_args[:-1])
+            )
+        )
+        extract_command = base.symbol_graph_extract_command(
+            "/usr/bin/swift-symbolgraph-extract",
+            "CommonCrypto",
+            sdk,
+            Path("/tmp/out"),
+            Path("/tmp/cache"),
+            extract_args,
+        )
+        self.assertEqual(
+            extract_command[extract_command.index(module_map_flag) - 1],
+            "-Xcc",
+        )
+        with self.assertRaisesRegex(base.SeedError, "without a preceding -Xcc"):
+            base.symbol_graph_extract_command(
+                "/usr/bin/swift-symbolgraph-extract",
+                "CommonCrypto",
+                sdk,
+                Path("/tmp/out"),
+                Path("/tmp/cache"),
+                [module_map_flag],
+            )
+        digester_args = base.digester_clang_module_args(location)
+        self.assertNotIn("-Xcc", digester_args)
+        self.assertFalse(
+            any(argument.startswith("-fmodule-map-file") for argument in digester_args)
+        )
+        self.assertEqual(
+            [
+                "-I",
+                str(sdk / "usr/include/CommonCrypto"),
+                "-I",
+                str(sdk / "usr/include"),
+            ],
+            digester_args,
+        )
+
 
     def test_locator_finds_top_level_clang_submodule(self) -> None:
         _temporary, sdk = self.make_sdk()
