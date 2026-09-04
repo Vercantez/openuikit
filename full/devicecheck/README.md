@@ -27,7 +27,18 @@ only the error code, matching the Xcode 26.1 runtime. Numeric
 `DCError.Code` values follow the public header enumeration.
 
 This cloud runner still has no Apple DeviceCheck/App Attest service, so Apple
-callback timing and cryptographic success are not claimed.
+callback timing, queue identity, and cryptographic success are not claimed.
+Linux currently invokes completion handlers synchronously before the
+generating method returns; that timing is a port choice recorded in
+`oracle-questions.tsv`.
+
+Wave-6 deliverable files (`coverage.tsv`, `oracle-questions.tsv`,
+`tests/agent/DeviceCheckLoadSmoke.swift`, `tests/agent/DeviceCheckTests.swift`,
+`tests/agent/DeviceCheckRuntime.swift`, and
+`tests/agent/DeviceCheckDependencyIdentity.swift`) account for the schema-v2
+public surface and exercise the fail-closed implementation. The sealed host
+gate compiles `*Tests.swift` and derives its runner from `implemented`
+coverage rows.
 
 `tests/test_devicecheck_host.sh` typechecks the committed source-surface
 program, cold-runs the committed guest runtime on Linux `swiftc`, runs the
