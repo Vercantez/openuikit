@@ -1269,8 +1269,51 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertEqual(leaving.superview, table, "\(leavingText ?? "?") must stay while it springs off")
         XCTAssertGreaterThan(leaving.frame.minY, oldY)
         XCTAssertNotNil(leaving.animations.first { $0.property == .position })
+        XCTAssertNil(leaving.animations.first { $0.property == .bounds },
+                     "dest fully off-screen must not spring height from 52")
         XCTAssertFalse(table.visibleCells.contains { $0 === leaving },
                        "off-screen dest is not in the visible map")
+    }
+
+    /// MEASURED clipprobe, iPhone SE 2x, iOS 26.1: a 62 pt row whose dest
+    /// straddles the visible bottom (Lima dest y 620, visBottom 667) and
+    /// whose old slot is fully below it springs bounds 52 → 62 (additive
+    /// dH = −10) so the top stays at the old slot. Position Δy = 57 =
+    /// (62+52)/2. Fully on-screen neighbours keep height 62.
+    func testClippedLastRowSpringsHeightFrom52() {
+        let titles = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot",
+                      "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima"]
+        let (_, table, source) = makeList(titles)
+        source.titles.remove(at: 2)
+        table.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+
+        let lima = table.cellForRow(at: IndexPath(row: 10, section: 0))
+            ?? table.subviews.compactMap { $0 as? UITableViewCell }
+                .first { $0.textLabel.text == "Lima" }
+        XCTAssertNotNil(lima, "Lima must stay as a sliding-in tile")
+        XCTAssertEqual(lima?.textLabel.text, "Lima")
+        guard let lima else { return }
+        XCTAssertEqual(lima.frame.height, 62, accuracy: 0.001)
+        let boundsAnim = lima.animations.first { $0.property == .bounds }
+        XCTAssertNotNil(boundsAnim, "clipped last row must spring bounds.size")
+        if case let .rect(from) = boundsAnim?.from {
+            XCTAssertEqual(from.height, UITableView.iOSClippedRowSpringHeight, accuracy: 0.001)
+        } else {
+            XCTFail("bounds from-value must be a rect of height 52")
+        }
+        if case let .rect(to) = boundsAnim?.to {
+            XCTAssertEqual(to.height, 62, accuracy: 0.001)
+        }
+        let pos = lima.animations.first { $0.property == .position }
+        XCTAssertNotNil(pos)
+        if case let .point(p0) = pos?.from, case let .point(p1) = pos?.to {
+            XCTAssertEqual(abs(p0.y - p1.y), (62 + 52) / 2, accuracy: 0.001)
+        }
+
+        let delta = table.cellForRow(at: IndexPath(row: 2, section: 0))
+        XCTAssertEqual(delta?.textLabel.text, "Delta")
+        XCTAssertNil(delta?.animations.first { $0.property == .bounds },
+                     "fully on-screen Delta must not spring height")
     }
 
     /// `.none` stays a snap even under the iOS cut — it was not on the

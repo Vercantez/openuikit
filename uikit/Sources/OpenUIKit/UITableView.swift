@@ -193,6 +193,19 @@ open class UITableView: UIScrollView {
     /// to this ω (file header of UIViewAnimation.swift: ω·D = 9.23341).
     static let iOSRowAnimationDuration: Double = 0.441
     static let iOSRowAnimationDamping: CGFloat = 1
+    /// Presentation height a neighbour springs FROM when it enters the
+    /// viewport from below into a dest that straddles the table's visible
+    /// bottom. MEASURED clipprobe, iPhone SE 2x, iOS 26.1, `.fade` delete
+    /// of row 2 (additive `bounds.size` + `position` on the last row):
+    /// 62 pt rows → bounds from (0, −10), position from (0, 57);
+    /// 44 pt rows → bounds from (0, +8), position from (0, 48);
+    /// 70 pt rows → bounds from (0, −18), position from (0, 61).
+    /// All three are destHeight → 52: `fromHeight = 52`,
+    /// `dH = 52 − destHeight`, position from `(destHeight + 52) / 2`.
+    /// TableEditor t1350 Juliet dest `[0, 496, 375, 62]` visBottom 551
+    /// (table bounds.origin.y −116 + 667). Fully off-screen dests
+    /// (insert Juliet) keep height 62 — only a straddling dest gets this.
+    static let iOSClippedRowSpringHeight: CGFloat = 52
     static func headerHeight(style: Style, firstSection: Bool,
                              compact: Bool = false) -> CGFloat {
         guard isIOSChrome else { return headerHeight }
@@ -1025,7 +1038,7 @@ open class UITableView: UIScrollView {
             }
             if let old = oldFrames[ObjectIdentifier(cell)] {
                 if old != target {
-                    cell.frame = old
+                    cell.frame = clippedRowSpringFromFrame(dest: target, old: old)
                     moves.append((cell, target))
                 }
             } else if shift != 0 {
@@ -1033,13 +1046,13 @@ open class UITableView: UIScrollView {
                 // source just off-screen. MEASURED Juliet on delete (from
                 // additive (0, +H)) and on insert (from (0, −H)).
                 let old = target.offsetBy(dx: 0, dy: shift)
-                cell.frame = old
+                cell.frame = clippedRowSpringFromFrame(dest: target, old: old)
                 moves.append((cell, target))
             }
         }
         for extra in slidingOut {
             if let old = oldFrames[ObjectIdentifier(extra.cell)], old != extra.target {
-                extra.cell.frame = old
+                extra.cell.frame = clippedRowSpringFromFrame(dest: extra.target, old: old)
                 moves.append((extra.cell, extra.target))
             }
         }
@@ -1082,6 +1095,19 @@ open class UITableView: UIScrollView {
             }
         })
         return true
+    }
+
+    /// MEASURED clipprobe: a row entering from below (`old.minY >= visBottom`)
+    /// into a dest that straddles the visible bottom springs its presentation
+    /// height from `iOSClippedRowSpringHeight` (52) to destHeight, keeping
+    /// the top at the old slot. Other neighbours keep the full old frame.
+    private func clippedRowSpringFromFrame(dest: CGRect, old: CGRect) -> CGRect {
+        let visBottom = bounds.maxY
+        guard dest.minY < visBottom, dest.maxY > visBottom, old.minY >= visBottom
+        else { return old }
+        var from = old
+        from.size.height = UITableView.iOSClippedRowSpringHeight
+        return from
     }
 
     /// Re-key one data-source move without discarding visible cells. UIKit's
