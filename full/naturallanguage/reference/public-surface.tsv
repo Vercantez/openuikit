@@ -1,0 +1,367 @@
+precise	kind	title	path	declaration
+c:@E@NLContextualEmbeddingAssetsResult	swift.enum	NLContextualEmbedding.AssetsResult	NLContextualEmbedding.AssetsResult	enum AssetsResult
+c:@E@NLContextualEmbeddingAssetsResult@NLContextualEmbeddingAssetsResultAvailable	swift.enum.case	NLContextualEmbedding.AssetsResult.available	NLContextualEmbedding.AssetsResult.available	case available
+c:@E@NLContextualEmbeddingAssetsResult@NLContextualEmbeddingAssetsResultError	swift.enum.case	NLContextualEmbedding.AssetsResult.error	NLContextualEmbedding.AssetsResult.error	case error
+c:@E@NLContextualEmbeddingAssetsResult@NLContextualEmbeddingAssetsResultNotAvailable	swift.enum.case	NLContextualEmbedding.AssetsResult.notAvailable	NLContextualEmbedding.AssetsResult.notAvailable	case notAvailable
+c:@E@NLDistanceType	swift.enum	NLDistanceType	NLDistanceType	enum NLDistanceType
+c:@E@NLDistanceType@NLDistanceTypeCosine	swift.enum.case	NLDistanceType.cosine	NLDistanceType.cosine	case cosine
+c:@E@NLModelType	swift.enum	NLModel.ModelType	NLModel.ModelType	enum ModelType
+c:@E@NLModelType@NLModelTypeClassifier	swift.enum.case	NLModel.ModelType.classifier	NLModel.ModelType.classifier	case classifier
+c:@E@NLModelType@NLModelTypeSequence	swift.enum.case	NLModel.ModelType.sequence	NLModel.ModelType.sequence	case sequence
+c:@E@NLTaggerAssetsResult	swift.enum	NLTagger.AssetsResult	NLTagger.AssetsResult	enum AssetsResult
+c:@E@NLTaggerAssetsResult@NLTaggerAssetsResultAvailable	swift.enum.case	NLTagger.AssetsResult.available	NLTagger.AssetsResult.available	case available
+c:@E@NLTaggerAssetsResult@NLTaggerAssetsResultError	swift.enum.case	NLTagger.AssetsResult.error	NLTagger.AssetsResult.error	case error
+c:@E@NLTaggerAssetsResult@NLTaggerAssetsResultNotAvailable	swift.enum.case	NLTagger.AssetsResult.notAvailable	NLTagger.AssetsResult.notAvailable	case notAvailable
+c:@E@NLTaggerOptions	swift.struct	NLTagger.Options	NLTagger.Options	struct Options
+c:@E@NLTaggerOptions@NLTaggerJoinContractions	swift.type.property	joinContractions	NLTagger.Options.joinContractions	static var joinContractions: NLTagger.Options { get }
+c:@E@NLTaggerOptions@NLTaggerJoinNames	swift.type.property	joinNames	NLTagger.Options.joinNames	static var joinNames: NLTagger.Options { get }
+c:@E@NLTaggerOptions@NLTaggerOmitOther	swift.type.property	omitOther	NLTagger.Options.omitOther	static var omitOther: NLTagger.Options { get }
+c:@E@NLTaggerOptions@NLTaggerOmitPunctuation	swift.type.property	omitPunctuation	NLTagger.Options.omitPunctuation	static var omitPunctuation: NLTagger.Options { get }
+c:@E@NLTaggerOptions@NLTaggerOmitWhitespace	swift.type.property	omitWhitespace	NLTagger.Options.omitWhitespace	static var omitWhitespace: NLTagger.Options { get }
+c:@E@NLTaggerOptions@NLTaggerOmitWords	swift.type.property	omitWords	NLTagger.Options.omitWords	static var omitWords: NLTagger.Options { get }
+c:@E@NLTokenUnit	swift.enum	NLTokenUnit	NLTokenUnit	enum NLTokenUnit
+c:@E@NLTokenUnit@NLTokenUnitDocument	swift.enum.case	NLTokenUnit.document	NLTokenUnit.document	case document
+c:@E@NLTokenUnit@NLTokenUnitParagraph	swift.enum.case	NLTokenUnit.paragraph	NLTokenUnit.paragraph	case paragraph
+c:@E@NLTokenUnit@NLTokenUnitSentence	swift.enum.case	NLTokenUnit.sentence	NLTokenUnit.sentence	case sentence
+c:@E@NLTokenUnit@NLTokenUnitWord	swift.enum.case	NLTokenUnit.word	NLTokenUnit.word	case word
+c:@E@NLTokenizerAttributes	swift.struct	NLTokenizer.Attributes	NLTokenizer.Attributes	struct Attributes
+c:@E@NLTokenizerAttributes@NLTokenizerAttributeEmoji	swift.type.property	emoji	NLTokenizer.Attributes.emoji	static var emoji: NLTokenizer.Attributes { get }
+c:@E@NLTokenizerAttributes@NLTokenizerAttributeNumeric	swift.type.property	numeric	NLTokenizer.Attributes.numeric	static var numeric: NLTokenizer.Attributes { get }
+c:@E@NLTokenizerAttributes@NLTokenizerAttributeSymbolic	swift.type.property	symbolic	NLTokenizer.Attributes.symbolic	static var symbolic: NLTokenizer.Attributes { get }
+c:@NLContextualEmbeddingKeyLanguages	swift.type.property	languages	NLContextualEmbeddingKey.languages	static let languages: NLContextualEmbeddingKey
+c:@NLContextualEmbeddingKeyRevision	swift.type.property	revision	NLContextualEmbeddingKey.revision	static let revision: NLContextualEmbeddingKey
+c:@NLContextualEmbeddingKeyScripts	swift.type.property	scripts	NLContextualEmbeddingKey.scripts	static let scripts: NLContextualEmbeddingKey
+c:@NLLanguageAmharic	swift.type.property	amharic	NLLanguage.amharic	static let amharic: NLLanguage
+c:@NLLanguageArabic	swift.type.property	arabic	NLLanguage.arabic	static let arabic: NLLanguage
+c:@NLLanguageArmenian	swift.type.property	armenian	NLLanguage.armenian	static let armenian: NLLanguage
+c:@NLLanguageBengali	swift.type.property	bengali	NLLanguage.bengali	static let bengali: NLLanguage
+c:@NLLanguageBulgarian	swift.type.property	bulgarian	NLLanguage.bulgarian	static let bulgarian: NLLanguage
+c:@NLLanguageBurmese	swift.type.property	burmese	NLLanguage.burmese	static let burmese: NLLanguage
+c:@NLLanguageCatalan	swift.type.property	catalan	NLLanguage.catalan	static let catalan: NLLanguage
+c:@NLLanguageCherokee	swift.type.property	cherokee	NLLanguage.cherokee	static let cherokee: NLLanguage
+c:@NLLanguageCroatian	swift.type.property	croatian	NLLanguage.croatian	static let croatian: NLLanguage
+c:@NLLanguageCzech	swift.type.property	czech	NLLanguage.czech	static let czech: NLLanguage
+c:@NLLanguageDanish	swift.type.property	danish	NLLanguage.danish	static let danish: NLLanguage
+c:@NLLanguageDutch	swift.type.property	dutch	NLLanguage.dutch	static let dutch: NLLanguage
+c:@NLLanguageEnglish	swift.type.property	english	NLLanguage.english	static let english: NLLanguage
+c:@NLLanguageFinnish	swift.type.property	finnish	NLLanguage.finnish	static let finnish: NLLanguage
+c:@NLLanguageFrench	swift.type.property	french	NLLanguage.french	static let french: NLLanguage
+c:@NLLanguageGeorgian	swift.type.property	georgian	NLLanguage.georgian	static let georgian: NLLanguage
+c:@NLLanguageGerman	swift.type.property	german	NLLanguage.german	static let german: NLLanguage
+c:@NLLanguageGreek	swift.type.property	greek	NLLanguage.greek	static let greek: NLLanguage
+c:@NLLanguageGujarati	swift.type.property	gujarati	NLLanguage.gujarati	static let gujarati: NLLanguage
+c:@NLLanguageHebrew	swift.type.property	hebrew	NLLanguage.hebrew	static let hebrew: NLLanguage
+c:@NLLanguageHindi	swift.type.property	hindi	NLLanguage.hindi	static let hindi: NLLanguage
+c:@NLLanguageHungarian	swift.type.property	hungarian	NLLanguage.hungarian	static let hungarian: NLLanguage
+c:@NLLanguageIcelandic	swift.type.property	icelandic	NLLanguage.icelandic	static let icelandic: NLLanguage
+c:@NLLanguageIndonesian	swift.type.property	indonesian	NLLanguage.indonesian	static let indonesian: NLLanguage
+c:@NLLanguageItalian	swift.type.property	italian	NLLanguage.italian	static let italian: NLLanguage
+c:@NLLanguageJapanese	swift.type.property	japanese	NLLanguage.japanese	static let japanese: NLLanguage
+c:@NLLanguageKannada	swift.type.property	kannada	NLLanguage.kannada	static let kannada: NLLanguage
+c:@NLLanguageKazakh	swift.type.property	kazakh	NLLanguage.kazakh	static let kazakh: NLLanguage
+c:@NLLanguageKhmer	swift.type.property	khmer	NLLanguage.khmer	static let khmer: NLLanguage
+c:@NLLanguageKorean	swift.type.property	korean	NLLanguage.korean	static let korean: NLLanguage
+c:@NLLanguageLao	swift.type.property	lao	NLLanguage.lao	static let lao: NLLanguage
+c:@NLLanguageMalay	swift.type.property	malay	NLLanguage.malay	static let malay: NLLanguage
+c:@NLLanguageMalayalam	swift.type.property	malayalam	NLLanguage.malayalam	static let malayalam: NLLanguage
+c:@NLLanguageMarathi	swift.type.property	marathi	NLLanguage.marathi	static let marathi: NLLanguage
+c:@NLLanguageMongolian	swift.type.property	mongolian	NLLanguage.mongolian	static let mongolian: NLLanguage
+c:@NLLanguageNorwegian	swift.type.property	norwegian	NLLanguage.norwegian	static let norwegian: NLLanguage
+c:@NLLanguageOriya	swift.type.property	oriya	NLLanguage.oriya	static let oriya: NLLanguage
+c:@NLLanguagePersian	swift.type.property	persian	NLLanguage.persian	static let persian: NLLanguage
+c:@NLLanguagePolish	swift.type.property	polish	NLLanguage.polish	static let polish: NLLanguage
+c:@NLLanguagePortuguese	swift.type.property	portuguese	NLLanguage.portuguese	static let portuguese: NLLanguage
+c:@NLLanguagePunjabi	swift.type.property	punjabi	NLLanguage.punjabi	static let punjabi: NLLanguage
+c:@NLLanguageRomanian	swift.type.property	romanian	NLLanguage.romanian	static let romanian: NLLanguage
+c:@NLLanguageRussian	swift.type.property	russian	NLLanguage.russian	static let russian: NLLanguage
+c:@NLLanguageSimplifiedChinese	swift.type.property	simplifiedChinese	NLLanguage.simplifiedChinese	static let simplifiedChinese: NLLanguage
+c:@NLLanguageSinhalese	swift.type.property	sinhalese	NLLanguage.sinhalese	static let sinhalese: NLLanguage
+c:@NLLanguageSlovak	swift.type.property	slovak	NLLanguage.slovak	static let slovak: NLLanguage
+c:@NLLanguageSpanish	swift.type.property	spanish	NLLanguage.spanish	static let spanish: NLLanguage
+c:@NLLanguageSwedish	swift.type.property	swedish	NLLanguage.swedish	static let swedish: NLLanguage
+c:@NLLanguageTamil	swift.type.property	tamil	NLLanguage.tamil	static let tamil: NLLanguage
+c:@NLLanguageTelugu	swift.type.property	telugu	NLLanguage.telugu	static let telugu: NLLanguage
+c:@NLLanguageThai	swift.type.property	thai	NLLanguage.thai	static let thai: NLLanguage
+c:@NLLanguageTibetan	swift.type.property	tibetan	NLLanguage.tibetan	static let tibetan: NLLanguage
+c:@NLLanguageTraditionalChinese	swift.type.property	traditionalChinese	NLLanguage.traditionalChinese	static let traditionalChinese: NLLanguage
+c:@NLLanguageTurkish	swift.type.property	turkish	NLLanguage.turkish	static let turkish: NLLanguage
+c:@NLLanguageUkrainian	swift.type.property	ukrainian	NLLanguage.ukrainian	static let ukrainian: NLLanguage
+c:@NLLanguageUndetermined	swift.type.property	undetermined	NLLanguage.undetermined	static let undetermined: NLLanguage
+c:@NLLanguageUrdu	swift.type.property	urdu	NLLanguage.urdu	static let urdu: NLLanguage
+c:@NLLanguageVietnamese	swift.type.property	vietnamese	NLLanguage.vietnamese	static let vietnamese: NLLanguage
+c:@NLScriptArabic	swift.type.property	arabic	NLScript.arabic	static let arabic: NLScript
+c:@NLScriptArmenian	swift.type.property	armenian	NLScript.armenian	static let armenian: NLScript
+c:@NLScriptBengali	swift.type.property	bengali	NLScript.bengali	static let bengali: NLScript
+c:@NLScriptCanadianAboriginalSyllabics	swift.type.property	canadianAboriginalSyllabics	NLScript.canadianAboriginalSyllabics	static let canadianAboriginalSyllabics: NLScript
+c:@NLScriptCherokee	swift.type.property	cherokee	NLScript.cherokee	static let cherokee: NLScript
+c:@NLScriptCyrillic	swift.type.property	cyrillic	NLScript.cyrillic	static let cyrillic: NLScript
+c:@NLScriptDevanagari	swift.type.property	devanagari	NLScript.devanagari	static let devanagari: NLScript
+c:@NLScriptEthiopic	swift.type.property	ethiopic	NLScript.ethiopic	static let ethiopic: NLScript
+c:@NLScriptGeorgian	swift.type.property	georgian	NLScript.georgian	static let georgian: NLScript
+c:@NLScriptGreek	swift.type.property	greek	NLScript.greek	static let greek: NLScript
+c:@NLScriptGujarati	swift.type.property	gujarati	NLScript.gujarati	static let gujarati: NLScript
+c:@NLScriptGurmukhi	swift.type.property	gurmukhi	NLScript.gurmukhi	static let gurmukhi: NLScript
+c:@NLScriptHebrew	swift.type.property	hebrew	NLScript.hebrew	static let hebrew: NLScript
+c:@NLScriptJapanese	swift.type.property	japanese	NLScript.japanese	static let japanese: NLScript
+c:@NLScriptKannada	swift.type.property	kannada	NLScript.kannada	static let kannada: NLScript
+c:@NLScriptKhmer	swift.type.property	khmer	NLScript.khmer	static let khmer: NLScript
+c:@NLScriptKorean	swift.type.property	korean	NLScript.korean	static let korean: NLScript
+c:@NLScriptLao	swift.type.property	lao	NLScript.lao	static let lao: NLScript
+c:@NLScriptLatin	swift.type.property	latin	NLScript.latin	static let latin: NLScript
+c:@NLScriptMalayalam	swift.type.property	malayalam	NLScript.malayalam	static let malayalam: NLScript
+c:@NLScriptMongolian	swift.type.property	mongolian	NLScript.mongolian	static let mongolian: NLScript
+c:@NLScriptMyanmar	swift.type.property	myanmar	NLScript.myanmar	static let myanmar: NLScript
+c:@NLScriptOriya	swift.type.property	oriya	NLScript.oriya	static let oriya: NLScript
+c:@NLScriptSimplifiedChinese	swift.type.property	simplifiedChinese	NLScript.simplifiedChinese	static let simplifiedChinese: NLScript
+c:@NLScriptSinhala	swift.type.property	sinhala	NLScript.sinhala	static let sinhala: NLScript
+c:@NLScriptTamil	swift.type.property	tamil	NLScript.tamil	static let tamil: NLScript
+c:@NLScriptTelugu	swift.type.property	telugu	NLScript.telugu	static let telugu: NLScript
+c:@NLScriptThai	swift.type.property	thai	NLScript.thai	static let thai: NLScript
+c:@NLScriptTibetan	swift.type.property	tibetan	NLScript.tibetan	static let tibetan: NLScript
+c:@NLScriptTraditionalChinese	swift.type.property	traditionalChinese	NLScript.traditionalChinese	static let traditionalChinese: NLScript
+c:@NLScriptUndetermined	swift.type.property	undetermined	NLScript.undetermined	static let undetermined: NLScript
+c:@NLTagAdjective	swift.type.property	adjective	NLTag.adjective	static let adjective: NLTag
+c:@NLTagAdverb	swift.type.property	adverb	NLTag.adverb	static let adverb: NLTag
+c:@NLTagClassifier	swift.type.property	classifier	NLTag.classifier	static let classifier: NLTag
+c:@NLTagCloseParenthesis	swift.type.property	closeParenthesis	NLTag.closeParenthesis	static let closeParenthesis: NLTag
+c:@NLTagCloseQuote	swift.type.property	closeQuote	NLTag.closeQuote	static let closeQuote: NLTag
+c:@NLTagConjunction	swift.type.property	conjunction	NLTag.conjunction	static let conjunction: NLTag
+c:@NLTagDash	swift.type.property	dash	NLTag.dash	static let dash: NLTag
+c:@NLTagDeterminer	swift.type.property	determiner	NLTag.determiner	static let determiner: NLTag
+c:@NLTagIdiom	swift.type.property	idiom	NLTag.idiom	static let idiom: NLTag
+c:@NLTagInterjection	swift.type.property	interjection	NLTag.interjection	static let interjection: NLTag
+c:@NLTagNoun	swift.type.property	noun	NLTag.noun	static let noun: NLTag
+c:@NLTagNumber	swift.type.property	number	NLTag.number	static let number: NLTag
+c:@NLTagOpenParenthesis	swift.type.property	openParenthesis	NLTag.openParenthesis	static let openParenthesis: NLTag
+c:@NLTagOpenQuote	swift.type.property	openQuote	NLTag.openQuote	static let openQuote: NLTag
+c:@NLTagOrganizationName	swift.type.property	organizationName	NLTag.organizationName	static let organizationName: NLTag
+c:@NLTagOther	swift.type.property	other	NLTag.other	static let other: NLTag
+c:@NLTagOtherPunctuation	swift.type.property	otherPunctuation	NLTag.otherPunctuation	static let otherPunctuation: NLTag
+c:@NLTagOtherWhitespace	swift.type.property	otherWhitespace	NLTag.otherWhitespace	static let otherWhitespace: NLTag
+c:@NLTagOtherWord	swift.type.property	otherWord	NLTag.otherWord	static let otherWord: NLTag
+c:@NLTagParagraphBreak	swift.type.property	paragraphBreak	NLTag.paragraphBreak	static let paragraphBreak: NLTag
+c:@NLTagParticle	swift.type.property	particle	NLTag.particle	static let particle: NLTag
+c:@NLTagPersonalName	swift.type.property	personalName	NLTag.personalName	static let personalName: NLTag
+c:@NLTagPlaceName	swift.type.property	placeName	NLTag.placeName	static let placeName: NLTag
+c:@NLTagPreposition	swift.type.property	preposition	NLTag.preposition	static let preposition: NLTag
+c:@NLTagPronoun	swift.type.property	pronoun	NLTag.pronoun	static let pronoun: NLTag
+c:@NLTagPunctuation	swift.type.property	punctuation	NLTag.punctuation	static let punctuation: NLTag
+c:@NLTagSchemeLanguage	swift.type.property	language	NLTagScheme.language	static let language: NLTagScheme
+c:@NLTagSchemeLemma	swift.type.property	lemma	NLTagScheme.lemma	static let lemma: NLTagScheme
+c:@NLTagSchemeLexicalClass	swift.type.property	lexicalClass	NLTagScheme.lexicalClass	static let lexicalClass: NLTagScheme
+c:@NLTagSchemeNameType	swift.type.property	nameType	NLTagScheme.nameType	static let nameType: NLTagScheme
+c:@NLTagSchemeNameTypeOrLexicalClass	swift.type.property	nameTypeOrLexicalClass	NLTagScheme.nameTypeOrLexicalClass	static let nameTypeOrLexicalClass: NLTagScheme
+c:@NLTagSchemeScript	swift.type.property	script	NLTagScheme.script	static let script: NLTagScheme
+c:@NLTagSchemeSentimentScore	swift.type.property	sentimentScore	NLTagScheme.sentimentScore	static let sentimentScore: NLTagScheme
+c:@NLTagSchemeTokenType	swift.type.property	tokenType	NLTagScheme.tokenType	static let tokenType: NLTagScheme
+c:@NLTagSentenceTerminator	swift.type.property	sentenceTerminator	NLTag.sentenceTerminator	static let sentenceTerminator: NLTag
+c:@NLTagVerb	swift.type.property	verb	NLTag.verb	static let verb: NLTag
+c:@NLTagWhitespace	swift.type.property	whitespace	NLTag.whitespace	static let whitespace: NLTag
+c:@NLTagWord	swift.type.property	word	NLTag.word	static let word: NLTag
+c:@NLTagWordJoiner	swift.type.property	wordJoiner	NLTag.wordJoiner	static let wordJoiner: NLTag
+c:@T@NLContextualEmbeddingKey	swift.struct	NLContextualEmbeddingKey	NLContextualEmbeddingKey	struct NLContextualEmbeddingKey
+c:@T@NLDistance	swift.typealias	NLDistance	NLDistance	typealias NLDistance = Double
+c:@T@NLLanguage	swift.struct	NLLanguage	NLLanguage	struct NLLanguage
+c:@T@NLScript	swift.struct	NLScript	NLScript	struct NLScript
+c:@T@NLTag	swift.struct	NLTag	NLTag	struct NLTag
+c:@T@NLTagScheme	swift.struct	NLTagScheme	NLTagScheme	struct NLTagScheme
+c:objc(cs)NLContextualEmbedding	swift.class	NLContextualEmbedding	NLContextualEmbedding	class NLContextualEmbedding
+c:objc(cs)NLContextualEmbedding(cm)contextualEmbeddingWithLanguage:	swift.init	init(language:)	NLContextualEmbedding.init(language:)	init?(language: NLLanguage)
+c:objc(cs)NLContextualEmbedding(cm)contextualEmbeddingWithModelIdentifier:	swift.init	init(modelIdentifier:)	NLContextualEmbedding.init(modelIdentifier:)	convenience init?(modelIdentifier: String)
+c:objc(cs)NLContextualEmbedding(cm)contextualEmbeddingWithScript:	swift.init	init(script:)	NLContextualEmbedding.init(script:)	init?(script: NLScript)
+c:objc(cs)NLContextualEmbedding(cm)contextualEmbeddingsForValues:	swift.type.method	contextualEmbeddings(forValues:)	NLContextualEmbedding.contextualEmbeddings(forValues:)	class func contextualEmbeddings(forValues valuesDictionary: [NLContextualEmbeddingKey : Any]) -> [NLContextualEmbedding]
+c:objc(cs)NLContextualEmbedding(im)embeddingResultForString:language:error:	swift.method	embeddingResult(for:language:)	NLContextualEmbedding.embeddingResult(for:language:)	func embeddingResult(for string: String, language: NLLanguage?) throws -> NLContextualEmbeddingResult
+c:objc(cs)NLContextualEmbedding(im)loadWithError:	swift.method	load()	NLContextualEmbedding.load()	func load() throws
+c:objc(cs)NLContextualEmbedding(im)requestEmbeddingAssetsWithCompletionHandler:	swift.method	requestAssets(completionHandler:)	NLContextualEmbedding.requestAssets(completionHandler:)	func requestAssets(completionHandler: @escaping (NLContextualEmbedding.AssetsResult, (any Error)?) -> Void)
+c:objc(cs)NLContextualEmbedding(im)unload	swift.method	unload()	NLContextualEmbedding.unload()	func unload()
+c:objc(cs)NLContextualEmbedding(py)dimension	swift.property	dimension	NLContextualEmbedding.dimension	var dimension: Int { get }
+c:objc(cs)NLContextualEmbedding(py)hasAvailableAssets	swift.property	hasAvailableAssets	NLContextualEmbedding.hasAvailableAssets	var hasAvailableAssets: Bool { get }
+c:objc(cs)NLContextualEmbedding(py)languages	swift.property	languages	NLContextualEmbedding.languages	var languages: [NLLanguage] { get }
+c:objc(cs)NLContextualEmbedding(py)maximumSequenceLength	swift.property	maximumSequenceLength	NLContextualEmbedding.maximumSequenceLength	var maximumSequenceLength: Int { get }
+c:objc(cs)NLContextualEmbedding(py)modelIdentifier	swift.property	modelIdentifier	NLContextualEmbedding.modelIdentifier	var modelIdentifier: String { get }
+c:objc(cs)NLContextualEmbedding(py)revision	swift.property	revision	NLContextualEmbedding.revision	var revision: Int { get }
+c:objc(cs)NLContextualEmbedding(py)scripts	swift.property	scripts	NLContextualEmbedding.scripts	var scripts: [NLScript] { get }
+c:objc(cs)NLContextualEmbeddingResult	swift.class	NLContextualEmbeddingResult	NLContextualEmbeddingResult	class NLContextualEmbeddingResult
+c:objc(cs)NLContextualEmbeddingResult(py)language	swift.property	language	NLContextualEmbeddingResult.language	var language: NLLanguage { get }
+c:objc(cs)NLContextualEmbeddingResult(py)sequenceLength	swift.property	sequenceLength	NLContextualEmbeddingResult.sequenceLength	var sequenceLength: Int { get }
+c:objc(cs)NLContextualEmbeddingResult(py)string	swift.property	string	NLContextualEmbeddingResult.string	var string: String { get }
+c:objc(cs)NLEmbedding	swift.class	NLEmbedding	NLEmbedding	class NLEmbedding
+c:objc(cs)NLEmbedding(cm)currentRevisionForLanguage:	swift.type.method	currentRevision(for:)	NLEmbedding.currentRevision(for:)	class func currentRevision(for language: NLLanguage) -> Int
+c:objc(cs)NLEmbedding(cm)currentSentenceEmbeddingRevisionForLanguage:	swift.type.method	currentSentenceEmbeddingRevision(for:)	NLEmbedding.currentSentenceEmbeddingRevision(for:)	class func currentSentenceEmbeddingRevision(for language: NLLanguage) -> Int
+c:objc(cs)NLEmbedding(cm)embeddingWithContentsOfURL:error:	swift.init	init(contentsOf:)	NLEmbedding.init(contentsOf:)	convenience init(contentsOf url: URL) throws
+c:objc(cs)NLEmbedding(cm)embeddingWithContentsOfURL:error:::SYNTHESIZED::c:objc(cs)NLEmbedding	swift.init	init(contentsOfURL:)	NLEmbedding.init(contentsOfURL:)	convenience init(contentsOfURL url: URL) throws
+c:objc(cs)NLEmbedding(cm)sentenceEmbeddingForLanguage:	swift.type.method	sentenceEmbedding(for:)	NLEmbedding.sentenceEmbedding(for:)	class func sentenceEmbedding(for language: NLLanguage) -> NLEmbedding?
+c:objc(cs)NLEmbedding(cm)sentenceEmbeddingForLanguage:revision:	swift.type.method	sentenceEmbedding(for:revision:)	NLEmbedding.sentenceEmbedding(for:revision:)	class func sentenceEmbedding(for language: NLLanguage, revision: Int) -> NLEmbedding?
+c:objc(cs)NLEmbedding(cm)supportedRevisionsForLanguage:	swift.type.method	supportedRevisions(for:)	NLEmbedding.supportedRevisions(for:)	class func supportedRevisions(for language: NLLanguage) -> IndexSet
+c:objc(cs)NLEmbedding(cm)supportedSentenceEmbeddingRevisionsForLanguage:	swift.type.method	supportedSentenceEmbeddingRevisions(for:)	NLEmbedding.supportedSentenceEmbeddingRevisions(for:)	class func supportedSentenceEmbeddingRevisions(for language: NLLanguage) -> IndexSet
+c:objc(cs)NLEmbedding(cm)wordEmbeddingForLanguage:	swift.type.method	wordEmbedding(for:)	NLEmbedding.wordEmbedding(for:)	class func wordEmbedding(for language: NLLanguage) -> NLEmbedding?
+c:objc(cs)NLEmbedding(cm)wordEmbeddingForLanguage:revision:	swift.type.method	wordEmbedding(for:revision:)	NLEmbedding.wordEmbedding(for:revision:)	class func wordEmbedding(for language: NLLanguage, revision: Int) -> NLEmbedding?
+c:objc(cs)NLEmbedding(im)containsString:	swift.method	contains(_:)	NLEmbedding.contains(_:)	func contains(_ string: String) -> Bool
+c:objc(cs)NLEmbedding(py)dimension	swift.property	dimension	NLEmbedding.dimension	var dimension: Int { get }
+c:objc(cs)NLEmbedding(py)language	swift.property	language	NLEmbedding.language	var language: NLLanguage? { get }
+c:objc(cs)NLEmbedding(py)revision	swift.property	revision	NLEmbedding.revision	var revision: Int { get }
+c:objc(cs)NLEmbedding(py)vocabularySize	swift.property	vocabularySize	NLEmbedding.vocabularySize	var vocabularySize: Int { get }
+c:objc(cs)NLGazetteer	swift.class	NLGazetteer	NLGazetteer	class NLGazetteer
+c:objc(cs)NLGazetteer(cm)gazetteerWithContentsOfURL:error:::SYNTHESIZED::c:objc(cs)NLGazetteer	swift.init	init(contentsOfURL:)	NLGazetteer.init(contentsOfURL:)	convenience init(contentsOfURL url: URL) throws
+c:objc(cs)NLGazetteer(cm)writeGazetteerForDictionary:language:toURL:error:	swift.type.method	write(_:language:to:)	NLGazetteer.write(_:language:to:)	class func write(_ dictionary: [String : [String]], language: NLLanguage?, to url: URL) throws
+c:objc(cs)NLGazetteer(im)initWithContentsOfURL:error:	swift.init	init(contentsOf:)	NLGazetteer.init(contentsOf:)	init(contentsOf url: URL) throws
+c:objc(cs)NLGazetteer(im)initWithContentsOfURL:error:::SYNTHESIZED::c:objc(cs)NLGazetteer	swift.init	init(contentsOfURL:)	NLGazetteer.init(contentsOfURL:)	init(contentsOfURL url: URL) throws
+c:objc(cs)NLGazetteer(im)initWithData:error:	swift.init	init(data:)	NLGazetteer.init(data:)	init(data: Data) throws
+c:objc(cs)NLGazetteer(im)initWithDictionary:language:error:	swift.init	init(dictionary:language:)	NLGazetteer.init(dictionary:language:)	init(dictionary: [String : [String]], language: NLLanguage?) throws
+c:objc(cs)NLGazetteer(im)labelForString:	swift.method	label(for:)	NLGazetteer.label(for:)	func label(for string: String) -> String?
+c:objc(cs)NLGazetteer(py)data	swift.property	data	NLGazetteer.data	var data: Data { get }
+c:objc(cs)NLGazetteer(py)language	swift.property	language	NLGazetteer.language	var language: NLLanguage? { get }
+c:objc(cs)NLLanguageRecognizer	swift.class	NLLanguageRecognizer	NLLanguageRecognizer	class NLLanguageRecognizer
+c:objc(cs)NLLanguageRecognizer(cm)dominantLanguageForString:	swift.type.method	dominantLanguage(for:)	NLLanguageRecognizer.dominantLanguage(for:)	class func dominantLanguage(for string: String) -> NLLanguage?
+c:objc(cs)NLLanguageRecognizer(im)init	swift.init	init()	NLLanguageRecognizer.init()	init()
+c:objc(cs)NLLanguageRecognizer(im)processString:	swift.method	processString(_:)	NLLanguageRecognizer.processString(_:)	func processString(_ string: String)
+c:objc(cs)NLLanguageRecognizer(im)reset	swift.method	reset()	NLLanguageRecognizer.reset()	func reset()
+c:objc(cs)NLLanguageRecognizer(py)dominantLanguage	swift.property	dominantLanguage	NLLanguageRecognizer.dominantLanguage	var dominantLanguage: NLLanguage? { get }
+c:objc(cs)NLLanguageRecognizer(py)languageConstraints	swift.property	languageConstraints	NLLanguageRecognizer.languageConstraints	var languageConstraints: [NLLanguage] { get set }
+c:objc(cs)NLModel	swift.class	NLModel	NLModel	class NLModel
+c:objc(cs)NLModel(cm)modelWithContentsOfURL:error:	swift.init	init(contentsOf:)	NLModel.init(contentsOf:)	convenience init(contentsOf url: URL) throws
+c:objc(cs)NLModel(cm)modelWithContentsOfURL:error:::SYNTHESIZED::c:objc(cs)NLModel	swift.init	init(contentsOfURL:)	NLModel.init(contentsOfURL:)	convenience init(contentsOfURL url: URL) throws
+c:objc(cs)NLModel(cm)modelWithMLModel:error:	swift.init	init(mlModel:)	NLModel.init(mlModel:)	convenience init(mlModel: MLModel) throws
+c:objc(cs)NLModel(cm)modelWithMLModel:error:::SYNTHESIZED::c:objc(cs)NLModel	swift.init	init(MLModel:)	NLModel.init(MLModel:)	convenience init(MLModel mlModel: MLModel) throws
+c:objc(cs)NLModel(im)predictedLabelForString:	swift.method	predictedLabel(for:)	NLModel.predictedLabel(for:)	func predictedLabel(for string: String) -> String?
+c:objc(cs)NLModel(im)predictedLabelsForTokens:	swift.method	predictedLabels(forTokens:)	NLModel.predictedLabels(forTokens:)	func predictedLabels(forTokens tokens: [String]) -> [String]
+c:objc(cs)NLModel(py)configuration	swift.property	configuration	NLModel.configuration	@NSCopying var configuration: NLModelConfiguration { get }
+c:objc(cs)NLModelConfiguration	swift.class	NLModelConfiguration	NLModelConfiguration	class NLModelConfiguration
+c:objc(cs)NLModelConfiguration(cm)currentRevisionForType:	swift.type.method	currentRevision(for:)	NLModelConfiguration.currentRevision(for:)	class func currentRevision(for type: NLModel.ModelType) -> Int
+c:objc(cs)NLModelConfiguration(cm)supportedRevisionsForType:	swift.type.method	supportedRevisions(for:)	NLModelConfiguration.supportedRevisions(for:)	class func supportedRevisions(for type: NLModel.ModelType) -> IndexSet
+c:objc(cs)NLModelConfiguration(py)language	swift.property	language	NLModelConfiguration.language	var language: NLLanguage? { get }
+c:objc(cs)NLModelConfiguration(py)revision	swift.property	revision	NLModelConfiguration.revision	var revision: Int { get }
+c:objc(cs)NLModelConfiguration(py)type	swift.property	type	NLModelConfiguration.type	var type: NLModel.ModelType { get }
+c:objc(cs)NLTagger	swift.class	NLTagger	NLTagger	class NLTagger
+c:objc(cs)NLTagger(cm)availableTagSchemesForUnit:language:	swift.type.method	availableTagSchemes(for:language:)	NLTagger.availableTagSchemes(for:language:)	class func availableTagSchemes(for unit: NLTokenUnit, language: NLLanguage) -> [NLTagScheme]
+c:objc(cs)NLTagger(cm)requestAssetsForLanguage:tagScheme:completionHandler:	swift.type.method	requestAssets(for:tagScheme:)	NLTagger.requestAssets(for:tagScheme:)	class func requestAssets(for language: NLLanguage, tagScheme: NLTagScheme) async throws -> NLTagger.AssetsResult
+c:objc(cs)NLTagger(im)gazetteersForTagScheme:	swift.method	gazetteers(for:)	NLTagger.gazetteers(for:)	func gazetteers(for tagScheme: NLTagScheme) -> [NLGazetteer]
+c:objc(cs)NLTagger(im)initWithTagSchemes:	swift.init	init(tagSchemes:)	NLTagger.init(tagSchemes:)	init(tagSchemes: [NLTagScheme])
+c:objc(cs)NLTagger(im)modelsForTagScheme:	swift.method	models(forTagScheme:)	NLTagger.models(forTagScheme:)	func models(forTagScheme tagScheme: NLTagScheme) -> [NLModel]
+c:objc(cs)NLTagger(im)setGazetteers:forTagScheme:	swift.method	setGazetteers(_:for:)	NLTagger.setGazetteers(_:for:)	func setGazetteers(_ gazetteers: [NLGazetteer], for tagScheme: NLTagScheme)
+c:objc(cs)NLTagger(im)setModels:forTagScheme:	swift.method	setModels(_:forTagScheme:)	NLTagger.setModels(_:forTagScheme:)	func setModels(_ models: [NLModel], forTagScheme tagScheme: NLTagScheme)
+c:objc(cs)NLTagger(py)dominantLanguage	swift.property	dominantLanguage	NLTagger.dominantLanguage	var dominantLanguage: NLLanguage? { get }
+c:objc(cs)NLTagger(py)string	swift.property	string	NLTagger.string	var string: String? { get set }
+c:objc(cs)NLTagger(py)tagSchemes	swift.property	tagSchemes	NLTagger.tagSchemes	var tagSchemes: [NLTagScheme] { get }
+c:objc(cs)NLTokenizer	swift.class	NLTokenizer	NLTokenizer	class NLTokenizer
+c:objc(cs)NLTokenizer(im)initWithUnit:	swift.init	init(unit:)	NLTokenizer.init(unit:)	init(unit: NLTokenUnit)
+c:objc(cs)NLTokenizer(im)setLanguage:	swift.method	setLanguage(_:)	NLTokenizer.setLanguage(_:)	func setLanguage(_ language: NLLanguage)
+c:objc(cs)NLTokenizer(py)string	swift.property	string	NLTokenizer.string	var string: String? { get set }
+c:objc(cs)NLTokenizer(py)unit	swift.property	unit	NLTokenizer.unit	var unit: NLTokenUnit { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NLModelConfiguration	swift.init	init(coder:)	NLModelConfiguration.init(coder:)	init?(coder: NSCoder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLContextualEmbeddingAssetsResult	swift.func.op	!=(_:_:)	NLContextualEmbedding.AssetsResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLDistanceType	swift.func.op	!=(_:_:)	NLDistanceType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLModelType	swift.func.op	!=(_:_:)	NLModel.ModelType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLTaggerAssetsResult	swift.func.op	!=(_:_:)	NLTagger.AssetsResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLTaggerOptions	swift.func.op	!=(_:_:)	NLTagger.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLTokenUnit	swift.func.op	!=(_:_:)	NLTokenUnit.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.func.op	!=(_:_:)	NLTokenizer.Attributes.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NLContextualEmbeddingKey	swift.func.op	!=(_:_:)	NLContextualEmbeddingKey.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NLLanguage	swift.func.op	!=(_:_:)	NLLanguage.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NLScript	swift.func.op	!=(_:_:)	NLScript.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NLTag	swift.func.op	!=(_:_:)	NLTag.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NLTagScheme	swift.func.op	!=(_:_:)	NLTagScheme.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NLContextualEmbeddingAssetsResult	swift.property	hashValue	NLContextualEmbedding.AssetsResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NLDistanceType	swift.property	hashValue	NLDistanceType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NLModelType	swift.property	hashValue	NLModel.ModelType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NLTaggerAssetsResult	swift.property	hashValue	NLTagger.AssetsResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NLTokenUnit	swift.property	hashValue	NLTokenUnit.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NLContextualEmbeddingAssetsResult	swift.method	hash(into:)	NLContextualEmbedding.AssetsResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NLDistanceType	swift.method	hash(into:)	NLDistanceType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NLModelType	swift.method	hash(into:)	NLModel.ModelType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NLTaggerAssetsResult	swift.method	hash(into:)	NLTagger.AssetsResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NLTokenUnit	swift.method	hash(into:)	NLTokenUnit.hash(into:)	func hash(into hasher: inout Hasher)
+s:So10NLLanguagea8rawValueABSS_tcfc	swift.init	init(rawValue:)	NLLanguage.init(rawValue:)	init(rawValue: String)
+s:So10NLLanguageayABSScfc	swift.init	init(_:)	NLLanguage.init(_:)	init(_ rawValue: String)
+s:So11NLEmbeddingC15NaturalLanguageE18enumerateNeighbors3for12maximumCount12distanceType5usingySS_SiSo010NLDistanceJ0VSbSS_SdtXEtF	swift.method	enumerateNeighbors(for:maximumCount:distanceType:using:)	NLEmbedding.enumerateNeighbors(for:maximumCount:distanceType:using:)	@nonobjc func enumerateNeighbors(for string: String, maximumCount maxCount: Int, distanceType: NLDistanceType = .cosine, using block: (String, NLDistance) -> Bool)
+s:So11NLEmbeddingC15NaturalLanguageE18enumerateNeighbors3for12maximumCount12distanceType5usingySaySdG_SiSo010NLDistanceJ0VSbSS_SdtXEtF	swift.method	enumerateNeighbors(for:maximumCount:distanceType:using:)	NLEmbedding.enumerateNeighbors(for:maximumCount:distanceType:using:)	@nonobjc func enumerateNeighbors(for vector: [Double], maximumCount maxCount: Int, distanceType: NLDistanceType = .cosine, using block: (String, NLDistance) -> Bool)
+s:So11NLEmbeddingC15NaturalLanguageE5write_8language8revision2toySDySSSaySdGG_So10NLLanguageaSgSi10Foundation3URLVtKFZ	swift.type.method	write(_:language:revision:to:)	NLEmbedding.write(_:language:revision:to:)	@nonobjc class func write(_ dictionary: [String : [Double]], language: NLLanguage?, revision: Int, to url: URL) throws
+s:So11NLEmbeddingC15NaturalLanguageE6vector3forSaySdGSgSS_tF	swift.method	vector(for:)	NLEmbedding.vector(for:)	@nonobjc func vector(for string: String) -> [Double]?
+s:So11NLEmbeddingC15NaturalLanguageE8distance7between3and0D4TypeSdSS_SSSo010NLDistanceG0VtF	swift.method	distance(between:and:distanceType:)	NLEmbedding.distance(between:and:distanceType:)	@nonobjc func distance(between firstString: String, and secondString: String, distanceType: NLDistanceType = .cosine) -> NLDistance
+s:So11NLEmbeddingC15NaturalLanguageE9neighbors3for12maximumCount12distanceTypeSaySS_SdtGSS_SiSo010NLDistanceI0VtF	swift.method	neighbors(for:maximumCount:distanceType:)	NLEmbedding.neighbors(for:maximumCount:distanceType:)	@nonobjc func neighbors(for string: String, maximumCount maxCount: Int, distanceType: NLDistanceType = .cosine) -> [(String, NLDistance)]
+s:So11NLEmbeddingC15NaturalLanguageE9neighbors3for12maximumCount12distanceTypeSaySS_SdtGSaySdG_SiSo010NLDistanceI0VtF	swift.method	neighbors(for:maximumCount:distanceType:)	NLEmbedding.neighbors(for:maximumCount:distanceType:)	@nonobjc func neighbors(for vector: [Double], maximumCount maxCount: Int, distanceType: NLDistanceType = .cosine) -> [(String, NLDistance)]
+s:So11NLModelTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NLModel.ModelType.init(rawValue:)	init?(rawValue: Int)
+s:So11NLTagSchemea8rawValueABSS_tcfc	swift.init	init(rawValue:)	NLTagScheme.init(rawValue:)	init(rawValue: String)
+s:So11NLTagSchemeayABSScfc	swift.init	init(_:)	NLTagScheme.init(_:)	init(_ rawValue: String)
+s:So11NLTokenUnitV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NLTokenUnit.init(rawValue:)	init?(rawValue: Int)
+s:So11NLTokenizerC15NaturalLanguageE10tokenRange2atSnySS5IndexVGAG_tF	swift.method	tokenRange(at:)	NLTokenizer.tokenRange(at:)	@nonobjc func tokenRange(at index: String.Index) -> Range<String.Index>
+s:So11NLTokenizerC15NaturalLanguageE10tokenRange3forSnySS5IndexVGAH_tF	swift.method	tokenRange(for:)	NLTokenizer.tokenRange(for:)	@nonobjc func tokenRange(for range: Range<String.Index>) -> Range<String.Index>
+s:So11NLTokenizerC15NaturalLanguageE15enumerateTokens2in5usingySnySS5IndexVG_SbAI_So0A10AttributesVtXEtF	swift.method	enumerateTokens(in:using:)	NLTokenizer.enumerateTokens(in:using:)	@nonobjc func enumerateTokens(in range: Range<String.Index>, using block: (Range<String.Index>, NLTokenizer.Attributes) -> Bool)
+s:So11NLTokenizerC15NaturalLanguageE6tokens3forSaySnySS5IndexVGGAH_tF	swift.method	tokens(for:)	NLTokenizer.tokens(for:)	@nonobjc func tokens(for range: Range<String.Index>) -> [Range<String.Index>]
+s:So14NLDistanceTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NLDistanceType.init(rawValue:)	init?(rawValue: Int)
+s:So15NLTaggerOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	NLTagger.Options.init(rawValue:)	init(rawValue: UInt)
+s:So20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvp	swift.property	languageHints	NLLanguageRecognizer.languageHints	@nonobjc var languageHints: [NLLanguage : Double] { get set }
+s:So20NLLanguageRecognizerC15NaturalLanguageE18languageHypotheses11withMaximumSDySo0A0aSdGSi_tF	swift.method	languageHypotheses(withMaximum:)	NLLanguageRecognizer.languageHypotheses(withMaximum:)	@nonobjc func languageHypotheses(withMaximum maxHypotheses: Int) -> [NLLanguage : Double]
+s:So20NLTaggerAssetsResultV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NLTagger.AssetsResult.init(rawValue:)	init?(rawValue: Int)
+s:So21NLTokenizerAttributesV8rawValueABSu_tcfc	swift.init	init(rawValue:)	NLTokenizer.Attributes.init(rawValue:)	init(rawValue: UInt)
+s:So24NLContextualEmbeddingKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	NLContextualEmbeddingKey.init(rawValue:)	init(rawValue: String)
+s:So24NLContextualEmbeddingKeyayABSScfc	swift.init	init(_:)	NLContextualEmbeddingKey.init(_:)	init(_ rawValue: String)
+s:So27NLContextualEmbeddingResultC15NaturalLanguageE11tokenVector2atSaySdG_SnySS5IndexVGtSgAH_tF	swift.method	tokenVector(at:)	NLContextualEmbeddingResult.tokenVector(at:)	@nonobjc func tokenVector(at index: String.Index) -> ([Double], Range<String.Index>)?
+s:So27NLContextualEmbeddingResultC15NaturalLanguageE21enumerateTokenVectors2in5usingySnySS5IndexVG_SbSaySdG_AItXEtF	swift.method	enumerateTokenVectors(in:using:)	NLContextualEmbeddingResult.enumerateTokenVectors(in:using:)	@nonobjc func enumerateTokenVectors(in range: Range<String.Index>, using block: ([Double], Range<String.Index>) -> Bool)
+s:So33NLContextualEmbeddingAssetsResultV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NLContextualEmbedding.AssetsResult.init(rawValue:)	init?(rawValue: Int)
+s:So5NLTaga8rawValueABSS_tcfc	swift.init	init(rawValue:)	NLTag.init(rawValue:)	init(rawValue: String)
+s:So5NLTagayABSScfc	swift.init	init(_:)	NLTag.init(_:)	init(_ rawValue: String)
+s:So7NLModelC15NaturalLanguageE24predictedLabelHypotheses3for12maximumCountSDySSSdGSS_SitF	swift.method	predictedLabelHypotheses(for:maximumCount:)	NLModel.predictedLabelHypotheses(for:maximumCount:)	@nonobjc func predictedLabelHypotheses(for string: String, maximumCount maxCount: Int) -> [String : Double]
+s:So7NLModelC15NaturalLanguageE24predictedLabelHypotheses9forTokens12maximumCountSaySDySSSdGGSaySSG_SitF	swift.method	predictedLabelHypotheses(forTokens:maximumCount:)	NLModel.predictedLabelHypotheses(forTokens:maximumCount:)	@nonobjc func predictedLabelHypotheses(forTokens tokens: [String], maximumCount maxCount: Int) -> [[String : Double]]
+s:So8NLScripta8rawValueABSS_tcfc	swift.init	init(rawValue:)	NLScript.init(rawValue:)	init(rawValue: String)
+s:So8NLScriptayABSScfc	swift.init	init(_:)	NLScript.init(_:)	init(_ rawValue: String)
+s:So8NLTaggerC15NaturalLanguageE03setC0_5rangeySo10NLLanguagea_SnySS5IndexVGtF	swift.method	setLanguage(_:range:)	NLTagger.setLanguage(_:range:)	@nonobjc func setLanguage(_ language: NLLanguage, range: Range<String.Index>)
+s:So8NLTaggerC15NaturalLanguageE10tokenRange2at4unitSnySS5IndexVGAH_So11NLTokenUnitVtF	swift.method	tokenRange(at:unit:)	NLTagger.tokenRange(at:unit:)	@nonobjc func tokenRange(at index: String.Index, unit: NLTokenUnit) -> Range<String.Index>
+s:So8NLTaggerC15NaturalLanguageE10tokenRange3for4unitSnySS5IndexVGAI_So11NLTokenUnitVtF	swift.method	tokenRange(for:unit:)	NLTagger.tokenRange(for:unit:)	@nonobjc func tokenRange(for range: Range<String.Index>, unit: NLTokenUnit) -> Range<String.Index>
+s:So8NLTaggerC15NaturalLanguageE13enumerateTags2in4unit6scheme7options5usingySnySS5IndexVG_So11NLTokenUnitVSo11NLTagSchemeaSo0A7OptionsVSbSo0N0aSg_ALtXEtF	swift.method	enumerateTags(in:unit:scheme:options:using:)	NLTagger.enumerateTags(in:unit:scheme:options:using:)	@nonobjc func enumerateTags(in range: Range<String.Index>, unit: NLTokenUnit, scheme: NLTagScheme, options: NLTagger.Options = [], using block: (NLTag?, Range<String.Index>) -> Bool)
+s:So8NLTaggerC15NaturalLanguageE13tagHypotheses2at4unit6scheme12maximumCountSDySSSdG_SnySS5IndexVGtAK_So11NLTokenUnitVSo11NLTagSchemeaSitF	swift.method	tagHypotheses(at:unit:scheme:maximumCount:)	NLTagger.tagHypotheses(at:unit:scheme:maximumCount:)	@nonobjc func tagHypotheses(at index: String.Index, unit: NLTokenUnit, scheme: NLTagScheme, maximumCount: Int) -> ([String : Double], Range<String.Index>)
+s:So8NLTaggerC15NaturalLanguageE14setOrthography_5rangeySo13NSOrthographyC_SnySS5IndexVGtF	swift.method	setOrthography(_:range:)	NLTagger.setOrthography(_:range:)	@nonobjc func setOrthography(_ orthography: NSOrthography, range: Range<String.Index>)
+s:So8NLTaggerC15NaturalLanguageE3tag2at4unit6schemeSo5NLTagaSg_SnySS5IndexVGtAL_So11NLTokenUnitVSo0H6SchemeatF	swift.method	tag(at:unit:scheme:)	NLTagger.tag(at:unit:scheme:)	@nonobjc func tag(at index: String.Index, unit: NLTokenUnit, scheme: NLTagScheme) -> (NLTag?, Range<String.Index>)
+s:So8NLTaggerC15NaturalLanguageE4tags2in4unit6scheme7optionsSaySo5NLTagaSg_SnySS5IndexVGtGAN_So11NLTokenUnitVSo0I6SchemeaSo0A7OptionsVtF	swift.method	tags(in:unit:scheme:options:)	NLTagger.tags(in:unit:scheme:options:)	@nonobjc func tags(in range: Range<String.Index>, unit: NLTokenUnit, scheme: NLTagScheme, options: NLTagger.Options = []) -> [(NLTag?, Range<String.Index>)]
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NLTaggerOptions	swift.init	init(arrayLiteral:)	NLTagger.Options.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.init	init(arrayLiteral:)	NLTokenizer.Attributes.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	isDisjoint(with:)	NLTagger.Options.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	isDisjoint(with:)	NLTokenizer.Attributes.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	isSuperset(of:)	NLTagger.Options.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	isSuperset(of:)	NLTokenizer.Attributes.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	subtracting(_:)	NLTagger.Options.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	subtracting(_:)	NLTokenizer.Attributes.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	isStrictSubset(of:)	NLTagger.Options.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	isStrictSubset(of:)	NLTokenizer.Attributes.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	isStrictSuperset(of:)	NLTagger.Options.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	isStrictSuperset(of:)	NLTokenizer.Attributes.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NLTaggerOptions	swift.property	isEmpty	NLTagger.Options.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.property	isEmpty	NLTokenizer.Attributes.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	isSubset(of:)	NLTagger.Options.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	isSubset(of:)	NLTokenizer.Attributes.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	subtract(_:)	NLTagger.Options.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	subtract(_:)	NLTokenizer.Attributes.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NLTaggerOptions	swift.init	init(_:)	NLTagger.Options.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.init	init(_:)	NLTokenizer.Attributes.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NLContextualEmbeddingKey	swift.property	hashValue	NLContextualEmbeddingKey.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NLLanguage	swift.property	hashValue	NLLanguage.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NLScript	swift.property	hashValue	NLScript.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NLTag	swift.property	hashValue	NLTag.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NLTagScheme	swift.property	hashValue	NLTagScheme.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NLContextualEmbeddingKey	swift.method	hash(into:)	NLContextualEmbeddingKey.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NLLanguage	swift.method	hash(into:)	NLLanguage.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NLScript	swift.method	hash(into:)	NLScript.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NLTag	swift.method	hash(into:)	NLTag.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NLTagScheme	swift.method	hash(into:)	NLTagScheme.hash(into:)	func hash(into hasher: inout Hasher)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	insert(_:)	NLTagger.Options.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	insert(_:)	NLTokenizer.Attributes.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	remove(_:)	NLTagger.Options.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	remove(_:)	NLTokenizer.Attributes.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	update(with:)	NLTagger.Options.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	update(with:)	NLTokenizer.Attributes.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	contains(_:)	NLTagger.Options.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	contains(_:)	NLTokenizer.Attributes.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	intersection(_:)	NLTagger.Options.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	intersection(_:)	NLTokenizer.Attributes.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	symmetricDifference(_:)	NLTagger.Options.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	symmetricDifference(_:)	NLTokenizer.Attributes.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	union(_:)	NLTagger.Options.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	union(_:)	NLTokenizer.Attributes.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	formIntersection(_:)	NLTagger.Options.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	formIntersection(_:)	NLTokenizer.Attributes.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	formSymmetricDifference(_:)	NLTagger.Options.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	formSymmetricDifference(_:)	NLTokenizer.Attributes.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NLTaggerOptions	swift.method	formUnion(_:)	NLTagger.Options.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.method	formUnion(_:)	NLTokenizer.Attributes.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NLTaggerOptions	swift.init	init()	NLTagger.Options.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NLTokenizerAttributes	swift.init	init()	NLTokenizer.Attributes.init()	init()

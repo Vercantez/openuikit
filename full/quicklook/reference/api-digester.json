@@ -1,0 +1,638 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "CoreFoundation",
+        "printedName": "CoreFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLBase",
+        "printedName": "QuickLook.QLBase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLPreviewController",
+        "printedName": "QuickLook.QLPreviewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLPreviewItem",
+        "printedName": "QuickLook.QLPreviewItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.ARQuickLookPreviewItem",
+        "printedName": "QuickLook.ARQuickLookPreviewItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLPreviewingController",
+        "printedName": "QuickLook.QLPreviewingController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLThumbnailProvider",
+        "printedName": "QuickLook.QLThumbnailProvider"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLThumbnailRequest",
+        "printedName": "QuickLook.QLThumbnailRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLThumbnailReply",
+        "printedName": "QuickLook.QLThumbnailReply"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLPreviewProvider",
+        "printedName": "QuickLook.QLPreviewProvider"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLPreviewReply",
+        "printedName": "QuickLook.QLPreviewReply"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLFilePreviewRequest",
+        "printedName": "QuickLook.QLFilePreviewRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QLPreviewSceneActivationConfiguration",
+        "printedName": "QuickLook.QLPreviewSceneActivationConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook.QuickLookUICore",
+        "printedName": "QuickLook.QuickLookUICore"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "QuickLook",
+        "printedName": "QuickLook"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLook",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoding",
+                    "printedName": "Swift.String.Encoding",
+                    "usr": "s:SS10FoundationE8EncodingV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14QLPreviewReplyC9QuickLookE14stringEncodingSS10FoundationE0F0Vvg",
+                "moduleName": "QuickLook",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So14QLPreviewReplyC9QuickLookE14stringEncodingSS10FoundationE0F0Vvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoding",
+                    "printedName": "Swift.String.Encoding",
+                    "usr": "s:SS10FoundationE8EncodingV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14QLPreviewReplyC9QuickLookE14stringEncodingSS10FoundationE0F0Vvs",
+                "moduleName": "QuickLook",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So14QLPreviewReplyC9QuickLookE14stringEncodingSS10FoundationE0F0Vvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Encoding",
+                "printedName": "Swift.String.Encoding",
+                "usr": "s:SS10FoundationE8EncodingV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo14QLPreviewReplyC9QuickLookE14stringEncodingSS10FoundationE0F0Vvp",
+            "moduleName": "QuickLook",
+            "name": "stringEncoding",
+            "printedName": "stringEncoding",
+            "usr": "s:So14QLPreviewReplyC9QuickLookE14stringEncodingSS10FoundationE0F0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "QLPreviewReply",
+                "printedName": "QuickLook.QLPreviewReply",
+                "usr": "c:objc(cs)QLPreviewReply"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGSize",
+                "printedName": "CoreFoundation.CGSize",
+                "usr": "c:@S@CGSize"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CGContext",
+                        "printedName": "CoreGraphics.CGContext",
+                        "usr": "c:@T@CGContextRef"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "QLPreviewReply",
+                        "printedName": "QuickLook.QLPreviewReply",
+                        "usr": "c:objc(cs)QLPreviewReply"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(CoreGraphics.CGContext, QuickLook.QLPreviewReply)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CoreGraphics.CGContext, QuickLook.QLPreviewReply) throws -> Swift.Void"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo14QLPreviewReplyC9QuickLookE11contextSize8isBitmap9drawUsingABSo6CGSizeV_SbySo12CGContextRefa_ABtKctcfc",
+            "moduleName": "QuickLook",
+            "name": "init",
+            "printedName": "init(contextSize:isBitmap:drawUsing:)",
+            "usr": "s:So14QLPreviewReplyC9QuickLookE11contextSize8isBitmap9drawUsingABSo6CGSizeV_SbySo12CGContextRefa_ABtKctcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "QLPreviewReply",
+                "printedName": "QuickLook.QLPreviewReply",
+                "usr": "c:objc(cs)QLPreviewReply"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGSize",
+                "printedName": "CoreFoundation.CGSize",
+                "usr": "c:@S@CGSize"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PDFDocument",
+                    "printedName": "PDFKit.PDFDocument",
+                    "usr": "c:objc(cs)PDFDocument"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "QLPreviewReply",
+                    "printedName": "QuickLook.QLPreviewReply",
+                    "usr": "c:objc(cs)QLPreviewReply"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(QuickLook.QLPreviewReply) throws -> PDFKit.PDFDocument"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo14QLPreviewReplyC9QuickLookE18forPDFWithPageSize19createDocumentUsingABSo6CGSizeV_So11PDFDocumentCABKctcfc",
+            "moduleName": "QuickLook",
+            "name": "init",
+            "printedName": "init(forPDFWithPageSize:createDocumentUsing:)",
+            "usr": "s:So14QLPreviewReplyC9QuickLookE18forPDFWithPageSize19createDocumentUsingABSo6CGSizeV_So11PDFDocumentCABKctcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "QLPreviewReply",
+                "printedName": "QuickLook.QLPreviewReply",
+                "usr": "c:objc(cs)QLPreviewReply"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UTType",
+                "printedName": "UniformTypeIdentifiers.UTType",
+                "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGSize",
+                "printedName": "CoreFoundation.CGSize",
+                "usr": "c:@S@CGSize"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "QLPreviewReply",
+                    "printedName": "QuickLook.QLPreviewReply",
+                    "usr": "c:objc(cs)QLPreviewReply"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(QuickLook.QLPreviewReply) throws -> Foundation.Data"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo14QLPreviewReplyC9QuickLookE17dataOfContentType11contentSize15createDataUsingAB07UniformH11Identifiers6UTTypeV_So6CGSizeV10Foundation0L0VABKctcfc",
+            "moduleName": "QuickLook",
+            "name": "init",
+            "printedName": "init(dataOfContentType:contentSize:createDataUsing:)",
+            "usr": "s:So14QLPreviewReplyC9QuickLookE17dataOfContentType11contentSize15createDataUsingAB07UniformH11Identifiers6UTTypeV_So6CGSizeV10Foundation0L0VABKctcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "QuickLook",
+        "name": "QLPreviewReply",
+        "objc_name": "QLPreviewReply",
+        "printedName": "QLPreviewReply",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)QLPreviewReply"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "QuickLook",
+    "printedName": "QuickLook"
+  }
+}

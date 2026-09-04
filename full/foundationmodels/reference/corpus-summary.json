@@ -1,0 +1,72 @@
+{
+  "module": "FoundationModels",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 19,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 65,
+    "iphoneos_runtime_focus_launch_build_rank": 72,
+    "module": "FoundationModels",
+    "occurrence_count": 19,
+    "per_app": {
+      "WordPress-iOS": {
+        "evidence_sha256": "a67bff24ae933536728d4b472b6050e28854fe6dbea72ada2fdec5dde01863de",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Modules/Sources/WordPressIntelligence/IntelligenceService.swift",
+          "Modules/Sources/WordPressIntelligence/UseCases/PostExcerptGenerator.swift",
+          "Modules/Sources/WordPressIntelligence/UseCases/PostSummaryGenerator.swift",
+          "Modules/Sources/WordPressIntelligence/UseCases/SupportTicketSummaryGenerator.swift",
+          "Modules/Sources/WordPressIntelligence/UseCases/TagSuggestionGenerator.swift",
+          "Modules/Sources/WordPressUI/Views/LanguageModelUnavailableView.swift",
+          "WordPress/Classes/Utility/BuildInformation/FeatureFlag.swift",
+          "WordPress/Classes/ViewRelated/NewSupport/SupportDataProvider.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "b74ca26f48d8fa96f621cdd7bd5733750f9be7dfda8206c6683a0669d2e994eb",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "BrowserKit/Sources/SummarizeKit/Backend/AppleIntelligence/FoundationModelsSummarizer.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/AppleIntelligence/LanguageModelResponseProtocol.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/AppleIntelligence/LanguageModelResponseStreamProtocol.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/AppleIntelligence/LanguageModelSessionAdapter.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/AppleIntelligence/LanguageModelSessionProtocol.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/SummarizerConfig.swift",
+          "BrowserKit/Sources/SummarizeKit/Backend/SummarizerError.swift",
+          "firefox-ios/Client/Application/AppleIntelligenceUtil.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "f8996238738625056e1fe1e0e806794f3a5a647a313f2941266448b2100dd982",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "podcasts/Bookmarks/BookmarkFoundationModelEnricher.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 65,
+    "byFocusLaunchBuildRelevance": 72
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

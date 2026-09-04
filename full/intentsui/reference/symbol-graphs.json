@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 5,
+  "duplicateOccurrenceCount": 5,
+  "duplicateRelationshipOccurrenceCount": 5,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/IntentsUI.symbols.json",
+      "relationshipCount": 141,
+      "sha256": "7c8f3d5e2e2e09dfeb7e066b472d7e8e6f055c6b80e392fddf353ce94448e398",
+      "symbolCount": 59
+    },
+    {
+      "path": "reference/symbol-graphs/IntentsUI@Foundation.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "4f674b46d4ee0f120f49272a2d0603ee0f9ffea411ff8aca0638140f8b1346ba",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/IntentsUI@Intents.symbols.json",
+      "relationshipCount": 7,
+      "sha256": "8ce0d1b87a92886e6f2df180285e5a23c08f0e0a85334f0075b4ea8e8ba5c1b9",
+      "symbolCount": 7
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "IntentsUI",
+  "relationshipCount": 151,
+  "relationshipMultisetSHA256": "270e8fee316a384370757c40a342dd29956b7f46c6db3086e4e3fc21a6e37561",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 64,
+  "symbolMultisetSHA256": "1221f51515035b4550fc3ced8e4af825b8837b8d94a435efdb364af6877c2bfc",
+  "target": "arm64-apple-ios26.0"
+}

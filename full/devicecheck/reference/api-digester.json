@@ -1,0 +1,936 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceCheck",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceCheck",
+        "name": "DeviceCheck.DCDevice",
+        "printedName": "DeviceCheck.DCDevice"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceCheck",
+        "name": "DeviceCheck.DCAppAttestService",
+        "printedName": "DeviceCheck.DCAppAttestService"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceCheck",
+        "name": "DeviceCheck.DCError",
+        "printedName": "DeviceCheck.DCError"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC7DCErrorLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC7DCErrorLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "DeviceCheck",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC7DCErrorLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DCError",
+                "printedName": "DeviceCheck.DCError",
+                "usr": "c:@E@DCError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC7DCErrorLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "DeviceCheck",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC7DCErrorLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV11errorDomainSSvgZ",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC7DCErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC7DCErrorLeV11errorDomainSSvpZ",
+            "moduleName": "DeviceCheck",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC7DCErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceCheck.DCError.Code",
+                        "usr": "c:@E@DCError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "DeviceCheck.DCError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo7DCErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "DeviceCheck",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So7DCErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo7DCErrorV8rawValueSivg",
+                    "moduleName": "DeviceCheck",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So7DCErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo7DCErrorV8rawValueSivp",
+                "moduleName": "DeviceCheck",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So7DCErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo7DCErrorV8RawValuea",
+                "moduleName": "DeviceCheck",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So7DCErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DCError",
+                    "printedName": "DeviceCheck.DCError",
+                    "usr": "c:@E@DCError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "DeviceCheck",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@DCError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceCheck.DCError.Code",
+                        "usr": "c:@E@DCError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceCheck.DCError.Code",
+                            "usr": "c:@E@DCError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceCheck.DCError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceCheck.DCError.Code.Type) -> DeviceCheck.DCError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceCheck",
+                "name": "unknownSystemFailure",
+                "printedName": "unknownSystemFailure",
+                "usr": "c:@E@DCError@DCErrorUnknownSystemFailure"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceCheck.DCError.Code",
+                        "usr": "c:@E@DCError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceCheck.DCError.Code",
+                            "usr": "c:@E@DCError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceCheck.DCError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceCheck.DCError.Code.Type) -> DeviceCheck.DCError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceCheck",
+                "name": "featureUnsupported",
+                "printedName": "featureUnsupported",
+                "usr": "c:@E@DCError@DCErrorFeatureUnsupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceCheck.DCError.Code",
+                        "usr": "c:@E@DCError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceCheck.DCError.Code",
+                            "usr": "c:@E@DCError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceCheck.DCError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceCheck.DCError.Code.Type) -> DeviceCheck.DCError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceCheck",
+                "name": "invalidInput",
+                "printedName": "invalidInput",
+                "usr": "c:@E@DCError@DCErrorInvalidInput"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceCheck.DCError.Code",
+                        "usr": "c:@E@DCError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceCheck.DCError.Code",
+                            "usr": "c:@E@DCError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceCheck.DCError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceCheck.DCError.Code.Type) -> DeviceCheck.DCError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceCheck",
+                "name": "invalidKey",
+                "printedName": "invalidKey",
+                "usr": "c:@E@DCError@DCErrorInvalidKey"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceCheck.DCError.Code",
+                        "usr": "c:@E@DCError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceCheck.DCError.Code",
+                            "usr": "c:@E@DCError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceCheck.DCError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceCheck.DCError.Code.Type) -> DeviceCheck.DCError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceCheck",
+                "name": "serverUnavailable",
+                "printedName": "serverUnavailable",
+                "usr": "c:@E@DCError@DCErrorServerUnavailable"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "DeviceCheck.DCError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "11.0",
+            "kind": "TypeDecl",
+            "moduleName": "DeviceCheck",
+            "name": "Code",
+            "objc_name": "DCError",
+            "printedName": "Code",
+            "usr": "c:@E@DCError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceCheck.DCError.Code",
+                    "usr": "c:@E@DCError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV20unknownSystemFailureSoAAVvgZ",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC7DCErrorLeV20unknownSystemFailureSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceCheck.DCError.Code",
+                "usr": "c:@E@DCError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceCheck",
+            "name": "unknownSystemFailure",
+            "printedName": "unknownSystemFailure",
+            "static": true,
+            "usr": "c:@E@DCError@DCErrorUnknownSystemFailure"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceCheck.DCError.Code",
+                    "usr": "c:@E@DCError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV18featureUnsupportedSoAAVvgZ",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC7DCErrorLeV18featureUnsupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceCheck.DCError.Code",
+                "usr": "c:@E@DCError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceCheck",
+            "name": "featureUnsupported",
+            "printedName": "featureUnsupported",
+            "static": true,
+            "usr": "c:@E@DCError@DCErrorFeatureUnsupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceCheck.DCError.Code",
+                    "usr": "c:@E@DCError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV12invalidInputSoAAVvgZ",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC7DCErrorLeV12invalidInputSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceCheck.DCError.Code",
+                "usr": "c:@E@DCError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceCheck",
+            "name": "invalidInput",
+            "printedName": "invalidInput",
+            "static": true,
+            "usr": "c:@E@DCError@DCErrorInvalidInput"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceCheck.DCError.Code",
+                    "usr": "c:@E@DCError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV10invalidKeySoAAVvgZ",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC7DCErrorLeV10invalidKeySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceCheck.DCError.Code",
+                "usr": "c:@E@DCError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceCheck",
+            "name": "invalidKey",
+            "printedName": "invalidKey",
+            "static": true,
+            "usr": "c:@E@DCError@DCErrorInvalidKey"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceCheck.DCError.Code",
+                    "usr": "c:@E@DCError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC7DCErrorLeV17serverUnavailableSoAAVvgZ",
+                "moduleName": "DeviceCheck",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC7DCErrorLeV17serverUnavailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceCheck.DCError.Code",
+                "usr": "c:@E@DCError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceCheck",
+            "name": "serverUnavailable",
+            "printedName": "serverUnavailable",
+            "static": true,
+            "usr": "c:@E@DCError@DCErrorServerUnavailable"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "11.0",
+        "kind": "TypeDecl",
+        "moduleName": "DeviceCheck",
+        "name": "DCError",
+        "printedName": "DCError",
+        "usr": "c:@E@DCError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "DeviceCheck",
+    "printedName": "DeviceCheck"
+  }
+}

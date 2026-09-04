@@ -1,0 +1,42 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 3,
+  "duplicateOccurrenceCount": 3,
+  "duplicateRelationshipOccurrenceCount": 3,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/QuickLook.symbols.json",
+      "relationshipCount": 133,
+      "sha256": "17c4973eccab774aec8785822a64bb9462a7b9f76d111d2b14827f6c434f7766",
+      "symbolCount": 64
+    },
+    {
+      "path": "reference/symbol-graphs/QuickLook@Foundation.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "7387453f4f045abab5032f21d12c56b04c41a3aa319c9fe671b34e3bef89c37d",
+      "symbolCount": 0
+    },
+    {
+      "path": "reference/symbol-graphs/_QuickLook_SwiftUI@QuickLook.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "cf63a40ee0b03df4d6ea327f010c2b3fcebbdd8458503970dbdfaef34bda0240",
+      "symbolCount": 0
+    },
+    {
+      "path": "reference/symbol-graphs/_QuickLook_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "807fb2bd31f69652bde78dbaae6da9c5702349f54c9eeb1e7f7075a22b02e0f0",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "QuickLook",
+  "relationshipCount": 138,
+  "relationshipMultisetSHA256": "fed08057f1472a851b39c2b675a8bf6a5eee96abca20d0284b44184853685e8b",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 63,
+  "symbolMultisetSHA256": "83d78a2a0e543e2f2403c9fa073c0f04ebef4d8e714a360743e5a7a0fa39b126",
+  "target": "arm64-apple-ios26.0"
+}

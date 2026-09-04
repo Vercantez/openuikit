@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 40,
+  "duplicateOccurrenceCount": 40,
+  "duplicateRelationshipOccurrenceCount": 36,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/PassKit.symbols.json",
+      "relationshipCount": 2243,
+      "sha256": "160e7cd8a78d508a6f96a992331b2cf860921f765017ceb8af45b7eac00ec642",
+      "symbolCount": 1304
+    },
+    {
+      "path": "reference/symbol-graphs/_PassKit_SwiftUI@PassKit.symbols.json",
+      "relationshipCount": 4009,
+      "sha256": "43f355449e64eb1dcdc92f56703e247b24500dbf291ab462ef579548c663e250",
+      "symbolCount": 3999
+    },
+    {
+      "path": "reference/symbol-graphs/_PassKit_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 10,
+      "sha256": "7b4c0bd919432337057c6ff64c9e24872fbad5c3db4022608a7220dab99454ea",
+      "symbolCount": 10
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "PassKit",
+  "relationshipCount": 6262,
+  "relationshipMultisetSHA256": "e971752b59833692f04fe6568e1cf607e5197d224430f82dcfe81548651ac898",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 5273,
+  "symbolMultisetSHA256": "0a2b31bec3cb2ce0bbdb483e426dc58a590696df65bfbcc1d9e49584c1a3fd5f",
+  "target": "arm64-apple-ios26.0"
+}

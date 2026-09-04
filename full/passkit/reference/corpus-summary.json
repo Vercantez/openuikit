@@ -1,0 +1,127 @@
+{
+  "module": "PassKit",
+  "moduleRecord": {
+    "app_coverage_count": 8,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 53,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "0416234faf7c60eeddbcc87d2713d5f97d154cc9a2699c4df86b80f12921bb58",
+      "main_target_file_count": 1,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 35,
+    "iphoneos_runtime_focus_launch_build_rank": 13,
+    "module": "PassKit",
+    "occurrence_count": 53,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "311f9036a8c248551345f1eb35a07d9f294691f31547e6e94ae6a306e1190ac1",
+        "file_count": 14,
+        "occurrence_count": 14,
+        "sample_paths": [
+          "Signal/ConversationView/Components/CVComponentGenericAttachment.swift",
+          "Signal/ConversationView/ConversationViewController+CVComponentDelegate.swift",
+          "Signal/src/ViewControllers/AppSettings/Donations/ApplePayButton.swift",
+          "Signal/src/ViewControllers/AppSettings/Donations/BadgeGiftingConfirmationViewController+ApplePay.swift",
+          "Signal/src/ViewControllers/Donations/DonateViewController+MonthlyApplePayDonation.swift",
+          "Signal/src/ViewControllers/Donations/DonateViewController+OneTimeApplePayDonation.swift",
+          "Signal/src/ViewControllers/Donations/DonateViewController+PKPaymentAuthorizationControllerDelegate.swift",
+          "Signal/src/ViewControllers/Donations/DonateViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "0c986872e1bf11e3d799d69d98283e927e7e9479b8c02b89ffebbb58b4c9dc14",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "submodules/AppLock/Sources/AppLock.swift",
+          "submodules/BotPaymentsUI/Sources/BotCheckoutActionButton.swift",
+          "submodules/BotPaymentsUI/Sources/BotCheckoutControllerNode.swift",
+          "submodules/BrowserUI/Sources/BrowserWebContent.swift",
+          "submodules/GalleryData/Sources/GalleryData.swift",
+          "submodules/ShareItems/Impl/Sources/TGItemProviderSignals.m",
+          "submodules/Stripe/PublicHeaders/Stripe/STPAPIClient+ApplePay.h",
+          "submodules/Stripe/PublicHeaders/Stripe/STPAPIClient.h"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "c820e76f6830805673cd7298b0339dadf6a152b9ee138cdcff41afc4e413c0a6",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "DuckDuckGo/PassKitPreviewHelper.swift",
+          "DuckDuckGo/ZippedPassKitPreviewHelper.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "acf365330a94fde448724842554538944079d0a8079af1df8ccf153c70621bbb",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Browser/OpenInHelper/OpenPassBookHelper.swift",
+          "focus-ios/Blockzilla/Modules/WebView/LegacyWebViewController.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "0416234faf7c60eeddbcc87d2713d5f97d154cc9a2699c4df86b80f12921bb58",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/Modules/WebView/WebViewController.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "7c914693d6fcbee13a6770ebac23477d5ff102786cdf4d69cc98a2c612dcda82",
+        "file_count": 14,
+        "occurrence_count": 14,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/DesignSystem/Controller/DesignSystemViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/DesignSystem/Views/DemoCTAContainerView.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/PledgePaymentMethods/Controller/PledgeExpandableRewardsHeaderViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/PledgePaymentMethods/Controller/PledgePaymentMethodsViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/PledgeView/Controllers/PledgeViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/PledgeView/Controllers/PostCampaignCheckoutViewController.swift",
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/PledgeView/Views/PledgeViewCTAContainerView.swift",
+          "Library/Sources/Library/Library/ApplePayCapabilities.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "e4d85fec443c15876b4330ea5f438ff74ee368766a06fe91b4ba4424a03b5b0a",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/Donation/VLCDonationViewController.m",
+          "Sources/Donation/VLCStripeController.m"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "f272fa0573baafb22ecb60bb223773e5ae5635d8428d1b0faffeeec05d61e889",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "WMFComponents/Sources/WMFComponents/Components/Donate Form/WMFDonateViewModel.swift",
+          "WMFComponents/Sources/WMFComponents/Style/WMFTheme.swift",
+          "WMFData/Sources/WMFData/Models/Donor Experience/WMFPaymentMethods.swift",
+          "Wikipedia/Code/DonateCoordinator.swift",
+          "Wikipedia/Code/ProfileCoordinator.swift",
+          "Wikipedia/Code/YearInReviewCoordinator.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 35,
+    "byFocusLaunchBuildRelevance": 13
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

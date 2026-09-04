@@ -1,0 +1,52 @@
+precise	kind	title	path	declaration
+c:@E@LPErrorCode	swift.enum	LPError.Code	LPError.Code	enum Code
+c:@E@LPErrorCode@LPErrorMetadataFetchCancelled	swift.enum.case	LPError.Code.metadataFetchCancelled	LPError.Code.metadataFetchCancelled	case metadataFetchCancelled
+c:@E@LPErrorCode@LPErrorMetadataFetchFailed	swift.enum.case	LPError.Code.metadataFetchFailed	LPError.Code.metadataFetchFailed	case metadataFetchFailed
+c:@E@LPErrorCode@LPErrorMetadataFetchNotAllowed	swift.enum.case	LPError.Code.metadataFetchNotAllowed	LPError.Code.metadataFetchNotAllowed	case metadataFetchNotAllowed
+c:@E@LPErrorCode@LPErrorMetadataFetchTimedOut	swift.enum.case	LPError.Code.metadataFetchTimedOut	LPError.Code.metadataFetchTimedOut	case metadataFetchTimedOut
+c:@E@LPErrorCode@LPErrorUnknown	swift.enum.case	LPError.Code.unknown	LPError.Code.unknown	case unknown
+c:@LPErrorDomain	swift.var	LPErrorDomain	LPErrorDomain	let LPErrorDomain: String
+c:objc(cs)LPLinkMetadata	swift.class	LPLinkMetadata	LPLinkMetadata	class LPLinkMetadata
+c:objc(cs)LPLinkMetadata(py)URL	swift.property	url	LPLinkMetadata.url	var url: URL? { get set }
+c:objc(cs)LPLinkMetadata(py)iconProvider	swift.property	iconProvider	LPLinkMetadata.iconProvider	var iconProvider: NSItemProvider? { get set }
+c:objc(cs)LPLinkMetadata(py)imageProvider	swift.property	imageProvider	LPLinkMetadata.imageProvider	var imageProvider: NSItemProvider? { get set }
+c:objc(cs)LPLinkMetadata(py)originalURL	swift.property	originalURL	LPLinkMetadata.originalURL	var originalURL: URL? { get set }
+c:objc(cs)LPLinkMetadata(py)remoteVideoURL	swift.property	remoteVideoURL	LPLinkMetadata.remoteVideoURL	var remoteVideoURL: URL? { get set }
+c:objc(cs)LPLinkMetadata(py)title	swift.property	title	LPLinkMetadata.title	var title: String? { get set }
+c:objc(cs)LPLinkMetadata(py)videoProvider	swift.property	videoProvider	LPLinkMetadata.videoProvider	var videoProvider: NSItemProvider? { get set }
+c:objc(cs)LPLinkView	swift.class	LPLinkView	LPLinkView	@MainActor class LPLinkView
+c:objc(cs)LPLinkView(im)initWithMetadata:	swift.init	init(metadata:)	LPLinkView.init(metadata:)	@MainActor init(metadata: LPLinkMetadata)
+c:objc(cs)LPLinkView(im)initWithURL:	swift.init	init(url:)	LPLinkView.init(url:)	@MainActor init(url URL: URL)
+c:objc(cs)LPLinkView(im)initWithURL:::SYNTHESIZED::c:objc(cs)LPLinkView	swift.init	init(URL:)	LPLinkView.init(URL:)	@MainActor init(URL: URL)
+c:objc(cs)LPLinkView(py)metadata	swift.property	metadata	LPLinkView.metadata	@NSCopying @MainActor var metadata: LPLinkMetadata { get set }
+c:objc(cs)LPMetadataProvider	swift.class	LPMetadataProvider	LPMetadataProvider	class LPMetadataProvider
+c:objc(cs)LPMetadataProvider(im)cancel	swift.method	cancel()	LPMetadataProvider.cancel()	func cancel()
+c:objc(cs)LPMetadataProvider(im)startFetchingMetadataForRequest:completionHandler:	swift.method	startFetchingMetadata(for:)	LPMetadataProvider.startFetchingMetadata(for:)	func startFetchingMetadata(for request: URLRequest) async throws -> LPLinkMetadata
+c:objc(cs)LPMetadataProvider(im)startFetchingMetadataForURL:completionHandler:	swift.method	startFetchingMetadata(for:)	LPMetadataProvider.startFetchingMetadata(for:)	func startFetchingMetadata(for URL: URL) async throws -> LPLinkMetadata
+c:objc(cs)LPMetadataProvider(py)shouldFetchSubresources	swift.property	shouldFetchSubresources	LPMetadataProvider.shouldFetchSubresources	var shouldFetchSubresources: Bool { get set }
+c:objc(cs)LPMetadataProvider(py)timeout	swift.property	timeout	LPMetadataProvider.timeout	var timeout: TimeInterval { get set }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)LPLinkMetadata	swift.init	init(coder:)	LPLinkMetadata.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@LPErrorCode	swift.type.property	errorDomain	LPError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	errorUserInfo	LPError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	errorCode	LPError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@LPErrorCode	swift.func.op	~=(_:_:)	LPError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	errorUserInfo	LPError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@LPErrorCode	swift.func.op	==(_:_:)	LPError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	code	LPError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LPErrorCode	swift.method	hash(into:)	LPError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	userInfo	LPError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	errorCode	LPError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	hashValue	LPError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@LPErrorCode	swift.init	init(_:userInfo:)	LPError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11LPErrorCodeLeV	swift.struct	LPError	LPError	struct LPError
+s:SC11LPErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	LPError.errorDomain	static var errorDomain: String { get }
+s:SC11LPErrorCodeLeV19metadataFetchFailedSoAAVvpZ	swift.type.property	metadataFetchFailed	LPError.metadataFetchFailed	static var metadataFetchFailed: LPError.Code { get }
+s:SC11LPErrorCodeLeV21metadataFetchTimedOutSoAAVvpZ	swift.type.property	metadataFetchTimedOut	LPError.metadataFetchTimedOut	static var metadataFetchTimedOut: LPError.Code { get }
+s:SC11LPErrorCodeLeV22metadataFetchCancelledSoAAVvpZ	swift.type.property	metadataFetchCancelled	LPError.metadataFetchCancelled	static var metadataFetchCancelled: LPError.Code { get }
+s:SC11LPErrorCodeLeV23metadataFetchNotAllowedSoAAVvpZ	swift.type.property	metadataFetchNotAllowed	LPError.metadataFetchNotAllowed	static var metadataFetchNotAllowed: LPError.Code { get }
+s:SC11LPErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	LPError.unknown	static var unknown: LPError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LPErrorCode	swift.func.op	!=(_:_:)	LPError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	hashValue	LPError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LPErrorCode	swift.method	hash(into:)	LPError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11LPErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	LPError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@LPErrorCode	swift.property	localizedDescription	LPError.localizedDescription	var localizedDescription: String { get }

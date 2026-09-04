@@ -1,0 +1,91 @@
+{
+  "module": "NaturalLanguage",
+  "moduleRecord": {
+    "app_coverage_count": 6,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 15,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 48,
+    "iphoneos_runtime_focus_launch_build_rank": 52,
+    "module": "NaturalLanguage",
+    "occurrence_count": 15,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "bdfef068cf113ac18b5b617a313a0bf626bba77a816a7c210a21b7d71960ee33",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "SignalServiceKit/Util/String+SSK.swift",
+          "SignalUI/Appearance/SignalSymbols.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "3e5d48f3f7771207829286c710fc433e07eac3f3fe8d5b9d60ae1fd976e2df72",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "submodules/TelegramUI/Components/TextProcessingScreen/Sources/TextProcessingTranslateContentComponent.swift",
+          "submodules/TranslateUI/Sources/ChatTranslation.swift",
+          "submodules/TranslateUI/Sources/Translate.swift",
+          "submodules/WebUI/Sources/WebAppPermissions.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "88fb275b2fd48503bebd5e27e7a461057ae1567ea7a4b136b84dd0df4d4e9f38",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/Sources/WordPressIntelligence/IntelligenceService.swift",
+          "Modules/Sources/WordPressIntelligence/UseCases/TranslationViewModel.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "d5b88e460e7e23c6242b72084452ee0d62b9d77614a1ed144790b895d6f6ab43",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Translations/LanguageDetector/LanguageDetector.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "89172066161114cd45b568e340196ba3fb063b9ec6e9de845938bdc4047d0714",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Mastodon/Diffable/Status/StatusSection.swift",
+          "MastodonSDK/Sources/MastodonCore/Model/FilterBox.swift",
+          "MastodonSDK/Sources/MastodonUI/Scene/ComposeContent/ComposeContentViewController.swift",
+          "MastodonSDK/Sources/MastodonUI/View/Content/StatusView+Configuration.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "ae5ed5f995d1392aec4f394a6905bf9eea2e3910b61a316a94b92caee4cf5bc2",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "podcasts/Bookmarks/BookmarkFoundationModelEnricher.swift",
+          "podcasts/Bookmarks/BookmarkTranscriptSnippetExtractor.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 48,
+    "byFocusLaunchBuildRelevance": 52
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

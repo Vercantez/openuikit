@@ -1,0 +1,5 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/AdServices.framework/AdServices.tbd	360	37c5a13f89078f0c58bb753ada6143169518e22816c149970f95d7e0e0e9c170
+header	System/Library/Frameworks/AdServices.framework/Headers/AAAttribution.h	1439	be7bec33b841e3552d816ab27b0d4fe9c13d06d99ef5a5001317c9013cb9ebf6
+header	System/Library/Frameworks/AdServices.framework/Headers/AdServices.h	136	32d5173d1b310696b068d1abef8d6d3d160247bf6fa8369615fb0ba7c938aef6
+modulemap	System/Library/Frameworks/AdServices.framework/Modules/module.modulemap	101	af6c7296a528ed9169d41af043925e5881e812341f98641034d7f0ea5795482c

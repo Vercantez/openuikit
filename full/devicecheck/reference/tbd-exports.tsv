@@ -1,0 +1,13 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck (for architecture arm64):	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_DCErrorDomain	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_CLASS_$_DCAppAttestDeviceService	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_CLASS_$_DCAppAttestService	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_CLASS_$_DCAppAttestServicePriv	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_CLASS_$_DCAppAttestWebAuthService	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_CLASS_$_DCDevice	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_METACLASS_$_DCAppAttestDeviceService	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_METACLASS_$_DCAppAttestService	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_METACLASS_$_DCAppAttestServicePriv	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_METACLASS_$_DCAppAttestWebAuthService	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd
+_OBJC_METACLASS_$_DCDevice	System/Library/Frameworks/DeviceCheck.framework/DeviceCheck.tbd

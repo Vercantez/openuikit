@@ -1,0 +1,74 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 153,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(50% of exact public symbols)"
+  },
+  "dependencies": [
+    "Foundation"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "coretransferable_guest_sources.txt",
+  "lane": "medium-full",
+  "module": "CoreTransferable",
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 87,
+    "apiCrosswalkImportNameCount": 0,
+    "apiCrosswalkUnmatchedCount": 218,
+    "apiDeclarationNodeCount": 129,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 878,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 120,
+    "arm64TBDExportCount": 290,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/CoreTransferable.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e44f6bde16e79ca2275fd7b518384d4c2b860d3e5b9293e68770a53eb118923c",
+    "rawSDKInputCount": 4,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "f70e4b6ff8138906ace17673f451a65f33c2347d534a9421b897f9201775faff",
+    "symbolGraphSymbolMultisetSHA256": "58997979d99b0225cf6b1dc0dd040182167d08f0c63c3085b1f73bddeeadc1aa",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 344,
+  "risks": [
+    "ui",
+    "fail-closed"
+  ],
+  "runtimeMarker": "CORETRANSFERABLE_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "coretransferable",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 305,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

@@ -1,0 +1,903 @@
+precise	kind	title	path	declaration
+c:@E@CGImageAnimationStatus	swift.enum	CGImageAnimationStatus	CGImageAnimationStatus	enum CGImageAnimationStatus
+c:@E@CGImageAnimationStatus@kCGImageAnimationStatus_AllocationFailure	swift.enum.case	CGImageAnimationStatus.allocationFailure	CGImageAnimationStatus.allocationFailure	case allocationFailure
+c:@E@CGImageAnimationStatus@kCGImageAnimationStatus_CorruptInputImage	swift.enum.case	CGImageAnimationStatus.corruptInputImage	CGImageAnimationStatus.corruptInputImage	case corruptInputImage
+c:@E@CGImageAnimationStatus@kCGImageAnimationStatus_IncompleteInputImage	swift.enum.case	CGImageAnimationStatus.incompleteInputImage	CGImageAnimationStatus.incompleteInputImage	case incompleteInputImage
+c:@E@CGImageAnimationStatus@kCGImageAnimationStatus_ParameterError	swift.enum.case	CGImageAnimationStatus.parameterError	CGImageAnimationStatus.parameterError	case parameterError
+c:@E@CGImageAnimationStatus@kCGImageAnimationStatus_UnsupportedFormat	swift.enum.case	CGImageAnimationStatus.unsupportedFormat	CGImageAnimationStatus.unsupportedFormat	case unsupportedFormat
+c:@E@CGImageMetadataErrors	swift.enum	CGImageMetadataErrors	CGImageMetadataErrors	enum CGImageMetadataErrors
+c:@E@CGImageMetadataErrors@kCGImageMetadataErrorBadArgument	swift.enum.case	CGImageMetadataErrors.badArgument	CGImageMetadataErrors.badArgument	case badArgument
+c:@E@CGImageMetadataErrors@kCGImageMetadataErrorConflictingArguments	swift.enum.case	CGImageMetadataErrors.conflictingArguments	CGImageMetadataErrors.conflictingArguments	case conflictingArguments
+c:@E@CGImageMetadataErrors@kCGImageMetadataErrorPrefixConflict	swift.enum.case	CGImageMetadataErrors.prefixConflict	CGImageMetadataErrors.prefixConflict	case prefixConflict
+c:@E@CGImageMetadataErrors@kCGImageMetadataErrorUnknown	swift.enum.case	CGImageMetadataErrors.unknown	CGImageMetadataErrors.unknown	case unknown
+c:@E@CGImageMetadataErrors@kCGImageMetadataErrorUnsupportedFormat	swift.enum.case	CGImageMetadataErrors.unsupportedFormat	CGImageMetadataErrors.unsupportedFormat	case unsupportedFormat
+c:@E@CGImageMetadataType	swift.enum	CGImageMetadataType	CGImageMetadataType	enum CGImageMetadataType
+c:@E@CGImageMetadataType@kCGImageMetadataTypeAlternateArray	swift.enum.case	CGImageMetadataType.alternateArray	CGImageMetadataType.alternateArray	case alternateArray
+c:@E@CGImageMetadataType@kCGImageMetadataTypeAlternateText	swift.enum.case	CGImageMetadataType.alternateText	CGImageMetadataType.alternateText	case alternateText
+c:@E@CGImageMetadataType@kCGImageMetadataTypeArrayOrdered	swift.enum.case	CGImageMetadataType.arrayOrdered	CGImageMetadataType.arrayOrdered	case arrayOrdered
+c:@E@CGImageMetadataType@kCGImageMetadataTypeArrayUnordered	swift.enum.case	CGImageMetadataType.arrayUnordered	CGImageMetadataType.arrayUnordered	case arrayUnordered
+c:@E@CGImageMetadataType@kCGImageMetadataTypeDefault	swift.enum.case	CGImageMetadataType.default	CGImageMetadataType.default	case `default`
+c:@E@CGImageMetadataType@kCGImageMetadataTypeInvalid	swift.enum.case	CGImageMetadataType.invalid	CGImageMetadataType.invalid	case invalid
+c:@E@CGImageMetadataType@kCGImageMetadataTypeString	swift.enum.case	CGImageMetadataType.string	CGImageMetadataType.string	case string
+c:@E@CGImageMetadataType@kCGImageMetadataTypeStructure	swift.enum.case	CGImageMetadataType.structure	CGImageMetadataType.structure	case structure
+c:@E@CGImagePropertyOrientation	swift.enum	CGImagePropertyOrientation	CGImagePropertyOrientation	@frozen enum CGImagePropertyOrientation
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationDown	swift.enum.case	CGImagePropertyOrientation.down	CGImagePropertyOrientation.down	case down
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationDownMirrored	swift.enum.case	CGImagePropertyOrientation.downMirrored	CGImagePropertyOrientation.downMirrored	case downMirrored
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationLeft	swift.enum.case	CGImagePropertyOrientation.left	CGImagePropertyOrientation.left	case left
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationLeftMirrored	swift.enum.case	CGImagePropertyOrientation.leftMirrored	CGImagePropertyOrientation.leftMirrored	case leftMirrored
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationRight	swift.enum.case	CGImagePropertyOrientation.right	CGImagePropertyOrientation.right	case right
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationRightMirrored	swift.enum.case	CGImagePropertyOrientation.rightMirrored	CGImagePropertyOrientation.rightMirrored	case rightMirrored
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationUp	swift.enum.case	CGImagePropertyOrientation.up	CGImagePropertyOrientation.up	case up
+c:@E@CGImagePropertyOrientation@kCGImagePropertyOrientationUpMirrored	swift.enum.case	CGImagePropertyOrientation.upMirrored	CGImagePropertyOrientation.upMirrored	case upMirrored
+c:@E@CGImagePropertyTGACompression	swift.enum	CGImagePropertyTGACompression	CGImagePropertyTGACompression	@frozen enum CGImagePropertyTGACompression
+c:@E@CGImagePropertyTGACompression@kCGImageTGACompressionNone	swift.enum.case	CGImagePropertyTGACompression.tgaCompressionNone	CGImagePropertyTGACompression.tgaCompressionNone	case tgaCompressionNone
+c:@E@CGImagePropertyTGACompression@kCGImageTGACompressionRLE	swift.enum.case	CGImagePropertyTGACompression.tgaCompressionRLE	CGImagePropertyTGACompression.tgaCompressionRLE	case tgaCompressionRLE
+c:@E@CGImageSourceStatus	swift.enum	CGImageSourceStatus	CGImageSourceStatus	enum CGImageSourceStatus
+c:@E@CGImageSourceStatus@kCGImageStatusComplete	swift.enum.case	CGImageSourceStatus.statusComplete	CGImageSourceStatus.statusComplete	case statusComplete
+c:@E@CGImageSourceStatus@kCGImageStatusIncomplete	swift.enum.case	CGImageSourceStatus.statusIncomplete	CGImageSourceStatus.statusIncomplete	case statusIncomplete
+c:@E@CGImageSourceStatus@kCGImageStatusInvalidData	swift.enum.case	CGImageSourceStatus.statusInvalidData	CGImageSourceStatus.statusInvalidData	case statusInvalidData
+c:@E@CGImageSourceStatus@kCGImageStatusReadingHeader	swift.enum.case	CGImageSourceStatus.statusReadingHeader	CGImageSourceStatus.statusReadingHeader	case statusReadingHeader
+c:@E@CGImageSourceStatus@kCGImageStatusUnexpectedEOF	swift.enum.case	CGImageSourceStatus.statusUnexpectedEOF	CGImageSourceStatus.statusUnexpectedEOF	case statusUnexpectedEOF
+c:@E@CGImageSourceStatus@kCGImageStatusUnknownType	swift.enum.case	CGImageSourceStatus.statusUnknownType	CGImageSourceStatus.statusUnknownType	case statusUnknownType
+c:@F@CGAnimateImageAtURLWithBlock	swift.func	CGAnimateImageAtURLWithBlock(_:_:_:)	CGAnimateImageAtURLWithBlock(_:_:_:)	func CGAnimateImageAtURLWithBlock(_ url: CFURL, _ options: CFDictionary?, _ block: @escaping CGImageSourceAnimationBlock) -> OSStatus
+c:@F@CGAnimateImageDataWithBlock	swift.func	CGAnimateImageDataWithBlock(_:_:_:)	CGAnimateImageDataWithBlock(_:_:_:)	func CGAnimateImageDataWithBlock(_ data: CFData, _ options: CFDictionary?, _ block: @escaping CGImageSourceAnimationBlock) -> OSStatus
+c:@F@CGImageDestinationAddAuxiliaryDataInfo	swift.func	CGImageDestinationAddAuxiliaryDataInfo(_:_:_:)	CGImageDestinationAddAuxiliaryDataInfo(_:_:_:)	func CGImageDestinationAddAuxiliaryDataInfo(_ idst: CGImageDestination, _ auxiliaryImageDataType: CFString, _ auxiliaryDataInfoDictionary: CFDictionary)
+c:@F@CGImageDestinationAddImage	swift.func	CGImageDestinationAddImage(_:_:_:)	CGImageDestinationAddImage(_:_:_:)	func CGImageDestinationAddImage(_ idst: CGImageDestination, _ image: CGImage, _ properties: CFDictionary?)
+c:@F@CGImageDestinationAddImageAndMetadata	swift.func	CGImageDestinationAddImageAndMetadata(_:_:_:_:)	CGImageDestinationAddImageAndMetadata(_:_:_:_:)	func CGImageDestinationAddImageAndMetadata(_ idst: CGImageDestination, _ image: CGImage, _ metadata: CGImageMetadata?, _ options: CFDictionary?)
+c:@F@CGImageDestinationAddImageFromSource	swift.func	CGImageDestinationAddImageFromSource(_:_:_:_:)	CGImageDestinationAddImageFromSource(_:_:_:_:)	func CGImageDestinationAddImageFromSource(_ idst: CGImageDestination, _ isrc: CGImageSource, _ index: Int, _ properties: CFDictionary?)
+c:@F@CGImageDestinationCopyImageSource	swift.func	CGImageDestinationCopyImageSource(_:_:_:_:)	CGImageDestinationCopyImageSource(_:_:_:_:)	func CGImageDestinationCopyImageSource(_ idst: CGImageDestination, _ isrc: CGImageSource, _ options: CFDictionary?, _ err: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Bool
+c:@F@CGImageDestinationCopyTypeIdentifiers	swift.func	CGImageDestinationCopyTypeIdentifiers()	CGImageDestinationCopyTypeIdentifiers()	func CGImageDestinationCopyTypeIdentifiers() -> CFArray
+c:@F@CGImageDestinationCreateWithData	swift.func	CGImageDestinationCreateWithData(_:_:_:_:)	CGImageDestinationCreateWithData(_:_:_:_:)	func CGImageDestinationCreateWithData(_ data: CFMutableData, _ type: CFString, _ count: Int, _ options: CFDictionary?) -> CGImageDestination?
+c:@F@CGImageDestinationCreateWithDataConsumer	swift.func	CGImageDestinationCreateWithDataConsumer(_:_:_:_:)	CGImageDestinationCreateWithDataConsumer(_:_:_:_:)	func CGImageDestinationCreateWithDataConsumer(_ consumer: CGDataConsumer, _ type: CFString, _ count: Int, _ options: CFDictionary?) -> CGImageDestination?
+c:@F@CGImageDestinationCreateWithURL	swift.func	CGImageDestinationCreateWithURL(_:_:_:_:)	CGImageDestinationCreateWithURL(_:_:_:_:)	func CGImageDestinationCreateWithURL(_ url: CFURL, _ type: CFString, _ count: Int, _ options: CFDictionary?) -> CGImageDestination?
+c:@F@CGImageDestinationFinalize	swift.func	CGImageDestinationFinalize(_:)	CGImageDestinationFinalize(_:)	func CGImageDestinationFinalize(_ idst: CGImageDestination) -> Bool
+c:@F@CGImageDestinationGetTypeID	swift.func	CGImageDestinationGetTypeID()	CGImageDestinationGetTypeID()	func CGImageDestinationGetTypeID() -> CFTypeID
+c:@F@CGImageDestinationSetProperties	swift.func	CGImageDestinationSetProperties(_:_:)	CGImageDestinationSetProperties(_:_:)	func CGImageDestinationSetProperties(_ idst: CGImageDestination, _ properties: CFDictionary?)
+c:@F@CGImageMetadataCopyStringValueWithPath	swift.func	CGImageMetadataCopyStringValueWithPath(_:_:_:)	CGImageMetadataCopyStringValueWithPath(_:_:_:)	func CGImageMetadataCopyStringValueWithPath(_ metadata: CGImageMetadata, _ parent: CGImageMetadataTag?, _ path: CFString) -> CFString?
+c:@F@CGImageMetadataCopyTagMatchingImageProperty	swift.func	CGImageMetadataCopyTagMatchingImageProperty(_:_:_:)	CGImageMetadataCopyTagMatchingImageProperty(_:_:_:)	func CGImageMetadataCopyTagMatchingImageProperty(_ metadata: CGImageMetadata, _ dictionaryName: CFString, _ propertyName: CFString) -> CGImageMetadataTag?
+c:@F@CGImageMetadataCopyTagWithPath	swift.func	CGImageMetadataCopyTagWithPath(_:_:_:)	CGImageMetadataCopyTagWithPath(_:_:_:)	func CGImageMetadataCopyTagWithPath(_ metadata: CGImageMetadata, _ parent: CGImageMetadataTag?, _ path: CFString) -> CGImageMetadataTag?
+c:@F@CGImageMetadataCopyTags	swift.func	CGImageMetadataCopyTags(_:)	CGImageMetadataCopyTags(_:)	func CGImageMetadataCopyTags(_ metadata: CGImageMetadata) -> CFArray?
+c:@F@CGImageMetadataCreateFromXMPData	swift.func	CGImageMetadataCreateFromXMPData(_:)	CGImageMetadataCreateFromXMPData(_:)	func CGImageMetadataCreateFromXMPData(_ data: CFData) -> CGImageMetadata?
+c:@F@CGImageMetadataCreateMutable	swift.func	CGImageMetadataCreateMutable()	CGImageMetadataCreateMutable()	func CGImageMetadataCreateMutable() -> CGMutableImageMetadata
+c:@F@CGImageMetadataCreateMutableCopy	swift.func	CGImageMetadataCreateMutableCopy(_:)	CGImageMetadataCreateMutableCopy(_:)	func CGImageMetadataCreateMutableCopy(_ metadata: CGImageMetadata) -> CGMutableImageMetadata?
+c:@F@CGImageMetadataCreateXMPData	swift.func	CGImageMetadataCreateXMPData(_:_:)	CGImageMetadataCreateXMPData(_:_:)	func CGImageMetadataCreateXMPData(_ metadata: CGImageMetadata, _ options: CFDictionary?) -> CFData?
+c:@F@CGImageMetadataEnumerateTagsUsingBlock	swift.func	CGImageMetadataEnumerateTagsUsingBlock(_:_:_:_:)	CGImageMetadataEnumerateTagsUsingBlock(_:_:_:_:)	func CGImageMetadataEnumerateTagsUsingBlock(_ metadata: CGImageMetadata, _ rootPath: CFString?, _ options: CFDictionary?, _ block: @escaping CGImageMetadataTagBlock)
+c:@F@CGImageMetadataGetTypeID	swift.func	CGImageMetadataGetTypeID()	CGImageMetadataGetTypeID()	func CGImageMetadataGetTypeID() -> CFTypeID
+c:@F@CGImageMetadataRegisterNamespaceForPrefix	swift.func	CGImageMetadataRegisterNamespaceForPrefix(_:_:_:_:)	CGImageMetadataRegisterNamespaceForPrefix(_:_:_:_:)	func CGImageMetadataRegisterNamespaceForPrefix(_ metadata: CGMutableImageMetadata, _ xmlns: CFString, _ prefix: CFString, _ err: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Bool
+c:@F@CGImageMetadataRemoveTagWithPath	swift.func	CGImageMetadataRemoveTagWithPath(_:_:_:)	CGImageMetadataRemoveTagWithPath(_:_:_:)	func CGImageMetadataRemoveTagWithPath(_ metadata: CGMutableImageMetadata, _ parent: CGImageMetadataTag?, _ path: CFString) -> Bool
+c:@F@CGImageMetadataSetTagWithPath	swift.func	CGImageMetadataSetTagWithPath(_:_:_:_:)	CGImageMetadataSetTagWithPath(_:_:_:_:)	func CGImageMetadataSetTagWithPath(_ metadata: CGMutableImageMetadata, _ parent: CGImageMetadataTag?, _ path: CFString, _ tag: CGImageMetadataTag) -> Bool
+c:@F@CGImageMetadataSetValueMatchingImageProperty	swift.func	CGImageMetadataSetValueMatchingImageProperty(_:_:_:_:)	CGImageMetadataSetValueMatchingImageProperty(_:_:_:_:)	func CGImageMetadataSetValueMatchingImageProperty(_ metadata: CGMutableImageMetadata, _ dictionaryName: CFString, _ propertyName: CFString, _ value: CFTypeRef) -> Bool
+c:@F@CGImageMetadataSetValueWithPath	swift.func	CGImageMetadataSetValueWithPath(_:_:_:_:)	CGImageMetadataSetValueWithPath(_:_:_:_:)	func CGImageMetadataSetValueWithPath(_ metadata: CGMutableImageMetadata, _ parent: CGImageMetadataTag?, _ path: CFString, _ value: CFTypeRef) -> Bool
+c:@F@CGImageMetadataTagCopyName	swift.func	CGImageMetadataTagCopyName(_:)	CGImageMetadataTagCopyName(_:)	func CGImageMetadataTagCopyName(_ tag: CGImageMetadataTag) -> CFString?
+c:@F@CGImageMetadataTagCopyNamespace	swift.func	CGImageMetadataTagCopyNamespace(_:)	CGImageMetadataTagCopyNamespace(_:)	func CGImageMetadataTagCopyNamespace(_ tag: CGImageMetadataTag) -> CFString?
+c:@F@CGImageMetadataTagCopyPrefix	swift.func	CGImageMetadataTagCopyPrefix(_:)	CGImageMetadataTagCopyPrefix(_:)	func CGImageMetadataTagCopyPrefix(_ tag: CGImageMetadataTag) -> CFString?
+c:@F@CGImageMetadataTagCopyQualifiers	swift.func	CGImageMetadataTagCopyQualifiers(_:)	CGImageMetadataTagCopyQualifiers(_:)	func CGImageMetadataTagCopyQualifiers(_ tag: CGImageMetadataTag) -> CFArray?
+c:@F@CGImageMetadataTagCopyValue	swift.func	CGImageMetadataTagCopyValue(_:)	CGImageMetadataTagCopyValue(_:)	func CGImageMetadataTagCopyValue(_ tag: CGImageMetadataTag) -> CFTypeRef?
+c:@F@CGImageMetadataTagCreate	swift.func	CGImageMetadataTagCreate(_:_:_:_:_:)	CGImageMetadataTagCreate(_:_:_:_:_:)	func CGImageMetadataTagCreate(_ xmlns: CFString, _ prefix: CFString?, _ name: CFString, _ type: CGImageMetadataType, _ value: CFTypeRef) -> CGImageMetadataTag?
+c:@F@CGImageMetadataTagGetType	swift.func	CGImageMetadataTagGetType(_:)	CGImageMetadataTagGetType(_:)	func CGImageMetadataTagGetType(_ tag: CGImageMetadataTag) -> CGImageMetadataType
+c:@F@CGImageMetadataTagGetTypeID	swift.func	CGImageMetadataTagGetTypeID()	CGImageMetadataTagGetTypeID()	func CGImageMetadataTagGetTypeID() -> CFTypeID
+c:@F@CGImageSourceCopyAuxiliaryDataInfoAtIndex	swift.func	CGImageSourceCopyAuxiliaryDataInfoAtIndex(_:_:_:)	CGImageSourceCopyAuxiliaryDataInfoAtIndex(_:_:_:)	func CGImageSourceCopyAuxiliaryDataInfoAtIndex(_ isrc: CGImageSource, _ index: Int, _ auxiliaryImageDataType: CFString) -> CFDictionary?
+c:@F@CGImageSourceCopyMetadataAtIndex	swift.func	CGImageSourceCopyMetadataAtIndex(_:_:_:)	CGImageSourceCopyMetadataAtIndex(_:_:_:)	func CGImageSourceCopyMetadataAtIndex(_ isrc: CGImageSource, _ index: Int, _ options: CFDictionary?) -> CGImageMetadata?
+c:@F@CGImageSourceCopyProperties	swift.func	CGImageSourceCopyProperties(_:_:)	CGImageSourceCopyProperties(_:_:)	func CGImageSourceCopyProperties(_ isrc: CGImageSource, _ options: CFDictionary?) -> CFDictionary?
+c:@F@CGImageSourceCopyPropertiesAtIndex	swift.func	CGImageSourceCopyPropertiesAtIndex(_:_:_:)	CGImageSourceCopyPropertiesAtIndex(_:_:_:)	func CGImageSourceCopyPropertiesAtIndex(_ isrc: CGImageSource, _ index: Int, _ options: CFDictionary?) -> CFDictionary?
+c:@F@CGImageSourceCopyTypeIdentifiers	swift.func	CGImageSourceCopyTypeIdentifiers()	CGImageSourceCopyTypeIdentifiers()	func CGImageSourceCopyTypeIdentifiers() -> CFArray
+c:@F@CGImageSourceCreateImageAtIndex	swift.func	CGImageSourceCreateImageAtIndex(_:_:_:)	CGImageSourceCreateImageAtIndex(_:_:_:)	func CGImageSourceCreateImageAtIndex(_ isrc: CGImageSource, _ index: Int, _ options: CFDictionary?) -> CGImage?
+c:@F@CGImageSourceCreateIncremental	swift.func	CGImageSourceCreateIncremental(_:)	CGImageSourceCreateIncremental(_:)	func CGImageSourceCreateIncremental(_ options: CFDictionary?) -> CGImageSource
+c:@F@CGImageSourceCreateThumbnailAtIndex	swift.func	CGImageSourceCreateThumbnailAtIndex(_:_:_:)	CGImageSourceCreateThumbnailAtIndex(_:_:_:)	func CGImageSourceCreateThumbnailAtIndex(_ isrc: CGImageSource, _ index: Int, _ options: CFDictionary?) -> CGImage?
+c:@F@CGImageSourceCreateWithData	swift.func	CGImageSourceCreateWithData(_:_:)	CGImageSourceCreateWithData(_:_:)	func CGImageSourceCreateWithData(_ data: CFData, _ options: CFDictionary?) -> CGImageSource?
+c:@F@CGImageSourceCreateWithDataProvider	swift.func	CGImageSourceCreateWithDataProvider(_:_:)	CGImageSourceCreateWithDataProvider(_:_:)	func CGImageSourceCreateWithDataProvider(_ provider: CGDataProvider, _ options: CFDictionary?) -> CGImageSource?
+c:@F@CGImageSourceCreateWithURL	swift.func	CGImageSourceCreateWithURL(_:_:)	CGImageSourceCreateWithURL(_:_:)	func CGImageSourceCreateWithURL(_ url: CFURL, _ options: CFDictionary?) -> CGImageSource?
+c:@F@CGImageSourceGetCount	swift.func	CGImageSourceGetCount(_:)	CGImageSourceGetCount(_:)	func CGImageSourceGetCount(_ isrc: CGImageSource) -> Int
+c:@F@CGImageSourceGetPrimaryImageIndex	swift.func	CGImageSourceGetPrimaryImageIndex(_:)	CGImageSourceGetPrimaryImageIndex(_:)	func CGImageSourceGetPrimaryImageIndex(_ isrc: CGImageSource) -> Int
+c:@F@CGImageSourceGetStatus	swift.func	CGImageSourceGetStatus(_:)	CGImageSourceGetStatus(_:)	func CGImageSourceGetStatus(_ isrc: CGImageSource) -> CGImageSourceStatus
+c:@F@CGImageSourceGetStatusAtIndex	swift.func	CGImageSourceGetStatusAtIndex(_:_:)	CGImageSourceGetStatusAtIndex(_:_:)	func CGImageSourceGetStatusAtIndex(_ isrc: CGImageSource, _ index: Int) -> CGImageSourceStatus
+c:@F@CGImageSourceGetType	swift.func	CGImageSourceGetType(_:)	CGImageSourceGetType(_:)	func CGImageSourceGetType(_ isrc: CGImageSource) -> CFString?
+c:@F@CGImageSourceGetTypeID	swift.func	CGImageSourceGetTypeID()	CGImageSourceGetTypeID()	func CGImageSourceGetTypeID() -> CFTypeID
+c:@F@CGImageSourceRemoveCacheAtIndex	swift.func	CGImageSourceRemoveCacheAtIndex(_:_:)	CGImageSourceRemoveCacheAtIndex(_:_:)	func CGImageSourceRemoveCacheAtIndex(_ isrc: CGImageSource, _ index: Int)
+c:@F@CGImageSourceSetAllowableTypes	swift.func	CGImageSourceSetAllowableTypes(_:)	CGImageSourceSetAllowableTypes(_:)	func CGImageSourceSetAllowableTypes(_ allowableTypes: CFArray) -> OSStatus
+c:@F@CGImageSourceUpdateData	swift.func	CGImageSourceUpdateData(_:_:_:)	CGImageSourceUpdateData(_:_:_:)	func CGImageSourceUpdateData(_ isrc: CGImageSource, _ data: CFData, _ final: Bool)
+c:@F@CGImageSourceUpdateDataProvider	swift.func	CGImageSourceUpdateDataProvider(_:_:_:)	CGImageSourceUpdateDataProvider(_:_:_:)	func CGImageSourceUpdateDataProvider(_ isrc: CGImageSource, _ provider: CGDataProvider, _ final: Bool)
+c:@T@CGImageDestinationRef	swift.class	CGImageDestination	CGImageDestination	class CGImageDestination
+c:@T@CGImageMetadataRef	swift.class	CGImageMetadata	CGImageMetadata	class CGImageMetadata
+c:@T@CGImageMetadataTagBlock	swift.typealias	CGImageMetadataTagBlock	CGImageMetadataTagBlock	typealias CGImageMetadataTagBlock = (CFString, CGImageMetadataTag) -> Bool
+c:@T@CGImageMetadataTagRef	swift.class	CGImageMetadataTag	CGImageMetadataTag	class CGImageMetadataTag
+c:@T@CGImageSourceAnimationBlock	swift.typealias	CGImageSourceAnimationBlock	CGImageSourceAnimationBlock	typealias CGImageSourceAnimationBlock = (Int, CGImage, UnsafeMutablePointer<Bool>) -> Void
+c:@T@CGImageSourceRef	swift.class	CGImageSource	CGImageSource	class CGImageSource
+c:@T@CGMutableImageMetadataRef	swift.class	CGMutableImageMetadata	CGMutableImageMetadata	class CGMutableImageMetadata
+c:@kCFErrorDomainCGImageMetadata	swift.var	kCFErrorDomainCGImageMetadata	kCFErrorDomainCGImageMetadata	let kCFErrorDomainCGImageMetadata: CFString
+c:@kCGComputeHDRStats	swift.var	kCGComputeHDRStats	kCGComputeHDRStats	let kCGComputeHDRStats: CFString
+c:@kCGImageAnimationDelayTime	swift.var	kCGImageAnimationDelayTime	kCGImageAnimationDelayTime	let kCGImageAnimationDelayTime: CFString
+c:@kCGImageAnimationLoopCount	swift.var	kCGImageAnimationLoopCount	kCGImageAnimationLoopCount	let kCGImageAnimationLoopCount: CFString
+c:@kCGImageAnimationStartIndex	swift.var	kCGImageAnimationStartIndex	kCGImageAnimationStartIndex	let kCGImageAnimationStartIndex: CFString
+c:@kCGImageAuxiliaryDataInfoColorSpace	swift.var	kCGImageAuxiliaryDataInfoColorSpace	kCGImageAuxiliaryDataInfoColorSpace	let kCGImageAuxiliaryDataInfoColorSpace: CFString
+c:@kCGImageAuxiliaryDataInfoData	swift.var	kCGImageAuxiliaryDataInfoData	kCGImageAuxiliaryDataInfoData	let kCGImageAuxiliaryDataInfoData: CFString
+c:@kCGImageAuxiliaryDataInfoDataDescription	swift.var	kCGImageAuxiliaryDataInfoDataDescription	kCGImageAuxiliaryDataInfoDataDescription	let kCGImageAuxiliaryDataInfoDataDescription: CFString
+c:@kCGImageAuxiliaryDataInfoMetadata	swift.var	kCGImageAuxiliaryDataInfoMetadata	kCGImageAuxiliaryDataInfoMetadata	let kCGImageAuxiliaryDataInfoMetadata: CFString
+c:@kCGImageAuxiliaryDataTypeDepth	swift.var	kCGImageAuxiliaryDataTypeDepth	kCGImageAuxiliaryDataTypeDepth	let kCGImageAuxiliaryDataTypeDepth: CFString
+c:@kCGImageAuxiliaryDataTypeDisparity	swift.var	kCGImageAuxiliaryDataTypeDisparity	kCGImageAuxiliaryDataTypeDisparity	let kCGImageAuxiliaryDataTypeDisparity: CFString
+c:@kCGImageAuxiliaryDataTypeHDRGainMap	swift.var	kCGImageAuxiliaryDataTypeHDRGainMap	kCGImageAuxiliaryDataTypeHDRGainMap	let kCGImageAuxiliaryDataTypeHDRGainMap: CFString
+c:@kCGImageAuxiliaryDataTypeISOGainMap	swift.var	kCGImageAuxiliaryDataTypeISOGainMap	kCGImageAuxiliaryDataTypeISOGainMap	let kCGImageAuxiliaryDataTypeISOGainMap: CFString
+c:@kCGImageAuxiliaryDataTypePortraitEffectsMatte	swift.var	kCGImageAuxiliaryDataTypePortraitEffectsMatte	kCGImageAuxiliaryDataTypePortraitEffectsMatte	let kCGImageAuxiliaryDataTypePortraitEffectsMatte: CFString
+c:@kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte	swift.var	kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte	kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte	let kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte: CFString
+c:@kCGImageAuxiliaryDataTypeSemanticSegmentationHairMatte	swift.var	kCGImageAuxiliaryDataTypeSemanticSegmentationHairMatte	kCGImageAuxiliaryDataTypeSemanticSegmentationHairMatte	let kCGImageAuxiliaryDataTypeSemanticSegmentationHairMatte: CFString
+c:@kCGImageAuxiliaryDataTypeSemanticSegmentationSkinMatte	swift.var	kCGImageAuxiliaryDataTypeSemanticSegmentationSkinMatte	kCGImageAuxiliaryDataTypeSemanticSegmentationSkinMatte	let kCGImageAuxiliaryDataTypeSemanticSegmentationSkinMatte: CFString
+c:@kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte	swift.var	kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte	kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte	let kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte: CFString
+c:@kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte	swift.var	kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte	kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte	let kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte: CFString
+c:@kCGImageDestinationBackgroundColor	swift.var	kCGImageDestinationBackgroundColor	kCGImageDestinationBackgroundColor	let kCGImageDestinationBackgroundColor: CFString
+c:@kCGImageDestinationDateTime	swift.var	kCGImageDestinationDateTime	kCGImageDestinationDateTime	let kCGImageDestinationDateTime: CFString
+c:@kCGImageDestinationEmbedThumbnail	swift.var	kCGImageDestinationEmbedThumbnail	kCGImageDestinationEmbedThumbnail	let kCGImageDestinationEmbedThumbnail: CFString
+c:@kCGImageDestinationEncodeAlternateColorSpace	swift.var	kCGImageDestinationEncodeAlternateColorSpace	kCGImageDestinationEncodeAlternateColorSpace	let kCGImageDestinationEncodeAlternateColorSpace: CFString
+c:@kCGImageDestinationEncodeBaseColorSpace	swift.var	kCGImageDestinationEncodeBaseColorSpace	kCGImageDestinationEncodeBaseColorSpace	let kCGImageDestinationEncodeBaseColorSpace: CFString
+c:@kCGImageDestinationEncodeBaseIsSDR	swift.var	kCGImageDestinationEncodeBaseIsSDR	kCGImageDestinationEncodeBaseIsSDR	let kCGImageDestinationEncodeBaseIsSDR: CFString
+c:@kCGImageDestinationEncodeBasePixelFormatRequest	swift.var	kCGImageDestinationEncodeBasePixelFormatRequest	kCGImageDestinationEncodeBasePixelFormatRequest	let kCGImageDestinationEncodeBasePixelFormatRequest: CFString
+c:@kCGImageDestinationEncodeGainMapPixelFormatRequest	swift.var	kCGImageDestinationEncodeGainMapPixelFormatRequest	kCGImageDestinationEncodeGainMapPixelFormatRequest	let kCGImageDestinationEncodeGainMapPixelFormatRequest: CFString
+c:@kCGImageDestinationEncodeGainMapSubsampleFactor	swift.var	kCGImageDestinationEncodeGainMapSubsampleFactor	kCGImageDestinationEncodeGainMapSubsampleFactor	let kCGImageDestinationEncodeGainMapSubsampleFactor: CFString
+c:@kCGImageDestinationEncodeGenerateGainMapWithBaseImage	swift.var	kCGImageDestinationEncodeGenerateGainMapWithBaseImage	kCGImageDestinationEncodeGenerateGainMapWithBaseImage	let kCGImageDestinationEncodeGenerateGainMapWithBaseImage: CFString
+c:@kCGImageDestinationEncodeIsBaseImage	swift.var	kCGImageDestinationEncodeIsBaseImage	kCGImageDestinationEncodeIsBaseImage	let kCGImageDestinationEncodeIsBaseImage: CFString
+c:@kCGImageDestinationEncodeRequest	swift.var	kCGImageDestinationEncodeRequest	kCGImageDestinationEncodeRequest	let kCGImageDestinationEncodeRequest: CFString
+c:@kCGImageDestinationEncodeRequestOptions	swift.var	kCGImageDestinationEncodeRequestOptions	kCGImageDestinationEncodeRequestOptions	let kCGImageDestinationEncodeRequestOptions: CFString
+c:@kCGImageDestinationEncodeToISOGainmap	swift.var	kCGImageDestinationEncodeToISOGainmap	kCGImageDestinationEncodeToISOGainmap	let kCGImageDestinationEncodeToISOGainmap: CFString
+c:@kCGImageDestinationEncodeToISOHDR	swift.var	kCGImageDestinationEncodeToISOHDR	kCGImageDestinationEncodeToISOHDR	let kCGImageDestinationEncodeToISOHDR: CFString
+c:@kCGImageDestinationEncodeToSDR	swift.var	kCGImageDestinationEncodeToSDR	kCGImageDestinationEncodeToSDR	let kCGImageDestinationEncodeToSDR: CFString
+c:@kCGImageDestinationEncodeTonemapMode	swift.var	kCGImageDestinationEncodeTonemapMode	kCGImageDestinationEncodeTonemapMode	let kCGImageDestinationEncodeTonemapMode: CFString
+c:@kCGImageDestinationImageMaxPixelSize	swift.var	kCGImageDestinationImageMaxPixelSize	kCGImageDestinationImageMaxPixelSize	let kCGImageDestinationImageMaxPixelSize: CFString
+c:@kCGImageDestinationLossyCompressionQuality	swift.var	kCGImageDestinationLossyCompressionQuality	kCGImageDestinationLossyCompressionQuality	let kCGImageDestinationLossyCompressionQuality: CFString
+c:@kCGImageDestinationMergeMetadata	swift.var	kCGImageDestinationMergeMetadata	kCGImageDestinationMergeMetadata	let kCGImageDestinationMergeMetadata: CFString
+c:@kCGImageDestinationMetadata	swift.var	kCGImageDestinationMetadata	kCGImageDestinationMetadata	let kCGImageDestinationMetadata: CFString
+c:@kCGImageDestinationOptimizeColorForSharing	swift.var	kCGImageDestinationOptimizeColorForSharing	kCGImageDestinationOptimizeColorForSharing	let kCGImageDestinationOptimizeColorForSharing: CFString
+c:@kCGImageDestinationOrientation	swift.var	kCGImageDestinationOrientation	kCGImageDestinationOrientation	let kCGImageDestinationOrientation: CFString
+c:@kCGImageDestinationPreserveGainMap	swift.var	kCGImageDestinationPreserveGainMap	kCGImageDestinationPreserveGainMap	let kCGImageDestinationPreserveGainMap: CFString
+c:@kCGImageMetadataEnumerateRecursively	swift.var	kCGImageMetadataEnumerateRecursively	kCGImageMetadataEnumerateRecursively	let kCGImageMetadataEnumerateRecursively: CFString
+c:@kCGImageMetadataNamespaceDublinCore	swift.var	kCGImageMetadataNamespaceDublinCore	kCGImageMetadataNamespaceDublinCore	let kCGImageMetadataNamespaceDublinCore: CFString
+c:@kCGImageMetadataNamespaceExif	swift.var	kCGImageMetadataNamespaceExif	kCGImageMetadataNamespaceExif	let kCGImageMetadataNamespaceExif: CFString
+c:@kCGImageMetadataNamespaceExifAux	swift.var	kCGImageMetadataNamespaceExifAux	kCGImageMetadataNamespaceExifAux	let kCGImageMetadataNamespaceExifAux: CFString
+c:@kCGImageMetadataNamespaceExifEX	swift.var	kCGImageMetadataNamespaceExifEX	kCGImageMetadataNamespaceExifEX	let kCGImageMetadataNamespaceExifEX: CFString
+c:@kCGImageMetadataNamespaceIPTCCore	swift.var	kCGImageMetadataNamespaceIPTCCore	kCGImageMetadataNamespaceIPTCCore	let kCGImageMetadataNamespaceIPTCCore: CFString
+c:@kCGImageMetadataNamespaceIPTCExtension	swift.var	kCGImageMetadataNamespaceIPTCExtension	kCGImageMetadataNamespaceIPTCExtension	let kCGImageMetadataNamespaceIPTCExtension: CFString
+c:@kCGImageMetadataNamespacePhotoshop	swift.var	kCGImageMetadataNamespacePhotoshop	kCGImageMetadataNamespacePhotoshop	let kCGImageMetadataNamespacePhotoshop: CFString
+c:@kCGImageMetadataNamespaceTIFF	swift.var	kCGImageMetadataNamespaceTIFF	kCGImageMetadataNamespaceTIFF	let kCGImageMetadataNamespaceTIFF: CFString
+c:@kCGImageMetadataNamespaceXMPBasic	swift.var	kCGImageMetadataNamespaceXMPBasic	kCGImageMetadataNamespaceXMPBasic	let kCGImageMetadataNamespaceXMPBasic: CFString
+c:@kCGImageMetadataNamespaceXMPRights	swift.var	kCGImageMetadataNamespaceXMPRights	kCGImageMetadataNamespaceXMPRights	let kCGImageMetadataNamespaceXMPRights: CFString
+c:@kCGImageMetadataPrefixDublinCore	swift.var	kCGImageMetadataPrefixDublinCore	kCGImageMetadataPrefixDublinCore	let kCGImageMetadataPrefixDublinCore: CFString
+c:@kCGImageMetadataPrefixExif	swift.var	kCGImageMetadataPrefixExif	kCGImageMetadataPrefixExif	let kCGImageMetadataPrefixExif: CFString
+c:@kCGImageMetadataPrefixExifAux	swift.var	kCGImageMetadataPrefixExifAux	kCGImageMetadataPrefixExifAux	let kCGImageMetadataPrefixExifAux: CFString
+c:@kCGImageMetadataPrefixExifEX	swift.var	kCGImageMetadataPrefixExifEX	kCGImageMetadataPrefixExifEX	let kCGImageMetadataPrefixExifEX: CFString
+c:@kCGImageMetadataPrefixIPTCCore	swift.var	kCGImageMetadataPrefixIPTCCore	kCGImageMetadataPrefixIPTCCore	let kCGImageMetadataPrefixIPTCCore: CFString
+c:@kCGImageMetadataPrefixIPTCExtension	swift.var	kCGImageMetadataPrefixIPTCExtension	kCGImageMetadataPrefixIPTCExtension	let kCGImageMetadataPrefixIPTCExtension: CFString
+c:@kCGImageMetadataPrefixPhotoshop	swift.var	kCGImageMetadataPrefixPhotoshop	kCGImageMetadataPrefixPhotoshop	let kCGImageMetadataPrefixPhotoshop: CFString
+c:@kCGImageMetadataPrefixTIFF	swift.var	kCGImageMetadataPrefixTIFF	kCGImageMetadataPrefixTIFF	let kCGImageMetadataPrefixTIFF: CFString
+c:@kCGImageMetadataPrefixXMPBasic	swift.var	kCGImageMetadataPrefixXMPBasic	kCGImageMetadataPrefixXMPBasic	let kCGImageMetadataPrefixXMPBasic: CFString
+c:@kCGImageMetadataPrefixXMPRights	swift.var	kCGImageMetadataPrefixXMPRights	kCGImageMetadataPrefixXMPRights	let kCGImageMetadataPrefixXMPRights: CFString
+c:@kCGImageMetadataShouldExcludeGPS	swift.var	kCGImageMetadataShouldExcludeGPS	kCGImageMetadataShouldExcludeGPS	let kCGImageMetadataShouldExcludeGPS: CFString
+c:@kCGImageMetadataShouldExcludeXMP	swift.var	kCGImageMetadataShouldExcludeXMP	kCGImageMetadataShouldExcludeXMP	let kCGImageMetadataShouldExcludeXMP: CFString
+c:@kCGImageProperty8BIMDictionary	swift.var	kCGImageProperty8BIMDictionary	kCGImageProperty8BIMDictionary	let kCGImageProperty8BIMDictionary: CFString
+c:@kCGImageProperty8BIMLayerNames	swift.var	kCGImageProperty8BIMLayerNames	kCGImageProperty8BIMLayerNames	let kCGImageProperty8BIMLayerNames: CFString
+c:@kCGImageProperty8BIMVersion	swift.var	kCGImageProperty8BIMVersion	kCGImageProperty8BIMVersion	let kCGImageProperty8BIMVersion: CFString
+c:@kCGImagePropertyAPNGCanvasPixelHeight	swift.var	kCGImagePropertyAPNGCanvasPixelHeight	kCGImagePropertyAPNGCanvasPixelHeight	let kCGImagePropertyAPNGCanvasPixelHeight: CFString
+c:@kCGImagePropertyAPNGCanvasPixelWidth	swift.var	kCGImagePropertyAPNGCanvasPixelWidth	kCGImagePropertyAPNGCanvasPixelWidth	let kCGImagePropertyAPNGCanvasPixelWidth: CFString
+c:@kCGImagePropertyAPNGDelayTime	swift.var	kCGImagePropertyAPNGDelayTime	kCGImagePropertyAPNGDelayTime	let kCGImagePropertyAPNGDelayTime: CFString
+c:@kCGImagePropertyAPNGFrameInfoArray	swift.var	kCGImagePropertyAPNGFrameInfoArray	kCGImagePropertyAPNGFrameInfoArray	let kCGImagePropertyAPNGFrameInfoArray: CFString
+c:@kCGImagePropertyAPNGLoopCount	swift.var	kCGImagePropertyAPNGLoopCount	kCGImagePropertyAPNGLoopCount	let kCGImagePropertyAPNGLoopCount: CFString
+c:@kCGImagePropertyAPNGUnclampedDelayTime	swift.var	kCGImagePropertyAPNGUnclampedDelayTime	kCGImagePropertyAPNGUnclampedDelayTime	let kCGImagePropertyAPNGUnclampedDelayTime: CFString
+c:@kCGImagePropertyASTCBlockSize	swift.var	kCGImagePropertyASTCBlockSize	kCGImagePropertyASTCBlockSize	let kCGImagePropertyASTCBlockSize: CFString
+c:@kCGImagePropertyASTCBlockSize4x4	swift.var	kCGImagePropertyASTCBlockSize4x4	kCGImagePropertyASTCBlockSize4x4	let kCGImagePropertyASTCBlockSize4x4: CFString
+c:@kCGImagePropertyASTCBlockSize8x8	swift.var	kCGImagePropertyASTCBlockSize8x8	kCGImagePropertyASTCBlockSize8x8	let kCGImagePropertyASTCBlockSize8x8: CFString
+c:@kCGImagePropertyASTCEncoder	swift.var	kCGImagePropertyASTCEncoder	kCGImagePropertyASTCEncoder	let kCGImagePropertyASTCEncoder: CFString
+c:@kCGImagePropertyAVISDictionary	swift.var	kCGImagePropertyAVISDictionary	kCGImagePropertyAVISDictionary	let kCGImagePropertyAVISDictionary: CFString
+c:@kCGImagePropertyAuxiliaryData	swift.var	kCGImagePropertyAuxiliaryData	kCGImagePropertyAuxiliaryData	let kCGImagePropertyAuxiliaryData: CFString
+c:@kCGImagePropertyAuxiliaryDataType	swift.var	kCGImagePropertyAuxiliaryDataType	kCGImagePropertyAuxiliaryDataType	let kCGImagePropertyAuxiliaryDataType: CFString
+c:@kCGImagePropertyBCEncoder	swift.var	kCGImagePropertyBCEncoder	kCGImagePropertyBCEncoder	let kCGImagePropertyBCEncoder: CFString
+c:@kCGImagePropertyBCFormat	swift.var	kCGImagePropertyBCFormat	kCGImagePropertyBCFormat	let kCGImagePropertyBCFormat: CFString
+c:@kCGImagePropertyBytesPerRow	swift.var	kCGImagePropertyBytesPerRow	kCGImagePropertyBytesPerRow	let kCGImagePropertyBytesPerRow: CFString
+c:@kCGImagePropertyCIFFCameraSerialNumber	swift.var	kCGImagePropertyCIFFCameraSerialNumber	kCGImagePropertyCIFFCameraSerialNumber	let kCGImagePropertyCIFFCameraSerialNumber: CFString
+c:@kCGImagePropertyCIFFContinuousDrive	swift.var	kCGImagePropertyCIFFContinuousDrive	kCGImagePropertyCIFFContinuousDrive	let kCGImagePropertyCIFFContinuousDrive: CFString
+c:@kCGImagePropertyCIFFDescription	swift.var	kCGImagePropertyCIFFDescription	kCGImagePropertyCIFFDescription	let kCGImagePropertyCIFFDescription: CFString
+c:@kCGImagePropertyCIFFDictionary	swift.var	kCGImagePropertyCIFFDictionary	kCGImagePropertyCIFFDictionary	let kCGImagePropertyCIFFDictionary: CFString
+c:@kCGImagePropertyCIFFFirmware	swift.var	kCGImagePropertyCIFFFirmware	kCGImagePropertyCIFFFirmware	let kCGImagePropertyCIFFFirmware: CFString
+c:@kCGImagePropertyCIFFFlashExposureComp	swift.var	kCGImagePropertyCIFFFlashExposureComp	kCGImagePropertyCIFFFlashExposureComp	let kCGImagePropertyCIFFFlashExposureComp: CFString
+c:@kCGImagePropertyCIFFFocusMode	swift.var	kCGImagePropertyCIFFFocusMode	kCGImagePropertyCIFFFocusMode	let kCGImagePropertyCIFFFocusMode: CFString
+c:@kCGImagePropertyCIFFImageFileName	swift.var	kCGImagePropertyCIFFImageFileName	kCGImagePropertyCIFFImageFileName	let kCGImagePropertyCIFFImageFileName: CFString
+c:@kCGImagePropertyCIFFImageName	swift.var	kCGImagePropertyCIFFImageName	kCGImagePropertyCIFFImageName	let kCGImagePropertyCIFFImageName: CFString
+c:@kCGImagePropertyCIFFImageSerialNumber	swift.var	kCGImagePropertyCIFFImageSerialNumber	kCGImagePropertyCIFFImageSerialNumber	let kCGImagePropertyCIFFImageSerialNumber: CFString
+c:@kCGImagePropertyCIFFLensMaxMM	swift.var	kCGImagePropertyCIFFLensMaxMM	kCGImagePropertyCIFFLensMaxMM	let kCGImagePropertyCIFFLensMaxMM: CFString
+c:@kCGImagePropertyCIFFLensMinMM	swift.var	kCGImagePropertyCIFFLensMinMM	kCGImagePropertyCIFFLensMinMM	let kCGImagePropertyCIFFLensMinMM: CFString
+c:@kCGImagePropertyCIFFLensModel	swift.var	kCGImagePropertyCIFFLensModel	kCGImagePropertyCIFFLensModel	let kCGImagePropertyCIFFLensModel: CFString
+c:@kCGImagePropertyCIFFMeasuredEV	swift.var	kCGImagePropertyCIFFMeasuredEV	kCGImagePropertyCIFFMeasuredEV	let kCGImagePropertyCIFFMeasuredEV: CFString
+c:@kCGImagePropertyCIFFMeteringMode	swift.var	kCGImagePropertyCIFFMeteringMode	kCGImagePropertyCIFFMeteringMode	let kCGImagePropertyCIFFMeteringMode: CFString
+c:@kCGImagePropertyCIFFOwnerName	swift.var	kCGImagePropertyCIFFOwnerName	kCGImagePropertyCIFFOwnerName	let kCGImagePropertyCIFFOwnerName: CFString
+c:@kCGImagePropertyCIFFRecordID	swift.var	kCGImagePropertyCIFFRecordID	kCGImagePropertyCIFFRecordID	let kCGImagePropertyCIFFRecordID: CFString
+c:@kCGImagePropertyCIFFReleaseMethod	swift.var	kCGImagePropertyCIFFReleaseMethod	kCGImagePropertyCIFFReleaseMethod	let kCGImagePropertyCIFFReleaseMethod: CFString
+c:@kCGImagePropertyCIFFReleaseTiming	swift.var	kCGImagePropertyCIFFReleaseTiming	kCGImagePropertyCIFFReleaseTiming	let kCGImagePropertyCIFFReleaseTiming: CFString
+c:@kCGImagePropertyCIFFSelfTimingTime	swift.var	kCGImagePropertyCIFFSelfTimingTime	kCGImagePropertyCIFFSelfTimingTime	let kCGImagePropertyCIFFSelfTimingTime: CFString
+c:@kCGImagePropertyCIFFShootingMode	swift.var	kCGImagePropertyCIFFShootingMode	kCGImagePropertyCIFFShootingMode	let kCGImagePropertyCIFFShootingMode: CFString
+c:@kCGImagePropertyCIFFWhiteBalanceIndex	swift.var	kCGImagePropertyCIFFWhiteBalanceIndex	kCGImagePropertyCIFFWhiteBalanceIndex	let kCGImagePropertyCIFFWhiteBalanceIndex: CFString
+c:@kCGImagePropertyColorModel	swift.var	kCGImagePropertyColorModel	kCGImagePropertyColorModel	let kCGImagePropertyColorModel: CFString
+c:@kCGImagePropertyColorModelCMYK	swift.var	kCGImagePropertyColorModelCMYK	kCGImagePropertyColorModelCMYK	let kCGImagePropertyColorModelCMYK: CFString
+c:@kCGImagePropertyColorModelGray	swift.var	kCGImagePropertyColorModelGray	kCGImagePropertyColorModelGray	let kCGImagePropertyColorModelGray: CFString
+c:@kCGImagePropertyColorModelLab	swift.var	kCGImagePropertyColorModelLab	kCGImagePropertyColorModelLab	let kCGImagePropertyColorModelLab: CFString
+c:@kCGImagePropertyColorModelRGB	swift.var	kCGImagePropertyColorModelRGB	kCGImagePropertyColorModelRGB	let kCGImagePropertyColorModelRGB: CFString
+c:@kCGImagePropertyDNGActiveArea	swift.var	kCGImagePropertyDNGActiveArea	kCGImagePropertyDNGActiveArea	let kCGImagePropertyDNGActiveArea: CFString
+c:@kCGImagePropertyDNGAnalogBalance	swift.var	kCGImagePropertyDNGAnalogBalance	kCGImagePropertyDNGAnalogBalance	let kCGImagePropertyDNGAnalogBalance: CFString
+c:@kCGImagePropertyDNGAntiAliasStrength	swift.var	kCGImagePropertyDNGAntiAliasStrength	kCGImagePropertyDNGAntiAliasStrength	let kCGImagePropertyDNGAntiAliasStrength: CFString
+c:@kCGImagePropertyDNGAsShotICCProfile	swift.var	kCGImagePropertyDNGAsShotICCProfile	kCGImagePropertyDNGAsShotICCProfile	let kCGImagePropertyDNGAsShotICCProfile: CFString
+c:@kCGImagePropertyDNGAsShotNeutral	swift.var	kCGImagePropertyDNGAsShotNeutral	kCGImagePropertyDNGAsShotNeutral	let kCGImagePropertyDNGAsShotNeutral: CFString
+c:@kCGImagePropertyDNGAsShotPreProfileMatrix	swift.var	kCGImagePropertyDNGAsShotPreProfileMatrix	kCGImagePropertyDNGAsShotPreProfileMatrix	let kCGImagePropertyDNGAsShotPreProfileMatrix: CFString
+c:@kCGImagePropertyDNGAsShotProfileName	swift.var	kCGImagePropertyDNGAsShotProfileName	kCGImagePropertyDNGAsShotProfileName	let kCGImagePropertyDNGAsShotProfileName: CFString
+c:@kCGImagePropertyDNGAsShotWhiteXY	swift.var	kCGImagePropertyDNGAsShotWhiteXY	kCGImagePropertyDNGAsShotWhiteXY	let kCGImagePropertyDNGAsShotWhiteXY: CFString
+c:@kCGImagePropertyDNGBackwardVersion	swift.var	kCGImagePropertyDNGBackwardVersion	kCGImagePropertyDNGBackwardVersion	let kCGImagePropertyDNGBackwardVersion: CFString
+c:@kCGImagePropertyDNGBaselineExposure	swift.var	kCGImagePropertyDNGBaselineExposure	kCGImagePropertyDNGBaselineExposure	let kCGImagePropertyDNGBaselineExposure: CFString
+c:@kCGImagePropertyDNGBaselineExposureOffset	swift.var	kCGImagePropertyDNGBaselineExposureOffset	kCGImagePropertyDNGBaselineExposureOffset	let kCGImagePropertyDNGBaselineExposureOffset: CFString
+c:@kCGImagePropertyDNGBaselineNoise	swift.var	kCGImagePropertyDNGBaselineNoise	kCGImagePropertyDNGBaselineNoise	let kCGImagePropertyDNGBaselineNoise: CFString
+c:@kCGImagePropertyDNGBaselineSharpness	swift.var	kCGImagePropertyDNGBaselineSharpness	kCGImagePropertyDNGBaselineSharpness	let kCGImagePropertyDNGBaselineSharpness: CFString
+c:@kCGImagePropertyDNGBayerGreenSplit	swift.var	kCGImagePropertyDNGBayerGreenSplit	kCGImagePropertyDNGBayerGreenSplit	let kCGImagePropertyDNGBayerGreenSplit: CFString
+c:@kCGImagePropertyDNGBestQualityScale	swift.var	kCGImagePropertyDNGBestQualityScale	kCGImagePropertyDNGBestQualityScale	let kCGImagePropertyDNGBestQualityScale: CFString
+c:@kCGImagePropertyDNGBlackLevel	swift.var	kCGImagePropertyDNGBlackLevel	kCGImagePropertyDNGBlackLevel	let kCGImagePropertyDNGBlackLevel: CFString
+c:@kCGImagePropertyDNGBlackLevelDeltaH	swift.var	kCGImagePropertyDNGBlackLevelDeltaH	kCGImagePropertyDNGBlackLevelDeltaH	let kCGImagePropertyDNGBlackLevelDeltaH: CFString
+c:@kCGImagePropertyDNGBlackLevelDeltaV	swift.var	kCGImagePropertyDNGBlackLevelDeltaV	kCGImagePropertyDNGBlackLevelDeltaV	let kCGImagePropertyDNGBlackLevelDeltaV: CFString
+c:@kCGImagePropertyDNGBlackLevelRepeatDim	swift.var	kCGImagePropertyDNGBlackLevelRepeatDim	kCGImagePropertyDNGBlackLevelRepeatDim	let kCGImagePropertyDNGBlackLevelRepeatDim: CFString
+c:@kCGImagePropertyDNGCFALayout	swift.var	kCGImagePropertyDNGCFALayout	kCGImagePropertyDNGCFALayout	let kCGImagePropertyDNGCFALayout: CFString
+c:@kCGImagePropertyDNGCFAPlaneColor	swift.var	kCGImagePropertyDNGCFAPlaneColor	kCGImagePropertyDNGCFAPlaneColor	let kCGImagePropertyDNGCFAPlaneColor: CFString
+c:@kCGImagePropertyDNGCalibrationIlluminant1	swift.var	kCGImagePropertyDNGCalibrationIlluminant1	kCGImagePropertyDNGCalibrationIlluminant1	let kCGImagePropertyDNGCalibrationIlluminant1: CFString
+c:@kCGImagePropertyDNGCalibrationIlluminant2	swift.var	kCGImagePropertyDNGCalibrationIlluminant2	kCGImagePropertyDNGCalibrationIlluminant2	let kCGImagePropertyDNGCalibrationIlluminant2: CFString
+c:@kCGImagePropertyDNGCameraCalibration1	swift.var	kCGImagePropertyDNGCameraCalibration1	kCGImagePropertyDNGCameraCalibration1	let kCGImagePropertyDNGCameraCalibration1: CFString
+c:@kCGImagePropertyDNGCameraCalibration2	swift.var	kCGImagePropertyDNGCameraCalibration2	kCGImagePropertyDNGCameraCalibration2	let kCGImagePropertyDNGCameraCalibration2: CFString
+c:@kCGImagePropertyDNGCameraCalibrationSignature	swift.var	kCGImagePropertyDNGCameraCalibrationSignature	kCGImagePropertyDNGCameraCalibrationSignature	let kCGImagePropertyDNGCameraCalibrationSignature: CFString
+c:@kCGImagePropertyDNGCameraSerialNumber	swift.var	kCGImagePropertyDNGCameraSerialNumber	kCGImagePropertyDNGCameraSerialNumber	let kCGImagePropertyDNGCameraSerialNumber: CFString
+c:@kCGImagePropertyDNGChromaBlurRadius	swift.var	kCGImagePropertyDNGChromaBlurRadius	kCGImagePropertyDNGChromaBlurRadius	let kCGImagePropertyDNGChromaBlurRadius: CFString
+c:@kCGImagePropertyDNGColorMatrix1	swift.var	kCGImagePropertyDNGColorMatrix1	kCGImagePropertyDNGColorMatrix1	let kCGImagePropertyDNGColorMatrix1: CFString
+c:@kCGImagePropertyDNGColorMatrix2	swift.var	kCGImagePropertyDNGColorMatrix2	kCGImagePropertyDNGColorMatrix2	let kCGImagePropertyDNGColorMatrix2: CFString
+c:@kCGImagePropertyDNGColorimetricReference	swift.var	kCGImagePropertyDNGColorimetricReference	kCGImagePropertyDNGColorimetricReference	let kCGImagePropertyDNGColorimetricReference: CFString
+c:@kCGImagePropertyDNGCurrentICCProfile	swift.var	kCGImagePropertyDNGCurrentICCProfile	kCGImagePropertyDNGCurrentICCProfile	let kCGImagePropertyDNGCurrentICCProfile: CFString
+c:@kCGImagePropertyDNGCurrentPreProfileMatrix	swift.var	kCGImagePropertyDNGCurrentPreProfileMatrix	kCGImagePropertyDNGCurrentPreProfileMatrix	let kCGImagePropertyDNGCurrentPreProfileMatrix: CFString
+c:@kCGImagePropertyDNGDefaultBlackRender	swift.var	kCGImagePropertyDNGDefaultBlackRender	kCGImagePropertyDNGDefaultBlackRender	let kCGImagePropertyDNGDefaultBlackRender: CFString
+c:@kCGImagePropertyDNGDefaultCropOrigin	swift.var	kCGImagePropertyDNGDefaultCropOrigin	kCGImagePropertyDNGDefaultCropOrigin	let kCGImagePropertyDNGDefaultCropOrigin: CFString
+c:@kCGImagePropertyDNGDefaultCropSize	swift.var	kCGImagePropertyDNGDefaultCropSize	kCGImagePropertyDNGDefaultCropSize	let kCGImagePropertyDNGDefaultCropSize: CFString
+c:@kCGImagePropertyDNGDefaultScale	swift.var	kCGImagePropertyDNGDefaultScale	kCGImagePropertyDNGDefaultScale	let kCGImagePropertyDNGDefaultScale: CFString
+c:@kCGImagePropertyDNGDefaultUserCrop	swift.var	kCGImagePropertyDNGDefaultUserCrop	kCGImagePropertyDNGDefaultUserCrop	let kCGImagePropertyDNGDefaultUserCrop: CFString
+c:@kCGImagePropertyDNGDictionary	swift.var	kCGImagePropertyDNGDictionary	kCGImagePropertyDNGDictionary	let kCGImagePropertyDNGDictionary: CFString
+c:@kCGImagePropertyDNGExtraCameraProfiles	swift.var	kCGImagePropertyDNGExtraCameraProfiles	kCGImagePropertyDNGExtraCameraProfiles	let kCGImagePropertyDNGExtraCameraProfiles: CFString
+c:@kCGImagePropertyDNGFixVignetteRadial	swift.var	kCGImagePropertyDNGFixVignetteRadial	kCGImagePropertyDNGFixVignetteRadial	let kCGImagePropertyDNGFixVignetteRadial: CFString
+c:@kCGImagePropertyDNGForwardMatrix1	swift.var	kCGImagePropertyDNGForwardMatrix1	kCGImagePropertyDNGForwardMatrix1	let kCGImagePropertyDNGForwardMatrix1: CFString
+c:@kCGImagePropertyDNGForwardMatrix2	swift.var	kCGImagePropertyDNGForwardMatrix2	kCGImagePropertyDNGForwardMatrix2	let kCGImagePropertyDNGForwardMatrix2: CFString
+c:@kCGImagePropertyDNGLensInfo	swift.var	kCGImagePropertyDNGLensInfo	kCGImagePropertyDNGLensInfo	let kCGImagePropertyDNGLensInfo: CFString
+c:@kCGImagePropertyDNGLinearResponseLimit	swift.var	kCGImagePropertyDNGLinearResponseLimit	kCGImagePropertyDNGLinearResponseLimit	let kCGImagePropertyDNGLinearResponseLimit: CFString
+c:@kCGImagePropertyDNGLinearizationTable	swift.var	kCGImagePropertyDNGLinearizationTable	kCGImagePropertyDNGLinearizationTable	let kCGImagePropertyDNGLinearizationTable: CFString
+c:@kCGImagePropertyDNGLocalizedCameraModel	swift.var	kCGImagePropertyDNGLocalizedCameraModel	kCGImagePropertyDNGLocalizedCameraModel	let kCGImagePropertyDNGLocalizedCameraModel: CFString
+c:@kCGImagePropertyDNGMakerNoteSafety	swift.var	kCGImagePropertyDNGMakerNoteSafety	kCGImagePropertyDNGMakerNoteSafety	let kCGImagePropertyDNGMakerNoteSafety: CFString
+c:@kCGImagePropertyDNGMaskedAreas	swift.var	kCGImagePropertyDNGMaskedAreas	kCGImagePropertyDNGMaskedAreas	let kCGImagePropertyDNGMaskedAreas: CFString
+c:@kCGImagePropertyDNGNewRawImageDigest	swift.var	kCGImagePropertyDNGNewRawImageDigest	kCGImagePropertyDNGNewRawImageDigest	let kCGImagePropertyDNGNewRawImageDigest: CFString
+c:@kCGImagePropertyDNGNoiseProfile	swift.var	kCGImagePropertyDNGNoiseProfile	kCGImagePropertyDNGNoiseProfile	let kCGImagePropertyDNGNoiseProfile: CFString
+c:@kCGImagePropertyDNGNoiseReductionApplied	swift.var	kCGImagePropertyDNGNoiseReductionApplied	kCGImagePropertyDNGNoiseReductionApplied	let kCGImagePropertyDNGNoiseReductionApplied: CFString
+c:@kCGImagePropertyDNGOpcodeList1	swift.var	kCGImagePropertyDNGOpcodeList1	kCGImagePropertyDNGOpcodeList1	let kCGImagePropertyDNGOpcodeList1: CFString
+c:@kCGImagePropertyDNGOpcodeList2	swift.var	kCGImagePropertyDNGOpcodeList2	kCGImagePropertyDNGOpcodeList2	let kCGImagePropertyDNGOpcodeList2: CFString
+c:@kCGImagePropertyDNGOpcodeList3	swift.var	kCGImagePropertyDNGOpcodeList3	kCGImagePropertyDNGOpcodeList3	let kCGImagePropertyDNGOpcodeList3: CFString
+c:@kCGImagePropertyDNGOriginalBestQualityFinalSize	swift.var	kCGImagePropertyDNGOriginalBestQualityFinalSize	kCGImagePropertyDNGOriginalBestQualityFinalSize	let kCGImagePropertyDNGOriginalBestQualityFinalSize: CFString
+c:@kCGImagePropertyDNGOriginalDefaultCropSize	swift.var	kCGImagePropertyDNGOriginalDefaultCropSize	kCGImagePropertyDNGOriginalDefaultCropSize	let kCGImagePropertyDNGOriginalDefaultCropSize: CFString
+c:@kCGImagePropertyDNGOriginalDefaultFinalSize	swift.var	kCGImagePropertyDNGOriginalDefaultFinalSize	kCGImagePropertyDNGOriginalDefaultFinalSize	let kCGImagePropertyDNGOriginalDefaultFinalSize: CFString
+c:@kCGImagePropertyDNGOriginalRawFileData	swift.var	kCGImagePropertyDNGOriginalRawFileData	kCGImagePropertyDNGOriginalRawFileData	let kCGImagePropertyDNGOriginalRawFileData: CFString
+c:@kCGImagePropertyDNGOriginalRawFileDigest	swift.var	kCGImagePropertyDNGOriginalRawFileDigest	kCGImagePropertyDNGOriginalRawFileDigest	let kCGImagePropertyDNGOriginalRawFileDigest: CFString
+c:@kCGImagePropertyDNGOriginalRawFileName	swift.var	kCGImagePropertyDNGOriginalRawFileName	kCGImagePropertyDNGOriginalRawFileName	let kCGImagePropertyDNGOriginalRawFileName: CFString
+c:@kCGImagePropertyDNGPreviewApplicationName	swift.var	kCGImagePropertyDNGPreviewApplicationName	kCGImagePropertyDNGPreviewApplicationName	let kCGImagePropertyDNGPreviewApplicationName: CFString
+c:@kCGImagePropertyDNGPreviewApplicationVersion	swift.var	kCGImagePropertyDNGPreviewApplicationVersion	kCGImagePropertyDNGPreviewApplicationVersion	let kCGImagePropertyDNGPreviewApplicationVersion: CFString
+c:@kCGImagePropertyDNGPreviewColorSpace	swift.var	kCGImagePropertyDNGPreviewColorSpace	kCGImagePropertyDNGPreviewColorSpace	let kCGImagePropertyDNGPreviewColorSpace: CFString
+c:@kCGImagePropertyDNGPreviewDateTime	swift.var	kCGImagePropertyDNGPreviewDateTime	kCGImagePropertyDNGPreviewDateTime	let kCGImagePropertyDNGPreviewDateTime: CFString
+c:@kCGImagePropertyDNGPreviewSettingsDigest	swift.var	kCGImagePropertyDNGPreviewSettingsDigest	kCGImagePropertyDNGPreviewSettingsDigest	let kCGImagePropertyDNGPreviewSettingsDigest: CFString
+c:@kCGImagePropertyDNGPreviewSettingsName	swift.var	kCGImagePropertyDNGPreviewSettingsName	kCGImagePropertyDNGPreviewSettingsName	let kCGImagePropertyDNGPreviewSettingsName: CFString
+c:@kCGImagePropertyDNGPrivateData	swift.var	kCGImagePropertyDNGPrivateData	kCGImagePropertyDNGPrivateData	let kCGImagePropertyDNGPrivateData: CFString
+c:@kCGImagePropertyDNGProfileCalibrationSignature	swift.var	kCGImagePropertyDNGProfileCalibrationSignature	kCGImagePropertyDNGProfileCalibrationSignature	let kCGImagePropertyDNGProfileCalibrationSignature: CFString
+c:@kCGImagePropertyDNGProfileCopyright	swift.var	kCGImagePropertyDNGProfileCopyright	kCGImagePropertyDNGProfileCopyright	let kCGImagePropertyDNGProfileCopyright: CFString
+c:@kCGImagePropertyDNGProfileEmbedPolicy	swift.var	kCGImagePropertyDNGProfileEmbedPolicy	kCGImagePropertyDNGProfileEmbedPolicy	let kCGImagePropertyDNGProfileEmbedPolicy: CFString
+c:@kCGImagePropertyDNGProfileHueSatMapData1	swift.var	kCGImagePropertyDNGProfileHueSatMapData1	kCGImagePropertyDNGProfileHueSatMapData1	let kCGImagePropertyDNGProfileHueSatMapData1: CFString
+c:@kCGImagePropertyDNGProfileHueSatMapData2	swift.var	kCGImagePropertyDNGProfileHueSatMapData2	kCGImagePropertyDNGProfileHueSatMapData2	let kCGImagePropertyDNGProfileHueSatMapData2: CFString
+c:@kCGImagePropertyDNGProfileHueSatMapDims	swift.var	kCGImagePropertyDNGProfileHueSatMapDims	kCGImagePropertyDNGProfileHueSatMapDims	let kCGImagePropertyDNGProfileHueSatMapDims: CFString
+c:@kCGImagePropertyDNGProfileHueSatMapEncoding	swift.var	kCGImagePropertyDNGProfileHueSatMapEncoding	kCGImagePropertyDNGProfileHueSatMapEncoding	let kCGImagePropertyDNGProfileHueSatMapEncoding: CFString
+c:@kCGImagePropertyDNGProfileLookTableData	swift.var	kCGImagePropertyDNGProfileLookTableData	kCGImagePropertyDNGProfileLookTableData	let kCGImagePropertyDNGProfileLookTableData: CFString
+c:@kCGImagePropertyDNGProfileLookTableDims	swift.var	kCGImagePropertyDNGProfileLookTableDims	kCGImagePropertyDNGProfileLookTableDims	let kCGImagePropertyDNGProfileLookTableDims: CFString
+c:@kCGImagePropertyDNGProfileLookTableEncoding	swift.var	kCGImagePropertyDNGProfileLookTableEncoding	kCGImagePropertyDNGProfileLookTableEncoding	let kCGImagePropertyDNGProfileLookTableEncoding: CFString
+c:@kCGImagePropertyDNGProfileName	swift.var	kCGImagePropertyDNGProfileName	kCGImagePropertyDNGProfileName	let kCGImagePropertyDNGProfileName: CFString
+c:@kCGImagePropertyDNGProfileToneCurve	swift.var	kCGImagePropertyDNGProfileToneCurve	kCGImagePropertyDNGProfileToneCurve	let kCGImagePropertyDNGProfileToneCurve: CFString
+c:@kCGImagePropertyDNGRawDataUniqueID	swift.var	kCGImagePropertyDNGRawDataUniqueID	kCGImagePropertyDNGRawDataUniqueID	let kCGImagePropertyDNGRawDataUniqueID: CFString
+c:@kCGImagePropertyDNGRawImageDigest	swift.var	kCGImagePropertyDNGRawImageDigest	kCGImagePropertyDNGRawImageDigest	let kCGImagePropertyDNGRawImageDigest: CFString
+c:@kCGImagePropertyDNGRawToPreviewGain	swift.var	kCGImagePropertyDNGRawToPreviewGain	kCGImagePropertyDNGRawToPreviewGain	let kCGImagePropertyDNGRawToPreviewGain: CFString
+c:@kCGImagePropertyDNGReductionMatrix1	swift.var	kCGImagePropertyDNGReductionMatrix1	kCGImagePropertyDNGReductionMatrix1	let kCGImagePropertyDNGReductionMatrix1: CFString
+c:@kCGImagePropertyDNGReductionMatrix2	swift.var	kCGImagePropertyDNGReductionMatrix2	kCGImagePropertyDNGReductionMatrix2	let kCGImagePropertyDNGReductionMatrix2: CFString
+c:@kCGImagePropertyDNGRowInterleaveFactor	swift.var	kCGImagePropertyDNGRowInterleaveFactor	kCGImagePropertyDNGRowInterleaveFactor	let kCGImagePropertyDNGRowInterleaveFactor: CFString
+c:@kCGImagePropertyDNGShadowScale	swift.var	kCGImagePropertyDNGShadowScale	kCGImagePropertyDNGShadowScale	let kCGImagePropertyDNGShadowScale: CFString
+c:@kCGImagePropertyDNGSubTileBlockSize	swift.var	kCGImagePropertyDNGSubTileBlockSize	kCGImagePropertyDNGSubTileBlockSize	let kCGImagePropertyDNGSubTileBlockSize: CFString
+c:@kCGImagePropertyDNGUniqueCameraModel	swift.var	kCGImagePropertyDNGUniqueCameraModel	kCGImagePropertyDNGUniqueCameraModel	let kCGImagePropertyDNGUniqueCameraModel: CFString
+c:@kCGImagePropertyDNGVersion	swift.var	kCGImagePropertyDNGVersion	kCGImagePropertyDNGVersion	let kCGImagePropertyDNGVersion: CFString
+c:@kCGImagePropertyDNGWarpFisheye	swift.var	kCGImagePropertyDNGWarpFisheye	kCGImagePropertyDNGWarpFisheye	let kCGImagePropertyDNGWarpFisheye: CFString
+c:@kCGImagePropertyDNGWarpRectilinear	swift.var	kCGImagePropertyDNGWarpRectilinear	kCGImagePropertyDNGWarpRectilinear	let kCGImagePropertyDNGWarpRectilinear: CFString
+c:@kCGImagePropertyDNGWhiteLevel	swift.var	kCGImagePropertyDNGWhiteLevel	kCGImagePropertyDNGWhiteLevel	let kCGImagePropertyDNGWhiteLevel: CFString
+c:@kCGImagePropertyDPIHeight	swift.var	kCGImagePropertyDPIHeight	kCGImagePropertyDPIHeight	let kCGImagePropertyDPIHeight: CFString
+c:@kCGImagePropertyDPIWidth	swift.var	kCGImagePropertyDPIWidth	kCGImagePropertyDPIWidth	let kCGImagePropertyDPIWidth: CFString
+c:@kCGImagePropertyDepth	swift.var	kCGImagePropertyDepth	kCGImagePropertyDepth	let kCGImagePropertyDepth: CFString
+c:@kCGImagePropertyEncoder	swift.var	kCGImagePropertyEncoder	kCGImagePropertyEncoder	let kCGImagePropertyEncoder: CFString
+c:@kCGImagePropertyExifApertureValue	swift.var	kCGImagePropertyExifApertureValue	kCGImagePropertyExifApertureValue	let kCGImagePropertyExifApertureValue: CFString
+c:@kCGImagePropertyExifAuxDictionary	swift.var	kCGImagePropertyExifAuxDictionary	kCGImagePropertyExifAuxDictionary	let kCGImagePropertyExifAuxDictionary: CFString
+c:@kCGImagePropertyExifAuxFirmware	swift.var	kCGImagePropertyExifAuxFirmware	kCGImagePropertyExifAuxFirmware	let kCGImagePropertyExifAuxFirmware: CFString
+c:@kCGImagePropertyExifAuxFlashCompensation	swift.var	kCGImagePropertyExifAuxFlashCompensation	kCGImagePropertyExifAuxFlashCompensation	let kCGImagePropertyExifAuxFlashCompensation: CFString
+c:@kCGImagePropertyExifAuxImageNumber	swift.var	kCGImagePropertyExifAuxImageNumber	kCGImagePropertyExifAuxImageNumber	let kCGImagePropertyExifAuxImageNumber: CFString
+c:@kCGImagePropertyExifAuxLensID	swift.var	kCGImagePropertyExifAuxLensID	kCGImagePropertyExifAuxLensID	let kCGImagePropertyExifAuxLensID: CFString
+c:@kCGImagePropertyExifAuxLensInfo	swift.var	kCGImagePropertyExifAuxLensInfo	kCGImagePropertyExifAuxLensInfo	let kCGImagePropertyExifAuxLensInfo: CFString
+c:@kCGImagePropertyExifAuxLensModel	swift.var	kCGImagePropertyExifAuxLensModel	kCGImagePropertyExifAuxLensModel	let kCGImagePropertyExifAuxLensModel: CFString
+c:@kCGImagePropertyExifAuxLensSerialNumber	swift.var	kCGImagePropertyExifAuxLensSerialNumber	kCGImagePropertyExifAuxLensSerialNumber	let kCGImagePropertyExifAuxLensSerialNumber: CFString
+c:@kCGImagePropertyExifAuxOwnerName	swift.var	kCGImagePropertyExifAuxOwnerName	kCGImagePropertyExifAuxOwnerName	let kCGImagePropertyExifAuxOwnerName: CFString
+c:@kCGImagePropertyExifAuxSerialNumber	swift.var	kCGImagePropertyExifAuxSerialNumber	kCGImagePropertyExifAuxSerialNumber	let kCGImagePropertyExifAuxSerialNumber: CFString
+c:@kCGImagePropertyExifBodySerialNumber	swift.var	kCGImagePropertyExifBodySerialNumber	kCGImagePropertyExifBodySerialNumber	let kCGImagePropertyExifBodySerialNumber: CFString
+c:@kCGImagePropertyExifBrightnessValue	swift.var	kCGImagePropertyExifBrightnessValue	kCGImagePropertyExifBrightnessValue	let kCGImagePropertyExifBrightnessValue: CFString
+c:@kCGImagePropertyExifCFAPattern	swift.var	kCGImagePropertyExifCFAPattern	kCGImagePropertyExifCFAPattern	let kCGImagePropertyExifCFAPattern: CFString
+c:@kCGImagePropertyExifCameraOwnerName	swift.var	kCGImagePropertyExifCameraOwnerName	kCGImagePropertyExifCameraOwnerName	let kCGImagePropertyExifCameraOwnerName: CFString
+c:@kCGImagePropertyExifColorSpace	swift.var	kCGImagePropertyExifColorSpace	kCGImagePropertyExifColorSpace	let kCGImagePropertyExifColorSpace: CFString
+c:@kCGImagePropertyExifComponentsConfiguration	swift.var	kCGImagePropertyExifComponentsConfiguration	kCGImagePropertyExifComponentsConfiguration	let kCGImagePropertyExifComponentsConfiguration: CFString
+c:@kCGImagePropertyExifCompositeImage	swift.var	kCGImagePropertyExifCompositeImage	kCGImagePropertyExifCompositeImage	let kCGImagePropertyExifCompositeImage: CFString
+c:@kCGImagePropertyExifCompressedBitsPerPixel	swift.var	kCGImagePropertyExifCompressedBitsPerPixel	kCGImagePropertyExifCompressedBitsPerPixel	let kCGImagePropertyExifCompressedBitsPerPixel: CFString
+c:@kCGImagePropertyExifContrast	swift.var	kCGImagePropertyExifContrast	kCGImagePropertyExifContrast	let kCGImagePropertyExifContrast: CFString
+c:@kCGImagePropertyExifCustomRendered	swift.var	kCGImagePropertyExifCustomRendered	kCGImagePropertyExifCustomRendered	let kCGImagePropertyExifCustomRendered: CFString
+c:@kCGImagePropertyExifDateTimeDigitized	swift.var	kCGImagePropertyExifDateTimeDigitized	kCGImagePropertyExifDateTimeDigitized	let kCGImagePropertyExifDateTimeDigitized: CFString
+c:@kCGImagePropertyExifDateTimeOriginal	swift.var	kCGImagePropertyExifDateTimeOriginal	kCGImagePropertyExifDateTimeOriginal	let kCGImagePropertyExifDateTimeOriginal: CFString
+c:@kCGImagePropertyExifDeviceSettingDescription	swift.var	kCGImagePropertyExifDeviceSettingDescription	kCGImagePropertyExifDeviceSettingDescription	let kCGImagePropertyExifDeviceSettingDescription: CFString
+c:@kCGImagePropertyExifDictionary	swift.var	kCGImagePropertyExifDictionary	kCGImagePropertyExifDictionary	let kCGImagePropertyExifDictionary: CFString
+c:@kCGImagePropertyExifDigitalZoomRatio	swift.var	kCGImagePropertyExifDigitalZoomRatio	kCGImagePropertyExifDigitalZoomRatio	let kCGImagePropertyExifDigitalZoomRatio: CFString
+c:@kCGImagePropertyExifExposureBiasValue	swift.var	kCGImagePropertyExifExposureBiasValue	kCGImagePropertyExifExposureBiasValue	let kCGImagePropertyExifExposureBiasValue: CFString
+c:@kCGImagePropertyExifExposureIndex	swift.var	kCGImagePropertyExifExposureIndex	kCGImagePropertyExifExposureIndex	let kCGImagePropertyExifExposureIndex: CFString
+c:@kCGImagePropertyExifExposureMode	swift.var	kCGImagePropertyExifExposureMode	kCGImagePropertyExifExposureMode	let kCGImagePropertyExifExposureMode: CFString
+c:@kCGImagePropertyExifExposureProgram	swift.var	kCGImagePropertyExifExposureProgram	kCGImagePropertyExifExposureProgram	let kCGImagePropertyExifExposureProgram: CFString
+c:@kCGImagePropertyExifExposureTime	swift.var	kCGImagePropertyExifExposureTime	kCGImagePropertyExifExposureTime	let kCGImagePropertyExifExposureTime: CFString
+c:@kCGImagePropertyExifFNumber	swift.var	kCGImagePropertyExifFNumber	kCGImagePropertyExifFNumber	let kCGImagePropertyExifFNumber: CFString
+c:@kCGImagePropertyExifFileSource	swift.var	kCGImagePropertyExifFileSource	kCGImagePropertyExifFileSource	let kCGImagePropertyExifFileSource: CFString
+c:@kCGImagePropertyExifFlash	swift.var	kCGImagePropertyExifFlash	kCGImagePropertyExifFlash	let kCGImagePropertyExifFlash: CFString
+c:@kCGImagePropertyExifFlashEnergy	swift.var	kCGImagePropertyExifFlashEnergy	kCGImagePropertyExifFlashEnergy	let kCGImagePropertyExifFlashEnergy: CFString
+c:@kCGImagePropertyExifFlashPixVersion	swift.var	kCGImagePropertyExifFlashPixVersion	kCGImagePropertyExifFlashPixVersion	let kCGImagePropertyExifFlashPixVersion: CFString
+c:@kCGImagePropertyExifFocalLenIn35mmFilm	swift.var	kCGImagePropertyExifFocalLenIn35mmFilm	kCGImagePropertyExifFocalLenIn35mmFilm	let kCGImagePropertyExifFocalLenIn35mmFilm: CFString
+c:@kCGImagePropertyExifFocalLength	swift.var	kCGImagePropertyExifFocalLength	kCGImagePropertyExifFocalLength	let kCGImagePropertyExifFocalLength: CFString
+c:@kCGImagePropertyExifFocalPlaneResolutionUnit	swift.var	kCGImagePropertyExifFocalPlaneResolutionUnit	kCGImagePropertyExifFocalPlaneResolutionUnit	let kCGImagePropertyExifFocalPlaneResolutionUnit: CFString
+c:@kCGImagePropertyExifFocalPlaneXResolution	swift.var	kCGImagePropertyExifFocalPlaneXResolution	kCGImagePropertyExifFocalPlaneXResolution	let kCGImagePropertyExifFocalPlaneXResolution: CFString
+c:@kCGImagePropertyExifFocalPlaneYResolution	swift.var	kCGImagePropertyExifFocalPlaneYResolution	kCGImagePropertyExifFocalPlaneYResolution	let kCGImagePropertyExifFocalPlaneYResolution: CFString
+c:@kCGImagePropertyExifGainControl	swift.var	kCGImagePropertyExifGainControl	kCGImagePropertyExifGainControl	let kCGImagePropertyExifGainControl: CFString
+c:@kCGImagePropertyExifGamma	swift.var	kCGImagePropertyExifGamma	kCGImagePropertyExifGamma	let kCGImagePropertyExifGamma: CFString
+c:@kCGImagePropertyExifISOSpeed	swift.var	kCGImagePropertyExifISOSpeed	kCGImagePropertyExifISOSpeed	let kCGImagePropertyExifISOSpeed: CFString
+c:@kCGImagePropertyExifISOSpeedLatitudeyyy	swift.var	kCGImagePropertyExifISOSpeedLatitudeyyy	kCGImagePropertyExifISOSpeedLatitudeyyy	let kCGImagePropertyExifISOSpeedLatitudeyyy: CFString
+c:@kCGImagePropertyExifISOSpeedLatitudezzz	swift.var	kCGImagePropertyExifISOSpeedLatitudezzz	kCGImagePropertyExifISOSpeedLatitudezzz	let kCGImagePropertyExifISOSpeedLatitudezzz: CFString
+c:@kCGImagePropertyExifISOSpeedRatings	swift.var	kCGImagePropertyExifISOSpeedRatings	kCGImagePropertyExifISOSpeedRatings	let kCGImagePropertyExifISOSpeedRatings: CFString
+c:@kCGImagePropertyExifImageUniqueID	swift.var	kCGImagePropertyExifImageUniqueID	kCGImagePropertyExifImageUniqueID	let kCGImagePropertyExifImageUniqueID: CFString
+c:@kCGImagePropertyExifLensMake	swift.var	kCGImagePropertyExifLensMake	kCGImagePropertyExifLensMake	let kCGImagePropertyExifLensMake: CFString
+c:@kCGImagePropertyExifLensModel	swift.var	kCGImagePropertyExifLensModel	kCGImagePropertyExifLensModel	let kCGImagePropertyExifLensModel: CFString
+c:@kCGImagePropertyExifLensSerialNumber	swift.var	kCGImagePropertyExifLensSerialNumber	kCGImagePropertyExifLensSerialNumber	let kCGImagePropertyExifLensSerialNumber: CFString
+c:@kCGImagePropertyExifLensSpecification	swift.var	kCGImagePropertyExifLensSpecification	kCGImagePropertyExifLensSpecification	let kCGImagePropertyExifLensSpecification: CFString
+c:@kCGImagePropertyExifLightSource	swift.var	kCGImagePropertyExifLightSource	kCGImagePropertyExifLightSource	let kCGImagePropertyExifLightSource: CFString
+c:@kCGImagePropertyExifMakerNote	swift.var	kCGImagePropertyExifMakerNote	kCGImagePropertyExifMakerNote	let kCGImagePropertyExifMakerNote: CFString
+c:@kCGImagePropertyExifMaxApertureValue	swift.var	kCGImagePropertyExifMaxApertureValue	kCGImagePropertyExifMaxApertureValue	let kCGImagePropertyExifMaxApertureValue: CFString
+c:@kCGImagePropertyExifMeteringMode	swift.var	kCGImagePropertyExifMeteringMode	kCGImagePropertyExifMeteringMode	let kCGImagePropertyExifMeteringMode: CFString
+c:@kCGImagePropertyExifOECF	swift.var	kCGImagePropertyExifOECF	kCGImagePropertyExifOECF	let kCGImagePropertyExifOECF: CFString
+c:@kCGImagePropertyExifOffsetTime	swift.var	kCGImagePropertyExifOffsetTime	kCGImagePropertyExifOffsetTime	let kCGImagePropertyExifOffsetTime: CFString
+c:@kCGImagePropertyExifOffsetTimeDigitized	swift.var	kCGImagePropertyExifOffsetTimeDigitized	kCGImagePropertyExifOffsetTimeDigitized	let kCGImagePropertyExifOffsetTimeDigitized: CFString
+c:@kCGImagePropertyExifOffsetTimeOriginal	swift.var	kCGImagePropertyExifOffsetTimeOriginal	kCGImagePropertyExifOffsetTimeOriginal	let kCGImagePropertyExifOffsetTimeOriginal: CFString
+c:@kCGImagePropertyExifPixelXDimension	swift.var	kCGImagePropertyExifPixelXDimension	kCGImagePropertyExifPixelXDimension	let kCGImagePropertyExifPixelXDimension: CFString
+c:@kCGImagePropertyExifPixelYDimension	swift.var	kCGImagePropertyExifPixelYDimension	kCGImagePropertyExifPixelYDimension	let kCGImagePropertyExifPixelYDimension: CFString
+c:@kCGImagePropertyExifRecommendedExposureIndex	swift.var	kCGImagePropertyExifRecommendedExposureIndex	kCGImagePropertyExifRecommendedExposureIndex	let kCGImagePropertyExifRecommendedExposureIndex: CFString
+c:@kCGImagePropertyExifRelatedSoundFile	swift.var	kCGImagePropertyExifRelatedSoundFile	kCGImagePropertyExifRelatedSoundFile	let kCGImagePropertyExifRelatedSoundFile: CFString
+c:@kCGImagePropertyExifSaturation	swift.var	kCGImagePropertyExifSaturation	kCGImagePropertyExifSaturation	let kCGImagePropertyExifSaturation: CFString
+c:@kCGImagePropertyExifSceneCaptureType	swift.var	kCGImagePropertyExifSceneCaptureType	kCGImagePropertyExifSceneCaptureType	let kCGImagePropertyExifSceneCaptureType: CFString
+c:@kCGImagePropertyExifSceneType	swift.var	kCGImagePropertyExifSceneType	kCGImagePropertyExifSceneType	let kCGImagePropertyExifSceneType: CFString
+c:@kCGImagePropertyExifSensingMethod	swift.var	kCGImagePropertyExifSensingMethod	kCGImagePropertyExifSensingMethod	let kCGImagePropertyExifSensingMethod: CFString
+c:@kCGImagePropertyExifSensitivityType	swift.var	kCGImagePropertyExifSensitivityType	kCGImagePropertyExifSensitivityType	let kCGImagePropertyExifSensitivityType: CFString
+c:@kCGImagePropertyExifSharpness	swift.var	kCGImagePropertyExifSharpness	kCGImagePropertyExifSharpness	let kCGImagePropertyExifSharpness: CFString
+c:@kCGImagePropertyExifShutterSpeedValue	swift.var	kCGImagePropertyExifShutterSpeedValue	kCGImagePropertyExifShutterSpeedValue	let kCGImagePropertyExifShutterSpeedValue: CFString
+c:@kCGImagePropertyExifSourceExposureTimesOfCompositeImage	swift.var	kCGImagePropertyExifSourceExposureTimesOfCompositeImage	kCGImagePropertyExifSourceExposureTimesOfCompositeImage	let kCGImagePropertyExifSourceExposureTimesOfCompositeImage: CFString
+c:@kCGImagePropertyExifSourceImageNumberOfCompositeImage	swift.var	kCGImagePropertyExifSourceImageNumberOfCompositeImage	kCGImagePropertyExifSourceImageNumberOfCompositeImage	let kCGImagePropertyExifSourceImageNumberOfCompositeImage: CFString
+c:@kCGImagePropertyExifSpatialFrequencyResponse	swift.var	kCGImagePropertyExifSpatialFrequencyResponse	kCGImagePropertyExifSpatialFrequencyResponse	let kCGImagePropertyExifSpatialFrequencyResponse: CFString
+c:@kCGImagePropertyExifSpectralSensitivity	swift.var	kCGImagePropertyExifSpectralSensitivity	kCGImagePropertyExifSpectralSensitivity	let kCGImagePropertyExifSpectralSensitivity: CFString
+c:@kCGImagePropertyExifStandardOutputSensitivity	swift.var	kCGImagePropertyExifStandardOutputSensitivity	kCGImagePropertyExifStandardOutputSensitivity	let kCGImagePropertyExifStandardOutputSensitivity: CFString
+c:@kCGImagePropertyExifSubjectArea	swift.var	kCGImagePropertyExifSubjectArea	kCGImagePropertyExifSubjectArea	let kCGImagePropertyExifSubjectArea: CFString
+c:@kCGImagePropertyExifSubjectDistRange	swift.var	kCGImagePropertyExifSubjectDistRange	kCGImagePropertyExifSubjectDistRange	let kCGImagePropertyExifSubjectDistRange: CFString
+c:@kCGImagePropertyExifSubjectDistance	swift.var	kCGImagePropertyExifSubjectDistance	kCGImagePropertyExifSubjectDistance	let kCGImagePropertyExifSubjectDistance: CFString
+c:@kCGImagePropertyExifSubjectLocation	swift.var	kCGImagePropertyExifSubjectLocation	kCGImagePropertyExifSubjectLocation	let kCGImagePropertyExifSubjectLocation: CFString
+c:@kCGImagePropertyExifSubsecTime	swift.var	kCGImagePropertyExifSubsecTime	kCGImagePropertyExifSubsecTime	let kCGImagePropertyExifSubsecTime: CFString
+c:@kCGImagePropertyExifSubsecTimeDigitized	swift.var	kCGImagePropertyExifSubsecTimeDigitized	kCGImagePropertyExifSubsecTimeDigitized	let kCGImagePropertyExifSubsecTimeDigitized: CFString
+c:@kCGImagePropertyExifSubsecTimeOrginal	swift.var	kCGImagePropertyExifSubsecTimeOrginal	kCGImagePropertyExifSubsecTimeOrginal	let kCGImagePropertyExifSubsecTimeOrginal: CFString
+c:@kCGImagePropertyExifSubsecTimeOriginal	swift.var	kCGImagePropertyExifSubsecTimeOriginal	kCGImagePropertyExifSubsecTimeOriginal	let kCGImagePropertyExifSubsecTimeOriginal: CFString
+c:@kCGImagePropertyExifUserComment	swift.var	kCGImagePropertyExifUserComment	kCGImagePropertyExifUserComment	let kCGImagePropertyExifUserComment: CFString
+c:@kCGImagePropertyExifVersion	swift.var	kCGImagePropertyExifVersion	kCGImagePropertyExifVersion	let kCGImagePropertyExifVersion: CFString
+c:@kCGImagePropertyExifWhiteBalance	swift.var	kCGImagePropertyExifWhiteBalance	kCGImagePropertyExifWhiteBalance	let kCGImagePropertyExifWhiteBalance: CFString
+c:@kCGImagePropertyFileContentsDictionary	swift.var	kCGImagePropertyFileContentsDictionary	kCGImagePropertyFileContentsDictionary	let kCGImagePropertyFileContentsDictionary: CFString
+c:@kCGImagePropertyFileSize	swift.var	kCGImagePropertyFileSize	kCGImagePropertyFileSize	let kCGImagePropertyFileSize: CFString
+c:@kCGImagePropertyGIFCanvasPixelHeight	swift.var	kCGImagePropertyGIFCanvasPixelHeight	kCGImagePropertyGIFCanvasPixelHeight	let kCGImagePropertyGIFCanvasPixelHeight: CFString
+c:@kCGImagePropertyGIFCanvasPixelWidth	swift.var	kCGImagePropertyGIFCanvasPixelWidth	kCGImagePropertyGIFCanvasPixelWidth	let kCGImagePropertyGIFCanvasPixelWidth: CFString
+c:@kCGImagePropertyGIFDelayTime	swift.var	kCGImagePropertyGIFDelayTime	kCGImagePropertyGIFDelayTime	let kCGImagePropertyGIFDelayTime: CFString
+c:@kCGImagePropertyGIFDictionary	swift.var	kCGImagePropertyGIFDictionary	kCGImagePropertyGIFDictionary	let kCGImagePropertyGIFDictionary: CFString
+c:@kCGImagePropertyGIFFrameInfoArray	swift.var	kCGImagePropertyGIFFrameInfoArray	kCGImagePropertyGIFFrameInfoArray	let kCGImagePropertyGIFFrameInfoArray: CFString
+c:@kCGImagePropertyGIFHasGlobalColorMap	swift.var	kCGImagePropertyGIFHasGlobalColorMap	kCGImagePropertyGIFHasGlobalColorMap	let kCGImagePropertyGIFHasGlobalColorMap: CFString
+c:@kCGImagePropertyGIFImageColorMap	swift.var	kCGImagePropertyGIFImageColorMap	kCGImagePropertyGIFImageColorMap	let kCGImagePropertyGIFImageColorMap: CFString
+c:@kCGImagePropertyGIFLoopCount	swift.var	kCGImagePropertyGIFLoopCount	kCGImagePropertyGIFLoopCount	let kCGImagePropertyGIFLoopCount: CFString
+c:@kCGImagePropertyGIFUnclampedDelayTime	swift.var	kCGImagePropertyGIFUnclampedDelayTime	kCGImagePropertyGIFUnclampedDelayTime	let kCGImagePropertyGIFUnclampedDelayTime: CFString
+c:@kCGImagePropertyGPSAltitude	swift.var	kCGImagePropertyGPSAltitude	kCGImagePropertyGPSAltitude	let kCGImagePropertyGPSAltitude: CFString
+c:@kCGImagePropertyGPSAltitudeRef	swift.var	kCGImagePropertyGPSAltitudeRef	kCGImagePropertyGPSAltitudeRef	let kCGImagePropertyGPSAltitudeRef: CFString
+c:@kCGImagePropertyGPSAreaInformation	swift.var	kCGImagePropertyGPSAreaInformation	kCGImagePropertyGPSAreaInformation	let kCGImagePropertyGPSAreaInformation: CFString
+c:@kCGImagePropertyGPSDOP	swift.var	kCGImagePropertyGPSDOP	kCGImagePropertyGPSDOP	let kCGImagePropertyGPSDOP: CFString
+c:@kCGImagePropertyGPSDateStamp	swift.var	kCGImagePropertyGPSDateStamp	kCGImagePropertyGPSDateStamp	let kCGImagePropertyGPSDateStamp: CFString
+c:@kCGImagePropertyGPSDestBearing	swift.var	kCGImagePropertyGPSDestBearing	kCGImagePropertyGPSDestBearing	let kCGImagePropertyGPSDestBearing: CFString
+c:@kCGImagePropertyGPSDestBearingRef	swift.var	kCGImagePropertyGPSDestBearingRef	kCGImagePropertyGPSDestBearingRef	let kCGImagePropertyGPSDestBearingRef: CFString
+c:@kCGImagePropertyGPSDestDistance	swift.var	kCGImagePropertyGPSDestDistance	kCGImagePropertyGPSDestDistance	let kCGImagePropertyGPSDestDistance: CFString
+c:@kCGImagePropertyGPSDestDistanceRef	swift.var	kCGImagePropertyGPSDestDistanceRef	kCGImagePropertyGPSDestDistanceRef	let kCGImagePropertyGPSDestDistanceRef: CFString
+c:@kCGImagePropertyGPSDestLatitude	swift.var	kCGImagePropertyGPSDestLatitude	kCGImagePropertyGPSDestLatitude	let kCGImagePropertyGPSDestLatitude: CFString
+c:@kCGImagePropertyGPSDestLatitudeRef	swift.var	kCGImagePropertyGPSDestLatitudeRef	kCGImagePropertyGPSDestLatitudeRef	let kCGImagePropertyGPSDestLatitudeRef: CFString
+c:@kCGImagePropertyGPSDestLongitude	swift.var	kCGImagePropertyGPSDestLongitude	kCGImagePropertyGPSDestLongitude	let kCGImagePropertyGPSDestLongitude: CFString
+c:@kCGImagePropertyGPSDestLongitudeRef	swift.var	kCGImagePropertyGPSDestLongitudeRef	kCGImagePropertyGPSDestLongitudeRef	let kCGImagePropertyGPSDestLongitudeRef: CFString
+c:@kCGImagePropertyGPSDictionary	swift.var	kCGImagePropertyGPSDictionary	kCGImagePropertyGPSDictionary	let kCGImagePropertyGPSDictionary: CFString
+c:@kCGImagePropertyGPSDifferental	swift.var	kCGImagePropertyGPSDifferental	kCGImagePropertyGPSDifferental	let kCGImagePropertyGPSDifferental: CFString
+c:@kCGImagePropertyGPSHPositioningError	swift.var	kCGImagePropertyGPSHPositioningError	kCGImagePropertyGPSHPositioningError	let kCGImagePropertyGPSHPositioningError: CFString
+c:@kCGImagePropertyGPSImgDirection	swift.var	kCGImagePropertyGPSImgDirection	kCGImagePropertyGPSImgDirection	let kCGImagePropertyGPSImgDirection: CFString
+c:@kCGImagePropertyGPSImgDirectionRef	swift.var	kCGImagePropertyGPSImgDirectionRef	kCGImagePropertyGPSImgDirectionRef	let kCGImagePropertyGPSImgDirectionRef: CFString
+c:@kCGImagePropertyGPSLatitude	swift.var	kCGImagePropertyGPSLatitude	kCGImagePropertyGPSLatitude	let kCGImagePropertyGPSLatitude: CFString
+c:@kCGImagePropertyGPSLatitudeRef	swift.var	kCGImagePropertyGPSLatitudeRef	kCGImagePropertyGPSLatitudeRef	let kCGImagePropertyGPSLatitudeRef: CFString
+c:@kCGImagePropertyGPSLongitude	swift.var	kCGImagePropertyGPSLongitude	kCGImagePropertyGPSLongitude	let kCGImagePropertyGPSLongitude: CFString
+c:@kCGImagePropertyGPSLongitudeRef	swift.var	kCGImagePropertyGPSLongitudeRef	kCGImagePropertyGPSLongitudeRef	let kCGImagePropertyGPSLongitudeRef: CFString
+c:@kCGImagePropertyGPSMapDatum	swift.var	kCGImagePropertyGPSMapDatum	kCGImagePropertyGPSMapDatum	let kCGImagePropertyGPSMapDatum: CFString
+c:@kCGImagePropertyGPSMeasureMode	swift.var	kCGImagePropertyGPSMeasureMode	kCGImagePropertyGPSMeasureMode	let kCGImagePropertyGPSMeasureMode: CFString
+c:@kCGImagePropertyGPSProcessingMethod	swift.var	kCGImagePropertyGPSProcessingMethod	kCGImagePropertyGPSProcessingMethod	let kCGImagePropertyGPSProcessingMethod: CFString
+c:@kCGImagePropertyGPSSatellites	swift.var	kCGImagePropertyGPSSatellites	kCGImagePropertyGPSSatellites	let kCGImagePropertyGPSSatellites: CFString
+c:@kCGImagePropertyGPSSpeed	swift.var	kCGImagePropertyGPSSpeed	kCGImagePropertyGPSSpeed	let kCGImagePropertyGPSSpeed: CFString
+c:@kCGImagePropertyGPSSpeedRef	swift.var	kCGImagePropertyGPSSpeedRef	kCGImagePropertyGPSSpeedRef	let kCGImagePropertyGPSSpeedRef: CFString
+c:@kCGImagePropertyGPSStatus	swift.var	kCGImagePropertyGPSStatus	kCGImagePropertyGPSStatus	let kCGImagePropertyGPSStatus: CFString
+c:@kCGImagePropertyGPSTimeStamp	swift.var	kCGImagePropertyGPSTimeStamp	kCGImagePropertyGPSTimeStamp	let kCGImagePropertyGPSTimeStamp: CFString
+c:@kCGImagePropertyGPSTrack	swift.var	kCGImagePropertyGPSTrack	kCGImagePropertyGPSTrack	let kCGImagePropertyGPSTrack: CFString
+c:@kCGImagePropertyGPSTrackRef	swift.var	kCGImagePropertyGPSTrackRef	kCGImagePropertyGPSTrackRef	let kCGImagePropertyGPSTrackRef: CFString
+c:@kCGImagePropertyGPSVersion	swift.var	kCGImagePropertyGPSVersion	kCGImagePropertyGPSVersion	let kCGImagePropertyGPSVersion: CFString
+c:@kCGImagePropertyGroupImageBaseline	swift.var	kCGImagePropertyGroupImageBaseline	kCGImagePropertyGroupImageBaseline	let kCGImagePropertyGroupImageBaseline: CFString
+c:@kCGImagePropertyGroupImageDisparityAdjustment	swift.var	kCGImagePropertyGroupImageDisparityAdjustment	kCGImagePropertyGroupImageDisparityAdjustment	let kCGImagePropertyGroupImageDisparityAdjustment: CFString
+c:@kCGImagePropertyGroupImageIndexLeft	swift.var	kCGImagePropertyGroupImageIndexLeft	kCGImagePropertyGroupImageIndexLeft	let kCGImagePropertyGroupImageIndexLeft: CFString
+c:@kCGImagePropertyGroupImageIndexMonoscopic	swift.var	kCGImagePropertyGroupImageIndexMonoscopic	kCGImagePropertyGroupImageIndexMonoscopic	let kCGImagePropertyGroupImageIndexMonoscopic: CFString
+c:@kCGImagePropertyGroupImageIndexRight	swift.var	kCGImagePropertyGroupImageIndexRight	kCGImagePropertyGroupImageIndexRight	let kCGImagePropertyGroupImageIndexRight: CFString
+c:@kCGImagePropertyGroupImageIsAlternateImage	swift.var	kCGImagePropertyGroupImageIsAlternateImage	kCGImagePropertyGroupImageIsAlternateImage	let kCGImagePropertyGroupImageIsAlternateImage: CFString
+c:@kCGImagePropertyGroupImageIsLeftImage	swift.var	kCGImagePropertyGroupImageIsLeftImage	kCGImagePropertyGroupImageIsLeftImage	let kCGImagePropertyGroupImageIsLeftImage: CFString
+c:@kCGImagePropertyGroupImageIsMonoscopicImage	swift.var	kCGImagePropertyGroupImageIsMonoscopicImage	kCGImagePropertyGroupImageIsMonoscopicImage	let kCGImagePropertyGroupImageIsMonoscopicImage: CFString
+c:@kCGImagePropertyGroupImageIsRightImage	swift.var	kCGImagePropertyGroupImageIsRightImage	kCGImagePropertyGroupImageIsRightImage	let kCGImagePropertyGroupImageIsRightImage: CFString
+c:@kCGImagePropertyGroupImageStereoAggressors	swift.var	kCGImagePropertyGroupImageStereoAggressors	kCGImagePropertyGroupImageStereoAggressors	let kCGImagePropertyGroupImageStereoAggressors: CFString
+c:@kCGImagePropertyGroupImagesAlternate	swift.var	kCGImagePropertyGroupImagesAlternate	kCGImagePropertyGroupImagesAlternate	let kCGImagePropertyGroupImagesAlternate: CFString
+c:@kCGImagePropertyGroupIndex	swift.var	kCGImagePropertyGroupIndex	kCGImagePropertyGroupIndex	let kCGImagePropertyGroupIndex: CFString
+c:@kCGImagePropertyGroupMonoscopicImageLocation	swift.var	kCGImagePropertyGroupMonoscopicImageLocation	kCGImagePropertyGroupMonoscopicImageLocation	let kCGImagePropertyGroupMonoscopicImageLocation: CFString
+c:@kCGImagePropertyGroupType	swift.var	kCGImagePropertyGroupType	kCGImagePropertyGroupType	let kCGImagePropertyGroupType: CFString
+c:@kCGImagePropertyGroupTypeAlternate	swift.var	kCGImagePropertyGroupTypeAlternate	kCGImagePropertyGroupTypeAlternate	let kCGImagePropertyGroupTypeAlternate: CFString
+c:@kCGImagePropertyGroupTypeStereoPair	swift.var	kCGImagePropertyGroupTypeStereoPair	kCGImagePropertyGroupTypeStereoPair	let kCGImagePropertyGroupTypeStereoPair: CFString
+c:@kCGImagePropertyGroups	swift.var	kCGImagePropertyGroups	kCGImagePropertyGroups	let kCGImagePropertyGroups: CFString
+c:@kCGImagePropertyHEICSCanvasPixelHeight	swift.var	kCGImagePropertyHEICSCanvasPixelHeight	kCGImagePropertyHEICSCanvasPixelHeight	let kCGImagePropertyHEICSCanvasPixelHeight: CFString
+c:@kCGImagePropertyHEICSCanvasPixelWidth	swift.var	kCGImagePropertyHEICSCanvasPixelWidth	kCGImagePropertyHEICSCanvasPixelWidth	let kCGImagePropertyHEICSCanvasPixelWidth: CFString
+c:@kCGImagePropertyHEICSDelayTime	swift.var	kCGImagePropertyHEICSDelayTime	kCGImagePropertyHEICSDelayTime	let kCGImagePropertyHEICSDelayTime: CFString
+c:@kCGImagePropertyHEICSDictionary	swift.var	kCGImagePropertyHEICSDictionary	kCGImagePropertyHEICSDictionary	let kCGImagePropertyHEICSDictionary: CFString
+c:@kCGImagePropertyHEICSFrameInfoArray	swift.var	kCGImagePropertyHEICSFrameInfoArray	kCGImagePropertyHEICSFrameInfoArray	let kCGImagePropertyHEICSFrameInfoArray: CFString
+c:@kCGImagePropertyHEICSLoopCount	swift.var	kCGImagePropertyHEICSLoopCount	kCGImagePropertyHEICSLoopCount	let kCGImagePropertyHEICSLoopCount: CFString
+c:@kCGImagePropertyHEICSUnclampedDelayTime	swift.var	kCGImagePropertyHEICSUnclampedDelayTime	kCGImagePropertyHEICSUnclampedDelayTime	let kCGImagePropertyHEICSUnclampedDelayTime: CFString
+c:@kCGImagePropertyHEIFDictionary	swift.var	kCGImagePropertyHEIFDictionary	kCGImagePropertyHEIFDictionary	let kCGImagePropertyHEIFDictionary: CFString
+c:@kCGImagePropertyHasAlpha	swift.var	kCGImagePropertyHasAlpha	kCGImagePropertyHasAlpha	let kCGImagePropertyHasAlpha: CFString
+c:@kCGImagePropertyHeight	swift.var	kCGImagePropertyHeight	kCGImagePropertyHeight	let kCGImagePropertyHeight: CFString
+c:@kCGImagePropertyIPTCActionAdvised	swift.var	kCGImagePropertyIPTCActionAdvised	kCGImagePropertyIPTCActionAdvised	let kCGImagePropertyIPTCActionAdvised: CFString
+c:@kCGImagePropertyIPTCByline	swift.var	kCGImagePropertyIPTCByline	kCGImagePropertyIPTCByline	let kCGImagePropertyIPTCByline: CFString
+c:@kCGImagePropertyIPTCBylineTitle	swift.var	kCGImagePropertyIPTCBylineTitle	kCGImagePropertyIPTCBylineTitle	let kCGImagePropertyIPTCBylineTitle: CFString
+c:@kCGImagePropertyIPTCCaptionAbstract	swift.var	kCGImagePropertyIPTCCaptionAbstract	kCGImagePropertyIPTCCaptionAbstract	let kCGImagePropertyIPTCCaptionAbstract: CFString
+c:@kCGImagePropertyIPTCCategory	swift.var	kCGImagePropertyIPTCCategory	kCGImagePropertyIPTCCategory	let kCGImagePropertyIPTCCategory: CFString
+c:@kCGImagePropertyIPTCCity	swift.var	kCGImagePropertyIPTCCity	kCGImagePropertyIPTCCity	let kCGImagePropertyIPTCCity: CFString
+c:@kCGImagePropertyIPTCContact	swift.var	kCGImagePropertyIPTCContact	kCGImagePropertyIPTCContact	let kCGImagePropertyIPTCContact: CFString
+c:@kCGImagePropertyIPTCContactInfoAddress	swift.var	kCGImagePropertyIPTCContactInfoAddress	kCGImagePropertyIPTCContactInfoAddress	let kCGImagePropertyIPTCContactInfoAddress: CFString
+c:@kCGImagePropertyIPTCContactInfoCity	swift.var	kCGImagePropertyIPTCContactInfoCity	kCGImagePropertyIPTCContactInfoCity	let kCGImagePropertyIPTCContactInfoCity: CFString
+c:@kCGImagePropertyIPTCContactInfoCountry	swift.var	kCGImagePropertyIPTCContactInfoCountry	kCGImagePropertyIPTCContactInfoCountry	let kCGImagePropertyIPTCContactInfoCountry: CFString
+c:@kCGImagePropertyIPTCContactInfoEmails	swift.var	kCGImagePropertyIPTCContactInfoEmails	kCGImagePropertyIPTCContactInfoEmails	let kCGImagePropertyIPTCContactInfoEmails: CFString
+c:@kCGImagePropertyIPTCContactInfoPhones	swift.var	kCGImagePropertyIPTCContactInfoPhones	kCGImagePropertyIPTCContactInfoPhones	let kCGImagePropertyIPTCContactInfoPhones: CFString
+c:@kCGImagePropertyIPTCContactInfoPostalCode	swift.var	kCGImagePropertyIPTCContactInfoPostalCode	kCGImagePropertyIPTCContactInfoPostalCode	let kCGImagePropertyIPTCContactInfoPostalCode: CFString
+c:@kCGImagePropertyIPTCContactInfoStateProvince	swift.var	kCGImagePropertyIPTCContactInfoStateProvince	kCGImagePropertyIPTCContactInfoStateProvince	let kCGImagePropertyIPTCContactInfoStateProvince: CFString
+c:@kCGImagePropertyIPTCContactInfoWebURLs	swift.var	kCGImagePropertyIPTCContactInfoWebURLs	kCGImagePropertyIPTCContactInfoWebURLs	let kCGImagePropertyIPTCContactInfoWebURLs: CFString
+c:@kCGImagePropertyIPTCContentLocationCode	swift.var	kCGImagePropertyIPTCContentLocationCode	kCGImagePropertyIPTCContentLocationCode	let kCGImagePropertyIPTCContentLocationCode: CFString
+c:@kCGImagePropertyIPTCContentLocationName	swift.var	kCGImagePropertyIPTCContentLocationName	kCGImagePropertyIPTCContentLocationName	let kCGImagePropertyIPTCContentLocationName: CFString
+c:@kCGImagePropertyIPTCCopyrightNotice	swift.var	kCGImagePropertyIPTCCopyrightNotice	kCGImagePropertyIPTCCopyrightNotice	let kCGImagePropertyIPTCCopyrightNotice: CFString
+c:@kCGImagePropertyIPTCCountryPrimaryLocationCode	swift.var	kCGImagePropertyIPTCCountryPrimaryLocationCode	kCGImagePropertyIPTCCountryPrimaryLocationCode	let kCGImagePropertyIPTCCountryPrimaryLocationCode: CFString
+c:@kCGImagePropertyIPTCCountryPrimaryLocationName	swift.var	kCGImagePropertyIPTCCountryPrimaryLocationName	kCGImagePropertyIPTCCountryPrimaryLocationName	let kCGImagePropertyIPTCCountryPrimaryLocationName: CFString
+c:@kCGImagePropertyIPTCCreatorContactInfo	swift.var	kCGImagePropertyIPTCCreatorContactInfo	kCGImagePropertyIPTCCreatorContactInfo	let kCGImagePropertyIPTCCreatorContactInfo: CFString
+c:@kCGImagePropertyIPTCCredit	swift.var	kCGImagePropertyIPTCCredit	kCGImagePropertyIPTCCredit	let kCGImagePropertyIPTCCredit: CFString
+c:@kCGImagePropertyIPTCDateCreated	swift.var	kCGImagePropertyIPTCDateCreated	kCGImagePropertyIPTCDateCreated	let kCGImagePropertyIPTCDateCreated: CFString
+c:@kCGImagePropertyIPTCDictionary	swift.var	kCGImagePropertyIPTCDictionary	kCGImagePropertyIPTCDictionary	let kCGImagePropertyIPTCDictionary: CFString
+c:@kCGImagePropertyIPTCDigitalCreationDate	swift.var	kCGImagePropertyIPTCDigitalCreationDate	kCGImagePropertyIPTCDigitalCreationDate	let kCGImagePropertyIPTCDigitalCreationDate: CFString
+c:@kCGImagePropertyIPTCDigitalCreationTime	swift.var	kCGImagePropertyIPTCDigitalCreationTime	kCGImagePropertyIPTCDigitalCreationTime	let kCGImagePropertyIPTCDigitalCreationTime: CFString
+c:@kCGImagePropertyIPTCEditStatus	swift.var	kCGImagePropertyIPTCEditStatus	kCGImagePropertyIPTCEditStatus	let kCGImagePropertyIPTCEditStatus: CFString
+c:@kCGImagePropertyIPTCEditorialUpdate	swift.var	kCGImagePropertyIPTCEditorialUpdate	kCGImagePropertyIPTCEditorialUpdate	let kCGImagePropertyIPTCEditorialUpdate: CFString
+c:@kCGImagePropertyIPTCExpirationDate	swift.var	kCGImagePropertyIPTCExpirationDate	kCGImagePropertyIPTCExpirationDate	let kCGImagePropertyIPTCExpirationDate: CFString
+c:@kCGImagePropertyIPTCExpirationTime	swift.var	kCGImagePropertyIPTCExpirationTime	kCGImagePropertyIPTCExpirationTime	let kCGImagePropertyIPTCExpirationTime: CFString
+c:@kCGImagePropertyIPTCExtAboutCvTerm	swift.var	kCGImagePropertyIPTCExtAboutCvTerm	kCGImagePropertyIPTCExtAboutCvTerm	let kCGImagePropertyIPTCExtAboutCvTerm: CFString
+c:@kCGImagePropertyIPTCExtAboutCvTermCvId	swift.var	kCGImagePropertyIPTCExtAboutCvTermCvId	kCGImagePropertyIPTCExtAboutCvTermCvId	let kCGImagePropertyIPTCExtAboutCvTermCvId: CFString
+c:@kCGImagePropertyIPTCExtAboutCvTermId	swift.var	kCGImagePropertyIPTCExtAboutCvTermId	kCGImagePropertyIPTCExtAboutCvTermId	let kCGImagePropertyIPTCExtAboutCvTermId: CFString
+c:@kCGImagePropertyIPTCExtAboutCvTermName	swift.var	kCGImagePropertyIPTCExtAboutCvTermName	kCGImagePropertyIPTCExtAboutCvTermName	let kCGImagePropertyIPTCExtAboutCvTermName: CFString
+c:@kCGImagePropertyIPTCExtAboutCvTermRefinedAbout	swift.var	kCGImagePropertyIPTCExtAboutCvTermRefinedAbout	kCGImagePropertyIPTCExtAboutCvTermRefinedAbout	let kCGImagePropertyIPTCExtAboutCvTermRefinedAbout: CFString
+c:@kCGImagePropertyIPTCExtAddlModelInfo	swift.var	kCGImagePropertyIPTCExtAddlModelInfo	kCGImagePropertyIPTCExtAddlModelInfo	let kCGImagePropertyIPTCExtAddlModelInfo: CFString
+c:@kCGImagePropertyIPTCExtArtworkCircaDateCreated	swift.var	kCGImagePropertyIPTCExtArtworkCircaDateCreated	kCGImagePropertyIPTCExtArtworkCircaDateCreated	let kCGImagePropertyIPTCExtArtworkCircaDateCreated: CFString
+c:@kCGImagePropertyIPTCExtArtworkContentDescription	swift.var	kCGImagePropertyIPTCExtArtworkContentDescription	kCGImagePropertyIPTCExtArtworkContentDescription	let kCGImagePropertyIPTCExtArtworkContentDescription: CFString
+c:@kCGImagePropertyIPTCExtArtworkContributionDescription	swift.var	kCGImagePropertyIPTCExtArtworkContributionDescription	kCGImagePropertyIPTCExtArtworkContributionDescription	let kCGImagePropertyIPTCExtArtworkContributionDescription: CFString
+c:@kCGImagePropertyIPTCExtArtworkCopyrightNotice	swift.var	kCGImagePropertyIPTCExtArtworkCopyrightNotice	kCGImagePropertyIPTCExtArtworkCopyrightNotice	let kCGImagePropertyIPTCExtArtworkCopyrightNotice: CFString
+c:@kCGImagePropertyIPTCExtArtworkCopyrightOwnerID	swift.var	kCGImagePropertyIPTCExtArtworkCopyrightOwnerID	kCGImagePropertyIPTCExtArtworkCopyrightOwnerID	let kCGImagePropertyIPTCExtArtworkCopyrightOwnerID: CFString
+c:@kCGImagePropertyIPTCExtArtworkCopyrightOwnerName	swift.var	kCGImagePropertyIPTCExtArtworkCopyrightOwnerName	kCGImagePropertyIPTCExtArtworkCopyrightOwnerName	let kCGImagePropertyIPTCExtArtworkCopyrightOwnerName: CFString
+c:@kCGImagePropertyIPTCExtArtworkCreator	swift.var	kCGImagePropertyIPTCExtArtworkCreator	kCGImagePropertyIPTCExtArtworkCreator	let kCGImagePropertyIPTCExtArtworkCreator: CFString
+c:@kCGImagePropertyIPTCExtArtworkCreatorID	swift.var	kCGImagePropertyIPTCExtArtworkCreatorID	kCGImagePropertyIPTCExtArtworkCreatorID	let kCGImagePropertyIPTCExtArtworkCreatorID: CFString
+c:@kCGImagePropertyIPTCExtArtworkDateCreated	swift.var	kCGImagePropertyIPTCExtArtworkDateCreated	kCGImagePropertyIPTCExtArtworkDateCreated	let kCGImagePropertyIPTCExtArtworkDateCreated: CFString
+c:@kCGImagePropertyIPTCExtArtworkLicensorID	swift.var	kCGImagePropertyIPTCExtArtworkLicensorID	kCGImagePropertyIPTCExtArtworkLicensorID	let kCGImagePropertyIPTCExtArtworkLicensorID: CFString
+c:@kCGImagePropertyIPTCExtArtworkLicensorName	swift.var	kCGImagePropertyIPTCExtArtworkLicensorName	kCGImagePropertyIPTCExtArtworkLicensorName	let kCGImagePropertyIPTCExtArtworkLicensorName: CFString
+c:@kCGImagePropertyIPTCExtArtworkOrObject	swift.var	kCGImagePropertyIPTCExtArtworkOrObject	kCGImagePropertyIPTCExtArtworkOrObject	let kCGImagePropertyIPTCExtArtworkOrObject: CFString
+c:@kCGImagePropertyIPTCExtArtworkPhysicalDescription	swift.var	kCGImagePropertyIPTCExtArtworkPhysicalDescription	kCGImagePropertyIPTCExtArtworkPhysicalDescription	let kCGImagePropertyIPTCExtArtworkPhysicalDescription: CFString
+c:@kCGImagePropertyIPTCExtArtworkSource	swift.var	kCGImagePropertyIPTCExtArtworkSource	kCGImagePropertyIPTCExtArtworkSource	let kCGImagePropertyIPTCExtArtworkSource: CFString
+c:@kCGImagePropertyIPTCExtArtworkSourceInvURL	swift.var	kCGImagePropertyIPTCExtArtworkSourceInvURL	kCGImagePropertyIPTCExtArtworkSourceInvURL	let kCGImagePropertyIPTCExtArtworkSourceInvURL: CFString
+c:@kCGImagePropertyIPTCExtArtworkSourceInventoryNo	swift.var	kCGImagePropertyIPTCExtArtworkSourceInventoryNo	kCGImagePropertyIPTCExtArtworkSourceInventoryNo	let kCGImagePropertyIPTCExtArtworkSourceInventoryNo: CFString
+c:@kCGImagePropertyIPTCExtArtworkStylePeriod	swift.var	kCGImagePropertyIPTCExtArtworkStylePeriod	kCGImagePropertyIPTCExtArtworkStylePeriod	let kCGImagePropertyIPTCExtArtworkStylePeriod: CFString
+c:@kCGImagePropertyIPTCExtArtworkTitle	swift.var	kCGImagePropertyIPTCExtArtworkTitle	kCGImagePropertyIPTCExtArtworkTitle	let kCGImagePropertyIPTCExtArtworkTitle: CFString
+c:@kCGImagePropertyIPTCExtAudioBitrate	swift.var	kCGImagePropertyIPTCExtAudioBitrate	kCGImagePropertyIPTCExtAudioBitrate	let kCGImagePropertyIPTCExtAudioBitrate: CFString
+c:@kCGImagePropertyIPTCExtAudioBitrateMode	swift.var	kCGImagePropertyIPTCExtAudioBitrateMode	kCGImagePropertyIPTCExtAudioBitrateMode	let kCGImagePropertyIPTCExtAudioBitrateMode: CFString
+c:@kCGImagePropertyIPTCExtAudioChannelCount	swift.var	kCGImagePropertyIPTCExtAudioChannelCount	kCGImagePropertyIPTCExtAudioChannelCount	let kCGImagePropertyIPTCExtAudioChannelCount: CFString
+c:@kCGImagePropertyIPTCExtCircaDateCreated	swift.var	kCGImagePropertyIPTCExtCircaDateCreated	kCGImagePropertyIPTCExtCircaDateCreated	let kCGImagePropertyIPTCExtCircaDateCreated: CFString
+c:@kCGImagePropertyIPTCExtContainerFormat	swift.var	kCGImagePropertyIPTCExtContainerFormat	kCGImagePropertyIPTCExtContainerFormat	let kCGImagePropertyIPTCExtContainerFormat: CFString
+c:@kCGImagePropertyIPTCExtContainerFormatIdentifier	swift.var	kCGImagePropertyIPTCExtContainerFormatIdentifier	kCGImagePropertyIPTCExtContainerFormatIdentifier	let kCGImagePropertyIPTCExtContainerFormatIdentifier: CFString
+c:@kCGImagePropertyIPTCExtContainerFormatName	swift.var	kCGImagePropertyIPTCExtContainerFormatName	kCGImagePropertyIPTCExtContainerFormatName	let kCGImagePropertyIPTCExtContainerFormatName: CFString
+c:@kCGImagePropertyIPTCExtContributor	swift.var	kCGImagePropertyIPTCExtContributor	kCGImagePropertyIPTCExtContributor	let kCGImagePropertyIPTCExtContributor: CFString
+c:@kCGImagePropertyIPTCExtContributorIdentifier	swift.var	kCGImagePropertyIPTCExtContributorIdentifier	kCGImagePropertyIPTCExtContributorIdentifier	let kCGImagePropertyIPTCExtContributorIdentifier: CFString
+c:@kCGImagePropertyIPTCExtContributorName	swift.var	kCGImagePropertyIPTCExtContributorName	kCGImagePropertyIPTCExtContributorName	let kCGImagePropertyIPTCExtContributorName: CFString
+c:@kCGImagePropertyIPTCExtContributorRole	swift.var	kCGImagePropertyIPTCExtContributorRole	kCGImagePropertyIPTCExtContributorRole	let kCGImagePropertyIPTCExtContributorRole: CFString
+c:@kCGImagePropertyIPTCExtControlledVocabularyTerm	swift.var	kCGImagePropertyIPTCExtControlledVocabularyTerm	kCGImagePropertyIPTCExtControlledVocabularyTerm	let kCGImagePropertyIPTCExtControlledVocabularyTerm: CFString
+c:@kCGImagePropertyIPTCExtCopyrightYear	swift.var	kCGImagePropertyIPTCExtCopyrightYear	kCGImagePropertyIPTCExtCopyrightYear	let kCGImagePropertyIPTCExtCopyrightYear: CFString
+c:@kCGImagePropertyIPTCExtCreator	swift.var	kCGImagePropertyIPTCExtCreator	kCGImagePropertyIPTCExtCreator	let kCGImagePropertyIPTCExtCreator: CFString
+c:@kCGImagePropertyIPTCExtCreatorIdentifier	swift.var	kCGImagePropertyIPTCExtCreatorIdentifier	kCGImagePropertyIPTCExtCreatorIdentifier	let kCGImagePropertyIPTCExtCreatorIdentifier: CFString
+c:@kCGImagePropertyIPTCExtCreatorName	swift.var	kCGImagePropertyIPTCExtCreatorName	kCGImagePropertyIPTCExtCreatorName	let kCGImagePropertyIPTCExtCreatorName: CFString
+c:@kCGImagePropertyIPTCExtCreatorRole	swift.var	kCGImagePropertyIPTCExtCreatorRole	kCGImagePropertyIPTCExtCreatorRole	let kCGImagePropertyIPTCExtCreatorRole: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreen	swift.var	kCGImagePropertyIPTCExtDataOnScreen	kCGImagePropertyIPTCExtDataOnScreen	let kCGImagePropertyIPTCExtDataOnScreen: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegion	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegion	kCGImagePropertyIPTCExtDataOnScreenRegion	let kCGImagePropertyIPTCExtDataOnScreenRegion: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionD	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionD	kCGImagePropertyIPTCExtDataOnScreenRegionD	let kCGImagePropertyIPTCExtDataOnScreenRegionD: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionH	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionH	kCGImagePropertyIPTCExtDataOnScreenRegionH	let kCGImagePropertyIPTCExtDataOnScreenRegionH: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionText	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionText	kCGImagePropertyIPTCExtDataOnScreenRegionText	let kCGImagePropertyIPTCExtDataOnScreenRegionText: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionUnit	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionUnit	kCGImagePropertyIPTCExtDataOnScreenRegionUnit	let kCGImagePropertyIPTCExtDataOnScreenRegionUnit: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionW	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionW	kCGImagePropertyIPTCExtDataOnScreenRegionW	let kCGImagePropertyIPTCExtDataOnScreenRegionW: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionX	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionX	kCGImagePropertyIPTCExtDataOnScreenRegionX	let kCGImagePropertyIPTCExtDataOnScreenRegionX: CFString
+c:@kCGImagePropertyIPTCExtDataOnScreenRegionY	swift.var	kCGImagePropertyIPTCExtDataOnScreenRegionY	kCGImagePropertyIPTCExtDataOnScreenRegionY	let kCGImagePropertyIPTCExtDataOnScreenRegionY: CFString
+c:@kCGImagePropertyIPTCExtDigitalImageGUID	swift.var	kCGImagePropertyIPTCExtDigitalImageGUID	kCGImagePropertyIPTCExtDigitalImageGUID	let kCGImagePropertyIPTCExtDigitalImageGUID: CFString
+c:@kCGImagePropertyIPTCExtDigitalSourceFileType	swift.var	kCGImagePropertyIPTCExtDigitalSourceFileType	kCGImagePropertyIPTCExtDigitalSourceFileType	let kCGImagePropertyIPTCExtDigitalSourceFileType: CFString
+c:@kCGImagePropertyIPTCExtDigitalSourceType	swift.var	kCGImagePropertyIPTCExtDigitalSourceType	kCGImagePropertyIPTCExtDigitalSourceType	let kCGImagePropertyIPTCExtDigitalSourceType: CFString
+c:@kCGImagePropertyIPTCExtDopesheet	swift.var	kCGImagePropertyIPTCExtDopesheet	kCGImagePropertyIPTCExtDopesheet	let kCGImagePropertyIPTCExtDopesheet: CFString
+c:@kCGImagePropertyIPTCExtDopesheetLink	swift.var	kCGImagePropertyIPTCExtDopesheetLink	kCGImagePropertyIPTCExtDopesheetLink	let kCGImagePropertyIPTCExtDopesheetLink: CFString
+c:@kCGImagePropertyIPTCExtDopesheetLinkLink	swift.var	kCGImagePropertyIPTCExtDopesheetLinkLink	kCGImagePropertyIPTCExtDopesheetLinkLink	let kCGImagePropertyIPTCExtDopesheetLinkLink: CFString
+c:@kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier	swift.var	kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier	kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier	let kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier: CFString
+c:@kCGImagePropertyIPTCExtEmbdEncRightsExpr	swift.var	kCGImagePropertyIPTCExtEmbdEncRightsExpr	kCGImagePropertyIPTCExtEmbdEncRightsExpr	let kCGImagePropertyIPTCExtEmbdEncRightsExpr: CFString
+c:@kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr	swift.var	kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr	kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr	let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr: CFString
+c:@kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID	swift.var	kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID	kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID	let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID: CFString
+c:@kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType	swift.var	kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType	kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType	let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType: CFString
+c:@kCGImagePropertyIPTCExtEpisode	swift.var	kCGImagePropertyIPTCExtEpisode	kCGImagePropertyIPTCExtEpisode	let kCGImagePropertyIPTCExtEpisode: CFString
+c:@kCGImagePropertyIPTCExtEpisodeIdentifier	swift.var	kCGImagePropertyIPTCExtEpisodeIdentifier	kCGImagePropertyIPTCExtEpisodeIdentifier	let kCGImagePropertyIPTCExtEpisodeIdentifier: CFString
+c:@kCGImagePropertyIPTCExtEpisodeName	swift.var	kCGImagePropertyIPTCExtEpisodeName	kCGImagePropertyIPTCExtEpisodeName	let kCGImagePropertyIPTCExtEpisodeName: CFString
+c:@kCGImagePropertyIPTCExtEpisodeNumber	swift.var	kCGImagePropertyIPTCExtEpisodeNumber	kCGImagePropertyIPTCExtEpisodeNumber	let kCGImagePropertyIPTCExtEpisodeNumber: CFString
+c:@kCGImagePropertyIPTCExtEvent	swift.var	kCGImagePropertyIPTCExtEvent	kCGImagePropertyIPTCExtEvent	let kCGImagePropertyIPTCExtEvent: CFString
+c:@kCGImagePropertyIPTCExtExternalMetadataLink	swift.var	kCGImagePropertyIPTCExtExternalMetadataLink	kCGImagePropertyIPTCExtExternalMetadataLink	let kCGImagePropertyIPTCExtExternalMetadataLink: CFString
+c:@kCGImagePropertyIPTCExtFeedIdentifier	swift.var	kCGImagePropertyIPTCExtFeedIdentifier	kCGImagePropertyIPTCExtFeedIdentifier	let kCGImagePropertyIPTCExtFeedIdentifier: CFString
+c:@kCGImagePropertyIPTCExtGenre	swift.var	kCGImagePropertyIPTCExtGenre	kCGImagePropertyIPTCExtGenre	let kCGImagePropertyIPTCExtGenre: CFString
+c:@kCGImagePropertyIPTCExtGenreCvId	swift.var	kCGImagePropertyIPTCExtGenreCvId	kCGImagePropertyIPTCExtGenreCvId	let kCGImagePropertyIPTCExtGenreCvId: CFString
+c:@kCGImagePropertyIPTCExtGenreCvTermId	swift.var	kCGImagePropertyIPTCExtGenreCvTermId	kCGImagePropertyIPTCExtGenreCvTermId	let kCGImagePropertyIPTCExtGenreCvTermId: CFString
+c:@kCGImagePropertyIPTCExtGenreCvTermName	swift.var	kCGImagePropertyIPTCExtGenreCvTermName	kCGImagePropertyIPTCExtGenreCvTermName	let kCGImagePropertyIPTCExtGenreCvTermName: CFString
+c:@kCGImagePropertyIPTCExtGenreCvTermRefinedAbout	swift.var	kCGImagePropertyIPTCExtGenreCvTermRefinedAbout	kCGImagePropertyIPTCExtGenreCvTermRefinedAbout	let kCGImagePropertyIPTCExtGenreCvTermRefinedAbout: CFString
+c:@kCGImagePropertyIPTCExtHeadline	swift.var	kCGImagePropertyIPTCExtHeadline	kCGImagePropertyIPTCExtHeadline	let kCGImagePropertyIPTCExtHeadline: CFString
+c:@kCGImagePropertyIPTCExtIPTCLastEdited	swift.var	kCGImagePropertyIPTCExtIPTCLastEdited	kCGImagePropertyIPTCExtIPTCLastEdited	let kCGImagePropertyIPTCExtIPTCLastEdited: CFString
+c:@kCGImagePropertyIPTCExtLinkedEncRightsExpr	swift.var	kCGImagePropertyIPTCExtLinkedEncRightsExpr	kCGImagePropertyIPTCExtLinkedEncRightsExpr	let kCGImagePropertyIPTCExtLinkedEncRightsExpr: CFString
+c:@kCGImagePropertyIPTCExtLinkedEncodedRightsExpr	swift.var	kCGImagePropertyIPTCExtLinkedEncodedRightsExpr	kCGImagePropertyIPTCExtLinkedEncodedRightsExpr	let kCGImagePropertyIPTCExtLinkedEncodedRightsExpr: CFString
+c:@kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID	swift.var	kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID	kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID	let kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID: CFString
+c:@kCGImagePropertyIPTCExtLinkedEncodedRightsExprType	swift.var	kCGImagePropertyIPTCExtLinkedEncodedRightsExprType	kCGImagePropertyIPTCExtLinkedEncodedRightsExprType	let kCGImagePropertyIPTCExtLinkedEncodedRightsExprType: CFString
+c:@kCGImagePropertyIPTCExtLocationCity	swift.var	kCGImagePropertyIPTCExtLocationCity	kCGImagePropertyIPTCExtLocationCity	let kCGImagePropertyIPTCExtLocationCity: CFString
+c:@kCGImagePropertyIPTCExtLocationCountryCode	swift.var	kCGImagePropertyIPTCExtLocationCountryCode	kCGImagePropertyIPTCExtLocationCountryCode	let kCGImagePropertyIPTCExtLocationCountryCode: CFString
+c:@kCGImagePropertyIPTCExtLocationCountryName	swift.var	kCGImagePropertyIPTCExtLocationCountryName	kCGImagePropertyIPTCExtLocationCountryName	let kCGImagePropertyIPTCExtLocationCountryName: CFString
+c:@kCGImagePropertyIPTCExtLocationCreated	swift.var	kCGImagePropertyIPTCExtLocationCreated	kCGImagePropertyIPTCExtLocationCreated	let kCGImagePropertyIPTCExtLocationCreated: CFString
+c:@kCGImagePropertyIPTCExtLocationGPSAltitude	swift.var	kCGImagePropertyIPTCExtLocationGPSAltitude	kCGImagePropertyIPTCExtLocationGPSAltitude	let kCGImagePropertyIPTCExtLocationGPSAltitude: CFString
+c:@kCGImagePropertyIPTCExtLocationGPSLatitude	swift.var	kCGImagePropertyIPTCExtLocationGPSLatitude	kCGImagePropertyIPTCExtLocationGPSLatitude	let kCGImagePropertyIPTCExtLocationGPSLatitude: CFString
+c:@kCGImagePropertyIPTCExtLocationGPSLongitude	swift.var	kCGImagePropertyIPTCExtLocationGPSLongitude	kCGImagePropertyIPTCExtLocationGPSLongitude	let kCGImagePropertyIPTCExtLocationGPSLongitude: CFString
+c:@kCGImagePropertyIPTCExtLocationIdentifier	swift.var	kCGImagePropertyIPTCExtLocationIdentifier	kCGImagePropertyIPTCExtLocationIdentifier	let kCGImagePropertyIPTCExtLocationIdentifier: CFString
+c:@kCGImagePropertyIPTCExtLocationLocationId	swift.var	kCGImagePropertyIPTCExtLocationLocationId	kCGImagePropertyIPTCExtLocationLocationId	let kCGImagePropertyIPTCExtLocationLocationId: CFString
+c:@kCGImagePropertyIPTCExtLocationLocationName	swift.var	kCGImagePropertyIPTCExtLocationLocationName	kCGImagePropertyIPTCExtLocationLocationName	let kCGImagePropertyIPTCExtLocationLocationName: CFString
+c:@kCGImagePropertyIPTCExtLocationProvinceState	swift.var	kCGImagePropertyIPTCExtLocationProvinceState	kCGImagePropertyIPTCExtLocationProvinceState	let kCGImagePropertyIPTCExtLocationProvinceState: CFString
+c:@kCGImagePropertyIPTCExtLocationShown	swift.var	kCGImagePropertyIPTCExtLocationShown	kCGImagePropertyIPTCExtLocationShown	let kCGImagePropertyIPTCExtLocationShown: CFString
+c:@kCGImagePropertyIPTCExtLocationSublocation	swift.var	kCGImagePropertyIPTCExtLocationSublocation	kCGImagePropertyIPTCExtLocationSublocation	let kCGImagePropertyIPTCExtLocationSublocation: CFString
+c:@kCGImagePropertyIPTCExtLocationWorldRegion	swift.var	kCGImagePropertyIPTCExtLocationWorldRegion	kCGImagePropertyIPTCExtLocationWorldRegion	let kCGImagePropertyIPTCExtLocationWorldRegion: CFString
+c:@kCGImagePropertyIPTCExtMaxAvailHeight	swift.var	kCGImagePropertyIPTCExtMaxAvailHeight	kCGImagePropertyIPTCExtMaxAvailHeight	let kCGImagePropertyIPTCExtMaxAvailHeight: CFString
+c:@kCGImagePropertyIPTCExtMaxAvailWidth	swift.var	kCGImagePropertyIPTCExtMaxAvailWidth	kCGImagePropertyIPTCExtMaxAvailWidth	let kCGImagePropertyIPTCExtMaxAvailWidth: CFString
+c:@kCGImagePropertyIPTCExtModelAge	swift.var	kCGImagePropertyIPTCExtModelAge	kCGImagePropertyIPTCExtModelAge	let kCGImagePropertyIPTCExtModelAge: CFString
+c:@kCGImagePropertyIPTCExtOrganisationInImageCode	swift.var	kCGImagePropertyIPTCExtOrganisationInImageCode	kCGImagePropertyIPTCExtOrganisationInImageCode	let kCGImagePropertyIPTCExtOrganisationInImageCode: CFString
+c:@kCGImagePropertyIPTCExtOrganisationInImageName	swift.var	kCGImagePropertyIPTCExtOrganisationInImageName	kCGImagePropertyIPTCExtOrganisationInImageName	let kCGImagePropertyIPTCExtOrganisationInImageName: CFString
+c:@kCGImagePropertyIPTCExtPersonHeard	swift.var	kCGImagePropertyIPTCExtPersonHeard	kCGImagePropertyIPTCExtPersonHeard	let kCGImagePropertyIPTCExtPersonHeard: CFString
+c:@kCGImagePropertyIPTCExtPersonHeardIdentifier	swift.var	kCGImagePropertyIPTCExtPersonHeardIdentifier	kCGImagePropertyIPTCExtPersonHeardIdentifier	let kCGImagePropertyIPTCExtPersonHeardIdentifier: CFString
+c:@kCGImagePropertyIPTCExtPersonHeardName	swift.var	kCGImagePropertyIPTCExtPersonHeardName	kCGImagePropertyIPTCExtPersonHeardName	let kCGImagePropertyIPTCExtPersonHeardName: CFString
+c:@kCGImagePropertyIPTCExtPersonInImage	swift.var	kCGImagePropertyIPTCExtPersonInImage	kCGImagePropertyIPTCExtPersonInImage	let kCGImagePropertyIPTCExtPersonInImage: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageCharacteristic	swift.var	kCGImagePropertyIPTCExtPersonInImageCharacteristic	kCGImagePropertyIPTCExtPersonInImageCharacteristic	let kCGImagePropertyIPTCExtPersonInImageCharacteristic: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageCvTermCvId	swift.var	kCGImagePropertyIPTCExtPersonInImageCvTermCvId	kCGImagePropertyIPTCExtPersonInImageCvTermCvId	let kCGImagePropertyIPTCExtPersonInImageCvTermCvId: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageCvTermId	swift.var	kCGImagePropertyIPTCExtPersonInImageCvTermId	kCGImagePropertyIPTCExtPersonInImageCvTermId	let kCGImagePropertyIPTCExtPersonInImageCvTermId: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageCvTermName	swift.var	kCGImagePropertyIPTCExtPersonInImageCvTermName	kCGImagePropertyIPTCExtPersonInImageCvTermName	let kCGImagePropertyIPTCExtPersonInImageCvTermName: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout	swift.var	kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout	kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout	let kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageDescription	swift.var	kCGImagePropertyIPTCExtPersonInImageDescription	kCGImagePropertyIPTCExtPersonInImageDescription	let kCGImagePropertyIPTCExtPersonInImageDescription: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageId	swift.var	kCGImagePropertyIPTCExtPersonInImageId	kCGImagePropertyIPTCExtPersonInImageId	let kCGImagePropertyIPTCExtPersonInImageId: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageName	swift.var	kCGImagePropertyIPTCExtPersonInImageName	kCGImagePropertyIPTCExtPersonInImageName	let kCGImagePropertyIPTCExtPersonInImageName: CFString
+c:@kCGImagePropertyIPTCExtPersonInImageWDetails	swift.var	kCGImagePropertyIPTCExtPersonInImageWDetails	kCGImagePropertyIPTCExtPersonInImageWDetails	let kCGImagePropertyIPTCExtPersonInImageWDetails: CFString
+c:@kCGImagePropertyIPTCExtProductInImage	swift.var	kCGImagePropertyIPTCExtProductInImage	kCGImagePropertyIPTCExtProductInImage	let kCGImagePropertyIPTCExtProductInImage: CFString
+c:@kCGImagePropertyIPTCExtProductInImageDescription	swift.var	kCGImagePropertyIPTCExtProductInImageDescription	kCGImagePropertyIPTCExtProductInImageDescription	let kCGImagePropertyIPTCExtProductInImageDescription: CFString
+c:@kCGImagePropertyIPTCExtProductInImageGTIN	swift.var	kCGImagePropertyIPTCExtProductInImageGTIN	kCGImagePropertyIPTCExtProductInImageGTIN	let kCGImagePropertyIPTCExtProductInImageGTIN: CFString
+c:@kCGImagePropertyIPTCExtProductInImageName	swift.var	kCGImagePropertyIPTCExtProductInImageName	kCGImagePropertyIPTCExtProductInImageName	let kCGImagePropertyIPTCExtProductInImageName: CFString
+c:@kCGImagePropertyIPTCExtPublicationEvent	swift.var	kCGImagePropertyIPTCExtPublicationEvent	kCGImagePropertyIPTCExtPublicationEvent	let kCGImagePropertyIPTCExtPublicationEvent: CFString
+c:@kCGImagePropertyIPTCExtPublicationEventDate	swift.var	kCGImagePropertyIPTCExtPublicationEventDate	kCGImagePropertyIPTCExtPublicationEventDate	let kCGImagePropertyIPTCExtPublicationEventDate: CFString
+c:@kCGImagePropertyIPTCExtPublicationEventIdentifier	swift.var	kCGImagePropertyIPTCExtPublicationEventIdentifier	kCGImagePropertyIPTCExtPublicationEventIdentifier	let kCGImagePropertyIPTCExtPublicationEventIdentifier: CFString
+c:@kCGImagePropertyIPTCExtPublicationEventName	swift.var	kCGImagePropertyIPTCExtPublicationEventName	kCGImagePropertyIPTCExtPublicationEventName	let kCGImagePropertyIPTCExtPublicationEventName: CFString
+c:@kCGImagePropertyIPTCExtRating	swift.var	kCGImagePropertyIPTCExtRating	kCGImagePropertyIPTCExtRating	let kCGImagePropertyIPTCExtRating: CFString
+c:@kCGImagePropertyIPTCExtRatingRatingRegion	swift.var	kCGImagePropertyIPTCExtRatingRatingRegion	kCGImagePropertyIPTCExtRatingRatingRegion	let kCGImagePropertyIPTCExtRatingRatingRegion: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionCity	swift.var	kCGImagePropertyIPTCExtRatingRegionCity	kCGImagePropertyIPTCExtRatingRegionCity	let kCGImagePropertyIPTCExtRatingRegionCity: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionCountryCode	swift.var	kCGImagePropertyIPTCExtRatingRegionCountryCode	kCGImagePropertyIPTCExtRatingRegionCountryCode	let kCGImagePropertyIPTCExtRatingRegionCountryCode: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionCountryName	swift.var	kCGImagePropertyIPTCExtRatingRegionCountryName	kCGImagePropertyIPTCExtRatingRegionCountryName	let kCGImagePropertyIPTCExtRatingRegionCountryName: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionGPSAltitude	swift.var	kCGImagePropertyIPTCExtRatingRegionGPSAltitude	kCGImagePropertyIPTCExtRatingRegionGPSAltitude	let kCGImagePropertyIPTCExtRatingRegionGPSAltitude: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionGPSLatitude	swift.var	kCGImagePropertyIPTCExtRatingRegionGPSLatitude	kCGImagePropertyIPTCExtRatingRegionGPSLatitude	let kCGImagePropertyIPTCExtRatingRegionGPSLatitude: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionGPSLongitude	swift.var	kCGImagePropertyIPTCExtRatingRegionGPSLongitude	kCGImagePropertyIPTCExtRatingRegionGPSLongitude	let kCGImagePropertyIPTCExtRatingRegionGPSLongitude: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionIdentifier	swift.var	kCGImagePropertyIPTCExtRatingRegionIdentifier	kCGImagePropertyIPTCExtRatingRegionIdentifier	let kCGImagePropertyIPTCExtRatingRegionIdentifier: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionLocationId	swift.var	kCGImagePropertyIPTCExtRatingRegionLocationId	kCGImagePropertyIPTCExtRatingRegionLocationId	let kCGImagePropertyIPTCExtRatingRegionLocationId: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionLocationName	swift.var	kCGImagePropertyIPTCExtRatingRegionLocationName	kCGImagePropertyIPTCExtRatingRegionLocationName	let kCGImagePropertyIPTCExtRatingRegionLocationName: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionProvinceState	swift.var	kCGImagePropertyIPTCExtRatingRegionProvinceState	kCGImagePropertyIPTCExtRatingRegionProvinceState	let kCGImagePropertyIPTCExtRatingRegionProvinceState: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionSublocation	swift.var	kCGImagePropertyIPTCExtRatingRegionSublocation	kCGImagePropertyIPTCExtRatingRegionSublocation	let kCGImagePropertyIPTCExtRatingRegionSublocation: CFString
+c:@kCGImagePropertyIPTCExtRatingRegionWorldRegion	swift.var	kCGImagePropertyIPTCExtRatingRegionWorldRegion	kCGImagePropertyIPTCExtRatingRegionWorldRegion	let kCGImagePropertyIPTCExtRatingRegionWorldRegion: CFString
+c:@kCGImagePropertyIPTCExtRatingScaleMaxValue	swift.var	kCGImagePropertyIPTCExtRatingScaleMaxValue	kCGImagePropertyIPTCExtRatingScaleMaxValue	let kCGImagePropertyIPTCExtRatingScaleMaxValue: CFString
+c:@kCGImagePropertyIPTCExtRatingScaleMinValue	swift.var	kCGImagePropertyIPTCExtRatingScaleMinValue	kCGImagePropertyIPTCExtRatingScaleMinValue	let kCGImagePropertyIPTCExtRatingScaleMinValue: CFString
+c:@kCGImagePropertyIPTCExtRatingSourceLink	swift.var	kCGImagePropertyIPTCExtRatingSourceLink	kCGImagePropertyIPTCExtRatingSourceLink	let kCGImagePropertyIPTCExtRatingSourceLink: CFString
+c:@kCGImagePropertyIPTCExtRatingValue	swift.var	kCGImagePropertyIPTCExtRatingValue	kCGImagePropertyIPTCExtRatingValue	let kCGImagePropertyIPTCExtRatingValue: CFString
+c:@kCGImagePropertyIPTCExtRatingValueLogoLink	swift.var	kCGImagePropertyIPTCExtRatingValueLogoLink	kCGImagePropertyIPTCExtRatingValueLogoLink	let kCGImagePropertyIPTCExtRatingValueLogoLink: CFString
+c:@kCGImagePropertyIPTCExtRegistryEntryRole	swift.var	kCGImagePropertyIPTCExtRegistryEntryRole	kCGImagePropertyIPTCExtRegistryEntryRole	let kCGImagePropertyIPTCExtRegistryEntryRole: CFString
+c:@kCGImagePropertyIPTCExtRegistryID	swift.var	kCGImagePropertyIPTCExtRegistryID	kCGImagePropertyIPTCExtRegistryID	let kCGImagePropertyIPTCExtRegistryID: CFString
+c:@kCGImagePropertyIPTCExtRegistryItemID	swift.var	kCGImagePropertyIPTCExtRegistryItemID	kCGImagePropertyIPTCExtRegistryItemID	let kCGImagePropertyIPTCExtRegistryItemID: CFString
+c:@kCGImagePropertyIPTCExtRegistryOrganisationID	swift.var	kCGImagePropertyIPTCExtRegistryOrganisationID	kCGImagePropertyIPTCExtRegistryOrganisationID	let kCGImagePropertyIPTCExtRegistryOrganisationID: CFString
+c:@kCGImagePropertyIPTCExtReleaseReady	swift.var	kCGImagePropertyIPTCExtReleaseReady	kCGImagePropertyIPTCExtReleaseReady	let kCGImagePropertyIPTCExtReleaseReady: CFString
+c:@kCGImagePropertyIPTCExtSeason	swift.var	kCGImagePropertyIPTCExtSeason	kCGImagePropertyIPTCExtSeason	let kCGImagePropertyIPTCExtSeason: CFString
+c:@kCGImagePropertyIPTCExtSeasonIdentifier	swift.var	kCGImagePropertyIPTCExtSeasonIdentifier	kCGImagePropertyIPTCExtSeasonIdentifier	let kCGImagePropertyIPTCExtSeasonIdentifier: CFString
+c:@kCGImagePropertyIPTCExtSeasonName	swift.var	kCGImagePropertyIPTCExtSeasonName	kCGImagePropertyIPTCExtSeasonName	let kCGImagePropertyIPTCExtSeasonName: CFString
+c:@kCGImagePropertyIPTCExtSeasonNumber	swift.var	kCGImagePropertyIPTCExtSeasonNumber	kCGImagePropertyIPTCExtSeasonNumber	let kCGImagePropertyIPTCExtSeasonNumber: CFString
+c:@kCGImagePropertyIPTCExtSeries	swift.var	kCGImagePropertyIPTCExtSeries	kCGImagePropertyIPTCExtSeries	let kCGImagePropertyIPTCExtSeries: CFString
+c:@kCGImagePropertyIPTCExtSeriesIdentifier	swift.var	kCGImagePropertyIPTCExtSeriesIdentifier	kCGImagePropertyIPTCExtSeriesIdentifier	let kCGImagePropertyIPTCExtSeriesIdentifier: CFString
+c:@kCGImagePropertyIPTCExtSeriesName	swift.var	kCGImagePropertyIPTCExtSeriesName	kCGImagePropertyIPTCExtSeriesName	let kCGImagePropertyIPTCExtSeriesName: CFString
+c:@kCGImagePropertyIPTCExtShownEvent	swift.var	kCGImagePropertyIPTCExtShownEvent	kCGImagePropertyIPTCExtShownEvent	let kCGImagePropertyIPTCExtShownEvent: CFString
+c:@kCGImagePropertyIPTCExtShownEventIdentifier	swift.var	kCGImagePropertyIPTCExtShownEventIdentifier	kCGImagePropertyIPTCExtShownEventIdentifier	let kCGImagePropertyIPTCExtShownEventIdentifier: CFString
+c:@kCGImagePropertyIPTCExtShownEventName	swift.var	kCGImagePropertyIPTCExtShownEventName	kCGImagePropertyIPTCExtShownEventName	let kCGImagePropertyIPTCExtShownEventName: CFString
+c:@kCGImagePropertyIPTCExtStorylineIdentifier	swift.var	kCGImagePropertyIPTCExtStorylineIdentifier	kCGImagePropertyIPTCExtStorylineIdentifier	let kCGImagePropertyIPTCExtStorylineIdentifier: CFString
+c:@kCGImagePropertyIPTCExtStreamReady	swift.var	kCGImagePropertyIPTCExtStreamReady	kCGImagePropertyIPTCExtStreamReady	let kCGImagePropertyIPTCExtStreamReady: CFString
+c:@kCGImagePropertyIPTCExtStylePeriod	swift.var	kCGImagePropertyIPTCExtStylePeriod	kCGImagePropertyIPTCExtStylePeriod	let kCGImagePropertyIPTCExtStylePeriod: CFString
+c:@kCGImagePropertyIPTCExtSupplyChainSource	swift.var	kCGImagePropertyIPTCExtSupplyChainSource	kCGImagePropertyIPTCExtSupplyChainSource	let kCGImagePropertyIPTCExtSupplyChainSource: CFString
+c:@kCGImagePropertyIPTCExtSupplyChainSourceIdentifier	swift.var	kCGImagePropertyIPTCExtSupplyChainSourceIdentifier	kCGImagePropertyIPTCExtSupplyChainSourceIdentifier	let kCGImagePropertyIPTCExtSupplyChainSourceIdentifier: CFString
+c:@kCGImagePropertyIPTCExtSupplyChainSourceName	swift.var	kCGImagePropertyIPTCExtSupplyChainSourceName	kCGImagePropertyIPTCExtSupplyChainSourceName	let kCGImagePropertyIPTCExtSupplyChainSourceName: CFString
+c:@kCGImagePropertyIPTCExtTemporalCoverage	swift.var	kCGImagePropertyIPTCExtTemporalCoverage	kCGImagePropertyIPTCExtTemporalCoverage	let kCGImagePropertyIPTCExtTemporalCoverage: CFString
+c:@kCGImagePropertyIPTCExtTemporalCoverageFrom	swift.var	kCGImagePropertyIPTCExtTemporalCoverageFrom	kCGImagePropertyIPTCExtTemporalCoverageFrom	let kCGImagePropertyIPTCExtTemporalCoverageFrom: CFString
+c:@kCGImagePropertyIPTCExtTemporalCoverageTo	swift.var	kCGImagePropertyIPTCExtTemporalCoverageTo	kCGImagePropertyIPTCExtTemporalCoverageTo	let kCGImagePropertyIPTCExtTemporalCoverageTo: CFString
+c:@kCGImagePropertyIPTCExtTranscript	swift.var	kCGImagePropertyIPTCExtTranscript	kCGImagePropertyIPTCExtTranscript	let kCGImagePropertyIPTCExtTranscript: CFString
+c:@kCGImagePropertyIPTCExtTranscriptLink	swift.var	kCGImagePropertyIPTCExtTranscriptLink	kCGImagePropertyIPTCExtTranscriptLink	let kCGImagePropertyIPTCExtTranscriptLink: CFString
+c:@kCGImagePropertyIPTCExtTranscriptLinkLink	swift.var	kCGImagePropertyIPTCExtTranscriptLinkLink	kCGImagePropertyIPTCExtTranscriptLinkLink	let kCGImagePropertyIPTCExtTranscriptLinkLink: CFString
+c:@kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier	swift.var	kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier	kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier	let kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier: CFString
+c:@kCGImagePropertyIPTCExtVideoBitrate	swift.var	kCGImagePropertyIPTCExtVideoBitrate	kCGImagePropertyIPTCExtVideoBitrate	let kCGImagePropertyIPTCExtVideoBitrate: CFString
+c:@kCGImagePropertyIPTCExtVideoBitrateMode	swift.var	kCGImagePropertyIPTCExtVideoBitrateMode	kCGImagePropertyIPTCExtVideoBitrateMode	let kCGImagePropertyIPTCExtVideoBitrateMode: CFString
+c:@kCGImagePropertyIPTCExtVideoDisplayAspectRatio	swift.var	kCGImagePropertyIPTCExtVideoDisplayAspectRatio	kCGImagePropertyIPTCExtVideoDisplayAspectRatio	let kCGImagePropertyIPTCExtVideoDisplayAspectRatio: CFString
+c:@kCGImagePropertyIPTCExtVideoEncodingProfile	swift.var	kCGImagePropertyIPTCExtVideoEncodingProfile	kCGImagePropertyIPTCExtVideoEncodingProfile	let kCGImagePropertyIPTCExtVideoEncodingProfile: CFString
+c:@kCGImagePropertyIPTCExtVideoShotType	swift.var	kCGImagePropertyIPTCExtVideoShotType	kCGImagePropertyIPTCExtVideoShotType	let kCGImagePropertyIPTCExtVideoShotType: CFString
+c:@kCGImagePropertyIPTCExtVideoShotTypeIdentifier	swift.var	kCGImagePropertyIPTCExtVideoShotTypeIdentifier	kCGImagePropertyIPTCExtVideoShotTypeIdentifier	let kCGImagePropertyIPTCExtVideoShotTypeIdentifier: CFString
+c:@kCGImagePropertyIPTCExtVideoShotTypeName	swift.var	kCGImagePropertyIPTCExtVideoShotTypeName	kCGImagePropertyIPTCExtVideoShotTypeName	let kCGImagePropertyIPTCExtVideoShotTypeName: CFString
+c:@kCGImagePropertyIPTCExtVideoStreamsCount	swift.var	kCGImagePropertyIPTCExtVideoStreamsCount	kCGImagePropertyIPTCExtVideoStreamsCount	let kCGImagePropertyIPTCExtVideoStreamsCount: CFString
+c:@kCGImagePropertyIPTCExtVisualColor	swift.var	kCGImagePropertyIPTCExtVisualColor	kCGImagePropertyIPTCExtVisualColor	let kCGImagePropertyIPTCExtVisualColor: CFString
+c:@kCGImagePropertyIPTCExtWorkflowTag	swift.var	kCGImagePropertyIPTCExtWorkflowTag	kCGImagePropertyIPTCExtWorkflowTag	let kCGImagePropertyIPTCExtWorkflowTag: CFString
+c:@kCGImagePropertyIPTCExtWorkflowTagCvId	swift.var	kCGImagePropertyIPTCExtWorkflowTagCvId	kCGImagePropertyIPTCExtWorkflowTagCvId	let kCGImagePropertyIPTCExtWorkflowTagCvId: CFString
+c:@kCGImagePropertyIPTCExtWorkflowTagCvTermId	swift.var	kCGImagePropertyIPTCExtWorkflowTagCvTermId	kCGImagePropertyIPTCExtWorkflowTagCvTermId	let kCGImagePropertyIPTCExtWorkflowTagCvTermId: CFString
+c:@kCGImagePropertyIPTCExtWorkflowTagCvTermName	swift.var	kCGImagePropertyIPTCExtWorkflowTagCvTermName	kCGImagePropertyIPTCExtWorkflowTagCvTermName	let kCGImagePropertyIPTCExtWorkflowTagCvTermName: CFString
+c:@kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout	swift.var	kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout	kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout	let kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout: CFString
+c:@kCGImagePropertyIPTCFixtureIdentifier	swift.var	kCGImagePropertyIPTCFixtureIdentifier	kCGImagePropertyIPTCFixtureIdentifier	let kCGImagePropertyIPTCFixtureIdentifier: CFString
+c:@kCGImagePropertyIPTCHeadline	swift.var	kCGImagePropertyIPTCHeadline	kCGImagePropertyIPTCHeadline	let kCGImagePropertyIPTCHeadline: CFString
+c:@kCGImagePropertyIPTCImageOrientation	swift.var	kCGImagePropertyIPTCImageOrientation	kCGImagePropertyIPTCImageOrientation	let kCGImagePropertyIPTCImageOrientation: CFString
+c:@kCGImagePropertyIPTCImageType	swift.var	kCGImagePropertyIPTCImageType	kCGImagePropertyIPTCImageType	let kCGImagePropertyIPTCImageType: CFString
+c:@kCGImagePropertyIPTCKeywords	swift.var	kCGImagePropertyIPTCKeywords	kCGImagePropertyIPTCKeywords	let kCGImagePropertyIPTCKeywords: CFString
+c:@kCGImagePropertyIPTCLanguageIdentifier	swift.var	kCGImagePropertyIPTCLanguageIdentifier	kCGImagePropertyIPTCLanguageIdentifier	let kCGImagePropertyIPTCLanguageIdentifier: CFString
+c:@kCGImagePropertyIPTCObjectAttributeReference	swift.var	kCGImagePropertyIPTCObjectAttributeReference	kCGImagePropertyIPTCObjectAttributeReference	let kCGImagePropertyIPTCObjectAttributeReference: CFString
+c:@kCGImagePropertyIPTCObjectCycle	swift.var	kCGImagePropertyIPTCObjectCycle	kCGImagePropertyIPTCObjectCycle	let kCGImagePropertyIPTCObjectCycle: CFString
+c:@kCGImagePropertyIPTCObjectName	swift.var	kCGImagePropertyIPTCObjectName	kCGImagePropertyIPTCObjectName	let kCGImagePropertyIPTCObjectName: CFString
+c:@kCGImagePropertyIPTCObjectTypeReference	swift.var	kCGImagePropertyIPTCObjectTypeReference	kCGImagePropertyIPTCObjectTypeReference	let kCGImagePropertyIPTCObjectTypeReference: CFString
+c:@kCGImagePropertyIPTCOriginalTransmissionReference	swift.var	kCGImagePropertyIPTCOriginalTransmissionReference	kCGImagePropertyIPTCOriginalTransmissionReference	let kCGImagePropertyIPTCOriginalTransmissionReference: CFString
+c:@kCGImagePropertyIPTCOriginatingProgram	swift.var	kCGImagePropertyIPTCOriginatingProgram	kCGImagePropertyIPTCOriginatingProgram	let kCGImagePropertyIPTCOriginatingProgram: CFString
+c:@kCGImagePropertyIPTCProgramVersion	swift.var	kCGImagePropertyIPTCProgramVersion	kCGImagePropertyIPTCProgramVersion	let kCGImagePropertyIPTCProgramVersion: CFString
+c:@kCGImagePropertyIPTCProvinceState	swift.var	kCGImagePropertyIPTCProvinceState	kCGImagePropertyIPTCProvinceState	let kCGImagePropertyIPTCProvinceState: CFString
+c:@kCGImagePropertyIPTCReferenceDate	swift.var	kCGImagePropertyIPTCReferenceDate	kCGImagePropertyIPTCReferenceDate	let kCGImagePropertyIPTCReferenceDate: CFString
+c:@kCGImagePropertyIPTCReferenceNumber	swift.var	kCGImagePropertyIPTCReferenceNumber	kCGImagePropertyIPTCReferenceNumber	let kCGImagePropertyIPTCReferenceNumber: CFString
+c:@kCGImagePropertyIPTCReferenceService	swift.var	kCGImagePropertyIPTCReferenceService	kCGImagePropertyIPTCReferenceService	let kCGImagePropertyIPTCReferenceService: CFString
+c:@kCGImagePropertyIPTCReleaseDate	swift.var	kCGImagePropertyIPTCReleaseDate	kCGImagePropertyIPTCReleaseDate	let kCGImagePropertyIPTCReleaseDate: CFString
+c:@kCGImagePropertyIPTCReleaseTime	swift.var	kCGImagePropertyIPTCReleaseTime	kCGImagePropertyIPTCReleaseTime	let kCGImagePropertyIPTCReleaseTime: CFString
+c:@kCGImagePropertyIPTCRightsUsageTerms	swift.var	kCGImagePropertyIPTCRightsUsageTerms	kCGImagePropertyIPTCRightsUsageTerms	let kCGImagePropertyIPTCRightsUsageTerms: CFString
+c:@kCGImagePropertyIPTCScene	swift.var	kCGImagePropertyIPTCScene	kCGImagePropertyIPTCScene	let kCGImagePropertyIPTCScene: CFString
+c:@kCGImagePropertyIPTCSource	swift.var	kCGImagePropertyIPTCSource	kCGImagePropertyIPTCSource	let kCGImagePropertyIPTCSource: CFString
+c:@kCGImagePropertyIPTCSpecialInstructions	swift.var	kCGImagePropertyIPTCSpecialInstructions	kCGImagePropertyIPTCSpecialInstructions	let kCGImagePropertyIPTCSpecialInstructions: CFString
+c:@kCGImagePropertyIPTCStarRating	swift.var	kCGImagePropertyIPTCStarRating	kCGImagePropertyIPTCStarRating	let kCGImagePropertyIPTCStarRating: CFString
+c:@kCGImagePropertyIPTCSubLocation	swift.var	kCGImagePropertyIPTCSubLocation	kCGImagePropertyIPTCSubLocation	let kCGImagePropertyIPTCSubLocation: CFString
+c:@kCGImagePropertyIPTCSubjectReference	swift.var	kCGImagePropertyIPTCSubjectReference	kCGImagePropertyIPTCSubjectReference	let kCGImagePropertyIPTCSubjectReference: CFString
+c:@kCGImagePropertyIPTCSupplementalCategory	swift.var	kCGImagePropertyIPTCSupplementalCategory	kCGImagePropertyIPTCSupplementalCategory	let kCGImagePropertyIPTCSupplementalCategory: CFString
+c:@kCGImagePropertyIPTCTimeCreated	swift.var	kCGImagePropertyIPTCTimeCreated	kCGImagePropertyIPTCTimeCreated	let kCGImagePropertyIPTCTimeCreated: CFString
+c:@kCGImagePropertyIPTCUrgency	swift.var	kCGImagePropertyIPTCUrgency	kCGImagePropertyIPTCUrgency	let kCGImagePropertyIPTCUrgency: CFString
+c:@kCGImagePropertyIPTCWriterEditor	swift.var	kCGImagePropertyIPTCWriterEditor	kCGImagePropertyIPTCWriterEditor	let kCGImagePropertyIPTCWriterEditor: CFString
+c:@kCGImagePropertyImageCount	swift.var	kCGImagePropertyImageCount	kCGImagePropertyImageCount	let kCGImagePropertyImageCount: CFString
+c:@kCGImagePropertyImageIndex	swift.var	kCGImagePropertyImageIndex	kCGImagePropertyImageIndex	let kCGImagePropertyImageIndex: CFString
+c:@kCGImagePropertyImages	swift.var	kCGImagePropertyImages	kCGImagePropertyImages	let kCGImagePropertyImages: CFString
+c:@kCGImagePropertyIsFloat	swift.var	kCGImagePropertyIsFloat	kCGImagePropertyIsFloat	let kCGImagePropertyIsFloat: CFString
+c:@kCGImagePropertyIsIndexed	swift.var	kCGImagePropertyIsIndexed	kCGImagePropertyIsIndexed	let kCGImagePropertyIsIndexed: CFString
+c:@kCGImagePropertyJFIFDensityUnit	swift.var	kCGImagePropertyJFIFDensityUnit	kCGImagePropertyJFIFDensityUnit	let kCGImagePropertyJFIFDensityUnit: CFString
+c:@kCGImagePropertyJFIFDictionary	swift.var	kCGImagePropertyJFIFDictionary	kCGImagePropertyJFIFDictionary	let kCGImagePropertyJFIFDictionary: CFString
+c:@kCGImagePropertyJFIFIsProgressive	swift.var	kCGImagePropertyJFIFIsProgressive	kCGImagePropertyJFIFIsProgressive	let kCGImagePropertyJFIFIsProgressive: CFString
+c:@kCGImagePropertyJFIFVersion	swift.var	kCGImagePropertyJFIFVersion	kCGImagePropertyJFIFVersion	let kCGImagePropertyJFIFVersion: CFString
+c:@kCGImagePropertyJFIFXDensity	swift.var	kCGImagePropertyJFIFXDensity	kCGImagePropertyJFIFXDensity	let kCGImagePropertyJFIFXDensity: CFString
+c:@kCGImagePropertyJFIFYDensity	swift.var	kCGImagePropertyJFIFYDensity	kCGImagePropertyJFIFYDensity	let kCGImagePropertyJFIFYDensity: CFString
+c:@kCGImagePropertyMakerAppleDictionary	swift.var	kCGImagePropertyMakerAppleDictionary	kCGImagePropertyMakerAppleDictionary	let kCGImagePropertyMakerAppleDictionary: CFString
+c:@kCGImagePropertyMakerCanonAspectRatioInfo	swift.var	kCGImagePropertyMakerCanonAspectRatioInfo	kCGImagePropertyMakerCanonAspectRatioInfo	let kCGImagePropertyMakerCanonAspectRatioInfo: CFString
+c:@kCGImagePropertyMakerCanonCameraSerialNumber	swift.var	kCGImagePropertyMakerCanonCameraSerialNumber	kCGImagePropertyMakerCanonCameraSerialNumber	let kCGImagePropertyMakerCanonCameraSerialNumber: CFString
+c:@kCGImagePropertyMakerCanonContinuousDrive	swift.var	kCGImagePropertyMakerCanonContinuousDrive	kCGImagePropertyMakerCanonContinuousDrive	let kCGImagePropertyMakerCanonContinuousDrive: CFString
+c:@kCGImagePropertyMakerCanonDictionary	swift.var	kCGImagePropertyMakerCanonDictionary	kCGImagePropertyMakerCanonDictionary	let kCGImagePropertyMakerCanonDictionary: CFString
+c:@kCGImagePropertyMakerCanonFirmware	swift.var	kCGImagePropertyMakerCanonFirmware	kCGImagePropertyMakerCanonFirmware	let kCGImagePropertyMakerCanonFirmware: CFString
+c:@kCGImagePropertyMakerCanonFlashExposureComp	swift.var	kCGImagePropertyMakerCanonFlashExposureComp	kCGImagePropertyMakerCanonFlashExposureComp	let kCGImagePropertyMakerCanonFlashExposureComp: CFString
+c:@kCGImagePropertyMakerCanonImageSerialNumber	swift.var	kCGImagePropertyMakerCanonImageSerialNumber	kCGImagePropertyMakerCanonImageSerialNumber	let kCGImagePropertyMakerCanonImageSerialNumber: CFString
+c:@kCGImagePropertyMakerCanonLensModel	swift.var	kCGImagePropertyMakerCanonLensModel	kCGImagePropertyMakerCanonLensModel	let kCGImagePropertyMakerCanonLensModel: CFString
+c:@kCGImagePropertyMakerCanonOwnerName	swift.var	kCGImagePropertyMakerCanonOwnerName	kCGImagePropertyMakerCanonOwnerName	let kCGImagePropertyMakerCanonOwnerName: CFString
+c:@kCGImagePropertyMakerFujiDictionary	swift.var	kCGImagePropertyMakerFujiDictionary	kCGImagePropertyMakerFujiDictionary	let kCGImagePropertyMakerFujiDictionary: CFString
+c:@kCGImagePropertyMakerMinoltaDictionary	swift.var	kCGImagePropertyMakerMinoltaDictionary	kCGImagePropertyMakerMinoltaDictionary	let kCGImagePropertyMakerMinoltaDictionary: CFString
+c:@kCGImagePropertyMakerNikonCameraSerialNumber	swift.var	kCGImagePropertyMakerNikonCameraSerialNumber	kCGImagePropertyMakerNikonCameraSerialNumber	let kCGImagePropertyMakerNikonCameraSerialNumber: CFString
+c:@kCGImagePropertyMakerNikonColorMode	swift.var	kCGImagePropertyMakerNikonColorMode	kCGImagePropertyMakerNikonColorMode	let kCGImagePropertyMakerNikonColorMode: CFString
+c:@kCGImagePropertyMakerNikonDictionary	swift.var	kCGImagePropertyMakerNikonDictionary	kCGImagePropertyMakerNikonDictionary	let kCGImagePropertyMakerNikonDictionary: CFString
+c:@kCGImagePropertyMakerNikonDigitalZoom	swift.var	kCGImagePropertyMakerNikonDigitalZoom	kCGImagePropertyMakerNikonDigitalZoom	let kCGImagePropertyMakerNikonDigitalZoom: CFString
+c:@kCGImagePropertyMakerNikonFlashExposureComp	swift.var	kCGImagePropertyMakerNikonFlashExposureComp	kCGImagePropertyMakerNikonFlashExposureComp	let kCGImagePropertyMakerNikonFlashExposureComp: CFString
+c:@kCGImagePropertyMakerNikonFlashSetting	swift.var	kCGImagePropertyMakerNikonFlashSetting	kCGImagePropertyMakerNikonFlashSetting	let kCGImagePropertyMakerNikonFlashSetting: CFString
+c:@kCGImagePropertyMakerNikonFocusDistance	swift.var	kCGImagePropertyMakerNikonFocusDistance	kCGImagePropertyMakerNikonFocusDistance	let kCGImagePropertyMakerNikonFocusDistance: CFString
+c:@kCGImagePropertyMakerNikonFocusMode	swift.var	kCGImagePropertyMakerNikonFocusMode	kCGImagePropertyMakerNikonFocusMode	let kCGImagePropertyMakerNikonFocusMode: CFString
+c:@kCGImagePropertyMakerNikonISOSelection	swift.var	kCGImagePropertyMakerNikonISOSelection	kCGImagePropertyMakerNikonISOSelection	let kCGImagePropertyMakerNikonISOSelection: CFString
+c:@kCGImagePropertyMakerNikonISOSetting	swift.var	kCGImagePropertyMakerNikonISOSetting	kCGImagePropertyMakerNikonISOSetting	let kCGImagePropertyMakerNikonISOSetting: CFString
+c:@kCGImagePropertyMakerNikonImageAdjustment	swift.var	kCGImagePropertyMakerNikonImageAdjustment	kCGImagePropertyMakerNikonImageAdjustment	let kCGImagePropertyMakerNikonImageAdjustment: CFString
+c:@kCGImagePropertyMakerNikonLensAdapter	swift.var	kCGImagePropertyMakerNikonLensAdapter	kCGImagePropertyMakerNikonLensAdapter	let kCGImagePropertyMakerNikonLensAdapter: CFString
+c:@kCGImagePropertyMakerNikonLensInfo	swift.var	kCGImagePropertyMakerNikonLensInfo	kCGImagePropertyMakerNikonLensInfo	let kCGImagePropertyMakerNikonLensInfo: CFString
+c:@kCGImagePropertyMakerNikonLensType	swift.var	kCGImagePropertyMakerNikonLensType	kCGImagePropertyMakerNikonLensType	let kCGImagePropertyMakerNikonLensType: CFString
+c:@kCGImagePropertyMakerNikonQuality	swift.var	kCGImagePropertyMakerNikonQuality	kCGImagePropertyMakerNikonQuality	let kCGImagePropertyMakerNikonQuality: CFString
+c:@kCGImagePropertyMakerNikonSharpenMode	swift.var	kCGImagePropertyMakerNikonSharpenMode	kCGImagePropertyMakerNikonSharpenMode	let kCGImagePropertyMakerNikonSharpenMode: CFString
+c:@kCGImagePropertyMakerNikonShootingMode	swift.var	kCGImagePropertyMakerNikonShootingMode	kCGImagePropertyMakerNikonShootingMode	let kCGImagePropertyMakerNikonShootingMode: CFString
+c:@kCGImagePropertyMakerNikonShutterCount	swift.var	kCGImagePropertyMakerNikonShutterCount	kCGImagePropertyMakerNikonShutterCount	let kCGImagePropertyMakerNikonShutterCount: CFString
+c:@kCGImagePropertyMakerNikonWhiteBalanceMode	swift.var	kCGImagePropertyMakerNikonWhiteBalanceMode	kCGImagePropertyMakerNikonWhiteBalanceMode	let kCGImagePropertyMakerNikonWhiteBalanceMode: CFString
+c:@kCGImagePropertyMakerOlympusDictionary	swift.var	kCGImagePropertyMakerOlympusDictionary	kCGImagePropertyMakerOlympusDictionary	let kCGImagePropertyMakerOlympusDictionary: CFString
+c:@kCGImagePropertyMakerPentaxDictionary	swift.var	kCGImagePropertyMakerPentaxDictionary	kCGImagePropertyMakerPentaxDictionary	let kCGImagePropertyMakerPentaxDictionary: CFString
+c:@kCGImagePropertyNamedColorSpace	swift.var	kCGImagePropertyNamedColorSpace	kCGImagePropertyNamedColorSpace	let kCGImagePropertyNamedColorSpace: CFString
+c:@kCGImagePropertyOpenEXRAspectRatio	swift.var	kCGImagePropertyOpenEXRAspectRatio	kCGImagePropertyOpenEXRAspectRatio	let kCGImagePropertyOpenEXRAspectRatio: CFString
+c:@kCGImagePropertyOpenEXRCompression	swift.var	kCGImagePropertyOpenEXRCompression	kCGImagePropertyOpenEXRCompression	let kCGImagePropertyOpenEXRCompression: CFString
+c:@kCGImagePropertyOpenEXRDictionary	swift.var	kCGImagePropertyOpenEXRDictionary	kCGImagePropertyOpenEXRDictionary	let kCGImagePropertyOpenEXRDictionary: CFString
+c:@kCGImagePropertyOrientation	swift.var	kCGImagePropertyOrientation	kCGImagePropertyOrientation	let kCGImagePropertyOrientation: CFString
+c:@kCGImagePropertyPNGAuthor	swift.var	kCGImagePropertyPNGAuthor	kCGImagePropertyPNGAuthor	let kCGImagePropertyPNGAuthor: CFString
+c:@kCGImagePropertyPNGChromaticities	swift.var	kCGImagePropertyPNGChromaticities	kCGImagePropertyPNGChromaticities	let kCGImagePropertyPNGChromaticities: CFString
+c:@kCGImagePropertyPNGComment	swift.var	kCGImagePropertyPNGComment	kCGImagePropertyPNGComment	let kCGImagePropertyPNGComment: CFString
+c:@kCGImagePropertyPNGCompressionFilter	swift.var	kCGImagePropertyPNGCompressionFilter	kCGImagePropertyPNGCompressionFilter	let kCGImagePropertyPNGCompressionFilter: CFString
+c:@kCGImagePropertyPNGCopyright	swift.var	kCGImagePropertyPNGCopyright	kCGImagePropertyPNGCopyright	let kCGImagePropertyPNGCopyright: CFString
+c:@kCGImagePropertyPNGCreationTime	swift.var	kCGImagePropertyPNGCreationTime	kCGImagePropertyPNGCreationTime	let kCGImagePropertyPNGCreationTime: CFString
+c:@kCGImagePropertyPNGDescription	swift.var	kCGImagePropertyPNGDescription	kCGImagePropertyPNGDescription	let kCGImagePropertyPNGDescription: CFString
+c:@kCGImagePropertyPNGDictionary	swift.var	kCGImagePropertyPNGDictionary	kCGImagePropertyPNGDictionary	let kCGImagePropertyPNGDictionary: CFString
+c:@kCGImagePropertyPNGDisclaimer	swift.var	kCGImagePropertyPNGDisclaimer	kCGImagePropertyPNGDisclaimer	let kCGImagePropertyPNGDisclaimer: CFString
+c:@kCGImagePropertyPNGGamma	swift.var	kCGImagePropertyPNGGamma	kCGImagePropertyPNGGamma	let kCGImagePropertyPNGGamma: CFString
+c:@kCGImagePropertyPNGInterlaceType	swift.var	kCGImagePropertyPNGInterlaceType	kCGImagePropertyPNGInterlaceType	let kCGImagePropertyPNGInterlaceType: CFString
+c:@kCGImagePropertyPNGModificationTime	swift.var	kCGImagePropertyPNGModificationTime	kCGImagePropertyPNGModificationTime	let kCGImagePropertyPNGModificationTime: CFString
+c:@kCGImagePropertyPNGPixelsAspectRatio	swift.var	kCGImagePropertyPNGPixelsAspectRatio	kCGImagePropertyPNGPixelsAspectRatio	let kCGImagePropertyPNGPixelsAspectRatio: CFString
+c:@kCGImagePropertyPNGSoftware	swift.var	kCGImagePropertyPNGSoftware	kCGImagePropertyPNGSoftware	let kCGImagePropertyPNGSoftware: CFString
+c:@kCGImagePropertyPNGSource	swift.var	kCGImagePropertyPNGSource	kCGImagePropertyPNGSource	let kCGImagePropertyPNGSource: CFString
+c:@kCGImagePropertyPNGTitle	swift.var	kCGImagePropertyPNGTitle	kCGImagePropertyPNGTitle	let kCGImagePropertyPNGTitle: CFString
+c:@kCGImagePropertyPNGTransparency	swift.var	kCGImagePropertyPNGTransparency	kCGImagePropertyPNGTransparency	let kCGImagePropertyPNGTransparency: CFString
+c:@kCGImagePropertyPNGWarning	swift.var	kCGImagePropertyPNGWarning	kCGImagePropertyPNGWarning	let kCGImagePropertyPNGWarning: CFString
+c:@kCGImagePropertyPNGXPixelsPerMeter	swift.var	kCGImagePropertyPNGXPixelsPerMeter	kCGImagePropertyPNGXPixelsPerMeter	let kCGImagePropertyPNGXPixelsPerMeter: CFString
+c:@kCGImagePropertyPNGYPixelsPerMeter	swift.var	kCGImagePropertyPNGYPixelsPerMeter	kCGImagePropertyPNGYPixelsPerMeter	let kCGImagePropertyPNGYPixelsPerMeter: CFString
+c:@kCGImagePropertyPNGsRGBIntent	swift.var	kCGImagePropertyPNGsRGBIntent	kCGImagePropertyPNGsRGBIntent	let kCGImagePropertyPNGsRGBIntent: CFString
+c:@kCGImagePropertyPVREncoder	swift.var	kCGImagePropertyPVREncoder	kCGImagePropertyPVREncoder	let kCGImagePropertyPVREncoder: CFString
+c:@kCGImagePropertyPixelFormat	swift.var	kCGImagePropertyPixelFormat	kCGImagePropertyPixelFormat	let kCGImagePropertyPixelFormat: CFString
+c:@kCGImagePropertyPixelHeight	swift.var	kCGImagePropertyPixelHeight	kCGImagePropertyPixelHeight	let kCGImagePropertyPixelHeight: CFString
+c:@kCGImagePropertyPixelWidth	swift.var	kCGImagePropertyPixelWidth	kCGImagePropertyPixelWidth	let kCGImagePropertyPixelWidth: CFString
+c:@kCGImagePropertyPrimaryImage	swift.var	kCGImagePropertyPrimaryImage	kCGImagePropertyPrimaryImage	let kCGImagePropertyPrimaryImage: CFString
+c:@kCGImagePropertyProfileName	swift.var	kCGImagePropertyProfileName	kCGImagePropertyProfileName	let kCGImagePropertyProfileName: CFString
+c:@kCGImagePropertyRawDictionary	swift.var	kCGImagePropertyRawDictionary	kCGImagePropertyRawDictionary	let kCGImagePropertyRawDictionary: CFString
+c:@kCGImagePropertyTGACompression	swift.var	kCGImagePropertyTGACompression	kCGImagePropertyTGACompression	let kCGImagePropertyTGACompression: CFString
+c:@kCGImagePropertyTGADictionary	swift.var	kCGImagePropertyTGADictionary	kCGImagePropertyTGADictionary	let kCGImagePropertyTGADictionary: CFString
+c:@kCGImagePropertyTIFFArtist	swift.var	kCGImagePropertyTIFFArtist	kCGImagePropertyTIFFArtist	let kCGImagePropertyTIFFArtist: CFString
+c:@kCGImagePropertyTIFFCompression	swift.var	kCGImagePropertyTIFFCompression	kCGImagePropertyTIFFCompression	let kCGImagePropertyTIFFCompression: CFString
+c:@kCGImagePropertyTIFFCopyright	swift.var	kCGImagePropertyTIFFCopyright	kCGImagePropertyTIFFCopyright	let kCGImagePropertyTIFFCopyright: CFString
+c:@kCGImagePropertyTIFFDateTime	swift.var	kCGImagePropertyTIFFDateTime	kCGImagePropertyTIFFDateTime	let kCGImagePropertyTIFFDateTime: CFString
+c:@kCGImagePropertyTIFFDictionary	swift.var	kCGImagePropertyTIFFDictionary	kCGImagePropertyTIFFDictionary	let kCGImagePropertyTIFFDictionary: CFString
+c:@kCGImagePropertyTIFFDocumentName	swift.var	kCGImagePropertyTIFFDocumentName	kCGImagePropertyTIFFDocumentName	let kCGImagePropertyTIFFDocumentName: CFString
+c:@kCGImagePropertyTIFFHostComputer	swift.var	kCGImagePropertyTIFFHostComputer	kCGImagePropertyTIFFHostComputer	let kCGImagePropertyTIFFHostComputer: CFString
+c:@kCGImagePropertyTIFFImageDescription	swift.var	kCGImagePropertyTIFFImageDescription	kCGImagePropertyTIFFImageDescription	let kCGImagePropertyTIFFImageDescription: CFString
+c:@kCGImagePropertyTIFFMake	swift.var	kCGImagePropertyTIFFMake	kCGImagePropertyTIFFMake	let kCGImagePropertyTIFFMake: CFString
+c:@kCGImagePropertyTIFFModel	swift.var	kCGImagePropertyTIFFModel	kCGImagePropertyTIFFModel	let kCGImagePropertyTIFFModel: CFString
+c:@kCGImagePropertyTIFFOrientation	swift.var	kCGImagePropertyTIFFOrientation	kCGImagePropertyTIFFOrientation	let kCGImagePropertyTIFFOrientation: CFString
+c:@kCGImagePropertyTIFFPhotometricInterpretation	swift.var	kCGImagePropertyTIFFPhotometricInterpretation	kCGImagePropertyTIFFPhotometricInterpretation	let kCGImagePropertyTIFFPhotometricInterpretation: CFString
+c:@kCGImagePropertyTIFFPrimaryChromaticities	swift.var	kCGImagePropertyTIFFPrimaryChromaticities	kCGImagePropertyTIFFPrimaryChromaticities	let kCGImagePropertyTIFFPrimaryChromaticities: CFString
+c:@kCGImagePropertyTIFFResolutionUnit	swift.var	kCGImagePropertyTIFFResolutionUnit	kCGImagePropertyTIFFResolutionUnit	let kCGImagePropertyTIFFResolutionUnit: CFString
+c:@kCGImagePropertyTIFFSoftware	swift.var	kCGImagePropertyTIFFSoftware	kCGImagePropertyTIFFSoftware	let kCGImagePropertyTIFFSoftware: CFString
+c:@kCGImagePropertyTIFFTileLength	swift.var	kCGImagePropertyTIFFTileLength	kCGImagePropertyTIFFTileLength	let kCGImagePropertyTIFFTileLength: CFString
+c:@kCGImagePropertyTIFFTileWidth	swift.var	kCGImagePropertyTIFFTileWidth	kCGImagePropertyTIFFTileWidth	let kCGImagePropertyTIFFTileWidth: CFString
+c:@kCGImagePropertyTIFFTransferFunction	swift.var	kCGImagePropertyTIFFTransferFunction	kCGImagePropertyTIFFTransferFunction	let kCGImagePropertyTIFFTransferFunction: CFString
+c:@kCGImagePropertyTIFFWhitePoint	swift.var	kCGImagePropertyTIFFWhitePoint	kCGImagePropertyTIFFWhitePoint	let kCGImagePropertyTIFFWhitePoint: CFString
+c:@kCGImagePropertyTIFFXPosition	swift.var	kCGImagePropertyTIFFXPosition	kCGImagePropertyTIFFXPosition	let kCGImagePropertyTIFFXPosition: CFString
+c:@kCGImagePropertyTIFFXResolution	swift.var	kCGImagePropertyTIFFXResolution	kCGImagePropertyTIFFXResolution	let kCGImagePropertyTIFFXResolution: CFString
+c:@kCGImagePropertyTIFFYPosition	swift.var	kCGImagePropertyTIFFYPosition	kCGImagePropertyTIFFYPosition	let kCGImagePropertyTIFFYPosition: CFString
+c:@kCGImagePropertyTIFFYResolution	swift.var	kCGImagePropertyTIFFYResolution	kCGImagePropertyTIFFYResolution	let kCGImagePropertyTIFFYResolution: CFString
+c:@kCGImagePropertyThumbnailImages	swift.var	kCGImagePropertyThumbnailImages	kCGImagePropertyThumbnailImages	let kCGImagePropertyThumbnailImages: CFString
+c:@kCGImagePropertyWebPCanvasPixelHeight	swift.var	kCGImagePropertyWebPCanvasPixelHeight	kCGImagePropertyWebPCanvasPixelHeight	let kCGImagePropertyWebPCanvasPixelHeight: CFString
+c:@kCGImagePropertyWebPCanvasPixelWidth	swift.var	kCGImagePropertyWebPCanvasPixelWidth	kCGImagePropertyWebPCanvasPixelWidth	let kCGImagePropertyWebPCanvasPixelWidth: CFString
+c:@kCGImagePropertyWebPDelayTime	swift.var	kCGImagePropertyWebPDelayTime	kCGImagePropertyWebPDelayTime	let kCGImagePropertyWebPDelayTime: CFString
+c:@kCGImagePropertyWebPDictionary	swift.var	kCGImagePropertyWebPDictionary	kCGImagePropertyWebPDictionary	let kCGImagePropertyWebPDictionary: CFString
+c:@kCGImagePropertyWebPFrameInfoArray	swift.var	kCGImagePropertyWebPFrameInfoArray	kCGImagePropertyWebPFrameInfoArray	let kCGImagePropertyWebPFrameInfoArray: CFString
+c:@kCGImagePropertyWebPLoopCount	swift.var	kCGImagePropertyWebPLoopCount	kCGImagePropertyWebPLoopCount	let kCGImagePropertyWebPLoopCount: CFString
+c:@kCGImagePropertyWebPUnclampedDelayTime	swift.var	kCGImagePropertyWebPUnclampedDelayTime	kCGImagePropertyWebPUnclampedDelayTime	let kCGImagePropertyWebPUnclampedDelayTime: CFString
+c:@kCGImagePropertyWidth	swift.var	kCGImagePropertyWidth	kCGImagePropertyWidth	let kCGImagePropertyWidth: CFString
+c:@kCGImageProviderPreferredTileHeight	swift.var	kCGImageProviderPreferredTileHeight	kCGImageProviderPreferredTileHeight	let kCGImageProviderPreferredTileHeight: CFString
+c:@kCGImageProviderPreferredTileWidth	swift.var	kCGImageProviderPreferredTileWidth	kCGImageProviderPreferredTileWidth	let kCGImageProviderPreferredTileWidth: CFString
+c:@kCGImageSourceCreateThumbnailFromImageAlways	swift.var	kCGImageSourceCreateThumbnailFromImageAlways	kCGImageSourceCreateThumbnailFromImageAlways	let kCGImageSourceCreateThumbnailFromImageAlways: CFString
+c:@kCGImageSourceCreateThumbnailFromImageIfAbsent	swift.var	kCGImageSourceCreateThumbnailFromImageIfAbsent	kCGImageSourceCreateThumbnailFromImageIfAbsent	let kCGImageSourceCreateThumbnailFromImageIfAbsent: CFString
+c:@kCGImageSourceCreateThumbnailWithTransform	swift.var	kCGImageSourceCreateThumbnailWithTransform	kCGImageSourceCreateThumbnailWithTransform	let kCGImageSourceCreateThumbnailWithTransform: CFString
+c:@kCGImageSourceDecodeRequest	swift.var	kCGImageSourceDecodeRequest	kCGImageSourceDecodeRequest	let kCGImageSourceDecodeRequest: CFString
+c:@kCGImageSourceDecodeRequestOptions	swift.var	kCGImageSourceDecodeRequestOptions	kCGImageSourceDecodeRequestOptions	let kCGImageSourceDecodeRequestOptions: CFString
+c:@kCGImageSourceDecodeToHDR	swift.var	kCGImageSourceDecodeToHDR	kCGImageSourceDecodeToHDR	let kCGImageSourceDecodeToHDR: CFString
+c:@kCGImageSourceDecodeToSDR	swift.var	kCGImageSourceDecodeToSDR	kCGImageSourceDecodeToSDR	let kCGImageSourceDecodeToSDR: CFString
+c:@kCGImageSourceGenerateImageSpecificLumaScaling	swift.var	kCGImageSourceGenerateImageSpecificLumaScaling	kCGImageSourceGenerateImageSpecificLumaScaling	let kCGImageSourceGenerateImageSpecificLumaScaling: CFString
+c:@kCGImageSourceShouldAllowFloat	swift.var	kCGImageSourceShouldAllowFloat	kCGImageSourceShouldAllowFloat	let kCGImageSourceShouldAllowFloat: CFString
+c:@kCGImageSourceShouldCache	swift.var	kCGImageSourceShouldCache	kCGImageSourceShouldCache	let kCGImageSourceShouldCache: CFString
+c:@kCGImageSourceShouldCacheImmediately	swift.var	kCGImageSourceShouldCacheImmediately	kCGImageSourceShouldCacheImmediately	let kCGImageSourceShouldCacheImmediately: CFString
+c:@kCGImageSourceSubsampleFactor	swift.var	kCGImageSourceSubsampleFactor	kCGImageSourceSubsampleFactor	let kCGImageSourceSubsampleFactor: CFString
+c:@kCGImageSourceThumbnailMaxPixelSize	swift.var	kCGImageSourceThumbnailMaxPixelSize	kCGImageSourceThumbnailMaxPixelSize	let kCGImageSourceThumbnailMaxPixelSize: CFString
+c:@kCGImageSourceTypeIdentifierHint	swift.var	kCGImageSourceTypeIdentifierHint	kCGImageSourceTypeIdentifierHint	let kCGImageSourceTypeIdentifierHint: CFString
+c:@kIIOCameraExtrinsics_CoordinateSystemID	swift.var	kIIOCameraExtrinsics_CoordinateSystemID	kIIOCameraExtrinsics_CoordinateSystemID	let kIIOCameraExtrinsics_CoordinateSystemID: CFString
+c:@kIIOCameraExtrinsics_Position	swift.var	kIIOCameraExtrinsics_Position	kIIOCameraExtrinsics_Position	let kIIOCameraExtrinsics_Position: CFString
+c:@kIIOCameraExtrinsics_Rotation	swift.var	kIIOCameraExtrinsics_Rotation	kIIOCameraExtrinsics_Rotation	let kIIOCameraExtrinsics_Rotation: CFString
+c:@kIIOCameraModelType_GenericPinhole	swift.var	kIIOCameraModelType_GenericPinhole	kIIOCameraModelType_GenericPinhole	let kIIOCameraModelType_GenericPinhole: CFString
+c:@kIIOCameraModelType_SimplifiedPinhole	swift.var	kIIOCameraModelType_SimplifiedPinhole	kIIOCameraModelType_SimplifiedPinhole	let kIIOCameraModelType_SimplifiedPinhole: CFString
+c:@kIIOCameraModel_Intrinsics	swift.var	kIIOCameraModel_Intrinsics	kIIOCameraModel_Intrinsics	let kIIOCameraModel_Intrinsics: CFString
+c:@kIIOCameraModel_ModelType	swift.var	kIIOCameraModel_ModelType	kIIOCameraModel_ModelType	let kIIOCameraModel_ModelType: CFString
+c:@kIIOMetadata_CameraExtrinsicsKey	swift.var	kIIOMetadata_CameraExtrinsicsKey	kIIOMetadata_CameraExtrinsicsKey	let kIIOMetadata_CameraExtrinsicsKey: CFString
+c:@kIIOMetadata_CameraModelKey	swift.var	kIIOMetadata_CameraModelKey	kIIOMetadata_CameraModelKey	let kIIOMetadata_CameraModelKey: CFString
+c:@kIIOMonoscopicImageLocation_Center	swift.var	kIIOMonoscopicImageLocation_Center	kIIOMonoscopicImageLocation_Center	let kIIOMonoscopicImageLocation_Center: CFString
+c:@kIIOMonoscopicImageLocation_Left	swift.var	kIIOMonoscopicImageLocation_Left	kIIOMonoscopicImageLocation_Left	let kIIOMonoscopicImageLocation_Left: CFString
+c:@kIIOMonoscopicImageLocation_Right	swift.var	kIIOMonoscopicImageLocation_Right	kIIOMonoscopicImageLocation_Right	let kIIOMonoscopicImageLocation_Right: CFString
+c:@kIIOMonoscopicImageLocation_Unspecified	swift.var	kIIOMonoscopicImageLocation_Unspecified	kIIOMonoscopicImageLocation_Unspecified	let kIIOMonoscopicImageLocation_Unspecified: CFString
+c:@kIIOStereoAggressors_Severity	swift.var	kIIOStereoAggressors_Severity	kIIOStereoAggressors_Severity	let kIIOStereoAggressors_Severity: CFString
+c:@kIIOStereoAggressors_SubTypeURI	swift.var	kIIOStereoAggressors_SubTypeURI	kIIOStereoAggressors_SubTypeURI	let kIIOStereoAggressors_SubTypeURI: CFString
+c:@kIIOStereoAggressors_Type	swift.var	kIIOStereoAggressors_Type	kIIOStereoAggressors_Type	let kIIOStereoAggressors_Type: CFString
+c:@macro@IIO_HAS_IOSURFACE	swift.var	IIO_HAS_IOSURFACE	IIO_HAS_IOSURFACE	var IIO_HAS_IOSURFACE: Int32 { get }
+c:@macro@IMAGEIO_PNG_FILTER_AVG	swift.var	IMAGEIO_PNG_FILTER_AVG	IMAGEIO_PNG_FILTER_AVG	var IMAGEIO_PNG_FILTER_AVG: Int32 { get }
+c:@macro@IMAGEIO_PNG_FILTER_NONE	swift.var	IMAGEIO_PNG_FILTER_NONE	IMAGEIO_PNG_FILTER_NONE	var IMAGEIO_PNG_FILTER_NONE: Int32 { get }
+c:@macro@IMAGEIO_PNG_FILTER_PAETH	swift.var	IMAGEIO_PNG_FILTER_PAETH	IMAGEIO_PNG_FILTER_PAETH	var IMAGEIO_PNG_FILTER_PAETH: Int32 { get }
+c:@macro@IMAGEIO_PNG_FILTER_SUB	swift.var	IMAGEIO_PNG_FILTER_SUB	IMAGEIO_PNG_FILTER_SUB	var IMAGEIO_PNG_FILTER_SUB: Int32 { get }
+c:@macro@IMAGEIO_PNG_FILTER_UP	swift.var	IMAGEIO_PNG_FILTER_UP	IMAGEIO_PNG_FILTER_UP	var IMAGEIO_PNG_FILTER_UP: Int32 { get }
+c:@macro@IMAGEIO_PNG_NO_FILTERS	swift.var	IMAGEIO_PNG_NO_FILTERS	IMAGEIO_PNG_NO_FILTERS	var IMAGEIO_PNG_NO_FILTERS: Int32 { get }
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageDestinationRef	swift.func.op	==(_:_:)	CGImageDestination.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageMetadataRef	swift.func.op	==(_:_:)	CGImageMetadata.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageMetadataTagRef	swift.func.op	==(_:_:)	CGImageMetadataTag.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageSourceRef	swift.func.op	==(_:_:)	CGImageSource.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CGImageDestinationRef	swift.method	hash(into:)	CGImageDestination.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CGImageMetadataRef	swift.method	hash(into:)	CGImageMetadata.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CGImageMetadataTagRef	swift.method	hash(into:)	CGImageMetadataTag.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CGImageSourceRef	swift.method	hash(into:)	CGImageSource.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CGImageDestinationRef	swift.property	hashValue	CGImageDestination.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CGImageMetadataRef	swift.property	hashValue	CGImageMetadata.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CGImageMetadataTagRef	swift.property	hashValue	CGImageMetadataTag.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CGImageSourceRef	swift.property	hashValue	CGImageSource.hashValue	var hashValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CGImageAnimationStatus	swift.func.op	!=(_:_:)	CGImageAnimationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CGImageMetadataErrors	swift.func.op	!=(_:_:)	CGImageMetadataErrors.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CGImageMetadataType	swift.func.op	!=(_:_:)	CGImageMetadataType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CGImagePropertyOrientation	swift.func.op	!=(_:_:)	CGImagePropertyOrientation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CGImagePropertyTGACompression	swift.func.op	!=(_:_:)	CGImagePropertyTGACompression.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CGImageSourceStatus	swift.func.op	!=(_:_:)	CGImageSourceStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageDestinationRef	swift.func.op	!=(_:_:)	CGImageDestination.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageMetadataRef	swift.func.op	!=(_:_:)	CGImageMetadata.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageMetadataTagRef	swift.func.op	!=(_:_:)	CGImageMetadataTag.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CGImageSourceRef	swift.func.op	!=(_:_:)	CGImageSource.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CGImageAnimationStatus	swift.property	hashValue	CGImageAnimationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CGImageMetadataErrors	swift.property	hashValue	CGImageMetadataErrors.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CGImageMetadataType	swift.property	hashValue	CGImageMetadataType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CGImagePropertyOrientation	swift.property	hashValue	CGImagePropertyOrientation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CGImagePropertyTGACompression	swift.property	hashValue	CGImagePropertyTGACompression.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CGImageSourceStatus	swift.property	hashValue	CGImageSourceStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CGImageAnimationStatus	swift.method	hash(into:)	CGImageAnimationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CGImageMetadataErrors	swift.method	hash(into:)	CGImageMetadataErrors.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CGImageMetadataType	swift.method	hash(into:)	CGImageMetadataType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CGImagePropertyOrientation	swift.method	hash(into:)	CGImagePropertyOrientation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CGImagePropertyTGACompression	swift.method	hash(into:)	CGImagePropertyTGACompression.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CGImageSourceStatus	swift.method	hash(into:)	CGImageSourceStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:So19CGImageMetadataTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CGImageMetadataType.init(rawValue:)	init?(rawValue: Int32)
+s:So19CGImageSourceStatusV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CGImageSourceStatus.init(rawValue:)	init?(rawValue: Int32)
+s:So21CGImageMetadataErrorsV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CGImageMetadataErrors.init(rawValue:)	init?(rawValue: Int32)
+s:So22CGImageAnimationStatusV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CGImageAnimationStatus.init(rawValue:)	init?(rawValue: OSStatus)
+s:So26CGImagePropertyOrientationV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	CGImagePropertyOrientation.init(rawValue:)	init?(rawValue: UInt32)
+s:So29CGImagePropertyTGACompressionV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	CGImagePropertyTGACompression.init(rawValue:)	init?(rawValue: UInt32)

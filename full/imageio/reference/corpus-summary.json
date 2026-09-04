@@ -1,0 +1,122 @@
+{
+  "module": "ImageIO",
+  "moduleRecord": {
+    "app_coverage_count": 9,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS SDK/system-module runtime-port allowlist",
+    "file_count": 28,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 31,
+    "iphoneos_runtime_focus_launch_build_rank": 35,
+    "module": "ImageIO",
+    "occurrence_count": 28,
+    "per_app": {
+      "Hackers": {
+        "evidence_sha256": "36875e8683312c50502538933087760606be7d75772ec69c69283ba7e9dbe6c7",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "DesignSystem/Sources/DesignSystem/Components/ThumbnailView.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "4417625e53faee28b2abca00dbf1fa59ca19fc32a2ab7b171b0b3654ea9a581b",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "SignalServiceKit/Profiles/BadgeAssets.swift",
+          "SignalServiceKit/Util/ImageMetadata/OWSImageSource.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "37f4c652ed090caf0721c29b649f8d6b37d42e93488155a7d8c0ea5465b548ff",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "Telegram/NotificationService/Sources/NotificationService.swift",
+          "submodules/AvatarNode/Sources/PeerAvatar.swift",
+          "submodules/InstantPageUI/Sources/InstantPageImageNode.swift",
+          "submodules/LegacyComponents/Sources/FLAnimatedImage.m",
+          "submodules/LegacyComponents/Sources/TGCache.m",
+          "submodules/LegacyComponents/Sources/TGGifConverter.m",
+          "submodules/LegacyComponents/Sources/TGPaintFaceDetector.m",
+          "submodules/LegacyComponents/Sources/TGVideoCameraPipeline.m"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "a8e4827a0b80a52fcadf0a431a5be415b457a23253b560c281b6527a535b8ec1",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Sources/WordPressMediaLibrary/Upload/UploadSourceMaterializer.swift",
+          "WordPress/Classes/Extensions/Media/UIImage+Exporters.swift",
+          "WordPress/WordPressShareExtension/Sources/Extensions/UIImage+Extensions.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "4c00e80b6688f9f2d47b68d690b55c392fe9e294a7e9a7e27c94054ac711b3e7",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Utils/MXKUTI.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "2835da3b179152f07b3fe4b4c3be5f882e8cde2904bd1e978c34bf9fbd51073a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Shared/Notifications/NotificationSender/NotificationCommunicationDecorator.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "232683ac80110425f33cdefd59ca08be79befab01a58c008ef8f821f3fbdd015",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "iOSClient/Extensions/UIImage+animatedGIF.h",
+          "iOSClient/Utility/NCCameraRoll.swift",
+          "iOSClient/Utility/NCLivePhoto.swift",
+          "iOSClient/Viewer/NCViewerMedia/Loading/NCNextcloudMediaViewerLoader.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "03388a1f6dfb4e0eee469f58f507105fbc2aa713b0759487bb4fa22f91cf46fc",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Playback/OS Integration/VLCMetadata.m"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "fbe7f550f3843b4f8bb414a240c481793de754e7b97c7b70a9b6a7ab2bcecd2e",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "WMF Framework/Third Party/FLAnimatedImage/FLAnimatedImage/FLAnimatedImage.m",
+          "WMFComponents/Sources/WMFComponents/Utility/WMFImageColorSampler.swift",
+          "Widgets/Utilities/UIImage+Extensions.swift",
+          "Wikipedia/Code/WMFNotificationsController.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 31,
+    "byFocusLaunchBuildRelevance": 35
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,856 @@
+precise	kind	title	path	declaration
+c:@CIDetectorAccuracy	swift.var	CIDetectorAccuracy	CIDetectorAccuracy	let CIDetectorAccuracy: String
+c:@CIDetectorAccuracyHigh	swift.var	CIDetectorAccuracyHigh	CIDetectorAccuracyHigh	let CIDetectorAccuracyHigh: String
+c:@CIDetectorAccuracyLow	swift.var	CIDetectorAccuracyLow	CIDetectorAccuracyLow	let CIDetectorAccuracyLow: String
+c:@CIDetectorAspectRatio	swift.var	CIDetectorAspectRatio	CIDetectorAspectRatio	let CIDetectorAspectRatio: String
+c:@CIDetectorEyeBlink	swift.var	CIDetectorEyeBlink	CIDetectorEyeBlink	let CIDetectorEyeBlink: String
+c:@CIDetectorFocalLength	swift.var	CIDetectorFocalLength	CIDetectorFocalLength	let CIDetectorFocalLength: String
+c:@CIDetectorImageOrientation	swift.var	CIDetectorImageOrientation	CIDetectorImageOrientation	let CIDetectorImageOrientation: String
+c:@CIDetectorMaxFeatureCount	swift.var	CIDetectorMaxFeatureCount	CIDetectorMaxFeatureCount	let CIDetectorMaxFeatureCount: String
+c:@CIDetectorMinFeatureSize	swift.var	CIDetectorMinFeatureSize	CIDetectorMinFeatureSize	let CIDetectorMinFeatureSize: String
+c:@CIDetectorNumberOfAngles	swift.var	CIDetectorNumberOfAngles	CIDetectorNumberOfAngles	let CIDetectorNumberOfAngles: String
+c:@CIDetectorReturnSubFeatures	swift.var	CIDetectorReturnSubFeatures	CIDetectorReturnSubFeatures	let CIDetectorReturnSubFeatures: String
+c:@CIDetectorSmile	swift.var	CIDetectorSmile	CIDetectorSmile	let CIDetectorSmile: String
+c:@CIDetectorTracking	swift.var	CIDetectorTracking	CIDetectorTracking	let CIDetectorTracking: String
+c:@CIDetectorTypeFace	swift.var	CIDetectorTypeFace	CIDetectorTypeFace	let CIDetectorTypeFace: String
+c:@CIDetectorTypeQRCode	swift.var	CIDetectorTypeQRCode	CIDetectorTypeQRCode	let CIDetectorTypeQRCode: String
+c:@CIDetectorTypeRectangle	swift.var	CIDetectorTypeRectangle	CIDetectorTypeRectangle	let CIDetectorTypeRectangle: String
+c:@CIDetectorTypeText	swift.var	CIDetectorTypeText	CIDetectorTypeText	let CIDetectorTypeText: String
+c:@CIFeatureTypeFace	swift.var	CIFeatureTypeFace	CIFeatureTypeFace	let CIFeatureTypeFace: String
+c:@CIFeatureTypeQRCode	swift.var	CIFeatureTypeQRCode	CIFeatureTypeQRCode	let CIFeatureTypeQRCode: String
+c:@CIFeatureTypeRectangle	swift.var	CIFeatureTypeRectangle	CIFeatureTypeRectangle	let CIFeatureTypeRectangle: String
+c:@CIFeatureTypeText	swift.var	CIFeatureTypeText	CIFeatureTypeText	let CIFeatureTypeText: String
+c:@CIRAWDecoderVersion6	swift.type.property	version6	CIRAWDecoderVersion.version6	static let version6: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion6DNG	swift.type.property	version6DNG	CIRAWDecoderVersion.version6DNG	static let version6DNG: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion7	swift.type.property	version7	CIRAWDecoderVersion.version7	static let version7: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion7DNG	swift.type.property	version7DNG	CIRAWDecoderVersion.version7DNG	static let version7DNG: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion8	swift.type.property	version8	CIRAWDecoderVersion.version8	static let version8: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion8DNG	swift.type.property	version8DNG	CIRAWDecoderVersion.version8DNG	static let version8DNG: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion9	swift.type.property	version9	CIRAWDecoderVersion.version9	static let version9: CIRAWDecoderVersion
+c:@CIRAWDecoderVersion9DNG	swift.type.property	version9DNG	CIRAWDecoderVersion.version9DNG	static let version9DNG: CIRAWDecoderVersion
+c:@CIRAWDecoderVersionNone	swift.type.property	none	CIRAWDecoderVersion.none	static let none: CIRAWDecoderVersion
+c:@E@CIDataMatrixCodeECCVersion	swift.enum	CIDataMatrixCodeDescriptor.ECCVersion	CIDataMatrixCodeDescriptor.ECCVersion	enum ECCVersion
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion000	swift.enum.case	CIDataMatrixCodeDescriptor.ECCVersion.v000	CIDataMatrixCodeDescriptor.ECCVersion.v000	case v000
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion050	swift.enum.case	CIDataMatrixCodeDescriptor.ECCVersion.v050	CIDataMatrixCodeDescriptor.ECCVersion.v050	case v050
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion080	swift.enum.case	CIDataMatrixCodeDescriptor.ECCVersion.v080	CIDataMatrixCodeDescriptor.ECCVersion.v080	case v080
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion100	swift.enum.case	CIDataMatrixCodeDescriptor.ECCVersion.v100	CIDataMatrixCodeDescriptor.ECCVersion.v100	case v100
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion140	swift.enum.case	CIDataMatrixCodeDescriptor.ECCVersion.v140	CIDataMatrixCodeDescriptor.ECCVersion.v140	case v140
+c:@E@CIDataMatrixCodeECCVersion@CIDataMatrixCodeECCVersion200	swift.enum.case	CIDataMatrixCodeDescriptor.ECCVersion.v200	CIDataMatrixCodeDescriptor.ECCVersion.v200	case v200
+c:@E@CIQRCodeErrorCorrectionLevel	swift.enum	CIQRCodeDescriptor.ErrorCorrectionLevel	CIQRCodeDescriptor.ErrorCorrectionLevel	enum ErrorCorrectionLevel
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelH	swift.enum.case	CIQRCodeDescriptor.ErrorCorrectionLevel.levelH	CIQRCodeDescriptor.ErrorCorrectionLevel.levelH	case levelH
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelL	swift.enum.case	CIQRCodeDescriptor.ErrorCorrectionLevel.levelL	CIQRCodeDescriptor.ErrorCorrectionLevel.levelL	case levelL
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelM	swift.enum.case	CIQRCodeDescriptor.ErrorCorrectionLevel.levelM	CIQRCodeDescriptor.ErrorCorrectionLevel.levelM	case levelM
+c:@E@CIQRCodeErrorCorrectionLevel@CIQRCodeErrorCorrectionLevelQ	swift.enum.case	CIQRCodeDescriptor.ErrorCorrectionLevel.levelQ	CIQRCodeDescriptor.ErrorCorrectionLevel.levelQ	case levelQ
+c:@E@CIRenderDestinationAlphaMode	swift.enum	CIRenderDestinationAlphaMode	CIRenderDestinationAlphaMode	enum CIRenderDestinationAlphaMode
+c:@E@CIRenderDestinationAlphaMode@CIRenderDestinationAlphaNone	swift.enum.case	CIRenderDestinationAlphaMode.none	CIRenderDestinationAlphaMode.none	case none
+c:@E@CIRenderDestinationAlphaMode@CIRenderDestinationAlphaPremultiplied	swift.enum.case	CIRenderDestinationAlphaMode.premultiplied	CIRenderDestinationAlphaMode.premultiplied	case premultiplied
+c:@E@CIRenderDestinationAlphaMode@CIRenderDestinationAlphaUnpremultiplied	swift.enum.case	CIRenderDestinationAlphaMode.unpremultiplied	CIRenderDestinationAlphaMode.unpremultiplied	case unpremultiplied
+c:@T@CIContextOption	swift.struct	CIContextOption	CIContextOption	struct CIContextOption
+c:@T@CIDynamicRangeOption	swift.struct	CIDynamicRangeOption	CIDynamicRangeOption	struct CIDynamicRangeOption
+c:@T@CIFormat	swift.struct	CIFormat	CIFormat	struct CIFormat
+c:@T@CIImageAutoAdjustmentOption	swift.struct	CIImageAutoAdjustmentOption	CIImageAutoAdjustmentOption	struct CIImageAutoAdjustmentOption
+c:@T@CIImageOption	swift.struct	CIImageOption	CIImageOption	struct CIImageOption
+c:@T@CIImageRepresentationOption	swift.struct	CIImageRepresentationOption	CIImageRepresentationOption	struct CIImageRepresentationOption
+c:@T@CIKernelROICallback	swift.typealias	CIKernelROICallback	CIKernelROICallback	typealias CIKernelROICallback = (Int32, CGRect) -> CGRect
+c:@T@CIRAWDecoderVersion	swift.struct	CIRAWDecoderVersion	CIRAWDecoderVersion	struct CIRAWDecoderVersion
+c:@T@CIRAWFilterOption	swift.struct	CIRAWFilterOption	CIRAWFilterOption	struct CIRAWFilterOption
+c:@kCIActiveKeys	swift.type.property	activeKeys	CIRAWFilterOption.activeKeys	static let activeKeys: CIRAWFilterOption
+c:@kCIAttributeClass	swift.var	kCIAttributeClass	kCIAttributeClass	let kCIAttributeClass: String
+c:@kCIAttributeDefault	swift.var	kCIAttributeDefault	kCIAttributeDefault	let kCIAttributeDefault: String
+c:@kCIAttributeDescription	swift.var	kCIAttributeDescription	kCIAttributeDescription	let kCIAttributeDescription: String
+c:@kCIAttributeDisplayName	swift.var	kCIAttributeDisplayName	kCIAttributeDisplayName	let kCIAttributeDisplayName: String
+c:@kCIAttributeFilterAvailable_Mac	swift.var	kCIAttributeFilterAvailable_Mac	kCIAttributeFilterAvailable_Mac	let kCIAttributeFilterAvailable_Mac: String
+c:@kCIAttributeFilterAvailable_iOS	swift.var	kCIAttributeFilterAvailable_iOS	kCIAttributeFilterAvailable_iOS	let kCIAttributeFilterAvailable_iOS: String
+c:@kCIAttributeFilterCategories	swift.var	kCIAttributeFilterCategories	kCIAttributeFilterCategories	let kCIAttributeFilterCategories: String
+c:@kCIAttributeFilterDisplayName	swift.var	kCIAttributeFilterDisplayName	kCIAttributeFilterDisplayName	let kCIAttributeFilterDisplayName: String
+c:@kCIAttributeFilterName	swift.var	kCIAttributeFilterName	kCIAttributeFilterName	let kCIAttributeFilterName: String
+c:@kCIAttributeIdentity	swift.var	kCIAttributeIdentity	kCIAttributeIdentity	let kCIAttributeIdentity: String
+c:@kCIAttributeMax	swift.var	kCIAttributeMax	kCIAttributeMax	let kCIAttributeMax: String
+c:@kCIAttributeMin	swift.var	kCIAttributeMin	kCIAttributeMin	let kCIAttributeMin: String
+c:@kCIAttributeName	swift.var	kCIAttributeName	kCIAttributeName	let kCIAttributeName: String
+c:@kCIAttributeReferenceDocumentation	swift.var	kCIAttributeReferenceDocumentation	kCIAttributeReferenceDocumentation	let kCIAttributeReferenceDocumentation: String
+c:@kCIAttributeSliderMax	swift.var	kCIAttributeSliderMax	kCIAttributeSliderMax	let kCIAttributeSliderMax: String
+c:@kCIAttributeSliderMin	swift.var	kCIAttributeSliderMin	kCIAttributeSliderMin	let kCIAttributeSliderMin: String
+c:@kCIAttributeType	swift.var	kCIAttributeType	kCIAttributeType	let kCIAttributeType: String
+c:@kCIAttributeTypeAngle	swift.var	kCIAttributeTypeAngle	kCIAttributeTypeAngle	let kCIAttributeTypeAngle: String
+c:@kCIAttributeTypeBoolean	swift.var	kCIAttributeTypeBoolean	kCIAttributeTypeBoolean	let kCIAttributeTypeBoolean: String
+c:@kCIAttributeTypeColor	swift.var	kCIAttributeTypeColor	kCIAttributeTypeColor	let kCIAttributeTypeColor: String
+c:@kCIAttributeTypeCount	swift.var	kCIAttributeTypeCount	kCIAttributeTypeCount	let kCIAttributeTypeCount: String
+c:@kCIAttributeTypeDistance	swift.var	kCIAttributeTypeDistance	kCIAttributeTypeDistance	let kCIAttributeTypeDistance: String
+c:@kCIAttributeTypeGradient	swift.var	kCIAttributeTypeGradient	kCIAttributeTypeGradient	let kCIAttributeTypeGradient: String
+c:@kCIAttributeTypeImage	swift.var	kCIAttributeTypeImage	kCIAttributeTypeImage	let kCIAttributeTypeImage: String
+c:@kCIAttributeTypeInteger	swift.var	kCIAttributeTypeInteger	kCIAttributeTypeInteger	let kCIAttributeTypeInteger: String
+c:@kCIAttributeTypeOffset	swift.var	kCIAttributeTypeOffset	kCIAttributeTypeOffset	let kCIAttributeTypeOffset: String
+c:@kCIAttributeTypeOpaqueColor	swift.var	kCIAttributeTypeOpaqueColor	kCIAttributeTypeOpaqueColor	let kCIAttributeTypeOpaqueColor: String
+c:@kCIAttributeTypePosition	swift.var	kCIAttributeTypePosition	kCIAttributeTypePosition	let kCIAttributeTypePosition: String
+c:@kCIAttributeTypePosition3	swift.var	kCIAttributeTypePosition3	kCIAttributeTypePosition3	let kCIAttributeTypePosition3: String
+c:@kCIAttributeTypeRectangle	swift.var	kCIAttributeTypeRectangle	kCIAttributeTypeRectangle	let kCIAttributeTypeRectangle: String
+c:@kCIAttributeTypeScalar	swift.var	kCIAttributeTypeScalar	kCIAttributeTypeScalar	let kCIAttributeTypeScalar: String
+c:@kCIAttributeTypeTime	swift.var	kCIAttributeTypeTime	kCIAttributeTypeTime	let kCIAttributeTypeTime: String
+c:@kCIAttributeTypeTransform	swift.var	kCIAttributeTypeTransform	kCIAttributeTypeTransform	let kCIAttributeTypeTransform: String
+c:@kCICategoryBlur	swift.var	kCICategoryBlur	kCICategoryBlur	let kCICategoryBlur: String
+c:@kCICategoryBuiltIn	swift.var	kCICategoryBuiltIn	kCICategoryBuiltIn	let kCICategoryBuiltIn: String
+c:@kCICategoryColorAdjustment	swift.var	kCICategoryColorAdjustment	kCICategoryColorAdjustment	let kCICategoryColorAdjustment: String
+c:@kCICategoryColorEffect	swift.var	kCICategoryColorEffect	kCICategoryColorEffect	let kCICategoryColorEffect: String
+c:@kCICategoryCompositeOperation	swift.var	kCICategoryCompositeOperation	kCICategoryCompositeOperation	let kCICategoryCompositeOperation: String
+c:@kCICategoryDistortionEffect	swift.var	kCICategoryDistortionEffect	kCICategoryDistortionEffect	let kCICategoryDistortionEffect: String
+c:@kCICategoryFilterGenerator	swift.var	kCICategoryFilterGenerator	kCICategoryFilterGenerator	let kCICategoryFilterGenerator: String
+c:@kCICategoryGenerator	swift.var	kCICategoryGenerator	kCICategoryGenerator	let kCICategoryGenerator: String
+c:@kCICategoryGeometryAdjustment	swift.var	kCICategoryGeometryAdjustment	kCICategoryGeometryAdjustment	let kCICategoryGeometryAdjustment: String
+c:@kCICategoryGradient	swift.var	kCICategoryGradient	kCICategoryGradient	let kCICategoryGradient: String
+c:@kCICategoryHalftoneEffect	swift.var	kCICategoryHalftoneEffect	kCICategoryHalftoneEffect	let kCICategoryHalftoneEffect: String
+c:@kCICategoryHighDynamicRange	swift.var	kCICategoryHighDynamicRange	kCICategoryHighDynamicRange	let kCICategoryHighDynamicRange: String
+c:@kCICategoryInterlaced	swift.var	kCICategoryInterlaced	kCICategoryInterlaced	let kCICategoryInterlaced: String
+c:@kCICategoryNonSquarePixels	swift.var	kCICategoryNonSquarePixels	kCICategoryNonSquarePixels	let kCICategoryNonSquarePixels: String
+c:@kCICategoryReduction	swift.var	kCICategoryReduction	kCICategoryReduction	let kCICategoryReduction: String
+c:@kCICategorySharpen	swift.var	kCICategorySharpen	kCICategorySharpen	let kCICategorySharpen: String
+c:@kCICategoryStillImage	swift.var	kCICategoryStillImage	kCICategoryStillImage	let kCICategoryStillImage: String
+c:@kCICategoryStylize	swift.var	kCICategoryStylize	kCICategoryStylize	let kCICategoryStylize: String
+c:@kCICategoryTileEffect	swift.var	kCICategoryTileEffect	kCICategoryTileEffect	let kCICategoryTileEffect: String
+c:@kCICategoryTransition	swift.var	kCICategoryTransition	kCICategoryTransition	let kCICategoryTransition: String
+c:@kCICategoryVideo	swift.var	kCICategoryVideo	kCICategoryVideo	let kCICategoryVideo: String
+c:@kCIContextAllowLowPower	swift.type.property	allowLowPower	CIContextOption.allowLowPower	static let allowLowPower: CIContextOption
+c:@kCIContextCVMetalTextureCache	swift.type.property	cvMetalTextureCache	CIContextOption.cvMetalTextureCache	static let cvMetalTextureCache: CIContextOption
+c:@kCIContextCacheIntermediates	swift.type.property	cacheIntermediates	CIContextOption.cacheIntermediates	static let cacheIntermediates: CIContextOption
+c:@kCIContextHighQualityDownsample	swift.type.property	highQualityDownsample	CIContextOption.highQualityDownsample	static let highQualityDownsample: CIContextOption
+c:@kCIContextMemoryLimit	swift.type.property	memoryTarget	CIContextOption.memoryTarget	static let memoryTarget: CIContextOption
+c:@kCIContextName	swift.type.property	name	CIContextOption.name	static let name: CIContextOption
+c:@kCIContextOutputColorSpace	swift.type.property	outputColorSpace	CIContextOption.outputColorSpace	static let outputColorSpace: CIContextOption
+c:@kCIContextOutputPremultiplied	swift.type.property	outputPremultiplied	CIContextOption.outputPremultiplied	static let outputPremultiplied: CIContextOption
+c:@kCIContextPriorityRequestLow	swift.type.property	priorityRequestLow	CIContextOption.priorityRequestLow	static let priorityRequestLow: CIContextOption
+c:@kCIContextUseSoftwareRenderer	swift.type.property	useSoftwareRenderer	CIContextOption.useSoftwareRenderer	static let useSoftwareRenderer: CIContextOption
+c:@kCIContextWorkingColorSpace	swift.type.property	workingColorSpace	CIContextOption.workingColorSpace	static let workingColorSpace: CIContextOption
+c:@kCIContextWorkingFormat	swift.type.property	workingFormat	CIContextOption.workingFormat	static let workingFormat: CIContextOption
+c:@kCIDynamicRangeConstrainedHigh	swift.type.property	constrainedHigh	CIDynamicRangeOption.constrainedHigh	static let constrainedHigh: CIDynamicRangeOption
+c:@kCIDynamicRangeHigh	swift.type.property	high	CIDynamicRangeOption.high	static let high: CIDynamicRangeOption
+c:@kCIDynamicRangeStandard	swift.type.property	standard	CIDynamicRangeOption.standard	static let standard: CIDynamicRangeOption
+c:@kCIFormatA16	swift.type.property	A16	CIFormat.A16	static let A16: CIFormat
+c:@kCIFormatA8	swift.type.property	A8	CIFormat.A8	static let A8: CIFormat
+c:@kCIFormatABGR8	swift.type.property	ABGR8	CIFormat.ABGR8	static let ABGR8: CIFormat
+c:@kCIFormatARGB8	swift.type.property	ARGB8	CIFormat.ARGB8	static let ARGB8: CIFormat
+c:@kCIFormatAf	swift.type.property	Af	CIFormat.Af	static let Af: CIFormat
+c:@kCIFormatAh	swift.type.property	Ah	CIFormat.Ah	static let Ah: CIFormat
+c:@kCIFormatBGRA8	swift.type.property	BGRA8	CIFormat.BGRA8	static let BGRA8: CIFormat
+c:@kCIFormatL16	swift.type.property	L16	CIFormat.L16	static let L16: CIFormat
+c:@kCIFormatL8	swift.type.property	L8	CIFormat.L8	static let L8: CIFormat
+c:@kCIFormatLA16	swift.type.property	LA16	CIFormat.LA16	static let LA16: CIFormat
+c:@kCIFormatLA8	swift.type.property	LA8	CIFormat.LA8	static let LA8: CIFormat
+c:@kCIFormatLAf	swift.type.property	LAf	CIFormat.LAf	static let LAf: CIFormat
+c:@kCIFormatLAh	swift.type.property	LAh	CIFormat.LAh	static let LAh: CIFormat
+c:@kCIFormatLf	swift.type.property	Lf	CIFormat.Lf	static let Lf: CIFormat
+c:@kCIFormatLh	swift.type.property	Lh	CIFormat.Lh	static let Lh: CIFormat
+c:@kCIFormatR16	swift.type.property	R16	CIFormat.R16	static let R16: CIFormat
+c:@kCIFormatR8	swift.type.property	R8	CIFormat.R8	static let R8: CIFormat
+c:@kCIFormatRG16	swift.type.property	RG16	CIFormat.RG16	static let RG16: CIFormat
+c:@kCIFormatRG8	swift.type.property	RG8	CIFormat.RG8	static let RG8: CIFormat
+c:@kCIFormatRGB10	swift.type.property	RGB10	CIFormat.RGB10	static let RGB10: CIFormat
+c:@kCIFormatRGBA16	swift.type.property	RGBA16	CIFormat.RGBA16	static let RGBA16: CIFormat
+c:@kCIFormatRGBA8	swift.type.property	RGBA8	CIFormat.RGBA8	static let RGBA8: CIFormat
+c:@kCIFormatRGBAf	swift.type.property	RGBAf	CIFormat.RGBAf	static let RGBAf: CIFormat
+c:@kCIFormatRGBAh	swift.type.property	RGBAh	CIFormat.RGBAh	static let RGBAh: CIFormat
+c:@kCIFormatRGBX16	swift.type.property	RGBX16	CIFormat.RGBX16	static let RGBX16: CIFormat
+c:@kCIFormatRGBX8	swift.type.property	RGBX8	CIFormat.RGBX8	static let RGBX8: CIFormat
+c:@kCIFormatRGBXf	swift.type.property	rgbXf	CIFormat.rgbXf	static let rgbXf: CIFormat
+c:@kCIFormatRGBXh	swift.type.property	rgbXh	CIFormat.rgbXh	static let rgbXh: CIFormat
+c:@kCIFormatRGf	swift.type.property	RGf	CIFormat.RGf	static let RGf: CIFormat
+c:@kCIFormatRGh	swift.type.property	RGh	CIFormat.RGh	static let RGh: CIFormat
+c:@kCIFormatRf	swift.type.property	Rf	CIFormat.Rf	static let Rf: CIFormat
+c:@kCIFormatRh	swift.type.property	Rh	CIFormat.Rh	static let Rh: CIFormat
+c:@kCIImageApplyCleanAperture	swift.type.property	applyCleanAperture	CIImageOption.applyCleanAperture	static let applyCleanAperture: CIImageOption
+c:@kCIImageApplyOrientationProperty	swift.type.property	applyOrientationProperty	CIImageOption.applyOrientationProperty	static let applyOrientationProperty: CIImageOption
+c:@kCIImageAutoAdjustCrop	swift.type.property	crop	CIImageAutoAdjustmentOption.crop	static let crop: CIImageAutoAdjustmentOption
+c:@kCIImageAutoAdjustEnhance	swift.type.property	enhance	CIImageAutoAdjustmentOption.enhance	static let enhance: CIImageAutoAdjustmentOption
+c:@kCIImageAutoAdjustFeatures	swift.type.property	features	CIImageAutoAdjustmentOption.features	static let features: CIImageAutoAdjustmentOption
+c:@kCIImageAutoAdjustLevel	swift.type.property	level	CIImageAutoAdjustmentOption.level	static let level: CIImageAutoAdjustmentOption
+c:@kCIImageAutoAdjustRedEye	swift.type.property	redEye	CIImageAutoAdjustmentOption.redEye	static let redEye: CIImageAutoAdjustmentOption
+c:@kCIImageAuxiliaryDepth	swift.type.property	auxiliaryDepth	CIImageOption.auxiliaryDepth	static let auxiliaryDepth: CIImageOption
+c:@kCIImageAuxiliaryDisparity	swift.type.property	auxiliaryDisparity	CIImageOption.auxiliaryDisparity	static let auxiliaryDisparity: CIImageOption
+c:@kCIImageAuxiliaryHDRGainMap	swift.type.property	auxiliaryHDRGainMap	CIImageOption.auxiliaryHDRGainMap	static let auxiliaryHDRGainMap: CIImageOption
+c:@kCIImageAuxiliaryPortraitEffectsMatte	swift.type.property	auxiliaryPortraitEffectsMatte	CIImageOption.auxiliaryPortraitEffectsMatte	static let auxiliaryPortraitEffectsMatte: CIImageOption
+c:@kCIImageAuxiliarySemanticSegmentationGlassesMatte	swift.type.property	auxiliarySemanticSegmentationGlassesMatte	CIImageOption.auxiliarySemanticSegmentationGlassesMatte	static let auxiliarySemanticSegmentationGlassesMatte: CIImageOption
+c:@kCIImageAuxiliarySemanticSegmentationHairMatte	swift.type.property	auxiliarySemanticSegmentationHairMatte	CIImageOption.auxiliarySemanticSegmentationHairMatte	static let auxiliarySemanticSegmentationHairMatte: CIImageOption
+c:@kCIImageAuxiliarySemanticSegmentationSkinMatte	swift.type.property	auxiliarySemanticSegmentationSkinMatte	CIImageOption.auxiliarySemanticSegmentationSkinMatte	static let auxiliarySemanticSegmentationSkinMatte: CIImageOption
+c:@kCIImageAuxiliarySemanticSegmentationSkyMatte	swift.type.property	auxiliarySemanticSegmentationSkyMatte	CIImageOption.auxiliarySemanticSegmentationSkyMatte	static let auxiliarySemanticSegmentationSkyMatte: CIImageOption
+c:@kCIImageAuxiliarySemanticSegmentationTeethMatte	swift.type.property	auxiliarySemanticSegmentationTeethMatte	CIImageOption.auxiliarySemanticSegmentationTeethMatte	static let auxiliarySemanticSegmentationTeethMatte: CIImageOption
+c:@kCIImageCacheImmediately	swift.type.property	cacheImmediately	CIImageOption.cacheImmediately	static let cacheImmediately: CIImageOption
+c:@kCIImageColorSpace	swift.type.property	colorSpace	CIImageOption.colorSpace	static let colorSpace: CIImageOption
+c:@kCIImageContentAverageLightLevel	swift.type.property	contentAverageLightLevel	CIImageOption.contentAverageLightLevel	static let contentAverageLightLevel: CIImageOption
+c:@kCIImageContentHeadroom	swift.type.property	contentHeadroom	CIImageOption.contentHeadroom	static let contentHeadroom: CIImageOption
+c:@kCIImageExpandToHDR	swift.type.property	expandToHDR	CIImageOption.expandToHDR	static let expandToHDR: CIImageOption
+c:@kCIImageNearestSampling	swift.type.property	nearestSampling	CIImageOption.nearestSampling	static let nearestSampling: CIImageOption
+c:@kCIImageProperties	swift.type.property	properties	CIImageOption.properties	static let properties: CIImageOption
+c:@kCIImageProviderTileSize	swift.type.property	providerTileSize	CIImageOption.providerTileSize	static let providerTileSize: CIImageOption
+c:@kCIImageProviderUserInfo	swift.type.property	providerUserInfo	CIImageOption.providerUserInfo	static let providerUserInfo: CIImageOption
+c:@kCIImageRepresentationAVDepthData	swift.type.property	avDepthData	CIImageRepresentationOption.avDepthData	static let avDepthData: CIImageRepresentationOption
+c:@kCIImageRepresentationAVPortraitEffectsMatte	swift.type.property	avPortraitEffectsMatte	CIImageRepresentationOption.avPortraitEffectsMatte	static let avPortraitEffectsMatte: CIImageRepresentationOption
+c:@kCIImageRepresentationAVSemanticSegmentationMattes	swift.type.property	avSemanticSegmentationMattes	CIImageRepresentationOption.avSemanticSegmentationMattes	static let avSemanticSegmentationMattes: CIImageRepresentationOption
+c:@kCIImageRepresentationDepthImage	swift.type.property	depthImage	CIImageRepresentationOption.depthImage	static let depthImage: CIImageRepresentationOption
+c:@kCIImageRepresentationDisparityImage	swift.type.property	disparityImage	CIImageRepresentationOption.disparityImage	static let disparityImage: CIImageRepresentationOption
+c:@kCIImageRepresentationHDRGainMapAsRGB	swift.type.property	hdrGainMapAsRGB	CIImageRepresentationOption.hdrGainMapAsRGB	static let hdrGainMapAsRGB: CIImageRepresentationOption
+c:@kCIImageRepresentationHDRGainMapImage	swift.type.property	hdrGainMapImage	CIImageRepresentationOption.hdrGainMapImage	static let hdrGainMapImage: CIImageRepresentationOption
+c:@kCIImageRepresentationHDRImage	swift.type.property	hdrImage	CIImageRepresentationOption.hdrImage	static let hdrImage: CIImageRepresentationOption
+c:@kCIImageRepresentationPortraitEffectsMatteImage	swift.type.property	portraitEffectsMatteImage	CIImageRepresentationOption.portraitEffectsMatteImage	static let portraitEffectsMatteImage: CIImageRepresentationOption
+c:@kCIImageRepresentationSemanticSegmentationGlassesMatteImage	swift.type.property	semanticSegmentationGlassesMatteImage	CIImageRepresentationOption.semanticSegmentationGlassesMatteImage	static let semanticSegmentationGlassesMatteImage: CIImageRepresentationOption
+c:@kCIImageRepresentationSemanticSegmentationHairMatteImage	swift.type.property	semanticSegmentationHairMatteImage	CIImageRepresentationOption.semanticSegmentationHairMatteImage	static let semanticSegmentationHairMatteImage: CIImageRepresentationOption
+c:@kCIImageRepresentationSemanticSegmentationSkinMatteImage	swift.type.property	semanticSegmentationSkinMatteImage	CIImageRepresentationOption.semanticSegmentationSkinMatteImage	static let semanticSegmentationSkinMatteImage: CIImageRepresentationOption
+c:@kCIImageRepresentationSemanticSegmentationSkyMatteImage	swift.type.property	semanticSegmentationSkyMatteImage	CIImageRepresentationOption.semanticSegmentationSkyMatteImage	static let semanticSegmentationSkyMatteImage: CIImageRepresentationOption
+c:@kCIImageRepresentationSemanticSegmentationTeethMatteImage	swift.type.property	semanticSegmentationTeethMatteImage	CIImageRepresentationOption.semanticSegmentationTeethMatteImage	static let semanticSegmentationTeethMatteImage: CIImageRepresentationOption
+c:@kCIImageToneMapHDRtoSDR	swift.type.property	toneMapHDRtoSDR	CIImageOption.toneMapHDRtoSDR	static let toneMapHDRtoSDR: CIImageOption
+c:@kCIInputAllowDraftModeKey	swift.type.property	allowDraftMode	CIRAWFilterOption.allowDraftMode	static let allowDraftMode: CIRAWFilterOption
+c:@kCIInputAmountKey	swift.var	kCIInputAmountKey	kCIInputAmountKey	let kCIInputAmountKey: String
+c:@kCIInputAngleKey	swift.var	kCIInputAngleKey	kCIInputAngleKey	let kCIInputAngleKey: String
+c:@kCIInputAspectRatioKey	swift.var	kCIInputAspectRatioKey	kCIInputAspectRatioKey	let kCIInputAspectRatioKey: String
+c:@kCIInputBackgroundImageKey	swift.var	kCIInputBackgroundImageKey	kCIInputBackgroundImageKey	let kCIInputBackgroundImageKey: String
+c:@kCIInputBacksideImageKey	swift.var	kCIInputBacksideImageKey	kCIInputBacksideImageKey	let kCIInputBacksideImageKey: String
+c:@kCIInputBaselineExposureKey	swift.type.property	baselineExposure	CIRAWFilterOption.baselineExposure	static let baselineExposure: CIRAWFilterOption
+c:@kCIInputBiasKey	swift.var	kCIInputBiasKey	kCIInputBiasKey	let kCIInputBiasKey: String
+c:@kCIInputBiasVectorKey	swift.var	kCIInputBiasVectorKey	kCIInputBiasVectorKey	let kCIInputBiasVectorKey: String
+c:@kCIInputBoostKey	swift.type.property	boostAmount	CIRAWFilterOption.boostAmount	static let boostAmount: CIRAWFilterOption
+c:@kCIInputBoostShadowAmountKey	swift.type.property	boostShadowAmount	CIRAWFilterOption.boostShadowAmount	static let boostShadowAmount: CIRAWFilterOption
+c:@kCIInputBrightnessKey	swift.var	kCIInputBrightnessKey	kCIInputBrightnessKey	let kCIInputBrightnessKey: String
+c:@kCIInputCenterKey	swift.var	kCIInputCenterKey	kCIInputCenterKey	let kCIInputCenterKey: String
+c:@kCIInputColor0Key	swift.var	kCIInputColor0Key	kCIInputColor0Key	let kCIInputColor0Key: String
+c:@kCIInputColor1Key	swift.var	kCIInputColor1Key	kCIInputColor1Key	let kCIInputColor1Key: String
+c:@kCIInputColorKey	swift.var	kCIInputColorKey	kCIInputColorKey	let kCIInputColorKey: String
+c:@kCIInputColorNoiseReductionAmountKey	swift.type.property	colorNoiseReductionAmount	CIRAWFilterOption.colorNoiseReductionAmount	static let colorNoiseReductionAmount: CIRAWFilterOption
+c:@kCIInputColorSpaceKey	swift.var	kCIInputColorSpaceKey	kCIInputColorSpaceKey	let kCIInputColorSpaceKey: String
+c:@kCIInputContrastKey	swift.var	kCIInputContrastKey	kCIInputContrastKey	let kCIInputContrastKey: String
+c:@kCIInputCountKey	swift.var	kCIInputCountKey	kCIInputCountKey	let kCIInputCountKey: String
+c:@kCIInputDecoderVersionKey	swift.type.property	decoderVersion	CIRAWFilterOption.decoderVersion	static let decoderVersion: CIRAWFilterOption
+c:@kCIInputDepthImageKey	swift.var	kCIInputDepthImageKey	kCIInputDepthImageKey	let kCIInputDepthImageKey: String
+c:@kCIInputDisableGamutMapKey	swift.type.property	disableGamutMap	CIRAWFilterOption.disableGamutMap	static let disableGamutMap: CIRAWFilterOption
+c:@kCIInputDisparityImageKey	swift.var	kCIInputDisparityImageKey	kCIInputDisparityImageKey	let kCIInputDisparityImageKey: String
+c:@kCIInputEVKey	swift.var	kCIInputEVKey	kCIInputEVKey	let kCIInputEVKey: String
+c:@kCIInputEnableChromaticNoiseTrackingKey	swift.type.property	enableChromaticNoiseTracking	CIRAWFilterOption.enableChromaticNoiseTracking	static let enableChromaticNoiseTracking: CIRAWFilterOption
+c:@kCIInputEnableEDRModeKey	swift.type.property	ciInputEnableEDRModeKey	CIRAWFilterOption.ciInputEnableEDRModeKey	static let ciInputEnableEDRModeKey: CIRAWFilterOption
+c:@kCIInputEnableSharpeningKey	swift.type.property	enableSharpening	CIRAWFilterOption.enableSharpening	static let enableSharpening: CIRAWFilterOption
+c:@kCIInputEnableVendorLensCorrectionKey	swift.type.property	enableVendorLensCorrection	CIRAWFilterOption.enableVendorLensCorrection	static let enableVendorLensCorrection: CIRAWFilterOption
+c:@kCIInputExtentKey	swift.var	kCIInputExtentKey	kCIInputExtentKey	let kCIInputExtentKey: String
+c:@kCIInputExtrapolateKey	swift.var	kCIInputExtrapolateKey	kCIInputExtrapolateKey	let kCIInputExtrapolateKey: String
+c:@kCIInputGradientImageKey	swift.var	kCIInputGradientImageKey	kCIInputGradientImageKey	let kCIInputGradientImageKey: String
+c:@kCIInputIgnoreImageOrientationKey	swift.type.property	ignoreImageOrientation	CIRAWFilterOption.ignoreImageOrientation	static let ignoreImageOrientation: CIRAWFilterOption
+c:@kCIInputImageKey	swift.var	kCIInputImageKey	kCIInputImageKey	let kCIInputImageKey: String
+c:@kCIInputImageOrientationKey	swift.type.property	imageOrientation	CIRAWFilterOption.imageOrientation	static let imageOrientation: CIRAWFilterOption
+c:@kCIInputIntensityKey	swift.var	kCIInputIntensityKey	kCIInputIntensityKey	let kCIInputIntensityKey: String
+c:@kCIInputLinearSpaceFilter	swift.type.property	linearSpaceFilter	CIRAWFilterOption.linearSpaceFilter	static let linearSpaceFilter: CIRAWFilterOption
+c:@kCIInputLocalToneMapAmountKey	swift.type.property	ciInputLocalToneMapAmountKey	CIRAWFilterOption.ciInputLocalToneMapAmountKey	static let ciInputLocalToneMapAmountKey: CIRAWFilterOption
+c:@kCIInputLuminanceNoiseReductionAmountKey	swift.type.property	luminanceNoiseReductionAmount	CIRAWFilterOption.luminanceNoiseReductionAmount	static let luminanceNoiseReductionAmount: CIRAWFilterOption
+c:@kCIInputMaskImageKey	swift.var	kCIInputMaskImageKey	kCIInputMaskImageKey	let kCIInputMaskImageKey: String
+c:@kCIInputMatteImageKey	swift.var	kCIInputMatteImageKey	kCIInputMatteImageKey	let kCIInputMatteImageKey: String
+c:@kCIInputMoireAmountKey	swift.type.property	moireAmount	CIRAWFilterOption.moireAmount	static let moireAmount: CIRAWFilterOption
+c:@kCIInputNeutralChromaticityXKey	swift.type.property	neutralChromaticityX	CIRAWFilterOption.neutralChromaticityX	static let neutralChromaticityX: CIRAWFilterOption
+c:@kCIInputNeutralChromaticityYKey	swift.type.property	neutralChromaticityY	CIRAWFilterOption.neutralChromaticityY	static let neutralChromaticityY: CIRAWFilterOption
+c:@kCIInputNeutralLocationKey	swift.type.property	neutralLocation	CIRAWFilterOption.neutralLocation	static let neutralLocation: CIRAWFilterOption
+c:@kCIInputNeutralTemperatureKey	swift.type.property	neutralTemperature	CIRAWFilterOption.neutralTemperature	static let neutralTemperature: CIRAWFilterOption
+c:@kCIInputNeutralTintKey	swift.type.property	neutralTint	CIRAWFilterOption.neutralTint	static let neutralTint: CIRAWFilterOption
+c:@kCIInputNoiseReductionAmountKey	swift.type.property	noiseReductionAmount	CIRAWFilterOption.noiseReductionAmount	static let noiseReductionAmount: CIRAWFilterOption
+c:@kCIInputNoiseReductionContrastAmountKey	swift.type.property	noiseReductionContrastAmount	CIRAWFilterOption.noiseReductionContrastAmount	static let noiseReductionContrastAmount: CIRAWFilterOption
+c:@kCIInputNoiseReductionDetailAmountKey	swift.type.property	noiseReductionDetailAmount	CIRAWFilterOption.noiseReductionDetailAmount	static let noiseReductionDetailAmount: CIRAWFilterOption
+c:@kCIInputNoiseReductionSharpnessAmountKey	swift.type.property	noiseReductionSharpnessAmount	CIRAWFilterOption.noiseReductionSharpnessAmount	static let noiseReductionSharpnessAmount: CIRAWFilterOption
+c:@kCIInputPaletteImageKey	swift.var	kCIInputPaletteImageKey	kCIInputPaletteImageKey	let kCIInputPaletteImageKey: String
+c:@kCIInputPerceptualKey	swift.var	kCIInputPerceptualKey	kCIInputPerceptualKey	let kCIInputPerceptualKey: String
+c:@kCIInputPoint0Key	swift.var	kCIInputPoint0Key	kCIInputPoint0Key	let kCIInputPoint0Key: String
+c:@kCIInputPoint1Key	swift.var	kCIInputPoint1Key	kCIInputPoint1Key	let kCIInputPoint1Key: String
+c:@kCIInputRadius0Key	swift.var	kCIInputRadius0Key	kCIInputRadius0Key	let kCIInputRadius0Key: String
+c:@kCIInputRadius1Key	swift.var	kCIInputRadius1Key	kCIInputRadius1Key	let kCIInputRadius1Key: String
+c:@kCIInputRadiusKey	swift.var	kCIInputRadiusKey	kCIInputRadiusKey	let kCIInputRadiusKey: String
+c:@kCIInputRefractionKey	swift.var	kCIInputRefractionKey	kCIInputRefractionKey	let kCIInputRefractionKey: String
+c:@kCIInputSaturationKey	swift.var	kCIInputSaturationKey	kCIInputSaturationKey	let kCIInputSaturationKey: String
+c:@kCIInputScaleFactorKey	swift.type.property	scaleFactor	CIRAWFilterOption.scaleFactor	static let scaleFactor: CIRAWFilterOption
+c:@kCIInputScaleKey	swift.var	kCIInputScaleKey	kCIInputScaleKey	let kCIInputScaleKey: String
+c:@kCIInputShadingImageKey	swift.var	kCIInputShadingImageKey	kCIInputShadingImageKey	let kCIInputShadingImageKey: String
+c:@kCIInputSharpnessKey	swift.var	kCIInputSharpnessKey	kCIInputSharpnessKey	let kCIInputSharpnessKey: String
+c:@kCIInputTargetImageKey	swift.var	kCIInputTargetImageKey	kCIInputTargetImageKey	let kCIInputTargetImageKey: String
+c:@kCIInputThresholdKey	swift.var	kCIInputThresholdKey	kCIInputThresholdKey	let kCIInputThresholdKey: String
+c:@kCIInputTimeKey	swift.var	kCIInputTimeKey	kCIInputTimeKey	let kCIInputTimeKey: String
+c:@kCIInputTransformKey	swift.var	kCIInputTransformKey	kCIInputTransformKey	let kCIInputTransformKey: String
+c:@kCIInputVersionKey	swift.var	kCIInputVersionKey	kCIInputVersionKey	let kCIInputVersionKey: String
+c:@kCIInputWeightsKey	swift.var	kCIInputWeightsKey	kCIInputWeightsKey	let kCIInputWeightsKey: String
+c:@kCIInputWidthKey	swift.var	kCIInputWidthKey	kCIInputWidthKey	let kCIInputWidthKey: String
+c:@kCIOutputImageKey	swift.var	kCIOutputImageKey	kCIOutputImageKey	let kCIOutputImageKey: String
+c:@kCIOutputNativeSizeKey	swift.type.property	outputNativeSize	CIRAWFilterOption.outputNativeSize	static let outputNativeSize: CIRAWFilterOption
+c:@kCIPropertiesKey	swift.type.property	propertiesKey	CIRAWFilterOption.propertiesKey	static let propertiesKey: CIRAWFilterOption
+c:@kCISamplerAffineMatrix	swift.var	kCISamplerAffineMatrix	kCISamplerAffineMatrix	let kCISamplerAffineMatrix: String
+c:@kCISamplerColorSpace	swift.var	kCISamplerColorSpace	kCISamplerColorSpace	let kCISamplerColorSpace: String
+c:@kCISamplerFilterLinear	swift.var	kCISamplerFilterLinear	kCISamplerFilterLinear	let kCISamplerFilterLinear: String
+c:@kCISamplerFilterMode	swift.var	kCISamplerFilterMode	kCISamplerFilterMode	let kCISamplerFilterMode: String
+c:@kCISamplerFilterNearest	swift.var	kCISamplerFilterNearest	kCISamplerFilterNearest	let kCISamplerFilterNearest: String
+c:@kCISamplerWrapBlack	swift.var	kCISamplerWrapBlack	kCISamplerWrapBlack	let kCISamplerWrapBlack: String
+c:@kCISamplerWrapClamp	swift.var	kCISamplerWrapClamp	kCISamplerWrapClamp	let kCISamplerWrapClamp: String
+c:@kCISamplerWrapMode	swift.var	kCISamplerWrapMode	kCISamplerWrapMode	let kCISamplerWrapMode: String
+c:@kCISupportedDecoderVersionsKey	swift.type.property	supportedDecoderVersions	CIRAWFilterOption.supportedDecoderVersions	static let supportedDecoderVersions: CIRAWFilterOption
+c:@kCIUIParameterSet	swift.var	kCIUIParameterSet	kCIUIParameterSet	let kCIUIParameterSet: String
+c:@kCIUISetAdvanced	swift.var	kCIUISetAdvanced	kCIUISetAdvanced	let kCIUISetAdvanced: String
+c:@kCIUISetBasic	swift.var	kCIUISetBasic	kCIUISetBasic	let kCIUISetBasic: String
+c:@kCIUISetDevelopment	swift.var	kCIUISetDevelopment	kCIUISetDevelopment	let kCIUISetDevelopment: String
+c:@kCIUISetIntermediate	swift.var	kCIUISetIntermediate	kCIUISetIntermediate	let kCIUISetIntermediate: String
+c:@macro@COREIMAGE_SUPPORTS_IOSURFACE	swift.var	COREIMAGE_SUPPORTS_IOSURFACE	COREIMAGE_SUPPORTS_IOSURFACE	var COREIMAGE_SUPPORTS_IOSURFACE: Int32 { get }
+c:@macro@COREIMAGE_SUPPORTS_OPENGLES	swift.var	COREIMAGE_SUPPORTS_OPENGLES	COREIMAGE_SUPPORTS_OPENGLES	var COREIMAGE_SUPPORTS_OPENGLES: Int32 { get }
+c:@macro@UNIFIED_CORE_IMAGE	swift.var	UNIFIED_CORE_IMAGE	UNIFIED_CORE_IMAGE	var UNIFIED_CORE_IMAGE: Int32 { get }
+c:objc(cs)CIAztecCodeDescriptor	swift.class	CIAztecCodeDescriptor	CIAztecCodeDescriptor	class CIAztecCodeDescriptor
+c:objc(cs)CIAztecCodeDescriptor(im)initWithPayload:isCompact:layerCount:dataCodewordCount:	swift.init	init(payload:isCompact:layerCount:dataCodewordCount:)	CIAztecCodeDescriptor.init(payload:isCompact:layerCount:dataCodewordCount:)	init?(payload errorCorrectedPayload: Data, isCompact: Bool, layerCount: Int, dataCodewordCount: Int)
+c:objc(cs)CIAztecCodeDescriptor(py)dataCodewordCount	swift.property	dataCodewordCount	CIAztecCodeDescriptor.dataCodewordCount	var dataCodewordCount: Int { get }
+c:objc(cs)CIAztecCodeDescriptor(py)errorCorrectedPayload	swift.property	errorCorrectedPayload	CIAztecCodeDescriptor.errorCorrectedPayload	var errorCorrectedPayload: Data { get }
+c:objc(cs)CIAztecCodeDescriptor(py)isCompact	swift.property	isCompact	CIAztecCodeDescriptor.isCompact	var isCompact: Bool { get }
+c:objc(cs)CIAztecCodeDescriptor(py)layerCount	swift.property	layerCount	CIAztecCodeDescriptor.layerCount	var layerCount: Int { get }
+c:objc(cs)CIBarcodeDescriptor	swift.class	CIBarcodeDescriptor	CIBarcodeDescriptor	class CIBarcodeDescriptor
+c:objc(cs)CIBlendKernel	swift.class	CIBlendKernel	CIBlendKernel	class CIBlendKernel
+c:objc(cs)CIBlendKernel(cm)kernelWithString:	swift.init	init(source:)	CIBlendKernel.init(source:)	convenience init?(source string: String)
+c:objc(cs)CIBlendKernel(cpy)clear	swift.type.property	clear	CIBlendKernel.clear	class var clear: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)color	swift.type.property	color	CIBlendKernel.color	class var color: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)colorBurn	swift.type.property	colorBurn	CIBlendKernel.colorBurn	class var colorBurn: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)colorDodge	swift.type.property	colorDodge	CIBlendKernel.colorDodge	class var colorDodge: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)componentAdd	swift.type.property	componentAdd	CIBlendKernel.componentAdd	class var componentAdd: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)componentMax	swift.type.property	componentMax	CIBlendKernel.componentMax	class var componentMax: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)componentMin	swift.type.property	componentMin	CIBlendKernel.componentMin	class var componentMin: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)componentMultiply	swift.type.property	componentMultiply	CIBlendKernel.componentMultiply	class var componentMultiply: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)darken	swift.type.property	darken	CIBlendKernel.darken	class var darken: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)darkerColor	swift.type.property	darkerColor	CIBlendKernel.darkerColor	class var darkerColor: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)destination	swift.type.property	destination	CIBlendKernel.destination	class var destination: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)destinationAtop	swift.type.property	destinationAtop	CIBlendKernel.destinationAtop	class var destinationAtop: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)destinationIn	swift.type.property	destinationIn	CIBlendKernel.destinationIn	class var destinationIn: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)destinationOut	swift.type.property	destinationOut	CIBlendKernel.destinationOut	class var destinationOut: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)destinationOver	swift.type.property	destinationOver	CIBlendKernel.destinationOver	class var destinationOver: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)difference	swift.type.property	difference	CIBlendKernel.difference	class var difference: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)divide	swift.type.property	divide	CIBlendKernel.divide	class var divide: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)exclusion	swift.type.property	exclusion	CIBlendKernel.exclusion	class var exclusion: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)exclusiveOr	swift.type.property	exclusiveOr	CIBlendKernel.exclusiveOr	class var exclusiveOr: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)hardLight	swift.type.property	hardLight	CIBlendKernel.hardLight	class var hardLight: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)hardMix	swift.type.property	hardMix	CIBlendKernel.hardMix	class var hardMix: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)hue	swift.type.property	hue	CIBlendKernel.hue	class var hue: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)lighten	swift.type.property	lighten	CIBlendKernel.lighten	class var lighten: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)lighterColor	swift.type.property	lighterColor	CIBlendKernel.lighterColor	class var lighterColor: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)linearBurn	swift.type.property	linearBurn	CIBlendKernel.linearBurn	class var linearBurn: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)linearDodge	swift.type.property	linearDodge	CIBlendKernel.linearDodge	class var linearDodge: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)linearLight	swift.type.property	linearLight	CIBlendKernel.linearLight	class var linearLight: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)luminosity	swift.type.property	luminosity	CIBlendKernel.luminosity	class var luminosity: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)multiply	swift.type.property	multiply	CIBlendKernel.multiply	class var multiply: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)overlay	swift.type.property	overlay	CIBlendKernel.overlay	class var overlay: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)pinLight	swift.type.property	pinLight	CIBlendKernel.pinLight	class var pinLight: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)saturation	swift.type.property	saturation	CIBlendKernel.saturation	class var saturation: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)screen	swift.type.property	screen	CIBlendKernel.screen	class var screen: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)softLight	swift.type.property	softLight	CIBlendKernel.softLight	class var softLight: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)source	swift.type.property	source	CIBlendKernel.source	class var source: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)sourceAtop	swift.type.property	sourceAtop	CIBlendKernel.sourceAtop	class var sourceAtop: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)sourceIn	swift.type.property	sourceIn	CIBlendKernel.sourceIn	class var sourceIn: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)sourceOut	swift.type.property	sourceOut	CIBlendKernel.sourceOut	class var sourceOut: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)sourceOver	swift.type.property	sourceOver	CIBlendKernel.sourceOver	class var sourceOver: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)subtract	swift.type.property	subtract	CIBlendKernel.subtract	class var subtract: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(cpy)vividLight	swift.type.property	vividLight	CIBlendKernel.vividLight	class var vividLight: CIBlendKernel { get }
+c:objc(cs)CIBlendKernel(im)applyWithForeground:background:	swift.method	apply(foreground:background:)	CIBlendKernel.apply(foreground:background:)	func apply(foreground: CIImage, background: CIImage) -> CIImage?
+c:objc(cs)CIBlendKernel(im)applyWithForeground:background:colorSpace:	swift.method	apply(foreground:background:colorSpace:)	CIBlendKernel.apply(foreground:background:colorSpace:)	func apply(foreground: CIImage, background: CIImage, colorSpace: CGColorSpace) -> CIImage?
+c:objc(cs)CIColor	swift.class	CIColor	CIColor	class CIColor
+c:objc(cs)CIColor(cm)colorWithCGColor:::SYNTHESIZED::c:objc(cs)CIColor	swift.init	init(CGColor:)	CIColor.init(CGColor:)	convenience init(CGColor color: CGColor)
+c:objc(cs)CIColor(cm)colorWithRed:green:blue:	swift.init	init(red:green:blue:)	CIColor.init(red:green:blue:)	convenience init(red: CGFloat, green: CGFloat, blue: CGFloat)
+c:objc(cs)CIColor(cm)colorWithString:	swift.init	init(string:)	CIColor.init(string:)	convenience init(string representation: String)
+c:objc(cs)CIColor(cpy)blackColor	swift.type.property	black	CIColor.black	class var black: CIColor { get }
+c:objc(cs)CIColor(cpy)blueColor	swift.type.property	blue	CIColor.blue	class var blue: CIColor { get }
+c:objc(cs)CIColor(cpy)clearColor	swift.type.property	clear	CIColor.clear	class var clear: CIColor { get }
+c:objc(cs)CIColor(cpy)cyanColor	swift.type.property	cyan	CIColor.cyan	class var cyan: CIColor { get }
+c:objc(cs)CIColor(cpy)grayColor	swift.type.property	gray	CIColor.gray	class var gray: CIColor { get }
+c:objc(cs)CIColor(cpy)greenColor	swift.type.property	green	CIColor.green	class var green: CIColor { get }
+c:objc(cs)CIColor(cpy)magentaColor	swift.type.property	magenta	CIColor.magenta	class var magenta: CIColor { get }
+c:objc(cs)CIColor(cpy)redColor	swift.type.property	red	CIColor.red	class var red: CIColor { get }
+c:objc(cs)CIColor(cpy)whiteColor	swift.type.property	white	CIColor.white	class var white: CIColor { get }
+c:objc(cs)CIColor(cpy)yellowColor	swift.type.property	yellow	CIColor.yellow	class var yellow: CIColor { get }
+c:objc(cs)CIColor(im)initWithCGColor:	swift.init	init(cgColor:)	CIColor.init(cgColor:)	init(cgColor color: CGColor)
+c:objc(cs)CIColor(im)initWithCGColor:::SYNTHESIZED::c:objc(cs)CIColor	swift.init	init(CGColor:)	CIColor.init(CGColor:)	init(CGColor color: CGColor)
+c:objc(cs)CIColor(im)initWithRed:green:blue:alpha:	swift.init	init(red:green:blue:alpha:)	CIColor.init(red:green:blue:alpha:)	convenience init(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
+c:objc(cs)CIColor(im)initWithRed:green:blue:alpha:colorSpace:	swift.init	init(red:green:blue:alpha:colorSpace:)	CIColor.init(red:green:blue:alpha:colorSpace:)	convenience init?(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat, colorSpace: CGColorSpace)
+c:objc(cs)CIColor(im)initWithRed:green:blue:colorSpace:	swift.init	init(red:green:blue:colorSpace:)	CIColor.init(red:green:blue:colorSpace:)	convenience init?(red: CGFloat, green: CGFloat, blue: CGFloat, colorSpace: CGColorSpace)
+c:objc(cs)CIColor(py)alpha	swift.property	alpha	CIColor.alpha	var alpha: CGFloat { get }
+c:objc(cs)CIColor(py)blue	swift.property	blue	CIColor.blue	var blue: CGFloat { get }
+c:objc(cs)CIColor(py)colorSpace	swift.property	colorSpace	CIColor.colorSpace	var colorSpace: CGColorSpace { get }
+c:objc(cs)CIColor(py)components	swift.property	components	CIColor.components	var components: UnsafePointer<CGFloat> { get }
+c:objc(cs)CIColor(py)green	swift.property	green	CIColor.green	var green: CGFloat { get }
+c:objc(cs)CIColor(py)numberOfComponents	swift.property	numberOfComponents	CIColor.numberOfComponents	var numberOfComponents: Int { get }
+c:objc(cs)CIColor(py)red	swift.property	red	CIColor.red	var red: CGFloat { get }
+c:objc(cs)CIColor(py)stringRepresentation	swift.property	stringRepresentation	CIColor.stringRepresentation	var stringRepresentation: String { get }
+c:objc(cs)CIColorKernel	swift.class	CIColorKernel	CIColorKernel	class CIColorKernel
+c:objc(cs)CIColorKernel(cm)kernelWithString:	swift.init	init(source:)	CIColorKernel.init(source:)	convenience init?(source string: String)
+c:objc(cs)CIColorKernel(im)applyWithExtent:arguments:	swift.method	apply(extent:arguments:)	CIColorKernel.apply(extent:arguments:)	func apply(extent: CGRect, arguments args: [Any]) -> CIImage?
+c:objc(cs)CIContext	swift.class	CIContext	CIContext	class CIContext
+c:objc(cs)CIContext(cm)contextWithCGContext:options:	swift.init	init(cgContext:options:)	CIContext.init(cgContext:options:)	init(cgContext cgctx: CGContext, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithCGContext:options:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(CGContext:options:)	CIContext.init(CGContext:options:)	init(CGContext cgctx: CGContext, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithEAGLContext:	swift.init	init(eaglContext:)	CIContext.init(eaglContext:)	init(eaglContext: EAGLContext)
+c:objc(cs)CIContext(cm)contextWithEAGLContext:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(EAGLContext:)	CIContext.init(EAGLContext:)	init(EAGLContext eaglContext: EAGLContext)
+c:objc(cs)CIContext(cm)contextWithEAGLContext:options:	swift.init	init(eaglContext:options:)	CIContext.init(eaglContext:options:)	init(eaglContext: EAGLContext, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithEAGLContext:options:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(EAGLContext:options:)	CIContext.init(EAGLContext:options:)	init(EAGLContext eaglContext: EAGLContext, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:	swift.init	init(mtlCommandQueue:)	CIContext.init(mtlCommandQueue:)	init(mtlCommandQueue commandQueue: any MTLCommandQueue)
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(MTLCommandQueue:)	CIContext.init(MTLCommandQueue:)	init(MTLCommandQueue commandQueue: any MTLCommandQueue)
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:	swift.init	init(mtlCommandQueue:options:)	CIContext.init(mtlCommandQueue:options:)	init(mtlCommandQueue commandQueue: any MTLCommandQueue, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(MTLCommandQueue:options:)	CIContext.init(MTLCommandQueue:options:)	init(MTLCommandQueue commandQueue: any MTLCommandQueue, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithMTLDevice:	swift.init	init(mtlDevice:)	CIContext.init(mtlDevice:)	init(mtlDevice device: any MTLDevice)
+c:objc(cs)CIContext(cm)contextWithMTLDevice:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(MTLDevice:)	CIContext.init(MTLDevice:)	init(MTLDevice device: any MTLDevice)
+c:objc(cs)CIContext(cm)contextWithMTLDevice:options:	swift.init	init(mtlDevice:options:)	CIContext.init(mtlDevice:options:)	init(mtlDevice device: any MTLDevice, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(cm)contextWithMTLDevice:options:::SYNTHESIZED::c:objc(cs)CIContext	swift.init	init(MTLDevice:options:)	CIContext.init(MTLDevice:options:)	init(MTLDevice device: any MTLDevice, options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(im)HEIF10RepresentationOfImage:colorSpace:options:error:	swift.method	heif10Representation(of:colorSpace:options:)	CIContext.heif10Representation(of:colorSpace:options:)	func heif10Representation(of image: CIImage, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) throws -> Data
+c:objc(cs)CIContext(im)HEIFRepresentationOfImage:format:colorSpace:options:	swift.method	heifRepresentation(of:format:colorSpace:options:)	CIContext.heifRepresentation(of:format:colorSpace:options:)	func heifRepresentation(of image: CIImage, format: CIFormat, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) -> Data?
+c:objc(cs)CIContext(im)JPEGRepresentationOfImage:colorSpace:options:	swift.method	jpegRepresentation(of:colorSpace:options:)	CIContext.jpegRepresentation(of:colorSpace:options:)	func jpegRepresentation(of image: CIImage, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) -> Data?
+c:objc(cs)CIContext(im)OpenEXRRepresentationOfImage:options:error:	swift.method	openEXRRepresentation(of:options:)	CIContext.openEXRRepresentation(of:options:)	func openEXRRepresentation(of image: CIImage, options: [CIImageRepresentationOption : Any] = [:]) throws -> Data
+c:objc(cs)CIContext(im)PNGRepresentationOfImage:format:colorSpace:options:	swift.method	pngRepresentation(of:format:colorSpace:options:)	CIContext.pngRepresentation(of:format:colorSpace:options:)	func pngRepresentation(of image: CIImage, format: CIFormat, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) -> Data?
+c:objc(cs)CIContext(im)TIFFRepresentationOfImage:format:colorSpace:options:	swift.method	tiffRepresentation(of:format:colorSpace:options:)	CIContext.tiffRepresentation(of:format:colorSpace:options:)	func tiffRepresentation(of image: CIImage, format: CIFormat, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) -> Data?
+c:objc(cs)CIContext(im)calculateHDRStatsForCGImage:	swift.method	calculateHDRStats(for:)	CIContext.calculateHDRStats(for:)	func calculateHDRStats(for cgimage: CGImage) -> CGImage
+c:objc(cs)CIContext(im)calculateHDRStatsForCVPixelBuffer:	swift.method	calculateHDRStats(for:)	CIContext.calculateHDRStats(for:)	func calculateHDRStats(for buffer: CVPixelBuffer)
+c:objc(cs)CIContext(im)calculateHDRStatsForIOSurface:	swift.method	calculateHDRStats(for:)	CIContext.calculateHDRStats(for:)	func calculateHDRStats(for surface: IOSurfaceRef)
+c:objc(cs)CIContext(im)calculateHDRStatsForImage:	swift.method	calculateHDRStats(for:)	CIContext.calculateHDRStats(for:)	func calculateHDRStats(for image: CIImage) -> CIImage?
+c:objc(cs)CIContext(im)clearCaches	swift.method	clearCaches()	CIContext.clearCaches()	func clearCaches()
+c:objc(cs)CIContext(im)createCGImage:fromRect:	swift.method	createCGImage(_:from:)	CIContext.createCGImage(_:from:)	func createCGImage(_ image: CIImage, from fromRect: CGRect) -> CGImage?
+c:objc(cs)CIContext(im)createCGImage:fromRect:format:colorSpace:	swift.method	createCGImage(_:from:format:colorSpace:)	CIContext.createCGImage(_:from:format:colorSpace:)	func createCGImage(_ image: CIImage, from fromRect: CGRect, format: CIFormat, colorSpace: CGColorSpace?) -> CGImage?
+c:objc(cs)CIContext(im)createCGImage:fromRect:format:colorSpace:deferred:	swift.method	createCGImage(_:from:format:colorSpace:deferred:)	CIContext.createCGImage(_:from:format:colorSpace:deferred:)	func createCGImage(_ image: CIImage, from fromRect: CGRect, format: CIFormat, colorSpace: CGColorSpace?, deferred: Bool) -> CGImage?
+c:objc(cs)CIContext(im)createCGImage:fromRect:format:colorSpace:deferred:calculateHDRStats:	swift.method	createCGImage(_:from:format:colorSpace:deferred:calculateHDRStats:)	CIContext.createCGImage(_:from:format:colorSpace:deferred:calculateHDRStats:)	func createCGImage(_ image: CIImage, from fromRect: CGRect, format: CIFormat, colorSpace: CGColorSpace?, deferred: Bool, calculateHDRStats: Bool) -> CGImage?
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:	swift.method	depthBlurEffectFilter(for:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:)	CIContext.depthBlurEffectFilter(for:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:)	func depthBlurEffectFilter(for image: CIImage, disparityImage: CIImage, portraitEffectsMatte: CIImage?, hairSemanticSegmentation: CIImage?, glassesMatte: CIImage?, gainMap: CIImage?, orientation: CGImagePropertyOrientation, options: [AnyHashable : Any]? = nil) -> CIFilter?
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:	swift.method	depthBlurEffectFilter(for:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:)	CIContext.depthBlurEffectFilter(for:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:)	func depthBlurEffectFilter(for image: CIImage, disparityImage: CIImage, portraitEffectsMatte: CIImage?, hairSemanticSegmentation: CIImage?, orientation: CGImagePropertyOrientation, options: [AnyHashable : Any]? = nil) -> CIFilter?
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options:	swift.method	depthBlurEffectFilter(for:disparityImage:portraitEffectsMatte:orientation:options:)	CIContext.depthBlurEffectFilter(for:disparityImage:portraitEffectsMatte:orientation:options:)	func depthBlurEffectFilter(for image: CIImage, disparityImage: CIImage, portraitEffectsMatte: CIImage?, orientation: CGImagePropertyOrientation, options: [AnyHashable : Any]? = nil) -> CIFilter?
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImageData:options:	swift.method	depthBlurEffectFilter(forImageData:options:)	CIContext.depthBlurEffectFilter(forImageData:options:)	func depthBlurEffectFilter(forImageData data: Data, options: [AnyHashable : Any]? = nil) -> CIFilter?
+c:objc(cs)CIContext(im)depthBlurEffectFilterForImageURL:options:	swift.method	depthBlurEffectFilter(forImageURL:options:)	CIContext.depthBlurEffectFilter(forImageURL:options:)	func depthBlurEffectFilter(forImageURL url: URL, options: [AnyHashable : Any]? = nil) -> CIFilter?
+c:objc(cs)CIContext(im)drawImage:inRect:fromRect:	swift.method	draw(_:in:from:)	CIContext.draw(_:in:from:)	func draw(_ image: CIImage, in inRect: CGRect, from fromRect: CGRect)
+c:objc(cs)CIContext(im)init	swift.init	init()	CIContext.init()	init()
+c:objc(cs)CIContext(im)initWithOptions:	swift.init	init(options:)	CIContext.init(options:)	init(options: [CIContextOption : Any]? = nil)
+c:objc(cs)CIContext(im)inputImageMaximumSize	swift.method	inputImageMaximumSize()	CIContext.inputImageMaximumSize()	func inputImageMaximumSize() -> CGSize
+c:objc(cs)CIContext(im)outputImageMaximumSize	swift.method	outputImageMaximumSize()	CIContext.outputImageMaximumSize()	func outputImageMaximumSize() -> CGSize
+c:objc(cs)CIContext(im)prepareRender:fromRect:toDestination:atPoint:error:	swift.method	prepareRender(_:from:to:at:)	CIContext.prepareRender(_:from:to:at:)	func prepareRender(_ image: CIImage, from fromRect: CGRect, to destination: CIRenderDestination, at atPoint: CGPoint) throws
+c:objc(cs)CIContext(im)render:toBitmap:rowBytes:bounds:format:colorSpace:	swift.method	render(_:toBitmap:rowBytes:bounds:format:colorSpace:)	CIContext.render(_:toBitmap:rowBytes:bounds:format:colorSpace:)	func render(_ image: CIImage, toBitmap data: UnsafeMutableRawPointer, rowBytes: Int, bounds: CGRect, format: CIFormat, colorSpace: CGColorSpace?)
+c:objc(cs)CIContext(im)render:toCVPixelBuffer:	swift.method	render(_:to:)	CIContext.render(_:to:)	func render(_ image: CIImage, to buffer: CVPixelBuffer)
+c:objc(cs)CIContext(im)render:toCVPixelBuffer:bounds:colorSpace:	swift.method	render(_:to:bounds:colorSpace:)	CIContext.render(_:to:bounds:colorSpace:)	func render(_ image: CIImage, to buffer: CVPixelBuffer, bounds: CGRect, colorSpace: CGColorSpace?)
+c:objc(cs)CIContext(im)render:toIOSurface:bounds:colorSpace:	swift.method	render(_:to:bounds:colorSpace:)	CIContext.render(_:to:bounds:colorSpace:)	func render(_ image: CIImage, to surface: IOSurfaceRef, bounds: CGRect, colorSpace: CGColorSpace?)
+c:objc(cs)CIContext(im)render:toMTLTexture:commandBuffer:bounds:colorSpace:	swift.method	render(_:to:commandBuffer:bounds:colorSpace:)	CIContext.render(_:to:commandBuffer:bounds:colorSpace:)	func render(_ image: CIImage, to texture: any MTLTexture, commandBuffer: (any MTLCommandBuffer)?, bounds: CGRect, colorSpace: CGColorSpace)
+c:objc(cs)CIContext(im)startTaskToClear:error:	swift.method	startTask(toClear:)	CIContext.startTask(toClear:)	func startTask(toClear destination: CIRenderDestination) throws -> CIRenderTask
+c:objc(cs)CIContext(im)startTaskToRender:fromRect:toDestination:atPoint:error:	swift.method	startTask(toRender:from:to:at:)	CIContext.startTask(toRender:from:to:at:)	func startTask(toRender image: CIImage, from fromRect: CGRect, to destination: CIRenderDestination, at atPoint: CGPoint) throws -> CIRenderTask
+c:objc(cs)CIContext(im)startTaskToRender:toDestination:error:	swift.method	startTask(toRender:to:)	CIContext.startTask(toRender:to:)	func startTask(toRender image: CIImage, to destination: CIRenderDestination) throws -> CIRenderTask
+c:objc(cs)CIContext(im)writeHEIF10RepresentationOfImage:toURL:colorSpace:options:error:	swift.method	writeHEIF10Representation(of:to:colorSpace:options:)	CIContext.writeHEIF10Representation(of:to:colorSpace:options:)	func writeHEIF10Representation(of image: CIImage, to url: URL, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) throws
+c:objc(cs)CIContext(im)writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:	swift.method	writeHEIFRepresentation(of:to:format:colorSpace:options:)	CIContext.writeHEIFRepresentation(of:to:format:colorSpace:options:)	func writeHEIFRepresentation(of image: CIImage, to url: URL, format: CIFormat, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) throws
+c:objc(cs)CIContext(im)writeJPEGRepresentationOfImage:toURL:colorSpace:options:error:	swift.method	writeJPEGRepresentation(of:to:colorSpace:options:)	CIContext.writeJPEGRepresentation(of:to:colorSpace:options:)	func writeJPEGRepresentation(of image: CIImage, to url: URL, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) throws
+c:objc(cs)CIContext(im)writeOpenEXRRepresentationOfImage:toURL:options:error:	swift.method	writeOpenEXRRepresentation(of:to:options:)	CIContext.writeOpenEXRRepresentation(of:to:options:)	func writeOpenEXRRepresentation(of image: CIImage, to url: URL, options: [CIImageRepresentationOption : Any] = [:]) throws
+c:objc(cs)CIContext(im)writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:	swift.method	writePNGRepresentation(of:to:format:colorSpace:options:)	CIContext.writePNGRepresentation(of:to:format:colorSpace:options:)	func writePNGRepresentation(of image: CIImage, to url: URL, format: CIFormat, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) throws
+c:objc(cs)CIContext(im)writeTIFFRepresentationOfImage:toURL:format:colorSpace:options:error:	swift.method	writeTIFFRepresentation(of:to:format:colorSpace:options:)	CIContext.writeTIFFRepresentation(of:to:format:colorSpace:options:)	func writeTIFFRepresentation(of image: CIImage, to url: URL, format: CIFormat, colorSpace: CGColorSpace, options: [CIImageRepresentationOption : Any] = [:]) throws
+c:objc(cs)CIContext(py)workingColorSpace	swift.property	workingColorSpace	CIContext.workingColorSpace	var workingColorSpace: CGColorSpace? { get }
+c:objc(cs)CIContext(py)workingFormat	swift.property	workingFormat	CIContext.workingFormat	var workingFormat: CIFormat { get }
+c:objc(cs)CIDataMatrixCodeDescriptor	swift.class	CIDataMatrixCodeDescriptor	CIDataMatrixCodeDescriptor	class CIDataMatrixCodeDescriptor
+c:objc(cs)CIDataMatrixCodeDescriptor(im)initWithPayload:rowCount:columnCount:eccVersion:	swift.init	init(payload:rowCount:columnCount:eccVersion:)	CIDataMatrixCodeDescriptor.init(payload:rowCount:columnCount:eccVersion:)	init?(payload errorCorrectedPayload: Data, rowCount: Int, columnCount: Int, eccVersion: CIDataMatrixCodeDescriptor.ECCVersion)
+c:objc(cs)CIDataMatrixCodeDescriptor(py)columnCount	swift.property	columnCount	CIDataMatrixCodeDescriptor.columnCount	var columnCount: Int { get }
+c:objc(cs)CIDataMatrixCodeDescriptor(py)eccVersion	swift.property	eccVersion	CIDataMatrixCodeDescriptor.eccVersion	var eccVersion: CIDataMatrixCodeDescriptor.ECCVersion { get }
+c:objc(cs)CIDataMatrixCodeDescriptor(py)errorCorrectedPayload	swift.property	errorCorrectedPayload	CIDataMatrixCodeDescriptor.errorCorrectedPayload	var errorCorrectedPayload: Data { get }
+c:objc(cs)CIDataMatrixCodeDescriptor(py)rowCount	swift.property	rowCount	CIDataMatrixCodeDescriptor.rowCount	var rowCount: Int { get }
+c:objc(cs)CIDetector	swift.class	CIDetector	CIDetector	class CIDetector
+c:objc(cs)CIDetector(cm)detectorOfType:context:options:	swift.init	init(ofType:context:options:)	CIDetector.init(ofType:context:options:)	init?(ofType type: String, context: CIContext?, options: [String : Any]? = nil)
+c:objc(cs)CIDetector(im)featuresInImage:	swift.method	features(in:)	CIDetector.features(in:)	func features(in image: CIImage) -> [CIFeature]
+c:objc(cs)CIDetector(im)featuresInImage:options:	swift.method	features(in:options:)	CIDetector.features(in:options:)	func features(in image: CIImage, options: [String : Any]? = nil) -> [CIFeature]
+c:objc(cs)CIFaceFeature	swift.class	CIFaceFeature	CIFaceFeature	class CIFaceFeature
+c:objc(cs)CIFaceFeature(py)bounds	swift.property	bounds	CIFaceFeature.bounds	var bounds: CGRect { get }
+c:objc(cs)CIFaceFeature(py)faceAngle	swift.property	faceAngle	CIFaceFeature.faceAngle	var faceAngle: Float { get }
+c:objc(cs)CIFaceFeature(py)hasFaceAngle	swift.property	hasFaceAngle	CIFaceFeature.hasFaceAngle	var hasFaceAngle: Bool { get }
+c:objc(cs)CIFaceFeature(py)hasLeftEyePosition	swift.property	hasLeftEyePosition	CIFaceFeature.hasLeftEyePosition	var hasLeftEyePosition: Bool { get }
+c:objc(cs)CIFaceFeature(py)hasMouthPosition	swift.property	hasMouthPosition	CIFaceFeature.hasMouthPosition	var hasMouthPosition: Bool { get }
+c:objc(cs)CIFaceFeature(py)hasRightEyePosition	swift.property	hasRightEyePosition	CIFaceFeature.hasRightEyePosition	var hasRightEyePosition: Bool { get }
+c:objc(cs)CIFaceFeature(py)hasSmile	swift.property	hasSmile	CIFaceFeature.hasSmile	var hasSmile: Bool { get }
+c:objc(cs)CIFaceFeature(py)hasTrackingFrameCount	swift.property	hasTrackingFrameCount	CIFaceFeature.hasTrackingFrameCount	var hasTrackingFrameCount: Bool { get }
+c:objc(cs)CIFaceFeature(py)hasTrackingID	swift.property	hasTrackingID	CIFaceFeature.hasTrackingID	var hasTrackingID: Bool { get }
+c:objc(cs)CIFaceFeature(py)leftEyeClosed	swift.property	leftEyeClosed	CIFaceFeature.leftEyeClosed	var leftEyeClosed: Bool { get }
+c:objc(cs)CIFaceFeature(py)leftEyePosition	swift.property	leftEyePosition	CIFaceFeature.leftEyePosition	var leftEyePosition: CGPoint { get }
+c:objc(cs)CIFaceFeature(py)mouthPosition	swift.property	mouthPosition	CIFaceFeature.mouthPosition	var mouthPosition: CGPoint { get }
+c:objc(cs)CIFaceFeature(py)rightEyeClosed	swift.property	rightEyeClosed	CIFaceFeature.rightEyeClosed	var rightEyeClosed: Bool { get }
+c:objc(cs)CIFaceFeature(py)rightEyePosition	swift.property	rightEyePosition	CIFaceFeature.rightEyePosition	var rightEyePosition: CGPoint { get }
+c:objc(cs)CIFaceFeature(py)trackingFrameCount	swift.property	trackingFrameCount	CIFaceFeature.trackingFrameCount	var trackingFrameCount: Int32 { get }
+c:objc(cs)CIFaceFeature(py)trackingID	swift.property	trackingID	CIFaceFeature.trackingID	var trackingID: Int32 { get }
+c:objc(cs)CIFeature	swift.class	CIFeature	CIFeature	class CIFeature
+c:objc(cs)CIFeature(py)bounds	swift.property	bounds	CIFeature.bounds	var bounds: CGRect { get }
+c:objc(cs)CIFeature(py)type	swift.property	type	CIFeature.type	var type: String { get }
+c:objc(cs)CIFilter	swift.class	CIFilter	CIFilter	class CIFilter
+c:objc(cs)CIFilter(cm)filterArrayFromSerializedXMP:inputImageExtent:error:	swift.type.method	filterArray(fromSerializedXMP:inputImageExtent:error:)	CIFilter.filterArray(fromSerializedXMP:inputImageExtent:error:)	class func filterArray(fromSerializedXMP xmpData: Data, inputImageExtent extent: CGRect, error outError: NSErrorPointer) -> [CIFilter]
+c:objc(cs)CIFilter(cm)filterNamesInCategories:	swift.type.method	filterNames(inCategories:)	CIFilter.filterNames(inCategories:)	class func filterNames(inCategories categories: [String]?) -> [String]
+c:objc(cs)CIFilter(cm)filterNamesInCategory:	swift.type.method	filterNames(inCategory:)	CIFilter.filterNames(inCategory:)	class func filterNames(inCategory category: String?) -> [String]
+c:objc(cs)CIFilter(cm)filterWithCVPixelBuffer:properties:options:	swift.init	init(cvPixelBuffer:properties:options:)	CIFilter.init(cvPixelBuffer:properties:options:)	init!(cvPixelBuffer pixelBuffer: CVPixelBuffer!, properties: [AnyHashable : Any]!, options: [CIRAWFilterOption : Any]! = [:])
+c:objc(cs)CIFilter(cm)filterWithImageData:options:	swift.init	init(imageData:options:)	CIFilter.init(imageData:options:)	init!(imageData data: Data!, options: [CIRAWFilterOption : Any]! = [:])
+c:objc(cs)CIFilter(cm)filterWithImageURL:options:	swift.init	init(imageURL:options:)	CIFilter.init(imageURL:options:)	init!(imageURL url: URL!, options: [CIRAWFilterOption : Any]! = [:])
+c:objc(cs)CIFilter(cm)filterWithName:	swift.init	init(name:)	CIFilter.init(name:)	init?(name: String)
+c:objc(cs)CIFilter(cm)filterWithName:withInputParameters:	swift.init	init(name:withInputParameters:)	CIFilter.init(name:withInputParameters:)	init?(name: String, withInputParameters params: [String : Any]?)
+c:objc(cs)CIFilter(cm)localizedDescriptionForFilterName:	swift.type.method	localizedDescription(forFilterName:)	CIFilter.localizedDescription(forFilterName:)	class func localizedDescription(forFilterName filterName: String) -> String?
+c:objc(cs)CIFilter(cm)localizedNameForCategory:	swift.type.method	localizedName(forCategory:)	CIFilter.localizedName(forCategory:)	class func localizedName(forCategory category: String) -> String
+c:objc(cs)CIFilter(cm)localizedNameForFilterName:	swift.type.method	localizedName(forFilterName:)	CIFilter.localizedName(forFilterName:)	class func localizedName(forFilterName filterName: String) -> String?
+c:objc(cs)CIFilter(cm)localizedReferenceDocumentationForFilterName:	swift.type.method	localizedReferenceDocumentation(forFilterName:)	CIFilter.localizedReferenceDocumentation(forFilterName:)	class func localizedReferenceDocumentation(forFilterName filterName: String) -> URL?
+c:objc(cs)CIFilter(cm)registerFilterName:constructor:classAttributes:	swift.type.method	registerName(_:constructor:classAttributes:)	CIFilter.registerName(_:constructor:classAttributes:)	class func registerName(_ name: String, constructor anObject: any CIFilterConstructor, classAttributes attributes: [String : Any] = [:])
+c:objc(cs)CIFilter(cm)serializedXMPFromFilters:inputImageExtent:	swift.type.method	serializedXMP(from:inputImageExtent:)	CIFilter.serializedXMP(from:inputImageExtent:)	class func serializedXMP(from filters: [CIFilter], inputImageExtent extent: CGRect) -> Data?
+c:objc(cs)CIFilter(cm)supportedRawCameraModels	swift.type.method	supportedRawCameraModels()	CIFilter.supportedRawCameraModels()	class func supportedRawCameraModels() -> [String]!
+c:objc(cs)CIFilter(im)setDefaults	swift.method	setDefaults()	CIFilter.setDefaults()	func setDefaults()
+c:objc(cs)CIFilter(py)attributes	swift.property	attributes	CIFilter.attributes	var attributes: [String : Any] { get }
+c:objc(cs)CIFilter(py)inputKeys	swift.property	inputKeys	CIFilter.inputKeys	var inputKeys: [String] { get }
+c:objc(cs)CIFilter(py)name	swift.property	name	CIFilter.name	var name: String { get set }
+c:objc(cs)CIFilter(py)outputImage	swift.property	outputImage	CIFilter.outputImage	var outputImage: CIImage? { get }
+c:objc(cs)CIFilter(py)outputKeys	swift.property	outputKeys	CIFilter.outputKeys	var outputKeys: [String] { get }
+c:objc(cs)CIFilterShape	swift.class	CIFilterShape	CIFilterShape	class CIFilterShape
+c:objc(cs)CIFilterShape(im)initWithRect:	swift.init	init(rect:)	CIFilterShape.init(rect:)	init(rect r: CGRect)
+c:objc(cs)CIFilterShape(im)insetByX:Y:	swift.method	insetBy(x:y:)	CIFilterShape.insetBy(x:y:)	func insetBy(x dx: Int32, y dy: Int32) -> CIFilterShape
+c:objc(cs)CIFilterShape(im)intersectWith:	swift.method	intersect(with:)	CIFilterShape.intersect(with:)	func intersect(with s2: CIFilterShape) -> CIFilterShape
+c:objc(cs)CIFilterShape(im)intersectWithRect:	swift.method	intersect(with:)	CIFilterShape.intersect(with:)	func intersect(with r: CGRect) -> CIFilterShape
+c:objc(cs)CIFilterShape(im)transformBy:interior:	swift.method	transform(by:interior:)	CIFilterShape.transform(by:interior:)	func transform(by m: CGAffineTransform, interior flag: Bool) -> CIFilterShape
+c:objc(cs)CIFilterShape(im)unionWith:	swift.method	union(with:)	CIFilterShape.union(with:)	func union(with s2: CIFilterShape) -> CIFilterShape
+c:objc(cs)CIFilterShape(im)unionWithRect:	swift.method	union(with:)	CIFilterShape.union(with:)	func union(with r: CGRect) -> CIFilterShape
+c:objc(cs)CIFilterShape(py)extent	swift.property	extent	CIFilterShape.extent	var extent: CGRect { get }
+c:objc(cs)CIImage	swift.class	CIImage	CIImage	class CIImage
+c:objc(cs)CIImage(cm)emptyImage	swift.type.method	empty()	CIImage.empty()	class func empty() -> CIImage
+c:objc(cs)CIImage(cm)imageWithCGImage:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CGImage:)	CIImage.init(CGImage:)	init(CGImage image: CGImage)
+c:objc(cs)CIImage(cm)imageWithCGImage:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CGImage:options:)	CIImage.init(CGImage:options:)	init(CGImage image: CGImage, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cm)imageWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CGImageSource:index:options:)	CIImage.init(CGImageSource:index:options:)	init(CGImageSource source: CGImageSource, index: Int, options dict: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cm)imageWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVImageBuffer:)	CIImage.init(CVImageBuffer:)	init(CVImageBuffer imageBuffer: CVImageBuffer)
+c:objc(cs)CIImage(cm)imageWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVImageBuffer:options:)	CIImage.init(CVImageBuffer:options:)	init(CVImageBuffer imageBuffer: CVImageBuffer, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVPixelBuffer:)	CIImage.init(CVPixelBuffer:)	init(CVPixelBuffer pixelBuffer: CVPixelBuffer)
+c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVPixelBuffer:options:)	CIImage.init(CVPixelBuffer:options:)	init(CVPixelBuffer pixelBuffer: CVPixelBuffer, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cm)imageWithContentsOfURL:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(contentsOfURL:)	CIImage.init(contentsOfURL:)	init?(contentsOfURL url: URL)
+c:objc(cs)CIImage(cm)imageWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(contentsOfURL:options:)	CIImage.init(contentsOfURL:options:)	init?(contentsOfURL url: URL, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cm)imageWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(IOSurface:)	CIImage.init(IOSurface:)	init(IOSurface surface: IOSurfaceRef)
+c:objc(cs)CIImage(cm)imageWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(IOSurface:options:)	CIImage.init(IOSurface:options:)	init(IOSurface surface: IOSurfaceRef, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cm)imageWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(MTLTexture:options:)	CIImage.init(MTLTexture:options:)	init?(MTLTexture texture: any MTLTexture, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(cpy)blackImage	swift.type.property	black	CIImage.black	class var black: CIImage { get }
+c:objc(cs)CIImage(cpy)blueImage	swift.type.property	blue	CIImage.blue	class var blue: CIImage { get }
+c:objc(cs)CIImage(cpy)clearImage	swift.type.property	clear	CIImage.clear	class var clear: CIImage { get }
+c:objc(cs)CIImage(cpy)cyanImage	swift.type.property	cyan	CIImage.cyan	class var cyan: CIImage { get }
+c:objc(cs)CIImage(cpy)grayImage	swift.type.property	gray	CIImage.gray	class var gray: CIImage { get }
+c:objc(cs)CIImage(cpy)greenImage	swift.type.property	green	CIImage.green	class var green: CIImage { get }
+c:objc(cs)CIImage(cpy)magentaImage	swift.type.property	magenta	CIImage.magenta	class var magenta: CIImage { get }
+c:objc(cs)CIImage(cpy)redImage	swift.type.property	red	CIImage.red	class var red: CIImage { get }
+c:objc(cs)CIImage(cpy)whiteImage	swift.type.property	white	CIImage.white	class var white: CIImage { get }
+c:objc(cs)CIImage(cpy)yellowImage	swift.type.property	yellow	CIImage.yellow	class var yellow: CIImage { get }
+c:objc(cs)CIImage(im)autoAdjustmentFilters	swift.method	autoAdjustmentFilters()	CIImage.autoAdjustmentFilters()	func autoAdjustmentFilters() -> [CIFilter]
+c:objc(cs)CIImage(im)autoAdjustmentFiltersWithOptions:	swift.method	autoAdjustmentFilters(options:)	CIImage.autoAdjustmentFilters(options:)	func autoAdjustmentFilters(options: [CIImageAutoAdjustmentOption : Any]? = nil) -> [CIFilter]
+c:objc(cs)CIImage(im)imageByApplyingCGOrientation:	swift.method	oriented(_:)	CIImage.oriented(_:)	func oriented(_ orientation: CGImagePropertyOrientation) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingFilter:	swift.method	applyingFilter(_:)	CIImage.applyingFilter(_:)	func applyingFilter(_ filterName: String) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingFilter:withInputParameters:	swift.method	applyingFilter(_:parameters:)	CIImage.applyingFilter(_:parameters:)	func applyingFilter(_ filterName: String, parameters params: [String : Any]) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingGainMap:	swift.method	applyingGainMap(_:)	CIImage.applyingGainMap(_:)	func applyingGainMap(_ gainmap: CIImage) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingGainMap:headroom:	swift.method	applyingGainMap(_:headroom:)	CIImage.applyingGainMap(_:headroom:)	func applyingGainMap(_ gainmap: CIImage, headroom: Float) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingGaussianBlurWithSigma:	swift.method	applyingGaussianBlur(sigma:)	CIImage.applyingGaussianBlur(sigma:)	func applyingGaussianBlur(sigma: Double) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingOrientation:	swift.method	oriented(forExifOrientation:)	CIImage.oriented(forExifOrientation:)	func oriented(forExifOrientation orientation: Int32) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingTransform:	swift.method	transformed(by:)	CIImage.transformed(by:)	func transformed(by matrix: CGAffineTransform) -> CIImage
+c:objc(cs)CIImage(im)imageByApplyingTransform:highQualityDownsample:	swift.method	transformed(by:highQualityDownsample:)	CIImage.transformed(by:highQualityDownsample:)	func transformed(by matrix: CGAffineTransform, highQualityDownsample: Bool) -> CIImage
+c:objc(cs)CIImage(im)imageByClampingToExtent	swift.method	clampedToExtent()	CIImage.clampedToExtent()	func clampedToExtent() -> CIImage
+c:objc(cs)CIImage(im)imageByClampingToRect:	swift.method	clamped(to:)	CIImage.clamped(to:)	func clamped(to rect: CGRect) -> CIImage
+c:objc(cs)CIImage(im)imageByColorMatchingColorSpaceToWorkingSpace:	swift.method	matchedToWorkingSpace(from:)	CIImage.matchedToWorkingSpace(from:)	func matchedToWorkingSpace(from colorSpace: CGColorSpace) -> CIImage?
+c:objc(cs)CIImage(im)imageByColorMatchingWorkingSpaceToColorSpace:	swift.method	matchedFromWorkingSpace(to:)	CIImage.matchedFromWorkingSpace(to:)	func matchedFromWorkingSpace(to colorSpace: CGColorSpace) -> CIImage?
+c:objc(cs)CIImage(im)imageByCompositingOverImage:	swift.method	composited(over:)	CIImage.composited(over:)	func composited(over dest: CIImage) -> CIImage
+c:objc(cs)CIImage(im)imageByConvertingLabToWorkingSpace	swift.method	convertingLabToWorkingSpace()	CIImage.convertingLabToWorkingSpace()	func convertingLabToWorkingSpace() -> CIImage
+c:objc(cs)CIImage(im)imageByConvertingWorkingSpaceToLab	swift.method	convertingWorkingSpaceToLab()	CIImage.convertingWorkingSpaceToLab()	func convertingWorkingSpaceToLab() -> CIImage
+c:objc(cs)CIImage(im)imageByCroppingToRect:	swift.method	cropped(to:)	CIImage.cropped(to:)	func cropped(to rect: CGRect) -> CIImage
+c:objc(cs)CIImage(im)imageByInsertingIntermediate	swift.method	insertingIntermediate()	CIImage.insertingIntermediate()	func insertingIntermediate() -> CIImage
+c:objc(cs)CIImage(im)imageByInsertingIntermediate:	swift.method	insertingIntermediate(cache:)	CIImage.insertingIntermediate(cache:)	func insertingIntermediate(cache: Bool) -> CIImage
+c:objc(cs)CIImage(im)imageByInsertingTiledIntermediate	swift.method	insertingTiledIntermediate()	CIImage.insertingTiledIntermediate()	func insertingTiledIntermediate() -> CIImage
+c:objc(cs)CIImage(im)imageByPremultiplyingAlpha	swift.method	premultiplyingAlpha()	CIImage.premultiplyingAlpha()	func premultiplyingAlpha() -> CIImage
+c:objc(cs)CIImage(im)imageBySamplingLinear	swift.method	samplingLinear()	CIImage.samplingLinear()	func samplingLinear() -> CIImage
+c:objc(cs)CIImage(im)imageBySamplingNearest	swift.method	samplingNearest()	CIImage.samplingNearest()	func samplingNearest() -> CIImage
+c:objc(cs)CIImage(im)imageBySettingAlphaOneInExtent:	swift.method	settingAlphaOne(in:)	CIImage.settingAlphaOne(in:)	func settingAlphaOne(in extent: CGRect) -> CIImage
+c:objc(cs)CIImage(im)imageBySettingContentAverageLightLevel:	swift.method	settingContentAverageLightLevel(_:)	CIImage.settingContentAverageLightLevel(_:)	func settingContentAverageLightLevel(_ average: Float) -> CIImage
+c:objc(cs)CIImage(im)imageBySettingContentHeadroom:	swift.method	settingContentHeadroom(_:)	CIImage.settingContentHeadroom(_:)	func settingContentHeadroom(_ headroom: Float) -> CIImage
+c:objc(cs)CIImage(im)imageBySettingProperties:	swift.method	settingProperties(_:)	CIImage.settingProperties(_:)	func settingProperties(_ properties: [AnyHashable : Any]) -> CIImage
+c:objc(cs)CIImage(im)imageByUnpremultiplyingAlpha	swift.method	unpremultiplyingAlpha()	CIImage.unpremultiplyingAlpha()	func unpremultiplyingAlpha() -> CIImage
+c:objc(cs)CIImage(im)imageTransformForCGOrientation:	swift.method	orientationTransform(for:)	CIImage.orientationTransform(for:)	func orientationTransform(for orientation: CGImagePropertyOrientation) -> CGAffineTransform
+c:objc(cs)CIImage(im)imageTransformForOrientation:	swift.method	orientationTransform(forExifOrientation:)	CIImage.orientationTransform(forExifOrientation:)	func orientationTransform(forExifOrientation orientation: Int32) -> CGAffineTransform
+c:objc(cs)CIImage(im)initWithBitmapData:bytesPerRow:size:format:colorSpace:	swift.init	init(bitmapData:bytesPerRow:size:format:colorSpace:)	CIImage.init(bitmapData:bytesPerRow:size:format:colorSpace:)	init(bitmapData data: Data, bytesPerRow: Int, size: CGSize, format: CIFormat, colorSpace: CGColorSpace?)
+c:objc(cs)CIImage(im)initWithCGImage:	swift.init	init(cgImage:)	CIImage.init(cgImage:)	init(cgImage image: CGImage)
+c:objc(cs)CIImage(im)initWithCGImage:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CGImage:)	CIImage.init(CGImage:)	init(CGImage image: CGImage)
+c:objc(cs)CIImage(im)initWithCGImage:options:	swift.init	init(cgImage:options:)	CIImage.init(cgImage:options:)	init(cgImage image: CGImage, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCGImage:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CGImage:options:)	CIImage.init(CGImage:options:)	init(CGImage image: CGImage, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCGImageSource:index:options:	swift.init	init(cgImageSource:index:options:)	CIImage.init(cgImageSource:index:options:)	init(cgImageSource source: CGImageSource, index: Int, options dict: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CGImageSource:index:options:)	CIImage.init(CGImageSource:index:options:)	init(CGImageSource source: CGImageSource, index: Int, options dict: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCVImageBuffer:	swift.init	init(cvImageBuffer:)	CIImage.init(cvImageBuffer:)	init(cvImageBuffer imageBuffer: CVImageBuffer)
+c:objc(cs)CIImage(im)initWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVImageBuffer:)	CIImage.init(CVImageBuffer:)	init(CVImageBuffer imageBuffer: CVImageBuffer)
+c:objc(cs)CIImage(im)initWithCVImageBuffer:options:	swift.init	init(cvImageBuffer:options:)	CIImage.init(cvImageBuffer:options:)	init(cvImageBuffer imageBuffer: CVImageBuffer, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVImageBuffer:options:)	CIImage.init(CVImageBuffer:options:)	init(CVImageBuffer imageBuffer: CVImageBuffer, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:	swift.init	init(cvPixelBuffer:)	CIImage.init(cvPixelBuffer:)	init(cvPixelBuffer pixelBuffer: CVPixelBuffer)
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVPixelBuffer:)	CIImage.init(CVPixelBuffer:)	init(CVPixelBuffer pixelBuffer: CVPixelBuffer)
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:	swift.init	init(cvPixelBuffer:options:)	CIImage.init(cvPixelBuffer:options:)	init(cvPixelBuffer pixelBuffer: CVPixelBuffer, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(CVPixelBuffer:options:)	CIImage.init(CVPixelBuffer:options:)	init(CVPixelBuffer pixelBuffer: CVPixelBuffer, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithColor:	swift.init	init(color:)	CIImage.init(color:)	init(color: CIColor)
+c:objc(cs)CIImage(im)initWithContentsOfURL:	swift.init	init(contentsOf:)	CIImage.init(contentsOf:)	init?(contentsOf url: URL)
+c:objc(cs)CIImage(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(contentsOfURL:)	CIImage.init(contentsOfURL:)	init?(contentsOfURL url: URL)
+c:objc(cs)CIImage(im)initWithContentsOfURL:options:	swift.init	init(contentsOf:options:)	CIImage.init(contentsOf:options:)	init?(contentsOf url: URL, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(contentsOfURL:options:)	CIImage.init(contentsOfURL:options:)	init?(contentsOfURL url: URL, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithData:	swift.init	init(data:)	CIImage.init(data:)	init?(data: Data)
+c:objc(cs)CIImage(im)initWithData:options:	swift.init	init(data:options:)	CIImage.init(data:options:)	init?(data: Data, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithDepthData:	swift.init	init(depthData:)	CIImage.init(depthData:)	init?(depthData data: AVDepthData)
+c:objc(cs)CIImage(im)initWithDepthData:options:	swift.init	init(depthData:options:)	CIImage.init(depthData:options:)	init?(depthData data: AVDepthData, options: [String : Any]? = nil)
+c:objc(cs)CIImage(im)initWithIOSurface:	swift.init	init(ioSurface:)	CIImage.init(ioSurface:)	init(ioSurface surface: IOSurfaceRef)
+c:objc(cs)CIImage(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(IOSurface:)	CIImage.init(IOSurface:)	init(IOSurface surface: IOSurfaceRef)
+c:objc(cs)CIImage(im)initWithIOSurface:options:	swift.init	init(ioSurface:options:)	CIImage.init(ioSurface:options:)	init(ioSurface surface: IOSurfaceRef, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(IOSurface:options:)	CIImage.init(IOSurface:options:)	init(IOSurface surface: IOSurfaceRef, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithImageProvider:size::format:colorSpace:options:	swift.init	init(imageProvider:size:_:format:colorSpace:options:)	CIImage.init(imageProvider:size:_:format:colorSpace:options:)	init(imageProvider provider: Any, size width: Int, _ height: Int, format: CIFormat, colorSpace: CGColorSpace?, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithMTLTexture:options:	swift.init	init(mtlTexture:options:)	CIImage.init(mtlTexture:options:)	init?(mtlTexture texture: any MTLTexture, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(MTLTexture:options:)	CIImage.init(MTLTexture:options:)	init?(MTLTexture texture: any MTLTexture, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:	swift.init	init(portaitEffectsMatte:)	CIImage.init(portaitEffectsMatte:)	init?(portaitEffectsMatte matte: AVPortraitEffectsMatte)
+c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:options:	swift.init	init(portaitEffectsMatte:options:)	CIImage.init(portaitEffectsMatte:options:)	init?(portaitEffectsMatte matte: AVPortraitEffectsMatte, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:	swift.init	init(semanticSegmentationMatte:)	CIImage.init(semanticSegmentationMatte:)	init?(semanticSegmentationMatte matte: AVSemanticSegmentationMatte)
+c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:options:	swift.init	init(semanticSegmentationMatte:options:)	CIImage.init(semanticSegmentationMatte:options:)	init?(semanticSegmentationMatte matte: AVSemanticSegmentationMatte, options: [CIImageOption : Any]? = nil)
+c:objc(cs)CIImage(im)initWithTexture:size:flipped:colorSpace:	swift.init	init(texture:size:flipped:colorSpace:)	CIImage.init(texture:size:flipped:colorSpace:)	init(texture name: UInt32, size: CGSize, flipped: Bool, colorSpace: CGColorSpace?)
+c:objc(cs)CIImage(im)regionOfInterestForImage:inRect:	swift.method	regionOfInterest(for:in:)	CIImage.regionOfInterest(for:in:)	func regionOfInterest(for image: CIImage, in rect: CGRect) -> CGRect
+c:objc(cs)CIImage(py)CGImage	swift.property	cgImage	CIImage.cgImage	var cgImage: CGImage? { get }
+c:objc(cs)CIImage(py)colorSpace	swift.property	colorSpace	CIImage.colorSpace	var colorSpace: CGColorSpace? { get }
+c:objc(cs)CIImage(py)contentAverageLightLevel	swift.property	contentAverageLightLevel	CIImage.contentAverageLightLevel	var contentAverageLightLevel: Float { get }
+c:objc(cs)CIImage(py)contentHeadroom	swift.property	contentHeadroom	CIImage.contentHeadroom	var contentHeadroom: Float { get }
+c:objc(cs)CIImage(py)depthData	swift.property	depthData	CIImage.depthData	var depthData: AVDepthData? { get }
+c:objc(cs)CIImage(py)extent	swift.property	extent	CIImage.extent	var extent: CGRect { get }
+c:objc(cs)CIImage(py)metalTexture	swift.property	metalTexture	CIImage.metalTexture	var metalTexture: (any MTLTexture)? { get }
+c:objc(cs)CIImage(py)opaque	swift.property	isOpaque	CIImage.isOpaque	var isOpaque: Bool { get }
+c:objc(cs)CIImage(py)pixelBuffer	swift.property	pixelBuffer	CIImage.pixelBuffer	var pixelBuffer: CVPixelBuffer? { get }
+c:objc(cs)CIImage(py)portraitEffectsMatte	swift.property	portraitEffectsMatte	CIImage.portraitEffectsMatte	var portraitEffectsMatte: AVPortraitEffectsMatte? { get }
+c:objc(cs)CIImage(py)properties	swift.property	properties	CIImage.properties	var properties: [String : Any] { get }
+c:objc(cs)CIImage(py)semanticSegmentationMatte	swift.property	semanticSegmentationMatte	CIImage.semanticSegmentationMatte	var semanticSegmentationMatte: AVSemanticSegmentationMatte? { get }
+c:objc(cs)CIImage(py)url	swift.property	url	CIImage.url	var url: URL? { get }
+c:objc(cs)CIImageAccumulator	swift.class	CIImageAccumulator	CIImageAccumulator	class CIImageAccumulator
+c:objc(cs)CIImageAccumulator(im)clear	swift.method	clear()	CIImageAccumulator.clear()	func clear()
+c:objc(cs)CIImageAccumulator(im)image	swift.method	image()	CIImageAccumulator.image()	func image() -> CIImage
+c:objc(cs)CIImageAccumulator(im)initWithExtent:format:	swift.init	init(extent:format:)	CIImageAccumulator.init(extent:format:)	init?(extent: CGRect, format: CIFormat)
+c:objc(cs)CIImageAccumulator(im)initWithExtent:format:colorSpace:	swift.init	init(extent:format:colorSpace:)	CIImageAccumulator.init(extent:format:colorSpace:)	init?(extent: CGRect, format: CIFormat, colorSpace: CGColorSpace)
+c:objc(cs)CIImageAccumulator(im)setImage:	swift.method	setImage(_:)	CIImageAccumulator.setImage(_:)	func setImage(_ image: CIImage)
+c:objc(cs)CIImageAccumulator(im)setImage:dirtyRect:	swift.method	setImage(_:dirtyRect:)	CIImageAccumulator.setImage(_:dirtyRect:)	func setImage(_ image: CIImage, dirtyRect: CGRect)
+c:objc(cs)CIImageAccumulator(py)extent	swift.property	extent	CIImageAccumulator.extent	var extent: CGRect { get }
+c:objc(cs)CIImageAccumulator(py)format	swift.property	format	CIImageAccumulator.format	var format: CIFormat { get }
+c:objc(cs)CIImageProcessorKernel	swift.class	CIImageProcessorKernel	CIImageProcessorKernel	class CIImageProcessorKernel
+c:objc(cs)CIImageProcessorKernel(cm)applyWithExtent:inputs:arguments:error:	swift.type.method	apply(withExtent:inputs:arguments:)	CIImageProcessorKernel.apply(withExtent:inputs:arguments:)	class func apply(withExtent extent: CGRect, inputs: [CIImage]?, arguments: [String : Any]?) throws -> CIImage
+c:objc(cs)CIImageProcessorKernel(cm)applyWithExtents:inputs:arguments:error:	swift.type.method	apply(withExtents:inputs:arguments:)	CIImageProcessorKernel.apply(withExtents:inputs:arguments:)	class func apply(withExtents extents: [CIVector], inputs: [CIImage]?, arguments: [String : Any]?) throws -> [CIImage]
+c:objc(cs)CIImageProcessorKernel(cm)formatForInputAtIndex:	swift.type.method	formatForInput(at:)	CIImageProcessorKernel.formatForInput(at:)	class func formatForInput(at inputIndex: Int32) -> CIFormat
+c:objc(cs)CIImageProcessorKernel(cm)outputFormatAtIndex:arguments:	swift.type.method	outputFormat(at:arguments:)	CIImageProcessorKernel.outputFormat(at:arguments:)	class func outputFormat(at outputIndex: Int32, arguments: [String : Any]?) -> CIFormat
+c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:output:error:	swift.type.method	process(with:arguments:output:)	CIImageProcessorKernel.process(with:arguments:output:)	class func process(with inputs: [any CIImageProcessorInput]?, arguments: [String : Any]?, output: any CIImageProcessorOutput) throws
+c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:outputs:error:	swift.type.method	process(with:arguments:outputs:)	CIImageProcessorKernel.process(with:arguments:outputs:)	class func process(with inputs: [any CIImageProcessorInput]?, arguments: [String : Any]?, outputs: [any CIImageProcessorOutput]) throws
+c:objc(cs)CIImageProcessorKernel(cm)roiForInput:arguments:outputRect:	swift.type.method	roi(forInput:arguments:outputRect:)	CIImageProcessorKernel.roi(forInput:arguments:outputRect:)	class func roi(forInput inputIndex: Int32, arguments: [String : Any]?, outputRect: CGRect) -> CGRect
+c:objc(cs)CIImageProcessorKernel(cm)roiTileArrayForInput:arguments:outputRect:	swift.type.method	roiTileArray(forInput:arguments:outputRect:)	CIImageProcessorKernel.roiTileArray(forInput:arguments:outputRect:)	class func roiTileArray(forInput inputIndex: Int32, arguments: [String : Any]?, outputRect: CGRect) -> [CIVector]
+c:objc(cs)CIImageProcessorKernel(cpy)outputFormat	swift.type.property	outputFormat	CIImageProcessorKernel.outputFormat	class var outputFormat: CIFormat { get }
+c:objc(cs)CIImageProcessorKernel(cpy)outputIsOpaque	swift.type.property	outputIsOpaque	CIImageProcessorKernel.outputIsOpaque	class var outputIsOpaque: Bool { get }
+c:objc(cs)CIImageProcessorKernel(cpy)synchronizeInputs	swift.type.property	synchronizeInputs	CIImageProcessorKernel.synchronizeInputs	class var synchronizeInputs: Bool { get }
+c:objc(cs)CIKernel	swift.class	CIKernel	CIKernel	class CIKernel
+c:objc(cs)CIKernel(cm)kernelNamesFromMetalLibraryData:	swift.type.method	kernelNames(fromMetalLibraryData:)	CIKernel.kernelNames(fromMetalLibraryData:)	class func kernelNames(fromMetalLibraryData data: Data) -> [String]
+c:objc(cs)CIKernel(cm)kernelWithFunctionName:fromMetalLibraryData:error:	swift.init	init(functionName:fromMetalLibraryData:)	CIKernel.init(functionName:fromMetalLibraryData:)	convenience init(functionName name: String, fromMetalLibraryData data: Data) throws
+c:objc(cs)CIKernel(cm)kernelWithFunctionName:fromMetalLibraryData:outputPixelFormat:error:	swift.init	init(functionName:fromMetalLibraryData:outputPixelFormat:)	CIKernel.init(functionName:fromMetalLibraryData:outputPixelFormat:)	convenience init(functionName name: String, fromMetalLibraryData data: Data, outputPixelFormat format: CIFormat) throws
+c:objc(cs)CIKernel(cm)kernelWithString:	swift.init	init(source:)	CIKernel.init(source:)	convenience init?(source string: String)
+c:objc(cs)CIKernel(cm)kernelWithString:::SYNTHESIZED::c:objc(cs)CIKernel	swift.init	init(string:)	CIKernel.init(string:)	convenience init?(string: String)
+c:objc(cs)CIKernel(cm)kernelsWithMetalString:error:	swift.type.method	kernels(withMetalString:)	CIKernel.kernels(withMetalString:)	class func kernels(withMetalString source: String) throws -> [CIKernel]
+c:objc(cs)CIKernel(cm)kernelsWithString:	swift.type.method	makeKernels(source:)	CIKernel.makeKernels(source:)	class func makeKernels(source string: String) -> [CIKernel]?
+c:objc(cs)CIKernel(im)applyWithExtent:roiCallback:arguments:	swift.method	apply(extent:roiCallback:arguments:)	CIKernel.apply(extent:roiCallback:arguments:)	func apply(extent: CGRect, roiCallback callback: @escaping CIKernelROICallback, arguments args: [Any]) -> CIImage?
+c:objc(cs)CIKernel(im)setROISelector:	swift.method	setROISelector(_:)	CIKernel.setROISelector(_:)	func setROISelector(_ method: Selector)
+c:objc(cs)CIKernel(py)name	swift.property	name	CIKernel.name	var name: String { get }
+c:objc(cs)CIPDF417CodeDescriptor	swift.class	CIPDF417CodeDescriptor	CIPDF417CodeDescriptor	class CIPDF417CodeDescriptor
+c:objc(cs)CIPDF417CodeDescriptor(im)initWithPayload:isCompact:rowCount:columnCount:	swift.init	init(payload:isCompact:rowCount:columnCount:)	CIPDF417CodeDescriptor.init(payload:isCompact:rowCount:columnCount:)	init?(payload errorCorrectedPayload: Data, isCompact: Bool, rowCount: Int, columnCount: Int)
+c:objc(cs)CIPDF417CodeDescriptor(py)columnCount	swift.property	columnCount	CIPDF417CodeDescriptor.columnCount	var columnCount: Int { get }
+c:objc(cs)CIPDF417CodeDescriptor(py)errorCorrectedPayload	swift.property	errorCorrectedPayload	CIPDF417CodeDescriptor.errorCorrectedPayload	var errorCorrectedPayload: Data { get }
+c:objc(cs)CIPDF417CodeDescriptor(py)isCompact	swift.property	isCompact	CIPDF417CodeDescriptor.isCompact	var isCompact: Bool { get }
+c:objc(cs)CIPDF417CodeDescriptor(py)rowCount	swift.property	rowCount	CIPDF417CodeDescriptor.rowCount	var rowCount: Int { get }
+c:objc(cs)CIQRCodeDescriptor	swift.class	CIQRCodeDescriptor	CIQRCodeDescriptor	class CIQRCodeDescriptor
+c:objc(cs)CIQRCodeDescriptor(im)initWithPayload:symbolVersion:maskPattern:errorCorrectionLevel:	swift.init	init(payload:symbolVersion:maskPattern:errorCorrectionLevel:)	CIQRCodeDescriptor.init(payload:symbolVersion:maskPattern:errorCorrectionLevel:)	init?(payload errorCorrectedPayload: Data, symbolVersion: Int, maskPattern: UInt8, errorCorrectionLevel: CIQRCodeDescriptor.ErrorCorrectionLevel)
+c:objc(cs)CIQRCodeDescriptor(py)errorCorrectedPayload	swift.property	errorCorrectedPayload	CIQRCodeDescriptor.errorCorrectedPayload	var errorCorrectedPayload: Data { get }
+c:objc(cs)CIQRCodeDescriptor(py)errorCorrectionLevel	swift.property	errorCorrectionLevel	CIQRCodeDescriptor.errorCorrectionLevel	var errorCorrectionLevel: CIQRCodeDescriptor.ErrorCorrectionLevel { get }
+c:objc(cs)CIQRCodeDescriptor(py)maskPattern	swift.property	maskPattern	CIQRCodeDescriptor.maskPattern	var maskPattern: UInt8 { get }
+c:objc(cs)CIQRCodeDescriptor(py)symbolVersion	swift.property	symbolVersion	CIQRCodeDescriptor.symbolVersion	var symbolVersion: Int { get }
+c:objc(cs)CIQRCodeFeature	swift.class	CIQRCodeFeature	CIQRCodeFeature	class CIQRCodeFeature
+c:objc(cs)CIQRCodeFeature(py)bottomLeft	swift.property	bottomLeft	CIQRCodeFeature.bottomLeft	var bottomLeft: CGPoint { get }
+c:objc(cs)CIQRCodeFeature(py)bottomRight	swift.property	bottomRight	CIQRCodeFeature.bottomRight	var bottomRight: CGPoint { get }
+c:objc(cs)CIQRCodeFeature(py)bounds	swift.property	bounds	CIQRCodeFeature.bounds	var bounds: CGRect { get }
+c:objc(cs)CIQRCodeFeature(py)messageString	swift.property	messageString	CIQRCodeFeature.messageString	var messageString: String? { get }
+c:objc(cs)CIQRCodeFeature(py)symbolDescriptor	swift.property	symbolDescriptor	CIQRCodeFeature.symbolDescriptor	var symbolDescriptor: CIQRCodeDescriptor? { get }
+c:objc(cs)CIQRCodeFeature(py)topLeft	swift.property	topLeft	CIQRCodeFeature.topLeft	var topLeft: CGPoint { get }
+c:objc(cs)CIQRCodeFeature(py)topRight	swift.property	topRight	CIQRCodeFeature.topRight	var topRight: CGPoint { get }
+c:objc(cs)CIRAWFilter	swift.class	CIRAWFilter	CIRAWFilter	class CIRAWFilter
+c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:	swift.init	init(cvPixelBuffer:properties:)	CIRAWFilter.init(cvPixelBuffer:properties:)	convenience init?(cvPixelBuffer buffer: CVPixelBuffer, properties: [AnyHashable : Any])
+c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:::SYNTHESIZED::c:objc(cs)CIRAWFilter	swift.init	init(CVPixelBuffer:properties:)	CIRAWFilter.init(CVPixelBuffer:properties:)	convenience init?(CVPixelBuffer buffer: CVPixelBuffer, properties: [AnyHashable : Any])
+c:objc(cs)CIRAWFilter(cm)filterWithImageData:identifierHint:	swift.init	init(imageData:identifierHint:)	CIRAWFilter.init(imageData:identifierHint:)	convenience init?(imageData data: Data, identifierHint: String?)
+c:objc(cs)CIRAWFilter(cm)filterWithImageURL:	swift.init	init(imageURL:)	CIRAWFilter.init(imageURL:)	convenience init?(imageURL url: URL)
+c:objc(cs)CIRAWFilter(cpy)supportedCameraModels	swift.type.property	supportedCameraModels	CIRAWFilter.supportedCameraModels	class var supportedCameraModels: [String] { get }
+c:objc(cs)CIRAWFilter(py)baselineExposure	swift.property	baselineExposure	CIRAWFilter.baselineExposure	var baselineExposure: Float { get set }
+c:objc(cs)CIRAWFilter(py)boostAmount	swift.property	boostAmount	CIRAWFilter.boostAmount	var boostAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)boostShadowAmount	swift.property	boostShadowAmount	CIRAWFilter.boostShadowAmount	var boostShadowAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)colorNoiseReductionAmount	swift.property	colorNoiseReductionAmount	CIRAWFilter.colorNoiseReductionAmount	var colorNoiseReductionAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)colorNoiseReductionSupported	swift.property	isColorNoiseReductionSupported	CIRAWFilter.isColorNoiseReductionSupported	var isColorNoiseReductionSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)contrastAmount	swift.property	contrastAmount	CIRAWFilter.contrastAmount	var contrastAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)contrastSupported	swift.property	isContrastSupported	CIRAWFilter.isContrastSupported	var isContrastSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)decoderVersion	swift.property	decoderVersion	CIRAWFilter.decoderVersion	var decoderVersion: CIRAWDecoderVersion { get set }
+c:objc(cs)CIRAWFilter(py)detailAmount	swift.property	detailAmount	CIRAWFilter.detailAmount	var detailAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)detailSupported	swift.property	isDetailSupported	CIRAWFilter.isDetailSupported	var isDetailSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)draftModeEnabled	swift.property	isDraftModeEnabled	CIRAWFilter.isDraftModeEnabled	var isDraftModeEnabled: Bool { get set }
+c:objc(cs)CIRAWFilter(py)exposure	swift.property	exposure	CIRAWFilter.exposure	var exposure: Float { get set }
+c:objc(cs)CIRAWFilter(py)extendedDynamicRangeAmount	swift.property	extendedDynamicRangeAmount	CIRAWFilter.extendedDynamicRangeAmount	var extendedDynamicRangeAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)gamutMappingEnabled	swift.property	isGamutMappingEnabled	CIRAWFilter.isGamutMappingEnabled	var isGamutMappingEnabled: Bool { get set }
+c:objc(cs)CIRAWFilter(py)highlightRecoveryEnabled	swift.property	isHighlightRecoveryEnabled	CIRAWFilter.isHighlightRecoveryEnabled	var isHighlightRecoveryEnabled: Bool { get set }
+c:objc(cs)CIRAWFilter(py)highlightRecoverySupported	swift.property	isHighlightRecoverySupported	CIRAWFilter.isHighlightRecoverySupported	var isHighlightRecoverySupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)lensCorrectionEnabled	swift.property	isLensCorrectionEnabled	CIRAWFilter.isLensCorrectionEnabled	var isLensCorrectionEnabled: Bool { get set }
+c:objc(cs)CIRAWFilter(py)lensCorrectionSupported	swift.property	isLensCorrectionSupported	CIRAWFilter.isLensCorrectionSupported	var isLensCorrectionSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)linearSpaceFilter	swift.property	linearSpaceFilter	CIRAWFilter.linearSpaceFilter	var linearSpaceFilter: CIFilter? { get set }
+c:objc(cs)CIRAWFilter(py)localToneMapAmount	swift.property	localToneMapAmount	CIRAWFilter.localToneMapAmount	var localToneMapAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)localToneMapSupported	swift.property	isLocalToneMapSupported	CIRAWFilter.isLocalToneMapSupported	var isLocalToneMapSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionAmount	swift.property	luminanceNoiseReductionAmount	CIRAWFilter.luminanceNoiseReductionAmount	var luminanceNoiseReductionAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionSupported	swift.property	isLuminanceNoiseReductionSupported	CIRAWFilter.isLuminanceNoiseReductionSupported	var isLuminanceNoiseReductionSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)moireReductionAmount	swift.property	moireReductionAmount	CIRAWFilter.moireReductionAmount	var moireReductionAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)moireReductionSupported	swift.property	isMoireReductionSupported	CIRAWFilter.isMoireReductionSupported	var isMoireReductionSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)nativeSize	swift.property	nativeSize	CIRAWFilter.nativeSize	var nativeSize: CGSize { get }
+c:objc(cs)CIRAWFilter(py)neutralChromaticity	swift.property	neutralChromaticity	CIRAWFilter.neutralChromaticity	var neutralChromaticity: CGPoint { get set }
+c:objc(cs)CIRAWFilter(py)neutralLocation	swift.property	neutralLocation	CIRAWFilter.neutralLocation	var neutralLocation: CGPoint { get set }
+c:objc(cs)CIRAWFilter(py)neutralTemperature	swift.property	neutralTemperature	CIRAWFilter.neutralTemperature	var neutralTemperature: Float { get set }
+c:objc(cs)CIRAWFilter(py)neutralTint	swift.property	neutralTint	CIRAWFilter.neutralTint	var neutralTint: Float { get set }
+c:objc(cs)CIRAWFilter(py)orientation	swift.property	orientation	CIRAWFilter.orientation	var orientation: CGImagePropertyOrientation { get set }
+c:objc(cs)CIRAWFilter(py)portraitEffectsMatte	swift.property	portraitEffectsMatte	CIRAWFilter.portraitEffectsMatte	var portraitEffectsMatte: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)previewImage	swift.property	previewImage	CIRAWFilter.previewImage	var previewImage: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)properties	swift.property	properties	CIRAWFilter.properties	var properties: [AnyHashable : Any] { get }
+c:objc(cs)CIRAWFilter(py)scaleFactor	swift.property	scaleFactor	CIRAWFilter.scaleFactor	var scaleFactor: Float { get set }
+c:objc(cs)CIRAWFilter(py)semanticSegmentationGlassesMatte	swift.property	semanticSegmentationGlassesMatte	CIRAWFilter.semanticSegmentationGlassesMatte	var semanticSegmentationGlassesMatte: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)semanticSegmentationHairMatte	swift.property	semanticSegmentationHairMatte	CIRAWFilter.semanticSegmentationHairMatte	var semanticSegmentationHairMatte: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)semanticSegmentationSkinMatte	swift.property	semanticSegmentationSkinMatte	CIRAWFilter.semanticSegmentationSkinMatte	var semanticSegmentationSkinMatte: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)semanticSegmentationSkyMatte	swift.property	semanticSegmentationSkyMatte	CIRAWFilter.semanticSegmentationSkyMatte	var semanticSegmentationSkyMatte: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)semanticSegmentationTeethMatte	swift.property	semanticSegmentationTeethMatte	CIRAWFilter.semanticSegmentationTeethMatte	var semanticSegmentationTeethMatte: CIImage? { get }
+c:objc(cs)CIRAWFilter(py)shadowBias	swift.property	shadowBias	CIRAWFilter.shadowBias	var shadowBias: Float { get set }
+c:objc(cs)CIRAWFilter(py)sharpnessAmount	swift.property	sharpnessAmount	CIRAWFilter.sharpnessAmount	var sharpnessAmount: Float { get set }
+c:objc(cs)CIRAWFilter(py)sharpnessSupported	swift.property	isSharpnessSupported	CIRAWFilter.isSharpnessSupported	var isSharpnessSupported: Bool { get }
+c:objc(cs)CIRAWFilter(py)supportedDecoderVersions	swift.property	supportedDecoderVersions	CIRAWFilter.supportedDecoderVersions	var supportedDecoderVersions: [CIRAWDecoderVersion] { get }
+c:objc(cs)CIRectangleFeature	swift.class	CIRectangleFeature	CIRectangleFeature	class CIRectangleFeature
+c:objc(cs)CIRectangleFeature(py)bottomLeft	swift.property	bottomLeft	CIRectangleFeature.bottomLeft	var bottomLeft: CGPoint { get }
+c:objc(cs)CIRectangleFeature(py)bottomRight	swift.property	bottomRight	CIRectangleFeature.bottomRight	var bottomRight: CGPoint { get }
+c:objc(cs)CIRectangleFeature(py)bounds	swift.property	bounds	CIRectangleFeature.bounds	var bounds: CGRect { get }
+c:objc(cs)CIRectangleFeature(py)topLeft	swift.property	topLeft	CIRectangleFeature.topLeft	var topLeft: CGPoint { get }
+c:objc(cs)CIRectangleFeature(py)topRight	swift.property	topRight	CIRectangleFeature.topRight	var topRight: CGPoint { get }
+c:objc(cs)CIRenderDestination	swift.class	CIRenderDestination	CIRenderDestination	class CIRenderDestination
+c:objc(cs)CIRenderDestination(im)initWithBitmapData:width:height:bytesPerRow:format:	swift.init	init(bitmapData:width:height:bytesPerRow:format:)	CIRenderDestination.init(bitmapData:width:height:bytesPerRow:format:)	init(bitmapData data: UnsafeMutableRawPointer, width: Int, height: Int, bytesPerRow: Int, format: CIFormat)
+c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:	swift.init	init(glTexture:target:width:height:)	CIRenderDestination.init(glTexture:target:width:height:)	init(glTexture texture: UInt32, target: UInt32, width: Int, height: Int)
+c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:::SYNTHESIZED::c:objc(cs)CIRenderDestination	swift.init	init(GLTexture:target:width:height:)	CIRenderDestination.init(GLTexture:target:width:height:)	init(GLTexture texture: UInt32, target: UInt32, width: Int, height: Int)
+c:objc(cs)CIRenderDestination(im)initWithIOSurface:	swift.init	init(ioSurface:)	CIRenderDestination.init(ioSurface:)	init(ioSurface surface: IOSurface)
+c:objc(cs)CIRenderDestination(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIRenderDestination	swift.init	init(IOSurface:)	CIRenderDestination.init(IOSurface:)	init(IOSurface surface: IOSurface)
+c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:	swift.init	init(mtlTexture:commandBuffer:)	CIRenderDestination.init(mtlTexture:commandBuffer:)	init(mtlTexture texture: any MTLTexture, commandBuffer: (any MTLCommandBuffer)?)
+c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:::SYNTHESIZED::c:objc(cs)CIRenderDestination	swift.init	init(MTLTexture:commandBuffer:)	CIRenderDestination.init(MTLTexture:commandBuffer:)	init(MTLTexture texture: any MTLTexture, commandBuffer: (any MTLCommandBuffer)?)
+c:objc(cs)CIRenderDestination(im)initWithPixelBuffer:	swift.init	init(pixelBuffer:)	CIRenderDestination.init(pixelBuffer:)	init(pixelBuffer: CVPixelBuffer)
+c:objc(cs)CIRenderDestination(im)initWithWidth:height:pixelFormat:commandBuffer:mtlTextureProvider:	swift.init	init(width:height:pixelFormat:commandBuffer:mtlTextureProvider:)	CIRenderDestination.init(width:height:pixelFormat:commandBuffer:mtlTextureProvider:)	init(width: Int, height: Int, pixelFormat: MTLPixelFormat, commandBuffer: (any MTLCommandBuffer)?, mtlTextureProvider block: (() -> any MTLTexture)? = nil)
+c:objc(cs)CIRenderDestination(py)alphaMode	swift.property	alphaMode	CIRenderDestination.alphaMode	var alphaMode: CIRenderDestinationAlphaMode { get set }
+c:objc(cs)CIRenderDestination(py)blendKernel	swift.property	blendKernel	CIRenderDestination.blendKernel	var blendKernel: CIBlendKernel? { get set }
+c:objc(cs)CIRenderDestination(py)blendsInDestinationColorSpace	swift.property	blendsInDestinationColorSpace	CIRenderDestination.blendsInDestinationColorSpace	var blendsInDestinationColorSpace: Bool { get set }
+c:objc(cs)CIRenderDestination(py)captureTraceURL	swift.property	captureTraceURL	CIRenderDestination.captureTraceURL	var captureTraceURL: URL? { get set }
+c:objc(cs)CIRenderDestination(py)clamped	swift.property	isClamped	CIRenderDestination.isClamped	var isClamped: Bool { get set }
+c:objc(cs)CIRenderDestination(py)colorSpace	swift.property	colorSpace	CIRenderDestination.colorSpace	var colorSpace: CGColorSpace? { get set }
+c:objc(cs)CIRenderDestination(py)dithered	swift.property	isDithered	CIRenderDestination.isDithered	var isDithered: Bool { get set }
+c:objc(cs)CIRenderDestination(py)flipped	swift.property	isFlipped	CIRenderDestination.isFlipped	var isFlipped: Bool { get set }
+c:objc(cs)CIRenderDestination(py)height	swift.property	height	CIRenderDestination.height	var height: Int { get }
+c:objc(cs)CIRenderDestination(py)width	swift.property	width	CIRenderDestination.width	var width: Int { get }
+c:objc(cs)CIRenderInfo	swift.class	CIRenderInfo	CIRenderInfo	class CIRenderInfo
+c:objc(cs)CIRenderInfo(py)kernelCompileTime	swift.property	kernelCompileTime	CIRenderInfo.kernelCompileTime	var kernelCompileTime: TimeInterval { get }
+c:objc(cs)CIRenderInfo(py)kernelExecutionTime	swift.property	kernelExecutionTime	CIRenderInfo.kernelExecutionTime	var kernelExecutionTime: TimeInterval { get }
+c:objc(cs)CIRenderInfo(py)passCount	swift.property	passCount	CIRenderInfo.passCount	var passCount: Int { get }
+c:objc(cs)CIRenderInfo(py)pixelsProcessed	swift.property	pixelsProcessed	CIRenderInfo.pixelsProcessed	var pixelsProcessed: Int { get }
+c:objc(cs)CIRenderTask	swift.class	CIRenderTask	CIRenderTask	class CIRenderTask
+c:objc(cs)CIRenderTask(im)waitUntilCompletedAndReturnError:	swift.method	waitUntilCompleted()	CIRenderTask.waitUntilCompleted()	func waitUntilCompleted() throws -> CIRenderInfo
+c:objc(cs)CISampler	swift.class	CISampler	CISampler	class CISampler
+c:objc(cs)CISampler(im)initWithImage:	swift.init	init(image:)	CISampler.init(image:)	convenience init(image im: CIImage)
+c:objc(cs)CISampler(im)initWithImage:options:	swift.init	init(image:options:)	CISampler.init(image:options:)	init(image im: CIImage, options dict: [AnyHashable : Any]? = nil)
+c:objc(cs)CISampler(py)definition	swift.property	definition	CISampler.definition	var definition: CIFilterShape { get }
+c:objc(cs)CISampler(py)extent	swift.property	extent	CISampler.extent	var extent: CGRect { get }
+c:objc(cs)CITextFeature	swift.class	CITextFeature	CITextFeature	class CITextFeature
+c:objc(cs)CITextFeature(py)bottomLeft	swift.property	bottomLeft	CITextFeature.bottomLeft	var bottomLeft: CGPoint { get }
+c:objc(cs)CITextFeature(py)bottomRight	swift.property	bottomRight	CITextFeature.bottomRight	var bottomRight: CGPoint { get }
+c:objc(cs)CITextFeature(py)bounds	swift.property	bounds	CITextFeature.bounds	var bounds: CGRect { get }
+c:objc(cs)CITextFeature(py)subFeatures	swift.property	subFeatures	CITextFeature.subFeatures	var subFeatures: [Any]? { get }
+c:objc(cs)CITextFeature(py)topLeft	swift.property	topLeft	CITextFeature.topLeft	var topLeft: CGPoint { get }
+c:objc(cs)CITextFeature(py)topRight	swift.property	topRight	CITextFeature.topRight	var topRight: CGPoint { get }
+c:objc(cs)CIVector	swift.class	CIVector	CIVector	class CIVector
+c:objc(cs)CIVector(cm)vectorWithCGAffineTransform:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(CGAffineTransform:)	CIVector.init(CGAffineTransform:)	convenience init(CGAffineTransform t: CGAffineTransform)
+c:objc(cs)CIVector(cm)vectorWithCGPoint:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(CGPoint:)	CIVector.init(CGPoint:)	convenience init(CGPoint p: CGPoint)
+c:objc(cs)CIVector(cm)vectorWithCGRect:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(CGRect:)	CIVector.init(CGRect:)	convenience init(CGRect r: CGRect)
+c:objc(cs)CIVector(cm)vectorWithX:Y:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(x:Y:)	CIVector.init(x:Y:)	convenience init(x: CGFloat, Y y: CGFloat)
+c:objc(cs)CIVector(cm)vectorWithX:Y:Z:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(x:Y:Z:)	CIVector.init(x:Y:Z:)	convenience init(x: CGFloat, Y y: CGFloat, Z z: CGFloat)
+c:objc(cs)CIVector(cm)vectorWithX:Y:Z:W:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(x:Y:Z:W:)	CIVector.init(x:Y:Z:W:)	convenience init(x: CGFloat, Y y: CGFloat, Z z: CGFloat, W w: CGFloat)
+c:objc(cs)CIVector(im)initWithCGAffineTransform:	swift.init	init(cgAffineTransform:)	CIVector.init(cgAffineTransform:)	convenience init(cgAffineTransform t: CGAffineTransform)
+c:objc(cs)CIVector(im)initWithCGAffineTransform:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(CGAffineTransform:)	CIVector.init(CGAffineTransform:)	convenience init(CGAffineTransform t: CGAffineTransform)
+c:objc(cs)CIVector(im)initWithCGPoint:	swift.init	init(cgPoint:)	CIVector.init(cgPoint:)	convenience init(cgPoint p: CGPoint)
+c:objc(cs)CIVector(im)initWithCGPoint:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(CGPoint:)	CIVector.init(CGPoint:)	convenience init(CGPoint p: CGPoint)
+c:objc(cs)CIVector(im)initWithCGRect:	swift.init	init(cgRect:)	CIVector.init(cgRect:)	convenience init(cgRect r: CGRect)
+c:objc(cs)CIVector(im)initWithCGRect:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(CGRect:)	CIVector.init(CGRect:)	convenience init(CGRect r: CGRect)
+c:objc(cs)CIVector(im)initWithString:	swift.init	init(string:)	CIVector.init(string:)	convenience init(string representation: String)
+c:objc(cs)CIVector(im)initWithValues:count:	swift.init	init(values:count:)	CIVector.init(values:count:)	init(values: UnsafePointer<CGFloat>, count: Int)
+c:objc(cs)CIVector(im)initWithX:	swift.init	init(x:)	CIVector.init(x:)	convenience init(x: CGFloat)
+c:objc(cs)CIVector(im)initWithX:Y:	swift.init	init(x:y:)	CIVector.init(x:y:)	convenience init(x: CGFloat, y: CGFloat)
+c:objc(cs)CIVector(im)initWithX:Y:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(x:Y:)	CIVector.init(x:Y:)	convenience init(x: CGFloat, Y y: CGFloat)
+c:objc(cs)CIVector(im)initWithX:Y:Z:	swift.init	init(x:y:z:)	CIVector.init(x:y:z:)	convenience init(x: CGFloat, y: CGFloat, z: CGFloat)
+c:objc(cs)CIVector(im)initWithX:Y:Z:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(x:Y:Z:)	CIVector.init(x:Y:Z:)	convenience init(x: CGFloat, Y y: CGFloat, Z z: CGFloat)
+c:objc(cs)CIVector(im)initWithX:Y:Z:W:	swift.init	init(x:y:z:w:)	CIVector.init(x:y:z:w:)	convenience init(x: CGFloat, y: CGFloat, z: CGFloat, w: CGFloat)
+c:objc(cs)CIVector(im)initWithX:Y:Z:W:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(x:Y:Z:W:)	CIVector.init(x:Y:Z:W:)	convenience init(x: CGFloat, Y y: CGFloat, Z z: CGFloat, W w: CGFloat)
+c:objc(cs)CIVector(im)valueAtIndex:	swift.method	value(at:)	CIVector.value(at:)	func value(at index: Int) -> CGFloat
+c:objc(cs)CIVector(py)CGAffineTransformValue	swift.property	cgAffineTransformValue	CIVector.cgAffineTransformValue	var cgAffineTransformValue: CGAffineTransform { get }
+c:objc(cs)CIVector(py)CGPointValue	swift.property	cgPointValue	CIVector.cgPointValue	var cgPointValue: CGPoint { get }
+c:objc(cs)CIVector(py)CGRectValue	swift.property	cgRectValue	CIVector.cgRectValue	var cgRectValue: CGRect { get }
+c:objc(cs)CIVector(py)W	swift.property	w	CIVector.w	var w: CGFloat { get }
+c:objc(cs)CIVector(py)X	swift.property	x	CIVector.x	var x: CGFloat { get }
+c:objc(cs)CIVector(py)Y	swift.property	y	CIVector.y	var y: CGFloat { get }
+c:objc(cs)CIVector(py)Z	swift.property	z	CIVector.z	var z: CGFloat { get }
+c:objc(cs)CIVector(py)count	swift.property	count	CIVector.count	var count: Int { get }
+c:objc(cs)CIVector(py)stringRepresentation	swift.property	stringRepresentation	CIVector.stringRepresentation	var stringRepresentation: String { get }
+c:objc(cs)CIWarpKernel	swift.class	CIWarpKernel	CIWarpKernel	class CIWarpKernel
+c:objc(cs)CIWarpKernel(cm)kernelWithString:	swift.init	init(source:)	CIWarpKernel.init(source:)	convenience init?(source string: String)
+c:objc(cs)CIWarpKernel(im)applyWithExtent:roiCallback:inputImage:arguments:	swift.method	apply(extent:roiCallback:image:arguments:)	CIWarpKernel.apply(extent:roiCallback:image:arguments:)	func apply(extent: CGRect, roiCallback callback: @escaping CIKernelROICallback, image: CIImage, arguments args: [Any]) -> CIImage?
+c:objc(cs)NSObject(im)provideImageData:bytesPerRow:origin::size::userInfo:	swift.method	provideImageData(_:bytesPerRow:origin:_:size:_:userInfo:)	NSObject.provideImageData(_:bytesPerRow:origin:_:size:_:userInfo:)	func provideImageData(_ data: UnsafeMutableRawPointer, bytesPerRow rowbytes: Int, origin originx: Int, _ originy: Int, size width: Int, _ height: Int, userInfo info: Any?)
+c:objc(cs)NSObject(im)provideImageToMTLTexture:commandBuffer:originx:originy:width:height:userInfo:	swift.method	provideImage(to:commandBuffer:originx:originy:width:height:userInfo:)	NSObject.provideImage(to:commandBuffer:originx:originy:width:height:userInfo:)	func provideImage(to texture: any MTLTexture, commandBuffer: any MTLCommandBuffer, originx: Int, originy: Int, width: Int, height: Int, userInfo info: Any?)
+c:objc(cs)NSUserActivity(py)detectedBarcodeDescriptor	swift.property	detectedBarcodeDescriptor	NSUserActivity.detectedBarcodeDescriptor	@NSCopying var detectedBarcodeDescriptor: CIBarcodeDescriptor? { get }
+c:objc(pl)CIFilter	swift.protocol	CIFilterProtocol	CIFilterProtocol	protocol CIFilterProtocol
+c:objc(pl)CIFilter(cm)customAttributes	swift.type.method	customAttributes()	CIFilterProtocol.customAttributes()	optional static func customAttributes() -> [String : Any]?
+c:objc(pl)CIFilter(py)outputImage	swift.property	outputImage	CIFilterProtocol.outputImage	var outputImage: CIImage? { get }
+c:objc(pl)CIFilterConstructor	swift.protocol	CIFilterConstructor	CIFilterConstructor	protocol CIFilterConstructor
+c:objc(pl)CIFilterConstructor(im)filterWithName:	swift.method	filter(withName:)	CIFilterConstructor.filter(withName:)	func filter(withName name: String) -> CIFilter?
+c:objc(pl)CIImageProcessorInput	swift.protocol	CIImageProcessorInput	CIImageProcessorInput	protocol CIImageProcessorInput
+c:objc(pl)CIImageProcessorInput(py)baseAddress	swift.property	baseAddress	CIImageProcessorInput.baseAddress	var baseAddress: UnsafeRawPointer { get }
+c:objc(pl)CIImageProcessorInput(py)bytesPerRow	swift.property	bytesPerRow	CIImageProcessorInput.bytesPerRow	var bytesPerRow: Int { get }
+c:objc(pl)CIImageProcessorInput(py)digest	swift.property	digest	CIImageProcessorInput.digest	var digest: UInt64 { get }
+c:objc(pl)CIImageProcessorInput(py)format	swift.property	format	CIImageProcessorInput.format	var format: CIFormat { get }
+c:objc(pl)CIImageProcessorInput(py)metalTexture	swift.property	metalTexture	CIImageProcessorInput.metalTexture	var metalTexture: (any MTLTexture)? { get }
+c:objc(pl)CIImageProcessorInput(py)pixelBuffer	swift.property	pixelBuffer	CIImageProcessorInput.pixelBuffer	var pixelBuffer: CVPixelBuffer? { get }
+c:objc(pl)CIImageProcessorInput(py)region	swift.property	region	CIImageProcessorInput.region	var region: CGRect { get }
+c:objc(pl)CIImageProcessorInput(py)roiTileCount	swift.property	roiTileCount	CIImageProcessorInput.roiTileCount	var roiTileCount: Int { get }
+c:objc(pl)CIImageProcessorInput(py)roiTileIndex	swift.property	roiTileIndex	CIImageProcessorInput.roiTileIndex	var roiTileIndex: Int { get }
+c:objc(pl)CIImageProcessorInput(py)surface	swift.property	surface	CIImageProcessorInput.surface	var surface: IOSurfaceRef { get }
+c:objc(pl)CIImageProcessorOutput	swift.protocol	CIImageProcessorOutput	CIImageProcessorOutput	protocol CIImageProcessorOutput
+c:objc(pl)CIImageProcessorOutput(py)baseAddress	swift.property	baseAddress	CIImageProcessorOutput.baseAddress	var baseAddress: UnsafeMutableRawPointer { get }
+c:objc(pl)CIImageProcessorOutput(py)bytesPerRow	swift.property	bytesPerRow	CIImageProcessorOutput.bytesPerRow	var bytesPerRow: Int { get }
+c:objc(pl)CIImageProcessorOutput(py)digest	swift.property	digest	CIImageProcessorOutput.digest	var digest: UInt64 { get }
+c:objc(pl)CIImageProcessorOutput(py)format	swift.property	format	CIImageProcessorOutput.format	var format: CIFormat { get }
+c:objc(pl)CIImageProcessorOutput(py)metalCommandBuffer	swift.property	metalCommandBuffer	CIImageProcessorOutput.metalCommandBuffer	var metalCommandBuffer: (any MTLCommandBuffer)? { get }
+c:objc(pl)CIImageProcessorOutput(py)metalTexture	swift.property	metalTexture	CIImageProcessorOutput.metalTexture	var metalTexture: (any MTLTexture)? { get }
+c:objc(pl)CIImageProcessorOutput(py)pixelBuffer	swift.property	pixelBuffer	CIImageProcessorOutput.pixelBuffer	var pixelBuffer: CVPixelBuffer? { get }
+c:objc(pl)CIImageProcessorOutput(py)region	swift.property	region	CIImageProcessorOutput.region	var region: CGRect { get }
+c:objc(pl)CIImageProcessorOutput(py)surface	swift.property	surface	CIImageProcessorOutput.surface	var surface: IOSurfaceRef { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIBarcodeDescriptor	swift.init	init(coder:)	CIBarcodeDescriptor.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIColor	swift.init	init(coder:)	CIColor.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIFilter	swift.init	init(coder:)	CIFilter.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIImage	swift.init	init(coder:)	CIImage.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIQRCodeFeature	swift.init	init(coder:)	CIQRCodeFeature.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIVector	swift.init	init(coder:)	CIVector.init(coder:)	init?(coder: NSCoder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	swift.func.op	!=(_:_:)	CIDataMatrixCodeDescriptor.ECCVersion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	swift.func.op	!=(_:_:)	CIQRCodeDescriptor.ErrorCorrectionLevel.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIRenderDestinationAlphaMode	swift.func.op	!=(_:_:)	CIRenderDestinationAlphaMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIContextOption	swift.func.op	!=(_:_:)	CIContextOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIDynamicRangeOption	swift.func.op	!=(_:_:)	CIDynamicRangeOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIFormat	swift.func.op	!=(_:_:)	CIFormat.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIImageAutoAdjustmentOption	swift.func.op	!=(_:_:)	CIImageAutoAdjustmentOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIImageOption	swift.func.op	!=(_:_:)	CIImageOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIImageRepresentationOption	swift.func.op	!=(_:_:)	CIImageRepresentationOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIRAWDecoderVersion	swift.func.op	!=(_:_:)	CIRAWDecoderVersion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CIRAWFilterOption	swift.func.op	!=(_:_:)	CIRAWFilterOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	swift.property	hashValue	CIDataMatrixCodeDescriptor.ECCVersion.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	swift.property	hashValue	CIQRCodeDescriptor.ErrorCorrectionLevel.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CIRenderDestinationAlphaMode	swift.property	hashValue	CIRenderDestinationAlphaMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	swift.method	hash(into:)	CIDataMatrixCodeDescriptor.ECCVersion.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	swift.method	hash(into:)	CIQRCodeDescriptor.ErrorCorrectionLevel.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CIRenderDestinationAlphaMode	swift.method	hash(into:)	CIRenderDestinationAlphaMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13CIImageOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIImageOption.init(rawValue:)	init(rawValue: String)
+s:So15CIContextOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIContextOption.init(rawValue:)	init(rawValue: String)
+s:So17CIRAWFilterOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIRAWFilterOption.init(rawValue:)	init(rawValue: String)
+s:So19CIRAWDecoderVersiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIRAWDecoderVersion.init(rawValue:)	init(rawValue: String)
+s:So20CIDynamicRangeOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIDynamicRangeOption.init(rawValue:)	init(rawValue: String)
+s:So26CIDataMatrixCodeECCVersionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CIDataMatrixCodeDescriptor.ECCVersion.init(rawValue:)	init?(rawValue: Int)
+s:So27CIImageAutoAdjustmentOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIImageAutoAdjustmentOption.init(rawValue:)	init(rawValue: String)
+s:So27CIImageRepresentationOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CIImageRepresentationOption.init(rawValue:)	init(rawValue: String)
+s:So28CIQRCodeErrorCorrectionLevelV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CIQRCodeDescriptor.ErrorCorrectionLevel.init(rawValue:)	init?(rawValue: Int)
+s:So28CIRenderDestinationAlphaModeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CIRenderDestinationAlphaMode.init(rawValue:)	init?(rawValue: UInt)
+s:So8CIFormata8rawValueABs5Int32V_tcfc	swift.init	init(rawValue:)	CIFormat.init(rawValue:)	init(rawValue: Int32)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIContextOption	swift.property	hashValue	CIContextOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIDynamicRangeOption	swift.property	hashValue	CIDynamicRangeOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIFormat	swift.property	hashValue	CIFormat.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIImageAutoAdjustmentOption	swift.property	hashValue	CIImageAutoAdjustmentOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIImageOption	swift.property	hashValue	CIImageOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIImageRepresentationOption	swift.property	hashValue	CIImageRepresentationOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIRAWDecoderVersion	swift.property	hashValue	CIRAWDecoderVersion.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CIRAWFilterOption	swift.property	hashValue	CIRAWFilterOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIContextOption	swift.method	hash(into:)	CIContextOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIDynamicRangeOption	swift.method	hash(into:)	CIDynamicRangeOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIFormat	swift.method	hash(into:)	CIFormat.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIImageAutoAdjustmentOption	swift.method	hash(into:)	CIImageAutoAdjustmentOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIImageOption	swift.method	hash(into:)	CIImageOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIImageRepresentationOption	swift.method	hash(into:)	CIImageRepresentationOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIRAWDecoderVersion	swift.method	hash(into:)	CIRAWDecoderVersion.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CIRAWFilterOption	swift.method	hash(into:)	CIRAWFilterOption.hash(into:)	func hash(into hasher: inout Hasher)

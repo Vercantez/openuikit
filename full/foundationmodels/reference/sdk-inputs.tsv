@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/FoundationModels.framework/FoundationModels.tbd	106548	46c0414b6cce46500103be678d878d76495fec2e97d057281100ee1ee5805a31
+swiftinterface	System/Library/Frameworks/FoundationModels.framework/Modules/FoundationModels.swiftmodule/arm64e-apple-ios.swiftinterface	77800	2450928e62608308d0a34dd995faa3dd353078547fdef2df0faee44f5c9151b7

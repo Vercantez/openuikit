@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 9,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/FoundationModels.symbols.json",
+      "relationshipCount": 782,
+      "sha256": "121986c873ae59cbdcef24629c0d088db2444fd1b113097c0e8af7b4b8105b1f",
+      "symbolCount": 608
+    },
+    {
+      "path": "reference/symbol-graphs/FoundationModels@Foundation.symbols.json",
+      "relationshipCount": 14,
+      "sha256": "819bea851a40be44d77555d6ec6e8f3b1b64f0bf0d1470864b2eb2743f92dd68",
+      "symbolCount": 7
+    },
+    {
+      "path": "reference/symbol-graphs/FoundationModels@Swift.symbols.json",
+      "relationshipCount": 207,
+      "sha256": "644b5b8db87bf2820d05e726689f5dae2c8ed4e6a37b076957e463c12ccf5af5",
+      "symbolCount": 139
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "FoundationModels",
+  "relationshipCount": 1003,
+  "relationshipMultisetSHA256": "2ec8ad0e210273000ac0779c9c58b1b2998e1b05fd15a2f650976d686e8ee451",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 754,
+  "symbolMultisetSHA256": "50776148daca1796a867a95d224e4a381930a5595ca491917c0e848b0170914f",
+  "target": "arm64-apple-ios26.0"
+}

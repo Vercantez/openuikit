@@ -1,0 +1,124 @@
+{
+  "module": "AppIntents",
+  "moduleRecord": {
+    "app_coverage_count": 7,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 160,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 39,
+    "iphoneos_runtime_focus_launch_build_rank": 43,
+    "module": "AppIntents",
+    "occurrence_count": 160,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "4d2615a330571e00b5f5cb099f86be901c2c987a4a4f37d43cf9c950a5a97abb",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "iOS/AppIntents/AddFeedAppIntent.swift",
+          "iOS/AppIntents/NetNewsWireAppShortcuts.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "e5219f86c4f0545e5fa77c0e0b159c786023e61f69db24bea1cb5d09f49e69b7",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "Modules/Sources/JetpackStatsWidgetsCore/AppIntents/SelectSiteIntent.swift",
+          "Modules/Sources/JetpackStatsWidgetsCore/AppIntents/SiteEntity.swift",
+          "Modules/Sources/JetpackStatsWidgetsCore/AppIntents/SiteEntityQuery.swift",
+          "Sources/Jetpack/AppIntents/AppIntentOpenError.swift",
+          "Sources/Jetpack/AppIntents/JetpackAppShortcuts.swift",
+          "Sources/Jetpack/AppIntents/NewPostIntent.swift",
+          "Sources/Jetpack/AppIntents/OpenNotificationsIntent.swift",
+          "Sources/Jetpack/AppIntents/OpenReaderIntent.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "6397821e3d51b08a29140115b44d98340fc63a9637c68ff1b13da4a45bdbc86c",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "DuckDuckGo/VPNAutoShortcuts.swift",
+          "DuckDuckGo/VPNShortcutIntents.swift",
+          "Widgets/AIChatControlWidget.swift",
+          "Widgets/ControlWidgetVPNIntents.swift",
+          "Widgets/VPNWidget.swift",
+          "Widgets/WidgetVPNIntents.swift",
+          "Widgets/Widgets.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "f0bf16d139b1fac7ff517fd60422cc8e5dc77d059356ece86eb33048c0799acd",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Browser/DownloadHelper/DownloadLiveActivityIntent.swift",
+          "firefox-ios/WidgetKit/DownloadManager/DownloadLiveActivity.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "c329570976de0de1eaa2f7020016b17130a666f6c1cce9b30d7f9c122274b2cb",
+        "file_count": 122,
+        "occurrence_count": 122,
+        "sample_paths": [
+          "Sources/App/Settings/Calendars/CalendarEventDeleteScopeAppEnum.swift",
+          "Sources/App/Settings/Calendars/CalendarEventRepeatAppEnum.swift",
+          "Sources/App/Settings/Calendars/CreateCalendarEventAppIntent.swift",
+          "Sources/App/Settings/Calendars/DeleteCalendarEventAppIntent.swift",
+          "Sources/App/Settings/Calendars/GetCalendarEventsAppIntent.swift",
+          "Sources/App/Settings/Calendars/HACalendarAppEntity.swift",
+          "Sources/App/Settings/Calendars/HACalendarAppEntityQuery.swift",
+          "Sources/App/Settings/Calendars/HACalendarEventAppEntity.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "9ed4b549d5e72ed9abf7e03ea2f83c6b39293201b61c6f2ed556e994c40077ff",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "podcasts/AppDelegate.swift",
+          "podcasts/LiveActivity/ExtendSleepTimerLiveActivityIntent.swift",
+          "podcasts/MigratedSleepTimerIntent.swift",
+          "podcasts/PlayEpisodeIntent.swift",
+          "podcasts/PocketCastsAppShortcutsProvider.swift",
+          "podcasts/SetSleepTimerIntent.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "56f8554ffb4aecb6428a21a2daf6fbee9af0970a16a2f9b3f65cf050b7bbd50d",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "MediaLibraryWidget/AppIntent.swift",
+          "Sources/App/iOS/AppShortcuts.swift",
+          "Sources/App/iOS/AudioEntities.swift",
+          "Sources/App/iOS/AudioIntents.swift",
+          "Sources/App/iOS/IntentContext.swift",
+          "Sources/App/iOS/PlayMediaIntent.swift",
+          "Sources/App/iOS/PlayRadioStationIntent.swift",
+          "Sources/App/iOS/RadioStationEntity.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 39,
+    "byFocusLaunchBuildRelevance": 43
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

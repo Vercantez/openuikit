@@ -1,0 +1,120 @@
+{
+  "module": "Accelerate",
+  "moduleRecord": {
+    "app_coverage_count": 9,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 48,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 28,
+    "iphoneos_runtime_focus_launch_build_rank": 32,
+    "module": "Accelerate",
+    "occurrence_count": 48,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "24eee18c717ee711c4e26a181564c641a8f5b8627700434f55d79c8bacf4ad27",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "SignalServiceKit/Messages/Attachments/V2/AudioWaveform/AudioWaveform.swift",
+          "SignalServiceKit/Messages/Attachments/V2/AudioWaveform/AudioWaveformManager.swift",
+          "SignalServiceKit/Messages/Attachments/V2/AudioWaveform/AudioWaveformSampler.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "3af0722cd3a3d0bd4dca06a61c32a684516d02face7b00e28112eac8b056dd8c",
+        "file_count": 33,
+        "occurrence_count": 33,
+        "sample_paths": [
+          "submodules/AnimatedStickerNode/Sources/CompressedAnimationRenderer.swift",
+          "submodules/AnimatedStickerNode/Sources/SoftwareAnimationRenderer.swift",
+          "submodules/AnimatedStickerNode/Sources/VideoStickerFrameSource.swift",
+          "submodules/AvatarNode/Sources/AvatarBadgeView.swift",
+          "submodules/AvatarNode/Sources/AvatarNode.swift",
+          "submodules/Camera/Sources/CameraUtils.swift",
+          "submodules/DirectMediaImageCache/Sources/DirectMediaImageCache.swift",
+          "submodules/Display/Source/GenerateImage.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "c826636c8463b1425ba747457b2dbe8077977f495341806dbb757acd2eecf61d",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "DuckDuckGo/SpeechRecognizer.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "148aa1871a2790a53de881dfcde343f372c4314c49292fb864b8ccde36c4a0c5",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "firefox-ios/ThirdParty/Apple/UIImage+ImageEffects.m"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "e42cd8ce177300ffb59bbd9599c1ba6009f61f936f50537d5052d5c309f3b71a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/Assist/Local/SpeechTranscriber.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "08d931ea8cd49624cbd7e8578dfc5cb151022e33099c8288d945814f5f01297c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "MastodonSDK/Sources/MastodonUI/View/Control/LineChartView.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "aeecc3623d3c937ee7158163508161e11051c2a8c9db0b729354a8c28042d2bc",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "iOSClient/Extensions/UIImage+Extension.swift",
+          "iOSClient/Utility/NCUtility+Image.swift",
+          "iOSClient/Utility/NCUtility.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "12a51e392afe137519607c3d08a3e85ac455bf9412f40ceebf984a05edfd4d2b",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "podcasts/AudioUtils.swift",
+          "podcasts/DefaultPlayer.swift",
+          "podcasts/Fingerprint/FingerprintTimingManager.swift",
+          "podcasts/VoiceBoostN.h"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "892987161c25c96564b42def12fe59860fd01a56a8c9d1664d0c0893c7da1b4d",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Extensions/UIKit/UIImage+Blur.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 28,
+    "byFocusLaunchBuildRelevance": 32
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
