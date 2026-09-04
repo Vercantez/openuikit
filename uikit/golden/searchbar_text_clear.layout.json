@@ -1,0 +1,251 @@
+{
+  "name" : "searchbar_text_clear",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        393,
+        100
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        393,
+        100
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        0,
+        28,
+        393,
+        44
+      ],
+      "class" : "UISearchBar",
+      "frame" : [
+        0,
+        28,
+        393,
+        44
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        0,
+        28,
+        393,
+        44
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        393,
+        44
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        28,
+        393,
+        44
+      ],
+      "class" : "UISearchBarBackground",
+      "frame" : [
+        0,
+        0,
+        393,
+        44
+      ],
+      "intrinsic" : [
+        0.33300000000000002,
+        44
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        28,
+        393,
+        44
+      ],
+      "class" : "_UISearchBarSearchContainerView",
+      "frame" : [
+        0,
+        0,
+        393,
+        44
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "absFrame" : [
+        8,
+        28,
+        377,
+        44
+      ],
+      "class" : "UISearchBarTextField",
+      "frame" : [
+        8,
+        0,
+        377,
+        44
+      ],
+      "intrinsic" : [
+        -1,
+        28
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        8,
+        28,
+        293.33300000000003,
+        40
+      ],
+      "class" : "_UITouchPassthroughView",
+      "frame" : [
+        0,
+        0,
+        293.33300000000003,
+        40
+      ],
+      "path" : "1.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        350.66699999999997,
+        39.667000000000002,
+        20,
+        20
+      ],
+      "class" : "_UITextFieldClearButton",
+      "frame" : [
+        342.66699999999997,
+        11.667,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        22
+      ],
+      "path" : "1.0.1.0.1",
+      "sizeThatFits200" : [
+        20,
+        22
+      ]
+    },
+    {
+      "absFrame" : [
+        350.66699999999997,
+        39.667000000000002,
+        20,
+        20
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20.332999999999998
+      ],
+      "path" : "1.0.1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        40,
+        20.667000000000002,
+        19.332999999999998
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        12,
+        12,
+        20.667000000000002,
+        19.332999999999998
+      ],
+      "intrinsic" : [
+        20.667000000000002,
+        20.332999999999998
+      ],
+      "path" : "1.0.1.0.2"
+    },
+    {
+      "absFrame" : [
+        47.667000000000002,
+        30,
+        293.33300000000003,
+        40
+      ],
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        39.667000000000002,
+        2,
+        293.33300000000003,
+        40
+      ],
+      "path" : "1.0.1.0.3"
+    },
+    {
+      "absFrame" : [
+        47.667000000000002,
+        39,
+        104,
+        22.332999999999998
+      ],
+      "boundsOrigin" : [
+        0,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        0,
+        9,
+        104,
+        22.332999999999998
+      ],
+      "layerBoundsOrigin" : [
+        0,
+        -1
+      ],
+      "path" : "1.0.1.0.3.0"
+    }
+  ]
+}

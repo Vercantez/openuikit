@@ -1,0 +1,34 @@
+{
+  "name": "collection_flow_3col_2x",
+  "size": [375, 272],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 272], "backgroundColor": "systemGray5" },
+      {
+        "class": "UICollectionView",
+        "frame": [0, 20, 375, 232],
+        "backgroundColor": "systemBackground",
+        "itemSize": [100, 100],
+        "minimumLineSpacing": 8,
+        "minimumInteritemSpacing": 8,
+        "sectionInset": [12, 20, 12, 20],
+        "itemCornerRadius": 10,
+        "sections": [
+          {
+            "items": [
+              { "text": "1", "color": "systemRed", "textColor": "systemBackground" },
+              { "text": "2", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "3", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "4", "color": "systemOrange", "textColor": "systemBackground" },
+              { "text": "5", "color": "systemPurple", "textColor": "systemBackground" },
+              { "text": "6", "color": "systemTeal", "textColor": "systemBackground" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
