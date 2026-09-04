@@ -678,6 +678,7 @@ final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
         let text: String
         let detailText: String?
         let accessory: UITableViewCell.AccessoryType
+        let switchOn: Bool?
         let selected: Bool
     }
     struct Section {
@@ -700,15 +701,20 @@ final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
                 case let x: fatalError("bad cell style '\(x)'")
                 }
                 let accessory: UITableViewCell.AccessoryType
+                var switchOn: Bool?
                 switch r["accessory"]?.stringValue ?? "none" {
                 case "none": accessory = .none
                 case "disclosureIndicator": accessory = .disclosureIndicator
                 case "checkmark": accessory = .checkmark
+                case "switch":
+                    accessory = .none
+                    switchOn = r["switchOn"]?.boolValue ?? false
                 case let x: fatalError("bad accessory '\(x)'")
                 }
                 return Row(style: style, text: r["text"]?.stringValue ?? "",
                            detailText: r["detailText"]?.stringValue,
                            accessory: accessory,
+                           switchOn: switchOn,
                            selected: r["selected"]?.boolValue == true)
             }
             return Section(header: s["header"]?.stringValue,
@@ -730,7 +736,13 @@ final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
         let cell = UITableViewCell(style: row.style, reuseIdentifier: nil)
         cell.textLabel.text = row.text
         cell.detailTextLabel?.text = row.detailText
-        cell.accessoryType = row.accessory
+        if let switchOn = row.switchOn {
+            let toggle = UISwitch(frame: .zero)
+            toggle.setOn(switchOn, animated: false)
+            cell.accessoryView = toggle
+        } else {
+            cell.accessoryType = row.accessory
+        }
         return cell
     }
 

@@ -136,20 +136,52 @@ public final class UITabBar: UIView {
     static let titleFontSize: CGFloat = 10
 
     static var platterColor: UIColor {
-        isIOS ? UIColor(red: 249 / 255, green: 249 / 255, blue: 249 / 255, alpha: 1)
-              : UIColor(red: 253 / 255, green: 253 / 255, blue: 254 / 255, alpha: 1)
+        UIColor(dynamicProvider: { traits in
+            if isIOS, traits.userInterfaceStyle == .dark {
+                // tableview/tabbar_dark, SE 2x, 2026-09-04:
+                // platter flat fill samples (19,19,19) in the untinted region.
+                return UIColor(red: 19 / 255, green: 19 / 255, blue: 19 / 255, alpha: 1)
+            }
+            return isIOS
+                ? UIColor(red: 249 / 255, green: 249 / 255, blue: 249 / 255, alpha: 1)
+                : UIColor(red: 253 / 255, green: 253 / 255, blue: 254 / 255, alpha: 1)
+        })
     }
     static var capsuleColor: UIColor {
-        isIOS ? UIColor(red: 230 / 255, green: 230 / 255, blue: 230 / 255, alpha: 1)
-              : UIColor(red: 235 / 255, green: 235 / 255, blue: 236 / 255, alpha: 1)
+        UIColor(dynamicProvider: { traits in
+            if isIOS, traits.userInterfaceStyle == .dark {
+                // tabbar_dark, SE 2x, 2026-09-04:
+                // selected button background clusters at (53,53,53).
+                return UIColor(red: 53 / 255, green: 53 / 255, blue: 53 / 255, alpha: 1)
+            }
+            return isIOS
+                ? UIColor(red: 230 / 255, green: 230 / 255, blue: 230 / 255, alpha: 1)
+                : UIColor(red: 235 / 255, green: 235 / 255, blue: 236 / 255, alpha: 1)
+        })
     }
-    static let unselectedColor = UIColor(red: 25 / 255, green: 25 / 255,
-                                         blue: 25 / 255, alpha: 1)
+    static var unselectedColor: UIColor {
+        UIColor(dynamicProvider: { traits in
+            if isIOS, traits.userInterfaceStyle == .dark {
+                // tabbar_dark, SE 2x, 2026-09-04:
+                // unselected icon block at [90,409,24,24] is (243,243,243).
+                return UIColor(red: 243 / 255, green: 243 / 255, blue: 243 / 255, alpha: 1)
+            }
+            return UIColor(red: 25 / 255, green: 25 / 255, blue: 25 / 255, alpha: 1)
+        })
+    }
     /// Measured default selected-item tint (iOS 26 tab bars do not use
     /// systemBlue).
     public static var defaultTint: UIColor {
-        isIOS ? UIColor(red: 0, green: 124 / 255, blue: 243 / 255, alpha: 1)
-              : UIColor(red: 52 / 255, green: 124 / 255, blue: 238 / 255, alpha: 1)
+        UIColor(dynamicProvider: { traits in
+            if isIOS, traits.userInterfaceStyle == .dark {
+                // tabbar_dark, SE 2x, 2026-09-04:
+                // selected tint samples (27,172,255) in icon/title ink.
+                return UIColor(red: 27 / 255, green: 172 / 255, blue: 1, alpha: 1)
+            }
+            return isIOS
+                ? UIColor(red: 0, green: 124 / 255, blue: 243 / 255, alpha: 1)
+                : UIColor(red: 52 / 255, green: 124 / 255, blue: 238 / 255, alpha: 1)
+        })
     }
     // Platter drop shadow (fit to the golden's soft falloff).
     static let shadowOpacity: Float = 0.10
@@ -187,13 +219,13 @@ public final class UITabBar: UIView {
 
     private func configureChrome() {
         isOpaque = false
-        platter.backgroundColor = UITabBar.platterColor
+        platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
         platter.layer.cornerRadius = UITabBar.platterHeight / 2
         platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
         platter.layer.shadowOpacity = UITabBar.shadowOpacity
         platter.layer.shadowRadius = UITabBar.shadowRadius
         platter.layer.shadowOffset = UITabBar.shadowOffset
-        capsule.backgroundColor = UITabBar.capsuleColor
+        capsule.backgroundColor = UITabBar.capsuleColor.resolvedColor(with: traitCollection)
         capsule.layer.cornerRadius = UITabBar.capsuleHeight / 2
         addSubview(platter)
         platter.addSubview(capsule)
@@ -228,9 +260,11 @@ public final class UITabBar: UIView {
     func applyItemColors() {
         let tint = (tintColor ?? UITabBar.defaultTint)
             .resolvedColor(with: UITraitCollection.current)
+        let unselected = UITabBar.unselectedColor
+            .resolvedColor(with: UITraitCollection.current)
         for v in itemViews {
             v.apply(color: v.item === selectedItem ? tint
-                                                   : UITabBar.unselectedColor)
+                                                   : unselected)
         }
     }
 

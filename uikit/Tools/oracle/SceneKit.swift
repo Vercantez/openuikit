@@ -187,6 +187,7 @@ final class SceneTableDriver: NSObject, UITableViewDataSource, UITableViewDelega
         let text: String
         let detailText: String?
         let accessory: UITableViewCell.AccessoryType
+        let switchOn: Bool?
         let selected: Bool
     }
     struct Section {
@@ -207,15 +208,20 @@ final class SceneTableDriver: NSObject, UITableViewDataSource, UITableViewDelega
                 case let x: fatalError("bad cell style '\(x)'")
                 }
                 let accessory: UITableViewCell.AccessoryType
+                var switchOn: Bool?
                 switch r["accessory"] as? String ?? "none" {
                 case "none": accessory = .none
                 case "disclosureIndicator": accessory = .disclosureIndicator
                 case "checkmark": accessory = .checkmark
+                case "switch":
+                    accessory = .none
+                    switchOn = r["switchOn"] as? Bool ?? false
                 case let x: fatalError("bad accessory '\(x)'")
                 }
                 return Row(style: style, text: r["text"] as? String ?? "",
                            detailText: r["detailText"] as? String,
                            accessory: accessory,
+                           switchOn: switchOn,
                            selected: r["selected"] as? Bool == true)
             }
             return Section(header: s["header"] as? String,
@@ -237,7 +243,13 @@ final class SceneTableDriver: NSObject, UITableViewDataSource, UITableViewDelega
         cfg.text = row.text
         if let d = row.detailText { cfg.secondaryText = d }
         cell.contentConfiguration = cfg
-        cell.accessoryType = row.accessory
+        if let switchOn = row.switchOn {
+            let toggle = UISwitch(frame: .zero)
+            toggle.setOn(switchOn, animated: false)
+            cell.accessoryView = toggle
+        } else {
+            cell.accessoryType = row.accessory
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

@@ -114,13 +114,16 @@ final class _UIDimmingView: UIView {
     /// MEASURED: real iOS 26.1 installs a `UIDimmingView` with
     /// backgroundColor black at exactly alpha 0.2 behind a pageSheet.
     static let maxAlpha: CGFloat = 0.2
-    /// MEASURED 2026-09-04 (Tools/oracle2/realappprobe, iPhone 16 iOS 26.1):
-    /// in DARK mode the same UIDimmingView is black at alpha 0.48
-    /// (`bg=[0,0,0,0.48]` in the dump; the presenter's #141414 backdrop
-    /// renders #0A0A0A). Mac Catalyst keeps 0.2 in both styles.
-    static func maxAlpha(for traits: UITraitCollection) -> CGFloat {
+    /// MEASURED 2026-09-04:
+    /// - modal_sheet_grabber_dark (iPhone 16, pageSheet large detent):
+    ///   dark dim over #333333 renders #292929 -> alpha 0.2.
+    /// - realapp_settings_dark (iPhone 16, floating custom detent):
+    ///   dark dim over #141414 renders #0A0A0A -> alpha 0.48.
+    /// iOS 26 therefore uses the stronger dim only for floating cards.
+    static func maxAlpha(for traits: UITraitCollection, floatingCard: Bool) -> CGFloat {
         if OpenUIKitRuntime.systemFontCut == .iOS,
-           traits.userInterfaceStyle == .dark { return 0.48 }
+           traits.userInterfaceStyle == .dark,
+           floatingCard { return 0.48 }
         return maxAlpha
     }
 }
@@ -206,14 +209,13 @@ public final class _UISheetGrabber: UIView {
     /// 200.0). Real UIKit draws it as a luma-tracking UIVisualEffectView;
     /// this is the flat equivalent over an opaque background.
     ///
-    /// Dark is NOT measured — `drawHierarchy` renders the dark grabber as
-    /// nothing at all (the same private-material capture limitation that
-    /// blocks the dark textfield border and the dark tab bar, see
-    /// docs/KNOWN_GAPS.md). The dark alpha extrapolates the light:dark ratio
-    /// UIKit uses for the systemFill family itself (0.2 → 0.36, i.e. ×1.8).
+    /// Dark, MEASURED 2026-09-04 (modal_sheet_grabber_dark, iPhone 16):
+    /// the 36x5 grabber box is black (0,0,0) over the dimmed backdrop.
     static let fill = UIColor(dynamicProvider: { traits in
-        let a: CGFloat = traits.userInterfaceStyle == .dark ? 0.7731 : 0.4295
-        return UIColor(red: 0.4706, green: 0.4706, blue: 0.502, alpha: a)
+        if traits.userInterfaceStyle == .dark {
+            return UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        }
+        return UIColor(red: 0.4706, green: 0.4706, blue: 0.502, alpha: 0.4295)
     })
 
     public override init(frame: CGRect) {
@@ -411,7 +413,7 @@ public final class UISheetPresentationController: UIPresentationController {
         // The FINAL (presented) chrome state. A non-animated present needs
         // nothing else; the animator winds it back to the start and plays
         // forward.
-        dim.alpha = _UIDimmingView.maxAlpha(for: container.traitCollection)
+        dim.alpha = _UIDimmingView.maxAlpha(for: container.traitCollection, floatingCard: isFloatingCard)
         if sheetStyle == .pageSheet { container.addSubview(dim) }
 
         // The floating card is the unscaled sheet under a scale transform
@@ -684,16 +686,15 @@ final class _UIPageSheetView: UIView {
     /// interpolate the dim with it.
     ///
     /// MEASURED: the dimming alpha is exactly LINEAR in drag progress —
-    /// alpha = 0.2 · (1 − offset / sheetHeight). Over four full drags the
-    /// residual against that model never exceeds 0.0025 (display-link
-    /// sampling lag), so this is the real relationship, not an approximation.
+    /// alpha = maxAlpha · (1 − offset / sheetHeight), where maxAlpha is
+    /// 0.2 for full-height page sheets and 0.48 for dark floating cards.
     func applyDragOffset(_ offset: CGFloat) {
         let h = bounds.height
         let o = min(max(offset, 0), h)
         dragOffset = o
         frame.origin.y = restY + o
         let progress = h > 0 ? o / h : 0
-        dim?.alpha = _UIDimmingView.maxAlpha(for: traitCollection) * (1 - progress)
+        dim?.alpha = _UIDimmingView.maxAlpha(for: traitCollection, floatingCard: floating) * (1 - progress)
     }
 
     func handlePan(_ pan: _UISheetPanGestureRecognizer) {
