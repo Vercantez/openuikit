@@ -30,6 +30,9 @@ REALAPP_FLOOR = {
     "realapp_settings_light": 98.4,
     "realapp_settings_dark": 98.4,
     "realapp_storage_light": 99.0,   # xib-driven Storage & Data Use screen: 99.41 on 2026-09-05
+    "realapp_settings_light_xs": 98.5,    # Settings at .extraSmall: 98.64 on 2026-09-06
+    "realapp_settings_light_xxxl": 98.0,  # Settings at .extraExtraExtraLarge: 98.13 on 2026-09-06
+    "realapp_settings_light_ax1": 97.4,   # Settings at .accessibilityLarge: 97.52 on 2026-09-06
     # Dynamic Type sizes of realapp_settings_light (window trait override),
     # measured 2026-09-04 on iPhone 16 / iOS 26.1 after the stack-floor and
     # scaledValue-vs-application-category rules.
