@@ -1,1 +1,5 @@
 full/charts/Charts.swift
+full/charts/ChartsLookalikes.swift
+full/charts/ChartsModifiers.swift
+full/charts/ChartsSurface.swift
+full/charts/ChartsViewSurface.swift
