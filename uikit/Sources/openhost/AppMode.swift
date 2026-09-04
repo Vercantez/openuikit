@@ -46,28 +46,30 @@ let appModeDefaultScale: CGFloat = 2
 // isolated (as in real UIKit), so the stored closure type must say so too --
 // otherwise the conversion silently drops the isolation.
 @MainActor
-let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewController)] = [
-    "demo": (DemoApp.windowSize, DemoApp.makeRootViewController),
-    "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
-    "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
-    "showcase": (ShowcaseApp.windowSize, ShowcaseApp.makeRootViewController),
-    "selectors": (SelectorApp.windowSize, SelectorApp.makeRootViewController),
-    // M14: NOT a DemoApp screen — UNMODIFIED source from Automattic/
-    // pocket-casts-ios, compiled against OpenUIKit (Sources/RealAppProbe,
-    // docs/REAL_APP_TEST.md). Live so the sheet's present animation, the
-    // row tap highlight and the switch can be driven by hand.
-    "pocketcasts": (RealAppScreen.windowSize, RealAppScreen.makeRootViewController),
-    // CONFORMANCE APPS (docs/HILLCLIMB.md, Sources/ConformanceApps): the same
-    // source the iOS simulator probe compiles against real UIKit. They boot
-    // through this registry so the port's side of the comparison really is
-    // the app lifecycle, not a scene builder — see ConformanceMode.swift for
-    // the scripted replay and the recorder.
-    "NavFlow": (NavFlowApp.windowSize, NavFlowApp.makeRoot),
-    "Forms": (FormsApp.windowSize, FormsApp.makeRoot),
-    "TableEditor": (TableEditorApp.windowSize, TableEditorApp.makeRoot),
-    "Feed": (FeedApp.windowSize, FeedApp.makeRoot),
-    "Modal": (ModalApp.windowSize, ModalApp.makeRoot),
-]
+let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewController)] = {
+    var r: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewController)] = [
+        "demo": (DemoApp.windowSize, DemoApp.makeRootViewController),
+        "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
+        "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
+        "showcase": (ShowcaseApp.windowSize, ShowcaseApp.makeRootViewController),
+        "selectors": (SelectorApp.windowSize, SelectorApp.makeRootViewController),
+        // M14: NOT a DemoApp screen — UNMODIFIED source from Automattic/
+        // pocket-casts-ios, compiled against OpenUIKit (Sources/RealAppProbe,
+        // docs/REAL_APP_TEST.md). Live so the sheet's present animation, the
+        // row tap highlight and the switch can be driven by hand.
+        "pocketcasts": (RealAppScreen.windowSize, RealAppScreen.makeRootViewController),
+    ]
+    // CONFORMANCE APPS (docs/HILLCLIMB.md): the same source the iOS
+    // simulator probe compiles against real UIKit. They boot through this
+    // table so the port's side of the comparison really is the app
+    // lifecycle, not a scene builder. One table — ConformanceApps.registry
+    // — is the only registration; see ConformanceMode.swift for the
+    // scripted replay.
+    for (name, entry) in ConformanceApps.registry {
+        r[name] = (entry.windowSize, entry.makeRoot)
+    }
+    return r
+}()
 
 /// The host's app delegate: builds the key window in didFinishLaunching and
 /// logs every lifecycle transition, so `--app` mode is also the manual test

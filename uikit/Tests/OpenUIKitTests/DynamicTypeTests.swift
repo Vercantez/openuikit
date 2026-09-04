@@ -371,6 +371,57 @@ final class SheetDetentTests: XCTestCase {
         XCTAssertEqual(mf.minY, 667 - 8 - 356.5 * 359 / 375, accuracy: 1e-6)
         XCTAssertEqual(mf.minY, 317.711, accuracy: 0.001)
     }
+
+    /// MEASURED sheetfillprobe / Modal t1200, iPhone SE 2x / iOS 26.1:
+    /// floating + `systemBackground` paints 245; floating + `.white` and
+    /// large + `systemBackground` stay 255. The view's resolved
+    /// systemBackground is still 1 — this is the glass compositor.
+    func testFloatingSystemBackgroundGlassFillOnIOS() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                      displayScale: 2)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+
+        let medium = UIViewController()
+        medium.view.backgroundColor = .systemBackground
+        medium.modalPresentationStyle = .pageSheet
+        medium.sheetPresentationController?.detents = [.medium(), .large()]
+        base.present(medium, animated: false)
+        window.layoutIfNeeded()
+        let glass = medium._presentationSheet!.paintedFillColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(glass.red, 245.0 / 255.0, accuracy: 1e-9)
+        XCTAssertEqual(glass.green, 245.0 / 255.0, accuracy: 1e-9)
+        XCTAssertEqual(glass.blue, 245.0 / 255.0, accuracy: 1e-9)
+        base.dismiss(animated: false)
+
+        let white = UIViewController()
+        white.view.backgroundColor = .white
+        white.modalPresentationStyle = .pageSheet
+        white.sheetPresentationController?.detents = [.medium()]
+        base.present(white, animated: false)
+        window.layoutIfNeeded()
+        let opaque = white._presentationSheet!.paintedFillColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(opaque.red, 1, accuracy: 1e-9)
+        base.dismiss(animated: false)
+
+        let large = UIViewController()
+        large.view.backgroundColor = .systemBackground
+        large.modalPresentationStyle = .pageSheet
+        large.sheetPresentationController?.detents = [.large()]
+        large.sheetPresentationController?.selectedDetentIdentifier = .large
+        base.present(large, animated: false)
+        window.layoutIfNeeded()
+        let full = large._presentationSheet!.paintedFillColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(full.red, 1, accuracy: 1e-9)
+    }
 }
 
 @MainActor

@@ -22,6 +22,7 @@
 
 import Foundation
 import OpenUIKit
+import ConformanceApps
 
 // Backend override: OPENUIKIT_BACKEND=swift|quartz (default: library default).
 if let v = ProcessInfo.processInfo.environment["OPENUIKIT_BACKEND"] {
@@ -90,24 +91,7 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
   pocketcasts a REAL app screen — UNMODIFIED source from
             Automattic/pocket-casts-ios (the options-picker sheet), compiled
             against OpenUIKit (docs/REAL_APP_TEST.md)
-  NavFlow   a CONFORMANCE app (Sources/ConformanceApps/NavFlow): the same
-            source Tools/oracle2/confprobe compiles against real UIKit. With
-            --script/--record it replays the script's named actions and
-            records the capture PNGs + layout dumps the simulator probe
-            records (docs/HILLCLIMB.md; scripts/conformance_flow.sh)
-  Forms     a CONFORMANCE app (Sources/ConformanceApps/Forms): grouped
-            UITableView form (text field, text view, switch, slider,
-            segmented control, compact date picker, stepper). Same harness.
-  TableEditor a CONFORMANCE app (Sources/ConformanceApps/TableEditor): a
-            plain UITableView of subtitle rows with Edit / insert / delete /
-            select. Same harness as NavFlow.
-  Feed      a CONFORMANCE app (Sources/ConformanceApps/Feed): a
-            UICollectionView with a compositional layout (stories strip,
-            card list, refresh control, section header, selection). Same
-            harness as NavFlow.
-  Modal     a CONFORMANCE app (Sources/ConformanceApps/Modal): page sheets
-            (medium/large detents + grabber), alert, action sheet, and a
-            phone popover from a bar button item. Same harness as NavFlow.
+\(ConformanceApps.usageLines)
 """
 
 var scenePath: String? = nil
@@ -170,10 +154,9 @@ try MainActor.assumeIsolated {
     // simulator, so the iOS cut is on unconditionally here — there is no
     // Catalyst reading of a conformance app to preserve.
     if let appName, let script = scriptPath, let record = recordDir,
-       conformanceActionRegistry[appName] != nil {
+       ConformanceApps.isRegistered(appName) {
         OpenUIKitRuntime.systemFontCut = .iOS
-        let scale = scaleOverride.map { CGFloat($0) }
-            ?? conformanceScaleRegistry[appName] ?? appModeDefaultScale
+        let scale = scaleOverride.map { CGFloat($0) } ?? appModeDefaultScale
         let scene = buildAppScene(appName, scaleOverride: scale)
         let (steps, captures) = parseConformanceScript(try loadSceneFile(script))
         try FileManager.default.createDirectory(atPath: record,

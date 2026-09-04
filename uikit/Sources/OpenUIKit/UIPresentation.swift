@@ -612,7 +612,7 @@ final class _UIPageSheetView: UIView {
             // floating card carries its fill as a background too, rounded
             // at the larger (bottom) radius: that rect lies entirely under
             // the two-radius path drawn on top, so only the shadow shows it.
-            backgroundColor = floating ? fillColor : nil
+            backgroundColor = floating ? paintedFillColor : nil
             layer.cornerRadius = floating ? _UIPageSheetView.floatingBottomCornerRadius : 0
             setNeedsDisplay()
         }
@@ -622,9 +622,33 @@ final class _UIPageSheetView: UIView {
     /// time against the effective traits.
     var fillColor: UIColor = .systemBackground {
         didSet {
-            if floating { backgroundColor = fillColor }
+            if floating { backgroundColor = paintedFillColor }
             setNeedsDisplay()
         }
+    }
+
+    /// MEASURED 2026-09-04, sheetfillprobe on the iPhone SE 3rd gen 2x /
+    /// iOS 26.1 (one process per case so glass materials survive): a
+    /// floating pageSheet whose view.backgroundColor is
+    /// `UIColor.systemBackground` composites to interior **245**
+    /// (Modal t1200 card centre; probe `systembg` / `modalclone`). The
+    /// same floating sheet with `UIColor.white` is **255** (`med_white_white`,
+    /// `modalclone_white`); a large detent with systemBackground is **255**
+    /// (Modal t3200). `systemBackground.resolvedColor` is still [1,1,1,1]
+    /// even at `userInterfaceLevel = .elevated` — the 245 is the iOS 26
+    /// floating-card glass, not the elevated palette. Dark is unmeasured
+    /// and stays the resolved semantic. Catalyst does not float.
+    static let floatingSystemBackgroundGlass: CGFloat = 245.0 / 255.0
+
+    var paintedFillColor: UIColor {
+        guard floating,
+              OpenUIKitRuntime.systemFontCut == .iOS,
+              traitCollection.userInterfaceStyle != .dark,
+              case .semantic(let name) = fillColor.storage,
+              name == "systemBackground" else {
+            return fillColor
+        }
+        return UIColor(white: _UIPageSheetView.floatingSystemBackgroundGlass, alpha: 1)
     }
 
     // MARK: Interactive dismissal state
@@ -676,7 +700,7 @@ final class _UIPageSheetView: UIView {
                                 : _UIPageSheetView.topCornerRadius,
             bottomRadius: floating ? _UIPageSheetView.floatingBottomCornerRadius
                                    : _UIPageSheetView.bottomCornerRadius)
-        let color = fillColor.resolvedColor(with: traitCollection).cgColor
+        let color = paintedFillColor.resolvedColor(with: traitCollection).cgColor
         canvas.fill(path, color: color)
     }
 
