@@ -181,6 +181,13 @@ open class UITableView: UIScrollView {
     //                 16 inside the card; detail right edge 16 in; chevron
     //                 right edge 20 in; separators inset 16 / 16.
     static var isIOSChrome: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+    /// iOS cut AND pad idiom. Guard for iPad (A16) chrome
+    /// (realapp_settings_light_ipad, 820×1180 @2x). Unspecified idiom
+    /// does not count, so the phone goldens stay on the phone numbers.
+    static var isPadChrome: Bool {
+        isIOSChrome && (UITraitCollection.current.userInterfaceIdiom == .pad
+                        || UIDevice.current.userInterfaceIdiom == .pad)
+    }
 
     /// TableEditor row insert/delete spring. MEASURED 2026-09-04,
     /// rowanimprobe on iPhone SE 2x / iOS 26.1 (TableEditor `.fade`

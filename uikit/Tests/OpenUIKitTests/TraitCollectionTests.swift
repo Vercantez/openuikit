@@ -79,6 +79,7 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(traits.horizontalSizeClass, .unspecified)
         XCTAssertEqual(traits.verticalSizeClass, .unspecified)
         XCTAssertEqual(traits.preferredContentSizeCategory, .unspecified)
+        XCTAssertEqual(traits.userInterfaceIdiom, .unspecified)
     }
 
     func testSpecializedInitializersCreatePartialCollections() {
@@ -106,6 +107,12 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(category.preferredContentSizeCategory, .extraLarge)
         XCTAssertEqual(category.userInterfaceStyle, .unspecified)
         XCTAssertEqual(category.displayScale, 0)
+        XCTAssertEqual(category.userInterfaceIdiom, .unspecified)
+
+        let idiom = UITraitCollection(userInterfaceIdiom: .pad)
+        XCTAssertEqual(idiom.userInterfaceIdiom, .pad)
+        XCTAssertEqual(idiom.userInterfaceStyle, .unspecified)
+        XCTAssertEqual(idiom.displayScale, 0)
     }
 
     func testExistingHostInitializerCanCarryACompleteEnvironment() {
@@ -114,13 +121,15 @@ final class TraitCollectionTests: XCTestCase {
             displayScale: 3,
             horizontalSizeClass: .regular,
             verticalSizeClass: .compact,
-            preferredContentSizeCategory: .accessibilityLarge
+            preferredContentSizeCategory: .accessibilityLarge,
+            userInterfaceIdiom: .pad
         )
         XCTAssertEqual(traits.userInterfaceStyle, .dark)
         XCTAssertEqual(traits.displayScale, 3)
         XCTAssertEqual(traits.horizontalSizeClass, .regular)
         XCTAssertEqual(traits.verticalSizeClass, .compact)
         XCTAssertEqual(traits.preferredContentSizeCategory, .accessibilityLarge)
+        XCTAssertEqual(traits.userInterfaceIdiom, .pad)
     }
 
     func testTraitsFromMergesEveryModeledTraitAndIgnoresLaterUnspecifiedValues() {
@@ -130,9 +139,11 @@ final class TraitCollectionTests: XCTestCase {
             UITraitCollection(horizontalSizeClass: .regular),
             UITraitCollection(verticalSizeClass: .compact),
             UITraitCollection(preferredContentSizeCategory: .extraLarge),
+            UITraitCollection(userInterfaceIdiom: .pad),
             UITraitCollection(userInterfaceStyle: .dark),
             UITraitCollection(horizontalSizeClass: .unspecified),
             UITraitCollection(preferredContentSizeCategory: .unspecified),
+            UITraitCollection(userInterfaceIdiom: .unspecified),
         ])
 
         XCTAssertEqual(traits.userInterfaceStyle, .dark)
@@ -140,6 +151,7 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(traits.horizontalSizeClass, .regular)
         XCTAssertEqual(traits.verticalSizeClass, .compact)
         XCTAssertEqual(traits.preferredContentSizeCategory, .extraLarge)
+        XCTAssertEqual(traits.userInterfaceIdiom, .pad)
         XCTAssertEqual(UITraitCollection(traitsFrom: []), UITraitCollection())
     }
 

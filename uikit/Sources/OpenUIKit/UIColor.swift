@@ -48,6 +48,10 @@ public struct UITraitCollection: Equatable, Sendable {
     /// `.unspecified`; OpenUIKit's complete host environment defaults to
     /// `.large`, the category where every `UIFontMetrics` factor is 1.0.
     public var preferredContentSizeCategory: UIContentSizeCategory
+    /// Device class. A partial collection defaults to `.unspecified`;
+    /// hosts that want pad chrome (realapp_settings_light_ipad) must set
+    /// `.pad` — unspecified does not inherit `UIDevice.current`.
+    public var userInterfaceIdiom: UIUserInterfaceIdiom
 
     /// UIKit's empty collection: every modeled trait is unspecified.
     public init() {
@@ -56,6 +60,7 @@ public struct UITraitCollection: Equatable, Sendable {
         horizontalSizeClass = .unspecified
         verticalSizeClass = .unspecified
         preferredContentSizeCategory = .unspecified
+        userInterfaceIdiom = .unspecified
     }
 
     /// UIKit's partial collection containing only an interface style.
@@ -88,6 +93,12 @@ public struct UITraitCollection: Equatable, Sendable {
         self.preferredContentSizeCategory = preferredContentSizeCategory
     }
 
+    /// UIKit's partial collection containing only a user-interface idiom.
+    public init(userInterfaceIdiom: UIUserInterfaceIdiom) {
+        self.init()
+        self.userInterfaceIdiom = userInterfaceIdiom
+    }
+
     /// OpenUIKit host convenience: construct a complete render environment in
     /// one call. The existing style/scale spelling is retained; size classes
     /// may be supplied by a host that already knows them, while `.unspecified`
@@ -97,13 +108,15 @@ public struct UITraitCollection: Equatable, Sendable {
         displayScale: CGFloat,
         horizontalSizeClass: UIUserInterfaceSizeClass = .unspecified,
         verticalSizeClass: UIUserInterfaceSizeClass = .unspecified,
-        preferredContentSizeCategory: UIContentSizeCategory = .large
+        preferredContentSizeCategory: UIContentSizeCategory = .large,
+        userInterfaceIdiom: UIUserInterfaceIdiom = .unspecified
     ) {
         self.userInterfaceStyle = userInterfaceStyle
         self.displayScale = displayScale
         self.horizontalSizeClass = horizontalSizeClass
         self.verticalSizeClass = verticalSizeClass
         self.preferredContentSizeCategory = preferredContentSizeCategory
+        self.userInterfaceIdiom = userInterfaceIdiom
     }
 
     /// UIKit's legacy merge initializer. Later collections win for each trait,
@@ -128,8 +141,16 @@ public struct UITraitCollection: Equatable, Sendable {
             if traits.preferredContentSizeCategory != .unspecified {
                 preferredContentSizeCategory = traits.preferredContentSizeCategory
             }
+            if traits.userInterfaceIdiom != .unspecified {
+                userInterfaceIdiom = traits.userInterfaceIdiom
+            }
         }
     }
+
+    /// Pad chrome under the iOS cut. Unspecified does not count — a host
+    /// that wants iPad metrics must set `.pad` on current (RealApp.swift
+    /// does, for `realapp_settings_light_ipad`).
+    var isPad: Bool { userInterfaceIdiom == .pad }
 
     /// A portable host approximation, not Apple's idiom/multitasking policy:
     /// each unspecified axis becomes regular at 600 pt and compact below it.

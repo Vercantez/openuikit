@@ -60,7 +60,7 @@ def compare_sheet(g, o, tol=compare.LAYOUT_TOL, anchor="UIScrollView"):
     groot, grows = window_frames(g, anchor); oroot, orows = window_frames(o, anchor)
     problems = []
     if groot is None or oroot is None:
-        return [f"no UIScrollView: golden={groot is not None} ours={oroot is not None}"], 0
+        return [f"no {anchor}: golden={groot is not None} ours={oroot is not None}"], 0
     n = min(len(grows), len(orows))
     if len(grows) != len(orows):
         problems.append(f"sheet subtree size: golden={len(grows)} ours={len(orows)}")
@@ -91,6 +91,9 @@ VARIANTS = {
     "realapp_settings_light_xs": "UIScrollView",
     "realapp_settings_light_xxxl": "UIScrollView",
     "realapp_settings_light_ax1": "UIScrollView",
+    # iPad (A16) portrait of the Settings picker. Goldens are native 2x
+    # (compare_pixels uses the dump's screen.scale, not --scale).
+    "realapp_settings_light_ipad": "UIScrollView",
 }
 
 
@@ -111,11 +114,16 @@ def main() -> int:
         if not (os.path.exists(gpng) and os.path.exists(opng)):
             print(f"{name}: MISSING golden={os.path.exists(gpng)} out={os.path.exists(opng)}")
             continue
+        g = json.load(open(glay)) if os.path.exists(glay) else {}
+        scale = args.scale
+        scr = g.get("screen") if isinstance(g, dict) else None
+        if isinstance(scr, dict) and scr.get("scale"):
+            scale = scr["scale"]
         diff_path = os.path.join(args.diff, name + ".diff.png") if args.diff else None
-        res = compare.compare_pixels(gpng, opng, diff_path, golden_premultiplied=True, scale=args.scale)
+        res = compare.compare_pixels(gpng, opng, diff_path, golden_premultiplied=True, scale=scale)
         print(f"{name}: pixels {res}")
         if os.path.exists(glay) and os.path.exists(olay):
-            g = json.load(open(glay)); o = json.load(open(olay))
+            o = json.load(open(olay))
             problems = compare.compare_layout(g, o)
             sp, n = compare_sheet(g, o, anchor=anchor)
             print(f"{name}: {anchor} subtree compared={n} views; problems={len(sp)} (window-space frames, tol {compare.LAYOUT_TOL} pt)")
