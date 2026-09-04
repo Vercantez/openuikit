@@ -31,6 +31,10 @@ fi
 if git diff --name-only main..."$BR" | grep -qE '^(scripts/vendor_pins.sh|env/|scripts/env/)'; then
   echo "REFUSED: the branch touches the pin files"; exit 3
 fi
+if git diff --name-only main..."$BR" | grep -qE 'Package\.resolved$|\.app/'; then
+  echo "REFUSED: the branch commits Package.resolved or a probe .app bundle"; exit 3
+fi
+rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks the merge
 
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
