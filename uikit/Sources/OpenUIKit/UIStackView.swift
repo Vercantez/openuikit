@@ -147,7 +147,41 @@ open class UIStackView: UIView {
         // naturalFittingSize).
         if let w = view._explicitSizeConstraint(.width) { s.width = Swift.max(s.width, w) }
         if let h = view._explicitSizeConstraint(.height) { s.height = Swift.max(s.height, h) }
+        applyIOSConstrainedSubviewFloor(to: &s, of: view)
         return s
+    }
+
+    /// Extra axis length from a plain arranged view whose SUBVIEWS have
+    /// intrinsic size and pin to this view's layout margins.
+    ///
+    /// MEASURED realapp_settings_light_ax1, iPhone 16 / iOS 26.1: the
+    /// "ROW ACTION" container is a `UIView` with `height >= 40` and a
+    /// footnote label on `layoutMarginsGuide`. At `.accessibilityLarge`
+    /// the 24 pt label's intrinsic height is 28.667, so the container is
+    /// 8+28.667+8 = **44.667** (the 40 pt floor is only a minimum). The
+    /// frame stack had used only that floor: scroll 377 vs golden 381.667,
+    /// card y 482.349 vs 477.872. `.large` / `_xs` / `_xxxl` stay 40
+    /// because 13/12/17 pt footnote + 16 pt margins still fit under 40.
+    /// Guarded by the iOS cut so Catalyst stack goldens stay exact.
+    private func applyIOSConstrainedSubviewFloor(to s: inout CGSize, of view: UIView) {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return }
+        let intrinsic = view.intrinsicContentSize
+        let selfMetric = axis == .vertical ? intrinsic.height : intrinsic.width
+        guard selfMetric == UIView.noIntrinsicMetric else { return }
+        var subLen: CGFloat = 0
+        for sub in view.subviews where !sub.isHidden {
+            let i = sub.intrinsicContentSize
+            let l = axis == .vertical ? i.height : i.width
+            if l != UIView.noIntrinsicMetric { subLen = max(subLen, l) }
+        }
+        guard subLen > 0 else { return }
+        let m = view.layoutMargins
+        let pad = axis == .vertical ? m.top + m.bottom : m.left + m.right
+        if axis == .vertical {
+            s.height = max(s.height, subLen + pad)
+        } else {
+            s.width = max(s.width, subLen + pad)
+        }
     }
 
     /// True when `view` has no intrinsic metric along our axis, so real
@@ -190,6 +224,7 @@ open class UIStackView: UIView {
         // often than by intrinsic content — M14, docs/REAL_APP_TEST.md.
         if let w = view._explicitSizeConstraint(.width) { s.width = max(s.width, w) }
         if let h = view._explicitSizeConstraint(.height) { s.height = max(s.height, h) }
+        applyIOSConstrainedSubviewFloor(to: &s, of: view)
         return s
     }
 

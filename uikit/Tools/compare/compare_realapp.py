@@ -87,6 +87,10 @@ VARIANTS = {
     # The nib-loaded screen: `ThemeableView` is StorageAndDataUseViewController's
     # own view, straight out of StorageAndDataUseViewController.xib.
     "realapp_storage_light": "ThemeableView",
+    # Dynamic Type sizes of realapp_settings_light (window trait override).
+    "realapp_settings_light_xs": "UIScrollView",
+    "realapp_settings_light_xxxl": "UIScrollView",
+    "realapp_settings_light_ax1": "UIScrollView",
 }
 
 

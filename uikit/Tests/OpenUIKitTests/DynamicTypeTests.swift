@@ -94,6 +94,43 @@ final class DynamicTypeTests: XCTestCase {
         }
     }
 
+    /// The four Settings Dynamic Type sizes `realapp_settings_light{_xs,_xxxl,_ax1}`
+    /// capture. Same numbers dyntypeprobe wrote into dynamic_type.json;
+    /// the app path is `UIFont.font(ofSize:weight:scalingWith:)` →
+    /// `UIFontMetrics.scaledFont(for:)` of 18 pt headline / 16 pt callout /
+    /// 13 pt footnote / 24 pt largeTitle (the icon floor).
+    func testSettingsScreenFontsAtCapturedCategories() {
+        let cases: [(UIContentSizeCategory, UIFont.TextStyle, CGFloat, CGFloat)] = [
+            (.extraSmall, .headline, 18, 16),
+            (.large, .headline, 18, 18),
+            (.extraExtraExtraLarge, .headline, 18, 24),
+            (.accessibilityLarge, .headline, 18, 33),
+            (.extraSmall, .callout, 16, 14),
+            (.large, .callout, 16, 16),
+            (.extraExtraExtraLarge, .callout, 16, 21),
+            (.accessibilityLarge, .callout, 16, 30),
+            (.extraSmall, .footnote, 13, 12),
+            (.accessibilityLarge, .footnote, 13, 24),
+            (.extraSmall, .largeTitle, 24, 22.333333),
+            (.accessibilityLarge, .largeTitle, 24, 33.333333),
+        ]
+        for (cat, style, base, want) in cases {
+            let traits = UITraitCollection(preferredContentSizeCategory: cat)
+            if style == .largeTitle {
+                let got = UIFontMetrics(forTextStyle: style)
+                    .scaledValue(for: base, compatibleWith: traits)
+                XCTAssertEqual(got, want, accuracy: 0.001,
+                               "scaledValue \(cat.rawValue)/\(style.rawValue)@\(base)")
+            } else {
+                let got = UIFontMetrics(forTextStyle: style)
+                    .scaledFont(for: .systemFont(ofSize: base, weight: .semibold),
+                                compatibleWith: traits).pointSize
+                XCTAssertEqual(got, want, accuracy: 0.001,
+                               "scaledFont \(cat.rawValue)/\(style.rawValue)@\(base)")
+            }
+        }
+    }
+
     /// dyntypeprobe: the preferred size table across categories, spot-checked
     /// at the extremes.
     func testPreferredPointSizeAcrossCategories() {
@@ -121,6 +158,84 @@ final class DynamicTypeTests: XCTestCase {
     func testAccessibilityCategoryFlag() {
         XCTAssertTrue(UIContentSizeCategory.accessibilityMedium.isAccessibilityCategory)
         XCTAssertFalse(UIContentSizeCategory.extraExtraExtraLarge.isAccessibilityCategory)
+    }
+
+    /// MEASURED dtmetrics probe, iPhone 16 / iOS 26.1: the no-`compatibleWith`
+    /// `scaledValue(for:)` overload tracks `UIApplication.shared`'s category
+    /// (Settings), not `UITraitCollection.current`. After setting current to
+    /// `.accessibilityLarge`, current reads AX1, the app category stays L,
+    /// `scaledValue(for: 24)` stays 24, and `compatibleWith: current` is 33.333.
+    func testIOSScaledValueUsesApplicationCategoryNotCurrent() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        let savedApp = UIApplication.shared.preferredContentSizeCategory
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UITraitCollection.current = savedTraits
+            UIApplication.shared.preferredContentSizeCategory = savedApp
+        }
+        UIApplication.shared.preferredContentSizeCategory = .large
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 3,
+            preferredContentSizeCategory: .accessibilityLarge)
+        let m = UIFontMetrics(forTextStyle: .largeTitle)
+        XCTAssertEqual(m.scaledValue(for: 24), 24, accuracy: 0.001)
+        XCTAssertEqual(
+            m.scaledValue(for: 24, compatibleWith: UITraitCollection.current),
+            33.333, accuracy: 0.01)
+    }
+
+    /// MEASURED realapp_settings_light_ax1, iPhone 16 / iOS 26.1: a stack
+    /// row that is a plain UIView with `height >= 40` and a label on
+    /// `layoutMarginsGuide` grows to 8 + labelIntrinsic + 8 when that is
+    /// above 40. At `.accessibilityLarge` the 24 pt footnote is 28.667.
+    func testSettingsTitleContainerGrowsAtAccessibilityLarge() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 393, height: 852),
+                                     scale: 3)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UITraitCollection.current = savedTraits
+        }
+
+        func titleStack(category: UIContentSizeCategory) -> (UIStackView, UILabel) {
+            UITraitCollection.current = UITraitCollection(
+                userInterfaceStyle: .light, displayScale: 3,
+                preferredContentSizeCategory: category)
+            let stack = UIStackView()
+            stack.axis = .vertical
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            let container = UIView()
+            NSLayoutConstraint.activate([
+                container.heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
+            ])
+            let label = UILabel()
+            label.font = UIFontMetrics(forTextStyle: .footnote)
+                .scaledFont(for: .systemFont(ofSize: 13, weight: .bold))
+            label.text = "ROW ACTION"
+            label.translatesAutoresizingMaskIntoConstraints = false
+            container.addSubview(label)
+            NSLayoutConstraint.activate([
+                label.topAnchor.constraint(equalTo: container.layoutMarginsGuide.topAnchor),
+                label.bottomAnchor.constraint(equalTo: container.layoutMarginsGuide.bottomAnchor),
+            ])
+            stack.addArrangedSubview(container)
+            return (stack, label)
+        }
+
+        let (large, largeLabel) = titleStack(category: .large)
+        XCTAssertEqual(largeLabel.font.pointSize, 13)
+        XCTAssertEqual(large.sizeThatFits(CGSize(width: 393, height: 0)).height, 40)
+
+        let (ax1, ax1Label) = titleStack(category: .accessibilityLarge)
+        XCTAssertEqual(ax1Label.font.pointSize, 24)
+        // 28.667 intrinsic + 8+8 layout margins. Golden title container 44.667.
+        XCTAssertEqual(ax1Label.intrinsicContentSize.height, 28.667, accuracy: 0.01)
+        XCTAssertEqual(ax1.sizeThatFits(CGSize(width: 393, height: 0)).height, 44.667,
+                       accuracy: 0.01)
     }
 }
 
