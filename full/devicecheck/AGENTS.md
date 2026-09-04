@@ -1,55 +1,99 @@
-# DeviceCheck pilot ownership
+# DeviceCheck framework fan-out rules
 
-This directory is an isolated framework-porting task for a Cursor Cloud Agent.
+This directory is an isolated clean-room starting point for the Linux `DeviceCheck`
+port. Work only inside `full/devicecheck/`. Do not edit application
+sources, another framework, package-wide manifests, shared integration/build
+files, or anything under `reference/` or `tests/acceptance/`.
 
-## Scope
+## Immutable evidence
 
-- You own only `full/devicecheck/**`.
-- Do not edit shared manifests, framework counts, `build_core_guest_package.sh`,
-  Xcode-plan files, or any other framework directory.
-- Do not modify the committed files under `reference/` or weaken the committed
-  source/runtime acceptance programs under `tests/`.
-- Do not change any third-party application source.
+`reference/immutable-files.sha256` seals this file, `FANOUT_TASK.md`, every
+reference input, and `tests/acceptance/test_host.sh`. Never rewrite, regenerate,
+or reseal those files. SDK headers, module maps, Swift interfaces, and TBD files
+are proprietary inputs: their paths and hashes are recorded, but their bytes
+must not be copied into this repository.
 
-## Evidence
+All extractor-emitted graph files are preserved byte-for-byte. Apple graphs can
+legitimately repeat a precise identifier. `reference/public-surface.tsv` contains
+one canonical row per exact ID under the fixed `canonicalSurfacePolicy` recorded
+in `reference/symbol-graphs.json`; duplicate occurrence and full-payload conflict
+counts remain explicit there. Never treat canonical compaction as evidence that
+the other raw occurrences did not exist.
 
-- Treat `reference/DeviceCheck.symbols.json` as the authoritative Xcode 26.1
-  public Swift surface for this pilot.
-- Treat `reference/devicecheck-public-boundary.tsv` as the public dynamic
-  boundary. Private TBD classes are explicit exclusions.
-- Treat `reference/apple-sdk-inputs.sha256` as provenance. Raw Apple SDK headers
-  are deliberately not committed.
-- Treat `reference/devicecheck-corpus-2026-09-01.tsv` and
-  `reference/devicecheck-corpus-usage.md` as untouched-app compatibility
-  requirements.
-- The cloud runner has no Apple runtime oracle. Never claim Apple behavioral
-  parity for a value that was not established by committed evidence.
+`reference/api-digester.json` is a location-free compiler dump from the same
+pinned Xcode SDK. Reconcile it with the symbol graph before writing declarations:
+use it for imported ObjC USRs, superclass/protocol identity, selectors, type
+optionality, declaration attributes, and ordered enum children. The graph remains
+the canonical exact-ID census. `reference/external-evidence.json` pins independent
+binding sources available in the prepared cloud environment. They are a
+read-only secondary cross-check, never authority over the Apple-derived files and
+never runtime evidence. If sources conflict, defer the declaration and add an
+oracle question. Do not guess.
 
-## Required behavior
+## Required output
 
-- Reconstruct the complete public surface represented in the symbol graph.
-- Preserve stable identity for `DCDevice.current` and
-  `DCAppAttestService.shared`.
-- Linux has no Apple DeviceCheck/App Attest or Secure Enclave attestation
-  service. `isSupported` must be `false`.
-- Every callback operation must complete exactly once with a nil result and a
-  typed `DCError(.featureUnsupported)`.
-- Every native async overload must throw the same typed error.
-- Never fabricate a successful device token, key identifier, attestation, or
-  assertion.
-- Keep callback and async behavior consistent.
+- Implement a real Linux module named `DeviceCheck` and a loadable
+  `libDeviceCheck.dylib`. Put implementation Swift files in this framework
+  directory, outside `tests/`, and list each one as a repo-relative path in
+  `devicecheck_guest_sources.txt`.
+- Create `coverage.tsv` with the exact header
+  `precise	status	evidence	notes`. Include every precise identifier from
+  `reference/public-surface.tsv` exactly once. Allowed statuses are
+  `implemented`, `declared`, `deferred`, `unavailable`, and `not-applicable`.
+  At least 21 rows must be `implemented` or `declared` for the `medium-full`
+  lane. A declaration that does not compile is not `declared`; behavior that was
+  not exercised is not `implemented`. Every `implemented` row must cite
+  `test:full/devicecheck/tests/agent/*Tests.swift#testName`; define that exact `test*`
+  function for the sealed runner to call. Every `declared` row must cite
+  `source:full/devicecheck/<product-source>.swift#Symbol`; the source must be listed in
+  `devicecheck_guest_sources.txt` and contain the exact identifier anchor. Deferred,
+  unavailable, and not-applicable rows require explanatory notes.
+- Create `oracle-questions.tsv` with the exact header
+  `precise	question	risk	reason`. Use an exact graph precise ID, or `module`
+  for a cross-cutting question. Include at least one concrete question; do not
+  guess behavior missing from public inputs.
+- Create a nonempty `README.md` describing what is real, fail-closed, and still
+  deferred. The primary implementation file must be `DeviceCheck.swift`.
+- Put focused behavioral checks in `tests/agent/*Tests.swift` as top-level,
+  synchronous, no-argument functions named `test*`. Create
+  `tests/agent/DeviceCheckLoadSmoke.swift` with exactly these three logical lines
+  (including the blank line): `import DeviceCheck`, a blank line, and
+  `let frameworkLoadSmokeMarker = "DEVICECHECK_AGENT_RUNTIME_OK"`. The sealed gate generates the
+  executable runner from `implemented` coverage rows, imports and explicitly
+  loads the dylib, invokes every cited test exactly once, and emits the marker
+  as its sole stdout. Loading and printing are acceptance plumbing, not
+  behavioral evidence by themselves.
+- When dependencies are listed below, create
+  `tests/agent/DeviceCheckDependencyIdentity.swift`. Import `DeviceCheck` and every
+  declared dependency and pass genuine dependency values through public
+  `DeviceCheck` APIs. This probe is for the clean EC2 integration build; the isolated
+  host gate is not permission to create same-named stand-ins. Never declare a
+  public framework-local substitute for a dependency-owned type.
+- Preserve unavailable, entitlement-gated, hardware-only, and Apple-service
+  behavior honestly. Prefer deterministic fail-closed errors or inert behavior
+  over fabricated success. Do not add or prioritize `#Preview` support.
 
-## Deliverables and proof
+Before implementation, make a declaration-facts pass: exact graph ID and
+signature, matching API-digester node/USR, dependency owner, and any corroborating
+binding source location. Static sources do not establish defaults, callback
+timing, queues, retention, coding round trips, hardware behavior, or service
+success. Such behavior is `implemented` only with focused behavioral test
+evidence; the load-smoke marker alone proves none of it.
 
-- `DeviceCheck.swift`
-- `devicecheck_guest_sources.txt`
-- `README.md` with supported behavior and honest remaining limitations
-- `tests/test_devicecheck_host.sh`
-- Any small test helper files needed under `tests/`
-- A Linux `swiftc` source-surface typecheck and cold runtime test using the
-  committed acceptance programs
-- Boundary/provenance tests that reject accidental private TBD exports
+## Build discipline
 
-Run every available test, record exact commands/results in the final response,
-and commit the completed directory. Do not integrate it into the shared package;
-that is a separate central review step.
+Run `bash tests/acceptance/test_host.sh` from this framework directory before
+committing. It validates evidence, coverage, the source manifest, warnings-as-
+errors compilation, dylib creation, import, linking, focused tests, and the exact
+load-smoke marker.
+Keep all generated products in temporary directories; remove `.build`, `build`,
+and `scratch` before reporting completion. Do not weaken or bypass the gate.
+
+Dependencies expected by this seed:
+
+- `Foundation`
+
+Risk labels:
+
+- `ui`
+- `fail-closed`
