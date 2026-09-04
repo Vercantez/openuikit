@@ -41,6 +41,20 @@ void QZLayerSetMaskedCorners(QZLayerRef layer, uint32_t corners);
 enum { QZCornerModelKappa = 0, QZCornerModelDisc = 1 };
 void QZLayerSetCornerModel(int model);
 int QZLayerGetCornerModel(void);
+
+/* Where a layer's shadow goes when the layer has GROUP OPACITY (< 1).
+ *   QZGroupShadowBeneath (0): the Mac oracle — the shadow is composited
+ *     onto the destination beneath the whole group at shadowOpacity *
+ *     opacity, never occluded by the layer's own content (a 60 % white
+ *     card shows its shadow through its interior).
+ *   QZGroupShadowInside (1): iOS 26.1 (allowsGroupOpacity is on by
+ *     default there) — the shadow is drawn INSIDE the group, occluded by
+ *     the content, and the group's opacity scales what remains (the same
+ *     card's interior is plain 60 % white: measured alpha_shadow_group).
+ * Process-global, like the corner model. */
+enum { QZGroupShadowBeneath = 0, QZGroupShadowInside = 1 };
+void QZLayerSetGroupShadowModel(int model);
+int QZLayerGetGroupShadowModel(void);
 /* CALayer.allowsEdgeAntialiasing: when false, the layer's background fill
  * and border are rasterized without edge anti-aliasing (hard 0/1 coverage
  * thresholded at pixel centers) — how iOS composites transformed layers.

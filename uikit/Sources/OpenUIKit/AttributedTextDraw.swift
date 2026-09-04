@@ -35,7 +35,16 @@ extension AttributedTextLayout {
             blockH += l.height
             if i < lines.count - 1 { blockH += l.spacingBelow }
         }
-        let y0 = bounds.minY + ((bounds.height - blockH) / 2 + 0.5).rounded(.down)
+        var y0 = bounds.minY + ((bounds.height - blockH) / 2 + 0.5).rounded(.down)
+        if GlyphInkTable.usesIOSTable {
+            // iOS (MEASURED 2026-09-04, attrtext_paragraph's centred 15 pt
+            // label on the 2x device): the block is its raw height rounded
+            // UP to the device pixel (2 x 17.9 + 3 = 38.8 -> 39) and centred
+            // exactly — line ink at 137.0 where Catalyst's whole-point
+            // rounding puts it at 137.5.
+            let bh = FontEngine.ceilToPixel(blockH, scale: ctx.canvas.scale)
+            y0 = bounds.minY + (bounds.height - bh) / 2
+        }
         let dark = ctx.traits.userInterfaceStyle == .dark
 
         var boxTop = y0

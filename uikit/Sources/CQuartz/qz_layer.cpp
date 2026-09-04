@@ -478,8 +478,12 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
 
     bool group = layer->opacity < 0.999;
     double saved_alpha = ctx->gs.alpha;
+    /* iOS: the shadow lives inside the group (see QZLayerSetGroupShadowModel),
+     * so it is set on the fill like a non-group layer's. */
+    bool shadow_inside = group && shadow_on && QZLayerGetGroupShadowModel() == QZGroupShadowInside;
+    bool shadow_with_fill = shadow_on && (!group || shadow_inside);
 
-    if (group && shadow_on) {
+    if (group && shadow_on && !shadow_inside) {
         /* Group opacity: CA composites the shadow onto the destination
          * BENEATH the whole group (never occluded by the layer's own
          * content) at strength shadowOpacity * opacity — draw it before
@@ -508,7 +512,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
 
     if (bg_visible) {
         QZContextSaveGState(ctx);
-        if (shadow_on && !group) set_layer_shadow(layer, ctx, 1.0);
+        if (shadow_with_fill) set_layer_shadow(layer, ctx, 1.0);
         QZContextSetRGBFillColor(ctx, layer->background.r, layer->background.g,
                                  layer->background.b, layer->background.a);
         if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
@@ -516,7 +520,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
         rounded_or_rect(ctx, b, cr, layer->masked_corners);
         QZContextFillPath(ctx);
         QZContextRestoreGState(ctx);
-    } else if (shadow_on && !group && border_visible) {
+    } else if (shadow_with_fill && border_visible) {
         /* No background to cast the shadow: the silhouette is the border
          * ring alone. Pre-draw it with the shadow active; the regular
          * border pass repaints the identical ring on top later. */

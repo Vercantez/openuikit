@@ -99,6 +99,11 @@ public enum LayerBridge {
         // the Mac oracle draws the self-intersecting kappa path.
         QZLayerSetCornerModel(OpenUIKitRuntime.systemFontCut == .iOS
                               ? Int32(QZCornerModelDisc) : Int32(QZCornerModelKappa))
+        // iOS: allowsGroupOpacity is on by default, so a translucent
+        // layer's shadow is occluded by its own content (QZGroupShadowInside);
+        // the Mac oracle composites it beneath the group.
+        QZLayerSetGroupShadowModel(OpenUIKitRuntime.systemFontCut == .iOS
+                                   ? Int32(QZGroupShadowInside) : Int32(QZGroupShadowBeneath))
         // Validate before CGFloat-to-Int conversion and before Bitmap's
         // width*height*4 allocation. Hostile root geometry must yield an
         // empty frame, not a conversion trap or unbounded allocation.

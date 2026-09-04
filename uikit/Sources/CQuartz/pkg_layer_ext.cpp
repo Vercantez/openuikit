@@ -95,6 +95,9 @@ void QZLayerSetShadow(QZLayerRef layer, QZFloat ox, QZFloat oy, QZFloat radius,
 static int g_qz_corner_model = QZCornerModelKappa;
 void QZLayerSetCornerModel(int model) { g_qz_corner_model = model == QZCornerModelDisc ? 1 : 0; }
 int QZLayerGetCornerModel(void) { return g_qz_corner_model; }
+static int g_qz_group_shadow_model = QZGroupShadowBeneath;
+void QZLayerSetGroupShadowModel(int model) { g_qz_group_shadow_model = model == QZGroupShadowInside ? 1 : 0; }
+int QZLayerGetGroupShadowModel(void) { return g_qz_group_shadow_model; }
 
 void QZLayerSetMaskedCorners(QZLayerRef layer, uint32_t corners) {
     if (layer) layer->masked_corners = corners & 0x0fu;
