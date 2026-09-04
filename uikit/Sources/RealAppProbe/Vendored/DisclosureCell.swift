@@ -1,0 +1,97 @@
+// VENDORED, UNMODIFIED apart from the marked lines:
+// pocket-casts-ios podcasts/DisclosureCell.swift (88 lines).
+//
+// The other cell the settings screens register. Six outlets — two labels, two
+// image views and three constraints it toggles — all from DisclosureCell.xib
+// (fixtures/realapp/nibs/DisclosureCell.nib).
+//
+// ADAPTED(objc-runtime): the seven `@IBOutlet` attributes, for the reason
+// spelled out at the top of SwitchCell.swift.
+
+import UIKit
+
+class DisclosureCell: ThemeableCell {
+    var cellImage: UIImageView!
+    var cellLabel: UILabel! {
+        didSet {
+            cellLabel.font = UIFont.font(ofSize: 16.0, scalingWith: .callout)
+        }
+    }
+    var disclosureImage: UIImageView!
+    var cellSecondaryLabel: ThemeableLabel! {
+        didSet {
+            cellSecondaryLabel.style = .primaryText02
+            cellSecondaryLabel.font = UIFont.font(ofSize: 16.0, scalingWith: .callout)
+        }
+    }
+
+    var cellTextToImageConstraint: NSLayoutConstraint!
+    var cellTextToMarginConstraint: NSLayoutConstraint!
+    var cellSecondaryTextWidthConstraint: NSLayoutConstraint!
+
+    private let baseDisclosureSize: CGFloat = 32
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (view: DisclosureCell, _) in
+            view.updateSize()
+        }
+
+        // Ensure label can expand vertically
+        cellLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        cellLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        setImage(imageName: nil)
+        updateSize()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        setImage(imageName: nil)
+    }
+
+    private func updateSize() {
+        let metric = UIFontMetrics(forTextStyle: .body)
+        let disclosureSize = max(baseDisclosureSize, metric.scaledValue(for: baseDisclosureSize))
+        disclosureImage.updateSizeConstraints(to: disclosureSize)
+
+        let iconMetric = UIFontMetrics(forTextStyle: .largeTitle)
+        let iconSize = max(24, iconMetric.scaledValue(for: 24))
+        cellImage.updateSizeConstraints(to: iconSize)
+    }
+
+    func setImage(imageName: String?, tintColor: UIColor? = nil) {
+        if let imageName {
+            cellTextToImageConstraint.isActive = true
+            cellTextToMarginConstraint.isActive = false
+            cellTextToImageConstraint.priority = .required
+            cellTextToMarginConstraint.priority = .defaultHigh
+            cellImage.tintColor = tintColor
+            cellImage.image = UIImage(named: imageName)
+        } else {
+            cellTextToImageConstraint.isActive = false
+            cellTextToMarginConstraint.isActive = true
+            cellTextToImageConstraint.priority = .defaultHigh
+            cellTextToMarginConstraint.priority = .required
+            cellImage.image = nil
+        }
+    }
+
+    override func handleThemeDidChange() {
+        disclosureImage.tintColor = ThemeColor.primaryIcon02()
+    }
+
+    var isLocked = true {
+        didSet {
+            contentView.isUserInteractionEnabled = isLocked
+            contentView.alpha = isLocked ? 1 : 0.3
+        }
+    }
+
+    var showSecondaryLabel: Bool = true {
+        didSet {
+            cellSecondaryLabel.isHidden = !showSecondaryLabel
+            cellSecondaryTextWidthConstraint.isActive = showSecondaryLabel
+        }
+    }
+}

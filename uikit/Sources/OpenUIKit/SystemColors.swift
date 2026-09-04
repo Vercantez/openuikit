@@ -67,4 +67,13 @@ public enum SystemColors {
         }
         return styleTable[name] ?? missing
     }
+
+    /// Whether the measured palette carries `name`. `UINib` asks before
+    /// turning an archived `UISystemColorName` into a semantic `UIColor`,
+    /// so an unknown name is reported instead of resolving to magenta.
+    static func isKnown(_ name: String) -> Bool {
+        let t = (OpenUIKitRuntime.systemFontCut == .iOS && !tableIOS.light.isEmpty)
+            ? tableIOS : table
+        return t.light[name] != nil || t.dark[name] != nil
+    }
 }
