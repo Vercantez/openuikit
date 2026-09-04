@@ -107,7 +107,7 @@ rm -rf "$OUT"
 suite_scenes=("${(@f)$(ls "$WORK"/scenes/*.json)}")
 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender render "$OUT" "${suite_scenes[@]}" >/dev/null
 echo "==> compare"
-python3 Tools/compare/compare.py --scenes "$WORK/scenes" --golden "$GOLD" --out "$OUT" "${names[@]}" > "$WORK/compare.txt" 2>&1 || true
+python3 Tools/compare/compare.py --scenes "$WORK/scenes" --golden "$GOLD" --out "$OUT" --golden-straight-alpha "${names[@]}" > "$WORK/compare.txt" 2>&1 || true
 grep -E 'scenes pass' "$WORK/compare.txt"
 grep '^FAIL' "$WORK/compare.txt" | sort -t= -k2 -n | head -25
 echo "full report: $WORK/compare.txt"

@@ -381,6 +381,10 @@ def main():
     ap.add_argument("--scenes", default="fixtures/scenes")
     ap.add_argument("--json", default=None)
     ap.add_argument("scene_names", nargs="*")
+    ap.add_argument("--golden-straight-alpha", action="store_true",
+                    help="every golden PNG carries straight alpha (SimScene "
+                         "captures since the capture-format round), window "
+                         "scenes included")
     ap.add_argument("--golden-premultiplied", action="store_true",
                     help="every golden PNG is premultiplied (simulator captures)")
     args = ap.parse_args()
@@ -412,7 +416,11 @@ def main():
         # oracle2 ("window" scenes) goldens are premultiplied, and so is
         # every drawHierarchy capture from the iOS simulator
         # (--golden-premultiplied, scripts/ios_suite.sh).
-        premul = bool(scene.get("window", False)) or args.golden_premultiplied
+        # Window-scene goldens from oracle2 (UIImage.pngData) are premultiplied;
+        # SimScene captures are straight alpha since the capture-format round
+        # (--golden-straight-alpha, which scripts/ios_suite.sh passes).
+        premul = (bool(scene.get("window", False)) and not args.golden_straight_alpha) \
+            or args.golden_premultiplied
         scale = scene.get("scale", 1)
         pixel_ok = True
         struct_ok = True
