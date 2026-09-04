@@ -54,6 +54,16 @@ git -C "$ROOT" show "${MAIN_REF}:scripts/x86/ud_guest.inc" \
     > "$MAIN_TREE/scripts/x86/ud_guest.inc"
 chmod +x "$MAIN_TREE/scripts/x86/stage_fe_sysroot.sh"
 ln -s "$ROOT/full" "$MAIN_TREE/full"
+# Main's common.inc invokes PHASE2_REPO/scripts/x86/gen_swift_tbd.sh while
+# staging overlay .tbd files into SYS. Keep main's stager/common.inc, but
+# share the rest of scripts/x86 with this checkout.
+while IFS= read -r -d '' f; do
+    bn=$(basename "$f")
+    case "$bn" in
+        stage_fe_sysroot.sh|common.inc|stamp.inc|ud_guest.inc) continue ;;
+    esac
+    ln -sfn "$f" "$MAIN_TREE/scripts/x86/$bn"
+done < <(find "$ROOT/scripts/x86" -maxdepth 1 -mindepth 1 -print0)
 
 ARM=$WORK/arm
 mkdir -p "$ARM/usr/include/sys" "$ARM/usr/lib/swift"
@@ -92,8 +102,8 @@ run_stager() {
         bash "$script" >"$log" 2>&1
 }
 
-SYS_MAIN=$WORK/sys-main
-SYS_OURS=$WORK/sys-ours
+SYS_MAIN=$WORK/sys-main-x86_64
+SYS_OURS=$WORK/sys-ours-x86_64
 LOG_MAIN=$WORK/main.log
 LOG_OURS=$WORK/ours.log
 
