@@ -238,6 +238,8 @@ if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     if [ -d "$fe_clang/usr/lib/swift/Darwin.swiftmodule" ] \
         || [ -f "$fe_clang/usr/lib/swift/Darwin.swiftinterface" ]; then
         echo "  Darwin overlays: VM-only on $fe_clang (overlay-copied SYS matches main)"
+    elif [ -f "$fe_clang/usr/include/Darwin.modulemap" ]; then
+        echo "  Darwin family: VM-only on $fe_clang (overlay-darwin Darwin.modulemap; overlay-copied SYS matches main)"
     else
         echo "  CANNOT_STAGE_XCODE_DARWIN_OVERLAYS: no Darwin.swiftmodule/swiftinterface in $ARM_SYS (Linux cannot materialize Apple's overlay interfaces)"
         exit 3

@@ -76,12 +76,21 @@ if [ "$host" = x86_64 ]; then
     [ -f "$core" ] || { printf 'cursor-products: missing x86 libswiftCore.dylib\n' >&2; exit 1; }
 
     sys=$scratch/sysroot_fe4-x86_64
+    arm=$scratch/sysroot_fe4
     mrroot=$scratch/mrroot_full-x86_64
     [ -d "$sys/usr/include" ] || { printf 'cursor-products: missing %s\n' "$sys" >&2; exit 1; }
-    [ -f "$sys/usr/include/Darwin.modulemap" ] \
+    # Box: Darwin family lives on overlay-copied SYS (main-copy). Fresh VM:
+    # SYS has no Darwin.modulemap; overlay-darwin writes it on *-fe-clang.
+    # shellcheck disable=SC1091
+    . "$repo_root/scripts/x86/common.inc"
+    phase2_select_fe_compile_sysroot "$sys" "$arm"
+    compile_sys=$PHASE2_FE_COMPILE_SYSROOT
+    [ -d "$compile_sys/usr/include" ] \
+        || { printf 'cursor-products: missing %s\n' "$compile_sys" >&2; exit 1; }
+    [ -f "$compile_sys/usr/include/Darwin.modulemap" ] \
         || { printf 'cursor-products: sysroot missing Darwin.modulemap\n' >&2; exit 1; }
-    { [ -d "$sys/usr/lib/swift/Darwin.swiftmodule" ] \
-        || [ -f "$sys/usr/lib/swift/Darwin.swiftinterface" ]; } \
+    { [ -d "$compile_sys/usr/lib/swift/Darwin.swiftmodule" ] \
+        || [ -f "$compile_sys/usr/lib/swift/Darwin.swiftinterface" ]; } \
         || { printf 'cursor-products: sysroot missing Darwin overlay\n' >&2; exit 1; }
     [ -x "$mrroot/machorun" ] || { printf 'cursor-products: missing %s/machorun\n' "$mrroot" >&2; exit 1; }
     fw=$mrroot/darwin/System/Library/Frameworks
