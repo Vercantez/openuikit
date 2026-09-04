@@ -467,13 +467,19 @@ if [ -f "$SYS/usr/lib/libSystem.B.dylib" ] && phase2_is_arm64_macho "$SYS/usr/li
     SYSROOT_OK=0
 fi
 
-# Overlay SDK copies $SYS unexpanded. FE Swift / Clang modules use the sibling.
-if [ "$SYSROOT_OK" -eq 1 ] || [ "$SYSROOT_HEADERS" -eq 1 ]; then
-    if [ ! -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
-        phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
-    fi
-    if [ -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
-        FE_CLANG_SYS=$(phase2_fe_clang_sysroot "$SYS")
+# Box (arm64-copied Darwin family): compile against $SYS like main.
+# VM (no arm64 Darwin family): expand *-fe-clang and compile against that.
+# Leftover *-fe-clang from a previous cycle must not win on the box.
+phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"
+FE_CLANG_SYS=$PHASE2_FE_COMPILE_SYSROOT
+if [ "$PHASE2_FE_SYSROOT_KIND" = fe-clang ]; then
+    if [ "$SYSROOT_OK" -eq 1 ] || [ "$SYSROOT_HEADERS" -eq 1 ]; then
+        if [ ! -d "$FE_CLANG_SYS" ]; then
+            phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+        fi
+        if [ -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
+            FE_CLANG_SYS=$(phase2_fe_clang_sysroot "$SYS")
+        fi
     fi
 fi
 
@@ -562,14 +568,20 @@ try_os_module() {
     local out=$OSMOD
     local key posix_dir
     local -a posix_xcc=()
-    posix_dir=$(phase2_posix_overlay_dir "$W" || true)
-    if [ -n "$posix_dir" ]; then
-        posix_xcc=(-Xcc -I"$posix_dir")
+    if [ "${PHASE2_FE_SYSROOT_KIND:-}" = fe-clang ]; then
+        posix_dir=$(phase2_posix_overlay_dir "$W" || true)
+        if [ -n "$posix_dir" ]; then
+            posix_xcc=(-Xcc -I"$posix_dir")
+        fi
+        key=$(stamp_key "$out/os.o" \
+            "$W/full/foundation/build_os_module.sh" \
+            "$TARGET" \
+            "${posix_dir:-no-posix-overlay}")
+    else
+        key=$(stamp_key "$out/os.o" \
+            "$W/full/foundation/build_os_module.sh" \
+            "$TARGET")
     fi
-    key=$(stamp_key "$out/os.o" \
-        "$W/full/foundation/build_os_module.sh" \
-        "$TARGET" \
-        "${posix_dir:-no-posix-overlay}")
     if stamp_reuse "$out/os.o" "$key" && [ -f "$out/os.swiftmodule" ]; then
         note os-module-x86 satisfied "mc=$MC stamp=$(stamp_short "$key")"
         OS_OK=1
@@ -624,15 +636,22 @@ try_fe() {
     local have_fe=0 have_compat=0
     local fe_key compat_key tree posix_dir
     local -a posix_xcc=()
-    posix_dir=$(phase2_posix_overlay_dir "$W" || true)
-    if [ -n "$posix_dir" ]; then
-        posix_xcc=(-Xcc -I"$posix_dir")
+    if [ "${PHASE2_FE_SYSROOT_KIND:-}" = fe-clang ]; then
+        posix_dir=$(phase2_posix_overlay_dir "$W" || true)
+        if [ -n "$posix_dir" ]; then
+            posix_xcc=(-Xcc -I"$posix_dir")
+        fi
+        tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+        fe_key=$(stamp_key "$out/FoundationEssentials.o" \
+            "$W/full/foundation/build_fe.sh" \
+            "$tree" "$TARGET" \
+            "${posix_dir:-no-posix-overlay}")
+    else
+        tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+        fe_key=$(stamp_key "$out/FoundationEssentials.o" \
+            "$W/full/foundation/build_fe.sh" \
+            "$tree" "$TARGET")
     fi
-    tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
-    fe_key=$(stamp_key "$out/FoundationEssentials.o" \
-        "$W/full/foundation/build_fe.sh" \
-        "$tree" "$TARGET" \
-        "${posix_dir:-no-posix-overlay}")
     compat_key=$(stamp_key "$out/removefile_compat.o" \
         "$W/full/foundation/removefile_compat.c" \
         "$TARGET")
@@ -1024,9 +1043,9 @@ fi
 #     are reused from build/full-x86_64/foundation; this does not compile FE
 #     again. Link-time does not need the nine overlay dylibs (tbd-first);
 #     rung a still needs them at load.
-# Overlay SDK copies $SYS unexpanded. ud-guest swiftc -sdk must be the FE
-# clang snapshot: textual sys/time.h so Darwin.swiftinterface can see
-# SwiftOverlayShims.timeval. Compiling against $SYS fails that import.
+# Overlay SDK copies $SYS unexpanded. Box compiles ud-guest against that
+# tree (FE_SYSROOT_SELECT=main-copy). VM compiles against *-fe-clang
+# (textual sys/time.h so Darwin.swiftinterface can see SwiftOverlayShims.timeval).
 echo "==== ud-guest-x86 (committed $PHASE2_UD_GUEST_LINKER) ===="
 UD_GUEST_ITEM_OK=0
 ud_report=$(phase2_try_ud_guest \

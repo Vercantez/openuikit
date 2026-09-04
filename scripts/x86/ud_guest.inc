@@ -290,9 +290,11 @@ phase2_ud_guest_compile_port() {
         collections_i=(-I "$fe_out/collections")
     fi
     local posix_i=()
-    if [ -d "$repo/swiftcore-macho/sdk/overlay-posix" ]; then
-        posix_i=(-Xcc -I"$repo/swiftcore-macho/sdk/overlay-posix")
-    fi
+    local posix_line
+    while IFS= read -r posix_line; do
+        [ -n "$posix_line" ] || continue
+        posix_i+=("$posix_line")
+    done < <(phase2_posix_xcc_for_sysroot "$repo" "$sdk")
     set +e
     swiftc -c -O -wmo -parse-as-library \
         -module-name PortedUserDefaultsGuest \
@@ -344,9 +346,11 @@ phase2_ud_guest_compile_runner() {
         collections_i=(-I "$fe_out/collections")
     fi
     local posix_i=()
-    if [ -d "$repo/swiftcore-macho/sdk/overlay-posix" ]; then
-        posix_i=(-Xcc -I"$repo/swiftcore-macho/sdk/overlay-posix")
-    fi
+    local posix_line
+    while IFS= read -r posix_line; do
+        [ -n "$posix_line" ] || continue
+        posix_i+=("$posix_line")
+    done < <(phase2_posix_xcc_for_sysroot "$repo" "$sdk")
     set +e
     swiftc -c -O -wmo \
         -module-name ud_guest \
@@ -1220,7 +1224,7 @@ phase2_try_ud_score_guest() {
     local out=$ud_w/bin/ud_score_guest
     local evid=$ud_w/bin/ud_score_guest.otool.txt
     local log=$ud_w/build_ud_score_guest.log
-    local report st status cshims extra
+    local report st status cshims extra posix_line
     local compile_triple
 
     report=$(phase2_ud_guest_refuse_unsuffixed "$ud_w" || true)
@@ -1274,10 +1278,10 @@ phase2_try_ud_score_guest() {
     if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
         extra="$extra -I $fe_out/collections"
     fi
-    posix_dir=$(phase2_posix_overlay_dir "$repo" || true)
-    if [ -n "$posix_dir" ]; then
-        extra="$extra -Xcc -I$posix_dir"
-    fi
+    while IFS= read -r posix_line; do
+        [ -n "$posix_line" ] || continue
+        extra="$extra $posix_line"
+    done < <(phase2_posix_xcc_for_sysroot "$repo" "$sys")
 
     set +e
     W="$ud_w" \

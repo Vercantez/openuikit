@@ -220,13 +220,17 @@ echo "  modulemaps  : $(find "$SYS/usr/include" -maxdepth 1 -name '*.modulemap' 
 echo "  textual overlays copied from arm64 sysroot: $OVERLAYS_COPIED"
 
 # Overlay SDK copies $SYS (unexpanded Darwin.modulemap, same bytes as main).
-# VM-only expansions (overlay-darwin Intel math.h, ioctl stub, artifact
-# Darwin overlays, SwiftOnone) land on the sibling snapshot.
-echo "== FE clang sysroot (expanded Darwin.modulemap; overlay SDK is not this tree)"
-phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+# *-fe-clang is VM-only: stage it when the Darwin family is not the arm64 copy.
+phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"
 fe_clang=$(phase2_fe_clang_sysroot "$SYS")
-if [ -f "$fe_clang/usr/include/Darwin.modulemap" ]; then
-    echo "  FE clang Darwin.modulemap: $(wc -l < "$fe_clang/usr/include/Darwin.modulemap" | tr -d ' ') lines at $fe_clang"
+if [ "$PHASE2_FE_SYSROOT_KIND" = fe-clang ]; then
+    echo "== FE clang sysroot (VM Darwin family; overlay SDK copies SYS unexpanded)"
+    phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+    if [ -f "$fe_clang/usr/include/Darwin.modulemap" ]; then
+        echo "  FE clang Darwin.modulemap: $(wc -l < "$fe_clang/usr/include/Darwin.modulemap" | tr -d ' ') lines at $fe_clang"
+    fi
+else
+    echo "  skipping *-fe-clang sibling (box compiles os-module/FE/ud-guest against overlay-copied SYS)"
 fi
 
 if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
