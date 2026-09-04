@@ -196,6 +196,8 @@ public struct AnnotationPosition: Hashable, Sendable {
 public struct AnnotationOverflowResolution: Hashable, Sendable {
     public struct Boundary: Hashable, Sendable {
         public static let automatic = Boundary()
+        public static let plot = Boundary()
+        public static let chart = Boundary()
         public init() {}
     }
     public struct Strategy: Hashable, Sendable {
@@ -259,6 +261,8 @@ public struct MajorValueAlignment<Value: Plottable>: Hashable {
 
 public struct ValueAlignedLimitBehavior: Hashable, Sendable {
     public static let automatic = ValueAlignedLimitBehavior()
+    public static let never = ValueAlignedLimitBehavior()
+    public static let always = ValueAlignedLimitBehavior()
     public init() {}
 }
 
