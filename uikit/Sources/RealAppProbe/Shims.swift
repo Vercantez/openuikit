@@ -311,6 +311,13 @@ extension UIView {
     }
 
     func updateSizeConstraints(width: CGFloat, height: CGFloat) {
+        // Verbatim Pocket Casts skip: ignore constraints with a second item.
+        // MEASURED dtmetrics probe, iPhone 16 / iOS 26.1: the 24×24 settings
+        // icons stay 24 at every window traitOverrides category because
+        // `UIFontMetrics.scaledValue(for: 24)` (no compatibleWith) reads the
+        // process category (always `.large` here), not because these unary
+        // width/height constraints fail to update — `firstItem === self`,
+        // `secondItem == nil`, constant follows whatever `updateSize` passes.
         for constraint in constraints {
             if constraint.secondItem != nil { continue }
             switch constraint.firstAttribute {

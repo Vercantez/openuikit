@@ -308,6 +308,23 @@ open class UIApplication: UIResponder {
     /// is on screen and taking input.
     public private(set) var applicationState: State = .inactive
 
+    /// Process-wide Dynamic Type category (Settings). OpenUIKit has no
+    /// Settings app, so this stays `.large` — a device's shipped identity —
+    /// unless a host assigns it.
+    ///
+    /// MEASURED dtmetrics probe, iPhone 16 / iOS 26.1: after
+    /// `UITraitCollection.current = .accessibilityLarge`, `current` reads
+    /// AccessibilityL but `UIApplication.shared.preferredContentSizeCategory`
+    /// stays L, and `UIFontMetrics.scaledValue(for: 24)` (no `compatibleWith`)
+    /// stays 24. The `compatibleWith: current` overload is 33.333. Backing is
+    /// `nonisolated` so `UIFontMetrics` can read it off the main actor.
+    public var preferredContentSizeCategory: UIContentSizeCategory {
+        get { Self._preferredContentSizeCategory }
+        set { Self._preferredContentSizeCategory = newValue }
+    }
+    nonisolated(unsafe) static var _preferredContentSizeCategory =
+        UIContentSizeCategory.large
+
     /// True between `_hostWillTerminate()` and process exit.
     public private(set) var isTerminating = false
 

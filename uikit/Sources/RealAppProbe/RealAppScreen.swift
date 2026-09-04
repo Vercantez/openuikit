@@ -63,6 +63,59 @@ public enum RealAppScreen {
         case storage
     }
 
+    /// One headless configuration: which app screen, which theme, and which
+    /// Dynamic Type category. `openrender realapp` and
+    /// `scripts/realapp_probe_sim.sh` both iterate this table so the port
+    /// and the iOS 26.1 oracle capture the same four Settings sizes.
+    ///
+    /// The `_xs` / `_xxxl` / `_ax1` rows are `realapp_settings_light` at
+    /// `.extraSmall` / `.extraExtraExtraLarge` / `.accessibilityLarge`;
+    /// `.large` is the device default and keeps the original name.
+    public struct Screen {
+        public let name: String
+        public let variant: Variant
+        public let theme: Theme.ThemeType
+        public let style: UIUserInterfaceStyle
+        public let contentSizeCategory: UIContentSizeCategory
+        public let presentsSheet: Bool
+
+        public init(name: String, variant: Variant, theme: Theme.ThemeType,
+                    style: UIUserInterfaceStyle,
+                    contentSizeCategory: UIContentSizeCategory,
+                    presentsSheet: Bool) {
+            self.name = name
+            self.variant = variant
+            self.theme = theme
+            self.style = style
+            self.contentSizeCategory = contentSizeCategory
+            self.presentsSheet = presentsSheet
+        }
+    }
+
+    public static let screens: [Screen] = [
+        Screen(name: "realapp_history_light", variant: .listeningHistory,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: true),
+        Screen(name: "realapp_settings_light", variant: .settings,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: true),
+        Screen(name: "realapp_settings_dark", variant: .settings,
+               theme: .dark, style: .dark, contentSizeCategory: .large,
+               presentsSheet: true),
+        Screen(name: "realapp_storage_light", variant: .storage,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: false),
+        Screen(name: "realapp_settings_light_xs", variant: .settings,
+               theme: .light, style: .light, contentSizeCategory: .extraSmall,
+               presentsSheet: true),
+        Screen(name: "realapp_settings_light_xxxl", variant: .settings,
+               theme: .light, style: .light,
+               contentSizeCategory: .extraExtraExtraLarge, presentsSheet: true),
+        Screen(name: "realapp_settings_light_ax1", variant: .settings,
+               theme: .light, style: .light,
+               contentSizeCategory: .accessibilityLarge, presentsSheet: true),
+    ]
+
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
         let optionsPicker = OptionsPicker(title: nil, themeOverride: theme)
