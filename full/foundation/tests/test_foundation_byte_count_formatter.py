@@ -45,10 +45,10 @@ class FoundationByteCountFormatterTests(unittest.TestCase):
 
         payload = GOLDEN.read_bytes()
         self.assertTrue(payload.endswith(b"\n"))
-        self.assertEqual(len(payload.splitlines()), 86)
+        self.assertEqual(len(payload.splitlines()), 91)
         self.assertEqual(
             hashlib.sha256(payload).hexdigest(),
-            "1390be735b11d92409e81bb9e04115502bed76bd830daa440fde7377cb4773c0",
+            "04b140256b7090a59bfef77354fbcf202ec7085b2191f43ff7201f601ea17270",
         )
 
 

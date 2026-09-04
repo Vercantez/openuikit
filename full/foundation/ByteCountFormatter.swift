@@ -117,7 +117,13 @@ open class ByteCountFormatter: ObjectiveC.NSObject, @unchecked Sendable {
         let magnitude = byteCount < 0 ? -Double(byteCount) : Double(byteCount)
         var preferred = 0
         if magnitude == 0 {
-            preferred = 1
+            // Darwin: "Zero KB" (static.*.0) but "0 bytes" once nonnumeric
+            // formatting is off and bytes are allowed (numeric-all.0, read
+            // off the iOS 26.1 Pocket Casts storage placeholder and then
+            // pinned by the oracle). The KB promotion belongs to the "Zero"
+            // wording, not to zero itself; forced-kb.0 is "0 KB" because KB
+            // is the only allowed unit there.
+            preferred = allowsNonnumericFormatting ? 1 : 0
         } else {
             while preferred < 8 {
                 let scaled = magnitude / _power(base, exponent: preferred)
