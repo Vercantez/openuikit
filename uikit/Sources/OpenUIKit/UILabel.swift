@@ -415,6 +415,10 @@ open class UILabel: UIView {
         let sizeKey = Int(font.pointSize)
         // Device-pixel anchor of the text-space origin (x: pen 0).
         let devOX = Int((ctm.tx).rounded())
+        // Nearest device row on both platforms. (A CTLineDraw sweep on iOS
+        // snaps UP, but UILabel's own drawing — what the goldens and the
+        // ink harvest see — lands 0.36 px higher than CTLineDraw at the same
+        // geometry; measured 2026-09-04, Tools/oracle2/textprobe diag renders.)
         let devBaseY = Int((origin.y * 2 + ctm.ty).rounded())
 
         var penX = origin.x
