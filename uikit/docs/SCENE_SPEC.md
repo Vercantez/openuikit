@@ -53,8 +53,9 @@ capture time** plus one shared layout dump — see “Animations (v3)”.
 - `style`: `"light"` (default) or `"dark"`. Applied via `overrideUserInterfaceStyle`.
 - `ios` (optional, bool, v5.3): `true` routes the scene's golden to **real
   iOS UIKit in the headless iOS Simulator** instead of Mac Catalyst. Requires
-  `"window": true`. Use it whenever the scene's subject is iOS-26-specific
-  chrome Catalyst does not reproduce — currently the bar-button platters.
+  `"window": true` only for scene classes that need a real window. Use it
+  whenever the scene's subject is iOS-26-specific behavior Catalyst does not
+  reproduce (bar-button platters and iOS-only control styling).
   `scripts/regen_goldens.sh` routes on this key and `openrender` mirrors it
   when picking the system-font cut (see above);
   `RenderCLITests.testSimulatorRoutedScenesUseTheIOSFontCut` and
@@ -222,10 +223,18 @@ Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguratio
 | key | notes |
 |---|---|
 | `title` | string |
+| `image` | standard scene-spec image object. Rendered as a template image (`.alwaysTemplate`) so tint drives its color. |
 | `fontSize`, `fontWeight` | applied to `titleLabel!.font` |
 | `titleColor` | color; default = tintColor (systemBlue) |
 | `enabled` | bool |
 | `highlighted` | bool (v4). Sets `isHighlighted = true` — a plain .system button renders its title dimmed. |
+| `configurationStyle` | v5.4. `filled`, `tinted`, `bordered`, `plain` — maps to `UIButton.Configuration.*()` and uses `title`/`image`. |
+| `imagePadding` | v5.4. Spacing between image and title when both are present on a configured button. |
+
+Measured iOS 26.1 metrics for the four configuration styles (`button_configurations_2x`,
+iPhone SE 2x): fixed-frame 170 x 36 buttons resolve to corner radius 17;
+title font 17 pt regular; title frame 75 x 20.5 centered at y = 7.5; intrinsic
+and `sizeThatFits(200)` both 99 x 34.5.
 
 ### `UISwitch`
 | key | notes |
@@ -240,7 +249,7 @@ Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguratio
 | `progress` | 0–1 |
 | `progressTintColor`, `trackTintColor` | color |
 
-### `UISlider` (v5.2 — app-compat cluster, requires `"window": true`)
+### `UISlider` (v5.2 — app-compat cluster)
 The iOS 26 thumb is a `_UILiquidLensView` the render server draws, so slider
 scenes must be captured by `Tools/oracle2` (the same rule `UISwitch`
 follows); the track and the minimum-track fill would render offscreen.
@@ -258,6 +267,17 @@ Measured metrics (Catalyst iOS 26, `control_slider`): `intrinsic` =
 thumb 37 x 24 capsule at `x = round(fraction × (width − 37))` (the thumb is
 a subview, so its origin lands on UIKit's integer-point frame grid) with a
 soft shadow; the minimum-track fill runs to the UNROUNDED thumb centre.
+
+### `UIStepper` (v5.4)
+| key | type | notes |
+|---|---|---|
+| `value` | number | default 0, clamped into range. |
+| `minimumValue` / `maximumValue` | number | defaults 0 / 100. |
+| `stepValue` | number | default 1. |
+| `continuous` | bool | default true. |
+| `autorepeat` | bool | default true. |
+| `wraps` | bool | default false. |
+| `enabled` | bool | |
 
 ### `UISegmentedControl` (v5.2 — app-compat cluster, requires `"window": true`)
 The selected pill is a `_UILiquidLensView` (render-server only); the

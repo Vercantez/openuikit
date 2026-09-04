@@ -514,7 +514,11 @@ final class AppDrawingTests: XCTestCase {
         XCTAssertFalse(medium.isAnimating)
 
         let savedTime = OpenUIKitRuntime.animationTime
-        defer { OpenUIKitRuntime.animationTime = savedTime }
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        defer {
+            OpenUIKitRuntime.animationTime = savedTime
+            OpenUIKitRuntime.systemFontCut = savedCut
+        }
         OpenUIKitRuntime.animationTime = 10
         large.startAnimating()
         XCTAssertTrue(large.isAnimating)
@@ -522,6 +526,10 @@ final class AppDrawingTests: XCTestCase {
         OpenUIKitRuntime.animationTime = 10 + 3.0 / 8.0 + 0.01
         XCTAssertEqual(large.currentStep, 3)
         OpenUIKitRuntime.animationTime = 10 + 1.0 + 0.01     // one full turn
+        XCTAssertEqual(large.currentStep, 0)
+        // Frozen SimScene pose is also step 0 under the iOS cut.
+        OpenUIKitRuntime.systemFontCut = .iOS
+        OpenUIKitRuntime.animationTime = 10
         XCTAssertEqual(large.currentStep, 0)
         large.stopAnimating()
         XCTAssertEqual(large.currentStep, 0)

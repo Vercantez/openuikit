@@ -739,7 +739,26 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         v = iv
     case "UIButton":
         let b = UIButton(type: .system)
-        b.setTitle(j["title"] as? String, for: .normal)
+        let title = j["title"] as? String
+        b.setTitle(title, for: .normal)
+        if let ij = j["image"] as? JSON {
+            let image = makeImage(ij, scale: scale).withRenderingMode(.alwaysTemplate)
+            b.setImage(image, for: .normal)
+        }
+        if let style = j["configurationStyle"] as? String {
+            var config: UIButton.Configuration
+            switch style {
+            case "filled": config = .filled()
+            case "tinted": config = .tinted()
+            case "bordered": config = .bordered()
+            case "plain": config = .plain()
+            default: fatalError("bad UIButton configurationStyle '\(style)'")
+            }
+            config.title = title
+            config.image = b.image(for: .normal)
+            if let p = num(j["imagePadding"]) { config.imagePadding = p }
+            b.configuration = config
+        }
         if j["fontSize"] != nil || j["fontWeight"] != nil { b.titleLabel!.font = fontFrom(j) }
         // Default title color comes from the dynamic tint; pin it to the
         // scene style (offscreen views never see trait changes).
@@ -816,6 +835,9 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         s.maximumValue = num(j["maximumValue"]).map { Double($0) } ?? 100
         s.stepValue = num(j["stepValue"]).map { Double($0) } ?? 1
         s.value = num(j["value"]).map { Double($0) } ?? 0
+        if let c = j["continuous"] as? Bool { s.isContinuous = c }
+        if let a = j["autorepeat"] as? Bool { s.autorepeat = a }
+        if let w = j["wraps"] as? Bool { s.wraps = w }
         s.tintColor = s.tintColor.resolvedColor(with: traits)
         if j["enabled"] as? Bool == false { s.isEnabled = false }
         v = s
@@ -1731,12 +1753,10 @@ func loadScene(file: String) throws -> SceneSpec {
         }
     }
     if scene["ios"] as? Bool == true {
-        // Spec v5.3 (M13): explicit "render me with real iOS UIKit in the
-        // Simulator" — the bars cluster. scripts/regen_goldens.sh routes on
-        // this key; openrender mirrors it when picking the system-font cut.
-        guard scene["window"] as? Bool == true else {
-            fatalError("scene \(name): \"ios\": true requires \"window\": true (SimScene)")
-        }
+        // Spec v5.3+: explicit "render me with real iOS UIKit in the
+        // Simulator". Window mode is optional: chrome stacks keep
+        // `"window": true`, while non-window controls/text can still route
+        // through the simulator to pin iOS-only styling.
     }
     if let alert = scene["alert"] as? JSON {
         let st = alert["style"] as? String ?? "alert"

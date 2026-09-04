@@ -220,11 +220,10 @@ final class RenderCLITests: XCTestCase {
         for f in files {
             let j = try JSONSerialization.jsonObject(
                 with: Data(contentsOf: f)) as! [String: Any]
-            let simRouted = j["modal"] != nil || j["alert"] != nil
-                || (j["ios"] as? Bool == true)
-            if simRouted {
+            let requiresWindow = j["modal"] != nil || j["alert"] != nil
+            if requiresWindow {
                 XCTAssertEqual(j["window"] as? Bool, true,
-                               "\(f.lastPathComponent): Simulator-routed scenes "
+                               "\(f.lastPathComponent): modal/alert scenes "
                                + "must set \"window\": true")
             }
         }

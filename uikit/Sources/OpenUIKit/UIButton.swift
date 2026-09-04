@@ -104,6 +104,9 @@ open class UIButton: UIControl {
     private var attributedTitles: [UInt: NSAttributedString] = [:]
     private var titleColors: [UInt: UIColor] = [:]
     private var images: [UInt: UIImage] = [:]
+    open var configuration: Configuration? {
+        didSet { applyConfiguration() }
+    }
 
     /// Legacy layout insets. They are physical left/right values, as on
     /// UIKit; semantic direction changes content order and leading/trailing
@@ -117,6 +120,7 @@ open class UIButton: UIControl {
     open var imageEdgeInsets: UIEdgeInsets = .zero {
         didSet { if imageEdgeInsets != oldValue { setNeedsLayout() } }
     }
+    private var configurationImagePadding: CGFloat = 0
 
     /// Default disabled title color of a plain .system button (measured
     /// from the oracle; see file header).
@@ -162,7 +166,10 @@ open class UIButton: UIControl {
     /// `imageView` is first read; until then the button has one subview.
     private func installImageViewIfNeeded() {
         guard _imageView.superview == nil else { return }
-        addSubview(_imageView)
+        // Real UIKit inserts the image view before the title label, so a
+        // button with both reports UIImageView at path *.0 in layout dumps
+        // (oracle_flow button_image_title_2x, iPhone SE 2x, 2026-09-04).
+        insertSubview(_imageView, at: 0)
     }
 
     public convenience init(type: ButtonType) {
@@ -279,6 +286,15 @@ open class UIButton: UIControl {
     }
 
     public var currentTitleColor: UIColor {
+        if configuration != nil {
+            if let c = titleColor(for: state) { return c }
+            let base = configurationBaseTitleColor()
+            if !isEnabled { return base.withMultipliedAlpha(0.4) }
+            if state.contains(.highlighted) {
+                return base.withMultipliedAlpha(UIButton.configurationHighlightedAlpha)
+            }
+            return base
+        }
         // Explicit color for the exact highlighted state wins outright.
         if state.contains(.highlighted),
            let c = titleColors[State.highlighted.rawValue] {
@@ -309,6 +325,75 @@ open class UIButton: UIControl {
     /// i.e. the base title color at alpha 0.2, for default AND explicit
     /// .normal colors alike.
     static let systemHighlightedTitleAlpha: CGFloat = 0.2
+    static let configurationHighlightedAlpha: CGFloat = 0.75
+
+    private func applyConfiguration() {
+        guard let configuration else {
+            configurationImagePadding = 0
+            layer.borderWidth = 0
+            layer.borderColor = nil
+            backgroundColor = nil
+            contentEdgeInsets = .zero
+            _titleLabel.font = .systemFont(ofSize: 15)
+            setNeedsLayout()
+            return
+        }
+        if let title = configuration.title { titles[State.normal.rawValue] = title }
+        if let image = configuration.image {
+            images[State.normal.rawValue] = image.withRenderingMode(.alwaysTemplate)
+        }
+        // Measured (oracle_flow button_configurations_2x, iPhone SE 2x):
+        // configuration titles use 17 pt regular and size to 75 x 20.5.
+        _titleLabel.font = .systemFont(ofSize: 17)
+        configurationImagePadding = configuration.imagePadding
+        // Same measurement: all four styles resolve to intrinsic 99 x 34.5
+        // for "Configure" (75 x 20.5 title plus 12/12 horizontal, 7/7 vertical insets).
+        contentEdgeInsets = UIEdgeInsets(top: 7, left: 12, bottom: 7, right: 12)
+        updateConfigurationAppearance()
+        updateTitleView()
+        updateImageView()
+        setNeedsLayout()
+    }
+
+    private func configurationBaseTitleColor() -> UIColor {
+        switch configuration?.style ?? .plain {
+        case .filled:
+            return .white
+        case .plain, .bordered, .tinted:
+            return tintColor
+        }
+    }
+
+    private func updateConfigurationAppearance() {
+        guard let configuration else { return }
+        let traits = traitCollection
+        let tint = tintColor.resolvedColor(with: traits)
+        layer.borderWidth = 0
+        layer.borderColor = nil
+        switch configuration.style {
+        case .plain:
+            backgroundColor = .clear
+        case .filled:
+            backgroundColor = isEnabled ? tint : tint.withMultipliedAlpha(0.35)
+        case .tinted:
+            // Measured background alpha (button_configurations_2x family):
+            // light 0.18, dark 0.25.
+            let a: CGFloat = traits.userInterfaceStyle == .dark ? 0.25 : 0.18
+            backgroundColor = isEnabled ? tint.withMultipliedAlpha(a)
+                : tint.withMultipliedAlpha(a * 0.5)
+        case .bordered:
+            // Measured fill (button_configurations_2x family): rgba
+            // (120,120,128) at alpha 0.16 (light) / 0.32 (dark).
+            let alpha: CGFloat = traits.userInterfaceStyle == .dark ? 0.32 : 0.16
+            backgroundColor = UIColor(red: 120.0 / 255.0, green: 120.0 / 255.0,
+                                      blue: 128.0 / 255.0, alpha: alpha)
+        }
+        if state.contains(.highlighted), isEnabled, configuration.style != .plain {
+            backgroundColor = backgroundColor?.withMultipliedAlpha(
+                UIButton.configurationHighlightedAlpha
+            )
+        }
+    }
 
     private func updateTitleView() {
         _titleLabel.textColor = currentTitleColor
@@ -327,9 +412,11 @@ open class UIButton: UIControl {
 
     open override func stateDidChange() {
         super.stateDidChange()
+        updateConfigurationAppearance()
         updateTitleView()
         updateImageView()
     }
+
 
     // MARK: - Sizing
 
@@ -346,14 +433,21 @@ open class UIButton: UIControl {
         }
         let titleSize = (_titleLabel.text?.isEmpty == false) ? title : .zero
         let imageSize = currentImage?.size ?? .zero
+        let spacing = (imageSize.width > 0 && titleSize.width > 0)
+            ? configurationImagePadding : 0
         // The image+title rect oracle floors the title's half-point
         // intrinsic width ("Go": 20.5 -> 20), while the established
         // title-only UIButton rule continues to ceil it.
         let titleWidth = imageSize.width > 0 && titleSize.width > 0
             ? titleSize.width.rounded(.down) : titleSize.width.rounded(.up)
-        let contentWidth = titleWidth + imageSize.width
+        let contentWidth = titleWidth + imageSize.width + spacing
         let contentHeight = Swift.max(titleSize.height, imageSize.height)
         if contentEdgeInsets == .zero {
+            if imageSize.width > 0, titleSize.width > 0, currentImage?._usesTemplateTint == true {
+                // Measured (button_image_title_2x): a template-image+title
+                // system button uses tight content height (no legacy +12).
+                return CGSize(width: contentWidth, height: contentHeight)
+            }
             return CGSize(width: contentWidth, height: contentHeight + 12)
         }
         let scale = _titleLabel.layoutScale
@@ -413,6 +507,11 @@ open class UIButton: UIControl {
         updateTitleView()
         updateImageView()
         let content = contentRect(forBounds: bounds)
+        if configuration != nil {
+            // Measured (oracle_flow button_configurations_2x, iPhone SE 2x):
+            // every 170 x 36 configured button resolves to cornerRadius 17.
+            layer.cornerRadius = Swift.max(0, (bounds.height - 2) / 2)
+        }
         // The public rect hooks expose UIKit's raw signed `.fill` geometry.
         // UIView frame assignment standardizes it before the subviews observe
         // their frames (the local UIView implementation does not do that for
@@ -426,7 +525,8 @@ open class UIButton: UIControl {
         let intr = _titleLabel.intrinsicContentSize
         let imageSize = currentImage?.size ?? .zero
         let hasTitle = _titleLabel.text?.isEmpty == false
-        let availableTitleWidth = Swift.max(0, content.width - imageSize.width)
+        let spacing = (imageSize.width > 0 && hasTitle) ? configurationImagePadding : 0
+        let availableTitleWidth = Swift.max(0, content.width - imageSize.width - spacing)
         var w = hasTitle
             ? (imageSize.width > 0 ? intr.width.rounded(.down) : intr.width.rounded(.up))
             : 0
@@ -484,7 +584,7 @@ open class UIButton: UIControl {
         let hasImage = currentImage != nil
         let iw = hasImage ? Swift.min(imageSize.width, content.width) : 0
         let ih = hasImage ? Swift.min(imageSize.height, content.height) : 0
-        let totalWidth = iw + w
+        let totalWidth = iw + w + spacing
         let rtl = effectiveUserInterfaceLayoutDirection == .rightToLeft
         var imageX: CGFloat = 0
         var titleX: CGFloat = 0
@@ -499,29 +599,33 @@ open class UIButton: UIControl {
                 titleX = pixelRound(base
                     + (titleEdgeInsets.left - titleEdgeInsets.right) / 2)
                 imageX = pixelRound(base + w
+                    + spacing
                     + (imageEdgeInsets.left - imageEdgeInsets.right) / 2)
             } else {
                 imageX = pixelRound(base
                     + (imageEdgeInsets.left - imageEdgeInsets.right) / 2)
                 titleX = pixelRound(base + iw
+                    + spacing
                     + (titleEdgeInsets.left - titleEdgeInsets.right) / 2)
             }
         case .left:
             if rtl {
                 titleX = pixelRound(content.minX + titleEdgeInsets.left)
-                imageX = pixelRound(content.minX + w + imageEdgeInsets.left)
+                imageX = pixelRound(content.minX + w + spacing + imageEdgeInsets.left)
             } else {
                 imageX = pixelRound(content.minX + imageEdgeInsets.left)
-                titleX = pixelRound(content.minX + iw + titleEdgeInsets.left)
+                titleX = pixelRound(content.minX + iw + spacing + titleEdgeInsets.left)
             }
         case .right:
             if rtl {
                 imageX = pixelRound(content.maxX - imageEdgeInsets.right - iw)
                 titleX = pixelRound(content.maxX - iw
+                    - spacing
                     - titleEdgeInsets.right - w)
             } else {
                 titleX = pixelRound(content.maxX - titleEdgeInsets.right - w)
                 imageX = pixelRound(content.maxX - w
+                    - spacing
                     - imageEdgeInsets.right - iw)
             }
         case .fill:

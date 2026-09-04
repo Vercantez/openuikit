@@ -98,6 +98,7 @@ var scriptPath: String? = nil
 var recordDir: String? = nil
 var navDemo = false
 var navLargeTitles = false
+if ProcessInfo.processInfo.environment["OPENUIKIT_FORCE_IOS"] == "1" { forceIOSCut = true }
 var appName: String? = nil
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
