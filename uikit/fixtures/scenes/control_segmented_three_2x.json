@@ -1,0 +1,20 @@
+{
+  "name": "control_segmented_three_2x",
+  "size": [320, 120],
+  "scale": 2,
+  "style": "light",
+  "ios": true,
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 120], "backgroundColor": "#FFFFFF" },
+      {
+        "class": "UISegmentedControl",
+        "frame": [20, 44, 280, 32],
+        "segments": ["One", "Two", "Three"],
+        "selectedSegmentIndex": 1
+      }
+    ]
+  }
+}

@@ -200,6 +200,15 @@ open class UILabel: UIView {
             } else {
                 maxW = Swift.max(maxW, l.measuredWidth)
             }
+            // iOS 26.1 (MEASURED 2026-09-04, attrtext_paragraph path 2
+            // on the SE 2x): right-aligned wrap counts the break space
+            // as a leading space on the continuation line — see
+            // AttributedTextLayout.wrap. Same number on a PLAIN
+            // UILabel (probe_space_trail path 8: 197.5).
+            if i > 0, OpenUIKitRuntime.systemFontCut == .iOS,
+               textAlignment == .right {
+                maxW = Swift.max(maxW, FontEngine.measure(" " + String(l.text), font: font))
+            }
         }
         return CGSize(width: FontEngine.ceilToPixel(maxW, scale: scale),
                       height: CGFloat(lines.count) * lineH)

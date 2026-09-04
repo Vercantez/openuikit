@@ -43,7 +43,11 @@ Environment: AGENT=$name, SIM_DEVICE_SUFFIX=-$name (already exported). Work from
     echo "AGENT_DONE rc=$?" >> "scratch/agents/$name.log"
   ) &
   running=$((running + 1))
-  if (( running >= MAXPAR )); then wait -n; running=$((running - 1)); fi
+  # zsh has no `wait -n`: poll the job table until a slot frees up.
+  while (( running >= MAXPAR )); do
+    sleep 15
+    running=$(jobs -r | wc -l | tr -d ' ')
+  done
 done < "$TASKS"
 wait
 echo "all agents finished; logs in scratch/agents/, branches agent/<name> (git worktree list)"

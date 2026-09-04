@@ -1,0 +1,18 @@
+{
+  "name": "textview_paragraphs_2x",
+  "size": [320, 220],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "#FFFFFF",
+    "subviews": [
+      {
+        "class": "UITextView",
+        "frame": [16, 24, 288, 172],
+        "fontSize": 17,
+        "text": "The quick brown fox jumps over the lazy dog near the river bank.\n\nSecond paragraph with the same text size checks wrapping and paragraph spacing in a text view."
+      }
+    ]
+  }
+}
