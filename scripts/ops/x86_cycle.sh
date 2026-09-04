@@ -38,7 +38,7 @@ SHA=${OPENUIKIT_SHA:-}
 STUB=${OPENUIKIT_CYCLE_STUB:-0}
 S3_REGION=${OPENUIKIT_S3_REGION:-}
 
-OVERLAY_CMD='NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 SWIFTCORE_BUILD_DISPATCH=1 SWIFTCORE_FE_SYSROOT=$TREE/scratch/sysroot_fe4-x86_64 SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh'
+OVERLAY_CMD='NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh'
 
 stage_names() {
     printf '%s\n' \
@@ -123,31 +123,6 @@ x86_cycle_assert_machorun_clean() {
     return 0
 }
 
-# Overlay SDK Darwin.modulemap must cmp the overlay-copied sysroot after the
-# cycle. FE expand lives on scratch/sysroot_fe4-x86_64-fe-clang, not here.
-x86_cycle_assert_overlay_darwin_modulemap() {
-    local sdk_map=$TREE/sdk/MacOSX.sdk/usr/include/Darwin.modulemap
-    local sys_map=$TREE/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap
-    if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
-        return 0
-    fi
-    if [ ! -f "$sys_map" ]; then
-        return 0
-    fi
-    if [ ! -f "$sdk_map" ]; then
-        echo "x86_cycle: overlay SDK missing Darwin.modulemap (sysroot has $sys_map)" >&2
-        return 1
-    fi
-    cp -a "$sys_map" "$sdk_map"
-    if ! cmp -s "$sys_map" "$sdk_map"; then
-        echo "x86_cycle: Darwin.modulemap SDK copy differs from sysroot" >&2
-        echo "  sdk=$sdk_map" >&2
-        echo "  sys=$sys_map" >&2
-        return 1
-    fi
-    return 0
-}
-
 if [ "$STUB" = 1 ]; then
     mkdir -p "$TREE" 2>/dev/null || TREE=$(mktemp -d /tmp/x86-cycle-stub.XXXXXX)
     while IFS= read -r name; do
@@ -159,10 +134,11 @@ if [ "$STUB" = 1 ]; then
 fi
 
 cd "$TREE"
-# A fresh Cursor VM is not the operator EC2 tree: export W / FULL_OUT_SUFFIX so
-# stage_fe_sysroot.sh and phase2 helpers resolve suffixed x86 paths, and point
-# SWIFT_TOOLCHAIN at the image's Swift (not a hardcoded /opt/swift).
-export W=$TREE
+# Do not export W globally. build_stdlib.sh uses W=${W:-$HOME/work}
+# (/root/work on the operator box). stage_fe_sysroot.sh gets env W=$TREE;
+# phase2 receives the tree as $1. Overlays run main's OVERLAY_CMD (no W,
+# no SWIFTCORE_FE_SYSROOT). A fresh Cursor VM still needs clang/Swift
+# defaults for later stages.
 # shellcheck disable=SC1091
 . "$TREE/full/scripts/guest_arch.inc"
 export CC="${CC:-clang-18}"
@@ -296,9 +272,9 @@ fi
 if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
     emit_stage overlays reused "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64 (skipped by request)"
 elif run_logged overlays "$LOGDIR/overlays.log" \
-    env NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
-        SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN="$SWIFT_TOOLCHAIN" \
-        SWIFTCORE_FE_SYSROOT="$TREE/scratch/sysroot_fe4-x86_64" \
+    env -u W -u SWIFTCORE_FE_SYSROOT \
+        NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
+        SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \
         bash "$TREE/swiftcore-macho/scripts/build_stdlib.sh"; then
     emit_stage overlays "$(status_from_log "$LOGDIR/overlays.log")" "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
 else
@@ -307,7 +283,6 @@ else
     rm -f "$TREE/machorun/machorun"
     exit 2
 fi
-x86_cycle_assert_overlay_darwin_modulemap || exit 2
 x86_cycle_assert_machorun_clean || exit 2
 
 # 7. stage roots. Operator box lets phase2 do this; SKIP_PHASE2 callers
@@ -376,6 +351,5 @@ else
     grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_' "$LOGDIR/phase2.log" || true
     exit 2
 fi
-x86_cycle_assert_overlay_darwin_modulemap || exit 2
 x86_cycle_assert_machorun_clean || exit 2
 exit 0
