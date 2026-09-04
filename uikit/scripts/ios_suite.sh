@@ -34,9 +34,11 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   echo "==> real iOS capture ($GOLD)"
   rm -rf "$GOLD"
   zsh scripts/render_sim_scenes.sh "$GOLD" "${scenes[@]}" | tail -1
-  # The probe captures in the standard (sRGB) range with STRAIGHT alpha, so
-  # compare.py reads the goldens like openrender's own PNGs; a P3-tagged
-  # capture (older SimScene builds) is converted so the diff is sRGB vs sRGB.
+  # SimScene captures in the EXTENDED range: sRGB values, straight alpha,
+  # untagged, and the private glass materials still render (the standard
+  # range dropped the sheet grabber; automatic tags Display P3). A P3-tagged
+  # capture from an older SimScene build is converted so the diff is sRGB vs
+  # sRGB.
   python3 - "$GOLD" <<'EOF'
 import glob, io, sys
 from PIL import Image, ImageCms

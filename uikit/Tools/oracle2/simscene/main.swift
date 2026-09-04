@@ -35,17 +35,62 @@ final class SimSceneRenderer {
         self.window = window
     }
 
+    /// Re-encode a capture as 8-bit sRGB with STRAIGHT (non-premultiplied)
+    /// alpha and no colour profile, whatever the renderer produced: across
+    /// a 98-scene run the extended-range renderer handed back premultiplied,
+    /// Display-P3-tagged bitmaps for some scenes and untagged straight ones
+    /// for others (measured 2026-09-04), so the PNG bytes are normalised here
+    /// and compare.py can read them like openrender's own.
+    func normalizedSRGB(_ img: UIImage) -> UIImage {
+        guard let cg = img.cgImage else { return img }
+        let w = cg.width, h = cg.height
+        var premul = [UInt8](repeating: 0, count: w * h * 4)
+        let space = CGColorSpace(name: CGColorSpace.sRGB)!
+        guard let ctx = CGContext(data: &premul, width: w, height: h, bitsPerComponent: 8,
+                                  bytesPerRow: w * 4, space: space,
+                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return img }
+        ctx.draw(cg, in: CGRect(x: 0, y: 0, width: w, height: h))
+        // Un-premultiply into a straight-alpha buffer (CG cannot draw into a
+        // non-premultiplied context, but it can wrap one as an image).
+        var straight = [UInt8](repeating: 0, count: w * h * 4)
+        for i in 0..<(w * h) {
+            let a = Int(premul[i * 4 + 3])
+            if a == 0 { continue }
+            for c in 0..<3 {
+                let v = Int(premul[i * 4 + c]) * 255 + a / 2
+                straight[i * 4 + c] = UInt8(min(255, v / a))
+            }
+            straight[i * 4 + 3] = UInt8(a)
+        }
+        let data = Data(straight)
+        guard let provider = CGDataProvider(data: data as CFData),
+              let out = CGImage(width: w, height: h, bitsPerComponent: 8, bitsPerPixel: 32,
+                                bytesPerRow: w * 4, space: space,
+                                bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
+                                provider: provider, decode: nil, shouldInterpolate: false,
+                                intent: .defaultIntent) else { return img }
+        return UIImage(cgImage: out, scale: img.scale, orientation: .up)
+    }
+
     func snapshot(_ view: UIView, size: CGSize, scale: CGFloat) -> UIImage {
         let fmt = UIGraphicsImageRendererFormat()
         fmt.scale = scale
-        // sRGB, not the device's Display P3: the PNG is diffed against an
-        // sRGB render, and a P3-tagged capture read raw is off by 30/255 on
-        // saturated colours (measured 2026-09-04: #1971C2 read as (54,111,188)).
-        fmt.preferredRange = .standard
-        fmt.opaque = false
-        return UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
-            view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+        // Capture range: .extended by default (SIMSCENE_RANGE overrides).
+        // MEASURED 2026-09-04: .automatic tags Display P3 (a saturated
+        // #1971C2 read raw is (54,111,188)); .standard gives sRGB but DROPS
+        // private glass materials (the sheet grabber vanished, region min
+        // 255 vs 195); .extended keeps the materials. Whatever the renderer
+        // hands back, normalizedSRGB() re-encodes it as untagged 8-bit sRGB
+        // with straight alpha.
+        switch ProcessInfo.processInfo.environment["SIMSCENE_RANGE"] ?? "extended" {
+        case "standard": fmt.preferredRange = .standard
+        case "automatic": fmt.preferredRange = .automatic
+        default: fmt.preferredRange = .extended
         }
+        fmt.opaque = false
+        return normalizedSRGB(UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
+            view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+        })
     }
 
     func renderAll() {
@@ -139,6 +184,7 @@ final class SimSceneRenderer {
             hostVC.present(vc, animated: false)
             RunLoop.current.run(until: Date().addingTimeInterval(0.5))
             img = snapshot(window, size: sceneSize, scale: spec.scale)
+            try writeLayoutDump(window, spec: spec, outdir: outDir)
             vc.dismiss(animated: false)
             RunLoop.current.run(until: Date().addingTimeInterval(0.3))
         } else if let alertJSON = spec.alert {
@@ -176,7 +222,9 @@ final class SimSceneRenderer {
         // (measured 2026-09-04: tableview_grouped's dump said cells at x 8 /
         // 359 wide / 53 tall while the pixels showed the iOS 26 card at
         // x 20 / 335 wide).
-        try writeLayoutDump(container, spec: spec, outdir: outDir)
+        // Modal scenes present OVER the window: dump the window so the sheet's
+        // own views (platter, grabber, content) are in the layout file too.
+        if spec.modal == nil { try writeLayoutDump(container, spec: spec, outdir: outDir) }
         wrapper.removeFromSuperview()
         try img.pngData()!.write(to: URL(fileURLWithPath: "\(outDir)/\(spec.name).png"))
         print("rendered \(spec.name)")
