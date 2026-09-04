@@ -431,8 +431,11 @@ cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$split_sdk/usr/include
 printf 'module Darwin [system] [extern_c] { export *\n  extern module C "Darwin_C.modulemap"\n}\n' \
   > "$split_sys/usr/include/Darwin.modulemap"
 cp "$split_sys/usr/include/Darwin.modulemap" "$split_sdk/usr/include/Darwin.modulemap"
-printf '--- !tapi-tbd-v3\narchs: [ x86_64 ]\ninstall-name: /usr/lib/libSystem.B.dylib\n' \
-  > "$split_sys/usr/lib/libSystem.B.tbd"
+cat > "$split_sys/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+TBD
 sys_math_before=$(sha256sum "$split_sys/usr/include/math.h" | awk '{print $1}')
 set +e
 split_ins=$(overlay_sysroot_ensure_intel_math_h "$split_sdk" 2>&1)

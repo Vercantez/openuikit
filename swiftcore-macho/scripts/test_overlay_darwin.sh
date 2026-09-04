@@ -248,8 +248,11 @@ module Darwin.C [system] [extern_c] {
 EOF
 printf 'module ObjectiveC [system] { header "objc/objc.h" export * }\nextern module Darwin "Darwin.modulemap"\n' \
   > "$sys/usr/include/module.modulemap"
-printf '--- !tapi-tbd-v3\narchs: [ x86_64 ]\ninstall-name: /usr/lib/libSystem.B.dylib\n' \
-  > "$sys/usr/lib/libSystem.B.tbd"
+cat > "$sys/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+TBD
 cp -a "$sys" "$box/sys-before"
 cp -a "$sys/usr/include/." "$sdk/usr/include/"
 export W=$box
