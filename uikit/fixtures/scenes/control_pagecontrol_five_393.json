@@ -1,0 +1,20 @@
+{
+  "name": "control_pagecontrol_five_393",
+  "size": [393, 120],
+  "scale": 3,
+  "style": "light",
+  "ios": true,
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 393, 120], "backgroundColor": "#000000" },
+      {
+        "class": "UIPageControl",
+        "frame": [20, 45, 353, 30],
+        "numberOfPages": 5,
+        "currentPage": 2
+      }
+    ]
+  }
+}

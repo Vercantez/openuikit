@@ -1,0 +1,153 @@
+{
+  "name" : "textview_paragraphs_2x",
+  "views" : [
+    {
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UITextView",
+      "frame" : [
+        16,
+        24,
+        288,
+        172
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "_UITextLayoutView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "_UITextContainerView",
+      "frame" : [
+        0,
+        0,
+        288,
+        136
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        0,
+        0,
+        288,
+        136
+      ],
+      "path" : "0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        288,
+        136
+      ],
+      "path" : "0.1.0.0"
+    },
+    {
+      "boundsOrigin" : [
+        -11,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -6,
+        67,
+        318,
+        62
+      ],
+      "layerBoundsOrigin" : [
+        -11,
+        -1
+      ],
+      "path" : "0.1.0.1"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        5,
+        48,
+        0,
+        20
+      ],
+      "path" : "0.1.0.2"
+    },
+    {
+      "boundsOrigin" : [
+        -11,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -6,
+        7,
+        309,
+        42
+      ],
+      "layerBoundsOrigin" : [
+        -11,
+        -1
+      ],
+      "path" : "0.1.0.3"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "extraSublayers" : [
+
+      ],
+      "frame" : [
+        0,
+        157,
+        288,
+        15
+      ],
+      "path" : "0.2"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "extraSublayers" : [
+
+      ],
+      "frame" : [
+        273,
+        0,
+        15,
+        172
+      ],
+      "path" : "0.3"
+    }
+  ]
+}

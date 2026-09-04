@@ -1,0 +1,523 @@
+{
+  "name" : "control_segmented_three_2x",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        120
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        120
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        280,
+        32
+      ],
+      "class" : "UISegmentedControl",
+      "cornerRadius" : 16,
+      "frame" : [
+        20,
+        44,
+        280,
+        32
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        280,
+        32
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        280,
+        32
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        93,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        26,
+        33
+      ],
+      "path" : "1.1"
+    },
+    {
+      "absFrame" : [
+        113,
+        44,
+        0,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        93,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.1.0"
+    },
+    {
+      "absFrame" : [
+        113,
+        44,
+        0,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.1.0.0"
+    },
+    {
+      "absFrame" : [
+        113,
+        44,
+        93,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        93,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        1,
+        33
+      ],
+      "path" : "1.2"
+    },
+    {
+      "absFrame" : [
+        206,
+        44,
+        0,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        93,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.2.0"
+    },
+    {
+      "absFrame" : [
+        206,
+        44,
+        0,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.2.0.0"
+    },
+    {
+      "absFrame" : [
+        206,
+        44,
+        94,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        186,
+        0,
+        94,
+        32
+      ],
+      "intrinsic" : [
+        26,
+        33
+      ],
+      "path" : "1.3"
+    },
+    {
+      "absFrame" : [
+        300,
+        44,
+        0,
+        32
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        94,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.3.0"
+    },
+    {
+      "absFrame" : [
+        300,
+        44,
+        0,
+        32
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.3.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        280,
+        32
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        32
+      ],
+      "path" : "1.4"
+    },
+    {
+      "absFrame" : [
+        115,
+        46,
+        89,
+        28
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        95,
+        2,
+        89,
+        28
+      ],
+      "path" : "1.4.0"
+    },
+    {
+      "absFrame" : [
+        115,
+        46,
+        89,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        89,
+        28
+      ],
+      "path" : "1.4.0.0"
+    },
+    {
+      "absFrame" : [
+        115,
+        46,
+        89,
+        28
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        89,
+        28
+      ],
+      "path" : "1.4.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        280,
+        32
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        32
+      ],
+      "path" : "1.4.1"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        93,
+        32
+      ],
+      "class" : "UISegment",
+      "frame" : [
+        0,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.4.1.0"
+    },
+    {
+      "absFrame" : [
+        54,
+        52,
+        25,
+        16
+      ],
+      "class" : "UISegmentLabel",
+      "font" : [
+        ".SFUI-RegularG3",
+        13
+      ],
+      "frame" : [
+        34,
+        8,
+        25,
+        16
+      ],
+      "intrinsic" : [
+        25,
+        16
+      ],
+      "path" : "1.4.1.0.0",
+      "sizeThatFits200" : [
+        25,
+        16
+      ],
+      "text" : "One"
+    },
+    {
+      "absFrame" : [
+        206,
+        44,
+        94,
+        32
+      ],
+      "class" : "UISegment",
+      "frame" : [
+        186,
+        0,
+        94,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.4.1.1"
+    },
+    {
+      "absFrame" : [
+        235.5,
+        52,
+        35.5,
+        16
+      ],
+      "class" : "UISegmentLabel",
+      "font" : [
+        ".SFUI-RegularG3",
+        13
+      ],
+      "frame" : [
+        29.5,
+        8,
+        35.5,
+        16
+      ],
+      "intrinsic" : [
+        35.5,
+        16
+      ],
+      "path" : "1.4.1.1.0",
+      "sizeThatFits200" : [
+        35.5,
+        16
+      ],
+      "text" : "Three"
+    },
+    {
+      "absFrame" : [
+        113,
+        44,
+        93,
+        32
+      ],
+      "class" : "UISegment",
+      "frame" : [
+        93,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.4.1.2"
+    },
+    {
+      "absFrame" : [
+        147,
+        52,
+        25.5,
+        16
+      ],
+      "class" : "UISegmentLabel",
+      "font" : [
+        ".SFUI-MediumG3",
+        13
+      ],
+      "frame" : [
+        34,
+        8,
+        25.5,
+        16
+      ],
+      "intrinsic" : [
+        25.5,
+        16
+      ],
+      "path" : "1.4.1.2.0",
+      "sizeThatFits200" : [
+        25.5,
+        16
+      ],
+      "text" : "Two"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        89,
+        28
+      ],
+      "alpha" : 0,
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "DestOutView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        89,
+        28
+      ],
+      "path" : "1.4.2",
+      "presentationFrame" : [
+        95,
+        2,
+        89,
+        28
+      ]
+    }
+  ]
+}
