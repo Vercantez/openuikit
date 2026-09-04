@@ -56,6 +56,46 @@ public enum GlyphInkTable {
     }()
     private static var cache: [String: GlyphInkMask] = [:]
 
+    /// The iOS table (Resources/glyph_ink_ios.json): masks harvested from
+    /// real iOS 26.1 by Tools/oracle2/inkprobe (scripts/ink_probe_sim.sh)
+    /// with the same key/phase model, calibration "opaque" — each mask IS
+    /// the coverage of an opaque label colour (no gamma LUT), and oy is
+    /// relative to round(2 * (top + (labelHeight - lineHeight) / 2 +
+    /// ascender)), which UILabel's iOS path reproduces. Selected under the
+    /// iOS font cut; absent, the Catalyst tables serve as before.
+    private static var iosEntries: [String: JSONValue]? = {
+        guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
+              let e = json["entries"]?.objectValue else { return nil }
+        return e
+    }()
+    public static var usesIOSTable: Bool {
+        OpenUIKitRuntime.systemFontCut == .iOS && iosEntries != nil
+    }
+    /// iOS pen phases. MEASURED 2026-09-04 (inkprobe sweep on iOS 26.1):
+    /// real iOS renders a DIFFERENT mask at every 1/8 pt of pen position —
+    /// 8 distinct masks per glyph at 13, 17 and 24 pt alike — i.e. glyph
+    /// origins are quantized to quarter device pixels at 2x, not to
+    /// Catalyst's size-dependent {0, 1/4, 1/3, 1/2, 2/3, 3/4} sets. The tag
+    /// is "F<k/8>" and the anchor floor(2 * phase), as the probe writes it.
+    static func phaseIOS(frac: CGFloat) -> (tag: String, anchor: Int) {
+        // 8 phases. A 16-phase table (11 MB) scored identically on every
+        // text scene (label_align 93.6 either way): the residual is
+        // per-glyph pen-position drift of up to 0.5 px against CoreText,
+        // not phase quantization (measured 2026-09-04).
+        let k = Int((frac * 8).rounded(.down)) & 7
+        let f = Double(k) / 8
+        return ("F\(f)", (2 * k) / 8)
+    }
+    /// True-coverage mask from the iOS table (nil = not harvested).
+    public static func maskIOS(familyKey: String, sizeKey: Int, dark: Bool,
+                               tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
+        let key = "\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
+        guard let e = iosEntries else { return nil }
+        if let m = decode(e[key]?.objectValue, cacheKey: "I|" + key) { return m }
+        if logMisses { missedKeys.insert("I|" + key) }
+        return nil
+    }
+
     /// When true (host renders a window-server-composited hierarchy, e.g. a
     /// scene marked `"window": true`), glyph lookups prefer the window-
     /// variant masks and fall back to the offscreen table per glyph.

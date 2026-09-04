@@ -351,8 +351,16 @@ open class UILabel: UIView {
         // the text block is centered with the offset rounded HALF-UP to
         // whole POINTS, and the first baseline sits at the ascender
         // rounded half-up to whole points below the block origin.
-        let y0 = ((bounds.height - blockH) / 2 + 0.5).rounded(.down)
-        let baselineInLine = (metrics.ascender + 0.5).rounded(.down)
+        var y0 = ((bounds.height - blockH) / 2 + 0.5).rounded(.down)
+        var baselineInLine = (metrics.ascender + 0.5).rounded(.down)
+        if GlyphInkTable.usesIOSTable {
+            // iOS cut: the harvested iOS masks are anchored to the row
+            // round(2 * (top + (height - font.lineHeight) / 2 + ascender)),
+            // i.e. the exact centred block and the exact ascender, no
+            // whole-point rounding (Tools/oracle2/inkprobe).
+            y0 = (bounds.height - blockH) / 2 + (lineH - metrics.lineHeight) / 2
+            baselineInLine = metrics.ascender
+        }
         let color = textColor.resolvedCGColor(with: traitCollection)
         guard color.alpha > 0 else { return }
         let glyphFont = GlyphRasterizer.font(for: drawingFont)
@@ -441,7 +449,18 @@ open class UILabel: UIView {
             let penFloor = penX.rounded(.down)
             let frac = penX - penFloor
             let (tag, anchor) = GlyphInkTable.phase(size: font.pointSize, frac: frac)
-            if let m = GlyphInkTable.maskLinear(familyKey: famKey, sizeKey: sizeKey,
+            if GlyphInkTable.usesIOSTable {
+                // Real-iOS masks are true coverage of an opaque colour:
+                // plain alpha compositing, no calibration LUT; 1/8-pt phases.
+                let (itag, ianchor) = GlyphInkTable.phaseIOS(frac: frac)
+                if let m = GlyphInkTable.maskIOS(familyKey: famKey, sizeKey: sizeKey,
+                                                 dark: dark, tag: itag, scalar: ch) {
+                    canvas.drawMask(m.mask, width: m.width, height: m.height,
+                                    atPixelX: devOX + 2 * Int(penFloor) + ianchor + m.ox,
+                                    pixelY: devBaseY + m.oy, color: color)
+                    return
+                }
+            } else if let m = GlyphInkTable.maskLinear(familyKey: famKey, sizeKey: sizeKey,
                                                 dark: dark, tag: tag, scalar: ch) {
                 canvas.drawMask(m.mask, width: m.width, height: m.height,
                                 atPixelX: devOX + 2 * Int(penFloor) + anchor + m.ox,

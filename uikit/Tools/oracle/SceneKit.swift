@@ -1265,6 +1265,25 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
              "cornerRadius": round3($0.cornerRadius)] as JSON
         }
     }
+    if let win = v.window {
+        let abs = v.convert(v.bounds, to: win)
+        entry["absFrame"] = [round3(abs.origin.x), round3(abs.origin.y), round3(abs.width), round3(abs.height)]
+    }
+    let lay = v.layer
+    if lay.bounds.origin != .zero {
+        entry["layerBoundsOrigin"] = [round3(lay.bounds.origin.x), round3(lay.bounds.origin.y)]
+    }
+    if lay.anchorPoint != CGPoint(x: 0.5, y: 0.5) {
+        entry["anchorPoint"] = [round3(lay.anchorPoint.x), round3(lay.anchorPoint.y)]
+    }
+    if !CATransform3DIsIdentity(lay.sublayerTransform) {
+        let t = lay.sublayerTransform
+        entry["sublayerTransform"] = [round3(t.m11), round3(t.m22), round3(t.m41), round3(t.m42)]
+    }
+    if !CATransform3DIsIdentity(lay.transform) {
+        let t = lay.transform
+        entry["layerTransform"] = [round3(t.m11), round3(t.m22), round3(t.m41), round3(t.m42)]
+    }
     if v.isHidden { entry["hidden"] = true }
     if v.alpha != 1 { entry["alpha"] = round3(v.alpha) }
     if v.layer.cornerRadius != 0 { entry["cornerRadius"] = round3(v.layer.cornerRadius) }

@@ -435,6 +435,11 @@ public enum FontEngine {
     /// Per-glyph advance adjustment for tight (truncated) lines.
     public static func tightDelta(for font: UIFont) -> CGFloat {
         guard font.design == .default else { return 0 }
+        // iOS cut: no tight tracking on truncated lines. MEASURED 2026-09-04
+        // (scripts/ios_suite.sh label_truncate, iOS 26.1): real iOS fits
+        // "This text is definit…" where the Catalyst rule fits two more
+        // characters — the truncated line keeps the standard advances.
+        if OpenUIKitRuntime.systemFontCut == .iOS { return 0 }
         return unitsToPoints(tightEntry(at: font.pointSize).dTight, size: font.pointSize)
     }
 
@@ -442,6 +447,8 @@ public enum FontEngine {
     /// than the drawn advance; fitted against Catalyst threshold sweeps).
     public static func ellipsisDecisionWidth(for font: UIFont, head: Bool) -> CGFloat {
         guard font.design == .default else { return ellipsisAdvance(for: font) }
+        // iOS cut: the decision uses the ellipsis' real advance (see tightDelta).
+        if OpenUIKitRuntime.systemFontCut == .iOS { return ellipsisAdvance(for: font) }
         let e = tightEntry(at: font.pointSize)
         let u = e.ell - (head ? 55 : 123.5)
         return unitsToPoints(u, size: font.pointSize)

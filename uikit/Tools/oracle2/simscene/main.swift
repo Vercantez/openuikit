@@ -81,7 +81,6 @@ final class SimSceneRenderer {
             oraclePostAttachActions = []
         }
         let container = buildContainer(spec)
-        try writeLayoutDump(container, spec: spec, outdir: outDir)
 
         let sceneSize = CGSize(width: spec.width, height: spec.height)
         if window.bounds.size != sceneSize {
@@ -165,6 +164,13 @@ final class SimSceneRenderer {
         } else {
             img = snapshot(wrapper, size: sceneSize, scale: spec.scale)
         }
+        // Dump AFTER the capture, while the wrapper is still in the window:
+        // drawHierarchy(afterScreenUpdates: true) runs UIKit's final layout
+        // pass, and the dump used to run before the wrapper was even added
+        // (measured 2026-09-04: tableview_grouped's dump said cells at x 8 /
+        // 359 wide / 53 tall while the pixels showed the iOS 26 card at
+        // x 20 / 335 wide).
+        try writeLayoutDump(container, spec: spec, outdir: outDir)
         wrapper.removeFromSuperview()
         try img.pngData()!.write(to: URL(fileURLWithPath: "\(outDir)/\(spec.name).png"))
         print("rendered \(spec.name)")
