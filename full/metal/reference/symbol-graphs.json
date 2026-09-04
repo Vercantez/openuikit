@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 21,
+  "duplicateOccurrenceCount": 21,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/Metal.symbols.json",
+      "relationshipCount": 6391,
+      "sha256": "eeba79352eb4ccb7f60270a5b4d57341b0b9ddeffdcbb36661eb215394cef0de",
+      "symbolCount": 4565
+    },
+    {
+      "path": "reference/symbol-graphs/Metal@Foundation.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "b832a0bbfe5d97caaa72c2792d85d97e35bf85a9b21f94a3208b0b6ebdfebf03",
+      "symbolCount": 3
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "Metal",
+  "relationshipCount": 6394,
+  "schema": 1,
+  "symbolCount": 4547,
+  "target": "arm64-apple-ios26.0"
+}
