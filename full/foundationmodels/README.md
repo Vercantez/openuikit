@@ -1,58 +1,71 @@
-# Portable FoundationModels
+# FoundationModels Linux lane (wave-6 deliverable)
 
-This tranche supplies the first real `FoundationModels` framework boundary for
-untouched IceCubes builds on Linux. It publishes an ARM64 Mach-O
-`libFoundationModels.dylib`, a target Swift module, and a relocatable native
-AArch64 `FoundationModelsMacros` compiler plugin.
+This directory is a clean-room Linux starting point for Apple's public
+`FoundationModels` module, seeded from the Xcode 26.1 iPhoneOS 26.1 symbol
+graph, API digester, and TBD exports. It keeps the existing IceCubes
+compiler/data-plane implementation and extends it to the wave-6 deliverable
+gate. It is not wired into the shared guest package; that integration is a
+later central-review step.
 
-The implemented compiler/data plane is functional rather than nominal:
+## What is real
 
-- `@Generable` derives a generation schema, generated-content encoder,
-  generated-content decoder, and partially generated representation for typed
-  stored properties.
-- `@Guide` carries descriptions and array count constraints into the generated
-  schema. The `.count(5)` inference bridge matches the Apple SDK's `[Never]`
-  fallback technique.
+- `@Generable` / `@Guide` still expand on the Apple SDK and Mach-O guest via
+  `FoundationModelsMacros`. The isolated Linux host compiles the module
+  without `#externalMacro` because the SwiftSyntax plugin is not loaded.
 - `GeneratedContent` supports scalar, array, and ordered structure values,
-  typed property decoding, stable JSON, IDs, equality, and round trips.
-- `GenerationGuide`, `GenerationSchema`, `Instructions`, `Prompt`, builders,
-  `GenerationOptions`, responses, and asynchronous response streams cover the
-  exact IceCubes StatusKit surface.
+  typed property decoding, JSON parse/print, IDs, equality, and in-memory
+  round trips. JSON object key order after `JSONSerialization` is not claimed
+  to match Apple.
+- `GenerationGuide`, `GenerationSchema` (including `SchemaError`, `anyOf`,
+  dynamic-root init, and a **local** Codable representation),
+  `DynamicGenerationSchema`, `Instructions`, `Prompt`, result builders,
+  `GenerationOptions`, `Transcript`, `Tool`, and `LanguageModelFeedback`
+  are source-compatible declarations with focused tests for the portable
+  data plane.
+- `Decimal`, `Optional`, and `Array` Generable conformances match the graph.
 
-Linux does not have Apple's private model assets or Apple Intelligence service.
-The service plane therefore fails closed: `SystemLanguageModel` reports
-`.unavailable(.deviceNotEligible)`, `isAvailable` is false, and direct and
-streaming inference throw `LanguageModelSession.GenerationError.assetsUnavailable`.
-No fabricated model output is returned. This activates IceCubes' existing
-fallback behavior without changing its source.
+Host-compiled sources import Foundation only. The identity probe
+`tests/agent/FoundationModelsDependencyIdentity.swift` imports
+`FoundationModels` and `Foundation` for the later EC2 integration build.
 
-## Frozen consumer and differential
+## Fail-closed boundaries
 
-The frontier is frozen to untouched IceCubes commit
-`b2db3033fbf67a97b54d25d6dac2df8a029b26b1`. The two StatusKit source hashes,
-line denominators, and API calls live in
-`tests/icecubes_foundationmodels_frontier.tsv`.
+Linux does not have Apple Intelligence model assets or the private inference
+runtime.
 
-`FoundationModelsNativeOracle.swift` runs against Apple's Xcode 26.1 framework.
-The portable generated-content transcript is required to match its four-line
-golden byte for byte. The portable macro expansion is also audited for the
-schema, encoder, partial value, guide, and conformance derivations.
+- `SystemLanguageModel` reports `.unavailable(.deviceNotEligible)`,
+  `isAvailable` is false, `supportedLanguages` is empty, and
+  `supportsLocale` is false.
+- Direct and streaming `LanguageModelSession` inference throw
+  `GenerationError.assetsUnavailable`. No fabricated model output is
+  returned. This preserves IceCubes' existing fallback path.
+- `SystemLanguageModel.Adapter` inits, `compile()`, and
+  `removeObsoleteAdapters()` throw `AssetError.invalidAsset`.
+  `compatibleAdapterIdentifiers` returns an empty list.
+- `logFeedbackAttachment` returns empty `Data`. That is a local no-op, not
+  an Apple feedback payload.
+- `GenerationError.Refusal.explanation` throws `assetsUnavailable`.
 
-Run the fast native differential on macOS:
+## Deferred / not applicable
+
+- `Adapter.isCompatible(_:)` takes `BackgroundAssets.AssetPack`. That module
+  is not a seeded host dependency; no public lookalike is declared.
+- Swift stdlib `Int` BinaryInteger/format witnesses that appear in the
+  FoundationModels graph are `not-applicable`; this module does not own them.
+- Apple's exact schema/transcript Codable documents, feedback `Data`
+  contents, adapter compiler errors, and availability-reason mapping remain
+  oracle questions.
+
+## Frozen IceCubes frontier
+
+The IceCubes compiler/runtime frontier is unchanged: untouched commit
+`b2db3033fbf67a97b54d25d6dac2df8a029b26b1`, `FoundationModels.swift` plus
+`FoundationModelsMacros.swift`, and fail-closed inference. Guest builders
+still compile that single runtime source.
+
+Run the sealed host gate with:
 
 ```sh
-bash full/foundationmodels/tests/test_foundationmodels_native.sh
+python3 -B full/framework-fanout/validate_seed.py --framework full/foundationmodels --phase deliverable
+bash full/foundationmodels/tests/acceptance/test_host.sh
 ```
-
-Run the Linux-built true-iOS ARM64 Mach-O proof against a completed platform
-package:
-
-```sh
-bash full/foundationmodels/tests/build_foundationmodels_guest.sh
-```
-
-The latter refuses a dirty FoundationModels tranche or a nonempty output,
-builds the native ELF plugin and target Mach-O artifacts from cold inputs,
-audits their architectures and load commands, expands the exact IceCubes macro
-shape, cold-runs it through `machorun`, and records a complete source/artifact
-attestation.
