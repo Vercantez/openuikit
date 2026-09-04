@@ -3082,7 +3082,7 @@ class ShellContractTests(unittest.TestCase):
             "scheduler=immediate,delayed,cancelled,receive-on",
             "FOUNDATION_URLSESSION_MACHO_OK",
             "FOUNDATION_CACHE_MACHO_OK rows=43 apple-differential=exact",
-            "FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact",
+            "FOUNDATION_BYTE_COUNT_MACHO_OK rows=91 apple-differential=exact",
             "attestation/dispatch-runtime.log",
             "attestation/foundation-urlsession-runtime.log",
             "FoundationCacheOracle.swift",

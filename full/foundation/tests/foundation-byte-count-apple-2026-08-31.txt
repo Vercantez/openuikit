@@ -84,3 +84,8 @@ bytes.numeric.0	0 bytes
 bytes.numeric.1	1 byte
 bytes.numeric.2	2 bytes
 units.raw	[1, 2, 4, 8, 16, 32, 64, 128, 65280, 65535, 0]
+numeric-all.-1024	-1 KB
+numeric-all.0	0 bytes
+numeric-all.1	1 byte
+numeric-all.1024	1 KB
+numeric-all.1500000	1.5 MB

@@ -202,6 +202,60 @@ final class SheetDetentTests: XCTestCase {
         vc.modalPresentationStyle = .formSheet
         XCTAssertEqual(vc._resolvedPresentationStyle, .pageSheet)
     }
+
+    /// MEASURED detentprobe iPhone 16 / iOS 26.1: medium unscaled height
+    /// 459 = 425 + 34, floating frame [8, 403.687, 377, 440.313].
+    func testMediumDetentFloatingFrameOnIOS() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let (_, pc) = present(detents: [.medium()])
+        let f = pc.frameOfPresentedViewInContainerView
+        let scale: CGFloat = 377 / 393
+        let unscaled: CGFloat = 425 + 34
+        XCTAssertEqual(f.width, 377, accuracy: 1e-9)
+        XCTAssertEqual(f.height, unscaled * scale, accuracy: 1e-6)
+        XCTAssertEqual(f.minX, 8, accuracy: 1e-9)
+        XCTAssertEqual(f.minY, 852 - 8 - unscaled * scale, accuracy: 1e-6)
+    }
+
+    /// MEASURED Modal t3200/t1200, iPhone SE 2x / iOS 26.1, window SA 0:
+    /// large `[0, 30, 375, 637]`; medium unscaled 356.5, floating
+    /// `[8, 317.711, 359, 341.289]`.
+    func testSEWindowLargeAndMediumDetentsOnIOS() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                      displayScale: 2)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+
+        let large = UIViewController()
+        large.modalPresentationStyle = .pageSheet
+        large.sheetPresentationController?.detents = [.large()]
+        large.sheetPresentationController?.selectedDetentIdentifier = .large
+        base.present(large, animated: false)
+        window.layoutIfNeeded()
+        let largePC = large.sheetPresentationController!
+        XCTAssertEqual(largePC.frameOfPresentedViewInContainerView,
+                       CGRect(x: 0, y: 30, width: 375, height: 637))
+        base.dismiss(animated: false)
+
+        let medium = UIViewController()
+        medium.modalPresentationStyle = .pageSheet
+        medium.sheetPresentationController?.detents = [.medium(), .large()]
+        base.present(medium, animated: false)
+        window.layoutIfNeeded()
+        let mf = medium.sheetPresentationController!.frameOfPresentedViewInContainerView
+        XCTAssertEqual(mf.minX, 8, accuracy: 1e-9)
+        XCTAssertEqual(mf.width, 359, accuracy: 1e-9)
+        XCTAssertEqual(mf.height, 356.5 * 359 / 375, accuracy: 1e-6)
+        XCTAssertEqual(mf.minY, 667 - 8 - 356.5 * 359 / 375, accuracy: 1e-6)
+        XCTAssertEqual(mf.minY, 317.711, accuracy: 0.001)
+    }
 }
 
 @MainActor

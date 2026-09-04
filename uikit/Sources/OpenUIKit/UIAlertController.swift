@@ -561,15 +561,30 @@ final class _UIAlertPresentationController: UIPresentationController {
     /// are built once.
     private var cachedFrame: CGRect?
 
+    /// Vertical band the card is centred in. MEASURED Modal t5200/t7200,
+    /// iPhone SE 2x / iOS 26.1, window SA [0,0,0,0]: the 264-pt alert sits
+    /// at y 201.5 and the 304-pt action sheet at y 181.5 — both centred
+    /// on the WINDOW (667/2), not the iPhone-16 59/34 safe band. A 852-pt
+    /// window keeps the measured 59/34 band (alertprobe, iPhone 16).
+    static func verticalSafeBand(in c: UIView) -> (CGFloat, CGFloat) {
+        if OpenUIKitRuntime.systemFontCut == .iOS, c.bounds.height <= 667 {
+            return (c.safeAreaInsets.top, c.bounds.height - c.safeAreaInsets.bottom)
+        }
+        let top = c.safeAreaInsets.top > 0 ? c.safeAreaInsets.top : UIScreenMetrics.safeAreaTop
+        let bottomInset = c.safeAreaInsets.bottom > 0 ? c.safeAreaInsets.bottom
+            : UIScreenMetrics.safeAreaBottom
+        return (top, c.bounds.height - bottomInset)
+    }
+
     /// MEASURED: 320 wide, centred horizontally, centred in the SAFE AREA
-    /// vertically (not in the container).
+    /// vertically (not in the container) — except on a zero-SA SE window,
+    /// where the band IS the container (see `verticalSafeBand`).
     override var frameOfPresentedViewInContainerView: CGRect {
         if let cachedFrame { return cachedFrame }
         guard let c = containerView, let alert else { return .zero }
         let w = UIAlertMetrics.cardWidth
         let h = alert._layoutCard(width: w)
-        let top = UIScreenMetrics.safeAreaTop
-        let bottom = c.bounds.height - UIScreenMetrics.safeAreaBottom
+        let (top, bottom) = Self.verticalSafeBand(in: c)
         let f = CGRect(x: ((c.bounds.width - w) / 2),
                        y: (top + bottom) / 2 - h / 2, width: w, height: h)
         cachedFrame = f

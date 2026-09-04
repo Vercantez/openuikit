@@ -236,4 +236,29 @@ final class UIAlertLayoutTests: XCTestCase {
         XCTAssertNil(base.presentedViewController)
         XCTAssertFalse(presentedWhenFired)
     }
+
+    /// MEASURED Modal t5200, iPhone SE 2x / iOS 26.1, window SA [0,0,0,0]:
+    /// the 320×264 alert card is at y 201.5 — centred on the 667-pt window,
+    /// not the iPhone-16 59/34 safe band (that path sits at y 213.833).
+    func testAlertCentersInSEWindowOnIOS() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+        let ac = UIAlertController(title: "Save changes?",
+                                   message: "This cannot be undone.",
+                                   preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        ac.addAction(UIAlertAction(title: "Save", style: .default))
+        ac.addAction(UIAlertAction(title: "Discard", style: .destructive))
+        base.present(ac, animated: false)
+        let frame = ac.view.frame
+        XCTAssertEqual(frame.width, 320, accuracy: 1e-9)
+        XCTAssertEqual(frame.minX, 27.5, accuracy: 1e-9)
+        XCTAssertEqual(frame.midY, 333.5, accuracy: 0.5)
+        XCTAssertEqual(frame.minY, 201.5, accuracy: 0.5)
+    }
 }
