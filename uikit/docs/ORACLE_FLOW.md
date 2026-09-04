@@ -97,4 +97,6 @@ with its own simulator devices, with `docs/AGENT_BRIEF_ORACLE.md` as the
 brief. Tasks are one scene family or one probe question each. Agents push
 branches; a human (or the operator agent) merges, advances the vendor pin
 (`scripts/vendor_pins.sh`, `env/contract.json`, `scripts/env/test_contract.py`)
-and runs the Linux authorities.
+and runs the Linux authorities — `scripts/agent_merge.sh <branch>` does the
+checks (scope, gate, real-app floors, Linux build), the merge and the pin
+advance in one go; `CHECK_ONLY=1` stops before the merge.
