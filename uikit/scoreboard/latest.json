@@ -1,9 +1,9 @@
 {
- "head": "7ed87486",
- "date": "2026-09-04T16:23Z",
+ "head": "5398ac1c",
+ "date": "2026-09-04T16:56Z",
  "suite": {
-  "pass": 96,
-  "total": 98
+  "pass": 112,
+  "total": 113
  },
  "gate": {
   "pass": 124,
@@ -11,34 +11,44 @@
  },
  "rows": [
   {
-   "scene": "attrtext_paragraph",
-   "category": "text",
-   "score": 96.076,
-   "blob": 15.2,
-   "layout_issues": 1,
+   "scene": "NavFlow:t4800",
+   "category": "conformance",
+   "score": 88.388,
+   "blob": 77.5,
+   "layout_issues": 12,
    "verdict": "FAIL",
-   "threshold": 97.0,
+   "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "attrtext_fields",
-   "category": "control",
-   "score": 96.74,
-   "blob": 14.5,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 96.0,
-   "status": "pass"
+   "scene": "NavFlow:t200",
+   "category": "conformance",
+   "score": 89.252,
+   "blob": 77.5,
+   "layout_issues": 12,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
   },
   {
-   "scene": "textview_basic",
-   "category": "control",
-   "score": 96.799,
-   "blob": 15.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 96.0,
-   "status": "pass"
+   "scene": "NavFlow:t2100",
+   "category": "conformance",
+   "score": 89.253,
+   "blob": 77.5,
+   "layout_issues": 12,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "NavFlow:t1200",
+   "category": "conformance",
+   "score": 93.007,
+   "blob": 74.0,
+   "layout_issues": 16,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
   },
   {
    "scene": "label_truncate",
@@ -71,6 +81,26 @@
    "status": "pass"
   },
   {
+   "scene": "label_multiline",
+   "category": "text",
+   "score": 97.612,
+   "blob": 15.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t3000",
+   "category": "conformance",
+   "score": 97.734,
+   "blob": 98.2,
+   "layout_issues": 3,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "textfield_basic",
    "category": "control",
    "score": 97.959,
@@ -91,6 +121,16 @@
    "status": "pass"
   },
   {
+   "scene": "attrtext_fields",
+   "category": "control",
+   "score": 98.248,
+   "blob": 4.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
    "scene": "attrtext_dark",
    "category": "text",
    "score": 98.254,
@@ -101,13 +141,33 @@
    "status": "pass"
   },
   {
-   "scene": "label_multiline",
-   "category": "text",
-   "score": 98.479,
-   "blob": 4.5,
+   "scene": "button_configurations_dark_2x",
+   "category": "control",
+   "score": 98.315,
+   "blob": 53.0,
    "layout_issues": 0,
    "verdict": "PASS",
-   "threshold": 97.0,
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "button_configurations_2x",
+   "category": "control",
+   "score": 98.437,
+   "blob": 51.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t3900",
+   "category": "conformance",
+   "score": 98.489,
+   "blob": 100.0,
+   "layout_issues": 3,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -201,10 +261,10 @@
    "status": "pass"
   },
   {
-   "scene": "control_activity",
+   "scene": "textview_paragraphs_2x",
    "category": "control",
-   "score": 98.918,
-   "blob": 0.0,
+   "score": 98.887,
+   "blob": 4.5,
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
@@ -215,6 +275,26 @@
    "category": "chrome",
    "score": 98.923,
    "blob": 2.9,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "textview_basic",
+   "category": "control",
+   "score": 98.992,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "alert_three_actions_dark",
+   "category": "chrome",
+   "score": 99.013,
+   "blob": 3.9,
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
@@ -241,13 +321,23 @@
    "status": "pass"
   },
   {
-   "scene": "control_dark",
-   "category": "control",
-   "score": 99.083,
-   "blob": 0.0,
+   "scene": "tabbar_dark",
+   "category": "chrome",
+   "score": 99.113,
+   "blob": 3.5,
    "layout_issues": 0,
    "verdict": "PASS",
-   "threshold": 96.0,
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "tableview_plain_dark_headers",
+   "category": "chrome",
+   "score": 99.131,
+   "blob": 6.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -278,6 +368,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "attrtext_paragraph",
+   "category": "text",
+   "score": 99.289,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
    "status": "pass"
   },
   {
@@ -321,6 +421,16 @@
    "status": "pass"
   },
   {
+   "scene": "realapp_storage_light",
+   "category": "realapp",
+   "score": 99.408,
+   "blob": 3.9,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.0,
+   "status": "pass"
+  },
+  {
    "scene": "corner_radius",
    "category": "geometry",
    "score": 99.411,
@@ -330,6 +440,16 @@
    "threshold": 99.5,
    "status": "open",
    "open_reason": "99.41 vs 99.5: every rounded corner on iOS carries a near-tangent coverage ramp about r/2 pt long along the curve (measured 2026-09-04/05 at radii 2-20, 2x and 3x); no closed-form rule fit every sample. A score-targeted parameter fit (exp shoulder + 0.172 radius bias) reached exactly 99.500 and was rejected as a fudge. Needs a rasteriser-level model (filtered SDF?) derived from the per-pixel samples, not tuned to the score."
+  },
+  {
+   "scene": "control_segmented_three_2x",
+   "category": "control",
+   "score": 99.414,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
   },
   {
    "scene": "collection_flow_lines",
@@ -362,6 +482,16 @@
    "status": "pass"
   },
   {
+   "scene": "collection_flow_3col_2x",
+   "category": "chrome",
+   "score": 99.452,
+   "blob": 3.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "label_basic",
    "category": "text",
    "score": 99.464,
@@ -369,6 +499,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "control_dark",
+   "category": "control",
+   "score": 99.471,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
    "status": "pass"
   },
   {
@@ -416,6 +556,16 @@
    "category": "control",
    "score": 99.554,
    "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "searchbar_text_clear",
+   "category": "control",
+   "score": 99.584,
+   "blob": 0.7,
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
@@ -472,6 +622,16 @@
    "status": "pass"
   },
   {
+   "scene": "tableview_grouped_dark_switch",
+   "category": "chrome",
+   "score": 99.657,
+   "blob": 0.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "collection_sections",
    "category": "chrome",
    "score": 99.658,
@@ -502,6 +662,16 @@
    "status": "pass"
   },
   {
+   "scene": "searchbar_placeholder",
+   "category": "control",
+   "score": 99.735,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
    "scene": "shadows_basic",
    "category": "effects",
    "score": 99.745,
@@ -509,6 +679,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 98.0,
+   "status": "pass"
+  },
+  {
+   "scene": "modal_sheet_grabber_dark",
+   "category": "chrome",
+   "score": 99.766,
+   "blob": 2.6,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -562,6 +742,16 @@
    "status": "pass"
   },
   {
+   "scene": "control_slider_stepper_2x",
+   "category": "control",
+   "score": 99.809,
+   "blob": 5.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
    "scene": "clip_subviews",
    "category": "geometry",
    "score": 99.812,
@@ -569,6 +759,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "control_pagecontrol_five_393",
+   "category": "control",
+   "score": 99.812,
+   "blob": 1.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
    "status": "pass"
   },
   {
@@ -699,6 +899,26 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 99.5,
+   "status": "pass"
+  },
+  {
+   "scene": "control_activity",
+   "category": "control",
+   "score": 99.961,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "button_image_title_2x",
+   "category": "control",
+   "score": 99.965,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 96.0,
    "status": "pass"
   },
   {
