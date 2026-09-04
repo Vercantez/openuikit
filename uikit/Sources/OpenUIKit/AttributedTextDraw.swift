@@ -76,13 +76,14 @@ extension AttributedTextLayout {
             let color = (st.color ?? .label).resolvedCGColor(with: ctx.traits)
             let glyphFont = GlyphRasterizer.font(for: st.font)
             let cm = canvas.ctm
-            let inkEligible = GlyphInkTable.isAvailable && canvas.scale == 2
-                && cm.a == 2 && cm.b == 0 && cm.c == 0 && cm.d == 2
+            let inkEligible = GlyphInkTable.isAvailable
+                && (canvas.scale == 2 || GlyphInkTable.hasIOSTable(scale: canvas.scale))
+                && cm.a == canvas.scale && cm.b == 0 && cm.c == 0 && cm.d == canvas.scale
                 && st.font.pointSize == st.font.pointSize.rounded(.down)
             let famKey = FontEngine.familyKey(for: st.font)
             let sizeKey = Int(st.font.pointSize)
             let devOX = Int(cm.tx.rounded())
-            let devBaseY = Int((baselineY * 2 + cm.ty).rounded())
+            let devBaseY = Int((baselineY * canvas.scale + cm.ty).rounded())
 
             // Background fills the line box behind the run.
             if let bg = st.backgroundColor {

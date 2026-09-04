@@ -72,13 +72,46 @@ public enum GlyphInkTable {
     public static var usesIOSTable: Bool {
         OpenUIKitRuntime.systemFontCut == .iOS && iosEntries != nil
     }
+    /// The 3x table (Resources/glyph_ink_ios_3x.json), harvested on the
+    /// iPhone 16 at its native scale (SIMCTL_CHILD_INK_SCALE=3). MEASURED
+    /// 2026-09-04 (24-step pen sweeps through UILabel AND through
+    /// CTLineDraw, 13/17/24 pt, regular/semibold/bold): on a 3x device the
+    /// glyph origin snaps to the WHOLE device pixel — one mask per glyph,
+    /// anchor floor(3 * phase) — where the 2x device keeps quarter-point
+    /// phases below 17 pt. (Moving the LABEL's frame by fractions does show
+    /// quarter-pixel phases, but Auto Layout pins label frames to the pixel
+    /// grid under the iOS cut, so the pen rule is the one that renders.)
+    private static var iosEntries3x: [String: JSONValue]? = {
+        guard let json = ResourceIO.loadJSONResource("glyph_ink_ios_3x.json"),
+              let e = json["entries"]?.objectValue else { return nil }
+        return e
+    }()
+    static func iosEntries(scale: CGFloat) -> [String: JSONValue]? {
+        if scale == 3 { return iosEntries3x }
+        if scale == 2 { return iosEntries }
+        return nil
+    }
+    /// True when the iOS cut is active and a table for `scale` is vendored.
+    public static func hasIOSTable(scale: CGFloat) -> Bool {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return false }
+        // A miss-logging run (OPENUIKIT_INK_LOG) needs the lookups to happen
+        // even before a table for this scale exists, so the harvest learns
+        // its keys.
+        if logMisses && (scale == 2 || scale == 3) { return true }
+        return iosEntries(scale: scale) != nil
+    }
     /// iOS pen phases. MEASURED 2026-09-04 (inkprobe sweep on iOS 26.1):
     /// real iOS renders a DIFFERENT mask at every 1/8 pt of pen position —
     /// 8 distinct masks per glyph at 13, 17 and 24 pt alike — i.e. glyph
     /// origins are quantized to quarter device pixels at 2x, not to
     /// Catalyst's size-dependent {0, 1/4, 1/3, 1/2, 2/3, 3/4} sets. The tag
     /// is "F<k/8>" and the anchor floor(2 * phase), as the probe writes it.
-    static func phaseIOS(size: CGFloat, frac: CGFloat) -> (tag: String, anchor: Int) {
+    static func phaseIOS(size: CGFloat, frac: CGFloat, scale: CGFloat) -> (tag: String, anchor: Int) {
+        if scale == 3 {
+            // Whole device pixels at 3x (see iosEntries3x); the epsilon keeps
+            // an exact third (3 * 0.3333.. = 0.9999..) on the pixel it lands on.
+            return ("F0.0", Swift.min(2, Int((frac * 3 + 1e-6).rounded(.down))))
+        }
         // MEASURED 2026-09-04 (inkprobe pen sweeps THROUGH UILABEL on the
         // iPhone SE 3rd gen, 2x, iOS 26.1 — the device the table is
         // harvested on): glyph origins snap to QUARTER points up to 16 pt
@@ -93,11 +126,16 @@ public enum GlyphInkTable {
     }
     /// True-coverage mask from the iOS table (nil = not harvested).
     public static func maskIOS(familyKey: String, sizeKey: Int, dark: Bool,
-                               tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
+                               tag: String, scalar: Unicode.Scalar,
+                               scale: CGFloat) -> GlyphInkMask? {
         let key = "\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
-        guard let e = iosEntries else { return nil }
-        if let m = decode(e[key]?.objectValue, cacheKey: "I|" + key) { return m }
-        if logMisses { missedKeys.insert("I|" + key) }
+        let prefix = scale == 3 ? "I3|" : "I|"
+        guard let e = iosEntries(scale: scale) else {
+            if logMisses { missedKeys.insert(prefix + key) }
+            return nil
+        }
+        if let m = decode(e[key]?.objectValue, cacheKey: prefix + key) { return m }
+        if logMisses { missedKeys.insert(prefix + key) }
         return nil
     }
 

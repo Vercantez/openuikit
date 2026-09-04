@@ -58,16 +58,27 @@ func phase(size: CGFloat, tag: String) -> (frac: CGFloat, anchor: Int)? {
     } else if tag == "0" { return (0, 0) }
     // Vertical sweep tags "V<fraction>": pen phase 0, baseline + fraction.
     if tag.hasPrefix("V"), let fr = Double(tag.dropFirst()) { return (CGFloat(fr) + 1000, 0) }
-    // Sweep tags "F<fraction>" (any fraction, anchor floor(2 * fraction)):
-    // for probing how many phases real iOS actually distinguishes.
-    if tag.hasPrefix("F") || tag.hasPrefix("C"), let fr = Double(tag.dropFirst()) {
-        return (CGFloat(fr), Int((2 * fr).rounded(.down)))
+    // Sweep tags "F<fraction>" (any fraction, anchor floor(scale * fraction)):
+    // for probing how many phases real iOS actually distinguishes. "L" moves
+    // the label frame instead of the pen.
+    if tag.hasPrefix("F") || tag.hasPrefix("C") || tag.hasPrefix("L"), let fr = Double(tag.dropFirst()) {
+        return (CGFloat(fr), Int((Double(inkScale) * fr).rounded(.down)))
     }
     // Legacy numeric tags "1","2","3" (quarter phases in the oldest table).
     switch tag { case "1": return (0.25, 0); case "2": return (0.5, 1); case "3": return (0.75, 1); default: return nil }
 }
 
 struct Capture { let gray: [UInt8]; let w: Int; let h: Int }
+
+/// Capture scale: 2 (the SE's native scale, the default) or 3 (the iPhone
+/// 16's). Launch with SIMCTL_CHILD_INK_SCALE=3 to harvest a 3x table; the
+/// masks, anchors and the reference row are all in device pixels of this
+/// scale. Capturing a 3x device at scale 2 resamples every glyph (the
+/// first 3x harvest lied that way — measured 2026-09-04).
+let inkScale: CGFloat = {
+    if let s = ProcessInfo.processInfo.environment["INK_SCALE"], let v = Double(s), v > 0 { return CGFloat(v) }
+    return 2
+}()
 
 /// Draw ONE glyph with CoreText at an EXACT fractional pen x on an integer
 /// baseline, into a scale-2 sRGB bitmap, and return the coverage of the
@@ -80,7 +91,7 @@ struct Capture { let gray: [UInt8]; let w: Int; let h: Int }
 func captureGlyph(_ text: String, font f: UIFont, penX: CGFloat, baselineY: CGFloat,
                   dark: Bool) -> Capture {
     let W = 200, H = 120
-    let scale: CGFloat = 2
+    let scale: CGFloat = inkScale
     let w = Int(CGFloat(W) * scale), h = Int(CGFloat(H) * scale)
     var rgba = [UInt8](repeating: 0, count: w * h * 4)
     let ctx = CGContext(data: &rgba, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
@@ -118,8 +129,12 @@ func captureGlyph(_ text: String, font f: UIFont, penX: CGFloat, baselineY: CGFl
 /// lower for CTLineDraw), so the harvest must go through UILabel.
 /// Returns the coverage plus the label's top pixel row and its frame height.
 func captureLabelGlyph(_ text: String, font f: UIFont, penX: CGFloat, dark: Bool,
-                       host: UIView, label: UILabel) -> (cap: Capture, labelTop: Int, labelHeight: CGFloat) {
-    let originX: CGFloat = 10, originY: CGFloat = 20
+                       host: UIView, label: UILabel,
+                       labelOffset: CGFloat = 0) -> (cap: Capture, labelTop: Int, labelHeight: CGFloat) {
+    // "L<fraction>" sweeps move the LABEL's frame by the fraction instead of
+    // kerning the glyph inside it (penX stays at originX): tells a label
+    // that snaps its frame from text that snaps its pen.
+    let originX: CGFloat = 10 + labelOffset, originY: CGFloat = 20
     let nbsp = "\u{00A0}"
     let nbspAdvance: CGFloat = {
         let l = CTLineCreateWithAttributedString(NSAttributedString(string: nbsp, attributes: [.font: f]))
@@ -137,7 +152,7 @@ func captureLabelGlyph(_ text: String, font f: UIFont, penX: CGFloat, dark: Bool
     host.backgroundColor = dark ? .black : .white
     host.layoutIfNeeded()
     let fmt = UIGraphicsImageRendererFormat()
-    fmt.scale = 2; fmt.opaque = true; fmt.preferredRange = .standard
+    fmt.scale = inkScale; fmt.opaque = true; fmt.preferredRange = .standard
     let img = UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
         host.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
     }
@@ -154,7 +169,7 @@ func captureLabelGlyph(_ text: String, font f: UIFont, penX: CGFloat, dark: Bool
         let v = (r + g + b) / 3
         gray[i] = UInt8(dark ? v : 255 - v)
     }
-    return (Capture(gray: gray, w: w, h: h), Int(originY * 2), label.frame.height)
+    return (Capture(gray: gray, w: w, h: h), Int(originY * inkScale), label.frame.height)
 }
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -189,17 +204,22 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             let vshift: CGFloat = ph.frac >= 1000 ? ph.frac - 1000 : 0
             let useCT = tag.hasPrefix("C") || tag.hasPrefix("V")
             let cap: Capture
-            var refRow = Int(baselineY * 2)
+            var refRow = Int(baselineY * inkScale)
             if useCT {
                 cap = captureGlyph(String(Character(scalar)), font: f, penX: originX + (ph.frac >= 1000 ? 0 : ph.frac),
                                    baselineY: baselineY + vshift, dark: dark)
+            } else if tag.hasPrefix("L") {
+                let r = captureLabelGlyph(String(Character(scalar)), font: f, penX: originX,
+                                          dark: dark, host: host, label: label, labelOffset: ph.frac)
+                cap = r.cap
+                refRow = Int(((CGFloat(r.labelTop) / inkScale + (r.labelHeight - f.lineHeight) / 2 + f.ascender) * inkScale).rounded())
             } else {
                 let r = captureLabelGlyph(String(Character(scalar)), font: f, penX: originX + ph.frac,
                                           dark: dark, host: host, label: label)
                 cap = r.cap
                 // Reference row = the port's iOS baseline rule for this label:
                 // round(2 * (top + (labelHeight - lineHeight) / 2 + ascender)).
-                refRow = Int(((CGFloat(r.labelTop) / 2 + (r.labelHeight - f.lineHeight) / 2 + f.ascender) * 2).rounded())
+                refRow = Int(((CGFloat(r.labelTop) / inkScale + (r.labelHeight - f.lineHeight) / 2 + f.ascender) * inkScale).rounded())
             }
             var minX = cap.w, minY = cap.h, maxX = -1, maxY = -1
             for y in 0..<cap.h { for x in 0..<cap.w where cap.gray[y * cap.w + x] > 0 {
@@ -218,7 +238,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             // port draws at devBaseY + oy where devBaseY is its own
             // baseline pixel (UILabel.swift, iOS path).
             entries[key] = ["w": bw, "h": bh,
-                            "ox": minX - (Int(originX) * 2 + ph.anchor),
+                            "ox": minX - (Int(originX) * Int(inkScale) + ph.anchor),
                             "oy": minY - refRow,
                             "m": hex]
         }
@@ -236,7 +256,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             baselines[ck] = ["labelHeight": Double(UILabel().then { $0.font = f; $0.text = "H"; $0.sizeToFit() }.frame.height),
                              "ascender": Double(f.ascender), "lineHeight": Double(f.lineHeight)]
         }
-        let out: [String: Any] = ["version": 1, "calibration": "opaque", "scale": 2,
+        let out: [String: Any] = ["version": 1, "calibration": "opaque", "scale": Int(inkScale),
                                   "device": UIDevice.current.systemVersion,
                                   "entries": entries, "baselines": baselines, "skipped": skipped]
         let data = try! JSONSerialization.data(withJSONObject: out, options: [.sortedKeys])

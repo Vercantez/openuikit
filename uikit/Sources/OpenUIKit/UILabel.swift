@@ -433,8 +433,10 @@ open class UILabel: UIView {
         // scale-2 translation-only canvases and integer point sizes (see
         // GlyphInkTable). Falls through per-glyph when a mask is missing.
         let ctm = canvas.ctm
-        let inkEligible = GlyphInkTable.isAvailable && scale == 2
-            && ctm.a == 2 && ctm.b == 0 && ctm.c == 0 && ctm.d == 2
+        // Catalyst tables are 2x; the iOS tables exist per device scale.
+        let inkEligible = GlyphInkTable.isAvailable
+            && (scale == 2 || GlyphInkTable.hasIOSTable(scale: scale))
+            && ctm.a == scale && ctm.b == 0 && ctm.c == 0 && ctm.d == scale
             && font.pointSize == font.pointSize.rounded(.down)
         let famKey = FontEngine.familyKey(for: font)
         let sizeKey = Int(font.pointSize)
@@ -444,7 +446,7 @@ open class UILabel: UIView {
         // snaps UP, but UILabel's own drawing — what the goldens and the
         // ink harvest see — lands 0.36 px higher than CTLineDraw at the same
         // geometry; measured 2026-09-04, Tools/oracle2/textprobe diag renders.)
-        let devBaseY = Int((origin.y * 2 + ctm.ty).rounded())
+        let devBaseY = Int((origin.y * scale + ctm.ty).rounded())
 
         var penX = origin.x
         var prev: Unicode.Scalar? = nil
@@ -481,18 +483,18 @@ open class UILabel: UIView {
             if GlyphInkTable.usesIOSTable {
                 // Real-iOS masks are true coverage of an opaque colour:
                 // plain alpha compositing, no calibration LUT; 1/8-pt phases.
-                let (itag, ianchor) = GlyphInkTable.phaseIOS(size: font.pointSize, frac: frac)
+                let (itag, ianchor) = GlyphInkTable.phaseIOS(size: font.pointSize, frac: frac, scale: scale)
                 if let m = GlyphInkTable.maskIOS(familyKey: famKey, sizeKey: sizeKey,
-                                                 dark: dark, tag: itag, scalar: ch) {
+                                                 dark: dark, tag: itag, scalar: ch, scale: scale) {
                     canvas.drawMask(m.mask, width: m.width, height: m.height,
-                                    atPixelX: devOX + 2 * Int(penFloor) + ianchor + m.ox,
+                                    atPixelX: devOX + Int(scale) * Int(penFloor) + ianchor + m.ox,
                                     pixelY: devBaseY + m.oy, color: color)
                     return
                 }
             } else if let m = GlyphInkTable.maskLinear(familyKey: famKey, sizeKey: sizeKey,
                                                 dark: dark, tag: tag, scalar: ch) {
                 canvas.drawMask(m.mask, width: m.width, height: m.height,
-                                atPixelX: devOX + 2 * Int(penFloor) + anchor + m.ox,
+                                atPixelX: devOX + Int(scale) * Int(penFloor) + anchor + m.ox,
                                 pixelY: devBaseY + m.oy,
                                 color: color,
                                 blendGamma: GlyphInkTable.blendGamma,

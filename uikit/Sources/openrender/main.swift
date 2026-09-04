@@ -127,6 +127,10 @@ try MainActor.assumeIsolated {
             }
             print("rendered \(result.name)")
         }
+        if let inkLogPath {
+            let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n")
+            try? (lines + "\n").write(toFile: inkLogPath, atomically: true, encoding: .utf8)
+        }
         exit(0)
     case "render":
         let outdir = args[2]
