@@ -3,9 +3,10 @@
 //   openhost --app NavFlow --script Sources/ConformanceApps/NavFlow/script.json \
 //            --record <outdir> [--scale N]
 //
-// boots the app through AppMode.swift's registry (UIApplicationMain, a real
-// UIWindow, the app's own root controller), replays the script's named
-// actions on a 60 Hz deterministic clock and writes, at each capture time:
+// boots the app through AppMode.swift, which merges ConformanceApps.registry
+// into the host app table (UIApplicationMain, a real UIWindow, the app's own
+// root controller), replays the script's named actions on a 60 Hz deterministic
+// clock and writes, at each capture time:
 //
 //   <outdir>/<app>.t<ms>.png          the window rendered at the script scale
 //   <outdir>/<app>.t<ms>.layout.json  {"name", "t", "screen", "views": [...]}
@@ -28,30 +29,6 @@
 
 import OpenUIKit
 import ConformanceApps
-
-// MARK: - The action tables
-
-/// `NavFlowApp.perform(_:)` and friends: the app method a scripted step
-/// calls. Named steps, not synthesised touches — see the app's header.
-@MainActor
-let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
-    "NavFlow": NavFlowApp.perform,
-    "Forms": FormsApp.perform,
-    "TableEditor": TableEditorApp.perform,
-    "Feed": FeedApp.perform,
-    "Modal": ModalApp.perform,
-]
-
-/// Capture scale per conformance app: the scale of the simulator device its
-/// oracle runs on. NavFlow is captured on the iPhone SE (3rd generation),
-/// which is 2x (docs/ORACLE_FLOW.md: capture scale-2 work on the SE).
-let conformanceScaleRegistry: [String: CGFloat] = [
-    "NavFlow": 2,
-    "Forms": 2,
-    "TableEditor": 2,
-    "Feed": 2,
-    "Modal": 2,
-]
 
 // MARK: - Script
 
@@ -180,7 +157,7 @@ func rectJSON(_ r: CGRect) -> JSONValue {
 func runConformanceScripted(_ scene: HostScene, app: String,
                             steps: [ConformanceStep], captures: [Double],
                             outdir: String) throws -> [String] {
-    guard let perform = conformanceActionRegistry[app] else {
+    guard let perform = ConformanceApps.registry[app]?.perform else {
         fatalError("no conformance action table for app \"\(app)\"")
     }
     let tick = 1.0 / 60.0

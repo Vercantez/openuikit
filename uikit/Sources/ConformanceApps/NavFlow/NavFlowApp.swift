@@ -99,3 +99,5 @@ public enum NavFlowApp {
         }
     }
 }
+
+extension ConformanceApps { static let _registerNavFlow: Void = register("NavFlow", windowSize: NavFlowApp.windowSize, makeRoot: NavFlowApp.makeRoot, perform: NavFlowApp.perform, scriptPath: "Sources/ConformanceApps/NavFlow/script.json") }

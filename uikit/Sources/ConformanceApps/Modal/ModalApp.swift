@@ -65,3 +65,5 @@ public enum ModalApp {
         }
     }
 }
+
+extension ConformanceApps { static let _registerModal: Void = register("Modal", windowSize: ModalApp.windowSize, makeRoot: ModalApp.makeRoot, perform: ModalApp.perform, scriptPath: "Sources/ConformanceApps/Modal/script.json") }
