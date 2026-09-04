@@ -24,6 +24,11 @@ public struct UIFont: Hashable, Sendable {
     public var pointSize: CGFloat
     public var weight: Weight
     public var design: Design
+    /// Extra inter-line spacing `UIFont.leading` reports for a preferred
+    /// text-style font. `nil` for `systemFont(ofSize:)` (font-file leading,
+    /// 0 at 15 pt). Set only by `UIFont.preferredFont(forTextStyle:)` on
+    /// the iOS cut.
+    var textStyleLeading: CGFloat? = nil
 
     public static func systemFont(ofSize size: CGFloat, weight: Weight = .regular) -> UIFont {
         UIFont(pointSize: size, weight: weight, design: .default)
@@ -49,5 +54,5 @@ public struct UIFont: Hashable, Sendable {
     public var labelLineHeight: CGFloat { FontEngine.labelLineHeight(for: self) }
     public var capHeight: CGFloat { FontEngine.metrics(for: self).capHeight }
     public var xHeight: CGFloat { FontEngine.metrics(for: self).xHeight }
-    public var leading: CGFloat { FontEngine.metrics(for: self).leading }
+    public var leading: CGFloat { textStyleLeading ?? FontEngine.metrics(for: self).leading }
 }

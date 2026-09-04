@@ -544,6 +544,45 @@ final class ViewCompatTests: XCTestCase {
         XCTAssertEqual(fit.height, 88)
     }
 
+    /// MEASURED probe_textstyle_leading + probe_feed_color_label, iPhone SE
+    /// 2x / iOS 26.1: preferred `.subheadline` reports `leading` 2.100
+    /// (20 − 17.900); `systemFont(ofSize: 15)` reports 0. A 2-line
+    /// wrapping label at 343 pt is 38 vs 36.
+    func testPreferredFontLeadingAddsBetweenWrappedLinesOnIOS() {
+        TextTestSupport.configureResourceRoot()
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                     displayScale: 2)
+
+        let preferred = UIFont.preferredFont(forTextStyle: .subheadline)
+        let system = UIFont.systemFont(ofSize: 15)
+        XCTAssertEqual(preferred.pointSize, 15)
+        XCTAssertEqual(preferred.leading, 20 - preferred.lineHeight, accuracy: 1e-6)
+        XCTAssertEqual(system.leading, 0, accuracy: 1e-6)
+
+        let body = "A quiet start, then a run of meetings. The 16:9 art is generated, not an asset."
+        let wrap = CGSize(width: 343, height: 1e6)
+        let prefLabel = UILabel()
+        prefLabel.font = preferred
+        prefLabel.numberOfLines = 2
+        prefLabel.text = body
+        XCTAssertEqual(prefLabel.sizeThatFits(wrap).height, 38, accuracy: 1e-6)
+
+        let sysLabel = UILabel()
+        sysLabel.font = system
+        sysLabel.numberOfLines = 2
+        sysLabel.text = body
+        XCTAssertEqual(sysLabel.sizeThatFits(wrap).height, 36, accuracy: 1e-6)
+
+        let one = UILabel()
+        one.font = preferred
+        one.text = "x"
+        XCTAssertEqual(one.sizeThatFits(CGSize(width: 100, height: 1e6)).height, 18,
+                       accuracy: 1e-6)
+    }
+
     func testRegisterForTraitChangesFires() {
         let v = UIView()
         var fired = 0
