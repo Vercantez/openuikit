@@ -337,8 +337,19 @@ expect_grep 'owns it so tgmath.swift.gyb' "$COMMON" \
     "FE Darwin.modulemap expand documents Darwin.C vs naming math.h on Darwin"
 expect_grep 'Darwin_C.modulemap' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
     "dual-run fixture is main's Darwin.C (math.h not on Darwin.modulemap)"
-expect_grep 'overlay-darwin.8' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
-    "overlay sysroot stamp recipe keys Darwin.modulemap bytes and dest sync"
+expect_grep '1a8d31fa51df8db9' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
+    "dual-run documents operator-box MAIN include-tree digest"
+expect_grep '2ee3efbfc91a89ef' "$ROOT/swiftcore-macho/scripts/test_overlay_darwin.sh" \
+    "overlay Darwin test pins SYS machorun math.h sha256[:16]"
+expect_grep '64c43951eaec1da9' "$ROOT/swiftcore-macho/scripts/test_overlay_darwin.sh" \
+    "overlay Darwin test pins SDK Libm math.h sha256[:16]"
+expect_grep 'overlay-darwin.9' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay sysroot stamp recipe keys Darwin.modulemap dest-sync and SDK Libm math.h insert"
+expect_grep 'overlay_sysroot_ensure_intel_math_h' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay finish inserts Libm Intel math.h onto SDK (SYS keeps machorun math.h)"
+expect_grep 'REFUSING Libm math.h insert onto overlay-copied SYS' \
+    "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "Libm math.h insert refuses to write SYS"
 expect_grep 'overlay_sysroot_sync_darwin_modulemap' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay finish copies FE Darwin.modulemap onto the SDK dest"
 expect_grep 'hides Darwin.C (tgmath.swift.gyb then misses acosf' \

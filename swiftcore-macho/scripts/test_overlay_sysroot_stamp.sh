@@ -414,6 +414,47 @@ printf '%s\n' "$sync_out" | grep -q 'Darwin.modulemap dest matches source' \
   || { echo "  FAIL missing sync log"; fail=1; }
 
 echo
+echo "=== overlay SDK Libm math.h insert leaves SYS machorun math.h ==="
+# Main's overlay_sysroot stage inserts Libm (64c43951 / 24257) onto
+# sdk/MacOSX.sdk so tgmath sees acosf/nanl. SYS keeps machorun
+# (2ee3efbf / 10344). Dest-sync is Darwin.modulemap only.
+split_sys=$tmp/splitSYS
+split_sdk=$tmp/splitSDK
+mkdir -p "$split_sys/usr/include/sys" "$split_sys/usr/lib" \
+         "$split_sdk/usr/include/sys" "$split_sdk/usr/lib"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$split_sys/usr/include/math.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$split_sdk/usr/include/math.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/MacTypes.h" "$split_sys/usr/include/MacTypes.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/MacTypes.h" "$split_sdk/usr/include/MacTypes.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$split_sys/usr/include/sys/proc.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$split_sdk/usr/include/sys/proc.h"
+printf 'module Darwin [system] [extern_c] { export *\n  extern module C "Darwin_C.modulemap"\n}\n' \
+  > "$split_sys/usr/include/Darwin.modulemap"
+cp "$split_sys/usr/include/Darwin.modulemap" "$split_sdk/usr/include/Darwin.modulemap"
+printf '--- !tapi-tbd-v3\narchs: [ x86_64 ]\ninstall-name: /usr/lib/libSystem.B.dylib\n' \
+  > "$split_sys/usr/lib/libSystem.B.tbd"
+sys_math_before=$(sha256sum "$split_sys/usr/include/math.h" | awk '{print $1}')
+set +e
+split_ins=$(overlay_sysroot_ensure_intel_math_h "$split_sdk" 2>&1)
+split_st=$?
+set -e
+printf '%s\n' "$split_ins"
+[ "$split_st" -eq 0 ] && echo "  OK  Libm insert rc=0" || { echo "  FAIL Libm insert rc=$split_st"; fail=1; }
+sys_math_after=$(sha256sum "$split_sys/usr/include/math.h" | awk '{print $1}')
+[ "$sys_math_before" = "$sys_math_after" ] \
+  && echo "  OK  SYS math.h unchanged" \
+  || { echo "  FAIL SYS math.h mutated"; fail=1; }
+cmp -s "$ROOT/sdk/overlay-darwin/math.h" "$split_sdk/usr/include/math.h" \
+  && echo "  OK  dest math.h is Libm Intel pin" \
+  || { echo "  FAIL dest math.h not Libm pin"; fail=1; }
+cmp -s "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$split_sys/usr/include/math.h" \
+  && echo "  OK  SYS math.h is still machorun" \
+  || { echo "  FAIL SYS math.h not machorun"; fail=1; }
+printf '%s\n' "$split_ins" | grep -q 'inserted Libm Intel math.h' \
+  && echo "  OK  insert logged SYS keeps machorun math.h" \
+  || { echo "  FAIL missing insert log"; fail=1; }
+
+echo
 echo "=== listed required header missing → refuse (not stamp MATCH) ==="
 mkdir -p "$tmp/noCM/usr/lib"
 fill_required_headers "$tmp/noCM"
@@ -625,6 +666,12 @@ grep -q 'overlay_sysroot_install_objc4_priv' "$SCRIPT_DIR/stage_sdk.sh" \
 grep -q 'overlay_sysroot_sync_darwin_modulemap' "$SCRIPT_DIR/stage_sdk.sh" \
   && echo "  OK  stage_sdk reuse path syncs Darwin.modulemap from the FE sysroot" \
   || { echo "  FAIL stage_sdk missing overlay_sysroot_sync_darwin_modulemap"; fail=1; }
+grep -q 'overlay_sysroot_ensure_intel_math_h' "$SCRIPT_DIR/stage_sdk.sh" \
+  && echo "  OK  stage_sdk reuse path inserts Libm math.h onto SDK (not SYS)" \
+  || { echo "  FAIL stage_sdk missing overlay_sysroot_ensure_intel_math_h"; fail=1; }
+grep -q 'overlay_sysroot_ensure_intel_math_h' "$SCRIPT_DIR/overlay_sysroot.inc" \
+  && echo "  OK  overlay_sysroot_finish inserts Libm math.h after dest-sync" \
+  || { echo "  FAIL overlay_sysroot.inc missing overlay_sysroot_ensure_intel_math_h"; fail=1; }
 
 echo
 echo "=== include_next wrapper predicate: objc4 vs Apple limits.h ==="

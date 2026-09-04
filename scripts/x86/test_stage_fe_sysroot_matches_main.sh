@@ -217,6 +217,28 @@ else
     die_test "SYS trees differ from main (diff rc=$diff_rc)"
 fi
 
+# Include-tree digest: sha256 of `find . -type f | sort | xargs sha256sum`
+# inside usr/include. Operator-box MAIN cycle at 27c6b679 measured
+# 1a8d31fa51df8db9 over 506 files. CI's ARM fixture is smaller, so this
+# asserts branch == origin/main on the same inputs rather than pinning
+# that 506-file digest. The six-row box pins live in test_overlay_darwin.sh.
+include_tree_digest() {
+    local root=$1/usr/include
+    (
+        cd "$root"
+        find . -type f | LC_ALL=C sort | xargs sha256sum | sha256sum | awk '{print $1}'
+    )
+}
+DIGEST_MAIN=$(include_tree_digest "$SYS_MAIN")
+DIGEST_OURS=$(include_tree_digest "$SYS_OURS")
+if [ "$DIGEST_MAIN" = "$DIGEST_OURS" ]; then
+    ok "SYS usr/include tree digest matches main (${DIGEST_OURS:0:16})"
+else
+    die_test "SYS usr/include tree digest disagrees: main=$DIGEST_MAIN ours=$DIGEST_OURS"
+fi
+n_include=$(find "$SYS_OURS/usr/include" -type f | wc -l | tr -d ' ')
+ok "SYS usr/include file count = $n_include (box MAIN cycle is 506; CI fixture is smaller)"
+
 FE_OURS=$(printf '%s-fe-clang\n' "${SYS_OURS%/}")
 if [ -d "$FE_OURS/usr/include" ]; then
     ok "VM-only sibling exists at $FE_OURS"
