@@ -1646,12 +1646,13 @@ phase2_darwin_fe_extra_headers() {
 # Does not rewrite a map that already names the header. Requires the file
 # to exist under usr/include (do not name an absent header).
 #
-# Overlay ninja -sdk dest-syncs scratch/sysroot_fe4-x86_64 Darwin.modulemap
-# onto sdk/MacOSX.sdk. Main's pruned map does not name math.h; Darwin.C
-# (Darwin_C.modulemap) owns it so tgmath.swift.gyb sees acosf/nanl through
-# that submodule. Expanding SYS (or dest-syncing this expand) puts
-# `header "math.h"` on Darwin, and the overlay compile misses those
-# symbols even when SDK math.h is Libm. Only run on *-fe-clang.
+# Overlay-copied SYS Darwin.modulemap does not name math.h; Darwin.C
+# (Darwin_C.modulemap) owns it. Overlay SDK extra-inserts header "math.h"
+# and header "sys/proc.h" onto its own Darwin.modulemap (recipe overlay-
+# darwin.6) plus Libm Intel math.h so tgmath sees acosf/nanl. Expanding
+# SYS puts those FE-only headers on Darwin and hides Darwin.C. Dest-sync
+# of SYS onto the overlay SDK deleted the extra-insert. Only expand on
+# *-fe-clang.
 phase2_expand_darwin_modulemap_for_fe() {
     local sys=$1
     local map=$sys/usr/include/Darwin.modulemap
@@ -1688,12 +1689,12 @@ phase2_expand_darwin_modulemap_for_fe() {
     return 0
 }
 
-# Overlay ninja -sdk is sdk/MacOSX.sdk. Darwin.modulemap dest-syncs from
-# scratch/sysroot_fe4-x86_64; math.h does not (SDK gets Libm Intel so
-# tgmath sees acosf/nanl). Expanding Darwin.modulemap on SYS (unistd.h, …)
-# makes _DarwinFoundation3 / Darwin fail (`#error "Do not include this
-# header directly, include <inttypes.h> instead"`). FE Swift still needs
-# that expansion on *-fe-clang only.
+# Overlay ninja -sdk is $W/sdk/MacOSX.sdk with W=${W:-$HOME/work}
+# (/root/work on the box). Darwin.modulemap extra-inserts math.h /
+# sys/proc.h; math.h is Libm Intel. Expanding Darwin.modulemap on SYS
+# (unistd.h, …) makes _DarwinFoundation3 / Darwin fail (`#error "Do not
+# include this header directly, include <inttypes.h> instead"`). FE Swift
+# still needs that expansion on *-fe-clang only.
 phase2_fe_clang_sysroot() {
     printf '%s-fe-clang\n' "${1%/}"
 }
@@ -1730,7 +1731,7 @@ phase2_apply_vm_only_fe_sysroot() {
     local dest=$1
     local repo=${2:-}
     local machorun artifacts posix_sem ioctl_stub ioctl_dest dylib
-    local _saved _skip
+    local _saved
     [ -n "$repo" ] || repo="${W:-${PHASE2_REPO:-}}"
     [ -n "$repo" ] || return 0
     machorun=${MACHORUN:-$repo/machorun}
@@ -1739,15 +1740,12 @@ phase2_apply_vm_only_fe_sysroot() {
     if [ ! -f "$dest/usr/include/Darwin.modulemap" ]; then
         echo "== VM-only Darwin.modulemap via stage_overlay_darwin.sh ($dest)"
         _saved="${SWIFTCORE_FE_SYSROOT-}"
-        _skip="${SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS-}"
         # Named dest is exclusive. *-fe-clang is skipped as a copy source, so
         # overlay-darwin falls through to vendor pins instead of the overlay-
-        # copied SYS (or a live mutated scratch).
+        # copied SYS (or a live mutated scratch). Extra-insert of math.h /
+        # sys/proc.h is overlay SDK only (overlay_sysroot skips *-fe-clang).
         SWIFTCORE_FE_SYSROOT="$dest"
         export SWIFTCORE_FE_SYSROOT
-        SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS=1
-        export SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS
-        unset SWIFTCORE_FE_SYSROOT_EXTRA_INSERTS
         set +e
         SWIFTCORE_DARWIN_ARCH=x86_64 W="$repo" \
             bash "$repo/swiftcore-macho/scripts/stage_overlay_darwin.sh" "$dest"
@@ -1757,12 +1755,6 @@ phase2_apply_vm_only_fe_sysroot() {
             export SWIFTCORE_FE_SYSROOT
         else
             unset SWIFTCORE_FE_SYSROOT
-        fi
-        if [ -n "$_skip" ]; then
-            SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS="$_skip"
-            export SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS
-        else
-            unset SWIFTCORE_FE_SYSROOT_SKIP_DARWIN_MODULEMAP_EXTRA_INSERTS
         fi
     fi
 

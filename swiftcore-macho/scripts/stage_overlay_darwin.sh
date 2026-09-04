@@ -261,20 +261,17 @@ if [ -f "$PROC_PIN" ]; then
   fi
 fi
 if [ -f "$SDK/usr/include/Darwin.modulemap" ]; then
-  # Extra header lines here made sdk/MacOSX.sdk/usr/include/Darwin.modulemap
-  # differ from scratch/sysroot_fe4-$ARCH after the cycle (the FE/SYS copy
-  # already names math.h / sys/proc.h as comments). Only mutate the
-  # generated fallback map.
-  if [ -z "$FE" ]; then
-    for h in math.h sys/proc.h; do
-      if [ -f "$SDK/usr/include/$h" ] \
-          && ! grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap"; then
-        # Insert before the last line (the outer module's closing brace).
-        sed -i '$i\  header "'"$h"'"' "$SDK/usr/include/Darwin.modulemap"
-        echo "stage_overlay_darwin: Darwin.modulemap now names $h"
-      fi
-    done
-  fi
+  # Overlay SDK Darwin.modulemap is the FE copy PLUS these two lines
+  # (overlay-darwin.6). Dest-sync onto the FE sysroot map deleted them
+  # and tgmath missed acosf/nanl. Do not skip when FE is present.
+  for h in math.h sys/proc.h; do
+    if [ -f "$SDK/usr/include/$h" ] \
+        && ! grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap"; then
+      # Insert before the last line (the outer module's closing brace).
+      sed -i '$i\  header "'"$h"'"' "$SDK/usr/include/Darwin.modulemap"
+      echo "stage_overlay_darwin: Darwin.modulemap now names $h"
+    fi
+  done
 else
   write_darwin_modulemap
 fi

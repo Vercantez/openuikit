@@ -11,9 +11,9 @@
 #
 # Stamp covers the overlay-darwin header set + Darwin.modulemap recipe
 # (stage_overlay_darwin.sh + enumerated module headers) + the FE source
-# usr/include/Darwin.modulemap *bytes* (an expanded map copied into
-# sdk/MacOSX.sdk must restage when main regenerates the unexpanded FE
-# sysroot map) + machorun sys/proc.h + the SDK copy's link inputs:
+# usr/include/Darwin.modulemap *bytes* (the overlay SDK copy is that map
+# PLUS header "math.h" / header "sys/proc.h"; do not dest-sync dest back
+# onto the FE map) + machorun sys/proc.h + the SDK copy's link inputs:
 # usr/lib/*.tbd, usr/lib/swift/*.tbd, usr/lib/swift/*.swiftmodule/*,
 # HEAD:machorun (darwin tbds originate in machorun gen_tbd; phase2 copies
 # them into scratch/sysroot_fe4[-x86_64]), and the crt_externs.h
@@ -60,12 +60,14 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
 # header closure, the required staged-header / tbd completeness gate, the
 # tbd / swiftmodule / HEAD:machorun stamp inputs, the FE Darwin.modulemap
-# byte hash, dest Darwin.modulemap sync (SDK copy must cmp the overlay-copied
-# sysroot), the overlay SDK Libm math.h insert (SYS keeps machorun math.h),
+# byte hash, extra-insert of header "math.h" / header "sys/proc.h" on the
+# overlay SDK map (recipe overlay-darwin.6; dest-sync onto the FE map
+# deleted those two lines), the overlay SDK Libm math.h insert (SYS keeps
+# machorun math.h), skipping SwiftOnoneSupport on the overlay SDK copy,
 # the include_next wrapper layout, or the include_next wrapper
 # predicate (first directive after comments/guard is `#include_next
 # <same-basename>`; not every `#include_next` in Apple's i386/arm limits.h).
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.9
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.10
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -178,11 +180,12 @@ overlay_sysroot_tree_has_tbds() {
     return 1
 }
 
-# FE Swift expand lives on scratch/sysroot_fe4-$ARCH-fe-clang. Overlay ninja
-# -sdk is $W/sdk/MacOSX.sdk. Darwin.modulemap dest-syncs from SYS (both
-# 1918 B / 68c22176 on main). math.h does NOT: SYS keeps machorun
-# (2ee3efbf, 10344 B); the overlay stage inserts Libm Intel (64c43951,
-# 24257 B) so tgmath sees acosf/nanl. module.modulemap also differs.
+# Overlay ninja -sdk is $W/sdk/MacOSX.sdk (W defaults to $HOME/work, i.e.
+# /root/work on the box). Darwin.modulemap on that copy is the FE map PLUS
+# header "math.h" and header "sys/proc.h" (overlay-darwin.6 extra-insert).
+# Dest-sync onto the FE sysroot map deletes those two lines. math.h: SYS
+# keeps machorun (2ee3efbf, 10344 B); the overlay stage inserts Libm Intel
+# (64c43951, 24257 B). SwiftOnoneSupport is VM-only on *-fe-clang.
 overlay_sysroot_is_fe_clang_snapshot() {
     case "${1%/}" in
         *-fe-clang) return 0 ;;
@@ -190,36 +193,38 @@ overlay_sysroot_is_fe_clang_snapshot() {
     return 1
 }
 
-# Copy usr/include/Darwin.modulemap from the overlay-copied FE sysroot onto
-# dest. Stamp hashes FE *source* bytes, so a leftover expanded dest still
-# MATCH-inputs; this is the writer that makes dest cmp the sysroot.
-# Source must be SYS, not *-fe-clang: the FE expand names math.h on Darwin,
-# which hides Darwin.C (tgmath.swift.gyb then misses acosf/nanl).
-# overlay_sysroot_sync_darwin_modulemap <dest>
-overlay_sysroot_sync_darwin_modulemap() {
-    local dest=${1:?overlay_sysroot_sync_darwin_modulemap: dest}
-    local src map destmap
-    src=$(overlay_sysroot_resolve_source || true)
-    [ -n "$src" ] && [ "$src" != ABSENT ] || return 0
-    if overlay_sysroot_is_fe_clang_snapshot "$src"; then
-        echo "overlay_sysroot: REFUSING FE-clang snapshot as Darwin.modulemap source $src" >&2
-        return 2
-    fi
-    map=$src/usr/include/Darwin.modulemap
-    destmap=$dest/usr/include/Darwin.modulemap
+# Overlay SDK Darwin.modulemap is the FE map PLUS header "math.h" and
+# header "sys/proc.h" (main overlay-darwin.6). Dest-sync onto the FE
+# sysroot map deleted those two lines; tgmath then missed acosf/nanl.
+# Never write SYS or *-fe-clang. overlay_sysroot_extra_insert_darwin_headers <dest>
+overlay_sysroot_extra_insert_darwin_headers() {
+    local dest=${1:?overlay_sysroot_extra_insert_darwin_headers: dest}
+    local map=$dest/usr/include/Darwin.modulemap
+    local h resolved
+    resolved=$(realpath "$dest" 2>/dev/null || printf '%s' "$dest")
+    case "${resolved%/}" in
+        *-fe-clang)
+            echo "overlay_sysroot: skipping Darwin.modulemap extra-insert on FE-clang snapshot $dest"
+            return 0
+            ;;
+        */scratch/sysroot_fe4-x86_64|*/scratch/sysroot_fe4)
+            echo "overlay_sysroot: REFUSING Darwin.modulemap extra-insert onto overlay-copied SYS $dest" >&2
+            return 2
+            ;;
+    esac
     [ -f "$map" ] || return 0
-    mkdir -p "$dest/usr/include"
-    cp -a "$map" "$destmap"
-    if ! cmp -s "$map" "$destmap"; then
-        echo "CANNOT_OVERLAY_SYSROOT_DARWIN_MODULEMAP dest=$destmap source=$map reason=SDK Darwin.modulemap differs from overlay-copied sysroot after copy" >&2
-        return 2
-    fi
-    echo "overlay_sysroot: Darwin.modulemap dest matches source $map"
+    for h in math.h sys/proc.h; do
+        if [ -f "$dest/usr/include/$h" ] \
+            && ! grep -q "header \"$h\"" "$map"; then
+            sed -i '$i\  header "'"$h"'"' "$map"
+            echo "overlay_sysroot: Darwin.modulemap now names $h"
+        fi
+    done
 }
 
 # Overlay SDK math.h is Libm Intel (fmaxl / acosf / nanl). SYS keeps
-# machorun's math.h. Dest-sync is Darwin.modulemap only — copying SYS
-# math.h onto the SDK was the misread of this insert as residue.
+# machorun's math.h. Dest-sync of Darwin.modulemap is not used — the
+# overlay SDK map is the FE map plus the two extra-insert lines.
 # Never write SYS or *-fe-clang. overlay_sysroot_ensure_intel_math_h <dest>
 overlay_sysroot_ensure_intel_math_h() {
     local dest=${1:?overlay_sysroot_ensure_intel_math_h: dest}
@@ -1095,7 +1100,7 @@ overlay_sysroot_copy_tbds_from() {
                 _RegexParser.swiftmodule|_Builtin_float.swiftmodule|Observation.swiftmodule|\
                 Synchronization.swiftmodule|_DarwinFoundation1.swiftmodule|\
                 _DarwinFoundation2.swiftmodule|_DarwinFoundation3.swiftmodule|\
-                _errno.swiftmodule|ObjectiveC.swiftmodule)
+                _errno.swiftmodule|ObjectiveC.swiftmodule|SwiftOnoneSupport.swiftmodule)
                     skipped_self=$((skipped_self + 1))
                     continue
                     ;;
@@ -1108,14 +1113,16 @@ overlay_sysroot_copy_tbds_from() {
             swift_n=$((swift_n + 1))
         done < <(find "$src/usr/lib/swift" -path '*.swiftmodule/*' \( -type f -o -type l \) | LC_ALL=C sort)
         [ "$skipped_self" -eq 0 ] || echo "overlay_sysroot: skipped $skipped_self swift inputs of self-built overlay modules (resource-dir wins)"
-        # A previous staging (recipe overlay-darwin.6) may have seeded them.
-        for selfmod in Darwin _Concurrency _StringProcessing _RegexParser _Builtin_float Observation Synchronization _DarwinFoundation1 _DarwinFoundation2 _DarwinFoundation3 _errno ObjectiveC; do
-            if [ -d "$dest/usr/lib/swift/${selfmod}.swiftmodule" ]; then
-                rm -rf "$dest/usr/lib/swift/${selfmod}.swiftmodule"
-                echo "overlay_sysroot: removed seeded self-built module ${selfmod}.swiftmodule from $dest"
-            fi
-        done
     fi
+    # A previous staging may have seeded self-built modules (overlay-darwin.9
+    # left SwiftOnoneSupport on the overlay SDK copy; that is VM-only on
+    # *-fe-clang). Always strip them from dest, even when src has no swift/.
+    for selfmod in Darwin _Concurrency _StringProcessing _RegexParser _Builtin_float Observation Synchronization _DarwinFoundation1 _DarwinFoundation2 _DarwinFoundation3 _errno ObjectiveC SwiftOnoneSupport; do
+        if [ -d "$dest/usr/lib/swift/${selfmod}.swiftmodule" ]; then
+            rm -rf "$dest/usr/lib/swift/${selfmod}.swiftmodule"
+            echo "overlay_sysroot: removed seeded self-built module ${selfmod}.swiftmodule from $dest"
+        fi
+    done
     if [ "$n" -gt 0 ] || [ "$swift_n" -gt 0 ]; then
         echo "overlay_sysroot: copied $n tbds + $swift_n swift inputs from $src → $dest"
     else
@@ -1331,10 +1338,9 @@ overlay_sysroot_finish() {
     local fresh=${2:?overlay_sysroot_finish: fresh}
     local live=$parent/MacOSX.sdk
     overlay_sysroot_copy_tbds "$fresh" "$live"
-    # Dest Darwin.modulemap must match the overlay-copied sysroot *before*
-    # fill enumerates quoted headers (comments included). Extra-insert /
-    # FE-clang copies otherwise leave dest ≠ SYS after finish.
-    overlay_sysroot_sync_darwin_modulemap "$fresh" || return $?
+    # Overlay SDK Darwin.modulemap is the FE copy PLUS header "math.h" /
+    # header "sys/proc.h". Dest-sync onto the FE map deleted those lines.
+    overlay_sysroot_extra_insert_darwin_headers "$fresh" || return $?
     overlay_sysroot_ensure_intel_math_h "$fresh" || return $?
     overlay_sysroot_fill_modulemap_headers "$fresh"
     overlay_sysroot_fill_include_next_wrappers "$fresh"
