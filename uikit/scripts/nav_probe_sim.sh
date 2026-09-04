@@ -8,10 +8,13 @@
 #   navprobe.<v>.rest_root.*    settled root      (png + layout.json)
 #   navprobe.<v>.rest_pushed.*  settled detail
 #   navprobe.<v>.rest_popped.*  settled root again
+#   navprobe.scroll.d<NNN>.*    rest sample at collapse distance N (png + layout)
+#   navprobe.scroll.summary.json  extracted chrome + snap results
 #
-# <v> is "large" (prefersLargeTitles) or "inline"; the app runs once per
-# variant, because a bar that has already run a large-title transition is not
-# a clean inline bar.
+# <v> is "large" (prefersLargeTitles push/pop), "inline" (same, no large
+# titles), or "scroll" (large-title UIScrollView collapse). The app runs
+# once per variant, because a bar that has already run a large-title
+# transition is not a clean inline bar.
 #
 # The probe (Tools/oracle2/navprobe/main.swift) builds the same hierarchy
 # openhost's `--nav-demo --large-titles` builds, so the two recordings are
@@ -52,7 +55,7 @@ xcrun simctl uninstall "$UDID" com.openuikit.navprobe 2>/dev/null || true
 xcrun simctl install "$UDID" "$APP"
 CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.navprobe data)
 rm -f "$OUTDIR"/navprobe.* 2>/dev/null || true
-for VARIANT in large inline; do
+for VARIANT in large inline scroll; do
   rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
   SIMCTL_CHILD_NAVPROBE_VARIANT=$VARIANT \
     xcrun simctl launch --console-pty "$UDID" com.openuikit.navprobe >/dev/null || true
