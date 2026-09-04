@@ -438,6 +438,31 @@ open class MTLRenderPipelineDescriptor: NSObject, @unchecked Sendable {
     }
 }
 
+/// Nominal Metal 4 pass type for clients such as MetalKit's
+/// `MTKView.currentMTL4RenderPassDescriptor`. Encoding stays fail-closed:
+/// this overlay does not create a Metal 4 command stream.
+open class MTL4RenderPassDescriptor: NSObject, @unchecked Sendable {
+    public let colorAttachments = MTLRenderPassColorAttachmentDescriptorArray()
+    public var depthAttachment: MTLRenderPassDepthAttachmentDescriptor! = MTLRenderPassDepthAttachmentDescriptor()
+    public var stencilAttachment: MTLRenderPassStencilAttachmentDescriptor! = MTLRenderPassStencilAttachmentDescriptor()
+    public var visibilityResultBuffer: (any MTLBuffer)?
+    public var visibilityResultType: MTLVisibilityResultType = .reset
+    public var renderTargetArrayLength: Int = 0
+    public var renderTargetHeight: Int = 0
+    public var renderTargetWidth: Int = 0
+    public var defaultRasterSampleCount: Int = 0
+    public var imageblockSampleLength: Int = 0
+    public var threadgroupMemoryLength: Int = 0
+    public var tileWidth: Int = 0
+    public var tileHeight: Int = 0
+    public var supportColorAttachmentMapping: Bool = false
+    public var samplePositions: [MTLSamplePosition] = []
+
+    public override init() {
+        super.init()
+    }
+}
+
 open class MTLComputePipelineDescriptor: NSObject, @unchecked Sendable {
     public var label: String?
     public var computeFunction: (any MTLFunction)?

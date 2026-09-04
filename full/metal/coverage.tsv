@@ -1458,22 +1458,22 @@ c:objc(cs)MTL4PrimitiveAccelerationStructureDescriptor(py)motionEndTime	deferred
 c:objc(cs)MTL4PrimitiveAccelerationStructureDescriptor(py)motionKeyframeCount	deferred		not in the Linux starting slice
 c:objc(cs)MTL4PrimitiveAccelerationStructureDescriptor(py)motionStartBorderMode	deferred		not in the Linux starting slice
 c:objc(cs)MTL4PrimitiveAccelerationStructureDescriptor(py)motionStartTime	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)colorAttachments	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)defaultRasterSampleCount	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)depthAttachment	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)imageblockSampleLength	deferred		not in the Linux starting slice
+c:objc(cs)MTL4RenderPassDescriptor	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)colorAttachments	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)defaultRasterSampleCount	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)depthAttachment	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)imageblockSampleLength	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
 c:objc(cs)MTL4RenderPassDescriptor(py)rasterizationRateMap	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)renderTargetArrayLength	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)renderTargetHeight	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)renderTargetWidth	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)stencilAttachment	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)supportColorAttachmentMapping	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)threadgroupMemoryLength	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)tileHeight	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)tileWidth	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)visibilityResultBuffer	deferred		not in the Linux starting slice
-c:objc(cs)MTL4RenderPassDescriptor(py)visibilityResultType	deferred		not in the Linux starting slice
+c:objc(cs)MTL4RenderPassDescriptor(py)renderTargetArrayLength	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)renderTargetHeight	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)renderTargetWidth	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)stencilAttachment	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)supportColorAttachmentMapping	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)threadgroupMemoryLength	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)tileHeight	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)tileWidth	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)visibilityResultBuffer	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
+c:objc(cs)MTL4RenderPassDescriptor(py)visibilityResultType	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
 c:objc(cs)MTL4RenderPipelineBinaryFunctionsDescriptor	deferred		not in the Linux starting slice
 c:objc(cs)MTL4RenderPipelineBinaryFunctionsDescriptor(im)reset	deferred		not in the Linux starting slice
 c:objc(cs)MTL4RenderPipelineBinaryFunctionsDescriptor(py)fragmentAdditionalBinaryFunctions	deferred		not in the Linux starting slice
@@ -3888,7 +3888,7 @@ s:So24MTL4RenderCommandEncoderP5MetalE18setDepthTestBoundsyySNySfGF	deferred		no
 s:So24MTL4RenderCommandEncoderP5MetalE27setVertexAmplificationCountyySaySo09MTLVertexH11ViewMappingaGF	deferred		not in the Linux starting slice
 s:So24MTL4RenderCommandEncoderP5MetalE27setVertexAmplificationCountyySiF	deferred		not in the Linux starting slice
 s:So24MTL4RenderEncoderOptionsV8rawValueABSu_tcfc	deferred		not in the Linux starting slice
-s:So24MTL4RenderPassDescriptorC5MetalE15samplePositionsSaySo17MTLSamplePositionaGvp	deferred		not in the Linux starting slice
+s:So24MTL4RenderPassDescriptorC5MetalE15samplePositionsSaySo17MTLSamplePositionaGvp	declared	full/metal/MetalDescriptors.swift	nominal Metal 4 pass type for MetalKit; no Metal 4 encoder
 s:So24MTL4TimestampGranularityV8rawValueABSgSi_tcfc	deferred		not in the Linux starting slice
 s:So24MTLComputeCommandEncoderP5MetalE10setBuffers_7offsets16attributeStrides5rangeySaySo9MTLBuffer_pSgG_SaySiGAKSnySiGtF	deferred		not in the Linux starting slice
 s:So24MTLComputeCommandEncoderP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	deferred		not in the Linux starting slice

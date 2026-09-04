@@ -34,6 +34,8 @@ iPhoneOS 26.1 symbol graph. It is not wired into the shared guest package.
   `startCapture(with:)` throws `MTLCaptureError.notSupported`.
 - Ray tracing, Metal 4 command queues, tensors, IO command queues,
   acceleration structures, and IOSurface-backed textures are not implemented.
+  `MTL4RenderPassDescriptor` exists as a nominal type so MetalKit can compile
+  `currentMTL4RenderPassDescriptor`; it does not encode GPU work.
 - Compressed pixel formats cannot be CPU-copied; `replace`/`getBytes` no-op
   when bytes-per-pixel is unknown.
 
