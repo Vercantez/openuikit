@@ -1,1 +1,6 @@
 full/coretransferable/CoreTransferable.swift
+full/coretransferable/CoreTransferableFoundation.swift
+full/coretransferable/CoreTransferableHost.swift
+full/coretransferable/CoreTransferableLookalikes.swift
+full/coretransferable/CoreTransferableModifiers.swift
+full/coretransferable/CoreTransferableRepresentations.swift
