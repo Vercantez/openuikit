@@ -21,3 +21,52 @@ extension SimpleActionView: SelectorDispatching {
         Self.actions.perform(name, on: self, with: sender)
     }
 }
+
+// The themeable base classes each observe Constants.Notifications.themeChanged
+// by selector. Nothing in the harness posts it — one frame, one theme — but the
+// observer is registered in their initialisers, so the name has to resolve.
+extension ThemeableView: SelectorDispatching {
+    static let actions: ActionTable<ThemeableView> = [
+        .action("themeDidChange", ThemeableView.themeDidChange),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}
+
+extension ThemeableLabel: SelectorDispatching {
+    static let actions: ActionTable<ThemeableLabel> = [
+        .action("themeDidChange", ThemeableLabel.themeDidChange),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}
+
+extension ThemeableTable: SelectorDispatching {
+    static let actions: ActionTable<ThemeableTable> = [
+        .action("themeDidChange", ThemeableTable.themeDidChange),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}
+
+extension ThemeableCell: SelectorDispatching {
+    static let actions: ActionTable<ThemeableCell> = [
+        .action("themeDidChange", ThemeableCell.themeDidChange),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}
+
+extension StorageAndDataUseViewController: SelectorDispatching {
+    static let actions: ActionTable<StorageAndDataUseViewController> = [
+        .action("warnWhenNotOnWifiToggled:",
+                StorageAndDataUseViewController.warnWhenNotOnWifiToggled),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}

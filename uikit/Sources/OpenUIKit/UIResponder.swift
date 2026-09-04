@@ -110,6 +110,32 @@ public final class UIPressesEvent {
 open class UIResponder: NSObject {
     public override init() { super.init() }
 
+    /// Called once a nib-loaded object's outlets are all connected.
+    ///
+    /// UIKit declares this on NSObject (NSNibAwaking) and calls it on every
+    /// object an archive produced; a real app's `UITableViewCell` subclass
+    /// does most of its setup there (pocket-casts' `SwitchCell.awakeFromNib`
+    /// installs the switch as the accessory view). Declared on UIResponder
+    /// because that is the widest OpenUIKit base a nib can instantiate — see
+    /// UINib.swift for the loader that calls it.
+    ///
+    /// On an Objective-C platform the method already exists on NSObject (the
+    /// `NSNibAwaking` category), so this is an override there and a fresh
+    /// declaration everywhere else — either way app source spells it
+    /// `override func awakeFromNib()`.
+#if canImport(ObjectiveC)
+    open override func awakeFromNib() {}
+#else
+    open func awakeFromNib() {}
+#endif
+
+    /// UIKit's `UIAccessibilityAction` hook (declared on NSObject there).
+    /// Storage-only accessibility means nothing calls it — see
+    /// docs/REAL_APP_TEST.md blocker 10 — but a real cell overrides it
+    /// (pocket-casts' `SwitchCell` returns its locked state), so the
+    /// declaration has to exist for that source to compile.
+    open func accessibilityActivate() -> Bool { false }
+
     /// Accessibility attributes (storage only — see UIViewCompat.swift for
     /// the accessors and for why nothing consults them).
     var _accessibility = AccessibilityState()

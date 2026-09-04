@@ -173,18 +173,29 @@ open class UIControl: UIView {
     ///
     ///     button.addTarget(self, action: #selector(buttonTapped),
     ///                      for: .touchUpInside)
-    public func addTarget(_ target: AnyObject, action: Selector,
+    ///
+    /// `Any?` rather than `AnyObject`, as UIKit spells it: app code passes a
+    /// target through as `Any?` (pocket-casts' SettingsTableHeader takes
+    /// `rightBtnTarget: Any?`) and would not compile against a narrower one.
+    /// A non-class target cannot be held weakly, so it is dropped — UIKit
+    /// traps on one instead, but only after the same registration is useless.
+    public func addTarget(_ target: Any?, action: Selector,
                           for controlEvents: Event) {
         nextToken += 1
         targets.append(Target(token: nextToken, events: controlEvents,
-                              handler: nil, target: target, action: action))
+                              handler: nil, target: target.flatMap { $0 as? AnyObject },
+                              action: action))
     }
 
     /// UIKit's `removeTarget(_:action:for:)`. `nil` matches any target /
     /// any action; only the named event bits are unregistered, and a
     /// registration keeps any bits that were not named.
-    public func removeTarget(_ target: AnyObject?, action: Selector?,
+    public func removeTarget(_ target: Any?, action: Selector?,
                              for controlEvents: Event) {
+        // `flatMap`, not `as?`: `Optional<Any>.none as? AnyObject` bridges the
+        // empty optional to NSNull on Darwin, so a plain `removeTarget(nil,
+        // action: nil, …)` would match no registration at all.
+        let target = target.flatMap { $0 as? AnyObject }
         for i in targets.indices.reversed() {
             let t = targets[i]
             guard t.handler == nil else { continue }   // closures unaffected

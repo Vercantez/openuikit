@@ -110,6 +110,73 @@ extension UIView {
         _ targetSize: CGSize,
         withHorizontalFittingPriority horizontal: UILayoutPriority,
         verticalFittingPriority vertical: UILayoutPriority) -> CGSize {
+        constraintFittingSize(targetSize,
+                              withHorizontalFittingPriority: horizontal,
+                              verticalFittingPriority: vertical)
+            ?? estimatedFittingSize(targetSize,
+                                    withHorizontalFittingPriority: horizontal,
+                                    verticalFittingPriority: vertical)
+    }
+
+    /// `systemLayoutSizeFitting` for the case where this subtree really does
+    /// install constraints; nil when it does not.
+    ///
+    /// The distinction matters to a caller deciding whether a view HAS an
+    /// opinion about its own size. `systemLayoutSizeFitting` can never say
+    /// "no opinion": UIView's `sizeThatFits` returns `bounds.size`, so a
+    /// frame-based container answers with its current height and looks
+    /// self-sizing. MEASURED 2026-09-04: treating that as an answer took the
+    /// Catalyst scene `tableview_grouped` from 98.154 to 92.663, because the
+    /// port's default `rowHeight` is `automaticDimension` and every ordinary
+    /// cell in the corpus started "self-sizing" to whatever it already was.
+    func constraintFittingSize(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontal: UILayoutPriority,
+        verticalFittingPriority vertical: UILayoutPriority) -> CGSize? {
+        // Ask the engine what the constraints require at this target
+        // (AutoLayout/LayoutEngine.swift, `fittingSize`) and take the LARGER
+        // of that and the FRAME-BASED subviews' extent.
+        //
+        // Both, not either. A frame-based subview enters the solver as a fixed
+        // rect and says nothing about its container, so a fitting solve is
+        // free to collapse the container underneath it — the extent is the
+        // floor that case needs. MEASURED 2026-09-04: taking only the solve
+        // dropped the three picker goldens from 99.1/98.5/98.5 to
+        // 83.8/63.1/64.0, because the sheet's detent height comes through here
+        // and its content is frame-based.
+        //
+        // The CONSTRAINT-based subviews are deliberately not counted. Their
+        // frames are an output of this same measurement, so folding them in
+        // would let the container only ever grow. MEASURED: with every
+        // subview counted, DisclosureCell ratcheted to 86 pt against a golden
+        // 65. `sizeThatFits` is left out for the same reason — UIView's
+        // returns `bounds.size`.
+        guard let solved = LayoutEngine.fittingSize(
+            root: self, target: targetSize,
+            freeWidth: horizontal != .required,
+            freeHeight: vertical != .required) else { return nil }
+        layoutIfNeeded()
+        var w = solved.width
+        var h = solved.height
+        for s in subviews
+        where !s.isHidden && s.translatesAutoresizingMaskIntoConstraints {
+            w = max(w, s.frame.maxX)
+            h = max(h, s.frame.maxY)
+        }
+        let intrinsic = intrinsicContentSize
+        if intrinsic.width != UIView.noIntrinsicMetric { w = max(w, intrinsic.width) }
+        if intrinsic.height != UIView.noIntrinsicMetric { h = max(h, intrinsic.height) }
+        return CGSize(width: horizontal == .required ? targetSize.width : w,
+                      height: vertical == .required ? targetSize.height : h)
+    }
+
+    /// The pre-Auto-Layout estimate: lay the subtree out and take the union of
+    /// the laid-out subviews, `sizeThatFits` and the intrinsic size. Still the
+    /// answer for a frame-based hierarchy, which has nothing to solve.
+    private func estimatedFittingSize(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontal: UILayoutPriority,
+        verticalFittingPriority vertical: UILayoutPriority) -> CGSize {
         layoutIfNeeded()
         var w: CGFloat = 0
         var h: CGFloat = 0

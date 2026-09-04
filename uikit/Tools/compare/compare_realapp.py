@@ -20,13 +20,18 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import compare  # noqa: E402
 
-def window_frames(dump):
+def window_frames(dump, anchor="UIScrollView"):
     """(class, window-space frame) per view, DFS order, for every view under the
-    first UIScrollView (the sheet content, which both renderers build from the
-    same app source). Real UIKit wraps the presented sheet in private
+    first view of class `anchor` (the sheet content, which both renderers build
+    from the same app source). Real UIKit wraps the presented sheet in private
     containers (UITransitionView/UIDropShadowView) and OpenUIKit in its own
     (_UIPageSheetView), so path equality is meaningless above the scroll view;
-    below it the subtree is the app's own view code and must match 1:1."""
+    below it the subtree is the app's own view code and must match 1:1.
+
+    A pushed screen needs a different anchor: its table is the app's own
+    UITableView SUBCLASS out of the nib, so "UIScrollView" matches nothing.
+    Real UIKit still interposes UITransitionView/UIDropShadowView above the
+    controller's view, so the anchor is that view's class."""
     by_path = {v["path"]: v for v in dump["views"]}
     def origin(path):
         x = y = 0.0
@@ -38,7 +43,7 @@ def window_frames(dump):
                 continue
             x += v["frame"][0]; y += v["frame"][1]
         return x, y
-    root = next((v for v in dump["views"] if v["class"] == "UIScrollView"), None)
+    root = next((v for v in dump["views"] if v["class"] == anchor), None)
     if root is None:
         return None, []
     rows = []
@@ -51,8 +56,8 @@ def window_frames(dump):
     return root, rows
 
 
-def compare_sheet(g, o, tol=compare.LAYOUT_TOL):
-    groot, grows = window_frames(g); oroot, orows = window_frames(o)
+def compare_sheet(g, o, tol=compare.LAYOUT_TOL, anchor="UIScrollView"):
+    groot, grows = window_frames(g, anchor); oroot, orows = window_frames(o, anchor)
     problems = []
     if groot is None or oroot is None:
         return [f"no UIScrollView: golden={groot is not None} ours={oroot is not None}"], 0
@@ -74,7 +79,15 @@ def compare_sheet(g, o, tol=compare.LAYOUT_TOL):
     return problems, n
 
 
-VARIANTS = ["realapp_history_light", "realapp_settings_light", "realapp_settings_dark"]
+# name -> the class the layout subtree is anchored at (see window_frames).
+VARIANTS = {
+    "realapp_history_light": "UIScrollView",
+    "realapp_settings_light": "UIScrollView",
+    "realapp_settings_dark": "UIScrollView",
+    # The nib-loaded screen: `ThemeableView` is StorageAndDataUseViewController's
+    # own view, straight out of StorageAndDataUseViewController.xib.
+    "realapp_storage_light": "ThemeableView",
+}
 
 
 def main() -> int:
@@ -86,7 +99,7 @@ def main() -> int:
     args = ap.parse_args()
     if args.diff:
         os.makedirs(args.diff, exist_ok=True)
-    for name in VARIANTS:
+    for name, anchor in VARIANTS.items():
         gpng = os.path.join(args.golden, name + ".png")
         opng = os.path.join(args.out, name + ".png")
         glay = os.path.join(args.golden, name + ".layout.json")
@@ -100,8 +113,8 @@ def main() -> int:
         if os.path.exists(glay) and os.path.exists(olay):
             g = json.load(open(glay)); o = json.load(open(olay))
             problems = compare.compare_layout(g, o)
-            sp, n = compare_sheet(g, o)
-            print(f"{name}: sheet subtree compared={n} views; problems={len(sp)} (window-space frames, tol {compare.LAYOUT_TOL} pt)")
+            sp, n = compare_sheet(g, o, anchor=anchor)
+            print(f"{name}: {anchor} subtree compared={n} views; problems={len(sp)} (window-space frames, tol {compare.LAYOUT_TOL} pt)")
             for p in sp[:30]:
                 print("   ", p)
             if len(sp) > 30:

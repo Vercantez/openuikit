@@ -211,7 +211,7 @@ open class UILabel: UIView {
             }
         }
         return CGSize(width: FontEngine.ceilToPixel(maxW, scale: scale),
-                      height: CGFloat(lines.count) * lineH)
+                      height: FontEngine.labelBlockHeight(for: font, lines: lines.count))
     }
 
     open override var intrinsicContentSize: CGSize {

@@ -148,11 +148,23 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// frame and nil (transparent) background — the same as a programmatic
     /// UIViewController without a nib. Containers re-frame the view anyway.
     open func loadView() {
+        // UIKit's rule: a controller with a nib gets its view from the nib's
+        // `view` outlet on the File's Owner (UINib.swift). The name defaults
+        // to the class's own, which is how the pocket-casts settings screens
+        // are written — `StorageAndDataUseViewController` names no nib and
+        // gets `StorageAndDataUseViewController.xib`.
+        let candidate = _nibName ?? String(describing: type(of: self))
+        let nib = UINib(nibName: candidate, bundle: _nibBundle)
+        if nib.isLoaded {
+            _ = nib.instantiate(withOwner: self, options: nil)
+            if _view != nil { return }
+        }
         if _hasExplicitNibRequest {
             let requestedName = _nibName ?? "<class-named nib>"
             fatalError(
-                "OpenUIKit cannot load Interface Builder nib '\(requestedName)'; "
-                + "override loadView() to construct the view programmatically")
+                "OpenUIKit could not load Interface Builder nib '\(requestedName)'; "
+                + "point OpenUIKitRuntime.nibSearchPaths at it, or override "
+                + "loadView() to construct the view programmatically")
         }
         view = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
     }

@@ -21,7 +21,9 @@ rm -rf "$APP"; mkdir -p "$APP"
 TMPSRC=$(mktemp -d /tmp/realappprobe.XXXXXX)
 sed -e 's/^import OpenUIKit$/import UIKit/' \
     -e 's/^        OpenUIKitRuntime.imageSearchPaths = \[directory\]$/        _ = directory/' \
+    -e 's/^        OpenUIKitRuntime.nibSearchPaths = \[directory\]$/        _ = directory/' \
     -e 's/^        UIImage.clearNamedCache()$//' \
+    -e 's/^        RealAppNibClasses.register()$//' \
     -e 's/^        super.init()$/        super.init(nibName: nil, bundle: nil)/' \
     -e 's/^    public override func viewDidLoad() {$/    required init?(coder: NSCoder) { fatalError() }\n    public override func viewDidLoad() {/' \
     Sources/RealAppProbe/RealAppScreen.swift > "$TMPSRC/RealAppScreen.swift"
@@ -30,11 +32,39 @@ sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Shims.swift > "
 # `Selector.named` spelling for native ELF; on Darwin compile the UPSTREAM
 # `#selector` text (pocket-casts-ios podcasts/SimpleActionView.swift:106,137).
 mkdir -p "$TMPSRC/Vendored"
+# Interface Builder mangles a custom class with the module it was set in, so
+# the compiled xibs name `_TtC8podcasts14ThemeableTable` and friends. The port
+# resolves those through UINibClassRegistry, which keys on the DEMANGLED name;
+# real UIKit calls NSClassFromString and would get nil (this module is
+# `realappprobe`, not `podcasts`) and silently fall back to UIOriginalClassName
+# — a plain UITableView, i.e. a different screen from the one the port renders.
+# `@objc(<mangled>)` gives the Objective-C runtime the name the nib asks for,
+# so both oracles instantiate the same class.
+objc_alias() {   # class name -> @objc(_TtC8podcasts<len><name>)
+  printf 's/^class %s: /@objc(_TtC8podcasts%d%s) class %s: /\n' "$1" "${#1}" "$1" "$1"
+}
+ALIASES=$(for c in ThemeableView ThemeableLabel ThemeableTable ThemeableCell \
+                   TintableImageView SwitchCell DisclosureCell \
+                   StorageAndDataUseViewController; do objc_alias "$c"; done)
 for f in Sources/RealAppProbe/Vendored/*.swift; do
   sed -e 's/action: Selector.named("switchToggled:")/action: #selector(switchToggled(_:))/' \
       -e 's/action: Selector.named("actionTapped")/action: #selector(actionTapped)/' \
       -e 's/^    func switchToggled(_ sender: AnyObject?) {$/    @objc private func switchToggled(_ sender: UISwitch) {/' \
       -e 's/^    func actionTapped() {$/    @objc private func actionTapped() {/' \
+      -e 's/action: Selector.named("warnWhenNotOnWifiToggled:")/action: #selector(warnWhenNotOnWifiToggled(_:))/' \
+      -e 's/^    func warnWhenNotOnWifiToggled(_ sender: UISwitch) {$/    @objc private func warnWhenNotOnWifiToggled(_ sender: UISwitch) {/' \
+      -e 's/selector: Selector.named("themeDidChange")/selector: #selector(themeDidChange)/' \
+      -e 's/^    func themeDidChange() {$/    @objc private func themeDidChange() {/' \
+      -e 's/^    var cellLabel: /    @IBOutlet var cellLabel: /' \
+      -e 's/^    var cellImage: /    @IBOutlet var cellImage: /' \
+      -e 's/^    var cellSwitch: /    @IBOutlet var cellSwitch: /' \
+      -e 's/^    var cellSecondaryLabel: /    @IBOutlet var cellSecondaryLabel: /' \
+      -e 's/^    var disclosureImage: /    @IBOutlet var disclosureImage: /' \
+      -e 's/^    var cellTextToImageConstraint: /    @IBOutlet var cellTextToImageConstraint: /' \
+      -e 's/^    var cellTextToMarginConstraint: /    @IBOutlet var cellTextToMarginConstraint: /' \
+      -e 's/^    var cellSecondaryTextWidthConstraint: /    @IBOutlet var cellSecondaryTextWidthConstraint: /' \
+      -e 's/^    var settingsTable: /    @IBOutlet var settingsTable: /' \
+      -e "$ALIASES" \
       "$f" > "$TMPSRC/Vendored/$(basename "$f")"
 done
 swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
@@ -45,10 +75,20 @@ swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor -t
   -o "$APP/realappprobe"
 cp Tools/oracle2/RealAppProbe-Info.plist "$APP/Info.plist"
 cp fixtures/realapp/assets/*.png "$APP/"
+# The compiled xibs, at the bundle root where both `UINib(nibName:bundle:nil)`
+# and UIViewController's class-named nib lookup expect them. These are the same
+# fixtures the port reads (scripts/compile_realapp_nibs.sh), so neither oracle
+# gets a differently-compiled archive.
+cp fixtures/realapp/nibs/*.nib "$APP/"
 rm -rf "$TMPSRC"
 
-DEVNAME="OpenUIKit-Chrome${SIM_DEVICE_SUFFIX:-}"
-DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"
+# iPhone 16 is the golden device (393x852 @3x); REALAPP_DEVICE exists so a
+# probe can re-capture the same screens at another width without disturbing
+# it — the layout dumps carry `layoutMargins`, and a margin that varies with
+# width can only be caught by asking twice. A non-default device writes to
+# whatever outdir the caller names; it must not be the golden one.
+DEVNAME="OpenUIKit-Chrome${REALAPP_DEVICE:+-$REALAPP_DEVICE}${SIM_DEVICE_SUFFIX:-}"
+DEVTYPE="com.apple.CoreSimulator.SimDeviceType.${REALAPP_DEVICE:-iPhone-16}"
 RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)
 UDID=$(xcrun simctl list devices | grep "$DEVNAME" | grep -o '[0-9A-F-]\{36\}' | head -1)
 if [[ -z "$UDID" ]]; then

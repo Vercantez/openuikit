@@ -17,6 +17,10 @@ struct RealAppVariant {
     let name: String
     let style: UIUserInterfaceStyle
     let makeRoot: () -> UIViewController
+    /// The picker variants render a sheet presented over a backdrop; the
+    /// storage screen is a plain pushed controller, so there is no
+    /// presentation to drive and no 0.4 s transition to run past.
+    var presentsSheet = true
 }
 
 @MainActor
@@ -30,6 +34,12 @@ let realAppVariants: [RealAppVariant] = [
     RealAppVariant(name: "realapp_settings_dark", style: .dark, makeRoot: {
         RealAppScreen.makeRoot(variant: .settings, theme: .dark)
     }),
+    // The nib-loaded variant: StorageAndDataUseViewController's view, its
+    // ThemeableTable and both cell prototypes come from compiled xibs
+    // (fixtures/realapp/nibs) through Sources/OpenUIKit/UINib.swift.
+    RealAppVariant(name: "realapp_storage_light", style: .light, makeRoot: {
+        RealAppScreen.makeRoot(variant: .storage, theme: .light)
+    }, presentsSheet: false),
 ]
 
 /// Render scale; main.swift sets it from OPENUIKIT_REALAPP_SCALE.
@@ -48,6 +58,7 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     UITraitCollection.current = UITraitCollection(userInterfaceStyle: variant.style,
                                                   displayScale: scale)
     RealAppScreen.configureAssets(directory: assets)
+    RealAppScreen.configureNibs(directory: RealAppScreen.defaultNibsDirectory)
     OpenUIKitRuntime.imageScreenScale = scale
     UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
 
@@ -61,7 +72,14 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     window.rootViewController = root
     window.makeKeyAndVisible()
     // openrender has no run loop, so viewDidAppear never fires on its own.
-    (root as? BackdropViewController)?.presentPickerNow()
+    if variant.presentsSheet {
+        (root as? BackdropViewController)?.presentPickerNow()
+    } else {
+        // A pushed screen's own lifecycle instead: viewWillAppear is where
+        // StorageAndDataUseViewController reloads its table.
+        root.beginAppearanceTransition(true, animated: false)
+        root.endAppearanceTransition()
+    }
     window.setNeedsLayout()
     window.layoutIfNeeded()
 
@@ -76,6 +94,14 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     dumpLayout(window, path: "", into: &views)
     let layout = JSONValue.object(["name": .string(variant.name),
                                    "views": .array(views)])
+    // The nib parser's own honesty log: anything the archive carried that
+    // UINib did not model. Printed with the render so a fidelity gap in a
+    // nib-loaded variant shows up as a key name, not just as pixels.
+    if !UINib.unhandledKeys.isEmpty {
+        print("  nib keys not modelled: "
+              + UINib.unhandledKeys.sorted().joined(separator: " "))
+        UINib.unhandledKeys = []
+    }
     let bmp = UIRenderer.render(window, scale: scale)
     OpenUIKitRuntime.animationTime = 0
     realAppRetained.append(window)

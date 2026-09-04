@@ -1,6 +1,6 @@
 {
- "head": "d2dc43e2",
- "date": "2026-09-04T15:37Z",
+ "head": "7ed87486",
+ "date": "2026-09-04T16:23Z",
  "suite": {
   "pass": 96,
   "total": 98
@@ -328,7 +328,8 @@
    "layout_issues": 0,
    "verdict": "FAIL",
    "threshold": 99.5,
-   "status": "fail"
+   "status": "open",
+   "open_reason": "99.41 vs 99.5: every rounded corner on iOS carries a near-tangent coverage ramp about r/2 pt long along the curve (measured 2026-09-04/05 at radii 2-20, 2x and 3x); no closed-form rule fit every sample. A score-targeted parameter fit (exp shoulder + 0.172 radius bias) reached exactly 99.500 and was rejected as a fudge. Needs a rasteriser-level model (filtered SDF?) derived from the per-pixel samples, not tuned to the score."
   },
   {
    "scene": "collection_flow_lines",

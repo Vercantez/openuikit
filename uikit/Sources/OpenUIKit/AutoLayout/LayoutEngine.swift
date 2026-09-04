@@ -30,6 +30,48 @@ enum LayoutEngine {
     /// Print the intrinsic entry order per solve (tie-break debugging).
     static var trace = false
 
+    // MARK: - Fitting solves (systemLayoutSizeFitting)
+
+    /// A fitting solve runs the engine BACKWARDS: instead of pinning the
+    /// root's size and solving for its subviews, it pins the target axes and
+    /// leaves the others free, so the root's own size becomes the answer. That
+    /// is what `systemLayoutSizeFitting` asks for, and it is the only way a
+    /// view whose height is decided by its content ever gets a height — a
+    /// self-sizing table row, or pocket-casts' SettingsTableHeader, whose
+    /// height is `max(38, its label's wrapped height)` and appears nowhere
+    /// else (measured: golden realapp_storage_light headers are 38 pt tall
+    /// with the delegate supplying no height at all).
+    struct FittingRequest {
+        var target: CGSize
+        var freeWidth: Bool
+        var freeHeight: Bool
+        /// Written by `solve`.
+        var solved = CGSize.zero
+    }
+    private static var fitting: FittingRequest?
+
+    /// Solve `root`'s subtree for `root`'s own size. Returns nil when the
+    /// subtree installs no constraints, so the caller can fall back to the
+    /// subview-extent estimate.
+    static func fittingSize(root: UIView, target: CGSize,
+                            freeWidth: Bool, freeHeight: Bool) -> CGSize? {
+        guard installedConstraintCount > 0 else { return nil }
+        var constraints: [NSLayoutConstraint] = []
+        collectConstraints(root, into: &constraints)
+        guard !constraints.isEmpty else { return nil }
+        var request = FittingRequest(target: target, freeWidth: freeWidth,
+                                     freeHeight: freeHeight)
+        fitting = request
+        solve(root: root, constraints: constraints)
+        request.solved = fitting?.solved ?? .zero
+        fitting = nil
+        return request.solved
+    }
+
+    /// Priority of the pull that collapses a free axis. UIKit's own
+    /// `fittingSizeLevel`, so any real constraint on the axis outranks it.
+    private static let fittingPull = Double(UILayoutPriority.fittingSizeLevel.rawValue)
+
     /// Solve every constraint installed in `root`'s subtree and write the
     /// solved frames to constraint-based views. Idempotent: re-solving an
     /// already-solved hierarchy computes identical frames (the solve reads
@@ -128,6 +170,8 @@ enum LayoutEngine {
         /// Constraint-based views in ENTRY order (first reference by a
         /// constraint), for the intrinsic-size pass below.
         var intrinsicViews: [ViewVars] = []
+        /// The root's variables, for reading a fitting solve's answer back.
+        var rootVars: ViewVars?
 
         func addRequired(_ expr: Cassowary.Expression, _ rel: Cassowary.Relation) {
             try? solver.addConstraint(Cassowary.Constraint(expr, rel))
@@ -194,6 +238,34 @@ enum LayoutEngine {
                     // its bounds space.
                     addRequired(Cassowary.Expression(vv.left), .equal)
                     addRequired(Cassowary.Expression(vv.top), .equal)
+                    // A fitting solve pins the root's size only on the axes
+                    // the caller fixed; a free axis gets the target as a
+                    // ceiling and a weak pull to zero, so it collapses onto
+                    // whatever the content requires.
+                    if let f = fitting, v === root {
+                        rootVars = vv
+                        if f.freeWidth {
+                            addRequired(Cassowary.Expression(vv.width), .greaterThanOrEqual)
+                            try? solver.addConstraint(Cassowary.Constraint(
+                                Cassowary.Expression(vv.width), .equal,
+                                strength: fittingPull))
+                        } else {
+                            addRequired(Cassowary.Expression(vv.width,
+                                                             constant: -Double(f.target.width)),
+                                        .equal)
+                        }
+                        if f.freeHeight {
+                            addRequired(Cassowary.Expression(vv.height), .greaterThanOrEqual)
+                            try? solver.addConstraint(Cassowary.Constraint(
+                                Cassowary.Expression(vv.height), .equal,
+                                strength: fittingPull))
+                        } else {
+                            addRequired(Cassowary.Expression(vv.height,
+                                                             constant: -Double(f.target.height)),
+                                        .equal)
+                        }
+                        continue
+                    }
                     addRequired(Cassowary.Expression(vv.width,
                                                      constant: -Double(v.bounds.width)),
                                 .equal)
@@ -239,9 +311,18 @@ enum LayoutEngine {
         // (both labels numberOfLines 0) hugs "Download" and stretches
         // "Wi-Fi only".
         var intrinsicConstraints: [ObjectIdentifier: [Cassowary.Constraint]] = [:]
-        func addIntrinsics(_ vv: ViewVars) {
+        func addIntrinsics(_ vv: ViewVars, wrapAt width: CGFloat? = nil) {
             let v = vv.view!
-            let s = v.intrinsicContentSize
+            // A wrapping label's `intrinsicContentSize` is its ONE-LINE size:
+            // nothing has told it how wide it will be. In the second pass the
+            // solver has, so re-measure at the width it solved — UIKit's
+            // `preferredMaxLayoutWidth`. MEASURED (realapp_storage_light,
+            // iPhone 16 / iOS 26.1): the usage footer's label is 46.667 pt
+            // (three wrapped lines at 361 pt) and the footer 70.667; with the
+            // one-line intrinsic they came out 15.667 and 39.667.
+            let s = width.map {
+                v.sizeThatFits(CGSize(width: $0, height: CGFloat.greatestFiniteMagnitude))
+            } ?? v.intrinsicContentSize
             var cs: [Cassowary.Constraint] = []
             if s.width != UIView.noIntrinsicMetric {
                 cs += addIntrinsic(solver, vv.width, Double(s.width),
@@ -290,9 +371,33 @@ enum LayoutEngine {
         for vv in intrinsicViews {
             guard let l = vv.view as? UILabel, l.numberOfLines != 1 else { continue }
             for c in intrinsicConstraints[ObjectIdentifier(l)] ?? [] { try? solver.removeConstraint(c) }
-            addIntrinsics(vv)
+            // Only a FITTING solve re-measures at the solved width. An
+            // ordinary solve keeps the one-line intrinsic it has always used:
+            // the tie-break outcomes in golden/layout_tiebreak_ios.json were
+            // fitted to that behaviour, and re-measuring there would move
+            // every multi-line label in every existing scene. The gap for
+            // ordinary solves stays in docs/KNOWN_GAPS.md.
+            let wrapWidth = fitting != nil
+                ? CGFloat(solver.value(of: vv.width)) : nil
+            addIntrinsics(vv, wrapAt: wrapWidth)
         }
 
+
+        // A fitting solve answers with the root's own size and writes no
+        // frames: the caller is measuring, not laying out, and the hierarchy
+        // it measured is usually about to be laid out at a different size.
+        if fitting != nil, let rootVars {
+            // UNROUNDED, unlike a written-back frame: `roundSize`'s half-point
+            // grid is the measured rule for a constraint-positioned view's
+            // SIZE, and a fitting answer is not one — it is a number the
+            // caller is about to add to others. MEASURED
+            // (realapp_storage_light): the usage footer wants 70.667 pt, and
+            // rounding it to 71 pushed the two views below it 0.333 pt down.
+            fitting?.solved = CGSize(
+                width: CGFloat(solver.value(of: rootVars.width)),
+                height: CGFloat(solver.value(of: rootVars.height)))
+            return
+        }
 
         // Write back solved frames (constraint-based views only), rounding
         // per-view in LOCAL (superview) coordinates. Layout guides get the

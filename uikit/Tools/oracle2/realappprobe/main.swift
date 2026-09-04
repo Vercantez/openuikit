@@ -27,12 +27,17 @@ struct Variant {
     let style: UIUserInterfaceStyle
     let kind: RealAppScreen.Variant
     let theme: Theme.ThemeType
+    /// See RealApp.swift: the picker variants present a sheet, the storage
+    /// screen is the window's root controller and presents nothing.
+    var presentsSheet = true
 }
 
 let variants: [Variant] = [
     Variant(name: "realapp_history_light", style: .light, kind: .listeningHistory, theme: .light),
     Variant(name: "realapp_settings_light", style: .light, kind: .settings, theme: .light),
     Variant(name: "realapp_settings_dark", style: .dark, kind: .settings, theme: .dark),
+    Variant(name: "realapp_storage_light", style: .light, kind: .storage, theme: .light,
+            presentsSheet: false),
 ]
 
 // Non-finite values (a private view's NaN frame, or an infinite fitting
@@ -224,6 +229,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // openrender capture is taken at animationTime = 1.0, past the end.
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [self] in
             capture(v, window: w)
+            guard v.presentsSheet else {
+                // Nothing was presented, so there is nothing to dismiss; the
+                // next variant simply replaces the window's root.
+                index += 1
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { self.runNext() }
+                return
+            }
             root.dismiss(animated: false) {
                 self.index += 1
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { self.runNext() }

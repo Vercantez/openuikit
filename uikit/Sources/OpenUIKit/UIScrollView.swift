@@ -360,6 +360,20 @@ open class UIScrollView: UIView {
     public var alwaysBounceHorizontal = false
     public var showsVerticalScrollIndicator = true
     public var showsHorizontalScrollIndicator = true
+
+    public enum IndicatorStyle: Int, Sendable { case `default`, black, white }
+    /// `.default` follows the trait collection (what ``makeIndicator`` did
+    /// unconditionally before); `.black`/`.white` pin the bar's colour, which
+    /// is how an app with its own theme system keeps the indicator legible
+    /// over a background UIKit cannot see.
+    public var indicatorStyle: IndicatorStyle = .default {
+        didSet {
+            guard indicatorStyle != oldValue else { return }
+            for bar in [verticalIndicator, horizontalIndicator].compactMap({ $0 }) {
+                bar.backgroundColor = indicatorColor()
+            }
+        }
+    }
     /// Wait ~150 ms (or until the scroll pan claims the gesture) before
     /// delivering touch-down to content subviews.
     public var delaysContentTouches = true
@@ -578,10 +592,28 @@ open class UIScrollView: UIView {
     }
 
     open override func safeAreaInsetsDidChange() {
+        let previous = adjustedSafeAreaTop
+        adjustedSafeAreaTop = safeAreaInsets.top
         super.safeAreaInsetsDidChange()
+        // Content resting at the top stays at the top when the safe area
+        // grows — the same rule `contentInset`'s setter applies, and for the
+        // same reason: `adjustedContentInset` folds the two together.
+        // MEASURED (realapp_storage_light, iPhone 16 / iOS 26.1): the screen
+        // sets no contentInset at all, yet UIKit reports the table's
+        // contentOffset as (0, -59) and adjustedContentInset [59, 0, 34, 0] —
+        // the window's own safe area. The port left the offset at 0 and drew
+        // the whole screen 59 pt too high.
+        if safeAreaInsets.top != previous,
+           contentOffset.y <= -(previous + contentInset.top) {
+            contentOffset.y = -(safeAreaInsets.top + contentInset.top)
+        }
         delegate?.scrollViewDidChangeAdjustedContentInset(self)
         setNeedsLayout()
     }
+
+    /// `safeAreaInsets.top` as of the last `safeAreaInsetsDidChange`, so the
+    /// hook can tell whether the content was resting against the old inset.
+    private var adjustedSafeAreaTop: CGFloat = 0
 
     // MARK: Drag handling
 
@@ -946,13 +978,22 @@ open class UIScrollView: UIView {
         let bar = UIView()
         bar.isUserInteractionEnabled = false
         bar.layer.cornerRadius = UIScrollView.indicatorThickness / 2
-        let dark = traitCollection.userInterfaceStyle == .dark
-        bar.backgroundColor = dark
-            ? UIColor(red: 1, green: 1, blue: 1, alpha: 0.35)
-            : UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
+        bar.backgroundColor = indicatorColor()
         bar.alpha = 0
         addSubview(bar)
         return bar
+    }
+
+    private func indicatorColor() -> UIColor {
+        let light: Bool
+        switch indicatorStyle {
+        case .default: light = traitCollection.userInterfaceStyle == .dark
+        case .white: light = true
+        case .black: light = false
+        }
+        return light
+            ? UIColor(red: 1, green: 1, blue: 1, alpha: 0.35)
+            : UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
     }
 
     func flashIndicators() {
