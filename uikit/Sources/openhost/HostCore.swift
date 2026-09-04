@@ -246,7 +246,7 @@ final class NavDemoRootVC: UIViewController {
 /// APP_FEEL transition (slide + parallax + scrim + edge shadow); the back
 /// button and the left-edge swipe both pop.
 @MainActor
-func buildNavDemoScene(scaleOverride: CGFloat?) -> HostScene {
+func buildNavDemoScene(scaleOverride: CGFloat?, largeTitles: Bool = false) -> HostScene {
     let scale = scaleOverride ?? 2
     let size = CGSize(width: 390, height: 700)
     GlyphInkTable.windowCompositing = false
@@ -256,6 +256,9 @@ func buildNavDemoScene(scaleOverride: CGFloat?) -> HostScene {
                                  scale: scale)
     let window = UIWindow(frame: UIScreen.main.bounds)
     let nav = UINavigationController(rootViewController: NavDemoRootVC())
+    // --large-titles: the root shows its title large (iOS collapses it to
+    // the inline title as a push transition runs).
+    nav.navigationBar.prefersLargeTitles = largeTitles
     _navDemoNav = nav
     window.rootViewController = nav
     window.makeKeyAndVisible()

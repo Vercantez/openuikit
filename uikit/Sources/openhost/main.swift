@@ -97,6 +97,7 @@ var scaleOverride: Double? = nil
 var scriptPath: String? = nil
 var recordDir: String? = nil
 var navDemo = false
+var navLargeTitles = false
 var appName: String? = nil
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
@@ -107,6 +108,8 @@ while let arg = it.next() {
         appName = v
     case "--nav-demo":
         navDemo = true
+    case "--large-titles":
+        navLargeTitles = true
     case "--scale":
         guard let v = it.next(), let s = Double(v), s > 0 else {
             print(usage); exit(1)
@@ -158,7 +161,7 @@ try MainActor.assumeIsolated {
         scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) },
                               style: style)
     } else if navDemo {
-        scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) })
+        scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) }, largeTitles: navLargeTitles)
     } else {
         let sceneJSON = try loadSceneFile(scenePath!)
         scene = buildHostScene(sceneJSON, scaleOverride: scaleOverride.map { CGFloat($0) },

@@ -1,0 +1,10 @@
+{
+  "comment": "Large-title root: tap the 'General' row (rows start 20 pt below the 116 pt expanded bar), then the back button.",
+  "events": [
+    { "t": 0.10, "kind": "down", "x": 195, "y": 150 },
+    { "t": 0.18, "kind": "up",   "x": 195, "y": 150 },
+    { "t": 0.90, "kind": "down", "x": 40,  "y": 42 },
+    { "t": 0.98, "kind": "up",   "x": 40,  "y": 42 }
+  ],
+  "captures": [0.05, 0.25, 0.33, 0.45, 0.60, 1.05, 1.13, 1.50]
+}
