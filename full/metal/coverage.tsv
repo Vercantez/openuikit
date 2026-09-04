@@ -3034,7 +3034,7 @@ c:objc(pl)MTLResource(py)heap	declared	full/metal/MetalSoftware.swift	declared o
 c:objc(pl)MTLResource(py)heapOffset	declared	full/metal/MetalSoftware.swift	declared on Linux protocol/class
 c:objc(pl)MTLResource(py)label	declared	full/metal/MetalSoftware.swift	declared on Linux protocol/class
 c:objc(pl)MTLResource(py)resourceOptions	declared	full/metal/MetalSoftware.swift	declared on Linux protocol/class
-c:objc(pl)MTLResource(py)storageMode	declared	full/metal/MetalSoftware.swift	declared on Linux protocol/class
+c:objc(pl)MTLResource(py)storageMode	implemented	tests/agent/MetalRuntime.swift	MetalKit sets descriptor.storageMode; texture reports that mode
 c:objc(pl)MTLResourceStateCommandEncoder	deferred		not in the Linux starting slice
 c:objc(pl)MTLResourceStateCommandEncoder(im)moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:	deferred		not in the Linux starting slice
 c:objc(pl)MTLResourceStateCommandEncoder(im)updateFence:	deferred		not in the Linux starting slice

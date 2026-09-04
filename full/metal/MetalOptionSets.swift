@@ -7,6 +7,9 @@ public struct MTLResourceOptions: OptionSet, Hashable, Sendable {
 
     public static let cpuCacheModeWriteCombined = MTLResourceOptions(rawValue: 1)
     public static let optionCPUCacheModeWriteCombined = MTLResourceOptions.cpuCacheModeWriteCombined
+    /// Lookalike/Darwin alias for default CPU cache (raw 0). Not a distinct
+    /// iPhoneOS 26.1 graph case; MetalKit's isolated-host overlay exports it.
+    public static let cpuCacheModeDefaultCache = MTLResourceOptions([])
     public static let storageModeShared = MTLResourceOptions([])
     public static let storageModePrivate = MTLResourceOptions(rawValue: 2 << 4)
     public static let storageModeMemoryless = MTLResourceOptions(rawValue: 3 << 4)

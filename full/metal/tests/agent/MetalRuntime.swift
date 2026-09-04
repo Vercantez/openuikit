@@ -216,10 +216,81 @@ func exerciseFailClosedGPU() {
     precondition(!capture.isCapturing)
 }
 
+/// Call the Metal APIs MetalKit product sources use through lookalikes
+/// (`MTKView`, `MTKTextureLoader`) so a later integration compile cannot
+/// silently drop those signatures.
+func exerciseMetalKitLookalikeSurface() {
+    guard let device = MTLCreateSystemDefaultDevice() else {
+        fatalError("software device must exist")
+    }
+    _ = device.name
+    let colorDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .bgra8Unorm,
+        width: 48,
+        height: 24,
+        mipmapped: false
+    )
+    colorDescriptor.usage = [.shaderRead, .renderTarget]
+    colorDescriptor.storageMode = .shared
+    colorDescriptor.sampleCount = 1
+    let color = device.makeTexture(descriptor: colorDescriptor)!
+    precondition(color.pixelFormat == .bgra8Unorm)
+    precondition(color.width == 48 && color.height == 24)
+    precondition(color.usage.contains(.renderTarget))
+    precondition(color.storageMode == .shared)
+
+    let depthDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .depth32Float,
+        width: 48,
+        height: 24,
+        mipmapped: false
+    )
+    depthDescriptor.usage = .renderTarget
+    depthDescriptor.storageMode = .private
+    let depth = device.makeTexture(descriptor: depthDescriptor)!
+    precondition(depth.pixelFormat == .depth32Float)
+    precondition(depth.storageMode == .private)
+
+    let buffer = device.makeBuffer(length: 16, options: .cpuCacheModeDefaultCache)!
+    precondition(buffer.length == 16)
+    _ = device.makeBuffer(length: 4, options: .storageModeShared)
+    _ = device.makeBuffer(length: 4, options: .storageModePrivate)
+
+    let pass = MTLRenderPassDescriptor()
+    pass.colorAttachments[0].texture = color
+    pass.colorAttachments[0].loadAction = .clear
+    pass.colorAttachments[0].storeAction = .store
+    pass.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
+    pass.renderTargetWidth = 48
+    pass.renderTargetHeight = 24
+    pass.depthAttachment.texture = depth
+    pass.depthAttachment.loadAction = .clear
+    pass.depthAttachment.storeAction = .store
+    pass.depthAttachment.clearDepth = 1
+    pass.stencilAttachment.clearStencil = 0
+    precondition(pass.colorAttachments[0].clearColor.alpha == 1)
+
+    let metal4: MTL4RenderPassDescriptor? = MTL4RenderPassDescriptor()
+    precondition(metal4 != nil)
+    _ = MTLPixelFormat.invalid
+    _ = MTLPixelFormat.a8Unorm
+    _ = MTLPixelFormat.r8Unorm
+    _ = MTLPixelFormat.rgba8Unorm
+    _ = MTLPixelFormat.bgra8Unorm_srgb
+    _ = MTLPixelFormat.stencil8
+    _ = MTLPixelFormat.depth32Float_stencil8
+    _ = MTLTextureUsage.unknown
+    _ = MTLTextureUsage.pixelFormatView
+    _ = MTLLoadAction.dontCare
+    _ = MTLStoreAction.multisampleResolve
+    _ = MTLStorageMode.memoryless
+}
+
 exerciseGeometry()
 exercisePixelFormatsAndOptions()
 exerciseSoftwareDevice()
 exerciseBuffersAndBlit()
 exerciseTextures()
 exerciseFailClosedGPU()
+exerciseMetalKitLookalikeSurface()
 print("METAL_AGENT_RUNTIME_OK")

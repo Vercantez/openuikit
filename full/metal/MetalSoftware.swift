@@ -1,5 +1,38 @@
 import Foundation
 
+/// MetalKit writes `MTLTextureDescriptor.storageMode` (and the sibling
+/// mode fields) without updating `resourceOptions`. The created resource
+/// must report those descriptor fields, not only the option bits.
+fileprivate func metalResourceOptions(from descriptor: MTLTextureDescriptor) -> MTLResourceOptions {
+    var options = descriptor.resourceOptions
+    options.remove(.storageModePrivate)
+    options.remove(.storageModeMemoryless)
+    switch descriptor.storageMode {
+    case .private:
+        options.insert(.storageModePrivate)
+    case .memoryless:
+        options.insert(.storageModeMemoryless)
+    case .shared:
+        break
+    }
+    if descriptor.cpuCacheMode == .writeCombined {
+        options.insert(.cpuCacheModeWriteCombined)
+    } else {
+        options.remove(.cpuCacheModeWriteCombined)
+    }
+    options.remove(.hazardTrackingModeTracked)
+    options.remove(.hazardTrackingModeUntracked)
+    switch descriptor.hazardTrackingMode {
+    case .tracked:
+        options.insert(.hazardTrackingModeTracked)
+    case .untracked:
+        options.insert(.hazardTrackingModeUntracked)
+    case .default:
+        break
+    }
+    return options
+}
+
 final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
     static let shared = LinuxMTLDevice()
 
@@ -392,7 +425,7 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         self.bytesPerPixel = metalBytesPerPixel(descriptor.pixelFormat)
         super.init(
             device: device,
-            options: descriptor.resourceOptions,
+            options: metalResourceOptions(from: descriptor),
             allocatedSize: LinuxMTLTexture.storageByteCount(descriptor: descriptor)
         )
     }
