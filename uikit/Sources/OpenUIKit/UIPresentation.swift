@@ -336,10 +336,11 @@ public final class UISheetPresentationController: UIPresentationController {
     }
 
     /// `containerHeight - topInset - bottomSafeArea` (measured: 759 on a
-    /// 393x852 iPhone container).
+    /// 393x852 iPhone container, 637 on the SE 375x667 at the compact 30 pt
+    /// inset).
     var maximumDetentValue: CGFloat {
         guard let c = containerView else { return 0 }
-        return max(0, c.bounds.height - _UIPageSheetView.topInset
+        return max(0, c.bounds.height - _UIPageSheetView.topInset(in: c)
                       - c.safeAreaInsets.bottom)
     }
 
@@ -395,9 +396,10 @@ public final class UISheetPresentationController: UIPresentationController {
             return CGRect(x: 0, y: c.bounds.height - h,
                           width: c.bounds.width, height: h)
         }
-        return CGRect(x: 0, y: _UIPageSheetView.topInset,
+        let inset = _UIPageSheetView.topInset(in: c)
+        return CGRect(x: 0, y: inset,
                       width: c.bounds.width,
-                      height: c.bounds.height - _UIPageSheetView.topInset)
+                      height: c.bounds.height - inset)
     }
 
     /// Only a fullScreen presentation covers the presenter (UIKit: a
@@ -538,7 +540,34 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
 /// platter provides the background color so the corners stay rounded.
 @preconcurrency @MainActor
 final class _UIPageSheetView: UIView {
+    /// iPhone 16 large-detent top inset. MEASURED detentprobe / modal_sheet
+    /// (iPhone 16 / iOS 26.1): equals that device's `window.safeAreaInsets.top`
+    /// (59) on a 393×852 window. Catalyst and every non-compact iOS surface
+    /// with no modelled window safe area keep this number.
     static let topInset: CGFloat = 59.0
+    /// Compact-phone floor. MEASURED 2026-09-04, probe_sheet_inset on the
+    /// iPhone SE 3rd gen 2x / iOS 26.1 (375×667): `UIDropShadowView`
+    /// `[0, 30, 375, 637]` at `windowSafeArea.top` 0 (status bar hidden) and
+    /// 20 (shown), presenting from a plain VC and from a
+    /// `UINavigationController`. NavFlow t1200 Filter `abs.y` 54 = 30 + the
+    /// heading's 24 pt top constraint (ours was 83 = 59 + 24).
+    static let compactMinimumTopInset: CGFloat = 30
+
+    /// Large-detent top inset for `container`.
+    ///
+    /// MEASURED rule: `max(30, window.safeAreaInsets.top)` — SE samples at
+    /// safe-area 0 and 20 both sit at 30; iPhone 16 at 59 sits at 59.
+    /// OpenUIKit's `UIWindow` has no device safe area, so a zero-inset
+    /// container uses 30 on the SE-sized surface (height 667, NavFlow) and
+    /// 59 on every taller one (modal_sheet 852). Guarded by the iOS cut.
+    static func topInset(in container: UIView) -> CGFloat {
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            let sa = container.safeAreaInsets.top
+            if sa > 0 { return max(compactMinimumTopInset, sa) }
+            return container.bounds.height <= 667 ? compactMinimumTopInset : topInset
+        }
+        return topInset
+    }
     static let topCornerRadius: CGFloat = 37.7
     static let bottomCornerRadius: CGFloat = 58.2
     /// MEASURED 2026-09-04 (realappprobe, iPhone 16 / iOS 26.1): the floating
