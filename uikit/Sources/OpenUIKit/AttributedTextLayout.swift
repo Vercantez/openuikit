@@ -293,6 +293,22 @@ enum AttributedTextLayout {
             if !hardBreak && next < t.count && next > lineEnd && !isLastAllowed {
                 measured = width(t, from: i, to: next)
             }
+            // iOS 26.1 (MEASURED 2026-09-04, attrtext_paragraph path 2 and
+            // probes on the SE 2x): a RIGHT-aligned wrap counts the
+            // wrap-break space as a LEADING space on the continuation line.
+            // "right aligned text that wraps over two lines here" at 200 pt
+            // / 17 pt: iOS sizeThatFits is 197.5 with .right (width of
+            // " wraps over two lines here") and 193.5 with .left / .center
+            // (width of "wraps over two lines here"). A hard newline plus
+            // an explicit leading space on the next line also reports
+            // 197.5; the same newline without the space reports 193.5.
+            // Left-align already counts the space as trailing on the
+            // previous line; Catalyst keeps that rule only.
+            if GlyphInkTable.usesIOSTable && p.alignment == .right
+                && !isFirstLineOfParagraph && i > 0
+                && t.scalars[i - 1] == " " {
+                measured = width(t, from: i - 1, to: lineEnd)
+            }
             var spacing: CGFloat = 0
             if hardBreak { spacing += p.paragraphSpacing + p.paragraphSpacingBefore }
             lines.append(Line(range: range,
