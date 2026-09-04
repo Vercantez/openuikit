@@ -2,9 +2,10 @@
 // (docs/HILLCLIMB.md, Sources/ConformanceApps).
 //
 // It is GENERIC. It knows nothing about any particular app: it compiles
-// against whatever Sources/ConformanceApps/<App>/*.swift the shell script
-// hands it, plus a three-line glue file the script generates from the app's
-// name, and replays whatever script.json the app ships.
+// the whole Sources/ConformanceApps tree (every app plus the generated
+// Registry.swift) against real UIKit, then looks the requested app up in
+// ConformanceApps.registry — the same table openhost reads. The shell
+// script copies that app's script.json into the bundle.
 //
 //   scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden
 //
@@ -163,20 +164,30 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     var window: UIWindow?
     var steps: [(t: Double, action: String)] = []
     var captures: [Double] = []
+    var performAction: ((String) -> Void)?
 
     func application(_ app: UIApplication,
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        guard let entry = ConformanceApps.registry[appName] else {
+            var have = ""
+            for (i, n) in ConformanceApps.names.enumerated() {
+                if i > 0 { have += ", " }
+                have += n
+            }
+            fatalError("confprobe: unknown app \"\(appName)\" (have \(have))")
+        }
         let w = UIWindow(frame: UIScreen.main.bounds)
         w.overrideUserInterfaceStyle = .light
         // A dismissed alert or sheet leaves the process's tint dimmed
         // (docs/ORACLE_FLOW.md capture hazards); NavFlow dismisses a sheet
         // halfway through its script, so pin the tint for the whole run.
         w.tintAdjustmentMode = .normal
-        w.rootViewController = confMakeRoot()
+        w.rootViewController = entry.makeRoot()
         w.makeKeyAndVisible()
         window = w
-        if w.bounds.size != confWindowSize {
-            print("confprobe: WARNING device \(w.bounds.size) != app \(confWindowSize)")
+        performAction = entry.perform
+        if w.bounds.size != entry.windowSize {
+            print("confprobe: WARNING device \(w.bounds.size) != app \(entry.windowSize)")
         }
         (steps, captures) = loadScript()
         // Let the first frame commit before the timeline starts: UIKit skips
@@ -200,7 +211,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                 switch entry.item {
                 case .step(let action):
                     print("action: \(action) t=\(entry.t)")
-                    confPerform(action)
+                    performAction?(action)
                 case .capture(let t):
                     capture(at: t)
                 }
