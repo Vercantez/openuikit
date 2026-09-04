@@ -1,6 +1,6 @@
 {
- "head": "003eaabc",
- "date": "2026-09-04T20:38Z",
+ "head": "d465dbc9",
+ "date": "2026-09-04T21:51Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -10,56 +10,6 @@
   "total": 124
  },
  "rows": [
-  {
-   "scene": "Feed:t3800",
-   "category": "conformance",
-   "score": 19.154,
-   "blob": 17052.5,
-   "layout_issues": 10,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t4800",
-   "category": "conformance",
-   "score": 19.154,
-   "blob": 17052.5,
-   "layout_issues": 10,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t2800",
-   "category": "conformance",
-   "score": 20.889,
-   "blob": 17052.5,
-   "layout_issues": 10,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Modal:t1200",
-   "category": "conformance",
-   "score": 50.963,
-   "blob": 4.5,
-   "layout_issues": 0,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Modal:t600",
-   "category": "conformance",
-   "score": 52.752,
-   "blob": 102.0,
-   "layout_issues": 0,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
   {
    "scene": "Feed:t200",
    "category": "conformance",
@@ -81,6 +31,36 @@
    "status": "fail"
   },
   {
+   "scene": "Feed:t2800",
+   "category": "conformance",
+   "score": 61.439,
+   "blob": 3.5,
+   "layout_issues": 3,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t3800",
+   "category": "conformance",
+   "score": 61.451,
+   "blob": 3.5,
+   "layout_issues": 3,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t4800",
+   "category": "conformance",
+   "score": 61.451,
+   "blob": 3.5,
+   "layout_issues": 3,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
    "scene": "Feed:t700",
    "category": "conformance",
    "score": 67.201,
@@ -89,6 +69,17 @@
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
+  },
+  {
+   "scene": "Modal:t600",
+   "category": "conformance",
+   "score": 92.765,
+   "blob": 103.2,
+   "layout_issues": 0,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "open",
+   "open_reason": "92.765 vs 97.5: medium-sheet +0.2 s of the 0.4 s present spring. Golden sheet top 366.5 (remaining 49 pt of the 349.3 pt travel), openhost 344.5 (remaining 27 pt). Rest is 317.5 both sides (t1200). confprobe GCD timer + afterScreenUpdates:false vs openhost's exact animationTime; same three-clock split as TableEditor t1350. A duration retarget is a score fit, not a measurement. Fill now matches (245 vs 247, inside PIXEL_TOL). blob 103. layout 0."
   },
   {
    "scene": "TableEditor:t2350",
@@ -133,11 +124,21 @@
    "status": "pass"
   },
   {
+   "scene": "realapp_settings_light_ax1",
+   "category": "realapp",
+   "score": 97.516,
+   "blob": 7.3,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.0,
+   "status": "pass"
+  },
+  {
    "scene": "NavFlow:t4800",
    "category": "conformance",
    "score": 97.524,
    "blob": 6.2,
-   "layout_issues": 1,
+   "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -156,8 +157,8 @@
    "scene": "NavFlow:t3000",
    "category": "conformance",
    "score": 97.581,
-   "blob": 95.2,
-   "layout_issues": 3,
+   "blob": 94.0,
+   "layout_issues": 2,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -170,6 +171,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t1200",
+   "category": "conformance",
+   "score": 97.805,
+   "blob": 4.5,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -190,6 +201,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "realapp_settings_light_xxxl",
+   "category": "realapp",
+   "score": 98.133,
+   "blob": 3.4,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.0,
    "status": "pass"
   },
   {
@@ -295,9 +316,9 @@
   {
    "scene": "NavFlow:t3900",
    "category": "conformance",
-   "score": 98.489,
-   "blob": 100.0,
-   "layout_issues": 3,
+   "score": 98.482,
+   "blob": 97.5,
+   "layout_issues": 2,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -340,6 +361,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "realapp_settings_light_xs",
+   "category": "realapp",
+   "score": 98.639,
+   "blob": 2.6,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 98.4,
    "status": "pass"
   },
   {
@@ -427,7 +458,7 @@
    "category": "conformance",
    "score": 98.806,
    "blob": 2.2,
-   "layout_issues": 1,
+   "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -898,7 +929,7 @@
    "category": "conformance",
    "score": 99.624,
    "blob": 6.2,
-   "layout_issues": 1,
+   "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -908,7 +939,7 @@
    "category": "conformance",
    "score": 99.624,
    "blob": 6.2,
-   "layout_issues": 1,
+   "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
