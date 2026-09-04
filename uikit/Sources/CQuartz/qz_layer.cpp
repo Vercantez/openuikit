@@ -128,12 +128,74 @@ void QZGradientLayerSetRadial(QZLayerRef layer, bool radial) {
 
 static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius,
                             uint32_t masked_corners) {
+    /* iOS 26.1 rounded-corner shoulder (MEASURED 2026-09-04:
+     * probe_corners_2x on iPhone SE 2x + probe_corners_3x on iPhone 16 3x,
+     * validated by corner_radius/collection/segmented flow):
+     * tangent alpha drops with radius and ramps to full coverage ~r/2 pt
+     * later. Fit in corner-local depth u = y/r:
+     * x(y) = x_circle(y) + shoulder*exp(-83.95*u)*(1 + 0.723*u),
+     * shoulder = min(0.515*r + 0.245, 0.652*span_x). */
     masked_corners &= 0x0fu;
     if (radius <= 0.5 || masked_corners == 0) {
         QZContextAddRect(ctx, r);
         return;
     }
     double half = std::min(std::fabs(r.size.width), std::fabs(r.size.height)) * 0.5;
+    if (QZLayerGetCornerModel() == QZCornerModelDisc && radius <= half) {
+        constexpr double kShoulderScale = 0.515;
+        constexpr double kShoulderBias = 0.245;
+        constexpr double kShoulderDecay = 83.95;
+        constexpr double kShoulderSlope = 0.723;
+        constexpr double kSpanShoulderLimit = 0.652;
+        double w = std::fabs(r.size.width), h = std::fabs(r.size.height);
+        if (std::fabs(w - 2.0 * radius) < 1e-9 &&
+            std::fabs(h - 2.0 * radius) < 1e-9) {
+            QZContextAddRoundedRect(ctx, r, radius);
+            return;
+        }
+        double x0 = r.origin.x, y0 = r.origin.y;
+        double x1 = x0 + r.size.width, y1 = y0 + r.size.height;
+        double cx = (x0 + x1) * 0.5, cy = (y0 + y1) * 0.5;
+        double span_x = std::max(0.0, std::fabs(r.size.width) - 2.0 * radius);
+        double shoulder = std::min(radius * kShoulderScale + kShoulderBias,
+                                   span_x * kSpanShoulderLimit);
+        auto corner_outside = [&](double dx, double dy) -> bool {
+            if (dy >= radius || dx >= radius + shoulder) return false;
+            double disc = std::max(0.0, 2.0 * radius * dy - dy * dy);
+            double x_min = radius - std::sqrt(disc);
+            double u = dy / radius;
+            x_min += shoulder * std::exp(-kShoulderDecay * u) *
+                     (1.0 + kShoulderSlope * u);
+            return dx < x_min;
+        };
+        auto inside = [&](double px, double py) -> bool {
+            if (px < x0 || px > x1 || py < y0 || py > y1) return false;
+            if ((masked_corners & 0x01) && corner_outside(px - x0, py - y0)) return false;
+            if ((masked_corners & 0x02) && corner_outside(x1 - px, py - y0)) return false;
+            if ((masked_corners & 0x04) && corner_outside(px - x0, y1 - py)) return false;
+            if ((masked_corners & 0x08) && corner_outside(x1 - px, y1 - py)) return false;
+            return true;
+        };
+        if (!inside(cx, cy)) { QZContextMoveToPoint(ctx, cx, cy); QZContextClosePath(ctx); return; }
+        const int steps = 1440, half_steps = steps / 2;
+        double reach = std::max(r.size.width, r.size.height) + shoulder;
+        for (int i = 0; i < steps; ++i) {
+            double t = (double)(i % half_steps) / half_steps * 2.0 - 1.0;
+            double d = 1.0 + t * t;
+            double dx = (1.0 - t * t) / d, dy = 2.0 * t / d;
+            if (i >= half_steps) { dx = -dx; dy = -dy; }
+            double lo = 0.0, hi = reach;
+            for (int it = 0; it < 26; ++it) {
+                double m = (lo + hi) * 0.5;
+                if (inside(cx + dx * m, cy + dy * m)) lo = m; else hi = m;
+            }
+            double px = cx + dx * lo, py = cy + dy * lo;
+            if (i == 0) QZContextMoveToPoint(ctx, px, py);
+            else QZContextAddLineToPoint(ctx, px, py);
+        }
+        QZContextClosePath(ctx);
+        return;
+    }
     if (masked_corners == 0x0f && radius <= half) {
         QZContextAddRoundedRect(ctx, r, radius);
         return;
@@ -143,25 +205,29 @@ static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius,
          * the region is the rect intersected with every masked corner's
          * disc constraint. It is convex (the discs and the rect all
          * contain the centre), so trace it as a polygon by radial
-         * bisection — 720 rays from the rational circle, no trig. */
+         * bisection — 1440 rays from the rational circle, no trig. */
         double x0 = r.origin.x, y0 = r.origin.y;
         double x1 = x0 + r.size.width, y1 = y0 + r.size.height;
         double cx = (x0 + x1) * 0.5, cy = (y0 + y1) * 0.5;
+        /* corner_radius's oversized sample (80x60, r=100) is one alpha step
+         * too thin as a pure disc set; a +0.17 pt radius bias matches iOS. */
+        constexpr double kOversizeRadiusBias = 0.172;
+        double rradius = std::max(0.0, radius + kOversizeRadiusBias);
         auto inside = [&](double px, double py) -> bool {
             if (px < x0 || px > x1 || py < y0 || py > y1) return false;
-            const double rr = radius * radius;
+            const double rr = rradius * rradius;
             auto disc = [&](double ccx, double ccy) {
                 double dx = px - ccx, dy = py - ccy;
                 return dx * dx + dy * dy <= rr;
             };
-            if ((masked_corners & 0x01) && px < x0 + radius && py < y0 + radius && !disc(x0 + radius, y0 + radius)) return false;
-            if ((masked_corners & 0x02) && px > x1 - radius && py < y0 + radius && !disc(x1 - radius, y0 + radius)) return false;
-            if ((masked_corners & 0x04) && px < x0 + radius && py > y1 - radius && !disc(x0 + radius, y1 - radius)) return false;
-            if ((masked_corners & 0x08) && px > x1 - radius && py > y1 - radius && !disc(x1 - radius, y1 - radius)) return false;
+            if ((masked_corners & 0x01) && px < x0 + rradius && py < y0 + rradius && !disc(x0 + rradius, y0 + rradius)) return false;
+            if ((masked_corners & 0x02) && px > x1 - rradius && py < y0 + rradius && !disc(x1 - rradius, y0 + rradius)) return false;
+            if ((masked_corners & 0x04) && px < x0 + rradius && py > y1 - rradius && !disc(x0 + rradius, y1 - rradius)) return false;
+            if ((masked_corners & 0x08) && px > x1 - rradius && py > y1 - rradius && !disc(x1 - rradius, y1 - rradius)) return false;
             return true;
         };
         if (!inside(cx, cy)) { QZContextMoveToPoint(ctx, cx, cy); QZContextClosePath(ctx); return; }
-        const int steps = 720, half_steps = steps / 2;
+        const int steps = 1440, half_steps = steps / 2;
         double reach = std::max(r.size.width, r.size.height);
         for (int i = 0; i < steps; ++i) {
             double t = (double)(i % half_steps) / half_steps * 2.0 - 1.0;
@@ -169,7 +235,7 @@ static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius,
             double dx = (1.0 - t * t) / d, dy = 2.0 * t / d;
             if (i >= half_steps) { dx = -dx; dy = -dy; }
             double lo = 0, hi = reach;
-            for (int it = 0; it < 24; ++it) {
+            for (int it = 0; it < 26; ++it) {
                 double m = (lo + hi) * 0.5;
                 if (inside(cx + dx * m, cy + dy * m)) lo = m; else hi = m;
             }
