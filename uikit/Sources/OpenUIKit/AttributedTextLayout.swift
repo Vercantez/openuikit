@@ -225,7 +225,13 @@ enum AttributedTextLayout {
             let a = GlyphInkTable.usesIOSTable
                 ? FontEngine.metrics(for: st.font).ascender
                 : (FontEngine.metrics(for: st.font).ascender + 0.5).rounded(.down)
-            let box = t.usesFontLineHeight
+            // iOS cut: lines advance by the RAW lineHeight (+ spacing) and
+            // each baseline is rounded at draw time — MEASURED 2026-09-04
+            // (attrtext_paragraph, 17 pt + 6 lineSpacing: baselines 53, 52
+            // px apart, i.e. a 26.287 pt pitch, where the 20.333 label line
+            // gave 26.333 and a growing offset). The block still rounds up
+            // to the pixel grid as a whole (blockSize).
+            let box = (t.usesFontLineHeight || GlyphInkTable.usesIOSTable)
                 ? FontEngine.metrics(for: st.font).lineHeight
                 : FontEngine.labelLineHeight(for: st.font)
             let d = box - a
@@ -245,6 +251,7 @@ enum AttributedTextLayout {
         if p.lineHeightMultiple > 0 { h *= p.lineHeightMultiple }
         if p.minimumLineHeight > 0 { h = Swift.max(h, p.minimumLineHeight) }
         if p.maximumLineHeight > 0 { h = Swift.min(h, p.maximumLineHeight) }
+        if GlyphInkTable.usesIOSTable { return h }   // raw pitch; see lineMetrics
         return FontEngine.ceilToPixel(h, scale: scale)
     }
 
@@ -371,6 +378,7 @@ enum AttributedTextLayout {
             h += l.height
             if i < lines.count - 1 { h += l.spacingBelow }
         }
-        return CGSize(width: FontEngine.ceilToPixel(w, scale: scale), height: h)
+        return CGSize(width: FontEngine.ceilToPixel(w, scale: scale),
+                      height: GlyphInkTable.usesIOSTable ? FontEngine.ceilToPixel(h, scale: scale) : h)
     }
 }

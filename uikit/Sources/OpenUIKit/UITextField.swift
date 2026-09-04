@@ -325,11 +325,20 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     // MARK: Chrome metrics (measured — see header)
 
     static let roundedRectCornerRadius: CGFloat = 5
-    static let roundedRectBorderWidth: CGFloat = 0.6493506493506493
+    /// iOS 26.1, MEASURED 2026-09-04 (scripts/ios_suite.sh textfield_basic):
+    /// the .roundedRect border is a single device pixel (0.5 pt at 2x) of
+    /// (219, 219, 220) over white; Catalyst's is the 0.649 pt black-20 % ring.
+    /// Corner radius (5) and text inset (7, 2) match on both.
+    static var roundedRectBorderWidth: CGFloat {
+        OpenUIKitRuntime.systemFontCut == .iOS ? 0.5 : 0.6493506493506493
+    }
     static let roundedRectTextInset = CGSize(width: 7, height: 2)
     /// Light: black 20 %; dark resolution is unverified (KNOWN_GAPS).
     static let chromeBorderColor = UIColor(.dynamic { t in
-        t.userInterfaceStyle == .dark
+        if OpenUIKitRuntime.systemFontCut == .iOS, t.userInterfaceStyle != .dark {
+            return CGColor(red: 219 / 255, green: 219 / 255, blue: 220 / 255, alpha: 1)
+        }
+        return t.userInterfaceStyle == .dark
             ? CGColor(red: 1, green: 1, blue: 1, alpha: 0.2)
             : CGColor(red: 0, green: 0, blue: 0, alpha: 0.2)
     })

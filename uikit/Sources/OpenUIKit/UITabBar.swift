@@ -110,31 +110,47 @@ public final class UITabBar: UIView {
     // MARK: Golden-measured metrics (see file header)
 
     /// Height of the bar's region at the bottom of the controller view.
-    public static let barHeight: CGFloat = 72
+    // The Catalyst-window numbers (file header) and, under the iOS cut, the
+    // iPhone 16 / iOS 26.1 simulator's, MEASURED 2026-09-04
+    // (scripts/ios_suite.sh tabbar_basic, post-layout dump + pixels, 375 pt,
+    // 3 items): bar 83 tall (49 + the 34 pt home-indicator area), platter
+    // [51, 0, 274, 62] at the bar's top, buttons 94 wide on an 86 pt pitch
+    // starting 4 in, selection capsule = the button rect (94 x 54, y 4),
+    // icon 24 x 24 at y 8, title 10 pt at y 35 (12 tall); platter
+    // (249, 249, 249), capsule (230, 230, 230), unselected (25, 25, 25),
+    // selected icon (0, 124, 243).
+    static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+    public static var barHeight: CGFloat { isIOS ? 83 : 72 }
     static let platterHeight: CGFloat = 62
-    static let platterBottomMargin: CGFloat = 10
+    static var platterBottomMargin: CGFloat { isIOS ? 21 : 10 }
     /// Horizontal pitch between item centers.
-    static let itemPitch: CGFloat = 85.75
+    static var itemPitch: CGFloat { isIOS ? 86 : 85.75 }
     /// Platter width = itemPitch · n + 2 · platterSidePadding.
-    static let platterSidePadding: CGFloat = 8.375
-    static let capsuleHeight: CGFloat = 53.5
+    static var platterSidePadding: CGFloat { isIOS ? 8 : 8.375 }
+    static var capsuleHeight: CGFloat { isIOS ? 54 : 53.5 }
     /// Capsule width = itemPitch + 2 · capsuleOverhang.
-    static let capsuleOverhang: CGFloat = 3.875
+    static var capsuleOverhang: CGFloat { isIOS ? 4 : 3.875 }
     /// Platter-local y of the icon center / title center.
     static let iconCenterY: CGFloat = 24
-    static let titleCenterY: CGFloat = 44.5
+    static var titleCenterY: CGFloat { isIOS ? 45 : 44.5 }
     static let titleFontSize: CGFloat = 10
 
-    static let platterColor = UIColor(red: 253 / 255, green: 253 / 255,
-                                      blue: 254 / 255, alpha: 1)
-    static let capsuleColor = UIColor(red: 235 / 255, green: 235 / 255,
-                                      blue: 236 / 255, alpha: 1)
+    static var platterColor: UIColor {
+        isIOS ? UIColor(red: 249 / 255, green: 249 / 255, blue: 249 / 255, alpha: 1)
+              : UIColor(red: 253 / 255, green: 253 / 255, blue: 254 / 255, alpha: 1)
+    }
+    static var capsuleColor: UIColor {
+        isIOS ? UIColor(red: 230 / 255, green: 230 / 255, blue: 230 / 255, alpha: 1)
+              : UIColor(red: 235 / 255, green: 235 / 255, blue: 236 / 255, alpha: 1)
+    }
     static let unselectedColor = UIColor(red: 25 / 255, green: 25 / 255,
                                          blue: 25 / 255, alpha: 1)
     /// Measured default selected-item tint (iOS 26 tab bars do not use
     /// systemBlue).
-    public static let defaultTint = UIColor(red: 52 / 255, green: 124 / 255,
-                                            blue: 238 / 255, alpha: 1)
+    public static var defaultTint: UIColor {
+        isIOS ? UIColor(red: 0, green: 124 / 255, blue: 243 / 255, alpha: 1)
+              : UIColor(red: 52 / 255, green: 124 / 255, blue: 238 / 255, alpha: 1)
+    }
     // Platter drop shadow (fit to the golden's soft falloff).
     static let shadowOpacity: Float = 0.10
     static let shadowRadius: CGFloat = 7
