@@ -152,8 +152,22 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Content bar height (below the top padding).
     public static let contentHeight: CGFloat = 54
-    /// Padding above the content bar inside the bar zone (measured).
+    /// Padding above the content bar inside the 64 pt overlay (measured).
+    /// On the iOS cut this padding is OUTSIDE the bar's own frame: the bar
+    /// sits at y = max(safeArea.top, iOSMinimumBarTop) with height 54 (see
+    /// UINavigationController.updateContainerLayout).
     public static let barTopPadding: CGFloat = 10
+    /// iOS 26.1 (MEASURED 2026-09-04, navprobe.barorigin, SE 2x and iPhone 16):
+    /// `bar.frame.y = max(nav.view.safeAreaInsets.top, 10)`. Window SA 0
+    /// (SE, status bar hidden) still yields y 10 — the 10 is a floor, not a
+    /// status-bar addend. A 20 pt status bar and a 59 pt notch set y to that
+    /// inset; additionalSafeAreaInsets 20/59 on a zero-SA window match.
+    public static let iOSMinimumBarTop: CGFloat = 10
+    /// Height of the bar's own frame on the iOS cut (the 54 pt content bar).
+    /// MEASURED same probe: inline [0, 10, W, 54]; collapsed large-title
+    /// the same; expanded large-title [0, 10, W, 106] = 54 + 52.
+    public static let iOSBarContentHeight: CGFloat = 54
+    public static let iOSLargeTitleBarHeight: CGFloat = 106
     /// Deprecated name for `barTopPadding` (M7.5 called it a status inset).
     public static var statusBarInset: CGFloat { barTopPadding }
     /// Total bar height.
@@ -187,25 +201,35 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     static let largeTitleZoneHeight: CGFloat = 52
     /// Catalyst: label [20, 3, w, 40.5] inside the zone. iOS 26.1 (MEASURED
     /// 2026-09-04, `navbar_dark`/`navbar_large` on the iPhone SE 3rd gen and
-    /// the iPhone 16 alike): `_UINavigationBarLargeTitleView`'s label is
-    /// [16, 3.5, textWidth, 41] — 4 pt further left and half a point lower,
-    /// which moved every large-title glyph a whole 2x pixel.
+    /// the iPhone 16 alike, confirmed navprobe.barorigin): the large-title
+    /// label is [16, 3.5, textWidth, 41] inside `NavigationBarLargeTitleView`
+    /// at bar-local y 54. On the iOS cut the bar frame starts AFTER the
+    /// 10 pt floor, so the label's bar-local y is 54 + 3.5 = 57.5 (abs 67.5
+    /// when pad is 10). Catalyst's bar still includes the padding (y 0,
+    /// height 116) so the label stays at 67.
     static var largeTitleX: CGFloat { isIOS ? 16 : 20 }
-    static var largeTitleLabelY: CGFloat { isIOS ? 67.5 : 67 }   // 10 + 54 + 3(.5)
+    static var largeTitleLabelY: CGFloat { isIOS ? 57.5 : 67 }
     static var largeTitleLabelHeight: CGFloat { isIOS ? 41 : 40.5 }
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
     static let largeTitleFontSize: CGFloat = 34
     static let largeInlineTitleCenterY: CGFloat = 32
+    /// iOS 26.1 (MEASURED 2026-09-04, navprobe.barorigin, SE 2x): in the
+    /// 54 pt content bar the inline title's HostedViewWrapper is y 11.5
+    /// (center 22) when the large title is off, and y 26.5 (center 37,
+    /// alpha 0) while the large title shows. Same numbers at SA top 0 / 20
+    /// / 59 — they are bar-local.
+    static let iOSInlineTitleCenterY: CGFloat = 22
+    static let iOSLargeHiddenInlineTitleCenterY: CGFloat = 37
     /// iOS 26.1 (MEASURED 2026-09-04, `Tools/oracle2/navprobe` scroll pass,
     /// iPhone 16): a zero-velocity release at collapse distance 36 snaps
     /// back to the expanded rest; at 37 it snaps collapsed. Catalyst keeps
     /// the half-zone snap (26).
     static let iOSSnapCollapseDistance: CGFloat = 36
-    /// Collapsed overlay on the iOS cut: 10 + 54. The expanded overlay is
-    /// `largeTitleExpandedInset` (116). MEASURED same probe: bar frame
-    /// [0, 10, 390, 106] / `_UIBarBackground` 116 through d = 51, then
-    /// [0, 10, 390, 54] / background 64 at d = 52.
-    static let iOSCollapsedBarHeight: CGFloat = 64
+    /// Collapsed bar-frame height on the iOS cut: 54 (the 10 pt floor sits
+    /// outside the frame). Overlay / child safe area is pad + 54 = 64 when
+    /// pad is 10. MEASURED navprobe.barorigin / scroll: bar [0, 10, W, 106]
+    /// → [0, 10, W, 54] at d = 52; `_UIBarBackground` 116 → 64.
+    static let iOSCollapsedBarHeight: CGFloat = 54
 
     /// Set by UINavigationController; fired on back-button touchUpInside.
     var onBackTapped: (() -> Void)?
@@ -454,7 +478,16 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             renderedBackground = a.backgroundImage
         }
         backgroundImageView.image = renderedBackground
-        backgroundImageView.isHidden = renderedBackground == nil
+        if UINavigationBar.isIOS {
+            // MEASURED navprobe.barorigin: `_UIBarBackground` covers
+            // [0, −bar.y, W, bar.y+height], including the 10 pt floor
+            // above the bar's own frame. The bar's backgroundColor only
+            // fills bounds, so the color rides on this view.
+            backgroundImageView.backgroundColor = backgroundColor
+            backgroundImageView.isHidden = false
+        } else {
+            backgroundImageView.isHidden = renderedBackground == nil
+        }
 
         if legacyBackground != nil, let shadowImage {
             // UIKit consults a custom shadow only when a custom legacy
@@ -621,7 +654,16 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        backgroundImageView.frame = bounds
+        if UINavigationBar.isIOS, frame.minY > 0.5 {
+            // MEASURED navprobe.barorigin: `_UIBarBackground` is
+            // [0, −bar.y, W, bar.y+bar.height] — it paints from the
+            // container top down to the bar's bottom edge.
+            backgroundImageView.frame = CGRect(x: 0, y: -frame.minY,
+                                               width: bounds.width,
+                                               height: bounds.height + frame.minY)
+        } else {
+            backgroundImageView.frame = bounds
+        }
         if let image = shadowImageView.image {
             shadowImageView.frame = CGRect(x: 0, y: bounds.height,
                                            width: bounds.width, height: image.size.height)
@@ -650,7 +692,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// margins, and place the prompt caption above them.
     func layoutBarItems() {
         let h = _UIBarMetrics.platterHeight
-        let y = UINavigationBar.platterY + promptOffset
+        let y = itemPlatterY + promptOffset
         var x = _UIBarMetrics.sideMargin + backButtonWidth
         for (i, v) in leftItemViews.enumerated() where !v.item._isSpace {
             let w = _UIBarItemLayout.width(of: v)
@@ -688,7 +730,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         if let l = promptLabel {
             let s = l.intrinsicContentSize
             l.frame = CGRect(x: (bounds.width - s.width) / 2,
-                             y: UINavigationBar.platterY
+                             y: itemPlatterY
                                 + (UINavigationBar.promptHeight - s.height) / 2,
                              width: s.width, height: s.height)
         }
@@ -739,8 +781,23 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         return (leadingIsEmpty ? lead : lead + _UIBarMetrics.gap) + width / 2
     }
 
+    /// Bar-local y of the item platters. Catalyst: 10, inside a 64 pt bar
+    /// that includes the top padding. iOS: 0, because the 10 pt floor is
+    /// already outside the bar frame (abs y still 10 when pad is 10).
+    var itemPlatterY: CGFloat { UINavigationBar.isIOS ? 0 : UINavigationBar.barTopPadding }
+
     private var contentMidY: CGFloat {
-        UINavigationBar.largeInlineTitleCenterY + promptOffset
+        let base: CGFloat
+        if UINavigationBar.isIOS {
+            let largeShowing = prefersLargeTitles
+                && collapseDistance < UINavigationBar.largeTitleZoneHeight
+            base = largeShowing
+                ? UINavigationBar.iOSLargeHiddenInlineTitleCenterY
+                : UINavigationBar.iOSInlineTitleCenterY
+        } else {
+            base = UINavigationBar.largeInlineTitleCenterY
+        }
+        return base + promptOffset
     }
 
     private func place(title l: UILabel, centerX: CGFloat, alpha: CGFloat) {
@@ -1016,14 +1073,16 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     }
 
     /// Overlay height the navigation controller should give this bar in
-    /// large-title mode. iOS shrinks the bar at the zone boundary; Catalyst
-    /// keeps the 116 pt overlay for the whole collapse.
+    /// large-title mode. iOS shrinks the BAR FRAME at the zone boundary
+    /// (106 → 54); Catalyst keeps the 116 pt overlay for the whole collapse.
     var largeTitleOverlayHeight: CGFloat {
-        guard UINavigationBar.isIOS,
-              collapseDistance >= UINavigationBar.largeTitleZoneHeight else {
+        guard UINavigationBar.isIOS else {
             return UINavigationBar.largeTitleExpandedInset
         }
-        return UINavigationBar.iOSCollapsedBarHeight
+        if collapseDistance >= UINavigationBar.largeTitleZoneHeight {
+            return UINavigationBar.iOSCollapsedBarHeight
+        }
+        return UINavigationBar.iOSLargeTitleBarHeight
     }
 
     /// Position/fade the large + inline titles for the current tracked
@@ -1130,6 +1189,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
                    engagement: e)
         if let k = pocketKey, k == key {
             pocketView.isHidden = false
+            layoutPocketView()
             return
         }
         pocketKey = key
@@ -1140,10 +1200,25 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let bitmap = UINavigationBar.pocketBitmap(from: snapshot, scale: scale,
                                                  background: bg)
         pocketView.image = UIImage(bitmap: bitmap, scale: scale)
-        pocketView.frame = CGRect(x: 0, y: 0, width: bounds.width,
-                                  height: UINavigationBar.pocketHeight)
+        layoutPocketView()
         pocketView.alpha = e
         pocketView.isHidden = false
+    }
+
+    /// Place the 72 pt pocket so it covers from the container origin.
+    ///
+    /// MEASURED 2026-09-04, suite golden `navbar_inline` (SE 2x / iOS 26.1,
+    /// large title collapsed at contentOffset 160): `ScrollEdgeEffectView`
+    /// is `[0, 0, 375, 118.8]` in the scroll view — it starts at the
+    /// container origin, not at `bar.frame.minY`. The port's pocket is a
+    /// bar subview; on the iOS cut the bar sits at
+    /// `y = max(SA.top, 10)`, so the pocket is offset by `-bar.y` to keep
+    /// covering window `[0, 72]` (the coverage the scene scored before the
+    /// origin rule). Catalyst's bar is still at y 0, so the offset is 0.
+    func layoutPocketView() {
+        let y = UINavigationBar.isIOS ? -frame.minY : 0
+        pocketView.frame = CGRect(x: 0, y: y, width: bounds.width,
+                                  height: UINavigationBar.pocketHeight)
     }
 
     /// The color the pocket washes toward: the nearest opaque ancestor

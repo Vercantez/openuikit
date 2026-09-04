@@ -134,10 +134,13 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
 
     func testLargeTitleMetricsUnderTheIOSCut() {
         XCTAssertEqual(UINavigationBar.largeTitleX, 16)
-        XCTAssertEqual(UINavigationBar.largeTitleLabelY, 67.5)
+        XCTAssertEqual(UINavigationBar.largeTitleLabelY, 57.5)
         XCTAssertEqual(UINavigationBar.largeTitleLabelHeight, 41)
         XCTAssertEqual(UINavigationBar.iOSSnapCollapseDistance, 36)
-        XCTAssertEqual(UINavigationBar.iOSCollapsedBarHeight, 64)
+        XCTAssertEqual(UINavigationBar.iOSCollapsedBarHeight, 54)
+        XCTAssertEqual(UINavigationBar.iOSBarContentHeight, 54)
+        XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight, 106)
+        XCTAssertEqual(UINavigationBar.iOSMinimumBarTop, 10)
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
             XCTAssertEqual(UINavigationBar.largeTitleX, 20)
