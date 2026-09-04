@@ -253,7 +253,12 @@ open class UITableView: UIScrollView {
 
     // MARK: Public configuration
 
-    public let style: Style
+    /// UIKit declares this read-only, and it is fixed at init for every
+    /// programmatic table. A nib-loaded table is constructed by
+    /// `UINibClassRegistry`'s zero-argument factory and then told its archived
+    /// style (`UITableViewStyle` in the archive), which is the one path that
+    /// needs to write it — see `_setArchivedStyle`.
+    public private(set) var style: Style
     public weak var dataSource: UITableViewDataSource? {
         didSet { if dataSource !== oldValue { reloadData() } }
     }
@@ -349,6 +354,17 @@ open class UITableView: UIScrollView {
         style = .plain
         super.init(coder: coder)
         configureStyle(.plain)
+    }
+
+    /// Adopt the style a nib archived (UINib.swift). Real UIKit decodes the
+    /// style inside `initWithCoder:`, before any of the table's own state
+    /// exists; the portable loader constructs first and configures after, so
+    /// this re-runs the style's own setup.
+    func _setArchivedStyle(_ style: Style) {
+        guard style != self.style else { return }
+        self.style = style
+        configureStyle(style)
+        setNeedsMetrics()
     }
 
     private func configureStyle(_ style: Style) {
@@ -979,6 +995,23 @@ open class UITableView: UIScrollView {
                 cellClass,
                 to: _UITableViewCellDynamicConstructor.Type.self)
             return constructor.init(style: .default, reuseIdentifier: id)
+        }
+    }
+
+    /// `register(_ nib: UINib, forCellReuseIdentifier:)` — the registration
+    /// every small pocket-casts settings screen uses (see UINib.swift). Each
+    /// dequeue instantiates the archive afresh, as UIKit's does, and the
+    /// identifier is stamped onto the cell the nib produced (a nib cell has
+    /// no `init(style:reuseIdentifier:)` to carry it).
+    public func register(_ nib: UINib, forCellReuseIdentifier identifier: String) {
+        cellRegistry.register(identifier: identifier) { id in
+            let objects = nib.instantiate(withOwner: nil, options: nil)
+            guard let cell = objects.compactMap({ $0 as? UITableViewCell }).first else {
+                fatalError("UINib '\(nib.nibName)' registered for cell identifier "
+                           + "'\(id)' contains no UITableViewCell")
+            }
+            cell._setNibReuseIdentifier(id)
+            return cell
         }
     }
 

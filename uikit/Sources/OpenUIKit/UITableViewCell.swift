@@ -235,7 +235,11 @@ open class UITableViewCell: UIView, ReusableView {
     // MARK: State
 
     public let style: CellStyle
-    public let reuseIdentifier: String?
+    /// UIKit declares this read-only; a cell built from a nib has no
+    /// `init(style:reuseIdentifier:)` to carry it, so the table stamps it on
+    /// after instantiation (`_setNibReuseIdentifier`), which is what UIKit
+    /// does too.
+    public private(set) var reuseIdentifier: String?
 
     public let contentView: UIView = UITableViewCellContentView()
     /// UIKit exposes these legacy cell views as optionals.  The stock styles
@@ -333,6 +337,12 @@ open class UITableViewCell: UIView, ReusableView {
         reuseIdentifier = nil
         super.init(coder: coder)
         configureCell(for: .default)
+    }
+
+    /// Stamp the reuse identifier onto a cell a `UINib` produced (see
+    /// `UITableView.register(_:forCellReuseIdentifier:)`).
+    func _setNibReuseIdentifier(_ identifier: String) {
+        reuseIdentifier = identifier
     }
 
     private func configureCell(for style: CellStyle) {
