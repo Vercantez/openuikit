@@ -410,6 +410,17 @@ open class UIScrollView: UIView {
 
     public weak var delegate: UIScrollViewDelegate?
 
+    /// UIKit-internal scroll observation, alongside (never instead of) the
+    /// app's `delegate`. UIKit's own chrome — the large-title navigation bar
+    /// is the one that matters here — tracks a content scroll view without
+    /// occupying the single public delegate slot, so a UITableViewController
+    /// that is its own delegate keeps receiving every callback once it is
+    /// pushed. MEASURED 2026-09-04, NavFlow conformance app, iPhone SE 2x:
+    /// real iOS honours `heightForRowAt` (44 pt rows) inside a large-title
+    /// nav controller; the port fell back to the 53 pt default because the
+    /// bar had taken the delegate.
+    weak var _scrollObserver: UIScrollViewDelegate?
+
     /// The content-touch delay (UIKit's is ~150 ms). Static + tunable for
     /// tests, like UIWindow.multiTapInterval.
     public static var contentTouchDelay: TimeInterval = 0.15
@@ -535,6 +546,7 @@ open class UIScrollView: UIView {
                 }
                 updateIndicators()
                 delegate?.scrollViewDidScroll(self)
+                _scrollObserver?.scrollViewDidScroll(self)
             }
         }
     }
@@ -755,6 +767,7 @@ open class UIScrollView: UIView {
 
         let decelerates = xAnim != nil || yAnim != nil
         delegate?.scrollViewDidEndDragging(self, willDecelerate: decelerates)
+        _scrollObserver?.scrollViewDidEndDragging(self, willDecelerate: decelerates)
         if decelerates {
             isDecelerating = true
             delegate?.scrollViewWillBeginDecelerating(self)
@@ -861,6 +874,7 @@ open class UIScrollView: UIView {
         if xAnim == nil && yAnim == nil {
             isDecelerating = false
             delegate?.scrollViewDidEndDecelerating(self)
+            _scrollObserver?.scrollViewDidEndDecelerating(self)
             settle()
         }
     }

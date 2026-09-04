@@ -101,6 +101,13 @@ public class UIBarButtonItem {
     /// Target-action, dispatched through the M12 selector machinery.
     public weak var target: AnyObject?
     public var action: Selector?
+    /// UIKit's closure-shaped alternative to target/action (iOS 14+). The
+    /// bars run it on `.touchUpInside` alongside `action`, and
+    /// `init(primaryAction:)` seeds the item's title and image from it —
+    /// which is what lets an app that must compile against BOTH real UIKit
+    /// and OpenUIKit wire a bar button without `@objc`/`#selector`
+    /// (Sources/ConformanceApps/NavFlow, docs/OBJC_RUNTIME.md).
+    public var primaryAction: UIAction?
 
     /// Set by the bar that owns the item so a mutation can trigger a relayout.
     weak var _bar: _UIBarItemContainer?
@@ -129,6 +136,15 @@ public class UIBarButtonItem {
         self.style = style
         self.target = target
         self.action = action
+    }
+
+    /// UIKit's `init(primaryAction:)`: the action's title and image become
+    /// the item's, and the action runs when the item is tapped.
+    public init(primaryAction: UIAction?) {
+        self.primaryAction = primaryAction
+        self.title = primaryAction?.title
+        self.image = primaryAction?.image
+        style = .plain
     }
 
     public init(customView: UIView) {

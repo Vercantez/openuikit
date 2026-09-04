@@ -90,6 +90,11 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
   pocketcasts a REAL app screen — UNMODIFIED source from
             Automattic/pocket-casts-ios (the options-picker sheet), compiled
             against OpenUIKit (docs/REAL_APP_TEST.md)
+  NavFlow   a CONFORMANCE app (Sources/ConformanceApps/NavFlow): the same
+            source Tools/oracle2/confprobe compiles against real UIKit. With
+            --script/--record it replays the script's named actions and
+            records the capture PNGs + layout dumps the simulator probe
+            records (docs/HILLCLIMB.md; scripts/conformance_flow.sh)
 """
 
 var scenePath: String? = nil
@@ -145,6 +150,27 @@ guard (scriptPath == nil) == (recordDir == nil) else {
 // would need an async entry point) or disabling the check per site.
 // `assumeIsolated` traps if the assumption is ever violated.
 try MainActor.assumeIsolated {
+    // CONFORMANCE APPS (docs/HILLCLIMB.md): `--app <name> --script <script>
+    // --record <dir>` where <name> is a Sources/ConformanceApps app replays
+    // the script's NAMED ACTIONS and records the files
+    // Tools/oracle2/confprobe records from real UIKit. The oracle is the iOS
+    // simulator, so the iOS cut is on unconditionally here — there is no
+    // Catalyst reading of a conformance app to preserve.
+    if let appName, let script = scriptPath, let record = recordDir,
+       conformanceActionRegistry[appName] != nil {
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let scale = scaleOverride.map { CGFloat($0) }
+            ?? conformanceScaleRegistry[appName] ?? appModeDefaultScale
+        let scene = buildAppScene(appName, scaleOverride: scale)
+        let (steps, captures) = parseConformanceScript(try loadSceneFile(script))
+        try FileManager.default.createDirectory(atPath: record,
+                                                withIntermediateDirectories: true)
+        let written = try runConformanceScripted(scene, app: appName, steps: steps,
+                                                 captures: captures, outdir: record)
+        print("recorded \(written.count) captures to \(record)")
+        exit(0)
+    }
+
     let scene: HostScene
     if let appName {
         // --app mode has no in-app appearance switch; OPENUIKIT_APP_STYLE=dark

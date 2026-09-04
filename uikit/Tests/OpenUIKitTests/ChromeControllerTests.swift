@@ -343,8 +343,11 @@ final class LargeTitleNavigationTests: XCTestCase {
     func testExpandedRestState() {
         let (nav, scroll) = makeLargeNav()
         let bar = nav.navigationBar
-        // Binding reserved the expanded inset and settled at the rest offset.
-        XCTAssertEqual(scroll.contentInset.top, 116)
+        // Binding settles at the expanded rest offset. The 116 pt is SAFE
+        // AREA (NavFlow t3000, iPhone SE 2x, iOS 26.1: contentInset [0,0,0,0],
+        // safeAreaInsets.top 116), not a contentInset.
+        XCTAssertEqual(scroll.contentInset.top, 0)
+        XCTAssertEqual(scroll.adjustedContentInset.top, 116)
         XCTAssertEqual(scroll.contentOffset.y, -116)
         // Content fills the whole container (underlaps the transparent bar).
         XCTAssertEqual(nav.topViewController!.view.frame,

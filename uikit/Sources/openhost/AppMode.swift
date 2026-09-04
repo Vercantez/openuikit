@@ -30,6 +30,7 @@
 import OpenUIKit
 import DemoApp
 import RealAppProbe
+import ConformanceApps
 
 /// Keeps the app delegate (and through it the window + root controller)
 /// alive: UIApplication.delegate is weak, like UIKit's.
@@ -56,6 +57,12 @@ let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewContro
     // docs/REAL_APP_TEST.md). Live so the sheet's present animation, the
     // row tap highlight and the switch can be driven by hand.
     "pocketcasts": (RealAppScreen.windowSize, RealAppScreen.makeRootViewController),
+    // CONFORMANCE APPS (docs/HILLCLIMB.md, Sources/ConformanceApps): the same
+    // source the iOS simulator probe compiles against real UIKit. They boot
+    // through this registry so the port's side of the comparison really is
+    // the app lifecycle, not a scene builder — see ConformanceMode.swift for
+    // the scripted replay and the recorder.
+    "NavFlow": (NavFlowApp.windowSize, NavFlowApp.makeRoot),
 ]
 
 /// The host's app delegate: builds the key window in didFinishLaunching and

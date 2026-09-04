@@ -276,6 +276,32 @@ open class UINavigationController: UIViewController {
         }
         toolbar.frame = CGRect(x: 0, y: v.bounds.height - toolbarHeight,
                                width: v.bounds.width, height: UIToolbar.defaultHeight)
+        updateContentSafeArea()
+    }
+
+    /// The bars a child underlaps are SAFE AREA, not a scroll-view inset.
+    ///
+    /// MEASURED 2026-09-04, NavFlow conformance app t3000, iPhone SE 2x,
+    /// iOS 26.1: the pushed controller's view fills the window and reports
+    /// `safeAreaInsets` [116, 0, 0, 0] — the large-title bar's bottom edge —
+    /// while its table's `contentInset` is [0, 0, 0, 0]. The port used to put
+    /// the 116 pt into the scroll view's `contentInset` and leave the safe
+    /// area at zero, so a controller whose Auto Layout hangs off
+    /// `view.safeAreaLayoutGuide.topAnchor` (the normal spelling) drew its
+    /// content 116 pt too high, under the bar.
+    func updateContentSafeArea() {
+        guard isViewLoaded else { return }
+        let v = view!
+        let inherited = v.safeAreaInsets
+        let barBottom = isNavigationBarHidden
+            ? 0 : navigationBar.frame.maxY - contentView.frame.minY
+        let barTop = v.bounds.maxY - toolbarHeight
+        let toolbarOverlap = contentView.frame.maxY - barTop
+        contentView._setSafeAreaInsets(UIEdgeInsets(
+            top: max(inherited.top, max(0, barBottom)),
+            left: inherited.left,
+            bottom: max(inherited.bottom, max(0, toolbarOverlap)),
+            right: inherited.right))
     }
 
     /// Height the toolbar takes out of the content area (0 when hidden).
@@ -314,20 +340,26 @@ open class UINavigationController: UIViewController {
     /// reserve the expanded inset, settle at the expanded rest offset when
     /// the scroll view was still at its default offset, and observe it.
     func bindContentScrollView(of vc: UIViewController) {
+        let previous = navigationBar.trackedScrollView
         guard navigationBar.prefersLargeTitles,
               let scroll = vc._contentScrollView else {
+            previous?._scrollObserver = nil
             navigationBar.trackedScrollView = nil
             return
         }
+        if previous !== scroll { previous?._scrollObserver = nil }
+        // The expanded overlay reaches the scroll view as SAFE AREA
+        // (updateContentSafeArea), exactly as it does on the device, so only
+        // the rest offset is settled here.
         let inset = UINavigationBar.largeTitleExpandedInset
-        if scroll.contentInset.top != inset {
-            let wasAtRest = scroll.contentOffset.y == -scroll.contentInset.top
-            scroll.contentInset.top = inset
-            if wasAtRest {
-                scroll.contentOffset.y = -inset
-            }
+        let wasAtRest = scroll.contentOffset.y == -scroll.adjustedContentInset.top
+        updateContentSafeArea()
+        if wasAtRest, scroll.contentOffset.y != -inset {
+            scroll.contentOffset.y = -inset
         }
-        scroll.delegate = self
+        // Observe, do not become the delegate: the app owns `scroll.delegate`
+        // (a UITableViewController is its own). See UIScrollView._scrollObserver.
+        scroll._scrollObserver = self
         navigationBar.trackedScrollView = scroll
         navigationBar.updateFromScroll()
     }
