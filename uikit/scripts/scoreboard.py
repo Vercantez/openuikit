@@ -71,16 +71,23 @@ def parse_gate(gate_out):
     m = re.search(r'(\d+)/(\d+) scenes pass', r.stdout + r.stderr)
     return {"pass": int(m.group(1)), "total": int(m.group(2))} if m else None
 
+CONFORMANCE_CAPTURED = {}   # app -> ISO time the summary was written (see #440)
+
 def parse_conformance(dirs):
     rows = []
     for d in dirs or []:
         summary = os.path.join(d, "summary.json")
         if not os.path.exists(summary): continue
         s = json.load(open(summary))
+        # A board once scored reports left in /tmp by earlier agent runs and
+        # picked rows the merged code had already fixed; every row carries the
+        # time its summary was written so a stale capture is visible.
+        captured = datetime.datetime.fromtimestamp(os.path.getmtime(summary)).strftime("%Y-%m-%dT%H:%M")
+        CONFORMANCE_CAPTURED[str(s.get("app"))] = captured
         for cap in s.get("captures", []):
             rows.append({"scene": f"{s.get('app')}:{cap.get('name')}", "category": "conformance",
                          "score": float(cap.get("score", 0)), "blob": float(cap.get("blob", 0)),
-                         "layout_issues": int(cap.get("layout_issues", 0)),
+                         "layout_issues": int(cap.get("layout_issues", 0)), "captured": captured,
                          "verdict": "PASS" if float(cap.get("score", 0)) >= 97.5 else "FAIL", "threshold": 97.5})
     return rows
 
@@ -113,6 +120,8 @@ def main():
     md = [f"# Scoreboard — {head} ({board['date']})", "",
           f"iOS scene suite: **{board['suite']['pass']}/{board['suite']['total']}**"
           + (f" · Catalyst gate: **{gate['pass']}/{gate['total']}**" if gate else ""), "",
+          ("conformance captured: " + ", ".join(f"{a} @ {t}" for a, t in sorted(CONFORMANCE_CAPTURED.items()))
+           if CONFORMANCE_CAPTURED else "conformance: none"), "",
           "| scene | category | score | bar | blob pt² | layout | status |", "|---|---|---|---|---|---|---|"]
     for r in board["rows"]:
         if r["status"] == "pass" and r["score"] >= r["threshold"] + 0.3: continue  # keep the table about the frontier

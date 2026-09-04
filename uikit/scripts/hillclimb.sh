@@ -27,8 +27,18 @@ MAXA=${1:-3}
 MODELS=(cursor-grok-4.6-high)   # every local agent: Grok 4.6 High (not fast)
 
 echo "==> score"
-if [[ -z "${SKIP_CAPTURE:-}" ]]; then zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || true
-else SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || true; fi
+if [[ -z "${SKIP_CAPTURE:-}" ]]; then
+  zsh scripts/ios_suite.sh /tmp/ios_suite > /tmp/ios_suite.flow.log 2>&1 || echo "WARNING: ios_suite.sh rc=$? (see /tmp/ios_suite.flow.log)"
+  # Every conformance app is recaptured in THIS run: the board once scored
+  # /tmp/conformance-* reports left by earlier agent runs (false green #440).
+  for app in Sources/ConformanceApps/*(/:t); do
+    echo "==> conformance $app"
+    zsh scripts/conformance_flow.sh /tmp/conformance-$app $app > /tmp/conformance-$app.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app rc=$? (see /tmp/conformance-$app.flow.log)"
+  done
+else
+  SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
+fi
 swift build -c release --product openrender >/dev/null
 rm -rf /tmp/hc_gate /tmp/hc_app
 ./.build/release/openrender render /tmp/hc_gate fixtures/scenes/*.json >/dev/null
