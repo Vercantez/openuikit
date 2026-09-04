@@ -333,12 +333,17 @@ expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
 expect_grep 'stage_fe_sysroot_x86.20' "$COMMON" \
     "recipe bump restages so overlay-copied SYS matches main (VM extras only on *-fe-clang)"
-expect_grep 'phase2_apply_vm_only_fe_sysroot' "$COMMON" \
-    "VM-only overlay-darwin / ioctl / artifact overlays land on the FE clang sibling"
+expect_grep 'owns it so tgmath.swift.gyb' "$COMMON" \
+    "FE Darwin.modulemap expand documents Darwin.C vs naming math.h on Darwin"
+expect_grep 'Darwin_C.modulemap' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
+    "dual-run fixture is main's Darwin.C (math.h not on Darwin.modulemap)"
 expect_grep 'overlay-darwin.8' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay sysroot stamp recipe keys Darwin.modulemap bytes and dest sync"
 expect_grep 'overlay_sysroot_sync_darwin_modulemap' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay finish copies FE Darwin.modulemap onto the SDK dest"
+expect_grep 'hides Darwin.C (tgmath.swift.gyb then misses acosf' \
+    "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay dest-sync documents not copying the FE-expanded Darwin.modulemap"
 expect_grep 'usr/include/Darwin.modulemap=' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay stamp hashes FE Darwin.modulemap bytes so a regenerated map restages"
 expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
@@ -979,11 +984,27 @@ rm -rf "$MMWORK"
 echo "== FE clang snapshot: expand does not rewrite the overlay-copied Darwin.modulemap"
 SNAP=$(mktemp -d /tmp/phase2-fe-clang.XXXXXX)
 mkdir -p "$SNAP/sys/usr/include"
-printf '%s\n' 'module Darwin [system] {' '  header "math.h"' '  export *' '}' \
-    > "$SNAP/sys/usr/include/Darwin.modulemap"
+# Main's Darwin.modulemap does not name math.h; Darwin.C does. FE expand
+# of `header "math.h"` must stay on *-fe-clang (overlay dest-sync copies SYS).
+cat > "$SNAP/sys/usr/include/Darwin.modulemap" <<'EOF'
+module Darwin [system] [extern_c] {
+  export *
+  extern module C "Darwin_C.modulemap"
+}
+EOF
+cat > "$SNAP/sys/usr/include/Darwin_C.modulemap" <<'EOF'
+module Darwin.C [system] [extern_c] {
+  module math {
+    header "math.h"
+    export *
+  }
+  export *
+}
+EOF
 printf '/* math */\n' > "$SNAP/sys/usr/include/math.h"
 printf '/* unistd */\n' > "$SNAP/sys/usr/include/unistd.h"
 cp -a "$SNAP/sys/usr/include/Darwin.modulemap" "$SNAP/overlay-clean.modulemap"
+cp -a "$SNAP/sys/usr/include/Darwin_C.modulemap" "$SNAP/overlay-clean-C.modulemap"
 if phase2_stage_fe_clang_sysroot "$SNAP/sys" "$ROOT"; then
     fe_clang=$(phase2_fe_clang_sysroot "$SNAP/sys")
     if cmp -s "$SNAP/sys/usr/include/Darwin.modulemap" "$SNAP/overlay-clean.modulemap"; then
@@ -991,10 +1012,26 @@ if phase2_stage_fe_clang_sysroot "$SNAP/sys" "$ROOT"; then
     else
         die_test "overlay-copied Darwin.modulemap was mutated"
     fi
+    if grep -q 'header "math.h"' "$SNAP/sys/usr/include/Darwin.modulemap"; then
+        die_test "overlay-copied Darwin.modulemap names math.h (hides Darwin.C; tgmath misses acosf)"
+    else
+        ok "overlay-copied Darwin.modulemap does not name math.h (Darwin.C owns it)"
+    fi
+    if cmp -s "$SNAP/sys/usr/include/Darwin_C.modulemap" "$SNAP/overlay-clean-C.modulemap" \
+        && grep -q 'header "math.h"' "$SNAP/sys/usr/include/Darwin_C.modulemap"; then
+        ok "overlay-copied Darwin_C.modulemap still names math.h"
+    else
+        die_test "overlay-copied Darwin_C.modulemap was mutated"
+    fi
     if grep -q 'header "unistd.h"' "$fe_clang/usr/include/Darwin.modulemap"; then
         ok "FE clang snapshot Darwin.modulemap names unistd.h for Darwin.write"
     else
         die_test "FE clang snapshot missing unistd.h"
+    fi
+    if grep -q 'header "math.h"' "$fe_clang/usr/include/Darwin.modulemap"; then
+        ok "FE clang snapshot Darwin.modulemap names math.h (expand is sibling-only)"
+    else
+        die_test "FE clang snapshot missing math.h expand"
     fi
     if grep -q 'header "unistd.h"' "$SNAP/sys/usr/include/Darwin.modulemap"; then
         die_test "overlay-copied Darwin.modulemap names unistd.h (would break _DarwinFoundation3)"

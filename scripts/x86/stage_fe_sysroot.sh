@@ -133,6 +133,8 @@ fi
 
 # ORDER: base module.modulemap (ObjectiveC) then the Darwin family. The
 # generator appends extern module lines; running it first would lose Darwin.
+# Box path: copy ARM's pruned maps unchanged (Darwin.modulemap does not
+# name math.h; Darwin.C does). Do not overlay-darwin / FE-expand SYS.
 echo "== Darwin family Clang modulemaps (underlying Objective-C module Darwin)"
 phase2_install_darwin_modulemaps \
     "$SYS" "$ARM_SYS" "$MACHORUN/scripts/gen_darwin_modulemap.py" \

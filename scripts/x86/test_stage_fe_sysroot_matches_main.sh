@@ -25,7 +25,8 @@ print_sys_shas() {
     local label=$1 sys=$2
     echo "=== $label SYS header sha256 ==="
     for rel in usr/include/math.h usr/include/tgmath.h usr/include/sys/proc.h \
-        usr/include/MacTypes.h usr/include/Darwin.modulemap; do
+        usr/include/MacTypes.h usr/include/Darwin.modulemap \
+        usr/include/Darwin_C.modulemap; do
         printf '%s  %s\n' "$(header_sha "$sys/$rel")" "$rel"
     done
 }
@@ -67,18 +68,35 @@ done < <(find "$ROOT/scripts/x86" -maxdepth 1 -mindepth 1 -print0)
 
 ARM=$WORK/arm
 mkdir -p "$ARM/usr/include/sys" "$ARM/usr/lib/swift"
-# Box-like arm64 sysroot: pruned Darwin.modulemap + textual Darwin overlay.
-# Measurement copies use stage_absent (no shadow of machorun).
+# Box-like arm64 sysroot: pruned Darwin family like main's gen_darwin_modulemap
+# output. Darwin.modulemap does NOT name math.h; Darwin.C does. FE expand of
+# `header "math.h"` onto Darwin is what made overlay tgmath miss acosf.
 if [ -d "$ROOT/machorun/sdk/usr/include" ]; then
     cp -R "$ROOT/machorun/sdk/usr/include/." "$ARM/usr/include/"
 fi
 cat > "$ARM/usr/include/Darwin.modulemap" <<'EOF'
-// pruned Darwin.modulemap from arm64 sysroot_fe4 fixture
-module Darwin [system] {
-  header "math.h"
+// pruned Darwin.modulemap from arm64 sysroot_fe4 (main cycle)
+module Darwin [system] [extern_c] {
+  module MacTypes {
+    header "MacTypes.h"
+    export *
+  }
+  export *
+  extern module C "Darwin_C.modulemap"
+}
+EOF
+cat > "$ARM/usr/include/Darwin_C.modulemap" <<'EOF'
+// pruned Darwin_C.modulemap: Darwin.C owns math.h (not Darwin.modulemap)
+module Darwin.C [system] [extern_c] {
+  module math {
+    header "math.h"
+    export *
+  }
   export *
 }
 EOF
+printf 'module ObjectiveC [system] { header "objc/objc.h" export * }\nextern module Darwin "Darwin.modulemap"\n' \
+    > "$ARM/usr/include/module.modulemap"
 ART_IF=$ROOT/swiftcore-macho/artifacts/swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface
 if [ -f "$ART_IF" ]; then
     cp "$ART_IF" "$ARM/usr/lib/swift/Darwin.swiftinterface"
@@ -138,11 +156,13 @@ main_tg=$(header_sha "$SYS_MAIN/usr/include/tgmath.h")
 main_proc=$(header_sha "$SYS_MAIN/usr/include/sys/proc.h")
 main_mac=$(header_sha "$SYS_MAIN/usr/include/MacTypes.h")
 main_map=$(header_sha "$SYS_MAIN/usr/include/Darwin.modulemap")
+main_cmap=$(header_sha "$SYS_MAIN/usr/include/Darwin_C.modulemap")
 ours_math=$(header_sha "$SYS_OURS/usr/include/math.h")
 ours_tg=$(header_sha "$SYS_OURS/usr/include/tgmath.h")
 ours_proc=$(header_sha "$SYS_OURS/usr/include/sys/proc.h")
 ours_mac=$(header_sha "$SYS_OURS/usr/include/MacTypes.h")
 ours_map=$(header_sha "$SYS_OURS/usr/include/Darwin.modulemap")
+ours_cmap=$(header_sha "$SYS_OURS/usr/include/Darwin_C.modulemap")
 
 # Box-path authority: these four files are copied from machorun/sdk; overlay-
 # darwin Intel math.h / CarbonHeaders MacTypes must not land on SYS.
@@ -165,6 +185,24 @@ ours_map=$(header_sha "$SYS_OURS/usr/include/Darwin.modulemap")
     || die_test "ours SYS MacTypes.h $ours_mac != main $main_mac"
 [ "$ours_map" = "$main_map" ] && ok "ours SYS Darwin.modulemap reproduces main sha=$main_map" \
     || die_test "ours SYS Darwin.modulemap $ours_map != main $main_map"
+[ "$ours_cmap" = "$main_cmap" ] && ok "ours SYS Darwin_C.modulemap reproduces main sha=$main_cmap" \
+    || die_test "ours SYS Darwin_C.modulemap $ours_cmap != main $main_cmap"
+
+if grep -q 'header "math.h"' "$SYS_OURS/usr/include/Darwin.modulemap"; then
+    die_test "SYS Darwin.modulemap names math.h (main uses Darwin.C; overlay tgmath misses acosf)"
+else
+    ok "SYS Darwin.modulemap does not name math.h"
+fi
+if grep -q 'header "math.h"' "$SYS_OURS/usr/include/Darwin_C.modulemap"; then
+    ok "SYS Darwin_C.modulemap names math.h (Darwin.C submodule)"
+else
+    die_test "SYS Darwin_C.modulemap missing header math.h"
+fi
+if cmp -s "$ARM/usr/include/Darwin.modulemap" "$SYS_OURS/usr/include/Darwin.modulemap"; then
+    ok "SYS Darwin.modulemap is the ARM pruned map (not FE expand / overlay-darwin generate)"
+else
+    die_test "SYS Darwin.modulemap differs from ARM pruned map"
+fi
 
 DIFF_OUT=$WORK/diff.txt
 set +e
@@ -214,6 +252,17 @@ if [ -f "$INTEL_MATH" ] && [ -f "$SYS_OURS/usr/include/math.h" ]; then
     else
         ok "SYS math.h is not overlay-darwin Intel"
     fi
+fi
+
+if grep -q 'header "math.h"' "$FE_OURS/usr/include/Darwin.modulemap"; then
+    ok "FE clang Darwin.modulemap names math.h (expand stays off the overlay-copied SYS)"
+else
+    die_test "FE clang Darwin.modulemap missing math.h expand"
+fi
+if cmp -s "$SYS_OURS/usr/include/Darwin.modulemap" "$FE_OURS/usr/include/Darwin.modulemap"; then
+    die_test "FE clang Darwin.modulemap cmp SYS (expand leaked onto overlay-copied tree)"
+else
+    ok "FE clang Darwin.modulemap differs from SYS (expand is sibling-only)"
 fi
 
 echo "pass=$pass fail=$fail"

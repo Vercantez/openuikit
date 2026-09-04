@@ -1645,6 +1645,13 @@ phase2_darwin_fe_extra_headers() {
 # Append missing `header "…"` lines before the outer Darwin module close.
 # Does not rewrite a map that already names the header. Requires the file
 # to exist under usr/include (do not name an absent header).
+#
+# Overlay ninja -sdk dest-syncs scratch/sysroot_fe4-x86_64 Darwin.modulemap
+# onto sdk/MacOSX.sdk. Main's pruned map does not name math.h; Darwin.C
+# (Darwin_C.modulemap) owns it so tgmath.swift.gyb sees acosf/nanl through
+# that submodule. Expanding SYS (or dest-syncing this expand) puts
+# `header "math.h"` on Darwin, and the overlay compile misses those
+# symbols even when SDK math.h is Libm. Only run on *-fe-clang.
 phase2_expand_darwin_modulemap_for_fe() {
     local sys=$1
     local map=$sys/usr/include/Darwin.modulemap

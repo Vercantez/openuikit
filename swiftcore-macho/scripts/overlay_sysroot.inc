@@ -190,6 +190,8 @@ overlay_sysroot_is_fe_clang_snapshot() {
 # Copy usr/include/Darwin.modulemap from the overlay-copied FE sysroot onto
 # dest. Stamp hashes FE *source* bytes, so a leftover expanded dest still
 # MATCH-inputs; this is the writer that makes dest cmp the sysroot.
+# Source must be SYS, not *-fe-clang: the FE expand names math.h on Darwin,
+# which hides Darwin.C (tgmath.swift.gyb then misses acosf/nanl).
 # overlay_sysroot_sync_darwin_modulemap <dest>
 overlay_sysroot_sync_darwin_modulemap() {
     local dest=${1:?overlay_sysroot_sync_darwin_modulemap: dest}
