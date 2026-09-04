@@ -9,8 +9,8 @@ public let WKErrorDomain = "WKErrorDomain"
 /// `WKErrorCredentialNotFound = 17`). Linux has no renderer, network fetch, or
 /// Web Content process; every OS/network/engine boundary fails closed with one
 /// of these codes instead of inventing a successful load.
-public struct WKError: Error, Equatable, Sendable, CustomStringConvertible {
-    public enum Code: Int, Sendable {
+public struct WKError: Error, Equatable, Hashable, Sendable, CustomStringConvertible {
+    public enum Code: Int, Hashable, Sendable {
         case unknown = 1
         case webContentProcessTerminated = 2
         case webViewInvalidated = 3
@@ -76,6 +76,19 @@ public struct WKError: Error, Equatable, Sendable, CustomStringConvertible {
     public static let duplicateCredential = Code.duplicateCredential
     public static let malformedCredential = Code.malformedCredential
     public static let credentialNotFound = Code.credentialNotFound
+
+    public var localizedDescription: String { description }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(WKErrorDomain)
+        hasher.combine(code)
+    }
+}
+
+extension WKError.Code {
+    public static func ~= (match: Self, error: any Error) -> Bool {
+        (error as? WKError)?.code == match
+    }
 }
 
 extension WKError: CustomNSError {

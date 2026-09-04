@@ -2,8 +2,10 @@
 
 This directory owns two separate pieces of the Linux-hosted iOS platform:
 
-1. `Intents.swift` is the source of the reusable `Intents.swiftmodule` and
-   ARM64 Mach-O `libIntents.dylib`.
+1. `Intents.swift` plus the generated host-safe surface files listed in
+   `intents_guest_sources.txt` are the source of the reusable
+   `Intents.swiftmodule` and `libIntents.dylib`. The isolated Linux host
+   compile imports Foundation only.
 2. `intentdefinition_compiler.py` is an independent compiler for the public
    plist schema stored in Xcode `.intentdefinition` build inputs. It emits
    derived Swift outside the application repository, so application and
@@ -12,6 +14,29 @@ This directory owns two separate pieces of the Linux-hosted iOS platform:
 `full/intentsui/IntentsUI.swift` is the corresponding controller/delegate
 runtime and is packaged as `IntentsUI.swiftmodule` plus
 `libIntentsUI.dylib`.
+
+## Linux fan-out deliverable
+
+Wave-5 schema v2 coverage lives in `coverage.tsv`. Before this lane there was
+no coverage file (0 implemented / 0 declared / 0 deferred of 4160 public IDs).
+The current honest census is recorded there: the in-process donation, voice-
+shortcut, resolution, person/image, Focus-restricted, and identifier-constant
+slice is `implemented` with `tests/agent/IntentsTests.swift`; the remaining
+compiling surface is `declared`; Apple Siri services, CoreLocation/Contacts/
+EventKit/CGColor/NSExtensionContext members, synthesized Equatable/SetAlgebra
+witnesses without a valid anchor, and the Swift `INShortcut` enum overlay are
+`deferred`.
+
+Siri authorization and Focus stay fail-closed at `.restricted`. Generated
+handler protocols default to needs-value / empty / failure responses rather
+than inventing Apple handler success. `INShortcut` remains the pre-existing
+`NSObject` class used by the Mach-O guest; Apple's Swift enum overlay is not
+substituted in.
+
+On the isolated host, corelibs Foundation has no `NSUserActivity`. When
+OpenUIKit is unavailable the module provides a lookalike so
+`INIntentResponse.userActivity` still compiles. The production guest keeps
+OpenUIKit's class identity.
 
 ## Generator contract
 

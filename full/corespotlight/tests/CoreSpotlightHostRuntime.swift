@@ -92,7 +92,8 @@ private struct CoreSpotlightHostRuntime {
       )
       try await index.indexSearchableItems([invalid])
       preconditionFailure("missing identifier was accepted")
-    } catch CSIndexError.missingUniqueIdentifier {
+    } catch let error as CSIndexError {
+      precondition(error.code == .invalidItemError)
     } catch {
       preconditionFailure("unexpected CoreSpotlight error")
     }

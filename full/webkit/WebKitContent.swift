@@ -6,7 +6,7 @@ import class ObjectiveC.NSObject
 import class Foundation.NSObject
 #endif
 
-public enum WKUserScriptInjectionTime: Int, Sendable {
+public enum WKUserScriptInjectionTime: Int, Hashable, Sendable {
     case atDocumentStart = 0
     case atDocumentEnd = 1
 }
@@ -16,6 +16,7 @@ open class WKUserScript: NSObject {
     public let source: String
     public let injectionTime: WKUserScriptInjectionTime
     public let isForMainFrameOnly: Bool
+    public let world: WKContentWorld
 
     public init(
         source: String,
@@ -25,6 +26,20 @@ open class WKUserScript: NSObject {
         self.source = source
         self.injectionTime = injectionTime
         self.isForMainFrameOnly = forMainFrameOnly
+        self.world = .page
+        super.init()
+    }
+
+    public init(
+        source: String,
+        injectionTime: WKUserScriptInjectionTime,
+        forMainFrameOnly: Bool,
+        in world: WKContentWorld
+    ) {
+        self.source = source
+        self.injectionTime = injectionTime
+        self.isForMainFrameOnly = forMainFrameOnly
+        self.world = world
         super.init()
     }
 }
@@ -42,11 +57,21 @@ open class WKScriptMessage: NSObject {
     public let name: String
     public let body: Any
     public let frameInfo: WKFrameInfo
+    public weak var webView: WKWebView?
+    public let world: WKContentWorld
 
-    public init(name: String, body: Any, frameInfo: WKFrameInfo? = nil) {
+    public init(
+        name: String,
+        body: Any,
+        frameInfo: WKFrameInfo? = nil,
+        webView: WKWebView? = nil,
+        world: WKContentWorld? = nil
+    ) {
         self.name = name
         self.body = body
         self.frameInfo = frameInfo ?? WKFrameInfo()
+        self.webView = webView
+        self.world = world ?? .page
         super.init()
     }
 }
@@ -200,9 +225,14 @@ open class WKContentRuleListStore: NSObject {
 open class WKUserContentController: NSObject {
     private var scripts: [WKUserScript] = []
     private var handlers: [String: WKScriptMessageHandler] = [:]
+    private var replyHandlers: [String: WKScriptMessageHandlerWithReply] = [:]
     private var rules: [String: WKContentRuleList] = [:]
 
     public override init() {
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
         super.init()
     }
 
@@ -224,12 +254,43 @@ open class WKUserContentController: NSObject {
         handlers[name] = scriptMessageHandler
     }
 
+    open func add(
+        _ scriptMessageHandler: any WKScriptMessageHandler,
+        contentWorld world: WKContentWorld,
+        name: String
+    ) {
+        _ = world
+        add(scriptMessageHandler, name: name)
+    }
+
+    open func addScriptMessageHandler(
+        _ scriptMessageHandlerWithReply: any WKScriptMessageHandlerWithReply,
+        contentWorld world: WKContentWorld,
+        name: String
+    ) {
+        _ = world
+        precondition(!name.isEmpty, "WKScriptMessageHandler name must not be empty")
+        replyHandlers[name] = scriptMessageHandlerWithReply
+    }
+
     open func removeScriptMessageHandler(forName name: String) {
         handlers.removeValue(forKey: name)
+        replyHandlers.removeValue(forKey: name)
+    }
+
+    open func removeScriptMessageHandler(forName name: String, contentWorld: WKContentWorld) {
+        _ = contentWorld
+        removeScriptMessageHandler(forName: name)
     }
 
     open func removeAllScriptMessageHandlers() {
         handlers.removeAll(keepingCapacity: false)
+        replyHandlers.removeAll(keepingCapacity: false)
+    }
+
+    open func removeAllScriptMessageHandlers(from contentWorld: WKContentWorld) {
+        _ = contentWorld
+        removeAllScriptMessageHandlers()
     }
 
     open func add(_ contentRuleList: WKContentRuleList) {
@@ -249,7 +310,7 @@ open class WKUserContentController: NSObject {
     /// engine; exposing registered names makes that configuration observable
     /// without pretending JavaScript ran.
     public var registeredScriptMessageHandlerNames: [String] {
-        handlers.keys.sorted()
+        Set(handlers.keys).union(replyHandlers.keys).sorted()
     }
 
     public var registeredContentRuleListIdentifiers: [String] {

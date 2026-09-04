@@ -1,6 +1,13 @@
 @_exported import Foundation
+#if canImport(Photos)
 @_exported import Photos
+#endif
+#if canImport(UniformTypeIdentifiers)
 @_exported import UniformTypeIdentifiers
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public struct PHPickerMode: Equatable, Hashable, Sendable {
     private let rawValue: UInt8
@@ -10,14 +17,69 @@ public struct PHPickerMode: Equatable, Hashable, Sendable {
     }
 
     public static let `default` = PHPickerMode(rawValue: 0)
-    public static let compact = PHPickerMode(rawValue: 1)
+    public static var compact: PHPickerMode { PHPickerMode(rawValue: 1) }
 }
+
+public enum PHPickerConfigurationAssetRepresentationMode: Int, Hashable, Sendable {
+    case automatic = 0
+    case current = 1
+    case compatible = 2
+}
+
+public enum PHPickerConfigurationSelection: Int, Hashable, Sendable {
+    case `default` = 0
+    case ordered = 1
+    case continuous = 2
+    case continuousAndOrdered = 3
+}
+
+public struct PHPickerCapabilities: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static var search: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 0) }
+    public static var stagingArea: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 1) }
+    public static var collectionNavigation: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 2) }
+    public static var selectionActions: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 3) }
+    public static var sensitivityAnalysisIntervention: PHPickerCapabilities {
+        PHPickerCapabilities(rawValue: 1 << 4)
+    }
+}
+
+#if !canImport(UIKit)
+public struct NSDirectionalRectEdge: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let top = NSDirectionalRectEdge(rawValue: 1 << 0)
+    public static let leading = NSDirectionalRectEdge(rawValue: 1 << 1)
+    public static let bottom = NSDirectionalRectEdge(rawValue: 1 << 2)
+    public static let trailing = NSDirectionalRectEdge(rawValue: 1 << 3)
+    public static let all: NSDirectionalRectEdge = [.top, .leading, .bottom, .trailing]
+}
+#endif
 
 public struct PHPickerFilter: Equatable, Hashable, Sendable {
     fileprivate indirect enum Storage: Equatable, Hashable, Sendable {
         case images
         case videos
         case livePhotos
+        case depthEffectPhotos
+        case screenshots
+        case slomoVideos
+        case spatialMedia
+        case cinematicVideos
+        case timelapseVideos
+        case screenRecordings
+        case bursts
+        case panoramas
+        case playbackStyle(PHAsset.PlaybackStyle)
         case any([Storage])
         case all([Storage])
         case not(Storage)
@@ -32,6 +94,19 @@ public struct PHPickerFilter: Equatable, Hashable, Sendable {
     public static let images = PHPickerFilter(.images)
     public static let videos = PHPickerFilter(.videos)
     public static let livePhotos = PHPickerFilter(.livePhotos)
+    public static let depthEffectPhotos = PHPickerFilter(.depthEffectPhotos)
+    public static let screenshots = PHPickerFilter(.screenshots)
+    public static let slomoVideos = PHPickerFilter(.slomoVideos)
+    public static let spatialMedia = PHPickerFilter(.spatialMedia)
+    public static let cinematicVideos = PHPickerFilter(.cinematicVideos)
+    public static let timelapseVideos = PHPickerFilter(.timelapseVideos)
+    public static let screenRecordings = PHPickerFilter(.screenRecordings)
+    public static let bursts = PHPickerFilter(.bursts)
+    public static let panoramas = PHPickerFilter(.panoramas)
+
+    public static func playbackStyle(_ playbackStyle: PHAsset.PlaybackStyle) -> PHPickerFilter {
+        PHPickerFilter(.playbackStyle(playbackStyle))
+    }
 
     public static func any(of subfilters: [PHPickerFilter]) -> PHPickerFilter {
         PHPickerFilter(.any(subfilters.map(\.storage)))
@@ -54,14 +129,23 @@ public struct PHPickerFilter: Equatable, Hashable, Sendable {
 private extension PHPickerFilter.Storage {
     func matches(_ contentTypes: [UTType]) -> Bool {
         switch self {
-        case .images:
+        case .images, .livePhotos, .depthEffectPhotos, .screenshots, .bursts, .panoramas, .spatialMedia:
             return contentTypes.contains { $0.conforms(to: .image) }
-        case .videos:
+        case .videos, .slomoVideos, .cinematicVideos, .timelapseVideos, .screenRecordings:
             return contentTypes.contains {
                 $0.conforms(to: .movie) || $0.conforms(to: .video)
             }
-        case .livePhotos:
-            return contentTypes.contains { $0.conforms(to: .image) }
+        case .playbackStyle(let style):
+            switch style {
+            case .image, .imageAnimated, .livePhoto:
+                return contentTypes.contains { $0.conforms(to: .image) }
+            case .video, .videoLooping:
+                return contentTypes.contains {
+                    $0.conforms(to: .movie) || $0.conforms(to: .video)
+                }
+            case .unsupported:
+                return false
+            }
         case .any(let filters):
             return filters.contains { $0.matches(contentTypes) }
         case .all(let filters):
@@ -86,12 +170,24 @@ public struct PHPickerConfiguration: Equatable, Hashable, Sendable {
         case continuousAndOrdered
     }
 
+    public struct Update: Equatable, Hashable, Sendable {
+        public var selectionLimit: Int?
+        public var edgesWithoutContentMargins: NSDirectionalRectEdge?
+
+        public init() {
+            selectionLimit = nil
+            edgesWithoutContentMargins = nil
+        }
+    }
+
     public var preferredAssetRepresentationMode: AssetRepresentationMode
     public var selection: Selection
     public var selectionLimit: Int
     public var filter: PHPickerFilter?
     public var preselectedAssetIdentifiers: [String]
     public var mode: PHPickerMode
+    public var disabledCapabilities: PHPickerCapabilities
+    public var edgesWithoutContentMargins: NSDirectionalRectEdge
 
     public init() {
         preferredAssetRepresentationMode = .automatic
@@ -100,10 +196,12 @@ public struct PHPickerConfiguration: Equatable, Hashable, Sendable {
         filter = nil
         preselectedAssetIdentifiers = []
         mode = .default
+        disabledCapabilities = []
+        edgesWithoutContentMargins = []
     }
 
     public init(photoLibrary: PHPhotoLibrary) {
-        _ = photoLibrary
         self.init()
+        _ = photoLibrary
     }
 }

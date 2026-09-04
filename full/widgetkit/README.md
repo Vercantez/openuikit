@@ -50,6 +50,36 @@ Run it on macOS with the two pinned clean app checkouts present:
 bash full/widgetkit/tests/test_widgetkit_host.sh
 ```
 
+The isolated Linux host gate compiles these sources with `swiftc` and
+Foundation only. SwiftUI, AppIntents, Intents, ActivityKit, and CoreGraphics
+are not present as modules there, so WidgetKit uses module-local lookalikes for
+those dependency-owned types. `tests/agent/WidgetKitDependencyIdentity.swift`
+imports the real Foundation module for the later clean integration build.
+
+What is real on Linux:
+
+- timeline entries, reload policies, and fail-closed timeline validation SPI;
+- process-local `WidgetCenter` / `ControlCenter` state and ordered reload
+  requests that never claim daemon acceptance;
+- WidgetKit-owned configuration, family, location, mounting, relevance, and
+  environment-value types;
+- inert SwiftUI `View` method names so WidgetKit `View`-conforming types
+  typecheck without Apple SwiftUI.
+
+What stays deferred:
+
+- `#Preview` macros, DeveloperToolsSupport preview inits, and ActivityKit
+  preview context;
+- `NSUserActivityTypeLiveActivity` string payload (unobserved);
+- Apple `chronod` / Control Center / Live Activity daemon behavior.
+
+The wave-5 deliverable gate is:
+
+```sh
+python3 -B full/framework-fanout/validate_seed.py --framework full/widgetkit --phase deliverable
+bash full/widgetkit/tests/acceptance/test_host.sh
+```
+
 The cold package additionally builds `libWidgetKit.dylib`, verifies its ARM64
 Mach-O identity and dependency graph, links an independent
 `WidgetKitGuestRuntime` executable, and executes the same semantic marker

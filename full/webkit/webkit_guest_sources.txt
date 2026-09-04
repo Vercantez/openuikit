@@ -1,5 +1,10 @@
-full/webkit/WebKitError.swift
+full/webkit/WebKit.swift
 full/webkit/WebKitConfiguration.swift
 full/webkit/WebKitContent.swift
+full/webkit/WebKitError.swift
+full/webkit/WebKitExtensions.swift
 full/webkit/WebKitNavigation.swift
+full/webkit/WebKitOptionSets.swift
+full/webkit/WebKitPage.swift
+full/webkit/WebKitSupport.swift
 full/webkit/WebKitWebView.swift

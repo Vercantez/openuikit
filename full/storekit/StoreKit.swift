@@ -6,8 +6,9 @@ import Foundation
 import UIKit
 #elseif canImport(OpenUIKit)
 import OpenUIKit
-#else
-#error("StoreKit requires UIKit or OpenUIKit")
+#endif
+#if canImport(SwiftUI)
+import SwiftUI
 #endif
 
 public struct StoreKitPortableError: Error, Equatable, Sendable,
@@ -51,21 +52,22 @@ public enum StoreKitError: Error, Sendable {
     case unsupported
 }
 
-@MainActor
-public enum SKStoreReviewController {
+open class SKStoreReviewController: NSObject {
     public private(set) static var portableRequestCount = 0
     public static let portableError = StoreKitPortableError(.serviceUnavailable)
 
-    public static func requestReview() {
+    public override init() { super.init() }
+
+    public class func requestReview() {
         portableRequestCount += 1
     }
 
-    public static func requestReview(in windowScene: UIWindowScene) {
+    public class func requestReview(in windowScene: UIWindowScene) {
+        _ = windowScene
         portableRequestCount += 1
     }
 }
 
-@MainActor
 public enum AppStore {
     public private(set) static var portableReviewRequestCount = 0
 
@@ -89,8 +91,8 @@ public enum AppStore {
     }
 }
 
-public struct SKError: Error, Equatable, Sendable, CustomStringConvertible {
-    public enum Code: Int, Sendable {
+public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvertible {
+    public enum Code: Int, Sendable, Hashable {
         case unknown = 0
         case clientInvalid = 1
         case paymentCancelled = 2
@@ -114,16 +116,51 @@ public struct SKError: Error, Equatable, Sendable, CustomStringConvertible {
         case overlayPresentedInBackgroundScene = 20
     }
 
+    public static var errorDomain: String { SKErrorDomain }
+    public static var unknown: Code { .unknown }
+    public static var clientInvalid: Code { .clientInvalid }
+    public static var paymentCancelled: Code { .paymentCancelled }
+    public static var paymentInvalid: Code { .paymentInvalid }
+    public static var paymentNotAllowed: Code { .paymentNotAllowed }
+    public static var storeProductNotAvailable: Code { .storeProductNotAvailable }
+    public static var cloudServicePermissionDenied: Code { .cloudServicePermissionDenied }
+    public static var cloudServiceNetworkConnectionFailed: Code { .cloudServiceNetworkConnectionFailed }
+    public static var cloudServiceRevoked: Code { .cloudServiceRevoked }
+    public static var privacyAcknowledgementRequired: Code { .privacyAcknowledgementRequired }
+    public static var unauthorizedRequestData: Code { .unauthorizedRequestData }
+    public static var invalidOfferIdentifier: Code { .invalidOfferIdentifier }
+    public static var invalidSignature: Code { .invalidSignature }
+    public static var missingOfferParams: Code { .missingOfferParams }
+    public static var invalidOfferPrice: Code { .invalidOfferPrice }
+    public static var overlayCancelled: Code { .overlayCancelled }
+    public static var overlayInvalidConfiguration: Code { .overlayInvalidConfiguration }
+    public static var overlayTimeout: Code { .overlayTimeout }
+    public static var ineligibleForOffer: Code { .ineligibleForOffer }
+    public static var unsupportedPlatform: Code { .unsupportedPlatform }
+    public static var overlayPresentedInBackgroundScene: Code { .overlayPresentedInBackgroundScene }
+
     public let code: Code
-    public let userInfo: [String: String]
+    public let userInfo: [String: Any]
 
     public init(_ code: Code, userInfo: [String: Any] = [:]) {
         self.code = code
-        self.userInfo = userInfo.mapValues { String(describing: $0) }
+        self.userInfo = userInfo
     }
 
+    public var errorCode: Int { code.rawValue }
+    public var errorUserInfo: [String: Any] { userInfo }
     public var description: String { "StoreKit error \(code.rawValue)" }
+
+    public static func == (lhs: SKError, rhs: SKError) -> Bool {
+        lhs.code == rhs.code
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+    }
 }
+
+public let SKErrorDomain = "SKErrorDomain"
 
 open class SKRequest {
     public weak var delegate: SKRequestDelegate?
@@ -142,7 +179,7 @@ open class SKRequest {
     open func cancel() { isCancelled = true }
 }
 
-public protocol SKRequestDelegate: AnyObject {
+public protocol SKRequestDelegate: NSObjectProtocol {
     func requestDidFinish(_ request: SKRequest)
     func request(_ request: SKRequest, didFailWithError error: Error)
 }
@@ -245,7 +282,7 @@ public final class SKPaymentTransaction {
     }
 }
 
-public protocol SKPaymentTransactionObserver: AnyObject {
+public protocol SKPaymentTransactionObserver: NSObjectProtocol {
     func paymentQueue(
         _ queue: SKPaymentQueue,
         updatedTransactions transactions: [SKPaymentTransaction]
@@ -307,45 +344,277 @@ public final class SKPaymentQueue {
     }
 }
 
-public enum SKAdNetwork {
-    public enum CoarseConversionValue: String, Sendable {
-        case low, medium, high
+open class SKAdNetwork: NSObject {
+    public struct CoarseConversionValue: Hashable, Sendable, RawRepresentable {
+        public var rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let low = CoarseConversionValue(rawValue: "low")
+        public static let medium = CoarseConversionValue(rawValue: "medium")
+        public static let high = CoarseConversionValue(rawValue: "high")
     }
 
-    public static func registerAppForAdNetworkAttribution() {}
+    public override init() { super.init() }
 
-    public static func updatePostbackConversionValue(
+    public class func registerAppForAdNetworkAttribution() {}
+
+    public class func updateConversionValue(_ conversionValue: Int) {
+        _ = conversionValue
+    }
+
+    public class func updatePostbackConversionValue(
         _ conversionValue: Int,
         completionHandler: ((Error?) -> Void)? = nil
     ) {
         completionHandler?(StoreKitPortableError(.serviceUnavailable))
     }
 
-    public static func updatePostbackConversionValue(
+    public class func updatePostbackConversionValue(
         _ fineValue: Int,
         coarseValue: CoarseConversionValue,
         completionHandler: ((Error?) -> Void)? = nil
     ) {
+        _ = fineValue
+        _ = coarseValue
         completionHandler?(StoreKitPortableError(.serviceUnavailable))
+    }
+
+    public class func updatePostbackConversionValue(_ conversionValue: Int) async throws {
+        _ = conversionValue
+        throw StoreKitPortableError(.serviceUnavailable)
+    }
+
+    public class func updatePostbackConversionValue(
+        _ fineValue: Int,
+        coarseValue: CoarseConversionValue
+    ) async throws {
+        _ = fineValue
+        _ = coarseValue
+        throw StoreKitPortableError(.serviceUnavailable)
+    }
+
+    public class func updatePostbackConversionValue(
+        _ fineValue: Int,
+        coarseValue: CoarseConversionValue,
+        lockWindow: Bool
+    ) async throws {
+        _ = fineValue
+        _ = coarseValue
+        _ = lockWindow
+        throw StoreKitPortableError(.serviceUnavailable)
+    }
+
+    public class func startImpression(_ impression: SKAdImpression) async throws {
+        _ = impression
+        throw StoreKitPortableError(.serviceUnavailable)
+    }
+
+    public class func endImpression(_ impression: SKAdImpression) async throws {
+        _ = impression
+        throw StoreKitPortableError(.serviceUnavailable)
     }
 }
 
-public enum VerificationResult<SignedType> {
-    case verified(SignedType)
-    case unverified(SignedType, Error)
+open class SKAdImpression: NSObject {
+    public var sourceAppStoreItemIdentifier: NSNumber
+    public var advertisedAppStoreItemIdentifier: NSNumber
+    public var adNetworkIdentifier: String
+    public var adCampaignIdentifier: NSNumber
+    public var adImpressionIdentifier: String
+    public var adDescription: String?
+    public var adPurchaserName: String?
+    public var timestamp: NSNumber
+    public var signature: String
+    public var version: String
+    public var sourceIdentifier: NSNumber?
+
+    public override init() {
+        sourceAppStoreItemIdentifier = 0
+        advertisedAppStoreItemIdentifier = 0
+        adNetworkIdentifier = ""
+        adCampaignIdentifier = 0
+        adImpressionIdentifier = ""
+        timestamp = 0
+        signature = ""
+        version = ""
+        super.init()
+    }
+
+    public init(
+        sourceAppStoreItemIdentifier: NSNumber,
+        advertisedAppStoreItemIdentifier: NSNumber,
+        adNetworkIdentifier: String,
+        adCampaignIdentifier: NSNumber,
+        adImpressionIdentifier: String,
+        timestamp: NSNumber,
+        signature: String,
+        version: String
+    ) {
+        self.sourceAppStoreItemIdentifier = sourceAppStoreItemIdentifier
+        self.advertisedAppStoreItemIdentifier = advertisedAppStoreItemIdentifier
+        self.adNetworkIdentifier = adNetworkIdentifier
+        self.adCampaignIdentifier = adCampaignIdentifier
+        self.adImpressionIdentifier = adImpressionIdentifier
+        self.timestamp = timestamp
+        self.signature = signature
+        self.version = version
+    }
 }
 
-public struct Product: Identifiable, Sendable {
-    public struct SubscriptionPeriod: Hashable, Sendable {
-        public enum Unit: Int, Sendable { case day, week, month, year }
+@frozen
+public enum VerificationResult<SignedType> {
+    public enum VerificationError: Error, Hashable, Sendable {
+        case invalidCertificateChain
+        case invalidEncoding
+        case invalidSignature
+        case missingRequiredProperties
+        case revokedCertificate
+    }
+
+    case verified(SignedType)
+    case unverified(SignedType, VerificationError)
+
+    public var unsafePayloadValue: SignedType {
+        switch self {
+        case .verified(let value), .unverified(let value, _):
+            return value
+        }
+    }
+
+    public var payloadValue: SignedType {
+        get throws {
+            switch self {
+            case .verified(let value):
+                return value
+            case .unverified(_, let error):
+                throw error
+            }
+        }
+    }
+}
+
+public struct Product: Identifiable, Hashable, Sendable {
+    public struct SubscriptionPeriod: Hashable, Sendable, CustomDebugStringConvertible {
+        public enum Unit: Int, Sendable, Hashable, Comparable, CustomDebugStringConvertible {
+            case day, week, month, year
+            public static func < (lhs: Unit, rhs: Unit) -> Bool { lhs.rawValue < rhs.rawValue }
+            public var debugDescription: String { String(describing: self) }
+            public var localizedDescription: String { debugDescription }
+        }
+
         public let value: Int
         public let unit: Unit
         public init(value: Int, unit: Unit) { self.value = value; self.unit = unit }
+        public var debugDescription: String { "\(value) \(unit)" }
+        public static var weekly: SubscriptionPeriod { SubscriptionPeriod(value: 1, unit: .week) }
+        public static var monthly: SubscriptionPeriod { SubscriptionPeriod(value: 1, unit: .month) }
+        public static var yearly: SubscriptionPeriod { SubscriptionPeriod(value: 1, unit: .year) }
+        public static var everyTwoWeeks: SubscriptionPeriod { SubscriptionPeriod(value: 2, unit: .week) }
+        public static var everyTwoMonths: SubscriptionPeriod { SubscriptionPeriod(value: 2, unit: .month) }
+        public static var everyThreeDays: SubscriptionPeriod { SubscriptionPeriod(value: 3, unit: .day) }
+        public static var everyThreeMonths: SubscriptionPeriod { SubscriptionPeriod(value: 3, unit: .month) }
+        public static var everySixMonths: SubscriptionPeriod { SubscriptionPeriod(value: 6, unit: .month) }
     }
 
-    public enum PurchaseOption: Hashable, Sendable {
-        case quantity(Int)
-        case appAccountToken(UUID)
+    public struct SubscriptionOffer: Hashable, Sendable, Identifiable {
+        public struct Signature: Hashable, Sendable {
+            public var keyID: String
+            public var nonce: UUID
+            public var timestamp: Int
+            public var signature: Data
+            public init(keyID: String, nonce: UUID, timestamp: Int, signature: Data) {
+                self.keyID = keyID
+                self.nonce = nonce
+                self.timestamp = timestamp
+                self.signature = signature
+            }
+        }
+
+        public let id: String
+        public init(id: String) { self.id = id }
+    }
+
+    public struct PurchaseOption: Hashable, Sendable, CustomDebugStringConvertible {
+        private enum Storage: Hashable, Sendable {
+            case quantity(Int)
+            case appAccountToken(UUID)
+            case other(String)
+        }
+
+        private var storage: Storage
+        public var debugDescription: String { String(describing: storage) }
+
+        public static func quantity(_ quantity: Int) -> PurchaseOption {
+            PurchaseOption(storage: .quantity(quantity))
+        }
+
+        public static func appAccountToken(_ token: UUID) -> PurchaseOption {
+            PurchaseOption(storage: .appAccountToken(token))
+        }
+
+        public static func simulatesAskToBuyInSandbox(_ simulateAskToBuy: Bool) -> PurchaseOption {
+            PurchaseOption(storage: .other("simulatesAskToBuyInSandbox:\(simulateAskToBuy)"))
+        }
+
+        public static func winBackOffer(_ offer: Product.SubscriptionOffer) -> PurchaseOption {
+            PurchaseOption(storage: .other("winBack:\(offer.id)"))
+        }
+
+        public static func promotionalOffer(
+            offerID: String,
+            keyID: String,
+            nonce: UUID,
+            signature: Data,
+            timestamp: Int
+        ) -> PurchaseOption {
+            _ = keyID
+            _ = nonce
+            _ = signature
+            _ = timestamp
+            return PurchaseOption(storage: .other("promo:\(offerID)"))
+        }
+
+        public static func promotionalOffer(
+            offerID: String,
+            signature: Product.SubscriptionOffer.Signature
+        ) -> PurchaseOption {
+            _ = signature
+            return PurchaseOption(storage: .other("promo:\(offerID)"))
+        }
+
+        public static func promotionalOffer(
+            _ offer: Product.SubscriptionOffer,
+            compactJWS: String
+        ) -> PurchaseOption {
+            _ = compactJWS
+            return PurchaseOption(storage: .other("promo:\(offer.id)"))
+        }
+
+        public static func onStorefrontChange(
+            shouldContinuePurchase: @escaping (Storefront) -> Bool
+        ) -> PurchaseOption {
+            _ = shouldContinuePurchase
+            return PurchaseOption(storage: .other("onStorefrontChange"))
+        }
+
+        public static func introductoryOfferEligibility(compactJWS: String) -> PurchaseOption {
+            PurchaseOption(storage: .other("intro:\(compactJWS)"))
+        }
+
+        public static func custom(key: String, value: Data) -> PurchaseOption {
+            PurchaseOption(storage: .other("custom:\(key):data"))
+        }
+
+        public static func custom(key: String, value: String) -> PurchaseOption {
+            PurchaseOption(storage: .other("custom:\(key):\(value)"))
+        }
+
+        public static func custom(key: String, value: Bool) -> PurchaseOption {
+            PurchaseOption(storage: .other("custom:\(key):\(value)"))
+        }
+
+        public static func custom(key: String, value: Double) -> PurchaseOption {
+            PurchaseOption(storage: .other("custom:\(key):\(value)"))
+        }
     }
 
     public enum PurchaseResult {
@@ -354,11 +623,21 @@ public struct Product: Identifiable, Sendable {
         case pending
     }
 
-    public struct SubscriptionInfo: Sendable {
+    public struct SubscriptionInfo: Hashable, Sendable {
         public let subscriptionGroupID: String
         public init(subscriptionGroupID: String) {
             self.subscriptionGroupID = subscriptionGroupID
         }
+    }
+
+    public typealias ID = String
+    public struct ProductType: Hashable, Sendable, RawRepresentable {
+        public var rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let consumable = ProductType(rawValue: "Consumable")
+        public static let nonConsumable = ProductType(rawValue: "NonConsumable")
+        public static let nonRenewable = ProductType(rawValue: "NonRenewable")
+        public static let autoRenewable = ProductType(rawValue: "AutoRenewable")
     }
 
     public let id: String
@@ -367,6 +646,9 @@ public struct Product: Identifiable, Sendable {
     public let price: Decimal
     public let displayPrice: String
     public let subscription: SubscriptionInfo?
+    public let isFamilyShareable: Bool
+    public let type: ProductType
+    public var jsonRepresentation: Data { Data() }
 
     public init(
         id: String,
@@ -374,7 +656,9 @@ public struct Product: Identifiable, Sendable {
         description: String = "",
         price: Decimal = 0,
         displayPrice: String? = nil,
-        subscription: SubscriptionInfo? = nil
+        subscription: SubscriptionInfo? = nil,
+        isFamilyShareable: Bool = false,
+        type: ProductType = .consumable
     ) {
         self.id = id
         self.displayName = displayName
@@ -386,9 +670,14 @@ public struct Product: Identifiable, Sendable {
         // Decimal spelling rather than inventing a currency.
         self.displayPrice = displayPrice ?? price.description
         self.subscription = subscription
+        self.isFamilyShareable = isFamilyShareable
+        self.type = type
     }
 
-    public static func products(for identifiers: [String]) async throws -> [Product] {
+    public static func products<Identifiers>(
+        for identifiers: Identifiers
+    ) async throws -> [Product] where Identifiers: Collection, Identifiers.Element == String {
+        _ = identifiers
         throw StoreKitPortableError(.productUnavailable)
     }
 
@@ -411,7 +700,7 @@ public struct Product: Identifiable, Sendable {
     #endif
 }
 
-public struct Transaction: Identifiable, Sendable {
+public struct Transaction: Identifiable, Hashable, Sendable {
     public let id: UInt64
     public let productID: String
     public let purchaseDate: Date
@@ -451,7 +740,8 @@ public struct Transaction: Identifiable, Sendable {
     public func finish() async {}
 }
 
-public struct Storefront: Sendable {
+public struct Storefront: Hashable, Sendable, Identifiable {
+    public typealias ID = String
     public let id: String
     public let countryCode: String
     public init(id: String, countryCode: String) {

@@ -1,0 +1,60 @@
+{
+  "module": "CFNetwork",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 5,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 73,
+    "iphoneos_runtime_focus_launch_build_rank": 65,
+    "module": "CFNetwork",
+    "occurrence_count": 5,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "0ddc241b2d4412d18b1a87c524e276f56ce09ee7dbc88b3c4351dad91e5583f1",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "SignalServiceKit/Network/API/HTTPUtils.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "c8da36dc003e0fdb94a97d4da7930472e8b654d84291e09a95e6ec7ac5fd22a6",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/MtProtoKit/Sources/GCDAsyncSocket.m",
+          "submodules/MtProtoKit/Sources/PingFoundation.h"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "3df0017a57772209ca44ff5de3d30df189429fc23687849310cba30c3d3bcf80",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "iOSClient/Networking/E2EE/NCNetworkingE2EECreateFolder.swift",
+          "iOSClient/Networking/E2EE/NCNetworkingE2EEUpload.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 73,
+    "byFocusLaunchBuildRelevance": 65
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

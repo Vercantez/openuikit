@@ -1,0 +1,600 @@
+precise	status	evidence	notes
+c:@CSActionIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSIndexErrorDomain	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@CSMailboxArchive	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSMailboxDrafts	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSMailboxInbox	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSMailboxJunk	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSMailboxSent	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSMailboxTrash	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSQueryContinuationActionType	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSSearchQueryErrorDomain	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+c:@CSSearchQueryString	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSSearchableItemActionType	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSSearchableItemActivityIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testConstants	-
+c:@CSSuggestionHighlightAttributeName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionHighlightKey	-
+c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexUnavailableError	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeIndexingUnsupported	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidClientStateError	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeInvalidItemError	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeMismatchedClientState	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeQuotaExceeded	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeRemoteConnectionError	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSIndexErrorCode@CSIndexErrorCodeUnknownError	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeCancelled	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeIndexUnreachable	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeInvalidQuery	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+c:@E@CSSearchQueryErrorCode@CSSearchQueryErrorCodeUnknown	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:@E@CSSearchQuerySourceOptions@CSSearchQuerySourceOptionAllowMail	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:@E@CSSearchableItemUpdateListenerOptions@CSSearchableItemUpdateListenerOptionPriority	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:@E@CSSearchableItemUpdateListenerOptions@CSSearchableItemUpdateListenerOptionSummarization	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:@E@CSSuggestionKind	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:@E@CSSuggestionKind@CSSuggestionKindCustom	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:@E@CSSuggestionKind@CSSuggestionKindDefault	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:@E@CSSuggestionKind@CSSuggestionKindNone	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:@E@CSUserInteraction	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:@E@CSUserInteraction@CSUserInteractionDefault	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:@E@CSUserInteraction@CSUserInteractionFocus	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:@E@CSUserInteraction@CSUserInteractionSelect	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:@macro@CoreSpotlightAPIVersion	deferred		The Int32 CoreSpotlightAPIVersion payload is not recorded in the symbol graph, API digester, TBD exports, or pinned macios bindings.
+c:objc(cs)CSCustomAttributeKey	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(im)initWithKeyName:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(im)initWithKeyName:searchable:searchableByDefault:unique:multiValued:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(py)keyName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(py)multiValued	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(py)searchable	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(py)searchableByDefault	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSCustomAttributeKey(py)unique	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(cs)CSImportExtension	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testImportExtensionFailClosed	-
+c:objc(cs)CSImportExtension(im)updateAttributes:forFileAtURL:error:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testImportExtensionFailClosed	-
+c:objc(cs)CSIndexExtensionRequestHandler	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexExtensionRequestHandler	-
+c:objc(cs)CSLocalizedString	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testLocalizedString	-
+c:objc(cs)CSLocalizedString(im)initWithLocalizedStrings:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testLocalizedString	-
+c:objc(cs)CSLocalizedString(im)localizedString	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testLocalizedString	-
+c:objc(cs)CSPerson	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(cs)CSPerson(im)initWithDisplayName:handles:handleIdentifier:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(cs)CSPerson(py)contactIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(cs)CSPerson(py)displayName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(cs)CSPerson(py)handleIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(cs)CSPerson(py)handles	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(cs)CSSearchQuery	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+c:objc(cs)CSSearchQuery(im)cancel	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryConvenienceAndCancel	-
+c:objc(cs)CSSearchQuery(im)initWithQueryString:attributes:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryConvenienceAndCancel	-
+c:objc(cs)CSSearchQuery(im)initWithQueryString:queryContext:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+c:objc(cs)CSSearchQuery(im)start	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+c:objc(cs)CSSearchQuery(py)cancelled	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryConvenienceAndCancel	-
+c:objc(cs)CSSearchQuery(py)completionHandler	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+c:objc(cs)CSSearchQuery(py)foundItemCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+c:objc(cs)CSSearchQuery(py)foundItemsHandler	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+c:objc(cs)CSSearchQuery(py)protectionClasses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryConvenienceAndCancel	-
+c:objc(cs)CSSearchQueryContext	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:objc(cs)CSSearchQueryContext(py)fetchAttributes	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:objc(cs)CSSearchQueryContext(py)filterQueries	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:objc(cs)CSSearchQueryContext(py)keyboardLanguage	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:objc(cs)CSSearchQueryContext(py)sourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:objc(cs)CSSearchableIndex	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(cm)defaultSearchableIndex	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(cm)isIndexingAvailable	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(im)beginIndexBatch	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexBatchClientState	-
+c:objc(cs)CSSearchableIndex(im)deleteAllSearchableItemsWithCompletionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexDeleteAllAndFetchDataUnavailable	-
+c:objc(cs)CSSearchableIndex(im)deleteSearchableItemsWithDomainIdentifiers:completionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(im)deleteSearchableItemsWithIdentifiers:completionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(im)endIndexBatchWithClientState:completionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexBatchClientState	-
+c:objc(cs)CSSearchableIndex(im)endIndexBatchWithExpectedClientState:newClientState:completionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexBatchClientState	-
+c:objc(cs)CSSearchableIndex(im)fetchDataForBundleIdentifier:itemIdentifier:contentType:completionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexDeleteAllAndFetchDataUnavailable	-
+c:objc(cs)CSSearchableIndex(im)fetchLastClientStateWithCompletionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexBatchClientState	-
+c:objc(cs)CSSearchableIndex(im)indexSearchableItems:completionHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(im)initWithName:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexCRUDAndQuery	-
+c:objc(cs)CSSearchableIndex(im)initWithName:protectionClass:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(cs)CSSearchableIndex(py)indexDelegate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(cs)CSSearchableItem	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(im)compareByRank:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemCompareByRank	-
+c:objc(cs)CSSearchableItem(im)initWithUniqueIdentifier:domainIdentifier:attributeSet:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(py)attributeSet	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(py)domainIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(py)expirationDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(py)isUpdate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(py)uniqueIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItem(py)updateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(cs)CSSearchableItemAttributeSet	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetContentTypeInitializers	-
+c:objc(cs)CSSearchableItemAttributeSet(im)initWithContentType:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetContentTypeInitializers	-
+c:objc(cs)CSSearchableItemAttributeSet(im)initWithItemContentType:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetContentTypeInitializers	-
+c:objc(cs)CSSearchableItemAttributeSet(im)moveFrom:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetMoveAndCoding	-
+c:objc(cs)CSSearchableItemAttributeSet(im)setValue:forCustomKey:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeValues	-
+c:objc(cs)CSSearchableItemAttributeSet(im)valueForCustomKey:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeValues	-
+c:objc(cs)CSSearchableItemAttributeSet(py)EXIFGPSVersion	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)EXIFVersion	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSAreaInformation	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDOP	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDateStamp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestBearing	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestDistance	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestLatitude	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDestLongitude	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSDifferental	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSMapDatum	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSMeasureMode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSProcessingMethod	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSStatus	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)GPSTrack	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)HTMLContentData	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)ISOSpeed	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)URL	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)accountHandles	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)accountIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)acquisitionMake	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)acquisitionModel	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)actionIdentifiers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)addedDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)additionalRecipients	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)album	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)allDay	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)alternateNames	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)altitude	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)aperture	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)artist	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)audiences	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)audioBitRate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)audioChannelCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)audioEncodingApplication	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)audioSampleRate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)audioTrackNumber	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)authorAddresses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)authorEmailAddresses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)authorNames	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)authors	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)bitsPerSample	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)cameraOwner	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)city	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)codecs	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)colorSpace	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)comment	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)completionDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)composer	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contactKeywords	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)containerDisplayName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)containerIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)containerOrder	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)containerTitle	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentCreationDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentDescription	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentModificationDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentRating	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentSources	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentType	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentTypeTree	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contentURL	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)contributors	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)copyright	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)country	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)coverage	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)creator	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)darkThumbnailURL	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)deliveryType	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)director	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)displayName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)domainIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)downloadedDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)dueDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)duration	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)editors	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)emailAddresses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)emailHeaders	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)encodingApplications	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)endDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureMode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureProgram	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureTime	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)exposureTimeString	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)fNumber	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)fileSize	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)flashOn	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)focalLength	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)focalLength35mm	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)fontNames	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)fullyFormattedAddress	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)generalMIDISequence	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)genre	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)hasAlphaChannel	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)headline	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)hiddenAdditionalRecipients	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)identifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)imageDirection	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)importantDates	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)information	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)instantMessageAddresses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)instructions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)isPriority	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetContentTypeInitializers	-
+c:objc(cs)CSSearchableItemAttributeSet(py)keySignature	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)keywords	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)kind	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)languages	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)lastUsedDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)latitude	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)layerNames	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)lensModel	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)likelyJunk	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)local	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)longitude	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)lyricist	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)mailboxIdentifiers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)maxAperture	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)mediaTypes	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)metadataModificationDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)meteringMode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)musicalGenre	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)musicalInstrumentCategory	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)musicalInstrumentName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)namedLocation	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)organizations	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)orientation	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)originalFormat	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)originalSource	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)pageCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)pageHeight	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)pageWidth	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)participants	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)path	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)performers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)phoneNumbers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)pixelCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)pixelHeight	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)pixelWidth	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)playCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)postalCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)primaryRecipients	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)producer	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)profileName	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)projects	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)providerDataTypeIdentifiers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)providerFileTypeIdentifiers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)providerInPlaceFileTypeIdentifiers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)publishers	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)rankingHint	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)rating	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)ratingDescription	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)recipientAddresses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)recipientEmailAddresses	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)recipientNames	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)recordingDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)redEyeOn	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)relatedUniqueIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)resolutionHeightDPI	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)resolutionWidthDPI	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)rights	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)role	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)securityMethod	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)sharedItemContentType	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)speed	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)startDate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)stateOrProvince	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)streamable	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)subThoroughfare	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)subject	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)supportsNavigation	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)supportsPhoneCall	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)tempo	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)textContent	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)textContentSummary	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetContentTypeInitializers	-
+c:objc(cs)CSSearchableItemAttributeSet(py)theme	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)thoroughfare	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)thumbnailData	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)thumbnailURL	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)timeSignature	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)timestamp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)title	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)totalBitRate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)transcribedTextContent	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)userCreated	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)userCurated	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)userOwned	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)version	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)videoBitRate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)weakRelatedUniqueIdentifier	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSearchableItemAttributeSet(py)whiteBalance	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetRemainingScalars	-
+c:objc(cs)CSSuggestion	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:objc(cs)CSSuggestion(im)compare:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:objc(cs)CSSuggestion(im)compareByRank:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:objc(cs)CSSuggestion(py)suggestionKind	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+c:objc(cs)CSUserQuery	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(cm)prepare	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(cm)prepareProtectionClasses:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(im)cancel	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(im)initWithUserQueryString:userQueryContext:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(im)start	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(py)foundSuggestionCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQuery(py)foundSuggestionsHandler	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+c:objc(cs)CSUserQueryContext	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)CSUserQueryContext(cm)userQueryContextWithCurrentSuggestion:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)CSUserQueryContext(py)disableSemanticSearch	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)CSUserQueryContext(py)enableRankedResults	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)CSUserQueryContext(py)maxRankedResultCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)CSUserQueryContext(py)maxResultCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)CSUserQueryContext(py)maxSuggestionCount	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryContextCoding	-
+c:objc(cs)NSUserActivity(py)contentAttributeSet	deferred		NSUserActivity is absent from Linux Foundation; the isolated host cannot declare this AppKit/UIKit continuation property.
+c:objc(pl)CSSearchableIndexDelegate	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)dataForSearchableIndex:itemIdentifier:typeIdentifier:error:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)fileURLForSearchableIndex:itemIdentifier:typeIdentifier:inPlace:error:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndexDidFinishThrottle:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)searchableIndexDidThrottle:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)searchableItemsDidUpdate:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)CSSearchableIndexDelegate(im)searchableItemsForIdentifiers:searchableItemsHandler:	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexProtectionClassAndDelegate	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSCustomAttributeKey	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testCustomAttributeKey	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSPerson	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testPersonAndContactIdentifier	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSearchQueryContext	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSearchableItem	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSearchableItemAttributeSet	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testAttributeSetMoveAndCoding	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CSSuggestion	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorPatternMatch	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SC16CSIndexErrorCodeLeV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV011invalidItemB0SoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV016indexUnavailableB0SoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV016remoteConnectionB0SoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV018invalidClientStateB0SoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV07unknownB0SoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV13quotaExceededSoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV19indexingUnsupportedSoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC16CSIndexErrorCodeLeV21mismatchedClientStateSoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:SC22CSSearchQueryErrorCodeLeV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SC22CSSearchQueryErrorCodeLeV07invalidB0SoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SC22CSSearchQueryErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SC22CSSearchQueryErrorCodeLeV16indexUnreachableSoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SC22CSSearchQueryErrorCodeLeV7unknownSoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SC22CSSearchQueryErrorCodeLeV9cancelledSoAAVvpZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSSuggestionKind	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CSUserInteraction	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE4ItemV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSSuggestionKind	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CSUserInteraction	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSSuggestionKind	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CSUserInteraction	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV	declared	source:full/corespotlight/CoreSpotlight.swift#Iterator	Actor-isolated AsyncIterator.next(isolation:) is a Swift stdlib default; Linux uses the portable next().
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV	declared	source:full/corespotlight/CoreSpotlight.swift#Iterator	Actor-isolated AsyncIterator.next(isolation:) is a Swift stdlib default; Linux uses the portable next().
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV	declared	source:full/corespotlight/CoreSpotlight.swift#Iterator	Actor-isolated AsyncIterator.next(isolation:) is a Swift stdlib default; Linux uses the portable next().
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySL7ElementRpzrlE3maxACSgyYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySL7ElementRpzrlE3maxACSgyYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySL7ElementRpzrlE3minACSgyYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySL7ElementRpzrlE3minACSgyYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	declared	source:full/corespotlight/CoreSpotlight.swift#Results	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestions	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	declared	source:full/corespotlight/CoreSpotlight.swift#Responses	Swift AsyncSequence protocol default. Linux iterates a snapshot of the portable index; Apple query DSL and daemon batching are not claimed.
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV10suggestionSo12CSSuggestionCvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV1goiySbAE_AEtFZ	declared	source:full/corespotlight/CoreSpotlight.swift#Suggestion	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV1loiySbAE_AEtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2IDa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2eeoiySbAE_AEtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV2idSSvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV4hash4intoys6HasherVz_tF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE10SuggestionV9hashValueSivp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV13AsyncIteratora	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV17makeAsyncIteratorAE0H0VyF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV7Elementa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV4nextAbCE10SuggestionVSgyYaKF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11SuggestionsV8IteratorV7Elementa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11suggestionsAbCE11SuggestionsVvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11userEngaged_12visibleItems11interactionyAbCE4ItemV_SayAHGSo0A11InteractionVtF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE11userEngaged_18visibleSuggestions11interactionyAbCE10SuggestionV_SayAHGSo0A11InteractionVtF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV1goiySbAE_AEtFZ	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:So11CSUserQueryC13CoreSpotlightE4ItemV1loiySbAE_AEtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV2IDa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV2eeoiySbAE_AEtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV2idSSvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV4hash4intoys6HasherVz_tF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV4itemSo012CSSearchableE0Cvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE4ItemV9hashValueSivp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV13AsyncIteratora	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV17makeAsyncIteratorAE0H0VyF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV7Elementa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV4nextAE8ResponseOSgyYaKF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8IteratorV7Elementa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO10suggestionyAgbCE10SuggestionVcAGmF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2IDa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2eeoiySbAG_AGtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO2idSSvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4hash4intoys6HasherVz_tF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO4itemyAgbCE4ItemVcAGmF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9ResponsesV8ResponseO9hashValueSivp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryComparableWrappers	-
+s:So11CSUserQueryC13CoreSpotlightE9responsesAbCE9ResponsesVvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So12CSSuggestionC13CoreSpotlightE29localizedAttributedSuggestion10Foundation0E6StringVvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV13AsyncIteratora	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV17makeAsyncIteratorAE0H0VyF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1goiySbAG_AGtFZ	declared	source:full/corespotlight/CoreSpotlight.swift#Item	Swift Comparable/Equatable range operators are protocol defaults on the portable Identifiable wrappers; Apple ranking is not claimed.
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV1loiySbAG_AGtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2IDa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2eeoiySbAG_AGtFZ	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV2idSSvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4hash4intoys6HasherVz_tF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV4itemSo012CSSearchableF0Cvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV4ItemV9hashValueSivp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV7Elementa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV4nextAE4ItemVSgyYaKF	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7ResultsV8IteratorV7Elementa	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryResultsAsyncSequence	-
+s:So13CSSearchQueryC13CoreSpotlightE7resultsAbCE7ResultsVvp	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryFindsPortableItems	-
+s:So16CSIndexErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorCodes	-
+s:So16CSSuggestionKindV8rawValueABSgSi_tcfc	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSuggestionCodingAndCompare	-
+s:So17CSUserInteractionV8rawValueABSgSi_tcfc	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testUserQueryFailClosedSuggestions	-
+s:So22CSSearchQueryErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:So26CSSearchQuerySourceOptionsV8rawValueABSu_tcfc	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:So37CSSearchableItemUpdateListenerOptionsV8rawValueABSu_tcfc	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CSIndexErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testIndexErrorEqualityAndHash	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CSSearchQueryErrorCode	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryErrorCodes	-
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CSSearchQuerySourceOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchQueryContextCodingAndSourceOptions	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CSSearchableItemUpdateListenerOptions	implemented	test:full/corespotlight/tests/agent/CoreSpotlightTests.swift#testSearchableItemAndUpdateOptions	-

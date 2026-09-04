@@ -1,1 +1,7 @@
 full/security/Security.swift
+full/security/SecurityCFShims.swift
+full/security/SecurityCiphers.swift
+full/security/SecurityCryptography.swift
+full/security/SecurityItemKeys.swift
+full/security/SecurityStatus.swift
+full/security/SecurityTypes.swift

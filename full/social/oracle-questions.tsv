@@ -1,0 +1,11 @@
+precise	question	risk	reason
+c:@SLServiceTypeTwitter	What exact UTF-8 payload does Darwin export for SLServiceTypeTwitter?	account-service	Commonly documented as com.apple.social.twitter; not measured on this host.
+c:@SLServiceTypeFacebook	What exact UTF-8 payload does Darwin export for SLServiceTypeFacebook?	account-service	Commonly documented as com.apple.social.facebook; not measured on this host.
+c:@SLServiceTypeSinaWeibo	What exact UTF-8 payload does Darwin export for SLServiceTypeSinaWeibo?	account-service	Commonly documented as com.apple.social.sinaweibo; not measured on this host.
+c:@SLServiceTypeTencentWeibo	What exact UTF-8 payload does Darwin export for SLServiceTypeTencentWeibo?	account-service	Commonly documented as com.apple.social.tencentweibo; not measured on this host.
+c:@SLServiceTypeLinkedIn	What exact UTF-8 payload does Darwin export for SLServiceTypeLinkedIn?	account-service	Commonly documented as com.apple.social.linkedin; not measured on this host.
+c:@E@SLRequestMethod@SLRequestMethodGET	What are the Darwin NS_ENUM raw values for SLRequestMethod GET/POST/DELETE/PUT?	fail-closed	Overlay uses declaration order 0...3; numeric ABI unobserved.
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultCancelled	What are the Darwin NS_ENUM raw values for SLComposeViewControllerResult cancelled/done?	fail-closed	Overlay uses declaration order 0, 1; numeric ABI unobserved.
+c:objc(cs)SLComposeServiceViewController(im)didSelectPost	When NSExtensionContext is nil, does Darwin didSelectPost complete the extension, dismiss, or no-op?	ui	Linux has no extension host; local counters are partial only.
+c:objc(cs)SLRequest(im)preparedURLRequest	Does Darwin preparedURLRequest return an unsigned request, nil, or throw when account is set but OAuth tokens are missing?	account-service	Linux returns nil; Apple signing behavior unobserved.
+module	Does a production Linux guest build import UIKit.UIViewController / UIKit.UITextViewDelegate / Accounts.ACAccount without emitting Social-owned fallbacks?	ui	Isolated host gate has no UIKit or Accounts modules; integration identity is unavailable.

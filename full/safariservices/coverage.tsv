@@ -1,0 +1,159 @@
+precise	status	evidence	notes
+c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+c:@E@SFAuthenticationError@SFAuthenticationErrorCanceledLogin	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+c:@E@SFContentBlockerErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+c:@E@SFContentBlockerErrorCode@SFContentBlockerLoadingInterrupted	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+c:@E@SFContentBlockerErrorCode@SFContentBlockerNoAttachmentFound	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+c:@E@SFContentBlockerErrorCode@SFContentBlockerNoExtensionFound	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+c:@E@SFErrorCode@SFErrorInternalError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+c:@E@SFErrorCode@SFErrorLoadingInterrupted	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+c:@E@SFErrorCode@SFErrorMissingEntitlement	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+c:@E@SFErrorCode@SFErrorNoAttachmentFound	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+c:@E@SFErrorCode@SFErrorNoExtensionFound	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+c:@E@SFSafariViewControllerDismissButtonStyle	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+c:@E@SFSafariViewControllerDismissButtonStyle@SFSafariViewControllerDismissButtonStyleCancel	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+c:@E@SFSafariViewControllerDismissButtonStyle@SFSafariViewControllerDismissButtonStyleClose	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+c:@E@SFSafariViewControllerDismissButtonStyle@SFSafariViewControllerDismissButtonStyleDone	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+c:@E@SSReadingListErrorCode@SSReadingListErrorURLSchemeNotAllowed	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+c:@SFAuthenticationErrorDomain	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+c:@SFContentBlockerErrorDomain	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+c:@SFErrorDomain	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+c:@SFExtensionMessageKey	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testExtensionMessageKeys	-
+c:@SFExtensionProfileKey	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testExtensionMessageKeys	-
+c:@SSReadingListErrorDomain	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+c:@T@SFAuthenticationCompletionHandler	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAuthenticationSessionDoesNotStart	-
+c:objc(cs)SFAddToHomeScreenInfo	deferred		Class designated initializer requires BrowserEngineKit.BEWebAppManifest, which is not a declared dependency and is absent on the isolated host.
+c:objc(cs)SFAddToHomeScreenInfo(im)initWithManifest:	deferred		Initializer takes BEWebAppManifest. A framework-local substitute for a foreign module type is forbidden.
+c:objc(cs)SFAddToHomeScreenInfo(py)manifest	deferred		Property type is BEWebAppManifest from BrowserEngineKit, unavailable on this host.
+c:objc(cs)SFAddToHomeScreenInfo(py)websiteCookies	deferred		Property type is [HTTPCookie]. Linux toolchain Foundation marks HTTPCookie unavailable outside FoundationNetworking, and the owning SFAddToHomeScreenInfo class cannot be declared without BEWebAppManifest.
+c:objc(cs)SFAuthenticationSession	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAuthenticationSessionDoesNotStart	-
+c:objc(cs)SFAuthenticationSession(im)cancel	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAuthenticationSessionDoesNotStart	-
+c:objc(cs)SFAuthenticationSession(im)initWithURL:callbackURLScheme:completionHandler:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAuthenticationSessionDoesNotStart	-
+c:objc(cs)SFAuthenticationSession(im)initWithURL:callbackURLScheme:completionHandler:::SYNTHESIZED::c:objc(cs)SFAuthenticationSession	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAuthenticationSessionDoesNotStart	-
+c:objc(cs)SFAuthenticationSession(im)start	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAuthenticationSessionDoesNotStart	-
+c:objc(cs)SFContentBlockerManager	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testContentBlockerManagerGetStateFailClosed	-
+c:objc(cs)SFContentBlockerManager(cm)getStateOfContentBlockerWithIdentifier:completionHandler:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testContentBlockerManagerGetStateFailClosed	-
+c:objc(cs)SFContentBlockerManager(cm)reloadContentBlockerWithIdentifier:completionHandler:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testContentBlockerManagerReloadAsync	-
+c:objc(cs)SFContentBlockerState	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testContentBlockerState	-
+c:objc(cs)SFContentBlockerState(py)enabled	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testContentBlockerState	-
+c:objc(cs)SFSafariSettings	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariSettingsExportFailClosed	-
+c:objc(cs)SFSafariSettings(cm)openExportBrowsingDataSettingsWithCompletionHandler:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariSettingsExportFailClosed	-
+c:objc(cs)SFSafariViewController	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(cm)prewarmConnectionsToURLs:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerPrewarmAndInvalidate	-
+c:objc(cs)SFSafariViewController(im)initWithURL:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(im)initWithURL:::SYNTHESIZED::c:objc(cs)SFSafariViewController	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(im)initWithURL:configuration:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(im)initWithURL:configuration:::SYNTHESIZED::c:objc(cs)SFSafariViewController	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(im)initWithURL:entersReaderIfAvailable:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(im)initWithURL:entersReaderIfAvailable:::SYNTHESIZED::c:objc(cs)SFSafariViewController	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(py)configuration	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(py)delegate	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDelegateInitialLoadFailure	-
+c:objc(cs)SFSafariViewController(py)dismissButtonStyle	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerInits	-
+c:objc(cs)SFSafariViewController(py)preferredBarTintColor	deferred		UIColor is owned by UIKit, which this seed does not list as a dependency. Isolated Linux host compilation cannot import UIKit, and a public module-local UIColor substitute is forbidden.
+c:objc(cs)SFSafariViewController(py)preferredControlTintColor	deferred		UIColor is owned by UIKit; isolated host sources import Foundation only. The existing Darwin/OpenUIKit-gated properties remain behind canImport(UIKit) || canImport(OpenUIKit).
+c:objc(cs)SFSafariViewControllerActivityButton	deferred		SFSafariViewController.ActivityButton requires UIImage in its designated initializer. UIImage is UIKit-owned and unavailable on the isolated host.
+c:objc(cs)SFSafariViewControllerActivityButton(im)initWithTemplateImage:extensionIdentifier:	deferred		Designated initializer takes UIImage. Isolated host cannot import UIKit, so the initializer is omitted rather than given a lookalike image type.
+c:objc(cs)SFSafariViewControllerActivityButton(py)extensionIdentifier	deferred		Property belongs to ActivityButton, which cannot be declared source-compatibly without the UIImage designated initializer.
+c:objc(cs)SFSafariViewControllerActivityButton(py)templateImage	deferred		Property type is UIImage. Isolated host cannot import UIKit.
+c:objc(cs)SFSafariViewControllerConfiguration	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerConfigurationCopy	-
+c:objc(cs)SFSafariViewControllerConfiguration(py)activityButton	deferred		Property type is SFSafariViewController.ActivityButton, which cannot be declared without UIImage.
+c:objc(cs)SFSafariViewControllerConfiguration(py)barCollapsingEnabled	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerConfigurationCopy	-
+c:objc(cs)SFSafariViewControllerConfiguration(py)entersReaderIfAvailable	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerConfigurationCopy	-
+c:objc(cs)SFSafariViewControllerConfiguration(py)eventAttribution	deferred		Property type is UIEventAttribution, owned by UIKit. Isolated host cannot import UIKit.
+c:objc(cs)SFSafariViewControllerDataStore	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDataStoreClear	-
+c:objc(cs)SFSafariViewControllerDataStore(cpy)defaultDataStore	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDataStoreClear	-
+c:objc(cs)SFSafariViewControllerDataStore(im)clearWebsiteDataWithCompletionHandler:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDataStoreClear	-
+c:objc(cs)SFSafariViewControllerPrewarmingToken	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerPrewarmAndInvalidate	-
+c:objc(cs)SFSafariViewControllerPrewarmingToken(im)invalidate	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerPrewarmAndInvalidate	-
+c:objc(cs)SSReadingList	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListSupportsAndAdd	-
+c:objc(cs)SSReadingList(cm)defaultReadingList	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListSupportsAndAdd	-
+c:objc(cs)SSReadingList(cm)supportsURL:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListSupportsAndAdd	-
+c:objc(cs)SSReadingList(im)addReadingListItemWithURL:title:previewText:error:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListSupportsAndAdd	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SFSafariViewControllerActivityButton	deferred		NSCoding initializer is on ActivityButton. The class is omitted because its designated initializer requires UIImage.
+c:objc(pl)SFAddToHomeScreenActivityItem	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAddToHomeScreenActivityItemRequirements	-
+c:objc(pl)SFAddToHomeScreenActivityItem(im)getHomeScreenWebAppInfoWithCompletionHandler:	deferred		Completion type is SFAddToHomeScreenInfo, which cannot be declared without BEWebAppManifest.
+c:objc(pl)SFAddToHomeScreenActivityItem(im)getWebAppManifestWithCompletionHandler:	deferred		Completion type is BEWebAppManifest from BrowserEngineKit, unavailable on this host.
+c:objc(pl)SFAddToHomeScreenActivityItem(py)URL	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAddToHomeScreenActivityItemRequirements	-
+c:objc(pl)SFAddToHomeScreenActivityItem(py)iconItemProvider	deferred		Property type is NSItemProvider, which is not present in isolated Linux Foundation.
+c:objc(pl)SFAddToHomeScreenActivityItem(py)title	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testAddToHomeScreenActivityItemRequirements	-
+c:objc(pl)SFSafariViewControllerDelegate	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDelegateInitialLoadFailure	-
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:activityItemsForURL:title:	deferred		Return type is [UIActivity]. UIActivity is UIKit-owned and unavailable on the isolated host.
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:didCompleteInitialLoad:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDelegateInitialLoadFailure	-
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:excludedActivityTypesForURL:title:	deferred		Return type is [UIActivity.ActivityType]. UIActivity is UIKit-owned and unavailable on the isolated host.
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewController:initialLoadDidRedirectToURL:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDelegateInitialLoadFailure	-
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewControllerDidFinish:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDelegateInitialLoadFailure	-
+c:objc(pl)SFSafariViewControllerDelegate(im)safariViewControllerWillOpenInBrowser:	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSafariViewControllerDelegateInitialLoadFailure	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
+s:SC11SFErrorCodeLeV	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SC11SFErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+s:SC11SFErrorCodeLeV13internalErrorSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SC11SFErrorCodeLeV16noExtensionFoundSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SC11SFErrorCodeLeV17noAttachmentFoundSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SC11SFErrorCodeLeV18loadingInterruptedSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SC11SFErrorCodeLeV18missingEntitlementSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SC21SFAuthenticationErrorLeV	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+s:SC21SFAuthenticationErrorLeV11errorDomainSSvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+s:SC21SFAuthenticationErrorLeV13canceledLoginSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+s:SC22SSReadingListErrorCodeLeV	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+s:SC22SSReadingListErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testErrorDomainConstants	-
+s:SC22SSReadingListErrorCodeLeV19urlSchemeNotAllowedSoAAVvpZ	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFContentBlockerErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SFSafariViewControllerDismissButtonStyle	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFContentBlockerErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SFSafariViewControllerDismissButtonStyle	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFContentBlockerErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SFSafariViewControllerDismissButtonStyle	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+s:So11SFErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorCodes	-
+s:So21SFAuthenticationErrorV8rawValueABSgSi_tcfc	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorCodes	-
+s:So22SSReadingListErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorCodes	-
+s:So25SFContentBlockerErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFContentBlockerErrorCodes	-
+s:So40SFSafariViewControllerDismissButtonStyleV8rawValueABSgSi_tcfc	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testDismissButtonStyle	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SFAuthenticationError	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFAuthenticationErrorBridgedMembers	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SFErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSFErrorBridgedMembers	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SSReadingListErrorCode	implemented	test:full/safariservices/tests/agent/SafariServicesTests.swift#testSSReadingListErrorBridgedMembers	-
