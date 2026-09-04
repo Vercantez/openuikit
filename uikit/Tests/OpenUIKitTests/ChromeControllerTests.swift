@@ -649,6 +649,17 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
                               height: UINavigationBar.pocketHeight))
     }
 
+    /// MEASURED 2026-09-04, probe_scroll_edge_white, iPhone SE 2x / iOS 26.1:
+    /// red|green edge under the collapsed bar, y = 8…20: 10–90 % mix is 5 pt,
+    /// erf fit σ = 1.85. Catalyst keeps the 8 pt navbar_inline kernel.
+    func testIOSPocketBlurSigmaIsTheMeasuredEdge() {
+        XCTAssertEqual(UINavigationBar.pocketBlurSigma, 1.85)
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .macOS
+        XCTAssertEqual(UINavigationBar.pocketBlurSigma, 8)
+        OpenUIKitRuntime.systemFontCut = saved
+    }
+
     /// Zero-velocity release: d = 36 expands, d = 37 collapses
     /// (navprobe.scroll hold_d36 / hold_d37).
     func testIOSSnapThresholdIs36() {

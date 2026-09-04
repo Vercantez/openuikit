@@ -52,6 +52,13 @@ if git diff main..."$BR" -- 'uikit/Sources/*.swift' | grep -E '^\+' | grep -qE '
   echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
 fi
 
+# Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
+# each; 25 of them once filled the disk. Reap any not attached to a live run.
+for stale in /tmp/agent_merge.*(N/); do
+  pgrep -f "agent_merge.*$stale" >/dev/null 2>&1 && continue
+  git worktree remove --force "$stale" 2>/dev/null || rm -rf "$stale"
+done
+git worktree prune
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
 trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
