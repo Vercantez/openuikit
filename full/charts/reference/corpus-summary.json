@@ -1,0 +1,69 @@
+{
+  "module": "Charts",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 14,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 68,
+    "iphoneos_runtime_focus_launch_build_rank": 68,
+    "module": "Charts",
+    "occurrence_count": 14,
+    "per_app": {
+      "WordPress-iOS": {
+        "evidence_sha256": "694774854acd773219113cc81183b9c08609f498d0da138938edfea7d0ff33d8",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Modules/Sources/JetpackStats/Cards/ChartCard.swift",
+          "Modules/Sources/JetpackStats/Cards/StandaloneChartCard.swift",
+          "Modules/Sources/JetpackStats/Cards/TodayCard.swift",
+          "Modules/Sources/JetpackStats/Charts/BarChartView.swift",
+          "Modules/Sources/JetpackStats/Charts/Helpers/ChartHelper.swift",
+          "Modules/Sources/JetpackStats/Charts/LineChartView.swift",
+          "Modules/Sources/JetpackStats/Charts/PieChartView.swift",
+          "Modules/Sources/JetpackStats/Charts/SimpleBarChartView.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "9ddf4fdad7ee0ab674c54a5e2fc4d0e0fb766d74c664c8294c24cb04e5f02476",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/HADesignSystem/Sources/Widgets/Energy/WidgetEnergyChartView.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "bafc435d666a3d2d82688cf5c0655864243f60e7a378d4c344d7b32c158b34e3",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "WMFComponents/Sources/WMFComponents/Components/Activity Tab/WMFActivityTabView.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Activity Tab/WMFContributionView.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Activity Tab/WMFImpactViews.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Activity Tab/WMFTimelineView.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Activity Tab/WMFTopViewedEditsView.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 68,
+    "byFocusLaunchBuildRelevance": 68
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

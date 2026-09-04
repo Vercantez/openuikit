@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/Charts.framework/Charts.tbd	188617	bf1fd994f23eacd97022ab2254e5f28b2df95fb99d1615f4b33df631cbe474c5
+swiftinterface	System/Library/Frameworks/Charts.framework/Modules/Charts.swiftmodule/arm64e-apple-ios.swiftinterface	220715	d0dd91b2f3167d948e7b5a17ef87796aa177b1acaaf6a87ce13c07ca095145fd

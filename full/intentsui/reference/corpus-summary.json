@@ -1,0 +1,106 @@
+{
+  "module": "IntentsUI",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 16,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "0622cba95819cee4aad1223b741e6a83baa882664f12e54ba840d383b3445361",
+      "main_target_file_count": 3,
+      "repository_file_count": 3
+    },
+    "iphoneos_runtime_app_coverage_rank": 58,
+    "iphoneos_runtime_focus_launch_build_rank": 7,
+    "module": "IntentsUI",
+    "occurrence_count": 16,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "a01b71331b8025915751c149438d5f8ee4ae05906e1ffb5bf7fef2c848306def",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Signal/src/ViewControllers/AppSettings/ChatsSettingsViewController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "c70dda91f494dc23e8ed3e6c2f32f1ef67b568030251865f22b651a54b1405da",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Extensions/SiriShortcuts.swift",
+          "firefox-ios/Client/Frontend/Settings/SiriSettingsViewController.swift",
+          "focus-ios/Blockzilla/Settings/Controller/SettingsViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriFavoriteViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriShortcuts.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "0622cba95819cee4aad1223b741e6a83baa882664f12e54ba840d383b3445361",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "focus-ios/Blockzilla/Settings/Controller/SettingsViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriFavoriteViewController.swift",
+          "focus-ios/Blockzilla/Siri/SiriShortcuts.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "a00a1d54b623fd1e90b542c313c49a29f37193b429a5681d6f5973a8380ac464",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "PodcastsIntentsUI/IntentViewController.swift",
+          "podcasts/PlaylistShortcutsViewController.swift",
+          "podcasts/PlaylistsShortcutsViewController.swift",
+          "podcasts/PodcastShortcutsViewController.swift",
+          "podcasts/Podcasts/Podcast Page/Podcast Settings/PodcastSettingsViewController+Table.swift",
+          "podcasts/Podcasts/Podcast Page/Podcast Settings/PodcastSettingsViewController+VoiceShortcuts.swift",
+          "podcasts/SiriSettingsViewController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 58,
+    "byFocusLaunchBuildRelevance": 7
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 13,
+      "apps": [
+        "NetNewsWire",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "element-ios",
+        "firefox-ios",
+        "focus-ios",
+        "home-assistant-ios",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "simplenote-ios",
+        "vlc-ios"
+      ],
+      "family": "Intents / IntentsUI",
+      "file_count": 117,
+      "focus_main_target_file_count": 7,
+      "focus_repository_file_count": 9,
+      "modules": [
+        "Intents",
+        "IntentsUI"
+      ],
+      "note": "Siri/custom intent model and UI"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

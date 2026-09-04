@@ -1,0 +1,129 @@
+precise	kind	title	path	declaration
+c:@E@OSLogEntryLogLevel	swift.enum	OSLogEntryLog.Level	OSLogEntryLog.Level	enum Level
+c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelDebug	swift.enum.case	OSLogEntryLog.Level.debug	OSLogEntryLog.Level.debug	case debug
+c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelError	swift.enum.case	OSLogEntryLog.Level.error	OSLogEntryLog.Level.error	case error
+c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelFault	swift.enum.case	OSLogEntryLog.Level.fault	OSLogEntryLog.Level.fault	case fault
+c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelInfo	swift.enum.case	OSLogEntryLog.Level.info	OSLogEntryLog.Level.info	case info
+c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelNotice	swift.enum.case	OSLogEntryLog.Level.notice	OSLogEntryLog.Level.notice	case notice
+c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelUndefined	swift.enum.case	OSLogEntryLog.Level.undefined	OSLogEntryLog.Level.undefined	case undefined
+c:@E@OSLogEntrySignpostType	swift.enum	OSLogEntrySignpost.SignpostType	OSLogEntrySignpost.SignpostType	enum SignpostType
+c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeEvent	swift.enum.case	OSLogEntrySignpost.SignpostType.event	OSLogEntrySignpost.SignpostType.event	case event
+c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeIntervalBegin	swift.enum.case	OSLogEntrySignpost.SignpostType.intervalBegin	OSLogEntrySignpost.SignpostType.intervalBegin	case intervalBegin
+c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeIntervalEnd	swift.enum.case	OSLogEntrySignpost.SignpostType.intervalEnd	OSLogEntrySignpost.SignpostType.intervalEnd	case intervalEnd
+c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeUndefined	swift.enum.case	OSLogEntrySignpost.SignpostType.undefined	OSLogEntrySignpost.SignpostType.undefined	case undefined
+c:@E@OSLogEntryStoreCategory	swift.enum	OSLogEntry.StoreCategory	OSLogEntry.StoreCategory	enum StoreCategory
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm1	swift.enum.case	OSLogEntry.StoreCategory.longTerm1	OSLogEntry.StoreCategory.longTerm1	case longTerm1
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm14	swift.enum.case	OSLogEntry.StoreCategory.longTerm14	OSLogEntry.StoreCategory.longTerm14	case longTerm14
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm3	swift.enum.case	OSLogEntry.StoreCategory.longTerm3	OSLogEntry.StoreCategory.longTerm3	case longTerm3
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm30	swift.enum.case	OSLogEntry.StoreCategory.longTerm30	OSLogEntry.StoreCategory.longTerm30	case longTerm30
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm7	swift.enum.case	OSLogEntry.StoreCategory.longTerm7	OSLogEntry.StoreCategory.longTerm7	case longTerm7
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTermAuto	swift.enum.case	OSLogEntry.StoreCategory.longTermAuto	OSLogEntry.StoreCategory.longTermAuto	case longTermAuto
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryMetadata	swift.enum.case	OSLogEntry.StoreCategory.metadata	OSLogEntry.StoreCategory.metadata	case metadata
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryShortTerm	swift.enum.case	OSLogEntry.StoreCategory.shortTerm	OSLogEntry.StoreCategory.shortTerm	case shortTerm
+c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryUndefined	swift.enum.case	OSLogEntry.StoreCategory.undefined	OSLogEntry.StoreCategory.undefined	case undefined
+c:@E@OSLogEnumeratorOptions	swift.struct	OSLogEnumerator.Options	OSLogEnumerator.Options	struct Options
+c:@E@OSLogEnumeratorOptions@OSLogEnumeratorReverse	swift.type.property	reverse	OSLogEnumerator.Options.reverse	static var reverse: OSLogEnumerator.Options { get }
+c:@E@OSLogMessageComponentArgumentCategory	swift.enum	OSLogMessageComponent.ArgumentCategory	OSLogMessageComponent.ArgumentCategory	enum ArgumentCategory
+c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryData	swift.enum.case	OSLogMessageComponent.ArgumentCategory.data	OSLogMessageComponent.ArgumentCategory.data	case data
+c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryDouble	swift.enum.case	OSLogMessageComponent.ArgumentCategory.double	OSLogMessageComponent.ArgumentCategory.double	case double
+c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryInt64	swift.enum.case	OSLogMessageComponent.ArgumentCategory.int64	OSLogMessageComponent.ArgumentCategory.int64	case int64
+c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryString	swift.enum.case	OSLogMessageComponent.ArgumentCategory.string	OSLogMessageComponent.ArgumentCategory.string	case string
+c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryUInt64	swift.enum.case	OSLogMessageComponent.ArgumentCategory.uInt64	OSLogMessageComponent.ArgumentCategory.uInt64	case uInt64
+c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryUndefined	swift.enum.case	OSLogMessageComponent.ArgumentCategory.undefined	OSLogMessageComponent.ArgumentCategory.undefined	case undefined
+c:@E@OSLogStoreScope	swift.enum	OSLogStore.Scope	OSLogStore.Scope	enum Scope
+c:@E@OSLogStoreScope@OSLogStoreCurrentProcessIdentifier	swift.enum.case	OSLogStore.Scope.currentProcessIdentifier	OSLogStore.Scope.currentProcessIdentifier	case currentProcessIdentifier
+c:objc(cs)OSLogEntry	swift.class	OSLogEntry	OSLogEntry	class OSLogEntry
+c:objc(cs)OSLogEntry(py)composedMessage	swift.property	composedMessage	OSLogEntry.composedMessage	var composedMessage: String { get }
+c:objc(cs)OSLogEntry(py)date	swift.property	date	OSLogEntry.date	var date: Date { get }
+c:objc(cs)OSLogEntry(py)storeCategory	swift.property	storeCategory	OSLogEntry.storeCategory	var storeCategory: OSLogEntry.StoreCategory { get }
+c:objc(cs)OSLogEntryActivity	swift.class	OSLogEntryActivity	OSLogEntryActivity	class OSLogEntryActivity
+c:objc(cs)OSLogEntryActivity(py)parentActivityIdentifier	swift.property	parentActivityIdentifier	OSLogEntryActivity.parentActivityIdentifier	var parentActivityIdentifier: os_activity_id_t { get }
+c:objc(cs)OSLogEntryBoundary	swift.class	OSLogEntryBoundary	OSLogEntryBoundary	class OSLogEntryBoundary
+c:objc(cs)OSLogEntryLog	swift.class	OSLogEntryLog	OSLogEntryLog	class OSLogEntryLog
+c:objc(cs)OSLogEntryLog(py)level	swift.property	level	OSLogEntryLog.level	var level: OSLogEntryLog.Level { get }
+c:objc(cs)OSLogEntrySignpost	swift.class	OSLogEntrySignpost	OSLogEntrySignpost	class OSLogEntrySignpost
+c:objc(cs)OSLogEntrySignpost(py)signpostIdentifier	swift.property	signpostIdentifier	OSLogEntrySignpost.signpostIdentifier	var signpostIdentifier: os_signpost_id_t { get }
+c:objc(cs)OSLogEntrySignpost(py)signpostName	swift.property	signpostName	OSLogEntrySignpost.signpostName	var signpostName: String { get }
+c:objc(cs)OSLogEntrySignpost(py)signpostType	swift.property	signpostType	OSLogEntrySignpost.signpostType	var signpostType: OSLogEntrySignpost.SignpostType { get }
+c:objc(cs)OSLogEnumerator	swift.class	OSLogEnumerator	OSLogEnumerator	class OSLogEnumerator
+c:objc(cs)OSLogMessageComponent	swift.class	OSLogMessageComponent	OSLogMessageComponent	class OSLogMessageComponent
+c:objc(cs)OSLogMessageComponent(py)argumentCategory	swift.property	argumentCategory	OSLogMessageComponent.argumentCategory	var argumentCategory: OSLogMessageComponent.ArgumentCategory { get }
+c:objc(cs)OSLogMessageComponent(py)argumentDataValue	swift.property	argumentDataValue	OSLogMessageComponent.argumentDataValue	var argumentDataValue: Data? { get }
+c:objc(cs)OSLogMessageComponent(py)argumentDoubleValue	swift.property	argumentDoubleValue	OSLogMessageComponent.argumentDoubleValue	var argumentDoubleValue: Double { get }
+c:objc(cs)OSLogMessageComponent(py)argumentInt64Value	swift.property	argumentInt64Value	OSLogMessageComponent.argumentInt64Value	var argumentInt64Value: Int64 { get }
+c:objc(cs)OSLogMessageComponent(py)argumentNumberValue	swift.property	argumentNumberValue	OSLogMessageComponent.argumentNumberValue	var argumentNumberValue: NSNumber? { get }
+c:objc(cs)OSLogMessageComponent(py)argumentStringValue	swift.property	argumentStringValue	OSLogMessageComponent.argumentStringValue	var argumentStringValue: String? { get }
+c:objc(cs)OSLogMessageComponent(py)argumentUInt64Value	swift.property	argumentUInt64Value	OSLogMessageComponent.argumentUInt64Value	var argumentUInt64Value: UInt64 { get }
+c:objc(cs)OSLogMessageComponent(py)formatSubstring	swift.property	formatSubstring	OSLogMessageComponent.formatSubstring	var formatSubstring: String { get }
+c:objc(cs)OSLogMessageComponent(py)placeholder	swift.property	placeholder	OSLogMessageComponent.placeholder	var placeholder: String { get }
+c:objc(cs)OSLogPosition	swift.class	OSLogPosition	OSLogPosition	class OSLogPosition
+c:objc(cs)OSLogStore	swift.class	OSLogStore	OSLogStore	class OSLogStore
+c:objc(cs)OSLogStore(cm)storeWithScope:error:	swift.init	init(scope:)	OSLogStore.init(scope:)	convenience init(scope: OSLogStore.Scope) throws
+c:objc(cs)OSLogStore(cm)storeWithURL:error:	swift.init	init(url:)	OSLogStore.init(url:)	convenience init(url: URL) throws
+c:objc(cs)OSLogStore(cm)storeWithURL:error:::SYNTHESIZED::c:objc(cs)OSLogStore	swift.init	init(URL:)	OSLogStore.init(URL:)	convenience init(URL url: URL) throws
+c:objc(cs)OSLogStore(im)positionWithDate:	swift.method	position(date:)	OSLogStore.position(date:)	func position(date: Date) -> OSLogPosition
+c:objc(cs)OSLogStore(im)positionWithTimeIntervalSinceEnd:	swift.method	position(timeIntervalSinceEnd:)	OSLogStore.position(timeIntervalSinceEnd:)	func position(timeIntervalSinceEnd seconds: TimeInterval) -> OSLogPosition
+c:objc(cs)OSLogStore(im)positionWithTimeIntervalSinceLatestBoot:	swift.method	position(timeIntervalSinceLatestBoot:)	OSLogStore.position(timeIntervalSinceLatestBoot:)	func position(timeIntervalSinceLatestBoot seconds: TimeInterval) -> OSLogPosition
+c:objc(pl)OSLogEntryFromProcess	swift.protocol	OSLogEntryFromProcess	OSLogEntryFromProcess	protocol OSLogEntryFromProcess
+c:objc(pl)OSLogEntryFromProcess(py)activityIdentifier	swift.property	activityIdentifier	OSLogEntryFromProcess.activityIdentifier	var activityIdentifier: os_activity_id_t { get }
+c:objc(pl)OSLogEntryFromProcess(py)process	swift.property	process	OSLogEntryFromProcess.process	var process: String { get }
+c:objc(pl)OSLogEntryFromProcess(py)processIdentifier	swift.property	processIdentifier	OSLogEntryFromProcess.processIdentifier	var processIdentifier: pid_t { get }
+c:objc(pl)OSLogEntryFromProcess(py)sender	swift.property	sender	OSLogEntryFromProcess.sender	var sender: String { get }
+c:objc(pl)OSLogEntryFromProcess(py)threadIdentifier	swift.property	threadIdentifier	OSLogEntryFromProcess.threadIdentifier	var threadIdentifier: UInt64 { get }
+c:objc(pl)OSLogEntryWithPayload	swift.protocol	OSLogEntryWithPayload	OSLogEntryWithPayload	protocol OSLogEntryWithPayload
+c:objc(pl)OSLogEntryWithPayload(py)category	swift.property	category	OSLogEntryWithPayload.category	var category: String { get }
+c:objc(pl)OSLogEntryWithPayload(py)components	swift.property	components	OSLogEntryWithPayload.components	var components: [OSLogMessageComponent] { get }
+c:objc(pl)OSLogEntryWithPayload(py)formatString	swift.property	formatString	OSLogEntryWithPayload.formatString	var formatString: String { get }
+c:objc(pl)OSLogEntryWithPayload(py)subsystem	swift.property	subsystem	OSLogEntryWithPayload.subsystem	var subsystem: String { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEntryLogLevel	swift.func.op	!=(_:_:)	OSLogEntryLog.Level.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEntrySignpostType	swift.func.op	!=(_:_:)	OSLogEntrySignpost.SignpostType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEntryStoreCategory	swift.func.op	!=(_:_:)	OSLogEntry.StoreCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.func.op	!=(_:_:)	OSLogEnumerator.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogMessageComponentArgumentCategory	swift.func.op	!=(_:_:)	OSLogMessageComponent.ArgumentCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogStoreScope	swift.func.op	!=(_:_:)	OSLogStore.Scope.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@OSLogEntryLogLevel	swift.property	hashValue	OSLogEntryLog.Level.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@OSLogEntrySignpostType	swift.property	hashValue	OSLogEntrySignpost.SignpostType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@OSLogEntryStoreCategory	swift.property	hashValue	OSLogEntry.StoreCategory.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@OSLogMessageComponentArgumentCategory	swift.property	hashValue	OSLogMessageComponent.ArgumentCategory.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@OSLogStoreScope	swift.property	hashValue	OSLogStore.Scope.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSLogEntryLogLevel	swift.method	hash(into:)	OSLogEntryLog.Level.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSLogEntrySignpostType	swift.method	hash(into:)	OSLogEntrySignpost.SignpostType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSLogEntryStoreCategory	swift.method	hash(into:)	OSLogEntry.StoreCategory.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSLogMessageComponentArgumentCategory	swift.method	hash(into:)	OSLogMessageComponent.ArgumentCategory.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSLogStoreScope	swift.method	hash(into:)	OSLogStore.Scope.hash(into:)	func hash(into hasher: inout Hasher)
+s:So10OSLogStoreC0A0E10getEntries4with2at8matchings11AnySequenceVySo0A5EntryCGSo0A17EnumeratorOptionsV_So0A8PositionCSgSo11NSPredicateCSgtKF	swift.method	getEntries(with:at:matching:)	OSLogStore.getEntries(with:at:matching:)	func getEntries(with options: OSLogEnumerator.Options = [], at position: OSLogPosition? = nil, matching predicate: NSPredicate? = nil) throws -> AnySequence<OSLogEntry>
+s:So15OSLogStoreScopeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	OSLogStore.Scope.init(rawValue:)	init?(rawValue: Int)
+s:So18OSLogEntryLogLevelV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	OSLogEntryLog.Level.init(rawValue:)	init?(rawValue: Int)
+s:So21OSLogMessageComponentC0A0E8ArgumentO	swift.enum	OSLogMessageComponent.Argument	OSLogMessageComponent.Argument	enum Argument
+s:So21OSLogMessageComponentC0A0E8ArgumentO4datayAE10Foundation4DataVcAEmF	swift.enum.case	OSLogMessageComponent.Argument.data(_:)	OSLogMessageComponent.Argument.data(_:)	case data(Data)
+s:So21OSLogMessageComponentC0A0E8ArgumentO6doubleyAESdcAEmF	swift.enum.case	OSLogMessageComponent.Argument.double(_:)	OSLogMessageComponent.Argument.double(_:)	case double(Double)
+s:So21OSLogMessageComponentC0A0E8ArgumentO6signedyAEs5Int64VcAEmF	swift.enum.case	OSLogMessageComponent.Argument.signed(_:)	OSLogMessageComponent.Argument.signed(_:)	case signed(Int64)
+s:So21OSLogMessageComponentC0A0E8ArgumentO6stringyAESScAEmF	swift.enum.case	OSLogMessageComponent.Argument.string(_:)	OSLogMessageComponent.Argument.string(_:)	case string(String)
+s:So21OSLogMessageComponentC0A0E8ArgumentO8unsignedyAEs6UInt64VcAEmF	swift.enum.case	OSLogMessageComponent.Argument.unsigned(_:)	OSLogMessageComponent.Argument.unsigned(_:)	case unsigned(UInt64)
+s:So21OSLogMessageComponentC0A0E8ArgumentO9undefinedyA2EmF	swift.enum.case	OSLogMessageComponent.Argument.undefined	OSLogMessageComponent.Argument.undefined	case undefined
+s:So21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvp	swift.property	argument	OSLogMessageComponent.argument	var argument: OSLogMessageComponent.Argument { get }
+s:So22OSLogEntrySignpostTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	OSLogEntrySignpost.SignpostType.init(rawValue:)	init?(rawValue: Int)
+s:So22OSLogEnumeratorOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	OSLogEnumerator.Options.init(rawValue:)	init(rawValue: UInt)
+s:So23OSLogEntryStoreCategoryV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	OSLogEntry.StoreCategory.init(rawValue:)	init?(rawValue: Int)
+s:So37OSLogMessageComponentArgumentCategoryV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	OSLogMessageComponent.ArgumentCategory.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.init	init(arrayLiteral:)	OSLogEnumerator.Options.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	isDisjoint(with:)	OSLogEnumerator.Options.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	isSuperset(of:)	OSLogEnumerator.Options.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	subtracting(_:)	OSLogEnumerator.Options.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	isStrictSubset(of:)	OSLogEnumerator.Options.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	isStrictSuperset(of:)	OSLogEnumerator.Options.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.property	isEmpty	OSLogEnumerator.Options.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	isSubset(of:)	OSLogEnumerator.Options.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	subtract(_:)	OSLogEnumerator.Options.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.init	init(_:)	OSLogEnumerator.Options.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	insert(_:)	OSLogEnumerator.Options.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	remove(_:)	OSLogEnumerator.Options.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	update(with:)	OSLogEnumerator.Options.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	contains(_:)	OSLogEnumerator.Options.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	intersection(_:)	OSLogEnumerator.Options.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	symmetricDifference(_:)	OSLogEnumerator.Options.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	union(_:)	OSLogEnumerator.Options.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	formIntersection(_:)	OSLogEnumerator.Options.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	formSymmetricDifference(_:)	OSLogEnumerator.Options.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.method	formUnion(_:)	OSLogEnumerator.Options.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@OSLogEnumeratorOptions	swift.init	init()	OSLogEnumerator.Options.init()	init()

@@ -1,0 +1,2543 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticDeviceCapability",
+        "printedName": "CoreHaptics.CHHapticDeviceCapability"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticErrors",
+        "printedName": "CoreHaptics.CHHapticErrors"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticEngine",
+        "printedName": "CoreHaptics.CHHapticEngine"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticEvent",
+        "printedName": "CoreHaptics.CHHapticEvent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticParameter",
+        "printedName": "CoreHaptics.CHHapticParameter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticPattern",
+        "printedName": "CoreHaptics.CHHapticPattern"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreHaptics",
+        "name": "CoreHaptics.CHHapticPatternPlayer",
+        "printedName": "CoreHaptics.CHHapticPatternPlayer"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC17CHHapticErrorCodeLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC17CHHapticErrorCodeLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "CoreHaptics",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC17CHHapticErrorCodeLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CHHapticError",
+                "printedName": "CoreHaptics.CHHapticError",
+                "usr": "c:@E@CHHapticErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC17CHHapticErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "CoreHaptics",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC17CHHapticErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC17CHHapticErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "CoreHaptics",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC17CHHapticErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "CoreHaptics.CHHapticError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo17CHHapticErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "CoreHaptics",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So17CHHapticErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo17CHHapticErrorCodeV8rawValueSivg",
+                    "moduleName": "CoreHaptics",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So17CHHapticErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo17CHHapticErrorCodeV8rawValueSivp",
+                "moduleName": "CoreHaptics",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So17CHHapticErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo17CHHapticErrorCodeV8RawValuea",
+                "moduleName": "CoreHaptics",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So17CHHapticErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CHHapticError",
+                    "printedName": "CoreHaptics.CHHapticError",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "CoreHaptics",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@CHHapticErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "engineNotRunning",
+                "printedName": "engineNotRunning",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeEngineNotRunning"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "operationNotPermitted",
+                "printedName": "operationNotPermitted",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeOperationNotPermitted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "engineStartTimeout",
+                "printedName": "engineStartTimeout",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeEngineStartTimeout"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "notSupported",
+                "printedName": "notSupported",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeNotSupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "serverInitFailed",
+                "printedName": "serverInitFailed",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeServerInitFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "serverInterrupted",
+                "printedName": "serverInterrupted",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeServerInterrupted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidPatternPlayer",
+                "printedName": "invalidPatternPlayer",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternPlayer"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidPatternData",
+                "printedName": "invalidPatternData",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternData"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidPatternDictionary",
+                "printedName": "invalidPatternDictionary",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternDictionary"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidAudioSession",
+                "printedName": "invalidAudioSession",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidAudioSession"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidEngineParameter",
+                "printedName": "invalidEngineParameter",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEngineParameter"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidParameterType",
+                "printedName": "invalidParameterType",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidParameterType"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidEventType",
+                "printedName": "invalidEventType",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventType"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidEventTime",
+                "printedName": "invalidEventTime",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventTime"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidEventDuration",
+                "printedName": "invalidEventDuration",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventDuration"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidAudioResource",
+                "printedName": "invalidAudioResource",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidAudioResource"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "resourceNotAvailable",
+                "printedName": "resourceNotAvailable",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeResourceNotAvailable"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "badEventEntry",
+                "printedName": "badEventEntry",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeBadEventEntry"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "badParameterEntry",
+                "printedName": "badParameterEntry",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeBadParameterEntry"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "invalidTime",
+                "printedName": "invalidTime",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidTime"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "fileNotFound",
+                "printedName": "fileNotFound",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeFileNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "insufficientPower",
+                "printedName": "insufficientPower",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInsufficientPower"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "unknownError",
+                "printedName": "unknownError",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeUnknownError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CoreHaptics.CHHapticError.Code",
+                        "usr": "c:@E@CHHapticErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CoreHaptics.CHHapticError.Code",
+                            "usr": "c:@E@CHHapticErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CoreHaptics.CHHapticError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreHaptics.CHHapticError.Code.Type) -> CoreHaptics.CHHapticError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CoreHaptics",
+                "name": "memoryError",
+                "printedName": "memoryError",
+                "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeMemoryError"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "CoreHaptics.CHHapticError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "13.0",
+            "kind": "TypeDecl",
+            "moduleName": "CoreHaptics",
+            "name": "Code",
+            "objc_name": "CHHapticErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@CHHapticErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV16engineNotRunningSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV16engineNotRunningSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "engineNotRunning",
+            "printedName": "engineNotRunning",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeEngineNotRunning"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV21operationNotPermittedSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV21operationNotPermittedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "operationNotPermitted",
+            "printedName": "operationNotPermitted",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeOperationNotPermitted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV18engineStartTimeoutSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV18engineStartTimeoutSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "engineStartTimeout",
+            "printedName": "engineStartTimeout",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeEngineStartTimeout"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV12notSupportedSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV12notSupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "notSupported",
+            "printedName": "notSupported",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeNotSupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV16serverInitFailedSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV16serverInitFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "serverInitFailed",
+            "printedName": "serverInitFailed",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeServerInitFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV17serverInterruptedSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV17serverInterruptedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "serverInterrupted",
+            "printedName": "serverInterrupted",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeServerInterrupted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV20invalidPatternPlayerSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV20invalidPatternPlayerSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidPatternPlayer",
+            "printedName": "invalidPatternPlayer",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternPlayer"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV18invalidPatternDataSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV18invalidPatternDataSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidPatternData",
+            "printedName": "invalidPatternData",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternData"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV24invalidPatternDictionarySoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV24invalidPatternDictionarySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidPatternDictionary",
+            "printedName": "invalidPatternDictionary",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternDictionary"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV19invalidAudioSessionSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV19invalidAudioSessionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidAudioSession",
+            "printedName": "invalidAudioSession",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidAudioSession"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV22invalidEngineParameterSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV22invalidEngineParameterSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidEngineParameter",
+            "printedName": "invalidEngineParameter",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEngineParameter"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV20invalidParameterTypeSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV20invalidParameterTypeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidParameterType",
+            "printedName": "invalidParameterType",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidParameterType"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV16invalidEventTypeSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV16invalidEventTypeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidEventType",
+            "printedName": "invalidEventType",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventType"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV16invalidEventTimeSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV16invalidEventTimeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidEventTime",
+            "printedName": "invalidEventTime",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventTime"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV20invalidEventDurationSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV20invalidEventDurationSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidEventDuration",
+            "printedName": "invalidEventDuration",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventDuration"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV20invalidAudioResourceSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV20invalidAudioResourceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidAudioResource",
+            "printedName": "invalidAudioResource",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidAudioResource"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV20resourceNotAvailableSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV20resourceNotAvailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "resourceNotAvailable",
+            "printedName": "resourceNotAvailable",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeResourceNotAvailable"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV13badEventEntrySoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV13badEventEntrySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "badEventEntry",
+            "printedName": "badEventEntry",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeBadEventEntry"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV17badParameterEntrySoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV17badParameterEntrySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "badParameterEntry",
+            "printedName": "badParameterEntry",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeBadParameterEntry"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV11invalidTimeSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV11invalidTimeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "invalidTime",
+            "printedName": "invalidTime",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidTime"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV12fileNotFoundSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV12fileNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "fileNotFound",
+            "printedName": "fileNotFound",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeFileNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV17insufficientPowerSoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV17insufficientPowerSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "insufficientPower",
+            "printedName": "insufficientPower",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeInsufficientPower"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV07unknownB0SoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV07unknownB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "unknownError",
+            "printedName": "unknownError",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeUnknownError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CoreHaptics.CHHapticError.Code",
+                    "usr": "c:@E@CHHapticErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC17CHHapticErrorCodeLeV06memoryB0SoAAVvgZ",
+                "moduleName": "CoreHaptics",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC17CHHapticErrorCodeLeV06memoryB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CoreHaptics.CHHapticError.Code",
+                "usr": "c:@E@CHHapticErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CoreHaptics",
+            "name": "memoryError",
+            "printedName": "memoryError",
+            "static": true,
+            "usr": "c:@E@CHHapticErrorCode@CHHapticErrorCodeMemoryError"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "13.0",
+        "kind": "TypeDecl",
+        "moduleName": "CoreHaptics",
+        "name": "CHHapticError",
+        "printedName": "CHHapticError",
+        "usr": "c:@E@CHHapticErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CoreHaptics",
+    "printedName": "CoreHaptics"
+  }
+}

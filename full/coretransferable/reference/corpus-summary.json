@@ -1,0 +1,50 @@
+{
+  "module": "CoreTransferable",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 2,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 93,
+    "iphoneos_runtime_focus_launch_build_rank": 82,
+    "module": "CoreTransferable",
+    "occurrence_count": 2,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "14255761e5ca7c30d454041dab3d0803f21a64f82c89c679e27f3a2f8e726288",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/InboxComposer/Sources/Composer/Views/Attachments/PhotosItemFile.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "3897f3e57c77bc11e9d2ab87123267420954a238476e70fc827c14ee59681a3a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/Sources/Support/Model/ApplicationLog.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 93,
+    "byFocusLaunchBuildRelevance": 82
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

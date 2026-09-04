@@ -1,0 +1,118 @@
+{
+  "module": "CoreImage",
+  "moduleRecord": {
+    "app_coverage_count": 9,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 39,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 29,
+    "iphoneos_runtime_focus_launch_build_rank": 33,
+    "module": "CoreImage",
+    "occurrence_count": 41,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "86f4324d0bfa44dd5484a6b3399b1c9c1b786feae461f78e707b9e6cd8a5eb36",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "SignalServiceKit/Messages/Attachments/V2/Thumbnails/AttachmentThumbnailServiceImpl.swift",
+          "SignalServiceKit/Util/UIImage+OWS.swift",
+          "SignalUI/UIKitExtensions/UIImage+Blur.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "fa48032aaa9eb8fb585fc33d6207f147e79183fc2b8c15518af033562a606802",
+        "file_count": 26,
+        "occurrence_count": 28,
+        "sample_paths": [
+          "submodules/Camera/Sources/Camera.swift",
+          "submodules/Camera/Sources/CameraOutput.swift",
+          "submodules/Camera/Sources/CameraRoundLegacyVideoFilter.swift",
+          "submodules/Camera/Sources/CameraRoundVideoFilter.swift",
+          "submodules/Camera/Sources/CameraUtils.swift",
+          "submodules/Camera/Sources/VideoRecorder.swift",
+          "submodules/LegacyComponents/Sources/GPUImageFramebuffer.h",
+          "submodules/LegacyComponents/Sources/GPUImageOutput.h"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "dbbe9447a5559bf1da0a081e11908ee34301444e38d1f718817ec44648dca917",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/Common/Recents/Service/MatrixSDK/RecentsListService.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "842de3d3cd269fc9ae53f2e5d6817afaa521158a50dfbf77898b800764dc2e11",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/App/BarcodeScanner/Camera/BarcodeScannerCamera.swift",
+          "Sources/Shared/Environment/CameraStreamServer.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "95fe9630d27ad0a57911e6fa08df97f59f2bafc995b85b04c7131a571ce8651e",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/Activities/Views/Cells/ActivityProjectStatusCell.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "7b5ee86501feb638f13c8b33a76cfa0becbb55a09046fc0fc68e41a9faa743ba",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "MastodonSDK/Sources/MastodonExtension/UIImage.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "e92b71f335c6ff761a8c1069930f736ca8714b1f8d040db36bc1861af4222525",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Utility/NCCameraRoll.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "aa662b0a8f7496325ba16af0614734151fddc338c792777f4912f5cb980bf6ee",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Pocket Casts TV App/UI/Auth/CreateAccountView.swift",
+          "Pocket Casts TV App/UI/Auth/QRCodeView.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "2391c6b8230daee7e517149a483e2a1987c34850a66892a1ebd23b6c1f5ec4d8",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Wikipedia/Code/CIContext+WMFImageProcessing.m",
+          "Wikipedia/Code/CIDetector+WMFFaceDetection.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 29,
+    "byFocusLaunchBuildRelevance": 33
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

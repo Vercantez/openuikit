@@ -1,0 +1,355 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CoreImageDefines",
+        "printedName": "CoreImage.CoreImageDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIVector",
+        "printedName": "CoreImage.CIVector"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIColor",
+        "printedName": "CoreImage.CIColor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIImage",
+        "printedName": "CoreImage.CIImage"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIContext",
+        "printedName": "CoreImage.CIContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIFilter",
+        "printedName": "CoreImage.CIFilter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIKernel",
+        "printedName": "CoreImage.CIKernel"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIDetector",
+        "printedName": "CoreImage.CIDetector"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIFeature",
+        "printedName": "CoreImage.CIFeature"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIImageProvider",
+        "printedName": "CoreImage.CIImageProvider"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIImageProcessor",
+        "printedName": "CoreImage.CIImageProcessor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIImageAccumulator",
+        "printedName": "CoreImage.CIImageAccumulator"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIFilterConstructor",
+        "printedName": "CoreImage.CIFilterConstructor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIFilterShape",
+        "printedName": "CoreImage.CIFilterShape"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CISampler",
+        "printedName": "CoreImage.CISampler"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIRAWFilter",
+        "printedName": "CoreImage.CIRAWFilter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIRAWFilter_Deprecated",
+        "printedName": "CoreImage.CIRAWFilter_Deprecated"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIRenderDestination",
+        "printedName": "CoreImage.CIRenderDestination"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIBarcodeDescriptor",
+        "printedName": "CoreImage.CIBarcodeDescriptor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIFilterGenerator",
+        "printedName": "CoreImage.CIFilterGenerator"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIPlugIn",
+        "printedName": "CoreImage.CIPlugIn"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage.CIKernelMetalLib",
+        "printedName": "CoreImage.CIKernelMetalLib"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "CoreImage",
+        "printedName": "CoreImage"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreImage",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CoreImage",
+    "printedName": "CoreImage"
+  }
+}

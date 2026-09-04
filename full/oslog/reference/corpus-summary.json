@@ -1,0 +1,109 @@
+{
+  "module": "OSLog",
+  "moduleRecord": {
+    "app_coverage_count": 8,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 22,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 38,
+    "iphoneos_runtime_focus_launch_build_rank": 41,
+    "module": "OSLog",
+    "occurrence_count": 22,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "07d8b53c24fa8ec937166c65eb8b9239bd3b2dd670d9e0292ae8d2b3ecd0fc5c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/InboxCore/Sources/AppLogger.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "631334d19d5129859152890deb426599fcf385e67d1326bedb5ca59603a5ed2c",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "Telegram/WatchApp/tgwatch Watch App/Accounts/AccountManager.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Accounts/AccountRegistry.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Chats/ChatListStore.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Chats/FolderPillBar.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/AudioPlaybackController.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/ChatHistoryLoader.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/ChatHistoryStore.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/VideoNotePlayerView.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "de4ada1bd82ed882575cace5585e042ae6664cb0b628df6172a637933532ebb9",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/Sources/TracksMini/Tracks.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "7944cb0c618938d0053495dc3468e3da9956f525cc32ff88410ebfbd5e1c8e5d",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "DuckDuckGo/AutofillCredentialsDebugViewController.swift",
+          "Widgets/ControlWidgetVPNIntents.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "e4df4974d3de91b164b15e1cb984a428b5398c1ff77e8a32c6c7aa39cbc29cbc",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "MastodonSDK/Sources/MastodonCore/Service/API/APIService+Recommend.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "01d5e461fad38b1caec7bb45f487867f507f06bcb16d1e7f702cdd6fd95d5c0e",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Share/Advanced/NCShareCells.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "77316878f65f395cdb2b8351b9fd7c313b5f504fce47e11fe742905795aeeaa0",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Modules/Sources/PocketCastsDataModel/Public/DataManager.swift",
+          "Modules/Sources/PocketCastsUtils/Logging/FileRotating.swift",
+          "Modules/Sources/PocketCastsUtils/Logging/PersistentTextWriting.swift",
+          "podcasts/Analytics/Adapters/AnalyticsOSLogAdapter.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "b03fa555afe58995c7fbf0d3dc15a9752e66fe3ded10fb37a0e01eda42d31d05",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/iOS/PlayMediaIntent.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 38,
+    "byFocusLaunchBuildRelevance": 41
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,30 @@
+precise	kind	title	path	declaration
+c:@AAAttributionErrorDomain	swift.var	AAAttributionErrorDomain	AAAttributionErrorDomain	let AAAttributionErrorDomain: String
+c:@E@AAAttributionErrorCode	swift.enum	AAAttributionError.Code	AAAttributionError.Code	enum Code
+c:@E@AAAttributionErrorCode@AAAttributionErrorCodeInternalError	swift.enum.case	AAAttributionError.Code.internalError	AAAttributionError.Code.internalError	case internalError
+c:@E@AAAttributionErrorCode@AAAttributionErrorCodeNetworkError	swift.enum.case	AAAttributionError.Code.networkError	AAAttributionError.Code.networkError	case networkError
+c:@E@AAAttributionErrorCode@AAAttributionErrorCodePlatformNotSupported	swift.enum.case	AAAttributionError.Code.platformNotSupported	AAAttributionError.Code.platformNotSupported	case platformNotSupported
+c:objc(cs)AAAttribution	swift.class	AAAttribution	AAAttribution	class AAAttribution
+c:objc(cs)AAAttribution(cm)attributionTokenWithError:	swift.type.method	attributionToken()	AAAttribution.attributionToken()	class func attributionToken() throws -> String
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.type.property	errorDomain	AAAttributionError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	errorUserInfo	AAAttributionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	errorCode	AAAttributionError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.func.op	~=(_:_:)	AAAttributionError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	errorUserInfo	AAAttributionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.func.op	==(_:_:)	AAAttributionError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	code	AAAttributionError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.method	hash(into:)	AAAttributionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	userInfo	AAAttributionError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	errorCode	AAAttributionError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	hashValue	AAAttributionError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.init	init(_:userInfo:)	AAAttributionError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC22AAAttributionErrorCodeLeV	swift.struct	AAAttributionError	AAAttributionError	struct AAAttributionError
+s:SC22AAAttributionErrorCodeLeV07networkB0SoAAVvpZ	swift.type.property	networkError	AAAttributionError.networkError	static var networkError: AAAttributionError.Code { get }
+s:SC22AAAttributionErrorCodeLeV08internalB0SoAAVvpZ	swift.type.property	internalError	AAAttributionError.internalError	static var internalError: AAAttributionError.Code { get }
+s:SC22AAAttributionErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	AAAttributionError.errorDomain	static var errorDomain: String { get }
+s:SC22AAAttributionErrorCodeLeV20platformNotSupportedSoAAVvpZ	swift.type.property	platformNotSupported	AAAttributionError.platformNotSupported	static var platformNotSupported: AAAttributionError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.func.op	!=(_:_:)	AAAttributionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	hashValue	AAAttributionError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.method	hash(into:)	AAAttributionError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So22AAAttributionErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	AAAttributionError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@AAAttributionErrorCode	swift.property	localizedDescription	AAAttributionError.localizedDescription	var localizedDescription: String { get }

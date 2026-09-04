@@ -1,0 +1,2386 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLContextualEmbedding",
+        "printedName": "NaturalLanguage.NLContextualEmbedding"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLEmbedding",
+        "printedName": "NaturalLanguage.NLEmbedding"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLGazetteer",
+        "printedName": "NaturalLanguage.NLGazetteer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLLanguage",
+        "printedName": "NaturalLanguage.NLLanguage"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLLanguageRecognizer",
+        "printedName": "NaturalLanguage.NLLanguageRecognizer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLModel",
+        "printedName": "NaturalLanguage.NLModel"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLScript",
+        "printedName": "NaturalLanguage.NLScript"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLTagger",
+        "printedName": "NaturalLanguage.NLTagger"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLTagScheme",
+        "printedName": "NaturalLanguage.NLTagScheme"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage.NLTokenizer",
+        "printedName": "NaturalLanguage.NLTokenizer"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "NaturalLanguage",
+        "printedName": "NaturalLanguage"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NaturalLanguage",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Index",
+                "printedName": "Swift.String.Index",
+                "usr": "s:SS5IndexV"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLTokenizerC15NaturalLanguageE10tokenRange2atSnySS5IndexVGAG_tF",
+            "moduleName": "NaturalLanguage",
+            "name": "tokenRange",
+            "printedName": "tokenRange(at:)",
+            "usr": "s:So11NLTokenizerC15NaturalLanguageE10tokenRange2atSnySS5IndexVGAG_tF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "11.0",
+            "intro_iOS": "14.0",
+            "intro_tvOS": "14.0",
+            "intro_watchOS": "7.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLTokenizerC15NaturalLanguageE10tokenRange3forSnySS5IndexVGAH_tF",
+            "moduleName": "NaturalLanguage",
+            "name": "tokenRange",
+            "printedName": "tokenRange(for:)",
+            "usr": "s:So11NLTokenizerC15NaturalLanguageE10tokenRange3forSnySS5IndexVGAH_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Index",
+                            "printedName": "Swift.String.Index",
+                            "usr": "s:SS5IndexV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.String.Index>",
+                        "usr": "s:Sn"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Attributes",
+                        "printedName": "NaturalLanguage.NLTokenizer.Attributes",
+                        "usr": "c:@E@NLTokenizerAttributes"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.Range<Swift.String.Index>, NaturalLanguage.NLTokenizer.Attributes)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Range<Swift.String.Index>, NaturalLanguage.NLTokenizer.Attributes) -> Swift.Bool",
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLTokenizerC15NaturalLanguageE15enumerateTokens2in5usingySnySS5IndexVG_SbAI_So0A10AttributesVtXEtF",
+            "moduleName": "NaturalLanguage",
+            "name": "enumerateTokens",
+            "printedName": "enumerateTokens(in:using:)",
+            "usr": "s:So11NLTokenizerC15NaturalLanguageE15enumerateTokens2in5usingySnySS5IndexVG_SbAI_So0A10AttributesVtXEtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Index",
+                        "printedName": "Swift.String.Index",
+                        "usr": "s:SS5IndexV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.String.Index>",
+                    "usr": "s:Sn"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Range<Swift.String.Index>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLTokenizerC15NaturalLanguageE6tokens3forSaySnySS5IndexVGGAH_tF",
+            "moduleName": "NaturalLanguage",
+            "name": "tokens",
+            "printedName": "tokens(for:)",
+            "usr": "s:So11NLTokenizerC15NaturalLanguageE6tokens3forSaySnySS5IndexVGGAH_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "12.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NaturalLanguage",
+        "name": "NLTokenizer",
+        "objc_name": "NLTokenizer",
+        "printedName": "NLTokenizer",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NLTokenizer"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.Double]",
+                        "usr": "s:Sa"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Index",
+                            "printedName": "Swift.String.Index",
+                            "usr": "s:SS5IndexV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.String.Index>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "([Swift.Double], Swift.Range<Swift.String.Index>)"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "([Swift.Double], Swift.Range<Swift.String.Index>)?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Index",
+                "printedName": "Swift.String.Index",
+                "usr": "s:SS5IndexV"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo27NLContextualEmbeddingResultC15NaturalLanguageE11tokenVector2atSaySdG_SnySS5IndexVGtSgAH_tF",
+            "moduleName": "NaturalLanguage",
+            "name": "tokenVector",
+            "printedName": "tokenVector(at:)",
+            "usr": "s:So27NLContextualEmbeddingResultC15NaturalLanguageE11tokenVector2atSaySdG_SnySS5IndexVGtSgAH_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.Double]",
+                        "usr": "s:Sa"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Index",
+                            "printedName": "Swift.String.Index",
+                            "usr": "s:SS5IndexV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.String.Index>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "([Swift.Double], Swift.Range<Swift.String.Index>)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "([Swift.Double], Swift.Range<Swift.String.Index>) -> Swift.Bool",
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo27NLContextualEmbeddingResultC15NaturalLanguageE21enumerateTokenVectors2in5usingySnySS5IndexVG_SbSaySdG_AItXEtF",
+            "moduleName": "NaturalLanguage",
+            "name": "enumerateTokenVectors",
+            "printedName": "enumerateTokenVectors(in:using:)",
+            "usr": "s:So27NLContextualEmbeddingResultC15NaturalLanguageE21enumerateTokenVectors2in5usingySnySS5IndexVG_SbSaySdG_AItXEtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "17.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NaturalLanguage",
+        "name": "NLContextualEmbeddingResult",
+        "objc_name": "NLContextualEmbeddingResult",
+        "printedName": "NLContextualEmbeddingResult",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NLContextualEmbeddingResult"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Index",
+                "printedName": "Swift.String.Index",
+                "usr": "s:SS5IndexV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTokenUnit",
+                "printedName": "NaturalLanguage.NLTokenUnit",
+                "usr": "c:@E@NLTokenUnit"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE10tokenRange2at4unitSnySS5IndexVGAH_So11NLTokenUnitVtF",
+            "moduleName": "NaturalLanguage",
+            "name": "tokenRange",
+            "printedName": "tokenRange(at:unit:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE10tokenRange2at4unitSnySS5IndexVGAH_So11NLTokenUnitVtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTokenUnit",
+                "printedName": "NaturalLanguage.NLTokenUnit",
+                "usr": "c:@E@NLTokenUnit"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "11.0",
+            "intro_iOS": "14.0",
+            "intro_tvOS": "14.0",
+            "intro_watchOS": "7.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE10tokenRange3for4unitSnySS5IndexVGAI_So11NLTokenUnitVtF",
+            "moduleName": "NaturalLanguage",
+            "name": "tokenRange",
+            "printedName": "tokenRange(for:unit:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE10tokenRange3for4unitSnySS5IndexVGAI_So11NLTokenUnitVtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NLTag",
+                        "printedName": "NaturalLanguage.NLTag",
+                        "usr": "c:@T@NLTag"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "NaturalLanguage.NLTag?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Index",
+                        "printedName": "Swift.String.Index",
+                        "usr": "s:SS5IndexV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.String.Index>",
+                    "usr": "s:Sn"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "(NaturalLanguage.NLTag?, Swift.Range<Swift.String.Index>)"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Index",
+                "printedName": "Swift.String.Index",
+                "usr": "s:SS5IndexV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTokenUnit",
+                "printedName": "NaturalLanguage.NLTokenUnit",
+                "usr": "c:@E@NLTokenUnit"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTagScheme",
+                "printedName": "NaturalLanguage.NLTagScheme",
+                "usr": "c:@T@NLTagScheme"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE3tag2at4unit6schemeSo5NLTagaSg_SnySS5IndexVGtAL_So11NLTokenUnitVSo0H6SchemeatF",
+            "moduleName": "NaturalLanguage",
+            "name": "tag",
+            "printedName": "tag(at:unit:scheme:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE3tag2at4unit6schemeSo5NLTagaSg_SnySS5IndexVGtAL_So11NLTokenUnitVSo0H6SchemeatF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Swift.Double]",
+                    "usr": "s:SD"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Index",
+                        "printedName": "Swift.String.Index",
+                        "usr": "s:SS5IndexV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.String.Index>",
+                    "usr": "s:Sn"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "([Swift.String : Swift.Double], Swift.Range<Swift.String.Index>)"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Index",
+                "printedName": "Swift.String.Index",
+                "usr": "s:SS5IndexV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTokenUnit",
+                "printedName": "NaturalLanguage.NLTokenUnit",
+                "usr": "c:@E@NLTokenUnit"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTagScheme",
+                "printedName": "NaturalLanguage.NLTagScheme",
+                "usr": "c:@T@NLTagScheme"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "11.0",
+            "intro_iOS": "14.0",
+            "intro_tvOS": "14.0",
+            "intro_watchOS": "7.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE13tagHypotheses2at4unit6scheme12maximumCountSDySSSdG_SnySS5IndexVGtAK_So11NLTokenUnitVSo11NLTagSchemeaSitF",
+            "moduleName": "NaturalLanguage",
+            "name": "tagHypotheses",
+            "printedName": "tagHypotheses(at:unit:scheme:maximumCount:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE13tagHypotheses2at4unit6scheme12maximumCountSDySSSdG_SnySS5IndexVGtAK_So11NLTokenUnitVSo11NLTagSchemeaSitF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTokenUnit",
+                "printedName": "NaturalLanguage.NLTokenUnit",
+                "usr": "c:@E@NLTokenUnit"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTagScheme",
+                "printedName": "NaturalLanguage.NLTagScheme",
+                "usr": "c:@T@NLTagScheme"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Options",
+                "printedName": "NaturalLanguage.NLTagger.Options",
+                "usr": "c:@E@NLTaggerOptions"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "NLTag",
+                            "printedName": "NaturalLanguage.NLTag",
+                            "usr": "c:@T@NLTag"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "NaturalLanguage.NLTag?",
+                        "usr": "s:Sq"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Index",
+                            "printedName": "Swift.String.Index",
+                            "usr": "s:SS5IndexV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.String.Index>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(NaturalLanguage.NLTag?, Swift.Range<Swift.String.Index>)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(NaturalLanguage.NLTag?, Swift.Range<Swift.String.Index>) -> Swift.Bool",
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE13enumerateTags2in4unit6scheme7options5usingySnySS5IndexVG_So11NLTokenUnitVSo11NLTagSchemeaSo0A7OptionsVSbSo0N0aSg_ALtXEtF",
+            "moduleName": "NaturalLanguage",
+            "name": "enumerateTags",
+            "printedName": "enumerateTags(in:unit:scheme:options:using:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE13enumerateTags2in4unit6scheme7options5usingySnySS5IndexVG_So11NLTokenUnitVSo11NLTagSchemeaSo0A7OptionsVSbSo0N0aSg_ALtXEtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "NLTag",
+                            "printedName": "NaturalLanguage.NLTag",
+                            "usr": "c:@T@NLTag"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "NaturalLanguage.NLTag?",
+                        "usr": "s:Sq"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Index",
+                            "printedName": "Swift.String.Index",
+                            "usr": "s:SS5IndexV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.String.Index>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(NaturalLanguage.NLTag?, Swift.Range<Swift.String.Index>)"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[(NaturalLanguage.NLTag?, Swift.Range<Swift.String.Index>)]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTokenUnit",
+                "printedName": "NaturalLanguage.NLTokenUnit",
+                "usr": "c:@E@NLTokenUnit"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLTagScheme",
+                "printedName": "NaturalLanguage.NLTagScheme",
+                "usr": "c:@T@NLTagScheme"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Options",
+                "printedName": "NaturalLanguage.NLTagger.Options",
+                "usr": "c:@E@NLTaggerOptions"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE4tags2in4unit6scheme7optionsSaySo5NLTagaSg_SnySS5IndexVGtGAN_So11NLTokenUnitVSo0I6SchemeaSo0A7OptionsVtF",
+            "moduleName": "NaturalLanguage",
+            "name": "tags",
+            "printedName": "tags(in:unit:scheme:options:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE4tags2in4unit6scheme7optionsSaySo5NLTagaSg_SnySS5IndexVGtGAN_So11NLTokenUnitVSo0I6SchemeaSo0A7OptionsVtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NLLanguage",
+                "printedName": "NaturalLanguage.NLLanguage",
+                "usr": "c:@T@NLLanguage"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE03setC0_5rangeySo10NLLanguagea_SnySS5IndexVGtF",
+            "moduleName": "NaturalLanguage",
+            "name": "setLanguage",
+            "printedName": "setLanguage(_:range:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE03setC0_5rangeySo10NLLanguagea_SnySS5IndexVGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSOrthography",
+                "printedName": "Foundation.NSOrthography",
+                "usr": "c:objc(cs)NSOrthography"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Range",
+                "printedName": "Swift.Range<Swift.String.Index>",
+                "usr": "s:Sn"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo8NLTaggerC15NaturalLanguageE14setOrthography_5rangeySo13NSOrthographyC_SnySS5IndexVGtF",
+            "moduleName": "NaturalLanguage",
+            "name": "setOrthography",
+            "printedName": "setOrthography(_:range:)",
+            "usr": "s:So8NLTaggerC15NaturalLanguageE14setOrthography_5rangeySo13NSOrthographyC_SnySS5IndexVGtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "12.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NaturalLanguage",
+        "name": "NLTagger",
+        "objc_name": "NLTagger",
+        "printedName": "NLTagger",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NLTagger"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Swift.Double]",
+                "usr": "s:SD"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo7NLModelC15NaturalLanguageE24predictedLabelHypotheses3for12maximumCountSDySSSdGSS_SitF",
+            "moduleName": "NaturalLanguage",
+            "name": "predictedLabelHypotheses",
+            "printedName": "predictedLabelHypotheses(for:maximumCount:)",
+            "usr": "s:So7NLModelC15NaturalLanguageE24predictedLabelHypotheses3for12maximumCountSDySSSdGSS_SitF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Swift.Double]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[[Swift.String : Swift.Double]]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo7NLModelC15NaturalLanguageE24predictedLabelHypotheses9forTokens12maximumCountSaySDySSSdGGSaySSG_SitF",
+            "moduleName": "NaturalLanguage",
+            "name": "predictedLabelHypotheses",
+            "printedName": "predictedLabelHypotheses(forTokens:maximumCount:)",
+            "usr": "s:So7NLModelC15NaturalLanguageE24predictedLabelHypotheses9forTokens12maximumCountSaySDySSSdGGSaySSG_SitF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "12.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NaturalLanguage",
+        "name": "NLModel",
+        "objc_name": "NLModel",
+        "printedName": "NLModel",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NLModel"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "NLDistance",
+                "printedName": "NaturalLanguage.NLDistance"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "NLDistanceType",
+                "printedName": "NaturalLanguage.NLDistanceType",
+                "usr": "c:@E@NLDistanceType"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE8distance7between3and0D4TypeSdSS_SSSo010NLDistanceG0VtF",
+            "moduleName": "NaturalLanguage",
+            "name": "distance",
+            "printedName": "distance(between:and:distanceType:)",
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE8distance7between3and0D4TypeSdSS_SSSo010NLDistanceG0VtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "NLDistanceType",
+                "printedName": "NaturalLanguage.NLDistanceType",
+                "usr": "c:@E@NLDistanceType"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "NLDistance",
+                        "printedName": "NaturalLanguage.NLDistance"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.String, NaturalLanguage.NLDistance)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.String, NaturalLanguage.NLDistance) -> Swift.Bool",
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE18enumerateNeighbors3for12maximumCount12distanceType5usingySS_SiSo010NLDistanceJ0VSbSS_SdtXEtF",
+            "moduleName": "NaturalLanguage",
+            "name": "enumerateNeighbors",
+            "printedName": "enumerateNeighbors(for:maximumCount:distanceType:using:)",
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE18enumerateNeighbors3for12maximumCount12distanceType5usingySS_SiSo010NLDistanceJ0VSbSS_SdtXEtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "NLDistance",
+                        "printedName": "NaturalLanguage.NLDistance"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.String, NaturalLanguage.NLDistance)"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[(Swift.String, NaturalLanguage.NLDistance)]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "NLDistanceType",
+                "printedName": "NaturalLanguage.NLDistanceType",
+                "usr": "c:@E@NLDistanceType"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE9neighbors3for12maximumCount12distanceTypeSaySS_SdtGSS_SiSo010NLDistanceI0VtF",
+            "moduleName": "NaturalLanguage",
+            "name": "neighbors",
+            "printedName": "neighbors(for:maximumCount:distanceType:)",
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE9neighbors3for12maximumCount12distanceTypeSaySS_SdtGSS_SiSo010NLDistanceI0VtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "NLDistanceType",
+                "printedName": "NaturalLanguage.NLDistanceType",
+                "usr": "c:@E@NLDistanceType"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "NLDistance",
+                        "printedName": "NaturalLanguage.NLDistance"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.String, NaturalLanguage.NLDistance)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.String, NaturalLanguage.NLDistance) -> Swift.Bool",
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE18enumerateNeighbors3for12maximumCount12distanceType5usingySaySdG_SiSo010NLDistanceJ0VSbSS_SdtXEtF",
+            "moduleName": "NaturalLanguage",
+            "name": "enumerateNeighbors",
+            "printedName": "enumerateNeighbors(for:maximumCount:distanceType:using:)",
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE18enumerateNeighbors3for12maximumCount12distanceType5usingySaySdG_SiSo010NLDistanceJ0VSbSS_SdtXEtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "NLDistance",
+                        "printedName": "NaturalLanguage.NLDistance"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Swift.String, NaturalLanguage.NLDistance)"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[(Swift.String, NaturalLanguage.NLDistance)]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "NLDistanceType",
+                "printedName": "NaturalLanguage.NLDistanceType",
+                "usr": "c:@E@NLDistanceType"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE9neighbors3for12maximumCount12distanceTypeSaySS_SdtGSaySdG_SiSo010NLDistanceI0VtF",
+            "moduleName": "NaturalLanguage",
+            "name": "neighbors",
+            "printedName": "neighbors(for:maximumCount:distanceType:)",
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE9neighbors3for12maximumCount12distanceTypeSaySS_SdtGSaySdG_SiSo010NLDistanceI0VtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Double]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.Double]?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE6vector3forSaySdGSgSS_tF",
+            "moduleName": "NaturalLanguage",
+            "name": "vector",
+            "printedName": "vector(for:)",
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE6vector3forSaySdGSgSS_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Double]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : [Swift.Double]]",
+                "usr": "s:SD"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NLLanguage",
+                    "printedName": "NaturalLanguage.NLLanguage",
+                    "usr": "c:@T@NLLanguage"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "NaturalLanguage.NLLanguage?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11NLEmbeddingC15NaturalLanguageE5write_8language8revision2toySDySSSaySdGG_So10NLLanguageaSgSi10Foundation3URLVtKFZ",
+            "moduleName": "NaturalLanguage",
+            "name": "write",
+            "printedName": "write(_:language:revision:to:)",
+            "static": true,
+            "throwing": true,
+            "usr": "s:So11NLEmbeddingC15NaturalLanguageE5write_8language8revision2toySDySSSaySdGG_So10NLLanguageaSgSi10Foundation3URLVtKFZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "13.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NaturalLanguage",
+        "name": "NLEmbedding",
+        "objc_name": "NLEmbedding",
+        "printedName": "NLEmbedding",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NLEmbedding"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NLLanguage",
+                        "printedName": "NaturalLanguage.NLLanguage",
+                        "usr": "c:@T@NLLanguage"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[NaturalLanguage.NLLanguage : Swift.Double]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvg",
+                "moduleName": "NaturalLanguage",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NLLanguage",
+                        "printedName": "NaturalLanguage.NLLanguage",
+                        "usr": "c:@T@NLLanguage"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[NaturalLanguage.NLLanguage : Swift.Double]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvs",
+                "moduleName": "NaturalLanguage",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NLLanguage",
+                    "printedName": "NaturalLanguage.NLLanguage",
+                    "usr": "c:@T@NLLanguage"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[NaturalLanguage.NLLanguage : Swift.Double]",
+                "usr": "s:SD"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvp",
+            "moduleName": "NaturalLanguage",
+            "name": "languageHints",
+            "printedName": "languageHints",
+            "usr": "s:So20NLLanguageRecognizerC15NaturalLanguageE13languageHintsSDySo0A0aSdGvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NLLanguage",
+                    "printedName": "NaturalLanguage.NLLanguage",
+                    "usr": "c:@T@NLLanguage"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[NaturalLanguage.NLLanguage : Swift.Double]",
+                "usr": "s:SD"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20NLLanguageRecognizerC15NaturalLanguageE18languageHypotheses11withMaximumSDySo0A0aSdGSi_tF",
+            "moduleName": "NaturalLanguage",
+            "name": "languageHypotheses",
+            "printedName": "languageHypotheses(withMaximum:)",
+            "usr": "s:So20NLLanguageRecognizerC15NaturalLanguageE18languageHypotheses11withMaximumSDySo0A0aSdGSi_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "12.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NaturalLanguage",
+        "name": "NLLanguageRecognizer",
+        "objc_name": "NLLanguageRecognizer",
+        "printedName": "NLLanguageRecognizer",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NLLanguageRecognizer"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "NaturalLanguage",
+    "printedName": "NaturalLanguage"
+  }
+}

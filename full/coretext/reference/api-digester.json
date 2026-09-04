@@ -1,0 +1,3087 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFont",
+        "printedName": "CoreText.CTFont"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFontCollection",
+        "printedName": "CoreText.CTFontCollection"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFontDescriptor",
+        "printedName": "CoreText.CTFontDescriptor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFontManager",
+        "printedName": "CoreText.CTFontManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFontTraits",
+        "printedName": "CoreText.CTFontTraits"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFrame",
+        "printedName": "CoreText.CTFrame"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTFramesetter",
+        "printedName": "CoreText.CTFramesetter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTGlyphInfo",
+        "printedName": "CoreText.CTGlyphInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTLine",
+        "printedName": "CoreText.CTLine"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTParagraphStyle",
+        "printedName": "CoreText.CTParagraphStyle"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTRubyAnnotation",
+        "printedName": "CoreText.CTRubyAnnotation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTRun",
+        "printedName": "CoreText.CTRun"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTRunDelegate",
+        "printedName": "CoreText.CTRunDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTStringAttributes",
+        "printedName": "CoreText.CTStringAttributes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTTextTab",
+        "printedName": "CoreText.CTTextTab"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.CTTypesetter",
+        "printedName": "CoreText.CTTypesetter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.SFNTLayoutTypes",
+        "printedName": "CoreText.SFNTLayoutTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText.SFNTTypes",
+        "printedName": "CoreText.SFNTTypes"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "UInt32",
+            "printedName": "Swift.UInt32",
+            "usr": "s:s6UInt32V"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "deprecated": true,
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "3.2",
+        "kind": "Function",
+        "moduleName": "CoreText",
+        "name": "CTGetCoreTextVersion",
+        "printedName": "CTGetCoreTextVersion()",
+        "usr": "c:@F@CTGetCoreTextVersion"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "CoreText",
+        "printedName": "CoreText"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "UniformTypeIdentifiers",
+        "printedName": "UniformTypeIdentifiers"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreText",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21kCTVersionNumber10_10s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21kCTVersionNumber10_10s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_10",
+        "printedName": "kCTVersionNumber10_10",
+        "usr": "c:@macro@kCTVersionNumber10_10"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21kCTVersionNumber10_11s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21kCTVersionNumber10_11s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_11",
+        "printedName": "kCTVersionNumber10_11",
+        "usr": "c:@macro@kCTVersionNumber10_11"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21kCTVersionNumber10_12s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21kCTVersionNumber10_12s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_12",
+        "printedName": "kCTVersionNumber10_12",
+        "usr": "c:@macro@kCTVersionNumber10_12"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21kCTVersionNumber10_13s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21kCTVersionNumber10_13s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_13",
+        "printedName": "kCTVersionNumber10_13",
+        "usr": "c:@macro@kCTVersionNumber10_13"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21kCTVersionNumber10_14s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21kCTVersionNumber10_14s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_14",
+        "printedName": "kCTVersionNumber10_14",
+        "usr": "c:@macro@kCTVersionNumber10_14"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21kCTVersionNumber10_15s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21kCTVersionNumber10_15s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_15",
+        "printedName": "kCTVersionNumber10_15",
+        "usr": "c:@macro@kCTVersionNumber10_15"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC20kCTVersionNumber10_5s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC20kCTVersionNumber10_5s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_5",
+        "printedName": "kCTVersionNumber10_5",
+        "usr": "c:@macro@kCTVersionNumber10_5"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC22kCTVersionNumber10_5_2s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC22kCTVersionNumber10_5_2s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_5_2",
+        "printedName": "kCTVersionNumber10_5_2",
+        "usr": "c:@macro@kCTVersionNumber10_5_2"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC22kCTVersionNumber10_5_3s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC22kCTVersionNumber10_5_3s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_5_3",
+        "printedName": "kCTVersionNumber10_5_3",
+        "usr": "c:@macro@kCTVersionNumber10_5_3"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC22kCTVersionNumber10_5_5s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC22kCTVersionNumber10_5_5s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_5_5",
+        "printedName": "kCTVersionNumber10_5_5",
+        "usr": "c:@macro@kCTVersionNumber10_5_5"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC20kCTVersionNumber10_6s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC20kCTVersionNumber10_6s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_6",
+        "printedName": "kCTVersionNumber10_6",
+        "usr": "c:@macro@kCTVersionNumber10_6"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC20kCTVersionNumber10_7s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC20kCTVersionNumber10_7s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_7",
+        "printedName": "kCTVersionNumber10_7",
+        "usr": "c:@macro@kCTVersionNumber10_7"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC20kCTVersionNumber10_8s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC20kCTVersionNumber10_8s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_8",
+        "printedName": "kCTVersionNumber10_8",
+        "usr": "c:@macro@kCTVersionNumber10_8"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC20kCTVersionNumber10_9s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC20kCTVersionNumber10_9s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber10_9",
+        "printedName": "kCTVersionNumber10_9",
+        "usr": "c:@macro@kCTVersionNumber10_9"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC20kCTVersionNumber11_0s5Int32Vvg",
+            "moduleName": "CoreText",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC20kCTVersionNumber11_0s5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "CoreText",
+        "name": "kCTVersionNumber11_0",
+        "printedName": "kCTVersionNumber11_0",
+        "usr": "c:@macro@kCTVersionNumber11_0"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "LineHeight",
+                        "printedName": "Foundation.AttributedString.LineHeight",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV8variableAFvgZ",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV8variableAFvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV8variableAFvpZ",
+                "moduleName": "CoreText",
+                "name": "variable",
+                "printedName": "variable",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV8variableAFvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "LineHeight",
+                        "printedName": "Foundation.AttributedString.LineHeight",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV6normalAFvgZ",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV6normalAFvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV6normalAFvpZ",
+                "moduleName": "CoreText",
+                "name": "normal",
+                "printedName": "normal",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV6normalAFvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "LineHeight",
+                        "printedName": "Foundation.AttributedString.LineHeight",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV5tightAFvgZ",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV5tightAFvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV5tightAFvpZ",
+                "moduleName": "CoreText",
+                "name": "tight",
+                "printedName": "tight",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV5tightAFvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "LineHeight",
+                        "printedName": "Foundation.AttributedString.LineHeight",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV5looseAFvgZ",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV5looseAFvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV5looseAFvpZ",
+                "moduleName": "CoreText",
+                "name": "loose",
+                "printedName": "loose",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV5looseAFvpZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGFloat",
+                    "printedName": "CoreGraphics.CGFloat",
+                    "usr": "s:14CoreFoundation7CGFloatV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV8multiple6factorAF0D8Graphics7CGFloatV_tFZ",
+                "moduleName": "CoreText",
+                "name": "multiple",
+                "printedName": "multiple(factor:)",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV8multiple6factorAF0dA07CGFloatV_tFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGFloat",
+                    "printedName": "CoreGraphics.CGFloat",
+                    "usr": "s:14CoreFoundation7CGFloatV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV7leading8increaseAF0D8Graphics7CGFloatV_tFZ",
+                "moduleName": "CoreText",
+                "name": "leading",
+                "printedName": "leading(increase:)",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV7leading8increaseAF0dA07CGFloatV_tFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGFloat",
+                    "printedName": "CoreGraphics.CGFloat",
+                    "usr": "s:14CoreFoundation7CGFloatV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV5exact6pointsAF0D8Graphics7CGFloatV_tFZ",
+                "moduleName": "CoreText",
+                "name": "exact",
+                "printedName": "exact(points:)",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV5exact6pointsAF0dA07CGFloatV_tFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV2eeoiySbAF_AFtFZ",
+                "moduleName": "CoreText",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV2eeoiySbAF_AFtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV6encode2toys7Encoder_p_tKF",
+                "moduleName": "CoreText",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV4hash4intoys6HasherVz_tF",
+                "moduleName": "CoreText",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV9hashValueSivg",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV9hashValueSivp",
+                "moduleName": "CoreText",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LineHeight",
+                    "printedName": "Foundation.AttributedString.LineHeight",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV4fromAFs7Decoder_p_tKcfc",
+                "moduleName": "CoreText",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV4fromAFs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s10Foundation16AttributedStringV8CoreTextE10LineHeightV",
+            "moduleName": "CoreText",
+            "name": "LineHeight",
+            "printedName": "LineHeight",
+            "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AdaptiveImageGlyph",
+                    "printedName": "Foundation.AttributedString.AdaptiveImageGlyph",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV12imageContentAfA4DataV_tcfc",
+                "moduleName": "CoreText",
+                "name": "init",
+                "printedName": "init(imageContent:)",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV12imageContentAfA4DataV_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV12imageContentAA4DataVvg",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV12imageContentAA4DataVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV12imageContentAA4DataVvp",
+                "moduleName": "CoreText",
+                "name": "imageContent",
+                "printedName": "imageContent",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV12imageContentAA4DataVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV17contentIdentifierSSvg",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV17contentIdentifierSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV17contentIdentifierSSvp",
+                "moduleName": "CoreText",
+                "name": "contentIdentifier",
+                "printedName": "contentIdentifier",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV17contentIdentifierSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV18contentDescriptionSSvg",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV18contentDescriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV18contentDescriptionSSvp",
+                "moduleName": "CoreText",
+                "name": "contentDescription",
+                "printedName": "contentDescription",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV18contentDescriptionSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UTType",
+                        "printedName": "UniformTypeIdentifiers.UTType",
+                        "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV11contentType07UniformJ11Identifiers6UTTypeVvgZ",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV11contentType07UniformJ11Identifiers6UTTypeVvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UTType",
+                    "printedName": "UniformTypeIdentifiers.UTType",
+                    "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV11contentType07UniformJ11Identifiers6UTTypeVvpZ",
+                "moduleName": "CoreText",
+                "name": "contentType",
+                "printedName": "contentType",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV11contentType07UniformJ11Identifiers6UTTypeVvpZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AdaptiveImageGlyph",
+                    "printedName": "Foundation.AttributedString.AdaptiveImageGlyph",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AdaptiveImageGlyph",
+                    "printedName": "Foundation.AttributedString.AdaptiveImageGlyph",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV2eeoiySbAF_AFtFZ",
+                "moduleName": "CoreText",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV2eeoiySbAF_AFtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV6encode2toys7Encoder_p_tKF",
+                "moduleName": "CoreText",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV4hash4intoys6HasherVz_tF",
+                "moduleName": "CoreText",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV9hashValueSivg",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV9hashValueSivp",
+                "moduleName": "CoreText",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AdaptiveImageGlyph",
+                    "printedName": "Foundation.AttributedString.AdaptiveImageGlyph",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV4fromAFs7Decoder_p_tKcfc",
+                "moduleName": "CoreText",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV4fromAFs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV",
+            "moduleName": "CoreText",
+            "name": "AdaptiveImageGlyph",
+            "printedName": "AdaptiveImageGlyph",
+            "usr": "s:10Foundation16AttributedStringV8CoreTextE18AdaptiveImageGlyphV"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TextAlignment",
+                        "printedName": "Foundation.AttributedString.TextAlignment",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "TextAlignment",
+                            "printedName": "Foundation.AttributedString.TextAlignment",
+                            "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Foundation.AttributedString.TextAlignment.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Foundation.AttributedString.TextAlignment.Type) -> Foundation.AttributedString.TextAlignment"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO4leftyA2FmF",
+                "moduleName": "CoreText",
+                "name": "left",
+                "printedName": "left",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO4leftyA2FmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TextAlignment",
+                        "printedName": "Foundation.AttributedString.TextAlignment",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "TextAlignment",
+                            "printedName": "Foundation.AttributedString.TextAlignment",
+                            "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Foundation.AttributedString.TextAlignment.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Foundation.AttributedString.TextAlignment.Type) -> Foundation.AttributedString.TextAlignment"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO6centeryA2FmF",
+                "moduleName": "CoreText",
+                "name": "center",
+                "printedName": "center",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO6centeryA2FmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TextAlignment",
+                        "printedName": "Foundation.AttributedString.TextAlignment",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "TextAlignment",
+                            "printedName": "Foundation.AttributedString.TextAlignment",
+                            "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Foundation.AttributedString.TextAlignment.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Foundation.AttributedString.TextAlignment.Type) -> Foundation.AttributedString.TextAlignment"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO5rightyA2FmF",
+                "moduleName": "CoreText",
+                "name": "right",
+                "printedName": "right",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO5rightyA2FmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TextAlignment",
+                    "printedName": "Foundation.AttributedString.TextAlignment",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TextAlignment",
+                    "printedName": "Foundation.AttributedString.TextAlignment",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO2eeoiySbAF_AFtFZ",
+                "moduleName": "CoreText",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO2eeoiySbAF_AFtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TextAlignment",
+                        "printedName": "Foundation.AttributedString.TextAlignment",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.AttributedString.TextAlignment]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "intro_tvOS": "26.0",
+                "intro_watchOS": "26.0",
+                "kind": "TypeAlias",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO8AllCasesa",
+                "moduleName": "CoreText",
+                "name": "AllCases",
+                "printedName": "AllCases",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO8AllCasesa"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "TextAlignment",
+                            "printedName": "Foundation.AttributedString.TextAlignment",
+                            "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Foundation.AttributedString.TextAlignment]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO8allCasesSayAFGvgZ",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO8allCasesSayAFGvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TextAlignment",
+                        "printedName": "Foundation.AttributedString.TextAlignment",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.AttributedString.TextAlignment]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO8allCasesSayAFGvpZ",
+                "moduleName": "CoreText",
+                "name": "allCases",
+                "printedName": "allCases",
+                "static": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO8allCasesSayAFGvpZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO6encode2toys7Encoder_p_tKF",
+                "moduleName": "CoreText",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO4hash4intoys6HasherVz_tF",
+                "moduleName": "CoreText",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO9hashValueSivg",
+                    "moduleName": "CoreText",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO9hashValueSivp",
+                "moduleName": "CoreText",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TextAlignment",
+                    "printedName": "Foundation.AttributedString.TextAlignment",
+                    "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO4fromAFs7Decoder_p_tKcfc",
+                "moduleName": "CoreText",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO4fromAFs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "TextAlignment",
+                                "printedName": "Foundation.AttributedString.TextAlignment",
+                                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[Foundation.AttributedString.TextAlignment]",
+                            "usr": "s:Sa"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AllCases",
+                        "printedName": "Foundation.AttributedString.TextAlignment.AllCases"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AllCases",
+                    "printedName": "AllCases"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss12CaseIterableP",
+                "name": "CaseIterable",
+                "printedName": "CaseIterable",
+                "usr": "s:s12CaseIterableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s10Foundation16AttributedStringV8CoreTextE0E9AlignmentO",
+            "moduleName": "CoreText",
+            "name": "TextAlignment",
+            "printedName": "TextAlignment",
+            "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "StringLiteralType",
+                    "printedName": "Foundation.AttributedString.StringLiteralType"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "StringLiteralType",
+                "printedName": "StringLiteralType"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss26ExpressibleByStringLiteralP",
+            "name": "ExpressibleByStringLiteral",
+            "printedName": "ExpressibleByStringLiteral",
+            "usr": "s:s26ExpressibleByStringLiteralP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ExtendedGraphemeClusterLiteralType",
+                    "printedName": "Foundation.AttributedString.ExtendedGraphemeClusterLiteralType"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ExtendedGraphemeClusterLiteralType",
+                "printedName": "ExtendedGraphemeClusterLiteralType"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss43ExpressibleByExtendedGraphemeClusterLiteralP",
+            "name": "ExpressibleByExtendedGraphemeClusterLiteral",
+            "printedName": "ExpressibleByExtendedGraphemeClusterLiteral",
+            "usr": "s:s43ExpressibleByExtendedGraphemeClusterLiteralP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "UnicodeScalarLiteralType",
+                    "printedName": "Foundation.AttributedString.UnicodeScalarLiteralType"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "UnicodeScalarLiteralType",
+                "printedName": "UnicodeScalarLiteralType"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss33ExpressibleByUnicodeScalarLiteralP",
+            "name": "ExpressibleByUnicodeScalarLiteral",
+            "printedName": "ExpressibleByUnicodeScalarLiteral",
+            "usr": "s:s33ExpressibleByUnicodeScalarLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation24AttributedStringProtocolP",
+            "name": "AttributedStringProtocol",
+            "printedName": "AttributedStringProtocol",
+            "usr": "s:10Foundation24AttributedStringProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation33AttributedStringAttributeMutationP",
+            "name": "AttributedStringAttributeMutation",
+            "printedName": "AttributedStringAttributeMutation",
+            "usr": "s:10Foundation33AttributedStringAttributeMutationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AttributeScopeCodableConfiguration",
+                        "printedName": "Foundation.AttributeScopeCodableConfiguration",
+                        "usr": "s:10Foundation34AttributeScopeCodableConfigurationV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "DecodingConfiguration",
+                    "printedName": "Foundation.AttributedString.DecodingConfiguration"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "DecodingConfiguration",
+                "printedName": "DecodingConfiguration"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation26DecodableWithConfigurationP",
+            "name": "DecodableWithConfiguration",
+            "printedName": "DecodableWithConfiguration",
+            "usr": "s:10Foundation26DecodableWithConfigurationP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AttributeScopeCodableConfiguration",
+                        "printedName": "Foundation.AttributeScopeCodableConfiguration",
+                        "usr": "s:10Foundation34AttributeScopeCodableConfigurationV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "EncodingConfiguration",
+                    "printedName": "Foundation.AttributedString.EncodingConfiguration"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "EncodingConfiguration",
+                "printedName": "EncodingConfiguration"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation26EncodableWithConfigurationP",
+            "name": "EncodableWithConfiguration",
+            "printedName": "EncodableWithConfiguration",
+            "usr": "s:10Foundation26EncodableWithConfigurationP"
+          }
+        ],
+        "declAttributes": [
+          "DynamicMemberLookup",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "12",
+        "intro_iOS": "15",
+        "intro_tvOS": "15",
+        "intro_watchOS": "8",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s10Foundation16AttributedStringV",
+        "moduleName": "Foundation",
+        "name": "AttributedString",
+        "printedName": "AttributedString",
+        "usr": "s:10Foundation16AttributedStringV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "LineHeight",
+                        "printedName": "Foundation.AttributedString.LineHeight",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                      }
+                    ],
+                    "declKind": "TypeAlias",
+                    "kind": "TypeAlias",
+                    "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O5Valuea",
+                    "moduleName": "CoreText",
+                    "name": "Value",
+                    "printedName": "Value",
+                    "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O5Valuea"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O4nameSSvgZ",
+                        "moduleName": "CoreText",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "static": true,
+                        "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O4nameSSvgZ"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O4nameSSvpZ",
+                    "moduleName": "CoreText",
+                    "name": "name",
+                    "printedName": "name",
+                    "static": true,
+                    "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O4nameSSvpZ"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "AttributeRunBoundaries",
+                                "printedName": "Foundation.AttributedString.AttributeRunBoundaries",
+                                "usr": "s:10Foundation16AttributedStringV22AttributeRunBoundariesO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "Foundation.AttributedString.AttributeRunBoundaries?",
+                            "usr": "s:Sq"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O13runBoundariesAA16AttributedStringV0b3RunJ0OSgvgZ",
+                        "moduleName": "CoreText",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "static": true,
+                        "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O13runBoundariesAA16AttributedStringV0b3RunJ0OSgvgZ"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AttributeRunBoundaries",
+                            "printedName": "Foundation.AttributedString.AttributeRunBoundaries",
+                            "usr": "s:10Foundation16AttributedStringV22AttributeRunBoundariesO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.AttributedString.AttributeRunBoundaries?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O13runBoundariesAA16AttributedStringV0b3RunJ0OSgvpZ",
+                    "moduleName": "CoreText",
+                    "name": "runBoundaries",
+                    "printedName": "runBoundaries",
+                    "static": true,
+                    "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O13runBoundariesAA16AttributedStringV0b3RunJ0OSgvpZ"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "LineHeight",
+                                "printedName": "Foundation.AttributedString.LineHeight",
+                                "usr": "s:10Foundation16AttributedStringV8CoreTextE10LineHeightV"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Value",
+                            "printedName": "Foundation.AttributeScopes.CoreTextAttributes.LineHeightAttribute.Value"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Value",
+                        "printedName": "Value"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$s10Foundation19AttributedStringKeyP",
+                    "name": "AttributedStringKey",
+                    "printedName": "AttributedStringKey",
+                    "usr": "s:10Foundation19AttributedStringKeyP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8SendableP",
+                    "name": "Sendable",
+                    "printedName": "Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss16SendableMetatypeP",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss15BitwiseCopyableP",
+                    "name": "BitwiseCopyable",
+                    "printedName": "BitwiseCopyable",
+                    "usr": "s:s15BitwiseCopyableP"
+                  }
+                ],
+                "declAttributes": [
+                  "Frozen",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "Enum",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "intro_tvOS": "26.0",
+                "intro_watchOS": "26.0",
+                "isEnumExhaustive": true,
+                "isFromExtension": true,
+                "kind": "TypeDecl",
+                "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O",
+                "moduleName": "CoreText",
+                "name": "LineHeightAttribute",
+                "printedName": "LineHeightAttribute",
+                "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV010LineHeightB0O"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TextAlignment",
+                        "printedName": "Foundation.AttributedString.TextAlignment",
+                        "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                      }
+                    ],
+                    "declKind": "TypeAlias",
+                    "kind": "TypeAlias",
+                    "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O5Valuea",
+                    "moduleName": "CoreText",
+                    "name": "Value",
+                    "printedName": "Value",
+                    "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O5Valuea"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O4nameSSvgZ",
+                        "moduleName": "CoreText",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "static": true,
+                        "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O4nameSSvgZ"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O4nameSSvpZ",
+                    "moduleName": "CoreText",
+                    "name": "name",
+                    "printedName": "name",
+                    "static": true,
+                    "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O4nameSSvpZ"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "AttributeRunBoundaries",
+                                "printedName": "Foundation.AttributedString.AttributeRunBoundaries",
+                                "usr": "s:10Foundation16AttributedStringV22AttributeRunBoundariesO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "Foundation.AttributedString.AttributeRunBoundaries?",
+                            "usr": "s:Sq"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O13runBoundariesAA16AttributedStringV0b3RunI0OSgvgZ",
+                        "moduleName": "CoreText",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "static": true,
+                        "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O13runBoundariesAA16AttributedStringV0b3RunI0OSgvgZ"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AttributeRunBoundaries",
+                            "printedName": "Foundation.AttributedString.AttributeRunBoundaries",
+                            "usr": "s:10Foundation16AttributedStringV22AttributeRunBoundariesO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.AttributedString.AttributeRunBoundaries?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O13runBoundariesAA16AttributedStringV0b3RunI0OSgvpZ",
+                    "moduleName": "CoreText",
+                    "name": "runBoundaries",
+                    "printedName": "runBoundaries",
+                    "static": true,
+                    "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O13runBoundariesAA16AttributedStringV0b3RunI0OSgvpZ"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$s10Foundation28DecodableAttributedStringKeyP",
+                    "name": "DecodableAttributedStringKey",
+                    "printedName": "DecodableAttributedStringKey",
+                    "usr": "s:10Foundation28DecodableAttributedStringKeyP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$s10Foundation28EncodableAttributedStringKeyP",
+                    "name": "EncodableAttributedStringKey",
+                    "printedName": "EncodableAttributedStringKey",
+                    "usr": "s:10Foundation28EncodableAttributedStringKeyP"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "TextAlignment",
+                                "printedName": "Foundation.AttributedString.TextAlignment",
+                                "usr": "s:10Foundation16AttributedStringV8CoreTextE0E9AlignmentO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Value",
+                            "printedName": "Foundation.AttributeScopes.CoreTextAttributes.TextAlignmentAttribute.Value"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Value",
+                        "printedName": "Value"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$s10Foundation19AttributedStringKeyP",
+                    "name": "AttributedStringKey",
+                    "printedName": "AttributedStringKey",
+                    "usr": "s:10Foundation19AttributedStringKeyP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8SendableP",
+                    "name": "Sendable",
+                    "printedName": "Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss16SendableMetatypeP",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss15BitwiseCopyableP",
+                    "name": "BitwiseCopyable",
+                    "printedName": "BitwiseCopyable",
+                    "usr": "s:s15BitwiseCopyableP"
+                  }
+                ],
+                "declAttributes": [
+                  "Frozen",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "Enum",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "intro_tvOS": "26.0",
+                "intro_watchOS": "26.0",
+                "isEnumExhaustive": true,
+                "isFromExtension": true,
+                "kind": "TypeDecl",
+                "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O",
+                "moduleName": "CoreText",
+                "name": "TextAlignmentAttribute",
+                "printedName": "TextAlignmentAttribute",
+                "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV0e9AlignmentB0O"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV",
+            "moduleName": "CoreText",
+            "name": "CoreTextAttributes",
+            "printedName": "CoreTextAttributes",
+            "usr": "s:10Foundation15AttributeScopesO8CoreTextE0dE10AttributesV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss15BitwiseCopyableP",
+            "name": "BitwiseCopyable",
+            "printedName": "BitwiseCopyable",
+            "usr": "s:s15BitwiseCopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Frozen",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "12",
+        "intro_iOS": "15",
+        "intro_tvOS": "15",
+        "intro_watchOS": "8",
+        "isEnumExhaustive": true,
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s10Foundation15AttributeScopesO",
+        "moduleName": "Foundation",
+        "name": "AttributeScopes",
+        "printedName": "AttributeScopes",
+        "usr": "s:10Foundation15AttributeScopesO"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CoreText",
+    "printedName": "CoreText"
+  }
+}

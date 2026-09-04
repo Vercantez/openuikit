@@ -1,0 +1,120 @@
+{
+  "module": "QuickLook",
+  "moduleRecord": {
+    "app_coverage_count": 9,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 23,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 32,
+    "iphoneos_runtime_focus_launch_build_rank": 37,
+    "module": "QuickLook",
+    "occurrence_count": 23,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "ef47eecbb95ebe569727f8d18302a23bf954b014f2975c0c6bc5db5fd320f935",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/App/Sources/UI/Views/AttachmentView/AttachmentViewController.swift",
+          "Modules/App/Sources/UI/Views/AttachmentView/AttachmentViewCoordinator.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "073f2a1819a02a5e4f7bd33024d48d178f8a279e5f9b6d70b523902bdf32e0a3",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Signal/ConversationView/Components/CVComponentGenericAttachment.swift",
+          "Signal/ConversationView/ConversationViewController+CVComponentDelegate.swift",
+          "Signal/src/ViewControllers/MessageDetailViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "dd4c16f658f362b44adc9079340673ea9728ad7dd957fd41191e43ad19c320d2",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "submodules/GalleryUI/Sources/GalleryController.swift",
+          "submodules/InstantPageUI/Sources/InstantPageGalleryController.swift",
+          "submodules/LegacyComponents/Sources/TGNavigationController.m",
+          "submodules/PassportUI/Sources/SecureIdDocumentGalleryController.swift",
+          "submodules/PeerAvatarGalleryUI/Sources/AvatarGalleryController.swift",
+          "submodules/TelegramUI/Components/Settings/WallpaperGalleryScreen/Sources/WallpaperGalleryController.swift",
+          "submodules/TelegramUI/Sources/DocumentPreviewController.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "d8cbcf0fd644aaf15a24a75c0534ab44202ed8557cfbde3f23be69f54edc1d52",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WordPress/Classes/Utility/In-App Feedback/ZendeskAttachmentsSection.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "a2d549c90cf509e1072e277b9c57ab668293ab2713ef5fcb5d3ba240c1cfd068",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "DuckDuckGo/QuickLookContainerViewController.swift",
+          "DuckDuckGo/QuickLookPreviewHelper.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "26d78ea7e321a5a35555bfaed8c3d968955f3c9689d9e80017df62606ae609e4",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Controllers/MXKPreviewViewController.m"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "dd8552ed6e3517a7d438ede6e2f776ea0156b23826bc814dfe497162caad30f9",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Browser/OpenInHelper/OpenQLPreviewHelper.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "be798f20d735eac73a413a339942145a4dceecf1cf9102c8947cadbdc0a1d0d1",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/Onboarding/API/Steps/OnboardingAuthStepConnectivity.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "625e7007161a69648e7a5072e14e9656a6c31f5990ce8d7cd1c5819b90263a8a",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "iOSClient/Main/Create/Upload Assets/NCUploadAssetsModel.swift",
+          "iOSClient/Scan document/NCScan+CollectionView.swift",
+          "iOSClient/Viewer/NCViewer.swift",
+          "iOSClient/Viewer/NCViewerQuickLook/NCViewerQuickLook.swift",
+          "iOSClient/Viewer/NCViewerQuickLook/NCViewerQuickLookView.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 32,
+    "byFocusLaunchBuildRelevance": 37
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

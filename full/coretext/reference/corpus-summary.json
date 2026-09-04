@@ -1,0 +1,82 @@
+{
+  "module": "CoreText",
+  "moduleRecord": {
+    "app_coverage_count": 5,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 24,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 52,
+    "iphoneos_runtime_focus_launch_build_rank": 56,
+    "module": "CoreText",
+    "occurrence_count": 24,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "8c8bc765043e464e5692dc3f1f7069649d03ee8b42684d688fc452261125f119",
+        "file_count": 19,
+        "occurrence_count": 19,
+        "sample_paths": [
+          "submodules/Display/Source/TextNode.swift",
+          "submodules/Emoji/Sources/EmojiUtils.swift",
+          "submodules/LegacyComponents/PublicHeaders/LegacyComponents/TGFont.h",
+          "submodules/LegacyComponents/Sources/TGCameraInterfaceAssets.m",
+          "submodules/TelegramStringFormatting/Sources/InstantPagePreviewText.swift",
+          "submodules/TelegramUI/Components/InteractiveTextComponent/Sources/InteractiveTextComponent.swift",
+          "submodules/TelegramUI/Components/InteractiveTextComponent/Sources/InteractiveTextNodeWithEntities.swift",
+          "submodules/lottie-ios/Sources/Private/MainThread/LayerContainers/CompLayers/TextCompositionLayer.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "1fe9c31246d781a48b11839d5b893b44edc056df238e5b73ea6740fd537df97c",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/Sources/DesignSystem/Typography/FontManager.swift",
+          "Modules/Sources/WordPressSharedObjCUI/WPFontManager.m"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "398cf1c976558bfb4780c74b60fa2f39778d9e013a62ac979570e9cae937c064",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/Categories/Artsy/UIFont+ArtsyFonts.m"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "a873ea5639ddbd7ca58ed0039117477d3ffe1cb4d1e6efad7c7bc539bd45e889",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/HAIconic/Sources/IconDrawable.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "c76d2aba708176b2d0288f1e39634863d46c57683593b890c05dfded138a0eb9",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Wikipedia/Code/NSString+WMFHTMLParsing.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 52,
+    "byFocusLaunchBuildRelevance": 56
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "module": "CoreHaptics",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 6,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "87d2c7a283294f01563960a9ad7766170df49411a3d0ca55b4cd535c7f84da2c",
+      "main_target_file_count": 1,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 63,
+    "iphoneos_runtime_focus_launch_build_rank": 15,
+    "module": "CoreHaptics",
+    "occurrence_count": 6,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "e3f41db5b923f6127a3186d3ab20b6fb4cac9fee93da9b412406291d16da4fad",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "submodules/Display/Source/HapticFeedback.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "87d2c7a283294f01563960a9ad7766170df49411a3d0ca55b4cd535c7f84da2c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "87d2c7a283294f01563960a9ad7766170df49411a3d0ca55b4cd535c7f84da2c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "60ad76a81e64119ebb49297da51cfecb6835453ec131fceeaeb6cc5dab35385e",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "podcasts/End of Year/Stories/2023/EpilogueStory2023.swift",
+          "podcasts/Onboarding/Patron/PatronAppIconUnlock.swift",
+          "podcasts/Onboarding/Patron/UnlockHaptic.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 63,
+    "byFocusLaunchBuildRelevance": 15
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

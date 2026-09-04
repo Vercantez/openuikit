@@ -1,0 +1,5352 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "os.activity",
+        "printedName": "os.activity"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "os.signpost",
+        "printedName": "os.signpost"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "composedMessage",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntry(im)composedMessage"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "composedMessage",
+            "objc_name": "composedMessage",
+            "printedName": "composedMessage",
+            "usr": "c:objc(cs)OSLogEntry(py)composedMessage"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "date",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntry(im)date"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "date",
+            "objc_name": "date",
+            "printedName": "date",
+            "usr": "c:objc(cs)OSLogEntry(py)date"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "StoreCategory",
+                    "printedName": "OSLog.OSLogEntry.StoreCategory",
+                    "usr": "c:@E@OSLogEntryStoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "storeCategory",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntry(im)storeCategory"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "StoreCategory",
+                "printedName": "OSLog.OSLogEntry.StoreCategory",
+                "usr": "c:@E@OSLogEntryStoreCategory"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "storeCategory",
+            "objc_name": "storeCategory",
+            "printedName": "storeCategory",
+            "usr": "c:objc(cs)OSLogEntry(py)storeCategory"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogEntry",
+                "printedName": "OSLog.OSLogEntry",
+                "usr": "c:objc(cs)OSLogEntry"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "OSLog.OSLogEntry.StoreCategory?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo23OSLogEntryStoreCategoryV8rawValueABSgSi_tcfc",
+                "moduleName": "OSLog",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So23OSLogEntryStoreCategoryV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo23OSLogEntryStoreCategoryV8rawValueSivg",
+                    "moduleName": "OSLog",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So23OSLogEntryStoreCategoryV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo23OSLogEntryStoreCategoryV8rawValueSivp",
+                "moduleName": "OSLog",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So23OSLogEntryStoreCategoryV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo23OSLogEntryStoreCategoryV8RawValuea",
+                "moduleName": "OSLog",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So23OSLogEntryStoreCategoryV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "undefined",
+                "printedName": "undefined",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryUndefined"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "metadata",
+                "printedName": "metadata",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryMetadata"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "shortTerm",
+                "printedName": "shortTerm",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryShortTerm"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "longTermAuto",
+                "printedName": "longTermAuto",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTermAuto"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "longTerm1",
+                "printedName": "longTerm1",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "longTerm3",
+                "printedName": "longTerm3",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm3"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "longTerm7",
+                "printedName": "longTerm7",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm7"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "longTerm14",
+                "printedName": "longTerm14",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm14"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "StoreCategory",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory",
+                        "usr": "c:@E@OSLogEntryStoreCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "StoreCategory",
+                            "printedName": "OSLog.OSLogEntry.StoreCategory",
+                            "usr": "c:@E@OSLogEntryStoreCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntry.StoreCategory.Type) -> OSLog.OSLogEntry.StoreCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "longTerm30",
+                "printedName": "longTerm30",
+                "usr": "c:@E@OSLogEntryStoreCategory@OSLogEntryStoreCategoryLongTerm30"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "OSLog.OSLogEntry.StoreCategory.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "15.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "OSLog",
+            "name": "StoreCategory",
+            "objc_name": "OSLogEntryStoreCategory",
+            "printedName": "StoreCategory",
+            "usr": "c:@E@OSLogEntryStoreCategory"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntry",
+        "objc_name": "OSLogEntry",
+        "printedName": "OSLogEntry",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)OSLogEntry"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt64",
+                        "printedName": "Swift.UInt64",
+                        "usr": "s:s6UInt64V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "os_activity_id_t",
+                    "printedName": "os.os_activity_id_t"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "parentActivityIdentifier",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntryActivity(im)parentActivityIdentifier"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt64",
+                    "printedName": "Swift.UInt64",
+                    "usr": "s:s6UInt64V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "os_activity_id_t",
+                "printedName": "os.os_activity_id_t"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "parentActivityIdentifier",
+            "objc_name": "parentActivityIdentifier",
+            "printedName": "parentActivityIdentifier",
+            "usr": "c:objc(cs)OSLogEntryActivity(py)parentActivityIdentifier"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogEntryActivity",
+                "printedName": "OSLog.OSLogEntryActivity",
+                "usr": "c:objc(cs)OSLogEntryActivity"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "OSLogEntryFromProcess",
+            "printedName": "OSLogEntryFromProcess",
+            "usr": "c:objc(pl)OSLogEntryFromProcess"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntryActivity",
+        "objc_name": "OSLogEntryActivity",
+        "printedName": "OSLogEntryActivity",
+        "superclassNames": [
+          "OSLog.OSLogEntry",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)OSLogEntry",
+        "usr": "c:objc(cs)OSLogEntryActivity"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogEntryBoundary",
+                "printedName": "OSLog.OSLogEntryBoundary",
+                "usr": "c:objc(cs)OSLogEntryBoundary"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntryBoundary",
+        "objc_name": "OSLogEntryBoundary",
+        "printedName": "OSLogEntryBoundary",
+        "superclassNames": [
+          "OSLog.OSLogEntry",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)OSLogEntry",
+        "usr": "c:objc(cs)OSLogEntryBoundary"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt64",
+                    "printedName": "Swift.UInt64",
+                    "usr": "s:s6UInt64V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "os_activity_id_t",
+                "printedName": "os.os_activity_id_t"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "activityIdentifier",
+            "objc_name": "activityIdentifier",
+            "printedName": "activityIdentifier",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryFromProcess(py)activityIdentifier"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "process",
+            "objc_name": "process",
+            "printedName": "process",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryFromProcess(py)process"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int32",
+                            "printedName": "Swift.Int32",
+                            "usr": "s:s5Int32V"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__int32_t",
+                        "printedName": "_DarwinFoundation2.__int32_t"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "__darwin_pid_t",
+                    "printedName": "_DarwinFoundation2.__darwin_pid_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "pid_t",
+                "printedName": "_DarwinFoundation2.pid_t"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "processIdentifier",
+            "objc_name": "processIdentifier",
+            "printedName": "processIdentifier",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryFromProcess(py)processIdentifier"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "sender",
+            "objc_name": "sender",
+            "printedName": "sender",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryFromProcess(py)sender"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt64",
+                "printedName": "Swift.UInt64",
+                "usr": "s:s6UInt64V"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "threadIdentifier",
+            "objc_name": "threadIdentifier",
+            "printedName": "threadIdentifier",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryFromProcess(py)threadIdentifier"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : AnyObject>",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntryFromProcess",
+        "objc_name": "OSLogEntryFromProcess",
+        "printedName": "OSLogEntryFromProcess",
+        "usr": "c:objc(pl)OSLogEntryFromProcess"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Level",
+                    "printedName": "OSLog.OSLogEntryLog.Level",
+                    "usr": "c:@E@OSLogEntryLogLevel"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "level",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntryLog(im)level"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Level",
+                "printedName": "OSLog.OSLogEntryLog.Level",
+                "usr": "c:@E@OSLogEntryLogLevel"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "level",
+            "objc_name": "level",
+            "printedName": "level",
+            "usr": "c:objc(cs)OSLogEntryLog(py)level"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogEntryLog",
+                "printedName": "OSLog.OSLogEntryLog",
+                "usr": "c:objc(cs)OSLogEntryLog"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "OSLog.OSLogEntryLog.Level?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo18OSLogEntryLogLevelV8rawValueABSgSi_tcfc",
+                "moduleName": "OSLog",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So18OSLogEntryLogLevelV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo18OSLogEntryLogLevelV8rawValueSivg",
+                    "moduleName": "OSLog",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So18OSLogEntryLogLevelV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo18OSLogEntryLogLevelV8rawValueSivp",
+                "moduleName": "OSLog",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So18OSLogEntryLogLevelV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo18OSLogEntryLogLevelV8RawValuea",
+                "moduleName": "OSLog",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So18OSLogEntryLogLevelV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "OSLog.OSLogEntryLog.Level",
+                            "usr": "c:@E@OSLogEntryLogLevel"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntryLog.Level.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntryLog.Level.Type) -> OSLog.OSLogEntryLog.Level"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "undefined",
+                "printedName": "undefined",
+                "usr": "c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelUndefined"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "OSLog.OSLogEntryLog.Level",
+                            "usr": "c:@E@OSLogEntryLogLevel"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntryLog.Level.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntryLog.Level.Type) -> OSLog.OSLogEntryLog.Level"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "debug",
+                "printedName": "debug",
+                "usr": "c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelDebug"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "OSLog.OSLogEntryLog.Level",
+                            "usr": "c:@E@OSLogEntryLogLevel"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntryLog.Level.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntryLog.Level.Type) -> OSLog.OSLogEntryLog.Level"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "info",
+                "printedName": "info",
+                "usr": "c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelInfo"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "OSLog.OSLogEntryLog.Level",
+                            "usr": "c:@E@OSLogEntryLogLevel"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntryLog.Level.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntryLog.Level.Type) -> OSLog.OSLogEntryLog.Level"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "notice",
+                "printedName": "notice",
+                "usr": "c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelNotice"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "OSLog.OSLogEntryLog.Level",
+                            "usr": "c:@E@OSLogEntryLogLevel"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntryLog.Level.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntryLog.Level.Type) -> OSLog.OSLogEntryLog.Level"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "error",
+                "printedName": "error",
+                "usr": "c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "OSLog.OSLogEntryLog.Level",
+                        "usr": "c:@E@OSLogEntryLogLevel"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "OSLog.OSLogEntryLog.Level",
+                            "usr": "c:@E@OSLogEntryLogLevel"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntryLog.Level.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntryLog.Level.Type) -> OSLog.OSLogEntryLog.Level"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "fault",
+                "printedName": "fault",
+                "usr": "c:@E@OSLogEntryLogLevel@OSLogEntryLogLevelFault"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "OSLog.OSLogEntryLog.Level.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "15.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "OSLog",
+            "name": "Level",
+            "objc_name": "OSLogEntryLogLevel",
+            "printedName": "Level",
+            "usr": "c:@E@OSLogEntryLogLevel"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "OSLogEntryFromProcess",
+            "printedName": "OSLogEntryFromProcess",
+            "usr": "c:objc(pl)OSLogEntryFromProcess"
+          },
+          {
+            "kind": "Conformance",
+            "name": "OSLogEntryWithPayload",
+            "printedName": "OSLogEntryWithPayload",
+            "usr": "c:objc(pl)OSLogEntryWithPayload"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntryLog",
+        "objc_name": "OSLogEntryLog",
+        "printedName": "OSLogEntryLog",
+        "superclassNames": [
+          "OSLog.OSLogEntry",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)OSLogEntry",
+        "usr": "c:objc(cs)OSLogEntryLog"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt64",
+                        "printedName": "Swift.UInt64",
+                        "usr": "s:s6UInt64V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "os_signpost_id_t",
+                    "printedName": "os.os_signpost_id_t"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "signpostIdentifier",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntrySignpost(im)signpostIdentifier"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt64",
+                    "printedName": "Swift.UInt64",
+                    "usr": "s:s6UInt64V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "os_signpost_id_t",
+                "printedName": "os.os_signpost_id_t"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "signpostIdentifier",
+            "objc_name": "signpostIdentifier",
+            "printedName": "signpostIdentifier",
+            "usr": "c:objc(cs)OSLogEntrySignpost(py)signpostIdentifier"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "signpostName",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntrySignpost(im)signpostName"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "signpostName",
+            "objc_name": "signpostName",
+            "printedName": "signpostName",
+            "usr": "c:objc(cs)OSLogEntrySignpost(py)signpostName"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SignpostType",
+                    "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                    "usr": "c:@E@OSLogEntrySignpostType"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "signpostType",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogEntrySignpost(im)signpostType"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SignpostType",
+                "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                "usr": "c:@E@OSLogEntrySignpostType"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "signpostType",
+            "objc_name": "signpostType",
+            "printedName": "signpostType",
+            "usr": "c:objc(cs)OSLogEntrySignpost(py)signpostType"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogEntrySignpost",
+                "printedName": "OSLog.OSLogEntrySignpost",
+                "usr": "c:objc(cs)OSLogEntrySignpost"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SignpostType",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                        "usr": "c:@E@OSLogEntrySignpostType"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "OSLog.OSLogEntrySignpost.SignpostType?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo22OSLogEntrySignpostTypeV8rawValueABSgSi_tcfc",
+                "moduleName": "OSLog",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So22OSLogEntrySignpostTypeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo22OSLogEntrySignpostTypeV8rawValueSivg",
+                    "moduleName": "OSLog",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So22OSLogEntrySignpostTypeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo22OSLogEntrySignpostTypeV8rawValueSivp",
+                "moduleName": "OSLog",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So22OSLogEntrySignpostTypeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo22OSLogEntrySignpostTypeV8RawValuea",
+                "moduleName": "OSLog",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So22OSLogEntrySignpostTypeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SignpostType",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                        "usr": "c:@E@OSLogEntrySignpostType"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SignpostType",
+                            "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                            "usr": "c:@E@OSLogEntrySignpostType"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntrySignpost.SignpostType.Type) -> OSLog.OSLogEntrySignpost.SignpostType"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "undefined",
+                "printedName": "undefined",
+                "usr": "c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeUndefined"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SignpostType",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                        "usr": "c:@E@OSLogEntrySignpostType"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SignpostType",
+                            "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                            "usr": "c:@E@OSLogEntrySignpostType"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntrySignpost.SignpostType.Type) -> OSLog.OSLogEntrySignpost.SignpostType"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "intervalBegin",
+                "printedName": "intervalBegin",
+                "usr": "c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeIntervalBegin"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SignpostType",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                        "usr": "c:@E@OSLogEntrySignpostType"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SignpostType",
+                            "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                            "usr": "c:@E@OSLogEntrySignpostType"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntrySignpost.SignpostType.Type) -> OSLog.OSLogEntrySignpost.SignpostType"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "intervalEnd",
+                "printedName": "intervalEnd",
+                "usr": "c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeIntervalEnd"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SignpostType",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                        "usr": "c:@E@OSLogEntrySignpostType"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SignpostType",
+                            "printedName": "OSLog.OSLogEntrySignpost.SignpostType",
+                            "usr": "c:@E@OSLogEntrySignpostType"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogEntrySignpost.SignpostType.Type) -> OSLog.OSLogEntrySignpost.SignpostType"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "event",
+                "printedName": "event",
+                "usr": "c:@E@OSLogEntrySignpostType@OSLogEntrySignpostTypeEvent"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "OSLog.OSLogEntrySignpost.SignpostType.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "15.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "OSLog",
+            "name": "SignpostType",
+            "objc_name": "OSLogEntrySignpostType",
+            "printedName": "SignpostType",
+            "usr": "c:@E@OSLogEntrySignpostType"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "OSLogEntryFromProcess",
+            "printedName": "OSLogEntryFromProcess",
+            "usr": "c:objc(pl)OSLogEntryFromProcess"
+          },
+          {
+            "kind": "Conformance",
+            "name": "OSLogEntryWithPayload",
+            "printedName": "OSLogEntryWithPayload",
+            "usr": "c:objc(pl)OSLogEntryWithPayload"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntrySignpost",
+        "objc_name": "OSLogEntrySignpost",
+        "printedName": "OSLogEntrySignpost",
+        "superclassNames": [
+          "OSLog.OSLogEntry",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)OSLogEntry",
+        "usr": "c:objc(cs)OSLogEntrySignpost"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "category",
+            "objc_name": "category",
+            "printedName": "category",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryWithPayload(py)category"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OSLogMessageComponent",
+                    "printedName": "OSLog.OSLogMessageComponent",
+                    "usr": "c:objc(cs)OSLogMessageComponent"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[OSLog.OSLogMessageComponent]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "components",
+            "objc_name": "components",
+            "printedName": "components",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryWithPayload(py)components"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "formatString",
+            "objc_name": "formatString",
+            "printedName": "formatString",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryWithPayload(py)formatString"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "subsystem",
+            "objc_name": "subsystem",
+            "printedName": "subsystem",
+            "protocolReq": true,
+            "usr": "c:objc(pl)OSLogEntryWithPayload(py)subsystem"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : AnyObject>",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEntryWithPayload",
+        "objc_name": "OSLogEntryWithPayload",
+        "printedName": "OSLogEntryWithPayload",
+        "usr": "c:objc(pl)OSLogEntryWithPayload"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogEnumerator",
+                "printedName": "OSLog.OSLogEnumerator",
+                "usr": "c:objc(cs)OSLogEnumerator"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Options",
+                    "printedName": "OSLog.OSLogEnumerator.Options",
+                    "usr": "c:@E@OSLogEnumeratorOptions"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo22OSLogEnumeratorOptionsV8rawValueABSu_tcfc",
+                "moduleName": "OSLog",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So22OSLogEnumeratorOptionsV8rawValueABSu_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "implicit": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$sSo22OSLogEnumeratorOptionsV8rawValueSuvp",
+                "moduleName": "OSLog",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So22OSLogEnumeratorOptionsV8rawValueSuvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo22OSLogEnumeratorOptionsV8RawValuea",
+                "moduleName": "OSLog",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So22OSLogEnumeratorOptionsV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Options",
+                    "printedName": "OSLog.OSLogEnumerator.Options",
+                    "usr": "c:@E@OSLogEnumeratorOptions"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo22OSLogEnumeratorOptionsV7Elementa",
+                "moduleName": "OSLog",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So22OSLogEnumeratorOptionsV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Options",
+                    "printedName": "OSLog.OSLogEnumerator.Options",
+                    "usr": "c:@E@OSLogEnumeratorOptions"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo22OSLogEnumeratorOptionsV19ArrayLiteralElementa",
+                "moduleName": "OSLog",
+                "name": "ArrayLiteralElement",
+                "printedName": "ArrayLiteralElement",
+                "usr": "s:So22OSLogEnumeratorOptionsV19ArrayLiteralElementa"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Options",
+                        "printedName": "OSLog.OSLogEnumerator.Options",
+                        "usr": "c:@E@OSLogEnumeratorOptions"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo22OSLogEnumeratorOptionsV7reverseABvgZ",
+                    "moduleName": "OSLog",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So22OSLogEnumeratorOptionsV7reverseABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Options",
+                    "printedName": "OSLog.OSLogEnumerator.Options",
+                    "usr": "c:@E@OSLogEnumeratorOptions"
+                  }
+                ],
+                "declAttributes": [
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "reverse",
+                "printedName": "reverse",
+                "static": true,
+                "usr": "c:@E@OSLogEnumeratorOptions@OSLogEnumeratorReverse"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Options",
+                            "printedName": "OSLog.OSLogEnumerator.Options",
+                            "usr": "c:@E@OSLogEnumeratorOptions"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "OSLog.OSLogEnumerator.Options.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss9OptionSetP",
+                "name": "OptionSet",
+                "printedName": "OptionSet",
+                "usr": "s:s9OptionSetP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UInt",
+                            "printedName": "Swift.UInt",
+                            "usr": "s:Su"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "OSLog.OSLogEnumerator.Options.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Options",
+                            "printedName": "OSLog.OSLogEnumerator.Options",
+                            "usr": "c:@E@OSLogEnumeratorOptions"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "OSLog.OSLogEnumerator.Options.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss10SetAlgebraP",
+                "name": "SetAlgebra",
+                "printedName": "SetAlgebra",
+                "usr": "s:s10SetAlgebraP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Options",
+                            "printedName": "OSLog.OSLogEnumerator.Options",
+                            "usr": "c:@E@OSLogEnumeratorOptions"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ArrayLiteralElement",
+                        "printedName": "OSLog.OSLogEnumerator.Options.ArrayLiteralElement"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ArrayLiteralElement",
+                    "printedName": "ArrayLiteralElement"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss25ExpressibleByArrayLiteralP",
+                "name": "ExpressibleByArrayLiteral",
+                "printedName": "ExpressibleByArrayLiteral",
+                "usr": "s:s25ExpressibleByArrayLiteralP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "Sendable"
+            ],
+            "declKind": "Struct",
+            "intro_iOS": "15.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "OSLog",
+            "name": "Options",
+            "printedName": "Options",
+            "usr": "c:@E@OSLogEnumeratorOptions"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSFastEnumeration",
+            "printedName": "NSFastEnumeration",
+            "usr": "c:objc(pl)NSFastEnumeration"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Element",
+                    "printedName": "Foundation.NSEnumerator.Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NSFastEnumerationIterator",
+                        "printedName": "Foundation.NSFastEnumerationIterator",
+                        "usr": "s:10Foundation25NSFastEnumerationIteratorV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Iterator",
+                    "printedName": "Foundation.NSEnumerator.Iterator"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sST",
+            "name": "Sequence",
+            "printedName": "Sequence",
+            "usr": "s:ST"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogEnumerator",
+        "objc_name": "OSLogEnumerator",
+        "printedName": "OSLogEnumerator",
+        "superclassNames": [
+          "Foundation.NSEnumerator",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSEnumerator",
+        "usr": "c:objc(cs)OSLogEnumerator"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "formatSubstring",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)formatSubstring"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "formatSubstring",
+            "objc_name": "formatSubstring",
+            "printedName": "formatSubstring",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)formatSubstring"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "placeholder",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)placeholder"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "placeholder",
+            "objc_name": "placeholder",
+            "printedName": "placeholder",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)placeholder"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ArgumentCategory",
+                    "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                    "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentCategory",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentCategory"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ArgumentCategory",
+                "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentCategory",
+            "objc_name": "argumentCategory",
+            "printedName": "argumentCategory",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentCategory"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Data?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentDataValue",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentDataValue"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentDataValue",
+            "objc_name": "argumentDataValue",
+            "printedName": "argumentDataValue",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentDataValue"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentDoubleValue",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentDoubleValue"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Double",
+                "printedName": "Swift.Double",
+                "usr": "s:Sd"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentDoubleValue",
+            "objc_name": "argumentDoubleValue",
+            "printedName": "argumentDoubleValue",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentDoubleValue"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int64",
+                    "printedName": "Swift.Int64",
+                    "usr": "s:s5Int64V"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentInt64Value",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentInt64Value"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int64",
+                "printedName": "Swift.Int64",
+                "usr": "s:s5Int64V"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentInt64Value",
+            "objc_name": "argumentInt64Value",
+            "printedName": "argumentInt64Value",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentInt64Value"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NSNumber",
+                        "printedName": "Foundation.NSNumber",
+                        "usr": "c:objc(cs)NSNumber"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.NSNumber?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentNumberValue",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentNumberValue"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSNumber",
+                    "printedName": "Foundation.NSNumber",
+                    "usr": "c:objc(cs)NSNumber"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.NSNumber?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentNumberValue",
+            "objc_name": "argumentNumberValue",
+            "printedName": "argumentNumberValue",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentNumberValue"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentStringValue",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentStringValue"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentStringValue",
+            "objc_name": "argumentStringValue",
+            "printedName": "argumentStringValue",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentStringValue"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt64",
+                    "printedName": "Swift.UInt64",
+                    "usr": "s:s6UInt64V"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "objc_name": "argumentUInt64Value",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSLogMessageComponent(im)argumentUInt64Value"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt64",
+                "printedName": "Swift.UInt64",
+                "usr": "s:s6UInt64V"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "OSLog",
+            "name": "argumentUInt64Value",
+            "objc_name": "argumentUInt64Value",
+            "printedName": "argumentUInt64Value",
+            "usr": "c:objc(cs)OSLogMessageComponent(py)argumentUInt64Value"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogMessageComponent",
+                "printedName": "OSLog.OSLogMessageComponent",
+                "usr": "c:objc(cs)OSLogMessageComponent"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo37OSLogMessageComponentArgumentCategoryV8rawValueABSgSi_tcfc",
+                "moduleName": "OSLog",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So37OSLogMessageComponentArgumentCategoryV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo37OSLogMessageComponentArgumentCategoryV8rawValueSivg",
+                    "moduleName": "OSLog",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So37OSLogMessageComponentArgumentCategoryV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo37OSLogMessageComponentArgumentCategoryV8rawValueSivp",
+                "moduleName": "OSLog",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So37OSLogMessageComponentArgumentCategoryV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo37OSLogMessageComponentArgumentCategoryV8RawValuea",
+                "moduleName": "OSLog",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So37OSLogMessageComponentArgumentCategoryV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ArgumentCategory",
+                            "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.ArgumentCategory.Type) -> OSLog.OSLogMessageComponent.ArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "undefined",
+                "printedName": "undefined",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryUndefined"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ArgumentCategory",
+                            "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.ArgumentCategory.Type) -> OSLog.OSLogMessageComponent.ArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "data",
+                "printedName": "data",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryData"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ArgumentCategory",
+                            "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.ArgumentCategory.Type) -> OSLog.OSLogMessageComponent.ArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "double",
+                "printedName": "double",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryDouble"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ArgumentCategory",
+                            "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.ArgumentCategory.Type) -> OSLog.OSLogMessageComponent.ArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "int64",
+                "printedName": "int64",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryInt64"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ArgumentCategory",
+                            "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.ArgumentCategory.Type) -> OSLog.OSLogMessageComponent.ArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "string",
+                "printedName": "string",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryString"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ArgumentCategory",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                        "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ArgumentCategory",
+                            "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory",
+                            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.ArgumentCategory.Type) -> OSLog.OSLogMessageComponent.ArgumentCategory"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "uInt64",
+                "printedName": "uInt64",
+                "usr": "c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryUInt64"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "OSLog.OSLogMessageComponent.ArgumentCategory.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "15.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "OSLog",
+            "name": "ArgumentCategory",
+            "objc_name": "OSLogMessageComponentArgumentCategory",
+            "printedName": "ArgumentCategory",
+            "usr": "c:@E@OSLogMessageComponentArgumentCategory"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Argument",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument",
+                        "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.Argument.Type) -> OSLog.OSLogMessageComponent.Argument"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO9undefinedyA2EmF",
+                "moduleName": "OSLog",
+                "name": "undefined",
+                "printedName": "undefined",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO9undefinedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Foundation.Data) -> OSLog.OSLogMessageComponent.Argument"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.Argument.Type) -> (Foundation.Data) -> OSLog.OSLogMessageComponent.Argument"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO4datayAE10Foundation4DataVcAEmF",
+                "moduleName": "OSLog",
+                "name": "data",
+                "printedName": "data",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO4datayAE10Foundation4DataVcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Double) -> OSLog.OSLogMessageComponent.Argument"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.Argument.Type) -> (Swift.Double) -> OSLog.OSLogMessageComponent.Argument"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO6doubleyAESdcAEmF",
+                "moduleName": "OSLog",
+                "name": "double",
+                "printedName": "double",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO6doubleyAESdcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int64",
+                            "printedName": "Swift.Int64",
+                            "usr": "s:s5Int64V"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Int64) -> OSLog.OSLogMessageComponent.Argument"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.Argument.Type) -> (Swift.Int64) -> OSLog.OSLogMessageComponent.Argument"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO6signedyAEs5Int64VcAEmF",
+                "moduleName": "OSLog",
+                "name": "signed",
+                "printedName": "signed",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO6signedyAEs5Int64VcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String) -> OSLog.OSLogMessageComponent.Argument"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.Argument.Type) -> (Swift.String) -> OSLog.OSLogMessageComponent.Argument"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO6stringyAESScAEmF",
+                "moduleName": "OSLog",
+                "name": "string",
+                "printedName": "string",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO6stringyAESScAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UInt64",
+                            "printedName": "Swift.UInt64",
+                            "usr": "s:s6UInt64V"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.UInt64) -> OSLog.OSLogMessageComponent.Argument"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Argument",
+                            "printedName": "OSLog.OSLogMessageComponent.Argument",
+                            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogMessageComponent.Argument.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogMessageComponent.Argument.Type) -> (Swift.UInt64) -> OSLog.OSLogMessageComponent.Argument"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO8unsignedyAEs6UInt64VcAEmF",
+                "moduleName": "OSLog",
+                "name": "unsigned",
+                "printedName": "unsigned",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO8unsignedyAEs6UInt64VcAEmF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo21OSLogMessageComponentC0A0E8ArgumentO",
+            "moduleName": "OSLog",
+            "name": "Argument",
+            "printedName": "Argument",
+            "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Argument",
+                    "printedName": "OSLog.OSLogMessageComponent.Argument",
+                    "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvg",
+                "moduleName": "OSLog",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Argument",
+                "printedName": "OSLog.OSLogMessageComponent.Argument",
+                "usr": "s:So21OSLogMessageComponentC0A0E8ArgumentO"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvp",
+            "moduleName": "OSLog",
+            "name": "argument",
+            "printedName": "argument",
+            "usr": "s:So21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogMessageComponent",
+        "objc_name": "OSLogMessageComponent",
+        "printedName": "OSLogMessageComponent",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)OSLogMessageComponent"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogPosition",
+        "objc_name": "OSLogPosition",
+        "printedName": "OSLogPosition",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)OSLogPosition"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogStore",
+                "printedName": "OSLog.OSLogStore",
+                "usr": "c:objc(cs)OSLogStore"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Scope",
+                "printedName": "OSLog.OSLogStore.Scope",
+                "usr": "c:@E@OSLogStoreScope"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "ConvenienceFactory",
+            "intro_iOS": "15.0",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "storeWithScope:error:",
+            "printedName": "init(scope:)",
+            "throwing": true,
+            "usr": "c:objc(cs)OSLogStore(cm)storeWithScope:error:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogStore",
+                "printedName": "OSLog.OSLogStore",
+                "usr": "c:objc(cs)OSLogStore"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "ConvenienceFactory",
+            "intro_iOS": "15.0",
+            "kind": "Constructor",
+            "moduleName": "OSLog",
+            "name": "init",
+            "objc_name": "storeWithURL:error:",
+            "printedName": "init(url:)",
+            "throwing": true,
+            "usr": "c:objc(cs)OSLogStore(cm)storeWithURL:error:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogPosition",
+                "printedName": "OSLog.OSLogPosition",
+                "usr": "c:objc(cs)OSLogPosition"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              }
+            ],
+            "declAttributes": [
+              "DiscardableResult",
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "OSLog",
+            "name": "position",
+            "objc_name": "positionWithDate:",
+            "printedName": "position(date:)",
+            "usr": "c:objc(cs)OSLogStore(im)positionWithDate:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogPosition",
+                "printedName": "OSLog.OSLogPosition",
+                "usr": "c:objc(cs)OSLogPosition"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "DiscardableResult",
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "OSLog",
+            "name": "position",
+            "objc_name": "positionWithTimeIntervalSinceEnd:",
+            "printedName": "position(timeIntervalSinceEnd:)",
+            "usr": "c:objc(cs)OSLogStore(im)positionWithTimeIntervalSinceEnd:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSLogPosition",
+                "printedName": "OSLog.OSLogPosition",
+                "usr": "c:objc(cs)OSLogPosition"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "DiscardableResult",
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "OSLog",
+            "name": "position",
+            "objc_name": "positionWithTimeIntervalSinceLatestBoot:",
+            "printedName": "position(timeIntervalSinceLatestBoot:)",
+            "usr": "c:objc(cs)OSLogStore(im)positionWithTimeIntervalSinceLatestBoot:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Scope",
+                        "printedName": "OSLog.OSLogStore.Scope",
+                        "usr": "c:@E@OSLogStoreScope"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "OSLog.OSLogStore.Scope?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo15OSLogStoreScopeV8rawValueABSgSi_tcfc",
+                "moduleName": "OSLog",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So15OSLogStoreScopeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo15OSLogStoreScopeV8rawValueSivg",
+                    "moduleName": "OSLog",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So15OSLogStoreScopeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo15OSLogStoreScopeV8rawValueSivp",
+                "moduleName": "OSLog",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So15OSLogStoreScopeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo15OSLogStoreScopeV8RawValuea",
+                "moduleName": "OSLog",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So15OSLogStoreScopeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Scope",
+                        "printedName": "OSLog.OSLogStore.Scope",
+                        "usr": "c:@E@OSLogStoreScope"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Scope",
+                            "printedName": "OSLog.OSLogStore.Scope",
+                            "usr": "c:@E@OSLogStoreScope"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "OSLog.OSLogStore.Scope.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(OSLog.OSLogStore.Scope.Type) -> OSLog.OSLogStore.Scope"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "OSLog",
+                "name": "currentProcessIdentifier",
+                "printedName": "currentProcessIdentifier",
+                "usr": "c:@E@OSLogStoreScope@OSLogStoreCurrentProcessIdentifier"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "OSLog.OSLogStore.Scope.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "15.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "OSLog",
+            "name": "Scope",
+            "objc_name": "OSLogStoreScope",
+            "printedName": "Scope",
+            "usr": "c:@E@OSLogStoreScope"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OSLogEntry",
+                    "printedName": "OSLog.OSLogEntry",
+                    "usr": "c:objc(cs)OSLogEntry"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "AnySequence",
+                "printedName": "Swift.AnySequence<OSLog.OSLogEntry>",
+                "usr": "s:s11AnySequenceV"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Options",
+                "printedName": "OSLog.OSLogEnumerator.Options",
+                "usr": "c:@E@OSLogEnumeratorOptions"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OSLogPosition",
+                    "printedName": "OSLog.OSLogPosition",
+                    "usr": "c:objc(cs)OSLogPosition"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "OSLog.OSLogPosition?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSPredicate",
+                    "printedName": "Foundation.NSPredicate",
+                    "usr": "c:objc(cs)NSPredicate"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.NSPredicate?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo10OSLogStoreC0A0E10getEntries4with2at8matchings11AnySequenceVySo0A5EntryCGSo0A17EnumeratorOptionsV_So0A8PositionCSgSo11NSPredicateCSgtKF",
+            "moduleName": "OSLog",
+            "name": "getEntries",
+            "printedName": "getEntries(with:at:matching:)",
+            "throwing": true,
+            "usr": "s:So10OSLogStoreC0A0E10getEntries4with2at8matchings11AnySequenceVySo0A5EntryCGSo0A17EnumeratorOptionsV_So0A8PositionCSgSo11NSPredicateCSgtKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "OSLog",
+        "name": "OSLogStore",
+        "objc_name": "OSLogStore",
+        "printedName": "OSLogStore",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)OSLogStore"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "OSLog",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "OSLog",
+    "printedName": "OSLog"
+  }
+}

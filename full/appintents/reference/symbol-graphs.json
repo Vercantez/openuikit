@@ -1,0 +1,78 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 200,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AppIntents.symbols.json",
+      "relationshipCount": 5677,
+      "sha256": "4bb206fe1375be8cc78f06910ce8f6d5a07a6074021bc01848b12d93a6dd67d6",
+      "symbolCount": 4626
+    },
+    {
+      "path": "reference/symbol-graphs/AppIntents@CoreLocation.symbols.json",
+      "relationshipCount": 13,
+      "sha256": "133a487770111d7e682ea6617b49b015e05501845335bf1e677b43840ad49454",
+      "symbolCount": 7
+    },
+    {
+      "path": "reference/symbol-graphs/AppIntents@CoreSpotlight.symbols.json",
+      "relationshipCount": 7,
+      "sha256": "a849874e2154ef2e3cc105f276cafc055e859b77402317f1d44dc710cc578e64",
+      "symbolCount": 7
+    },
+    {
+      "path": "reference/symbol-graphs/AppIntents@Foundation.symbols.json",
+      "relationshipCount": 63,
+      "sha256": "aa365dd09aa72b4d4a5c59113a32ab86a577a43635d80b08d885c19e1033a6cd",
+      "symbolCount": 51
+    },
+    {
+      "path": "reference/symbol-graphs/AppIntents@Swift.symbols.json",
+      "relationshipCount": 284,
+      "sha256": "afc592ce648267c6586b0028515c402779e3420c8fed19ab684e34594ab1ded7",
+      "symbolCount": 232
+    },
+    {
+      "path": "reference/symbol-graphs/_AppIntents_SwiftUI@AppIntents.symbols.json",
+      "relationshipCount": 1608,
+      "sha256": "e91c49c3d7462741ab013eb30b8833c7c602e3e87789013e64c9165d000d0fd5",
+      "symbolCount": 1606
+    },
+    {
+      "path": "reference/symbol-graphs/_AppIntents_SwiftUI@SwiftUI.symbols.json",
+      "relationshipCount": 18,
+      "sha256": "4fde150b88e0066877c8fb6e2dfadf6b522c27adaba1dd2d8326cf0f0d3d8a97",
+      "symbolCount": 18
+    },
+    {
+      "path": "reference/symbol-graphs/_AppIntents_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 14,
+      "sha256": "2835f5c2626563bc67c0eea77cbfc1c01b6769c9cdf5b526fc258033887ac928",
+      "symbolCount": 14
+    },
+    {
+      "path": "reference/symbol-graphs/_AppIntents_UIKit@AppIntents.symbols.json",
+      "relationshipCount": 88,
+      "sha256": "2b9db9b531946006d70e58c6a9310f7f0b75ddcd0b34e87a75bfa7c3bc967f49",
+      "symbolCount": 24
+    },
+    {
+      "path": "reference/symbol-graphs/_AppIntents_UIKit@UIKit.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "f02320848ae241bb8b07b02aff36b6710e2dc51025393626caa946a18617e4c4",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AppIntents",
+  "relationshipCount": 7773,
+  "relationshipMultisetSHA256": "8a5b8509f58f6912a15e84ca50ab2f477c68b3b1eddf9fe5a460d4064cf5b1e2",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 6586,
+  "symbolMultisetSHA256": "aa4db979376ab28e92f9f26d51193dc6c7c9ce4716014f2d27e3f54ec4d7f18d",
+  "target": "arm64-apple-ios26.0"
+}

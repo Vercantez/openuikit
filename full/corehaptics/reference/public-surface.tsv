@@ -1,0 +1,243 @@
+precise	kind	title	path	declaration
+c:@CHHapticAudioResourceKeyLoopEnabled	swift.var	CHHapticAudioResourceKeyLoopEnabled	CHHapticAudioResourceKeyLoopEnabled	let CHHapticAudioResourceKeyLoopEnabled: String
+c:@CHHapticAudioResourceKeyUseVolumeEnvelope	swift.var	CHHapticAudioResourceKeyUseVolumeEnvelope	CHHapticAudioResourceKeyUseVolumeEnvelope	let CHHapticAudioResourceKeyUseVolumeEnvelope: String
+c:@CHHapticDynamicParameterIDAudioAttackTimeControl	swift.type.property	audioAttackTimeControl	CHHapticDynamicParameter.ID.audioAttackTimeControl	static let audioAttackTimeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDAudioBrightnessControl	swift.type.property	audioBrightnessControl	CHHapticDynamicParameter.ID.audioBrightnessControl	static let audioBrightnessControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDAudioDecayTimeControl	swift.type.property	audioDecayTimeControl	CHHapticDynamicParameter.ID.audioDecayTimeControl	static let audioDecayTimeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDAudioPanControl	swift.type.property	audioPanControl	CHHapticDynamicParameter.ID.audioPanControl	static let audioPanControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDAudioPitchControl	swift.type.property	audioPitchControl	CHHapticDynamicParameter.ID.audioPitchControl	static let audioPitchControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDAudioReleaseTimeControl	swift.type.property	audioReleaseTimeControl	CHHapticDynamicParameter.ID.audioReleaseTimeControl	static let audioReleaseTimeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDAudioVolumeControl	swift.type.property	audioVolumeControl	CHHapticDynamicParameter.ID.audioVolumeControl	static let audioVolumeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDHapticAttackTimeControl	swift.type.property	hapticAttackTimeControl	CHHapticDynamicParameter.ID.hapticAttackTimeControl	static let hapticAttackTimeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDHapticDecayTimeControl	swift.type.property	hapticDecayTimeControl	CHHapticDynamicParameter.ID.hapticDecayTimeControl	static let hapticDecayTimeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDHapticIntensityControl	swift.type.property	hapticIntensityControl	CHHapticDynamicParameter.ID.hapticIntensityControl	static let hapticIntensityControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDHapticReleaseTimeControl	swift.type.property	hapticReleaseTimeControl	CHHapticDynamicParameter.ID.hapticReleaseTimeControl	static let hapticReleaseTimeControl: CHHapticDynamicParameter.ID
+c:@CHHapticDynamicParameterIDHapticSharpnessControl	swift.type.property	hapticSharpnessControl	CHHapticDynamicParameter.ID.hapticSharpnessControl	static let hapticSharpnessControl: CHHapticDynamicParameter.ID
+c:@CHHapticEventParameterIDAttackTime	swift.type.property	attackTime	CHHapticEvent.ParameterID.attackTime	static let attackTime: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDAudioBrightness	swift.type.property	audioBrightness	CHHapticEvent.ParameterID.audioBrightness	static let audioBrightness: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDAudioPan	swift.type.property	audioPan	CHHapticEvent.ParameterID.audioPan	static let audioPan: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDAudioPitch	swift.type.property	audioPitch	CHHapticEvent.ParameterID.audioPitch	static let audioPitch: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDAudioVolume	swift.type.property	audioVolume	CHHapticEvent.ParameterID.audioVolume	static let audioVolume: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDDecayTime	swift.type.property	decayTime	CHHapticEvent.ParameterID.decayTime	static let decayTime: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDHapticIntensity	swift.type.property	hapticIntensity	CHHapticEvent.ParameterID.hapticIntensity	static let hapticIntensity: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDHapticSharpness	swift.type.property	hapticSharpness	CHHapticEvent.ParameterID.hapticSharpness	static let hapticSharpness: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDReleaseTime	swift.type.property	releaseTime	CHHapticEvent.ParameterID.releaseTime	static let releaseTime: CHHapticEvent.ParameterID
+c:@CHHapticEventParameterIDSustained	swift.type.property	sustained	CHHapticEvent.ParameterID.sustained	static let sustained: CHHapticEvent.ParameterID
+c:@CHHapticEventTypeAudioContinuous	swift.type.property	audioContinuous	CHHapticEvent.EventType.audioContinuous	static let audioContinuous: CHHapticEvent.EventType
+c:@CHHapticEventTypeAudioCustom	swift.type.property	audioCustom	CHHapticEvent.EventType.audioCustom	static let audioCustom: CHHapticEvent.EventType
+c:@CHHapticEventTypeHapticContinuous	swift.type.property	hapticContinuous	CHHapticEvent.EventType.hapticContinuous	static let hapticContinuous: CHHapticEvent.EventType
+c:@CHHapticEventTypeHapticTransient	swift.type.property	hapticTransient	CHHapticEvent.EventType.hapticTransient	static let hapticTransient: CHHapticEvent.EventType
+c:@CHHapticPatternKeyEvent	swift.type.property	event	CHHapticPattern.Key.event	static let event: CHHapticPattern.Key
+c:@CHHapticPatternKeyEventDuration	swift.type.property	eventDuration	CHHapticPattern.Key.eventDuration	static let eventDuration: CHHapticPattern.Key
+c:@CHHapticPatternKeyEventParameters	swift.type.property	eventParameters	CHHapticPattern.Key.eventParameters	static let eventParameters: CHHapticPattern.Key
+c:@CHHapticPatternKeyEventType	swift.type.property	eventType	CHHapticPattern.Key.eventType	static let eventType: CHHapticPattern.Key
+c:@CHHapticPatternKeyEventWaveformLoopEnabled	swift.type.property	eventWaveformLoopEnabled	CHHapticPattern.Key.eventWaveformLoopEnabled	static let eventWaveformLoopEnabled: CHHapticPattern.Key
+c:@CHHapticPatternKeyEventWaveformPath	swift.type.property	eventWaveformPath	CHHapticPattern.Key.eventWaveformPath	static let eventWaveformPath: CHHapticPattern.Key
+c:@CHHapticPatternKeyEventWaveformUseVolumeEnvelope	swift.type.property	eventWaveformUseVolumeEnvelope	CHHapticPattern.Key.eventWaveformUseVolumeEnvelope	static let eventWaveformUseVolumeEnvelope: CHHapticPattern.Key
+c:@CHHapticPatternKeyParameter	swift.type.property	parameter	CHHapticPattern.Key.parameter	static let parameter: CHHapticPattern.Key
+c:@CHHapticPatternKeyParameterCurve	swift.type.property	parameterCurve	CHHapticPattern.Key.parameterCurve	static let parameterCurve: CHHapticPattern.Key
+c:@CHHapticPatternKeyParameterCurveControlPoints	swift.type.property	parameterCurveControlPoints	CHHapticPattern.Key.parameterCurveControlPoints	static let parameterCurveControlPoints: CHHapticPattern.Key
+c:@CHHapticPatternKeyParameterID	swift.type.property	parameterID	CHHapticPattern.Key.parameterID	static let parameterID: CHHapticPattern.Key
+c:@CHHapticPatternKeyParameterValue	swift.type.property	parameterValue	CHHapticPattern.Key.parameterValue	static let parameterValue: CHHapticPattern.Key
+c:@CHHapticPatternKeyPattern	swift.type.property	pattern	CHHapticPattern.Key.pattern	static let pattern: CHHapticPattern.Key
+c:@CHHapticPatternKeyTime	swift.type.property	time	CHHapticPattern.Key.time	static let time: CHHapticPattern.Key
+c:@CHHapticPatternKeyVersion	swift.type.property	version	CHHapticPattern.Key.version	static let version: CHHapticPattern.Key
+c:@CoreHapticsErrorDomain	swift.var	CoreHapticsErrorDomain	CoreHapticsErrorDomain	let CoreHapticsErrorDomain: String
+c:@E@CHHapticEngineFinishedAction	swift.enum	CHHapticEngine.FinishedAction	CHHapticEngine.FinishedAction	enum FinishedAction
+c:@E@CHHapticEngineFinishedAction@CHHapticEngineFinishedActionLeaveEngineRunning	swift.enum.case	CHHapticEngine.FinishedAction.leaveEngineRunning	CHHapticEngine.FinishedAction.leaveEngineRunning	case leaveEngineRunning
+c:@E@CHHapticEngineFinishedAction@CHHapticEngineFinishedActionStopEngine	swift.enum.case	CHHapticEngine.FinishedAction.stopEngine	CHHapticEngine.FinishedAction.stopEngine	case stopEngine
+c:@E@CHHapticEngineStoppedReason	swift.enum	CHHapticEngine.StoppedReason	CHHapticEngine.StoppedReason	enum StoppedReason
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonApplicationSuspended	swift.enum.case	CHHapticEngine.StoppedReason.applicationSuspended	CHHapticEngine.StoppedReason.applicationSuspended	case applicationSuspended
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonAudioSessionInterrupt	swift.enum.case	CHHapticEngine.StoppedReason.audioSessionInterrupt	CHHapticEngine.StoppedReason.audioSessionInterrupt	case audioSessionInterrupt
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonEngineDestroyed	swift.enum.case	CHHapticEngine.StoppedReason.engineDestroyed	CHHapticEngine.StoppedReason.engineDestroyed	case engineDestroyed
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonGameControllerDisconnect	swift.enum.case	CHHapticEngine.StoppedReason.gameControllerDisconnect	CHHapticEngine.StoppedReason.gameControllerDisconnect	case gameControllerDisconnect
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonIdleTimeout	swift.enum.case	CHHapticEngine.StoppedReason.idleTimeout	CHHapticEngine.StoppedReason.idleTimeout	case idleTimeout
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonNotifyWhenFinished	swift.enum.case	CHHapticEngine.StoppedReason.notifyWhenFinished	CHHapticEngine.StoppedReason.notifyWhenFinished	case notifyWhenFinished
+c:@E@CHHapticEngineStoppedReason@CHHapticEngineStoppedReasonSystemError	swift.enum.case	CHHapticEngine.StoppedReason.systemError	CHHapticEngine.StoppedReason.systemError	case systemError
+c:@E@CHHapticErrorCode	swift.enum	CHHapticError.Code	CHHapticError.Code	enum Code
+c:@E@CHHapticErrorCode@CHHapticErrorCodeBadEventEntry	swift.enum.case	CHHapticError.Code.badEventEntry	CHHapticError.Code.badEventEntry	case badEventEntry
+c:@E@CHHapticErrorCode@CHHapticErrorCodeBadParameterEntry	swift.enum.case	CHHapticError.Code.badParameterEntry	CHHapticError.Code.badParameterEntry	case badParameterEntry
+c:@E@CHHapticErrorCode@CHHapticErrorCodeEngineNotRunning	swift.enum.case	CHHapticError.Code.engineNotRunning	CHHapticError.Code.engineNotRunning	case engineNotRunning
+c:@E@CHHapticErrorCode@CHHapticErrorCodeEngineStartTimeout	swift.enum.case	CHHapticError.Code.engineStartTimeout	CHHapticError.Code.engineStartTimeout	case engineStartTimeout
+c:@E@CHHapticErrorCode@CHHapticErrorCodeFileNotFound	swift.enum.case	CHHapticError.Code.fileNotFound	CHHapticError.Code.fileNotFound	case fileNotFound
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInsufficientPower	swift.enum.case	CHHapticError.Code.insufficientPower	CHHapticError.Code.insufficientPower	case insufficientPower
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidAudioResource	swift.enum.case	CHHapticError.Code.invalidAudioResource	CHHapticError.Code.invalidAudioResource	case invalidAudioResource
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidAudioSession	swift.enum.case	CHHapticError.Code.invalidAudioSession	CHHapticError.Code.invalidAudioSession	case invalidAudioSession
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEngineParameter	swift.enum.case	CHHapticError.Code.invalidEngineParameter	CHHapticError.Code.invalidEngineParameter	case invalidEngineParameter
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventDuration	swift.enum.case	CHHapticError.Code.invalidEventDuration	CHHapticError.Code.invalidEventDuration	case invalidEventDuration
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventTime	swift.enum.case	CHHapticError.Code.invalidEventTime	CHHapticError.Code.invalidEventTime	case invalidEventTime
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidEventType	swift.enum.case	CHHapticError.Code.invalidEventType	CHHapticError.Code.invalidEventType	case invalidEventType
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidParameterType	swift.enum.case	CHHapticError.Code.invalidParameterType	CHHapticError.Code.invalidParameterType	case invalidParameterType
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternData	swift.enum.case	CHHapticError.Code.invalidPatternData	CHHapticError.Code.invalidPatternData	case invalidPatternData
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternDictionary	swift.enum.case	CHHapticError.Code.invalidPatternDictionary	CHHapticError.Code.invalidPatternDictionary	case invalidPatternDictionary
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidPatternPlayer	swift.enum.case	CHHapticError.Code.invalidPatternPlayer	CHHapticError.Code.invalidPatternPlayer	case invalidPatternPlayer
+c:@E@CHHapticErrorCode@CHHapticErrorCodeInvalidTime	swift.enum.case	CHHapticError.Code.invalidTime	CHHapticError.Code.invalidTime	case invalidTime
+c:@E@CHHapticErrorCode@CHHapticErrorCodeMemoryError	swift.enum.case	CHHapticError.Code.memoryError	CHHapticError.Code.memoryError	case memoryError
+c:@E@CHHapticErrorCode@CHHapticErrorCodeNotSupported	swift.enum.case	CHHapticError.Code.notSupported	CHHapticError.Code.notSupported	case notSupported
+c:@E@CHHapticErrorCode@CHHapticErrorCodeOperationNotPermitted	swift.enum.case	CHHapticError.Code.operationNotPermitted	CHHapticError.Code.operationNotPermitted	case operationNotPermitted
+c:@E@CHHapticErrorCode@CHHapticErrorCodeResourceNotAvailable	swift.enum.case	CHHapticError.Code.resourceNotAvailable	CHHapticError.Code.resourceNotAvailable	case resourceNotAvailable
+c:@E@CHHapticErrorCode@CHHapticErrorCodeServerInitFailed	swift.enum.case	CHHapticError.Code.serverInitFailed	CHHapticError.Code.serverInitFailed	case serverInitFailed
+c:@E@CHHapticErrorCode@CHHapticErrorCodeServerInterrupted	swift.enum.case	CHHapticError.Code.serverInterrupted	CHHapticError.Code.serverInterrupted	case serverInterrupted
+c:@E@CHHapticErrorCode@CHHapticErrorCodeUnknownError	swift.enum.case	CHHapticError.Code.unknownError	CHHapticError.Code.unknownError	case unknownError
+c:@T@CHHapticAdvancedPatternPlayerCompletionHandler	swift.typealias	CHHapticAdvancedPatternPlayerCompletionHandler	CHHapticAdvancedPatternPlayerCompletionHandler	typealias CHHapticAdvancedPatternPlayerCompletionHandler = ((any Error)?) -> Void
+c:@T@CHHapticAudioResourceID	swift.typealias	CHHapticAudioResourceID	CHHapticAudioResourceID	typealias CHHapticAudioResourceID = Int
+c:@T@CHHapticAudioResourceKey	swift.typealias	CHHapticAudioResourceKey	CHHapticAudioResourceKey	typealias CHHapticAudioResourceKey = NSString
+c:@T@CHHapticCompletionHandler	swift.typealias	CHHapticEngine.CompletionHandler	CHHapticEngine.CompletionHandler	typealias CompletionHandler = ((any Error)?) -> Void
+c:@T@CHHapticDynamicParameterID	swift.struct	CHHapticDynamicParameter.ID	CHHapticDynamicParameter.ID	struct ID
+c:@T@CHHapticEngineFinishedHandler	swift.typealias	CHHapticEngine.FinishedHandler	CHHapticEngine.FinishedHandler	typealias FinishedHandler = ((any Error)?) -> CHHapticEngine.FinishedAction
+c:@T@CHHapticEngineResetHandler	swift.typealias	CHHapticEngine.ResetHandler	CHHapticEngine.ResetHandler	typealias ResetHandler = () -> Void
+c:@T@CHHapticEngineStoppedHandler	swift.typealias	CHHapticEngine.StoppedHandler	CHHapticEngine.StoppedHandler	typealias StoppedHandler = (CHHapticEngine.StoppedReason) -> Void
+c:@T@CHHapticEventParameterID	swift.struct	CHHapticEvent.ParameterID	CHHapticEvent.ParameterID	struct ParameterID
+c:@T@CHHapticEventType	swift.struct	CHHapticEvent.EventType	CHHapticEvent.EventType	struct EventType
+c:@T@CHHapticPatternKey	swift.struct	CHHapticPattern.Key	CHHapticPattern.Key	struct Key
+c:@macro@CHHapticTimeImmediate	swift.var	CHHapticTimeImmediate	CHHapticTimeImmediate	var CHHapticTimeImmediate: TimeInterval { get }
+c:objc(cs)CHHapticDynamicParameter	swift.class	CHHapticDynamicParameter	CHHapticDynamicParameter	class CHHapticDynamicParameter
+c:objc(cs)CHHapticDynamicParameter(im)initWithParameterID:value:relativeTime:	swift.init	init(parameterID:value:relativeTime:)	CHHapticDynamicParameter.init(parameterID:value:relativeTime:)	init(parameterID: CHHapticDynamicParameter.ID, value: Float, relativeTime time: TimeInterval)
+c:objc(cs)CHHapticDynamicParameter(py)parameterID	swift.property	parameterID	CHHapticDynamicParameter.parameterID	var parameterID: CHHapticDynamicParameter.ID { get }
+c:objc(cs)CHHapticDynamicParameter(py)relativeTime	swift.property	relativeTime	CHHapticDynamicParameter.relativeTime	var relativeTime: TimeInterval { get set }
+c:objc(cs)CHHapticDynamicParameter(py)value	swift.property	value	CHHapticDynamicParameter.value	var value: Float { get set }
+c:objc(cs)CHHapticEngine	swift.class	CHHapticEngine	CHHapticEngine	class CHHapticEngine
+c:objc(cs)CHHapticEngine(cm)capabilitiesForHardware	swift.type.method	capabilitiesForHardware()	CHHapticEngine.capabilitiesForHardware()	class func capabilitiesForHardware() -> any CHHapticDeviceCapability
+c:objc(cs)CHHapticEngine(im)createAdvancedPlayerWithPattern:error:	swift.method	makeAdvancedPlayer(with:)	CHHapticEngine.makeAdvancedPlayer(with:)	func makeAdvancedPlayer(with pattern: CHHapticPattern) throws -> any CHHapticAdvancedPatternPlayer
+c:objc(cs)CHHapticEngine(im)createPlayerWithPattern:error:	swift.method	makePlayer(with:)	CHHapticEngine.makePlayer(with:)	func makePlayer(with pattern: CHHapticPattern) throws -> any CHHapticPatternPlayer
+c:objc(cs)CHHapticEngine(im)initAndReturnError:	swift.init	init()	CHHapticEngine.init()	init() throws
+c:objc(cs)CHHapticEngine(im)initAndReturnError:::SYNTHESIZED::c:objc(cs)CHHapticEngine	swift.init	init(andReturnError:)	CHHapticEngine.init(andReturnError:)	init(andReturnError: ()) throws
+c:objc(cs)CHHapticEngine(im)initWithAudioSession:error:	swift.init	init(audioSession:)	CHHapticEngine.init(audioSession:)	init(audioSession: AVAudioSession?) throws
+c:objc(cs)CHHapticEngine(im)notifyWhenPlayersFinished:	swift.method	notifyWhenPlayersFinished(finishedHandler:)	CHHapticEngine.notifyWhenPlayersFinished(finishedHandler:)	func notifyWhenPlayersFinished(finishedHandler: @escaping CHHapticEngine.FinishedHandler)
+c:objc(cs)CHHapticEngine(im)playPatternFromData:error:	swift.method	playPattern(from:)	CHHapticEngine.playPattern(from:)	func playPattern(from data: Data) throws
+c:objc(cs)CHHapticEngine(im)playPatternFromURL:error:	swift.method	playPattern(from:)	CHHapticEngine.playPattern(from:)	func playPattern(from fileURL: URL) throws
+c:objc(cs)CHHapticEngine(im)registerAudioResource:options:error:	swift.method	registerAudioResource(_:options:)	CHHapticEngine.registerAudioResource(_:options:)	func registerAudioResource(_ resourceURL: URL, options: [AnyHashable : Any] = [:]) throws -> CHHapticAudioResourceID
+c:objc(cs)CHHapticEngine(im)startAndReturnError:	swift.method	start()	CHHapticEngine.start()	func start() throws
+c:objc(cs)CHHapticEngine(im)startWithCompletionHandler:	swift.method	start(completionHandler:)	CHHapticEngine.start(completionHandler:)	func start(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)CHHapticEngine(im)stopWithCompletionHandler:	swift.method	stop(completionHandler:)	CHHapticEngine.stop(completionHandler:)	func stop(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)CHHapticEngine(im)unregisterAudioResource:error:	swift.method	unregisterAudioResource(_:)	CHHapticEngine.unregisterAudioResource(_:)	func unregisterAudioResource(_ resourceID: CHHapticAudioResourceID) throws
+c:objc(cs)CHHapticEngine(py)autoShutdownEnabled	swift.property	isAutoShutdownEnabled	CHHapticEngine.isAutoShutdownEnabled	var isAutoShutdownEnabled: Bool { get set }
+c:objc(cs)CHHapticEngine(py)currentTime	swift.property	currentTime	CHHapticEngine.currentTime	var currentTime: TimeInterval { get }
+c:objc(cs)CHHapticEngine(py)isMutedForAudio	swift.property	isMutedForAudio	CHHapticEngine.isMutedForAudio	var isMutedForAudio: Bool { get set }
+c:objc(cs)CHHapticEngine(py)isMutedForHaptics	swift.property	isMutedForHaptics	CHHapticEngine.isMutedForHaptics	var isMutedForHaptics: Bool { get set }
+c:objc(cs)CHHapticEngine(py)playsAudioOnly	swift.property	playsAudioOnly	CHHapticEngine.playsAudioOnly	var playsAudioOnly: Bool { get set }
+c:objc(cs)CHHapticEngine(py)playsHapticsOnly	swift.property	playsHapticsOnly	CHHapticEngine.playsHapticsOnly	var playsHapticsOnly: Bool { get set }
+c:objc(cs)CHHapticEngine(py)resetHandler	swift.property	resetHandler	CHHapticEngine.resetHandler	var resetHandler: CHHapticEngine.ResetHandler { get set }
+c:objc(cs)CHHapticEngine(py)stoppedHandler	swift.property	stoppedHandler	CHHapticEngine.stoppedHandler	var stoppedHandler: CHHapticEngine.StoppedHandler { get set }
+c:objc(cs)CHHapticEvent	swift.class	CHHapticEvent	CHHapticEvent	class CHHapticEvent
+c:objc(cs)CHHapticEvent(im)initWithAudioResourceID:parameters:relativeTime:	swift.init	init(audioResourceID:parameters:relativeTime:)	CHHapticEvent.init(audioResourceID:parameters:relativeTime:)	init(audioResourceID resID: CHHapticAudioResourceID, parameters eventParams: [CHHapticEventParameter], relativeTime time: TimeInterval)
+c:objc(cs)CHHapticEvent(im)initWithAudioResourceID:parameters:relativeTime:duration:	swift.init	init(audioResourceID:parameters:relativeTime:duration:)	CHHapticEvent.init(audioResourceID:parameters:relativeTime:duration:)	init(audioResourceID resID: CHHapticAudioResourceID, parameters eventParams: [CHHapticEventParameter], relativeTime time: TimeInterval, duration: TimeInterval)
+c:objc(cs)CHHapticEvent(im)initWithEventType:parameters:relativeTime:	swift.init	init(eventType:parameters:relativeTime:)	CHHapticEvent.init(eventType:parameters:relativeTime:)	init(eventType type: CHHapticEvent.EventType, parameters eventParams: [CHHapticEventParameter], relativeTime time: TimeInterval)
+c:objc(cs)CHHapticEvent(im)initWithEventType:parameters:relativeTime:duration:	swift.init	init(eventType:parameters:relativeTime:duration:)	CHHapticEvent.init(eventType:parameters:relativeTime:duration:)	init(eventType type: CHHapticEvent.EventType, parameters eventParams: [CHHapticEventParameter], relativeTime time: TimeInterval, duration: TimeInterval)
+c:objc(cs)CHHapticEvent(py)duration	swift.property	duration	CHHapticEvent.duration	var duration: TimeInterval { get set }
+c:objc(cs)CHHapticEvent(py)eventParameters	swift.property	eventParameters	CHHapticEvent.eventParameters	var eventParameters: [CHHapticEventParameter] { get }
+c:objc(cs)CHHapticEvent(py)relativeTime	swift.property	relativeTime	CHHapticEvent.relativeTime	var relativeTime: TimeInterval { get set }
+c:objc(cs)CHHapticEvent(py)type	swift.property	type	CHHapticEvent.type	var type: CHHapticEvent.EventType { get }
+c:objc(cs)CHHapticEventParameter	swift.class	CHHapticEventParameter	CHHapticEventParameter	class CHHapticEventParameter
+c:objc(cs)CHHapticEventParameter(im)initWithParameterID:value:	swift.init	init(parameterID:value:)	CHHapticEventParameter.init(parameterID:value:)	init(parameterID: CHHapticEvent.ParameterID, value: Float)
+c:objc(cs)CHHapticEventParameter(py)parameterID	swift.property	parameterID	CHHapticEventParameter.parameterID	var parameterID: CHHapticEvent.ParameterID { get }
+c:objc(cs)CHHapticEventParameter(py)value	swift.property	value	CHHapticEventParameter.value	var value: Float { get set }
+c:objc(cs)CHHapticParameterCurve	swift.class	CHHapticParameterCurve	CHHapticParameterCurve	class CHHapticParameterCurve
+c:objc(cs)CHHapticParameterCurve(im)initWithParameterID:controlPoints:relativeTime:	swift.init	init(parameterID:controlPoints:relativeTime:)	CHHapticParameterCurve.init(parameterID:controlPoints:relativeTime:)	init(parameterID: CHHapticDynamicParameter.ID, controlPoints: [CHHapticParameterCurve.ControlPoint], relativeTime: TimeInterval)
+c:objc(cs)CHHapticParameterCurve(py)controlPoints	swift.property	controlPoints	CHHapticParameterCurve.controlPoints	var controlPoints: [CHHapticParameterCurve.ControlPoint] { get }
+c:objc(cs)CHHapticParameterCurve(py)parameterID	swift.property	parameterID	CHHapticParameterCurve.parameterID	var parameterID: CHHapticDynamicParameter.ID { get }
+c:objc(cs)CHHapticParameterCurve(py)relativeTime	swift.property	relativeTime	CHHapticParameterCurve.relativeTime	var relativeTime: TimeInterval { get set }
+c:objc(cs)CHHapticParameterCurveControlPoint	swift.class	CHHapticParameterCurve.ControlPoint	CHHapticParameterCurve.ControlPoint	class ControlPoint
+c:objc(cs)CHHapticParameterCurveControlPoint(im)initWithRelativeTime:value:	swift.init	init(relativeTime:value:)	CHHapticParameterCurve.ControlPoint.init(relativeTime:value:)	init(relativeTime time: TimeInterval, value: Float)
+c:objc(cs)CHHapticParameterCurveControlPoint(py)relativeTime	swift.property	relativeTime	CHHapticParameterCurve.ControlPoint.relativeTime	var relativeTime: TimeInterval { get set }
+c:objc(cs)CHHapticParameterCurveControlPoint(py)value	swift.property	value	CHHapticParameterCurve.ControlPoint.value	var value: Float { get set }
+c:objc(cs)CHHapticPattern	swift.class	CHHapticPattern	CHHapticPattern	class CHHapticPattern
+c:objc(cs)CHHapticPattern(im)exportDictionaryAndReturnError:	swift.method	exportDictionary()	CHHapticPattern.exportDictionary()	func exportDictionary() throws -> [CHHapticPattern.Key : Any]
+c:objc(cs)CHHapticPattern(im)initWithContentsOfURL:error:	swift.init	init(contentsOf:)	CHHapticPattern.init(contentsOf:)	init(contentsOf ahapURL: URL) throws
+c:objc(cs)CHHapticPattern(im)initWithContentsOfURL:error:::SYNTHESIZED::c:objc(cs)CHHapticPattern	swift.init	init(contentsOfURL:)	CHHapticPattern.init(contentsOfURL:)	init(contentsOfURL ahapURL: URL) throws
+c:objc(cs)CHHapticPattern(im)initWithDictionary:error:	swift.init	init(dictionary:)	CHHapticPattern.init(dictionary:)	init(dictionary patternDict: [CHHapticPattern.Key : Any]) throws
+c:objc(cs)CHHapticPattern(im)initWithEvents:parameterCurves:error:	swift.init	init(events:parameterCurves:)	CHHapticPattern.init(events:parameterCurves:)	init(events: [CHHapticEvent], parameterCurves: [CHHapticParameterCurve]) throws
+c:objc(cs)CHHapticPattern(im)initWithEvents:parameters:error:	swift.init	init(events:parameters:)	CHHapticPattern.init(events:parameters:)	init(events: [CHHapticEvent], parameters: [CHHapticDynamicParameter]) throws
+c:objc(cs)CHHapticPattern(py)duration	swift.property	duration	CHHapticPattern.duration	var duration: TimeInterval { get }
+c:objc(pl)CHHapticAdvancedPatternPlayer	swift.protocol	CHHapticAdvancedPatternPlayer	CHHapticAdvancedPatternPlayer	protocol CHHapticAdvancedPatternPlayer : CHHapticPatternPlayer
+c:objc(pl)CHHapticAdvancedPatternPlayer(im)pauseAtTime:error:	swift.method	pause(atTime:)	CHHapticAdvancedPatternPlayer.pause(atTime:)	func pause(atTime time: TimeInterval) throws
+c:objc(pl)CHHapticAdvancedPatternPlayer(im)resumeAtTime:error:	swift.method	resume(atTime:)	CHHapticAdvancedPatternPlayer.resume(atTime:)	func resume(atTime time: TimeInterval) throws
+c:objc(pl)CHHapticAdvancedPatternPlayer(im)seekToOffset:error:	swift.method	seek(toOffset:)	CHHapticAdvancedPatternPlayer.seek(toOffset:)	func seek(toOffset offsetTime: TimeInterval) throws
+c:objc(pl)CHHapticAdvancedPatternPlayer(py)completionHandler	swift.property	completionHandler	CHHapticAdvancedPatternPlayer.completionHandler	var completionHandler: CHHapticAdvancedPatternPlayerCompletionHandler { get set }
+c:objc(pl)CHHapticAdvancedPatternPlayer(py)isMuted	swift.property	isMuted	CHHapticAdvancedPatternPlayer.isMuted	var isMuted: Bool { get set }
+c:objc(pl)CHHapticAdvancedPatternPlayer(py)loopEnabled	swift.property	loopEnabled	CHHapticAdvancedPatternPlayer.loopEnabled	var loopEnabled: Bool { get set }
+c:objc(pl)CHHapticAdvancedPatternPlayer(py)loopEnd	swift.property	loopEnd	CHHapticAdvancedPatternPlayer.loopEnd	var loopEnd: TimeInterval { get set }
+c:objc(pl)CHHapticAdvancedPatternPlayer(py)playbackRate	swift.property	playbackRate	CHHapticAdvancedPatternPlayer.playbackRate	var playbackRate: Float { get set }
+c:objc(pl)CHHapticDeviceCapability	swift.protocol	CHHapticDeviceCapability	CHHapticDeviceCapability	protocol CHHapticDeviceCapability
+c:objc(pl)CHHapticDeviceCapability(im)attributesForDynamicParameter:error:	swift.method	attributes(forDynamicParameter:)	CHHapticDeviceCapability.attributes(forDynamicParameter:)	func attributes(forDynamicParameter inParameter: CHHapticDynamicParameter.ID) throws -> any CHHapticParameterAttributes
+c:objc(pl)CHHapticDeviceCapability(im)attributesForEventParameter:eventType:error:	swift.method	attributes(forEventParameter:eventType:)	CHHapticDeviceCapability.attributes(forEventParameter:eventType:)	func attributes(forEventParameter inParameter: CHHapticEvent.ParameterID, eventType type: CHHapticEvent.EventType) throws -> any CHHapticParameterAttributes
+c:objc(pl)CHHapticDeviceCapability(py)supportsAudio	swift.property	supportsAudio	CHHapticDeviceCapability.supportsAudio	var supportsAudio: Bool { get }
+c:objc(pl)CHHapticDeviceCapability(py)supportsHaptics	swift.property	supportsHaptics	CHHapticDeviceCapability.supportsHaptics	var supportsHaptics: Bool { get }
+c:objc(pl)CHHapticParameterAttributes	swift.protocol	CHHapticParameterAttributes	CHHapticParameterAttributes	protocol CHHapticParameterAttributes : NSObjectProtocol
+c:objc(pl)CHHapticParameterAttributes(py)defaultValue	swift.property	defaultValue	CHHapticParameterAttributes.defaultValue	var defaultValue: Float { get }
+c:objc(pl)CHHapticParameterAttributes(py)maxValue	swift.property	maxValue	CHHapticParameterAttributes.maxValue	var maxValue: Float { get }
+c:objc(pl)CHHapticParameterAttributes(py)minValue	swift.property	minValue	CHHapticParameterAttributes.minValue	var minValue: Float { get }
+c:objc(pl)CHHapticPatternPlayer	swift.protocol	CHHapticPatternPlayer	CHHapticPatternPlayer	protocol CHHapticPatternPlayer : NSObjectProtocol
+c:objc(pl)CHHapticPatternPlayer(im)cancelAndReturnError:	swift.method	cancel()	CHHapticPatternPlayer.cancel()	func cancel() throws
+c:objc(pl)CHHapticPatternPlayer(im)scheduleParameterCurve:atTime:error:	swift.method	scheduleParameterCurve(_:atTime:)	CHHapticPatternPlayer.scheduleParameterCurve(_:atTime:)	func scheduleParameterCurve(_ parameterCurve: CHHapticParameterCurve, atTime time: TimeInterval) throws
+c:objc(pl)CHHapticPatternPlayer(im)sendParameters:atTime:error:	swift.method	sendParameters(_:atTime:)	CHHapticPatternPlayer.sendParameters(_:atTime:)	func sendParameters(_ parameters: [CHHapticDynamicParameter], atTime time: TimeInterval) throws
+c:objc(pl)CHHapticPatternPlayer(im)startAtTime:error:	swift.method	start(atTime:)	CHHapticPatternPlayer.start(atTime:)	func start(atTime time: TimeInterval) throws
+c:objc(pl)CHHapticPatternPlayer(im)stopAtTime:error:	swift.method	stop(atTime:)	CHHapticPatternPlayer.stop(atTime:)	func stop(atTime time: TimeInterval) throws
+c:objc(pl)CHHapticPatternPlayer(py)isMuted	swift.property	isMuted	CHHapticPatternPlayer.isMuted	var isMuted: Bool { get set }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.type.property	errorDomain	CHHapticError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	errorUserInfo	CHHapticError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	errorCode	CHHapticError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.func.op	~=(_:_:)	CHHapticError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	errorUserInfo	CHHapticError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.func.op	==(_:_:)	CHHapticError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	code	CHHapticError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.method	hash(into:)	CHHapticError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	userInfo	CHHapticError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	errorCode	CHHapticError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	hashValue	CHHapticError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.init	init(_:userInfo:)	CHHapticError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC17CHHapticErrorCodeLeV	swift.struct	CHHapticError	CHHapticError	struct CHHapticError
+s:SC17CHHapticErrorCodeLeV06memoryB0SoAAVvpZ	swift.type.property	memoryError	CHHapticError.memoryError	static var memoryError: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV07unknownB0SoAAVvpZ	swift.type.property	unknownError	CHHapticError.unknownError	static var unknownError: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CHHapticError.errorDomain	static var errorDomain: String { get }
+s:SC17CHHapticErrorCodeLeV11invalidTimeSoAAVvpZ	swift.type.property	invalidTime	CHHapticError.invalidTime	static var invalidTime: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV12fileNotFoundSoAAVvpZ	swift.type.property	fileNotFound	CHHapticError.fileNotFound	static var fileNotFound: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV12notSupportedSoAAVvpZ	swift.type.property	notSupported	CHHapticError.notSupported	static var notSupported: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV13badEventEntrySoAAVvpZ	swift.type.property	badEventEntry	CHHapticError.badEventEntry	static var badEventEntry: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV16engineNotRunningSoAAVvpZ	swift.type.property	engineNotRunning	CHHapticError.engineNotRunning	static var engineNotRunning: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV16invalidEventTimeSoAAVvpZ	swift.type.property	invalidEventTime	CHHapticError.invalidEventTime	static var invalidEventTime: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV16invalidEventTypeSoAAVvpZ	swift.type.property	invalidEventType	CHHapticError.invalidEventType	static var invalidEventType: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV16serverInitFailedSoAAVvpZ	swift.type.property	serverInitFailed	CHHapticError.serverInitFailed	static var serverInitFailed: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV17badParameterEntrySoAAVvpZ	swift.type.property	badParameterEntry	CHHapticError.badParameterEntry	static var badParameterEntry: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV17insufficientPowerSoAAVvpZ	swift.type.property	insufficientPower	CHHapticError.insufficientPower	static var insufficientPower: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV17serverInterruptedSoAAVvpZ	swift.type.property	serverInterrupted	CHHapticError.serverInterrupted	static var serverInterrupted: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV18engineStartTimeoutSoAAVvpZ	swift.type.property	engineStartTimeout	CHHapticError.engineStartTimeout	static var engineStartTimeout: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV18invalidPatternDataSoAAVvpZ	swift.type.property	invalidPatternData	CHHapticError.invalidPatternData	static var invalidPatternData: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV19invalidAudioSessionSoAAVvpZ	swift.type.property	invalidAudioSession	CHHapticError.invalidAudioSession	static var invalidAudioSession: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV20invalidAudioResourceSoAAVvpZ	swift.type.property	invalidAudioResource	CHHapticError.invalidAudioResource	static var invalidAudioResource: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV20invalidEventDurationSoAAVvpZ	swift.type.property	invalidEventDuration	CHHapticError.invalidEventDuration	static var invalidEventDuration: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV20invalidParameterTypeSoAAVvpZ	swift.type.property	invalidParameterType	CHHapticError.invalidParameterType	static var invalidParameterType: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV20invalidPatternPlayerSoAAVvpZ	swift.type.property	invalidPatternPlayer	CHHapticError.invalidPatternPlayer	static var invalidPatternPlayer: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV20resourceNotAvailableSoAAVvpZ	swift.type.property	resourceNotAvailable	CHHapticError.resourceNotAvailable	static var resourceNotAvailable: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV21operationNotPermittedSoAAVvpZ	swift.type.property	operationNotPermitted	CHHapticError.operationNotPermitted	static var operationNotPermitted: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV22invalidEngineParameterSoAAVvpZ	swift.type.property	invalidEngineParameter	CHHapticError.invalidEngineParameter	static var invalidEngineParameter: CHHapticError.Code { get }
+s:SC17CHHapticErrorCodeLeV24invalidPatternDictionarySoAAVvpZ	swift.type.property	invalidPatternDictionary	CHHapticError.invalidPatternDictionary	static var invalidPatternDictionary: CHHapticError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CHHapticEngineFinishedAction	swift.func.op	!=(_:_:)	CHHapticEngine.FinishedAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CHHapticEngineStoppedReason	swift.func.op	!=(_:_:)	CHHapticEngine.StoppedReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.func.op	!=(_:_:)	CHHapticError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CHHapticDynamicParameterID	swift.func.op	!=(_:_:)	CHHapticDynamicParameter.ID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CHHapticEventParameterID	swift.func.op	!=(_:_:)	CHHapticEvent.ParameterID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CHHapticEventType	swift.func.op	!=(_:_:)	CHHapticEvent.EventType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CHHapticPatternKey	swift.func.op	!=(_:_:)	CHHapticPattern.Key.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CHHapticEngineFinishedAction	swift.property	hashValue	CHHapticEngine.FinishedAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CHHapticEngineStoppedReason	swift.property	hashValue	CHHapticEngine.StoppedReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	hashValue	CHHapticError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CHHapticEngineFinishedAction	swift.method	hash(into:)	CHHapticEngine.FinishedAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CHHapticEngineStoppedReason	swift.method	hash(into:)	CHHapticEngine.StoppedReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.method	hash(into:)	CHHapticError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So17CHHapticErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CHHapticError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So17CHHapticEventTypea8rawValueABSS_tcfc	swift.init	init(rawValue:)	CHHapticEvent.EventType.init(rawValue:)	init(rawValue: String)
+s:So18CHHapticPatternKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	CHHapticPattern.Key.init(rawValue:)	init(rawValue: String)
+s:So24CHHapticEventParameterIDa8rawValueABSS_tcfc	swift.init	init(rawValue:)	CHHapticEvent.ParameterID.init(rawValue:)	init(rawValue: String)
+s:So26CHHapticDynamicParameterIDa8rawValueABSS_tcfc	swift.init	init(rawValue:)	CHHapticDynamicParameter.ID.init(rawValue:)	init(rawValue: String)
+s:So27CHHapticEngineStoppedReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CHHapticEngine.StoppedReason.init(rawValue:)	init?(rawValue: Int)
+s:So28CHHapticEngineFinishedActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CHHapticEngine.FinishedAction.init(rawValue:)	init?(rawValue: Int)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CHHapticDynamicParameterID	swift.property	hashValue	CHHapticDynamicParameter.ID.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CHHapticEventParameterID	swift.property	hashValue	CHHapticEvent.ParameterID.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CHHapticEventType	swift.property	hashValue	CHHapticEvent.EventType.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CHHapticPatternKey	swift.property	hashValue	CHHapticPattern.Key.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CHHapticDynamicParameterID	swift.method	hash(into:)	CHHapticDynamicParameter.ID.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CHHapticEventParameterID	swift.method	hash(into:)	CHHapticEvent.ParameterID.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CHHapticEventType	swift.method	hash(into:)	CHHapticEvent.EventType.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CHHapticPatternKey	swift.method	hash(into:)	CHHapticPattern.Key.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CHHapticErrorCode	swift.property	localizedDescription	CHHapticError.localizedDescription	var localizedDescription: String { get }

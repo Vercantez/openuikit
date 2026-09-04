@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/OSLog.symbols.json",
+      "relationshipCount": 240,
+      "sha256": "610ae88224d1ffceedf3858030a43d3eac530338e7311b7bd49f385c85389710",
+      "symbolCount": 128
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "OSLog",
+  "relationshipCount": 240,
+  "relationshipMultisetSHA256": "78896481e5acc23fdbc6c1fc113b26565ab60216fb0eaf6977836f9ded90e2b1",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 128,
+  "symbolMultisetSHA256": "001a32a1d537f3867b08def15a76e130995f211dda1a288e045f5406ddccd876",
+  "target": "arm64-apple-ios26.0"
+}

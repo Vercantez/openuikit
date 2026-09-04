@@ -1,0 +1,8 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/AdServices.framework/AdServices (for architecture arm64):	System/Library/Frameworks/AdServices.framework/AdServices.tbd
+_AAAttributionErrorDomain	System/Library/Frameworks/AdServices.framework/AdServices.tbd
+_OBJC_CLASS_$_AAAttribution	System/Library/Frameworks/AdServices.framework/AdServices.tbd
+_OBJC_CLASS_$_AAAttributionResult	System/Library/Frameworks/AdServices.framework/AdServices.tbd
+_OBJC_METACLASS_$_AAAttribution	System/Library/Frameworks/AdServices.framework/AdServices.tbd
+_OBJC_METACLASS_$_AAAttributionResult	System/Library/Frameworks/AdServices.framework/AdServices.tbd
+_kAAAttributionXPCMachServiceName	System/Library/Frameworks/AdServices.framework/AdServices.tbd
