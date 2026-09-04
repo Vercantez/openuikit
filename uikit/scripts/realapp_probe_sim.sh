@@ -47,7 +47,7 @@ cp Tools/oracle2/RealAppProbe-Info.plist "$APP/Info.plist"
 cp fixtures/realapp/assets/*.png "$APP/"
 rm -rf "$TMPSRC"
 
-DEVNAME="OpenUIKit-Chrome"
+DEVNAME="OpenUIKit-Chrome${SIM_DEVICE_SUFFIX:-}"
 DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"
 RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)
 UDID=$(xcrun simctl list devices | grep "$DEVNAME" | grep -o '[0-9A-F-]\{36\}' | head -1)

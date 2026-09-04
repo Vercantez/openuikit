@@ -98,6 +98,9 @@ int QZLayerGetCornerModel(void) { return g_qz_corner_model; }
 static int g_qz_group_shadow_model = QZGroupShadowBeneath;
 void QZLayerSetGroupShadowModel(int model) { g_qz_group_shadow_model = model == QZGroupShadowInside ? 1 : 0; }
 int QZLayerGetGroupShadowModel(void) { return g_qz_group_shadow_model; }
+static int g_qz_origin_snap_model = QZOriginSnapNone;
+void QZLayerSetOriginSnapModel(int model) { g_qz_origin_snap_model = model == QZOriginSnapFloor ? 1 : 0; }
+int QZLayerGetOriginSnapModel(void) { return g_qz_origin_snap_model; }
 
 void QZLayerSetMaskedCorners(QZLayerRef layer, uint32_t corners) {
     if (layer) layer->masked_corners = corners & 0x0fu;

@@ -18,10 +18,10 @@ cp Tools/oracle2/ColorProbe-Info.plist "$APP/Info.plist"; cp Sources/OpenUIKit/R
 # resamples every view edge (measured 2026-09-04: label backgrounds off by
 # 2-4/255 along their frame edges). Window/modal scenes need the iPhone 16.
 if [[ "${SIM_DEVICE:-}" == "2x" ]]; then
-  DEVNAME="OpenUIKit-2x"
+  DEVNAME="OpenUIKit-2x${SIM_DEVICE_SUFFIX:-}"
   DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
 else
-  DEVNAME="OpenUIKit-Chrome"
+  DEVNAME="OpenUIKit-Chrome${SIM_DEVICE_SUFFIX:-}"
   DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"
 fi
 RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)

@@ -55,6 +55,19 @@ int QZLayerGetCornerModel(void);
 enum { QZGroupShadowBeneath = 0, QZGroupShadowInside = 1 };
 void QZLayerSetGroupShadowModel(int model);
 int QZLayerGetGroupShadowModel(void);
+
+/* Where a layer whose device-space origin is FRACTIONAL renders.
+ *   QZOriginSnapNone (0): at the exact position, edges anti-aliased.
+ *   QZOriginSnapFloor (1): iOS 26.1 (MEASURED 2026-09-04 on the iPhone
+ *     16 at 3x with views at every sixth-of-a-point offset): the layer's
+ *     device origin is FLOORED to the pixel and its pixel size kept — a
+ *     29 pt view at y 46.5 covers rows 138 ... 224 (half-pixel edges
+ *     never anti-alias, sublayers inherit the shift); a rounded layer
+ *     draws its path at the exact position clipped to that snapped
+ *     store (top row 50 %, bottom row cut). Axis-aligned layers only. */
+enum { QZOriginSnapNone = 0, QZOriginSnapFloor = 1 };
+void QZLayerSetOriginSnapModel(int model);
+int QZLayerGetOriginSnapModel(void);
 /* CALayer.allowsEdgeAntialiasing: when false, the layer's background fill
  * and border are rasterized without edge anti-aliasing (hard 0/1 coverage
  * thresholded at pixel centers) — how iOS composites transformed layers.

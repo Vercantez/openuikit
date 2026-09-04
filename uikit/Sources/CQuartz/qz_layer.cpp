@@ -461,6 +461,58 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
     QZRect b = layer->bounds;
     double cr = layer->corner_radius;
 
+    /* iOS origin snapping (QZLayerSetOriginSnapModel): floor the layer's
+     * device origin, keep its size. `bs` is the snapped store rect; the
+     * layer's OWN geometry (plain background, border, shadow silhouette,
+     * masksToBounds clip) uses it, a rounded background is drawn at the
+     * exact position clipped to it, and text / children keep the exact
+     * transform (MEASURED: labels inside a snapped card keep the baseline
+     * the unsnapped model gives; a plain sublayer floors on its own). */
+    double snap_ux = 0, snap_uy = 0, snap_w = 0, snap_h = 0;
+    bool snap_size = false;
+    if (QZLayerGetOriginSnapModel() == QZOriginSnapFloor) {
+        const QZAffineTransform &m = ctx->gs.ctm;
+        /* Only at an integer device scale: inside a zoomed group (the
+         * floating sheet's 0.96 platter) CA rasterises the group once at
+         * its own resolution, and snapping its children would be wrong. */
+        double ua = std::fabs(m.a), ud = std::fabs(m.d);
+        bool integer_scale = std::fabs(ua - std::round(ua)) < 1e-6 && std::fabs(ud - std::round(ud)) < 1e-6 && ua >= 1;
+        if (integer_scale && std::fabs(m.b) < 1e-9 && std::fabs(m.c) < 1e-9 && m.a != 0 && m.d != 0) {
+            /* The store's top-left device corner, whichever way the axes
+             * run (a flipped context has d < 0). */
+            /* Bitmap row/column of the store's top-left corner. The bitmap
+             * counts rows from the top; a flipped context (d < 0) has its
+             * device y growing upwards, so the TOP edge is the larger
+             * device y and row = height - device y. */
+            double x0 = m.a * b.origin.x + m.tx, x1 = m.a * (b.origin.x + b.size.width) + m.tx;
+            double y0 = m.d * b.origin.y + m.ty, y1 = m.d * (b.origin.y + b.size.height) + m.ty;
+            /* MEASURED in a real window (edge_snap_win, iPhone 16, 3x):
+             * EVERY edge floors independently — a 29.5 pt view at y 10
+             * covers rows 30 ... 117 (bottom 118.5 -> 118) and at y 10.5
+             * rows 271 ... 359 (top 271.5 -> 271, bottom 360 exact) — so
+             * the store is [floor(left), floor(right)) x [floor(top),
+             * floor(bottom)) and its size can differ from the layer's by
+             * a pixel. Rounded or not, with or without sublayers alike. */
+            double col0 = std::min(x0, x1), col1 = std::max(x0, x1);
+            double row0 = (m.d < 0) ? (double)ctx->height - std::max(y0, y1) : std::min(y0, y1);
+            double row1 = (m.d < 0) ? (double)ctx->height - std::min(y0, y1) : std::max(y0, y1);
+            double fc0 = std::floor(col0 + 1e-6), fc1 = std::floor(col1 + 1e-6);
+            double fr0 = std::floor(row0 + 1e-6), fr1 = std::floor(row1 + 1e-6);
+            if (std::fabs(fc0 - col0) > 1e-6 || std::fabs(fr0 - row0) > 1e-6 ||
+                std::fabs(fc1 - col1) > 1e-6 || std::fabs(fr1 - row1) > 1e-6) {
+                double sdev_y = (m.d < 0) ? -(fr0 - row0) : (fr0 - row0);
+                snap_ux = (fc0 - col0) / m.a; snap_uy = sdev_y / m.d;
+                snap_w = (fc1 - fc0) / std::fabs(m.a);
+                snap_h = (fr1 - fr0) / std::fabs(m.d);
+                snap_size = true;
+            }
+        }
+    }
+    bool snapped = snap_size;
+    QZRect bs = snapped ? QZRectMake(b.origin.x + snap_ux, b.origin.y + snap_uy, snap_w, snap_h) : b;
+    /* All of the layer's own geometry lives on the snapped store. */
+    QZRect bgeom = bs;
+
     /* A CALayer mask applies once to the final layer composite, including
      * a grouped shadow. Build that composite offscreen and multiply it by
      * the rendered mask immediately before returning to the destination. */
@@ -493,7 +545,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
         set_layer_shadow(layer, ctx, layer->opacity);
         QZContextSetRGBFillColor(ctx, 0, 0, 0, 0);
         QZContextBeginPath(ctx);
-        bool eo = add_shadow_silhouette(layer, ctx, b, cr, bg_visible);
+        bool eo = add_shadow_silhouette(layer, ctx, bgeom, cr, bg_visible);
         if (eo) QZContextEOFillPath(ctx);
         else QZContextFillPath(ctx);
         QZContextRestoreGState(ctx);
@@ -506,7 +558,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
 
     if (layer->masks_to_bounds) {
         QZContextBeginPath(ctx);
-        rounded_or_rect(ctx, b, cr, layer->masked_corners);
+        rounded_or_rect(ctx, bs, cr, layer->masked_corners);
         QZContextClip(ctx);
     }
 
@@ -517,7 +569,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
                                  layer->background.b, layer->background.a);
         if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
         QZContextBeginPath(ctx);
-        rounded_or_rect(ctx, b, cr, layer->masked_corners);
+        rounded_or_rect(ctx, bgeom, cr, layer->masked_corners);
         QZContextFillPath(ctx);
         QZContextRestoreGState(ctx);
     } else if (shadow_with_fill && border_visible) {
@@ -526,7 +578,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
          * border pass repaints the identical ring on top later. */
         QZContextSaveGState(ctx);
         set_layer_shadow(layer, ctx, 1.0);
-        draw_border(layer, ctx, b, cr);
+        draw_border(layer, ctx, bgeom, cr);
         QZContextRestoreGState(ctx);
     }
 
@@ -615,7 +667,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
     if (st) QZContextRestoreGState(ctx);
 
     if (border_visible) {
-        draw_border(layer, ctx, b, cr);
+        draw_border(layer, ctx, bgeom, cr);
     }
 
     if (group) {

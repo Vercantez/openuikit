@@ -104,6 +104,10 @@ public enum LayerBridge {
         // the Mac oracle composites it beneath the group.
         QZLayerSetGroupShadowModel(OpenUIKitRuntime.systemFontCut == .iOS
                                    ? Int32(QZGroupShadowInside) : Int32(QZGroupShadowBeneath))
+        // iOS floors a layer's fractional device origin and keeps its
+        // pixel size (measured on the iPhone 16 at 3x, edge_snap probe).
+        QZLayerSetOriginSnapModel(OpenUIKitRuntime.systemFontCut == .iOS && !OpenUIKitRuntime.disableIOSOriginSnap
+                                  ? Int32(QZOriginSnapFloor) : Int32(QZOriginSnapNone))
         // Validate before CGFloat-to-Int conversion and before Bitmap's
         // width*height*4 allocation. Hostile root geometry must yield an
         // empty frame, not a conversion trap or unbounded allocation.

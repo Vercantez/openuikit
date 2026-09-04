@@ -57,6 +57,9 @@ public enum OpenUIKitRuntime {
     /// OPENUIKIT_COMPOSITOR=layers|renderpass); the library never reads
     /// env vars.
     public static var compositor: RenderCompositor = .layers
+    /// Diagnostic: turn the iOS origin-snapping model off (OPENUIKIT_IOS_SNAP=0
+    /// in openrender) to measure what it buys on a scene.
+    public static var disableIOSOriginSnap = false
     /// Presentation clock for UIView animations (M6), in seconds since the
     /// animations were committed (t = 0 shows every non-delayed animation's
     /// FROM state). The host sets it, then renders: LayerBridge builds the
