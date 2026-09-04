@@ -1983,11 +1983,15 @@ exercised and OpenUIKit does not fully honour.
   changes the probe does not resolve — worst observed gap ~2/3 pt at
   accessibility sizes. Widening `baseValues` in the probe closes it. Nothing
   is hand-fitted.
-- **Nothing changes the content size category.** There is no Settings app, so
-  `UILabel.adjustsFontForContentSizeCategory` is inert unless a host changes
-  `UITraitCollection.current.preferredContentSizeCategory` itself, and
-  `registerForTraitChanges` handlers only fire when a host calls
-  `UIView._traitsDidChange(previous:)`.
+- **Nothing changes the content size category automatically.** There is no
+  Settings app, so a host that wants Dynamic Type assigns
+  `UITraitCollection.current` and/or `UIApplication.shared.preferredContentSizeCategory`.
+  MEASURED dtmetrics probe, iPhone 16 / iOS 26.1: `UIFontMetrics.scaledValue(for:)`
+  without `compatibleWith:` tracks the **application** category (always `.large`
+  unless the host sets it), not `current`; `scaledValue(for:compatibleWith:)`
+  and `scaledFont(for:)` follow `current`. `UILabel.adjustsFontForContentSizeCategory`
+  is inert unless a host changes `current`, and `registerForTraitChanges`
+  handlers only fire when a host calls `UIView._traitsDidChange(previous:)`.
 - **Size classes use a bounds approximation, not device policy.** Partial
   `UITraitCollection` construction and `traitsFrom` merging match the modeled
   UIKit traits, and views/controllers inherit both axes through their window;

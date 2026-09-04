@@ -30,15 +30,10 @@ struct Variant {
     /// See RealApp.swift: the picker variants present a sheet, the storage
     /// screen is the window's root controller and presents nothing.
     var presentsSheet = true
+    var contentSizeCategory: UIContentSizeCategory = .large
 }
 
-let variants: [Variant] = [
-    Variant(name: "realapp_history_light", style: .light, kind: .listeningHistory, theme: .light),
-    Variant(name: "realapp_settings_light", style: .light, kind: .settings, theme: .light),
-    Variant(name: "realapp_settings_dark", style: .dark, kind: .settings, theme: .dark),
-    Variant(name: "realapp_storage_light", style: .light, kind: .storage, theme: .light,
-            presentsSheet: false),
-]
+var variants: [Variant] = []
 
 // Non-finite values (a private view's NaN frame, or an infinite fitting
 // size) are written as -1: JSONSerialization throws on NaN/inf, and the
@@ -153,15 +148,17 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [[String: Any]]) {
     }
     // The image an image view shows (the switch's on-track sheen is one),
     // written beside the layout so the port can be compared against it.
-    if let iv = v as? UIImageView, let img = iv.image, let data = img.pngData(), !currentVariant.isEmpty {
-        let file = "\(currentVariant).\(path).png"
-        try? data.write(to: URL(fileURLWithPath: "\(docsDir)/\(file)"))
-        entry["image"] = ["file": file, "size": [round3(img.size.width), round3(img.size.height)],
-                          "scale": round3(img.scale), "renderingMode": img.renderingMode.rawValue,
-                          "capInsets": [round3(img.capInsets.top), round3(img.capInsets.left),
-                                        round3(img.capInsets.bottom), round3(img.capInsets.right)]]
-        if let tint = rgba(iv.tintColor) { entry["ivTint"] = tint }
-        entry["contentMode"] = iv.contentMode.rawValue
+    if let iv = v as? UIImageView {
+        if let img = iv.image, let data = img.pngData(), !currentVariant.isEmpty {
+            let file = "\(currentVariant).\(path).png"
+            try? data.write(to: URL(fileURLWithPath: "\(docsDir)/\(file)"))
+            entry["image"] = ["file": file, "size": [round3(img.size.width), round3(img.size.height)],
+                              "scale": round3(img.scale), "renderingMode": img.renderingMode.rawValue,
+                              "capInsets": [round3(img.capInsets.top), round3(img.capInsets.left),
+                                            round3(img.capInsets.bottom), round3(img.capInsets.right)]]
+            if let tint = rgba(iv.tintColor) { entry["ivTint"] = tint }
+            entry["contentMode"] = iv.contentMode.rawValue
+        }
     }
     // Margin/safe-area facts: which views inset their margins, and by how
     // much (the header row's width depends on the stack view's margins).
@@ -208,6 +205,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ app: UIApplication,
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        variants = RealAppScreen.screens.map { s in
+            Variant(name: s.name, style: s.style, kind: s.variant, theme: s.theme,
+                    presentsSheet: s.presentsSheet, contentSizeCategory: s.contentSizeCategory)
+        }
         let w = UIWindow(frame: UIScreen.main.bounds)
         window = w
         runNext()
@@ -222,6 +223,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         }
         let v = variants[index]
         w.overrideUserInterfaceStyle = v.style
+        // Dynamic Type override on the window before the screen is built
+        // and before capture. `UITraitCollection(preferredContentSizeCategory:)`
+        // is the value; iOS 17+ `traitOverrides` is the setter. Applied
+        // every variant (including `.large`) so a previous `_xs`/`_ax1`
+        // capture cannot leak into the next one on this reused window.
+        let categoryTraits = UITraitCollection(preferredContentSizeCategory: v.contentSizeCategory)
+        w.traitOverrides.preferredContentSizeCategory = v.contentSizeCategory
+        // OptionsPicker.addAction sets fonts via UIFontMetrics (which reads
+        // `UITraitCollection.current`) *before* the picker is added to the
+        // window. Push the same category onto `current` so construction
+        // matches the override the presented tree inherits.
+        UITraitCollection.current = UITraitCollection(traitsFrom: [UITraitCollection.current, categoryTraits])
         let root = RealAppScreen.makeRoot(variant: v.kind, theme: v.theme)
         w.rootViewController = root
         w.makeKeyAndVisible()
@@ -262,6 +275,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         var views: [[String: Any]] = []
         dumpLayout(w, path: "", into: &views)
         let layout: [String: Any] = ["name": v.name, "views": views,
+                                     "contentSizeCategory": v.contentSizeCategory.rawValue,
+                                     "windowContentSizeCategory": w.traitCollection.preferredContentSizeCategory.rawValue,
                                      "screen": ["scale": Double(UIScreen.main.scale),
                                                 "bounds": [round3(w.bounds.width), round3(w.bounds.height)]]]
         let data = try! JSONSerialization.data(withJSONObject: layout, options: [.sortedKeys])

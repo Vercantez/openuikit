@@ -33,8 +33,11 @@
 //     closes that; nothing here is hand-tuned to hide it.
 //   * There is no notification when the category changes: OpenUIKit has no
 //     Settings app. `UIApplication.shared.preferredContentSizeCategory` is
-//     settable by a host, and `adjustsFontForContentSizeCategory` is honoured
-//     at layout time.
+//     settable by a host (default `.large`). On the iOS cut,
+//     `UIFontMetrics.scaledValue(for:)` without `compatibleWith:` reads that
+//     process category, not `UITraitCollection.current` — MEASURED dtmetrics
+//     probe, iPhone 16 / iOS 26.1. `adjustsFontForContentSizeCategory` is
+//     honoured at layout time against `current`.
 
 /// Real UIKit's `UIContentSizeCategory` (a String-backed struct).
 public struct UIContentSizeCategory: Hashable, RawRepresentable, Sendable {
@@ -231,7 +234,23 @@ public final class UIFontMetrics {
     public static let `default` = UIFontMetrics(forTextStyle: .body)
 
     public func scaledValue(for value: CGFloat) -> CGFloat {
-        scaledValue(for: value, compatibleWith: UITraitCollection.current)
+        // MEASURED dtmetrics probe, iPhone 16 / iOS 26.1: after
+        // `UITraitCollection.current = .accessibilityLarge`, `current` reads
+        // AccessibilityL but `UIApplication.shared.preferredContentSizeCategory`
+        // stays `.large`, and this no-`compatibleWith` overload stays **24**.
+        // `scaledValue(for: 24, compatibleWith: current)` is 33.333.
+        // Pocket Casts `SimpleActionView.updateSize()` uses this overload, so
+        // window `traitOverrides` scale labels
+        // (`adjustsFontForContentSizeCategory`) while icons stay 24×24
+        // (realapp_settings_light_xxxl / _ax1). Catalyst unmeasured: keep
+        // reading `current`.
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            return scaledValue(
+                for: value,
+                compatibleWith: UITraitCollection(
+                    preferredContentSizeCategory: UIApplication._preferredContentSizeCategory))
+        }
+        return scaledValue(for: value, compatibleWith: UITraitCollection.current)
     }
 
     public func scaledValue(for value: CGFloat,
