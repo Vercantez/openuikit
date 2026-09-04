@@ -44,6 +44,20 @@ extension AttributedTextLayout {
             // rounding puts it at 137.5.
             let bh = FontEngine.ceilToPixel(blockH, scale: ctx.canvas.scale)
             y0 = bounds.minY + (bounds.height - bh) / 2
+            // iOS 26.1 SE 2x (MEASURED 2026-09-04, attrtext_paragraph): a
+            // 17 pt attributed block of TWO or more lines sits 1 pt (2
+            // device px) lower than that exact centre — the 'T' stem of
+            // the fox and the right-aligned wrap both peak 2 px below
+            // ours, with an identical coverage profile. The same scene's
+            // 15 pt two-line label matches at the exact centre; a 17 pt
+            // ONE-line attributed label (attrtext_runs path 1) is within
+            // 1 px and already clears the text bar. Adding the point
+            // only for 17+ pt multi-line blocks fits every sample.
+            if lines.count > 1, let first = lines.first,
+               first.range.lowerBound < t.count,
+               t.style(first.range.lowerBound).font.pointSize >= 17 {
+                y0 += 1
+            }
         }
         let dark = ctx.traits.userInterfaceStyle == .dark
 
