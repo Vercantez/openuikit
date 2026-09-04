@@ -174,6 +174,35 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(table.metrics[1].headerHeight, 38, accuracy: 1e-9)
         XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 225.5, accuracy: 1e-9)
     }
+
+    // MARK: Compact pageSheet top inset (probe_sheet_inset / NavFlow t1200)
+
+    /// MEASURED 2026-09-04, probe_sheet_inset on the iPhone SE 2x / iOS 26.1:
+    /// `UIDropShadowView` `[0, 30, 375, 637]` at windowSafeArea.top 0 and 20.
+    /// The iPhone 16 surface (393×852, zero modelled safe area) keeps 59.
+    func testCompactPhoneSheetTopInsetIsThirty() {
+        device(375, 667, scale: 2)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let base = UIViewController()
+        base.view.frame = window.bounds
+        window.addSubview(base.view)
+        let sheet = UIViewController()
+        sheet.view.backgroundColor = .systemBackground
+        base.present(sheet, animated: false)
+        XCTAssertEqual(sheet._presentationSheet!.frame,
+                       CGRect(x: 0, y: 30, width: 375, height: 637))
+
+        device(393, 852, scale: 3)
+        let phone16 = UIWindow(frame: CGRect(x: 0, y: 0, width: 393, height: 852))
+        let base16 = UIViewController()
+        base16.view.frame = phone16.bounds
+        phone16.addSubview(base16.view)
+        let sheet16 = UIViewController()
+        sheet16.view.backgroundColor = .systemBackground
+        base16.present(sheet16, animated: false)
+        XCTAssertEqual(sheet16._presentationSheet!.frame,
+                       CGRect(x: 0, y: 59, width: 393, height: 793))
+    }
 }
 
 @MainActor
