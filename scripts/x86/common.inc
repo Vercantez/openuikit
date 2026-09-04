@@ -1772,47 +1772,49 @@ phase2_ensure_macho_modulemap() {
     fi
 }
 
-# Empty-by-design Foundation / CoreFoundation Mach-Os into a RUN root
-# (mrroot_full-x86_64). Loud-abort stubs stay in BASE (mrroot-x86_64) for
-# build_full. run_ud_guest.sh looks here; a loud-abort stub in this slot
-# loads a second libSystem and aborts on a foreign malloc zone (exit 71).
-phase2_stage_x86_foundation_placeholders() {
-    local dest=$1 repo=$2 sys=$3
+# Run-root umbrellas + Foundation slots: the same producers as the box's
+# full cycle. Loud-abort stubs live in BASE (mrroot-x86_64) from
+# build_runtime_shims.sh STUBS_ONLY. build_full.sh copies those into
+# ROOTDIR and splits libSystem.B / libc++.1 into umbrella + *.real.
+# BUILD_FULL_THROUGH=umbrellas stops before libquartz from /uikit.
+# Do not use foundation-macho build_foundation_placeholder.sh here: that
+# 4208-byte empty dylib is a different recipe than the box (17456-byte
+# fckstub + umbrella libSystem).
+phase2_stage_x86_build_full_umbrellas() {
+    local dest=$1 repo=$2
+    local log=$repo/scratch/build_full_umbrellas${FULL_OUT_SUFFIX:-}.log
+    local lib=$dest/darwin/usr/lib
     local fw=$dest/darwin/System/Library/Frameworks
-    # Work dir MUST sit outside dest. build_foundation_placeholder CHECK 0
-    # writes a positive-control dylib that binds Foundation; CHECK 1 then
-    # sweeps dest. A work dir under dest makes that control look like a
-    # real overlay bind and the recipe refuses (rc=6).
-    local work
-    work=$(cd "$(dirname "$dest")" && pwd)/placeholder-work-$(basename "$dest")
-    local log=$work/build_foundation_placeholder.log
-    local src=$repo/foundation-macho/src/placeholder/FoundationPlaceholder.c
-    local script=$repo/foundation-macho/scripts/build_foundation_placeholder.sh
-    local fslot=$fw/Foundation.framework/Foundation
-    local cslot=$fw/CoreFoundation.framework/CoreFoundation
-    local key
-    mkdir -p "$fw/Foundation.framework" "$fw/CoreFoundation.framework" "$work"
-    [ -f "$src" ] && [ -f "$script" ] || return 1
-    key=$(stamp_key "$fslot" "$script" "$src" "$sys" "${TARGET:-x86_64-apple-macos15.0}")
-    if stamp_reuse "$fslot" "$key" && stamp_reuse "$cslot" "$key"; then
-        return 0
-    fi
-    stamp_rebuild_reason "$fslot" "$key"
-    rm -f "$fslot" "$cslot"
+    local base_fw=$repo/scratch/mrroot${FULL_OUT_SUFFIX:-}/darwin/System/Library/Frameworks
+    mkdir -p "$(dirname "$log")"
     set +e
-    PATH="/usr/lib/llvm-18/bin:/usr/bin:${PATH:-}" \
-        W="$work" R="$repo/foundation-macho" SDK="$sys" EXTRA= REPLACE=1 \
-        bash "$script" "$dest" >"$log" 2>&1
+    BUILD_FULL_THROUGH=umbrellas \
+        W="$repo" \
+        ROOTDIR="$dest" \
+        bash "$repo/full/scripts/build_full.sh" >"$log" 2>&1
     local st=$?
     set -e
-    if [ "$st" -ne 0 ] \
-        || ! phase2_is_x86_macho "$fslot" \
-        || ! phase2_is_x86_macho "$cslot"; then
-        echo "phase2: foundation placeholders failed rc=$st log=$log" >&2
+    if [ "$st" -ne 0 ]; then
+        echo "phase2: build_full THROUGH=umbrellas failed rc=$st log=$log" >&2
+        tail -n 40 "$log" >&2 || true
         return 1
     fi
-    stamp_write "$fslot" "$key"
-    stamp_write "$cslot" "$key"
+    if [ ! -f "$lib/libSystem.real.dylib" ] \
+        || ! phase2_is_x86_macho "$lib/libSystem.real.dylib" \
+        || ! phase2_is_x86_macho "$lib/libSystem.B.dylib" \
+        || ! llvm-nm-18 --extern-only --defined-only "$lib/libSystem.B.dylib" 2>/dev/null \
+            | awk '$NF=="_nan"{f=1} END{exit !f}'; then
+        echo "phase2: run-root libSystem is not build_full's umbrella (need .real + _nan) log=$log" >&2
+        return 1
+    fi
+    if ! cmp -s "$fw/Foundation.framework/Foundation" \
+            "$base_fw/Foundation.framework/Foundation" \
+        || ! cmp -s "$fw/CoreFoundation.framework/CoreFoundation" \
+            "$base_fw/CoreFoundation.framework/CoreFoundation"; then
+        echo "phase2: run-root Foundation/CF are not byte-identical to BASE loud-abort stubs log=$log" >&2
+        return 1
+    fi
+    echo "  umbrellas log=$log libSystem.B=$(wc -c < "$lib/libSystem.B.dylib") Foundation=$(wc -c < "$fw/Foundation.framework/Foundation")" >&2
 }
 
 # Copy x86_64 Swift overlay modules (Darwin, ObjectiveC, …) from committed

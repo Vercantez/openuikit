@@ -12,6 +12,9 @@ and verify should finish in seconds.
   in the corpus pin file)
 - x86 cycle substrate: loader at `machorun/build/machorun`, darwin dylibs,
   sysroot `scratch/sysroot_fe4-x86_64`, run root `scratch/mrroot_full-x86_64`
+  (build_full.sh `BUILD_FULL_THROUGH=umbrellas`: libSystem.B umbrella +
+  `libSystem.real.dylib`, Foundation/CoreFoundation copied from BASE
+  loud-abort stubs — not `build_foundation_placeholder.sh`)
 - objc4 via `scripts/x86/ensure_machorun.sh` (`machorun/scripts/build.sh objc4`)
 - Loader scoreboard inputs: stamp-keyed `machorun/scripts/build_fixtures_linux_x86_64.sh`
   → `machorun/tests/bin-x86_64/` so `machorun/scripts/scoreboard_x86_64.sh` does

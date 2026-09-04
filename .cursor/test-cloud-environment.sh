@@ -180,8 +180,10 @@ check products_x86_ud_guest \
     grep -q 'ud_score_guest' "$script_dir/install-built-products.sh"
 check products_refuse_empty_tbd \
     grep -q 'empty .tbd is a linker lie' "$script_dir/install-built-products.sh"
-check products_x86_placeholder \
-    grep -q '_machorun_foundation_placeholder' "$script_dir/install-built-products.sh"
+check products_x86_umbrella \
+    grep -q 'libSystem.real.dylib' "$script_dir/install-built-products.sh"
+check products_x86_base_foundation \
+    grep -q 'BASE loud-abort stub' "$script_dir/install-built-products.sh"
 check fixtures_wraps_vendor_script \
     grep -q 'build_fixtures_linux_x86_64.sh' "$script_dir/install-x86-fixtures.sh"
 check fixtures_stamp_keyed \

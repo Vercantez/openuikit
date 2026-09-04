@@ -262,7 +262,7 @@ fi
 
 # 7. stage roots. Operator box lets phase2 do this; SKIP_PHASE2 callers
 # (tests, box -o) still need the trees. Cursor install no longer skips phase2.
-# Mirror phase2's helpers (base + host + layout + run-root placeholders).
+# Mirror phase2's helpers (base + host + layout + build_full umbrellas).
 if run_logged roots "$LOGDIR/roots.log" \
     bash "$TREE/scripts/x86/stage_cycle_roots.sh" "$TREE"; then
     emit_stage roots "$(status_from_log "$LOGDIR/roots.log")" "$TREE/scratch/mrroot-x86_64"

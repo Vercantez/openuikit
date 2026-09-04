@@ -86,13 +86,21 @@ if [ "$host" = x86_64 ]; then
     [ -x "$mrroot/machorun" ] || { printf 'cursor-products: missing %s/machorun\n' "$mrroot" >&2; exit 1; }
     fw=$mrroot/darwin/System/Library/Frameworks
     [ -f "$fw/Foundation.framework/Foundation" ] \
-        || { printf 'cursor-products: missing Foundation placeholder in mrroot_full-x86_64\n' >&2; exit 1; }
+        || { printf 'cursor-products: missing Foundation in mrroot_full-x86_64\n' >&2; exit 1; }
     [ -f "$fw/CoreFoundation.framework/CoreFoundation" ] \
-        || { printf 'cursor-products: missing CoreFoundation placeholder in mrroot_full-x86_64\n' >&2; exit 1; }
-    llvm-nm-18 -g "$fw/Foundation.framework/Foundation" | grep -q _machorun_foundation_placeholder \
-        || { printf 'cursor-products: Foundation slot is not the empty placeholder\n' >&2; exit 1; }
-    llvm-nm-18 -g "$fw/CoreFoundation.framework/CoreFoundation" | grep -q _machorun_foundation_placeholder \
-        || { printf 'cursor-products: CoreFoundation slot is not the empty placeholder\n' >&2; exit 1; }
+        || { printf 'cursor-products: missing CoreFoundation in mrroot_full-x86_64\n' >&2; exit 1; }
+    base_fw=$scratch/mrroot-x86_64/darwin/System/Library/Frameworks
+    cmp -s "$fw/Foundation.framework/Foundation" \
+        "$base_fw/Foundation.framework/Foundation" \
+        || { printf 'cursor-products: run-root Foundation is not the BASE loud-abort stub\n' >&2; exit 1; }
+    cmp -s "$fw/CoreFoundation.framework/CoreFoundation" \
+        "$base_fw/CoreFoundation.framework/CoreFoundation" \
+        || { printf 'cursor-products: run-root CoreFoundation is not the BASE loud-abort stub\n' >&2; exit 1; }
+    [ -f "$mrroot/darwin/usr/lib/libSystem.real.dylib" ] \
+        || { printf 'cursor-products: missing run-root libSystem.real.dylib (build_full umbrella split)\n' >&2; exit 1; }
+    llvm-nm-18 --extern-only --defined-only "$mrroot/darwin/usr/lib/libSystem.B.dylib" \
+        | awk '$NF=="_nan"{f=1} END{exit !f}' \
+        || { printf 'cursor-products: run-root libSystem.B.dylib is not the umbrella (no _nan)\n' >&2; exit 1; }
 
     empty_tbd=$(find "$sys" -name '*.tbd' -size 0 -print -quit)
     [ -z "$empty_tbd" ] \

@@ -987,13 +987,13 @@ else
         "no $MRROOT to stage overlays into (mrroot-x86 did not produce a dest)"
 fi
 
-echo "==== mrroot_full-x86_64 Foundation placeholders (empty; not loud-abort) ===="
+echo "==== mrroot_full-x86_64 umbrellas (build_full THROUGH=umbrellas; BASE loud-abort Foundation) ===="
 if [ -d "$MRROOT" ]; then
-    if phase2_stage_x86_foundation_placeholders "$MRROOT" "$W" "$SYS"; then
-        note mrroot-placeholders-x86 satisfied
+    if phase2_stage_x86_build_full_umbrellas "$MRROOT" "$W"; then
+        note mrroot-umbrellas-x86 satisfied
     else
-        cannot mrroot-placeholders-x86 STAGE_FOUNDATION_PLACEHOLDERS \
-            "build_foundation_placeholder.sh failed for $MRROOT; run_ud_guest.sh refuses empty Foundation slots. Loud-abort stubs stay in $BASE_MRROOT."
+        cannot mrroot-umbrellas-x86 STAGE_BUILD_FULL_UMBRELLAS \
+            "BUILD_FULL_THROUGH=umbrellas failed for $MRROOT; box run root is umbrella libSystem + BASE fckstub Foundation (not build_foundation_placeholder.sh). See $W/scratch/build_full_umbrellas${FULL_OUT_SUFFIX:-}.log"
     fi
 fi
 

@@ -403,10 +403,16 @@ expect_grep 'stamp_key "$cfbase"' "$UDINC" \
 expect_file "$ROOT/scripts/x86/Darwin.apinotes"
 expect_grep 'Darwin.apinotes' "$COMMON" \
     "FE clang snapshot stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
-expect_grep 'build_foundation_placeholder.sh' "$COMMON" \
-    "run-root Foundation slots are empty placeholders, not loud-abort stubs"
-expect_grep 'Work dir MUST sit outside dest' "$COMMON" \
-    "placeholder work dir is outside the run root so CHECK 0 control is not a CHECK 1 bind"
+expect_grep 'BUILD_FULL_THROUGH=umbrellas' "$COMMON" \
+    "run-root umbrellas come from build_full.sh, not build_foundation_placeholder.sh"
+expect_grep 'phase2_stage_x86_build_full_umbrellas' "$PHASE2" \
+    "phase2 invokes build_full THROUGH=umbrellas before rung a"
+expect_grep 'BUILD_FULL_THROUGH=umbrellas' "$BUILD_FULL" \
+    "build_full.sh accepts the reduced-form umbrellas stop"
+expect_not_grep 'phase2_stage_x86_foundation_placeholders' "$PHASE2" \
+    "phase2 does not stage empty Foundation placeholders into the run root"
+expect_not_grep 'phase2_stage_x86_foundation_placeholders' "$ROOT/scripts/x86/stage_cycle_roots.sh" \
+    "cycle roots do not stage empty Foundation placeholders into the run root"
 expect_grep 'fe_sysroot_append_vm_copy' "$STAGE" \
     "x86 stager uses the shared vm_copy append"
 expect_grep 'fe_sysroot_measurement.inc' "$ROOT/full/foundation/stage_fe_sysroot.sh" \

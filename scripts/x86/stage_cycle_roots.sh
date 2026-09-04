@@ -6,9 +6,9 @@
 #
 # BASE (scratch/mrroot-x86_64): ELF loader + x86 darwin + libswiftCore +
 #   host runtime + loud-abort Foundation/CF + libswiftcompat + twelve overlays.
-# RUN (scratch/mrroot_full-x86_64): loader + darwin + libswiftCore + overlays +
-#   EMPTY Foundation placeholders (not loud-abort stubs — those clash with
-#   malloc zones when run_ud_guest.sh loads them as CoreFoundation).
+# RUN (scratch/mrroot_full-x86_64): loader + darwin + libswiftCore + overlays,
+#   then build_full.sh THROUGH=umbrellas (libSystem/.real split + BASE
+#   loud-abort Foundation/CF). Same producers as the box's full cycle.
 set -euo pipefail
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -113,9 +113,9 @@ if printf '%s\n' "$overlay_full" | grep -q '^CANNOT_STAGE_CACHE_EXTRACT'; then
     exit 2
 fi
 
-echo "== EMPTY Foundation placeholders into $MRROOT (not loud-abort stubs)"
-if ! phase2_stage_x86_foundation_placeholders "$MRROOT" "$W" "$SYS"; then
-    echo "stage_cycle_roots: CANNOT_STAGE_FOUNDATION_PLACEHOLDERS $MRROOT" >&2
+echo "== build_full THROUGH=umbrellas into $MRROOT (BASE loud-abort Foundation + libSystem split)"
+if ! phase2_stage_x86_build_full_umbrellas "$MRROOT" "$W"; then
+    echo "stage_cycle_roots: CANNOT_STAGE_BUILD_FULL_UMBRELLAS $MRROOT" >&2
     exit 2
 fi
 
