@@ -134,6 +134,35 @@ MODULE_LOCATION_KINDS = (
     "clang-submodule",
 )
 ROADMAP_OPERATOR_OVERRIDE = "none (operator override)"
+# Exact top-level key set the generated host gate historically required.
+REQUIRED_FRAMEWORK_JSON_KEYS = frozenset(
+    {
+        "schema",
+        "module",
+        "slug",
+        "lane",
+        "risks",
+        "dependencies",
+        "symbolCount",
+        "relationshipCount",
+        "symbolGraph",
+        "symbolConflicts",
+        "publicSurface",
+        "apiDigester",
+        "apiCrosswalk",
+        "tbdExports",
+        "corpusSummary",
+        "externalEvidence",
+        "sdkInputs",
+        "guestManifest",
+        "runtimeMarker",
+        "coveragePolicy",
+        "provenance",
+    }
+)
+# Keep in sync with full/framework-fanout/validate_seed.py
+# OPTIONAL_FRAMEWORK_METADATA_KEYS. Module-path seeds write these extras.
+OPTIONAL_FRAMEWORK_JSON_KEYS = frozenset({"moduleLocation", "roadmap"})
 IGNORED_REEXPORT_MODULES = frozenset(
     {
         "Block",
@@ -2435,9 +2464,52 @@ retention, coding round trips, hardware behavior, or service results.
 """
 
 
+def host_gate_framework_json_keys_error(framework: object) -> str | None:
+    """Return the host-gate refusal detail, or None if the key set is accepted.
+
+    This is the same check ``acceptance_script()`` embeds in
+    ``tests/acceptance/test_host.sh``. Extra module-path keys must be the
+    same optional set ``validate_seed.py`` already allows.
+    """
+
+    if not isinstance(framework, dict):
+        return "framework.json schema/keys differ"
+    actual_keys = set(framework)
+    allowed = REQUIRED_FRAMEWORK_JSON_KEYS | OPTIONAL_FRAMEWORK_JSON_KEYS
+    if (
+        REQUIRED_FRAMEWORK_JSON_KEYS - actual_keys
+        or actual_keys - allowed
+        or framework.get("schema") != FRAMEWORK_SCHEMA
+    ):
+        return "framework.json schema/keys differ"
+    return None
+
+
+def host_gate_framework_json_key_check_python() -> str:
+    """Python fragment inlined into the generated host-gate script."""
+
+    required = ", ".join(
+        f'"{key}"' for key in sorted(REQUIRED_FRAMEWORK_JSON_KEYS)
+    )
+    optional = ", ".join(
+        f'"{key}"' for key in sorted(OPTIONAL_FRAMEWORK_JSON_KEYS)
+    )
+    return (
+        f"required_keys = {{\n    {required}\n}}\n"
+        f"optional_keys = {{{optional}}}\n"
+        "actual_keys = set(framework)\n"
+        "if (\n"
+        "    required_keys - actual_keys\n"
+        "    or actual_keys - (required_keys | optional_keys)\n"
+        '    or framework["schema"] != 2\n'
+        "):\n"
+        '    fail("framework.json schema/keys differ")\n'
+    )
+
+
 def acceptance_script() -> str:
     # The here-doc is single quoted so framework paths cannot become shell code.
-    return r'''#!/usr/bin/env bash
+    script = r'''#!/usr/bin/env bash
 set -euo pipefail
 
 die() {
@@ -2751,15 +2823,7 @@ if set(seed) != expected_seed:
     fail("seed-files digest has a missing or unexpected evidence path")
 
 framework = json.loads(confined("reference/framework.json").read_text(encoding="utf-8"))
-required_keys = {
-    "schema", "module", "slug", "lane", "risks", "dependencies",
-    "symbolCount", "relationshipCount", "symbolGraph", "symbolConflicts",
-    "publicSurface", "apiDigester", "apiCrosswalk", "tbdExports",
-    "corpusSummary", "externalEvidence", "sdkInputs", "guestManifest",
-    "runtimeMarker", "coveragePolicy", "provenance"
-}
-if set(framework) != required_keys or framework["schema"] != 2:
-    fail("framework.json schema/keys differ")
+# HOST_GATE_FRAMEWORK_JSON_KEY_CHECK
 if root.name != framework["slug"]:
     fail("framework slug differs from directory")
 for key in (
@@ -3506,6 +3570,10 @@ cmp -s "$TMP/expected.stdout" "$TMP/actual.stdout" \
 cat "$TMP/actual.stdout"
 printf 'FRAMEWORK_FANOUT_HOST_OK module=%s dylib=lib%s.dylib\n' "$MODULE" "$MODULE"
 '''
+    marker = "# HOST_GATE_FRAMEWORK_JSON_KEY_CHECK\n"
+    if marker not in script:
+        raise SeedError("host-gate template is missing the framework.json key check")
+    return script.replace(marker, host_gate_framework_json_key_check_python(), 1)
 
 
 def select_developer_directory() -> Path:
