@@ -304,7 +304,7 @@ else
     die_test "fixture W/machorun is not a real directory"
 fi
 
-echo "== x86_cycle asserts machorun git-status and Darwin.modulemap cmp at the end"
+echo "== x86_cycle asserts machorun git-status; overlays match main OVERLAY_CMD"
 grep -q 'x86_cycle_assert_machorun_clean' "$ROOT/scripts/ops/x86_cycle.sh" \
     && ok "x86_cycle defines end-of-cycle machorun git-status assertion" \
     || die_test "x86_cycle missing x86_cycle_assert_machorun_clean"
@@ -312,14 +312,32 @@ grep -qF -- 'status --short --untracked-files=all -- machorun' \
     "$ROOT/scripts/ops/x86_cycle.sh" \
     && ok "x86_cycle git-status pathspec is machorun" \
     || die_test "x86_cycle missing git status --short machorun"
-grep -q 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
-    && ok "x86_cycle defines Darwin.modulemap cmp assertion" \
-    || die_test "x86_cycle missing Darwin.modulemap assertion"
-grep -q 'cmp -s "$sys_map" "$sdk_map"' "$ROOT/scripts/ops/x86_cycle.sh" \
-    && ok "x86_cycle verifies Darwin.modulemap with cmp" \
-    || die_test "x86_cycle missing cmp of SDK vs sysroot Darwin.modulemap"
+if grep -q 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
+        || grep -q 'cmp -s "$sys_map" "$sdk_map"' "$ROOT/scripts/ops/x86_cycle.sh"; then
+    die_test "x86_cycle still dest-syncs overlay SDK Darwin.modulemap onto the FE sysroot map"
+else
+    ok "x86_cycle does not dest-sync overlay SDK Darwin.modulemap onto the FE map"
+fi
+if grep -q 'export W=$TREE' "$ROOT/scripts/ops/x86_cycle.sh"; then
+    die_test "x86_cycle still exports W globally (overlays would hit \$TREE/sdk)"
+else
+    ok "x86_cycle does not export W globally"
+fi
+grep -q "SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh" \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "overlays OVERLAY_CMD matches main (no W, no SWIFTCORE_FE_SYSROOT)" \
+    || die_test "overlays OVERLAY_CMD drifted from main"
+grep -q 'env -u W -u SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "overlays stage unsets leaked W / SWIFTCORE_FE_SYSROOT (box keeps /root/work)" \
+    || die_test "overlays stage missing env -u W -u SWIFTCORE_FE_SYSROOT"
+grep -q 'env W="$TREE" bash "$TREE/scripts/x86/stage_fe_sysroot.sh"' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "sysroot stage still gets env W=\$TREE" \
+    || die_test "sysroot stage lost env W=\$TREE"
 
-# End-of-cycle assertion on a fixture tree (same checks as x86_cycle.sh).
+# End-of-cycle assertion on a fixture tree (machorun-clean only).
+# Overlay SDK Darwin.modulemap is the FE map PLUS header "math.h" /
+# header "sys/proc.h"; it must not be dest-synced onto the SYS map.
 CYC=$STUBDIR/cycle-assert
 mkdir -p "$CYC/machorun" "$CYC/sdk/MacOSX.sdk/usr/include" \
     "$CYC/scratch/sysroot_fe4-x86_64/usr/include"
@@ -328,12 +346,12 @@ cp "$ROOT/machorun/.gitignore" "$CYC/machorun/.gitignore"
 git -C "$CYC" init -q
 git -C "$CYC" add machorun/README machorun/.gitignore
 git -C "$CYC" commit -qm 'machorun pin'
-printf 'module Darwin { header "math.h" }\n' \
+printf 'module Darwin [system] { export *\n  extern module C "Darwin_C.modulemap"\n}\n' \
     > "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap"
-printf 'module Darwin expanded { header "unistd.h" }\n' \
+printf 'module Darwin [system] { export *\n  extern module C "Darwin_C.modulemap"\n  header "math.h"\n  header "sys/proc.h"\n}\n' \
     > "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"
 ln -sfn "$CYC/machorun" "$CYC/machorun/machorun"
-# Same body as x86_cycle_assert_machorun_clean / _overlay_darwin_modulemap.
+# Same body as x86_cycle_assert_machorun_clean.
 if [ -L "$CYC/machorun/machorun" ]; then
     rm -f "$CYC/machorun/machorun"
 fi
@@ -341,12 +359,12 @@ cyc_status=$(git -C "$CYC" status --short --untracked-files=all -- machorun)
 [ -z "$cyc_status" ] \
     && ok "cycle-end git status --short machorun is empty after symlink removal" \
     || die_test "cycle-end machorun dirty: $cyc_status"
-cp -a "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap" \
-    "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"
-cmp -s "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap" \
-    "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap" \
-    && ok "cycle-end cmp: SDK Darwin.modulemap matches sysroot" \
-    || die_test "cycle-end left SDK Darwin.modulemap different from sysroot"
+if cmp -s "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap" \
+        "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"; then
+    die_test "fixture SDK Darwin.modulemap dest-synced onto SYS (extra-insert missing)"
+else
+    ok "cycle-end SDK Darwin.modulemap may differ from SYS (extra-insert)"
+fi
 [ ! -e "$CYC/machorun/machorun" ] \
     && ok "cycle-end assertion removed nested machorun/machorun" \
     || die_test "cycle-end left nested machorun/machorun"

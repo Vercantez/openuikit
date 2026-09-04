@@ -343,18 +343,18 @@ expect_grep '2ee3efbfc91a89ef' "$ROOT/swiftcore-macho/scripts/test_overlay_darwi
     "overlay Darwin test pins SYS machorun math.h sha256[:16]"
 expect_grep '64c43951eaec1da9' "$ROOT/swiftcore-macho/scripts/test_overlay_darwin.sh" \
     "overlay Darwin test pins SDK Libm math.h sha256[:16]"
-expect_grep 'overlay-darwin.9' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
-    "overlay sysroot stamp recipe keys Darwin.modulemap dest-sync and SDK Libm math.h insert"
+expect_grep 'overlay-darwin.10' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay sysroot stamp recipe keys extra-insert and SDK Libm math.h insert"
 expect_grep 'overlay_sysroot_ensure_intel_math_h' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay finish inserts Libm Intel math.h onto SDK (SYS keeps machorun math.h)"
 expect_grep 'REFUSING Libm math.h insert onto overlay-copied SYS' \
     "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "Libm math.h insert refuses to write SYS"
-expect_grep 'overlay_sysroot_sync_darwin_modulemap' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
-    "overlay finish copies FE Darwin.modulemap onto the SDK dest"
-expect_grep 'hides Darwin.C (tgmath.swift.gyb then misses acosf' \
+expect_grep 'overlay_sysroot_extra_insert_darwin_headers' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay finish extra-inserts math.h / sys/proc.h onto the SDK Darwin.modulemap"
+expect_not_grep 'overlay_sysroot_sync_darwin_modulemap' \
     "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
-    "overlay dest-sync documents not copying the FE-expanded Darwin.modulemap"
+    "overlay dest-sync onto the FE Darwin.modulemap is removed"
 expect_grep 'usr/include/Darwin.modulemap=' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
     "overlay stamp hashes FE Darwin.modulemap bytes so a regenerated map restages"
 expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
@@ -364,10 +364,19 @@ expect_grep 'status --short --untracked-files=all -- machorun' \
     "ensure_machorun asserts git status --short machorun is empty"
 expect_grep 'x86_cycle_assert_machorun_clean' "$ROOT/scripts/ops/x86_cycle.sh" \
     "x86_cycle asserts git status --short machorun is empty at the end"
-expect_grep 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
-    "x86_cycle cmps overlay SDK Darwin.modulemap against the overlay-copied sysroot"
-expect_grep 'cmp -s "$sys_map" "$sdk_map"' "$ROOT/scripts/ops/x86_cycle.sh" \
-    "x86_cycle verifies Darwin.modulemap with cmp"
+expect_not_grep 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle does not dest-sync overlay SDK Darwin.modulemap onto the FE sysroot map"
+expect_not_grep 'export W=$TREE' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle does not export W globally (overlays use \$HOME/work)"
+expect_grep 'env W="$TREE" bash "$TREE/scripts/x86/stage_fe_sysroot.sh"' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "sysroot stage still gets env W=\$TREE"
+expect_grep "SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh" \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "overlays OVERLAY_CMD matches main (no W, no SWIFTCORE_FE_SYSROOT)"
+expect_not_grep 'SWIFTCORE_FE_SYSROOT="$TREE/scratch/sysroot_fe4-x86_64"' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "overlays stage does not set SWIFTCORE_FE_SYSROOT"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -384,8 +393,8 @@ expect_not_grep 'phase2_expand_darwin_modulemap_for_fe "$SYS"' "$STAGE" \
     "stager does not expand Darwin.modulemap in-place on the overlay-copied FE sysroot"
 expect_grep 'phase2_fe_clang_sysroot' "$PHASE2" \
     "phase2 compiles FE against the expanded clang snapshot"
-expect_grep 'SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
-    "x86_cycle overlays stage points SWIFTCORE_FE_SYSROOT at the unexpanded sysroot"
+expect_grep 'env -u W -u SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "overlays stage unsets leaked W and SWIFTCORE_FE_SYSROOT so build_stdlib uses \$HOME/work"
 expect_grep 'phase2_ensure_swift_onone_support' "$COMMON" \
     "SwiftOnoneSupport stub helper exists for collections without -O"
 expect_not_grep 'phase2_ensure_swift_onone_support "$SYS"' "$STAGE" \
@@ -995,8 +1004,9 @@ rm -rf "$MMWORK"
 echo "== FE clang snapshot: expand does not rewrite the overlay-copied Darwin.modulemap"
 SNAP=$(mktemp -d /tmp/phase2-fe-clang.XXXXXX)
 mkdir -p "$SNAP/sys/usr/include"
-# Main's Darwin.modulemap does not name math.h; Darwin.C does. FE expand
-# of `header "math.h"` must stay on *-fe-clang (overlay dest-sync copies SYS).
+# Overlay-copied SYS Darwin.modulemap does not name math.h; Darwin.C does.
+# Overlay SDK extra-inserts those two lines onto its own copy. FE expand of
+# unistd.h / clock headers must stay on *-fe-clang, not SYS.
 cat > "$SNAP/sys/usr/include/Darwin.modulemap" <<'EOF'
 module Darwin [system] [extern_c] {
   export *

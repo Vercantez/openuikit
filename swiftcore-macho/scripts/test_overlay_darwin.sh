@@ -7,8 +7,9 @@ ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 fail=0
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
-# A live cycle exports SWIFTCORE_FE_SYSROOT and W=$TREE. Tests that stage a
-# fixture FE tree (or generate from overlay-darwin pins) must not inherit those.
+# A leaked SWIFTCORE_FE_SYSROOT / W would retarget overlay staging. Tests
+# that stage a fixture FE tree (or generate from overlay-darwin pins) must
+# not inherit those.
 unset SWIFTCORE_FE_SYSROOT
 unset W
 
@@ -175,10 +176,10 @@ cmp -s "$ROOT/sdk/overlay-darwin/math.h" "$tmp/sdk5/usr/include/math.h" \
   && echo "  OK  repaired math.h is the Intel pin" || { echo "  FAIL not Intel pin"; fail=1; }
 
 echo
-echo "=== FE Darwin.modulemap is not extra-inserted (dest cmp FE) ==="
+echo "=== FE Darwin.modulemap extra-inserts math.h and sys/proc.h (FE source unchanged) ==="
 mkdir -p "$tmp/feC/usr/include/sys" "$tmp/sdkC/usr/include" "$tmp/workC/scratch"
 # Unexpanded FE map does not name math.h as a real header line. Extra-insert
-# of `header "math.h"` made the overlay SDK copy differ from the sysroot.
+# of those two lines is main overlay-darwin.6 (tgmath sees acosf/nanl).
 cat > "$tmp/feC/usr/include/Darwin.modulemap" <<'EOF'
 module Darwin [system] [extern_c] {
   export *
@@ -189,34 +190,39 @@ echo 'extern float acosf(float);' > "$tmp/feC/usr/include/math.h"
 echo 'extern long double fmaxl(long double, long double);' >> "$tmp/feC/usr/include/math.h"
 echo 'struct extern_proc { int p_pid; };' > "$tmp/feC/usr/include/sys/proc.h"
 ln -sfn "$tmp/feC" "$tmp/workC/scratch/sysroot_fe4-x86_64"
+cp -a "$tmp/feC/usr/include/Darwin.modulemap" "$tmp/feC-map-before"
 set +e
 out=$(SWIFTCORE_FE_SYSROOT="$tmp/feC" W="$tmp/workC" SWIFTCORE_DARWIN_ARCH=x86_64 \
   bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdkC" 2>&1)
 rc=$?
 set -e
 printf '%s\n' "$out" | tail -15
-[ "$rc" -eq 0 ] && echo "  OK  FE-cmp rc=0" || { echo "  FAIL FE-cmp rc=$rc"; fail=1; }
-printf '%s\n' "$out" | grep -q 'Darwin.modulemap now names' \
-  && { echo "  FAIL extra-inserted into FE Darwin.modulemap copy"; fail=1; } \
-  || echo "  OK  no extra-insert into FE Darwin.modulemap copy"
-cmp -s "$tmp/feC/usr/include/Darwin.modulemap" "$tmp/sdkC/usr/include/Darwin.modulemap" \
-  && echo "  OK  SDK Darwin.modulemap cmps FE sysroot" \
-  || { echo "  FAIL SDK Darwin.modulemap differs from FE"; fail=1; }
+[ "$rc" -eq 0 ] && echo "  OK  FE-extra-insert rc=0" || { echo "  FAIL FE-extra-insert rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -q 'Darwin.modulemap now names math.h' \
+  && echo "  OK  extra-inserted header math.h onto overlay SDK map" \
+  || { echo "  FAIL missing math.h extra-insert"; fail=1; }
+printf '%s\n' "$out" | grep -q 'Darwin.modulemap now names sys/proc.h' \
+  && echo "  OK  extra-inserted header sys/proc.h onto overlay SDK map" \
+  || { echo "  FAIL missing sys/proc.h extra-insert"; fail=1; }
+grep -q 'header "math.h"' "$tmp/sdkC/usr/include/Darwin.modulemap" \
+  && grep -q 'header "sys/proc.h"' "$tmp/sdkC/usr/include/Darwin.modulemap" \
+  && echo "  OK  SDK Darwin.modulemap names math.h and sys/proc.h" \
+  || { echo "  FAIL SDK map missing extra-insert lines"; fail=1; }
+cmp -s "$tmp/feC-map-before" "$tmp/feC/usr/include/Darwin.modulemap" \
+  && echo "  OK  FE Darwin.modulemap source unchanged" \
+  || { echo "  FAIL FE Darwin.modulemap mutated"; fail=1; }
+if cmp -s "$tmp/feC/usr/include/Darwin.modulemap" "$tmp/sdkC/usr/include/Darwin.modulemap"; then
+  echo "  FAIL SDK Darwin.modulemap still cmps FE (extra-insert missing)"
+  fail=1
+else
+  echo "  OK  SDK Darwin.modulemap differs from FE (extra-insert)"
+fi
 
 echo
-echo "=== box-path six-row pins (SYS machorun math.h, SDK Libm insert) ==="
-# Operator-box MAIN cycle at 27c6b679 (a+b+c) measured:
-#   2ee3efbfc91a89ef 10344 scratch/sysroot_fe4-x86_64/usr/include/math.h
-#   64c43951eaec1da9 24257 sdk/MacOSX.sdk/usr/include/math.h
-#   MISSING tgmath.h on both
-#   de7edcc6107af239 18703 sys/proc.h (both)
-#   10499cb2286f2dc3  9055 MacTypes.h (both)
-#   68c22176598f53f8  1918 Darwin.modulemap (both; does not name math.h)
-#   e67ded36201eedc5  2041 SYS module.modulemap vs 14541f5a 1883 SDK
-#   include tree digest 1a8d31fa51df8db9 / 506 files
-# ARM Darwin.modulemap 1918 B is operator-box only; here dest-sync + the
-# four in-repo pin files must reproduce the split. module.modulemap may
-# differ. Never write SYS.
+echo "=== box-path pins (SYS machorun math.h, SDK Libm + extra-insert) ==="
+# Operator-box MAIN overlay SDK (/root/work, recipe overlay-darwin.6):
+#   Darwin.modulemap = FE map PLUS header "math.h" and header "sys/proc.h"
+#   math.h is Libm Intel; SYS keeps machorun. Dest-sync was the wrong rule.
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/overlay_sysroot.inc"
 OPENUIKIT_ROOT=$(cd "$ROOT/.." && pwd)
@@ -264,17 +270,17 @@ set +e
 out=$(W="$box" SWIFTCORE_FE_SYSROOT="$sys" SWIFTCORE_DARWIN_ARCH=x86_64 \
   bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$sdk" 2>&1)
 rc=$?
-sync_out=$(overlay_sysroot_sync_darwin_modulemap "$sdk" 2>&1)
-sync_st=$?
 ins_out=$(overlay_sysroot_ensure_intel_math_h "$sdk" 2>&1)
 ins_st=$?
+extra_out=$(overlay_sysroot_extra_insert_darwin_headers "$sdk" 2>&1)
+extra_st=$?
 set -e
 printf '%s\n' "$out" | tail -20
-printf '%s\n' "$sync_out"
 printf '%s\n' "$ins_out"
+printf '%s\n' "$extra_out"
 [ "$rc" -eq 0 ] && echo "  OK  stage_overlay_darwin rc=0" || { echo "  FAIL stage rc=$rc"; fail=1; }
-[ "$sync_st" -eq 0 ] && echo "  OK  dest-sync rc=0" || { echo "  FAIL dest-sync rc=$sync_st"; fail=1; }
 [ "$ins_st" -eq 0 ] && echo "  OK  Libm insert rc=0" || { echo "  FAIL Libm insert rc=$ins_st"; fail=1; }
+[ "$extra_st" -eq 0 ] && echo "  OK  extra-insert rc=0" || { echo "  FAIL extra-insert rc=$extra_st"; fail=1; }
 if diff -rq "$box/sys-before" "$sys" >/dev/null; then
   echo "  OK  SYS tree unchanged (Libm insert did not write SYS)"
 else
@@ -331,16 +337,22 @@ sdk_mac=$(sha256sum "$sdk/usr/include/MacTypes.h" | awk '{print substr($1,1,16)}
 [ "$sys_mac" = 10499cb2286f2dc3 ] && [ "$sdk_mac" = 10499cb2286f2dc3 ] \
   && echo "  OK  MacTypes.h 10499cb2286f2dc3 on SYS and SDK" \
   || { echo "  FAIL MacTypes.h sys=$sys_mac sdk=$sdk_mac"; fail=1; }
-cmp -s "$sys/usr/include/Darwin.modulemap" "$sdk/usr/include/Darwin.modulemap" \
-  && echo "  OK  Darwin.modulemap dest-synced SYS == SDK" \
-  || { echo "  FAIL Darwin.modulemap SYS != SDK"; fail=1; }
-if grep -q 'header "math.h"' "$sys/usr/include/Darwin.modulemap" \
-    || grep -q 'header "math.h"' "$sdk/usr/include/Darwin.modulemap"; then
-  echo "  FAIL Darwin.modulemap names math.h (must stay Darwin.C)"
+if cmp -s "$sys/usr/include/Darwin.modulemap" "$sdk/usr/include/Darwin.modulemap"; then
+  echo "  FAIL Darwin.modulemap dest-synced SYS == SDK (extra-insert missing)"
   fail=1
 else
-  echo "  OK  Darwin.modulemap does not name math.h"
+  echo "  OK  Darwin.modulemap SDK differs from SYS (extra-insert)"
 fi
+if grep -q 'header "math.h"' "$sys/usr/include/Darwin.modulemap"; then
+  echo "  FAIL SYS Darwin.modulemap names math.h (must stay Darwin.C / FE pruned)"
+  fail=1
+else
+  echo "  OK  SYS Darwin.modulemap does not name math.h"
+fi
+grep -q 'header "math.h"' "$sdk/usr/include/Darwin.modulemap" \
+  && grep -q 'header "sys/proc.h"' "$sdk/usr/include/Darwin.modulemap" \
+  && echo "  OK  SDK Darwin.modulemap names math.h and sys/proc.h" \
+  || { echo "  FAIL SDK Darwin.modulemap missing extra-insert lines"; fail=1; }
 if cmp -s "$sys/usr/include/module.modulemap" "$sdk/usr/include/module.modulemap"; then
   echo "  OK  module.modulemap happened to match (box MAIN cycle they differ)"
 else
@@ -356,6 +368,16 @@ set -e
 printf '%s\n' "$sys_refuse" | grep -q 'REFUSING Libm math.h insert onto overlay-copied SYS' \
   && echo "  OK  SYS refuse named overlay-copied SYS" \
   || { echo "  FAIL SYS refuse text"; fail=1; }
+set +e
+sys_extra_refuse=$(overlay_sysroot_extra_insert_darwin_headers "$sys" 2>&1)
+sys_extra_st=$?
+set -e
+[ "$sys_extra_st" -ne 0 ] \
+  && echo "  OK  extra-insert refuses overlay-copied SYS" \
+  || { echo "  FAIL extra-insert wrote SYS rc=$sys_extra_st"; fail=1; }
+printf '%s\n' "$sys_extra_refuse" | grep -q 'REFUSING Darwin.modulemap extra-insert onto overlay-copied SYS' \
+  && echo "  OK  extra-insert SYS refuse named overlay-copied SYS" \
+  || { echo "  FAIL extra-insert SYS refuse text"; fail=1; }
 
 echo
 if [ "$fail" -eq 0 ]; then
