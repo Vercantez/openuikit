@@ -5,8 +5,11 @@
 // measurements in UIBarButtonItem.swift:
 //   - 54pt content bar below a 10pt top padding (MEASURED on real iOS 26.1;
 //     M7.5's guessed 20 + 44 split is gone, the 64pt total is unchanged).
-//     Background + hairline come from `standardAppearance`, whose default is
-//     the opaque configuration.
+//     Background + hairline come from `standardAppearance`. Catalyst's
+//     default is the opaque configuration; iOS 26's default is
+//     `configureWithDefaultBackground` (transparent at rest — MEASURED
+//     Forms t200, iPhone SE 2x: the 64 pt bar zone reads the grouped
+//     table's (242, 242, 247), not opaque white).
 //   - `topItem` (a pushed controller's `navigationItem`) drives the title,
 //     title view, prompt and the leading/trailing bar-button platters.
 //   - Title label centered, semibold 17, .label color.
@@ -258,13 +261,22 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     // MARK: Appearance (M13)
 
-    /// UIKit's bar appearance objects. The default is the measured OPAQUE
-    /// configuration — that is what OpenUIKit's inline bar has drawn since
-    /// M7.5, and iOS 26's own default (transparent + scroll-edge effect) is
-    /// what `prefersLargeTitles` already models.
+    /// UIKit's bar appearance objects. Catalyst keeps the opaque
+    /// configuration the inline bar has drawn since M7.5. iOS 26's default
+    /// is `configureWithDefaultBackground` (transparent at rest, material
+    /// from the scroll-edge effect once content passes under the bar).
+    /// MEASURED Forms t200, iPhone SE 2x, iOS 26.1: an inline bar with no
+    /// explicit appearance over a grouped table reads (242, 242, 247) —
+    /// `systemGroupedBackground` — through the whole 64 pt zone, PIXEL_TOL 6
+    /// so the port's previous opaque white (255, 255, 255) failed every
+    /// navbar pixel (mae 13.53, 99.6 % of the 64 pt strip).
     var _standardAppearance: UINavigationBarAppearance = {
         let a = UINavigationBarAppearance()
-        a.configureWithOpaqueBackground()
+        if UINavigationBar.isIOS {
+            a.configureWithDefaultBackground()
+        } else {
+            a.configureWithOpaqueBackground()
+        }
         return a
     }()
     /// UIKit synthesizes its initial `standardAppearance` from legacy state,
