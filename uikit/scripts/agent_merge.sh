@@ -34,7 +34,7 @@ fi
 
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
-trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null' EXIT
+trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4 }
 cd "$WT/uikit"
 echo "==> macOS build + Catalyst gate"
