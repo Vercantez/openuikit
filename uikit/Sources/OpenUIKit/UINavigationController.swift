@@ -640,6 +640,7 @@ open class UINavigationController: UIViewController {
             t.frontVC.beginAppearanceTransition(true, animated: true)
             t.frontVC.endAppearanceTransition()
             navigationBar.endTransition(cancelled: true)
+            settleBarAfterTransition(on: t.frontVC)
             delegate?.navigationController(self, didShow: t.frontVC, animated: true)
             return
         }
@@ -649,6 +650,7 @@ open class UINavigationController: UIViewController {
             t.backVC.endAppearanceTransition()
             t.frontVC.endAppearanceTransition()
             navigationBar.endTransition()
+            settleBarAfterTransition(on: t.frontVC)
             t.frontVC.didMove(toParent: self)
             delegate?.navigationController(self, didShow: t.frontVC, animated: true)
         } else {
@@ -660,9 +662,24 @@ open class UINavigationController: UIViewController {
             t.frontVC.endAppearanceTransition()
             t.backVC.endAppearanceTransition()
             navigationBar.endTransition()
+            settleBarAfterTransition(on: t.backVC)
             detachFromParent(t.frontVC)
             delegate?.navigationController(self, didShow: t.backVC, animated: true)
         }
+    }
+
+    /// A finished transition hands the bar over to the controller that is now
+    /// on top: the item stack, and — in large-title mode — the tracked scroll
+    /// view the large title follows. Without this the bar keeps the state it
+    /// had when the transition started, which is why a pushed controller's
+    /// large title still read the previous title (MEASURED: real iOS 26.1
+    /// shows the pushed "About" as the LARGE title, `navprobe.large`
+    /// rest_pushed — `_UINavigationBarLargeTitleView`'s label reads "About"
+    /// at [16, 3.67, 97, 40.67] while the inline title stays at alpha 0).
+    func settleBarAfterTransition(on vc: UIViewController) {
+        guard vc === topViewController else { return }
+        updateBarState()
+        if vc.viewIfLoaded?.superview === contentView { bindContentScrollView(of: vc) }
     }
 
     func detachFromParent(_ vc: UIViewController) {
