@@ -10,18 +10,24 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     private var savedBounds: CGRect!
     private var savedScale: CGFloat!
+    private var savedIdiom: UIUserInterfaceIdiom!
+    private var savedTraits: UITraitCollection!
 
     override func setUp() {
         super.setUp()
         savedCut = OpenUIKitRuntime.systemFontCut
         savedBounds = UIScreen.main.bounds
         savedScale = UIScreen.main.scale
+        savedIdiom = UIDevice.current.userInterfaceIdiom
+        savedTraits = UITraitCollection.current
         OpenUIKitRuntime.systemFontCut = .iOS
     }
 
     override func tearDown() {
         OpenUIKitRuntime.systemFontCut = savedCut
         UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        UIDevice.current.userInterfaceIdiom = savedIdiom
+        UITraitCollection.current = savedTraits
         super.tearDown()
     }
 
@@ -73,6 +79,14 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(wide.plainSeparatorInsets.left, 20)
         wide.insetGroupedSideInset = 8   // an explicit value still pins
         XCTAssertEqual(wide.insetGroupedSideInset, 8)
+
+        // MEASURED ipadprobe navLargeTable, iPad (A16) 820×1180 @2x: the
+        // inset-grouped card is at x 20, 780 wide — the same 20 pt system
+        // margin as a 390+ phone, not a larger readable-width inset.
+        XCTAssertEqual(UITableView.iOSSystemMargin(width: 820), 20)
+        device(820, 1180, scale: 2)
+        let pad = UITableView(frame: CGRect(x: 0, y: 0, width: 820, height: 1180), style: .insetGrouped)
+        XCTAssertEqual(pad.insetGroupedSideInset, 20)
     }
 
     // MARK: UIStackView rounds both edges (stack_vertical on the SE)
@@ -208,6 +222,56 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         base16.present(sheet16, animated: false)
         XCTAssertEqual(sheet16._presentationSheet!.frame,
                        CGRect(x: 0, y: 59, width: 393, height: 793))
+    }
+
+    // MARK: iPad formSheet (ipadprobe / realapp_settings_light_ipad)
+
+    /// MEASURED ipadprobe on iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `.formSheet` default `[120, 260, 580, 650]`; custom detent 343
+    /// `[120, 567, 580, 343]` (same bottom edge 910). Not a pageSheet
+    /// floating card. Inline nav bar is still 54 pt (bar `[0, 32, 820, 54]`),
+    /// not the pre-iOS-26 regular-width 50.
+    func testPadFormSheetIsCentredCardNotPageSheet() {
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        defer {
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+        }
+        device(820, 1180, scale: 2)
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+
+        let large = UIViewController()
+        large.view.backgroundColor = .white
+        large.modalPresentationStyle = .formSheet
+        base.present(large, animated: false)
+        XCTAssertEqual(large._presentationSheet!.frame,
+                       CGRect(x: 120, y: 260, width: 580, height: 650))
+        XCTAssertEqual(large._presentationDim?.alpha ?? 0, 0.2, accuracy: 1e-9)
+        base.dismiss(animated: false)
+
+        let custom = UIViewController()
+        custom.view.backgroundColor = .white
+        custom.modalPresentationStyle = .formSheet
+        custom.sheetPresentationController?.detents = [
+            .custom { ctx in
+                XCTAssertEqual(ctx.maximumDetentValue, 650, accuracy: 1e-9)
+                return 343
+            }
+        ]
+        base.present(custom, animated: false)
+        XCTAssertEqual(custom._presentationSheet!.frame,
+                       CGRect(x: 120, y: 567, width: 580, height: 343))
+        XCTAssertEqual(custom._presentationSheet!.layer.cornerRadius, 32)
+        XCTAssertEqual(custom._presentationDim?.alpha ?? 0, 0.2, accuracy: 1e-9)
     }
 }
 

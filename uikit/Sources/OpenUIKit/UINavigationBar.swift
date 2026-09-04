@@ -211,6 +211,15 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     static var largeTitleLabelY: CGFloat { isIOS ? 57.5 : 67 }
     static var largeTitleLabelHeight: CGFloat { isIOS ? 41 : 40.5 }
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+    /// iOS cut AND pad idiom. MEASURED ipadprobe navLargeTable / inline,
+    /// iPad (A16) 820×1180 @2x / iOS 26.1: the content bar is still 54 pt
+    /// (`[0, 32, 820, 54]` inline, `[0, 32, 820, 106]` large = 54+52),
+    /// not the pre-iOS-26 regular-width 50. Unspecified idiom does not
+    /// count, so phone goldens stay on the phone numbers.
+    static var isPad: Bool {
+        isIOS && (UITraitCollection.current.userInterfaceIdiom == .pad
+                  || UIDevice.current.userInterfaceIdiom == .pad)
+    }
     static let largeTitleFontSize: CGFloat = 34
     static let largeInlineTitleCenterY: CGFloat = 32
     /// iOS 26.1 (MEASURED 2026-09-04, navprobe.barorigin, SE 2x): in the
@@ -1164,7 +1173,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// Pocket region height (bar zone 64 pt + soft falloff).
     static let pocketHeight: CGFloat = 72
     /// Gaussian sigma for the pocket blur, in points.
-    static let pocketBlurSigma: CGFloat = 8
+    /// Catalyst keeps 8 (tuned against golden/navbar_inline).
+    /// iOS 26.1 (MEASURED 2026-09-04, probe_scroll_edge_white, iPhone SE 2x):
+    /// a red|green column edge under the collapsed bar has a 5 pt 10–90 %
+    /// mix at y = 8…20 (the inline-title band); erf fit σ = 1.85
+    /// (rms 1.1). Feed t2800's 8 pt kernel turned "Morning briefing" into a
+    /// 245 cloud vs iOS 233 and spread the 1 pt card sliver 12 pt down.
+    static var pocketBlurSigma: CGFloat { isIOS ? 1.85 : 8 }
     /// Background wash: plateau strength, plateau end and wash end (pt).
     static let pocketWashTop: CGFloat = 0.82
     static let pocketWashPlateau: CGFloat = 24

@@ -376,7 +376,13 @@ open class UILabel: UIView {
         // against the oracle: an italic 'l' overhanging its advance is cut
         // exactly at the label's right edge).
         _ = needsClip
-        let blockH = CGFloat(drawLines.count) * lineH
+        let blockH = FontEngine.labelBlockHeight(for: drawingFont, lines: drawLines.count)
+        let lineStep: CGFloat
+        if drawLines.count > 1 {
+            lineStep = (blockH - lineH) / CGFloat(drawLines.count - 1)
+        } else {
+            lineStep = lineH
+        }
         canvas.save()
         canvas.clip(to: bounds)
         defer { canvas.restore() }
@@ -412,7 +418,7 @@ open class UILabel: UIView {
             case .right:
                 penX = bounds.width - line.width
             }
-            let baselineY = y0 + CGFloat(i) * lineH + baselineInLine
+            let baselineY = y0 + CGFloat(i) * lineStep + baselineInLine
             drawLineGlyphs(line.text, at: CGPoint(x: penX, y: baselineY),
                            in: canvas, font: drawingFont, color: color,
                            glyphFont: glyphFont,

@@ -16,8 +16,20 @@ import OpenUIKit
 // exactly as it would be in the app's own code.
 @MainActor
 public enum RealAppScreen {
-    /// iPhone 15 Pro points — the picker is a bottom sheet over a full screen.
-    public static let windowSize = CGSize(width: 393, height: 852)
+    /// iPhone 16 points — the picker is a bottom sheet over a full screen.
+    public static let windowSizePhone = CGSize(width: 393, height: 852)
+    /// iPad (A16) portrait. MEASURED `UIScreen.main.bounds` on the
+    /// `iPad-A16` simulator (2x): 820 × 1180.
+    public static let windowSizePad = CGSize(width: 820, height: 1180)
+    /// Default (phone) window; openhost `--app pocketcasts` uses this.
+    public static let windowSize = windowSizePhone
+    /// MEASURED realappprobe, iPhone 16 / iOS 26.1: window safe area
+    /// `[59, 0, 34, 0]`.
+    public static let phoneSafeArea = UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0)
+    /// Filled from realapp_settings_light_ipad / ipadprobe on the
+    /// iPad (A16) 820×1180 @2x / iOS 26.1: window `safeAreaInsets`
+    /// `[32, 0, 25, 0]`.
+    public static let padSafeArea = UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0)
 
     /// Where UIImage(named:) finds the app's icons. `openrender`/`openhost`
     /// point this at fixtures/realapp/assets before building the screen.
@@ -78,17 +90,35 @@ public enum RealAppScreen {
         public let style: UIUserInterfaceStyle
         public let contentSizeCategory: UIContentSizeCategory
         public let presentsSheet: Bool
+        /// `.pad` rows render and capture on the iPad (A16) surface.
+        public let idiom: UIUserInterfaceIdiom
+        public let windowSize: CGSize
+        /// Device backing-store scale. iPhone 16 goldens are 3x; iPad (A16)
+        /// goldens are 2x. `openrender realapp` uses this for pad rows even
+        /// when `OPENUIKIT_REALAPP_SCALE=3` (the phone-oracle scale).
+        public let nativeScale: CGFloat
+        public let safeAreaInsets: UIEdgeInsets
 
         public init(name: String, variant: Variant, theme: Theme.ThemeType,
                     style: UIUserInterfaceStyle,
                     contentSizeCategory: UIContentSizeCategory,
-                    presentsSheet: Bool) {
+                    presentsSheet: Bool,
+                    idiom: UIUserInterfaceIdiom = .phone,
+                    windowSize: CGSize? = nil,
+                    nativeScale: CGFloat? = nil,
+                    safeAreaInsets: UIEdgeInsets? = nil) {
             self.name = name
             self.variant = variant
             self.theme = theme
             self.style = style
             self.contentSizeCategory = contentSizeCategory
             self.presentsSheet = presentsSheet
+            self.idiom = idiom
+            self.windowSize = windowSize ?? (idiom == .pad
+                ? RealAppScreen.windowSizePad : RealAppScreen.windowSizePhone)
+            self.nativeScale = nativeScale ?? (idiom == .pad ? 2 : 3)
+            self.safeAreaInsets = safeAreaInsets ?? (idiom == .pad
+                ? RealAppScreen.padSafeArea : RealAppScreen.phoneSafeArea)
         }
     }
 
@@ -114,6 +144,13 @@ public enum RealAppScreen {
         Screen(name: "realapp_settings_light_ax1", variant: .settings,
                theme: .light, style: .light,
                contentSizeCategory: .accessibilityLarge, presentsSheet: true),
+        // iPad (A16) portrait of the same Settings picker. Captured by
+        // scripts/realapp_probe_sim.sh on a private iPad-A16 simulator
+        // (SIM_DEVICE_SUFFIX); rendered by `openrender realapp` with
+        // `.pad` on UITraitCollection.current / UIDevice.
+        Screen(name: "realapp_settings_light_ipad", variant: .settings,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: true, idiom: .pad),
     ]
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {

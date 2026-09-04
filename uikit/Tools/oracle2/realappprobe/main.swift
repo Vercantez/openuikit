@@ -31,6 +31,7 @@ struct Variant {
     /// screen is the window's root controller and presents nothing.
     var presentsSheet = true
     var contentSizeCategory: UIContentSizeCategory = .large
+    var idiom: UIUserInterfaceIdiom = .phone
 }
 
 var variants: [Variant] = []
@@ -205,9 +206,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ app: UIApplication,
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        variants = RealAppScreen.screens.map { s in
-            Variant(name: s.name, style: s.style, kind: s.variant, theme: s.theme,
-                    presentsSheet: s.presentsSheet, contentSizeCategory: s.contentSizeCategory)
+        variants = RealAppScreen.screens.compactMap { s in
+            // Phone rows capture on the iPhone 16; pad rows on the iPad
+            // (A16). Mixing them on one device would write an iPad-named
+            // golden at phone geometry (or the reverse).
+            let wantPad = s.idiom == .pad
+            let isPad = UIDevice.current.userInterfaceIdiom == .pad
+            guard wantPad == isPad else { return nil }
+            return Variant(name: s.name, style: s.style, kind: s.variant, theme: s.theme,
+                           presentsSheet: s.presentsSheet, contentSizeCategory: s.contentSizeCategory,
+                           idiom: s.idiom)
         }
         let w = UIWindow(frame: UIScreen.main.bounds)
         window = w
@@ -277,6 +285,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         let layout: [String: Any] = ["name": v.name, "views": views,
                                      "contentSizeCategory": v.contentSizeCategory.rawValue,
                                      "windowContentSizeCategory": w.traitCollection.preferredContentSizeCategory.rawValue,
+                                     "userInterfaceIdiom": UIDevice.current.userInterfaceIdiom == .pad ? "pad" : "phone",
                                      "screen": ["scale": Double(UIScreen.main.scale),
                                                 "bounds": [round3(w.bounds.width), round3(w.bounds.height)]]]
         let data = try! JSONSerialization.data(withJSONObject: layout, options: [.sortedKeys])

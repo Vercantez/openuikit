@@ -52,6 +52,13 @@ if git diff main..."$BR" -- 'uikit/Sources/*.swift' | grep -E '^\+' | grep -qE '
   echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
 fi
 
+# Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
+# each; 25 of them once filled the disk. Reap any not attached to a live run.
+for stale in /tmp/agent_merge.*(N/); do
+  pgrep -f "agent_merge.*$stale" >/dev/null 2>&1 && continue
+  git worktree remove --force "$stale" 2>/dev/null || rm -rf "$stale"
+done
+git worktree prune
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
 trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
@@ -68,7 +75,7 @@ python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out 
 python3 - <<'PY' || exit 6
 import re, subprocess
 out = subprocess.run(['python3', 'Tools/compare/compare_realapp.py', '--golden', '/tmp/golden_realapp_ios', '--out', '/tmp/agent_merge_app', '--scale', '3'], capture_output=True, text=True).stdout
-floors = {'realapp_history_light': 99.0, 'realapp_settings_light': 98.4, 'realapp_settings_dark': 98.4, 'realapp_storage_light': 99.0, 'realapp_settings_light_xs': 98.4, 'realapp_settings_light_xxxl': 98.0, 'realapp_settings_light_ax1': 97.0}
+floors = {'realapp_history_light': 99.0, 'realapp_settings_light': 98.4, 'realapp_settings_dark': 98.4, 'realapp_storage_light': 99.0, 'realapp_settings_light_xs': 98.4, 'realapp_settings_light_xxxl': 98.0, 'realapp_settings_light_ax1': 97.0, 'realapp_settings_light_ipad': 99.4}
 for name, floor in floors.items():
     m = re.search(name + r".*?'score': np\.float64\(([\d.]+)\)", out)
     if not m or float(m.group(1)) < floor: raise SystemExit(f'REAL APP DROPPED: {name} {m.group(1) if m else "?"} < {floor}')

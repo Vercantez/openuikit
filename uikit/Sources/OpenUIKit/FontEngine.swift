@@ -387,7 +387,15 @@ public enum FontEngine {
               !tablesIOS.families.isEmpty
         else { return n * labelLineHeight(for: font) }
         let scale = max(1, UIScreen.main.scale)
-        return (metrics(for: font).lineHeight * n * scale).rounded(.up) / scale
+        // Preferred-font leading sits BETWEEN lines, not on the first.
+        // MEASURED probe_feed_color_label, iPhone SE 2x / iOS 26.1:
+        // 2-line `.subheadline` (leading 2.100) is 38 = ceil_px(2 × 17.900 + 2.100);
+        // `systemFont(ofSize: 15)` (leading 0) is 36; one-line both 18.
+        var total = metrics(for: font).lineHeight * n
+        if let extra = font.textStyleLeading {
+            total += extra * (n - 1)
+        }
+        return (total * scale).rounded(.up) / scale
     }
 
     // MARK: - Truncation ("tight") metrics — system font, from SFNS.ttf

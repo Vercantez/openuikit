@@ -26,6 +26,10 @@ struct RealAppVariant {
     /// is a device's shipped category — identity for every UIFontMetrics
     /// factor, so the original four screens do not move.
     var contentSizeCategory: UIContentSizeCategory = .large
+    var idiom: UIUserInterfaceIdiom = .phone
+    var windowSize: CGSize = CGSize(width: 393, height: 852)
+    var nativeScale: CGFloat = 3
+    var safeAreaInsets: UIEdgeInsets = UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0)
 }
 
 @MainActor
@@ -35,7 +39,11 @@ let realAppVariants: [RealAppVariant] = RealAppScreen.screens.map { screen in
         style: screen.style,
         makeRoot: { RealAppScreen.makeRoot(variant: screen.variant, theme: screen.theme) },
         presentsSheet: screen.presentsSheet,
-        contentSizeCategory: screen.contentSizeCategory)
+        contentSizeCategory: screen.contentSizeCategory,
+        idiom: screen.idiom,
+        windowSize: screen.windowSize,
+        nativeScale: screen.nativeScale,
+        safeAreaInsets: screen.safeAreaInsets)
 }
 
 /// Render scale; main.swift sets it from OPENUIKIT_REALAPP_SCALE.
@@ -43,14 +51,19 @@ nonisolated(unsafe) var realAppScale: CGFloat = 2
 
 @MainActor
 func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
-    let size = RealAppScreen.windowSize
-    // The iPhone 16 the real-iOS goldens come from is a 3x device; the
-    // default stays 2 (the Linux-vs-macOS byte-identity fixture), the
-    // golden comparison renders at 3 (OPENUIKIT_REALAPP_SCALE=3).
-    let scale = realAppScale
+    let size = variant.windowSize
+    // Phone goldens are the iPhone 16 at 3x (`OPENUIKIT_REALAPP_SCALE=3`);
+    // the Linux byte-identity fixture stays at 2. Pad goldens are the
+    // iPad (A16) at native 2x — never resampled up to 3.
+    let scale = variant.idiom == .pad ? variant.nativeScale : realAppScale
     Timer._reset()
     GlyphInkTable.windowCompositing = false
     OpenUIKitRuntime.systemFontCut = .iOS
+    let savedIdiom = UIDevice.current.userInterfaceIdiom
+    let savedAssetIdiom = OpenUIKitRuntime.assetCatalogIdiom
+    let savedTraits = UITraitCollection.current
+    UIDevice.current.userInterfaceIdiom = variant.idiom
+    OpenUIKitRuntime.assetCatalogIdiom = variant.idiom
     // Same override the iOS oracle applies on the window
     // (`UITraitCollection(preferredContentSizeCategory:)` via
     // `traitOverrides`) before capture. Set on `current` *before*
@@ -61,10 +74,15 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     // cut, tracks `UIApplication.shared.preferredContentSizeCategory`
     // (always `.large` here) — MEASURED dtmetrics probe, iPhone 16 /
     // iOS 26.1: icons stay 24×24 at every window override.
+    //
+    // `userInterfaceIdiom: .pad` is the iPad (A16) row
+    // (realapp_settings_light_ipad): form-sheet geometry, nav/table
+    // chrome and readable-width margins all key off this trait.
     UITraitCollection.current = UITraitCollection(
         userInterfaceStyle: variant.style,
         displayScale: scale,
-        preferredContentSizeCategory: variant.contentSizeCategory)
+        preferredContentSizeCategory: variant.contentSizeCategory,
+        userInterfaceIdiom: variant.idiom)
     RealAppScreen.configureAssets(directory: assets)
     RealAppScreen.configureNibs(directory: RealAppScreen.defaultNibsDirectory)
     OpenUIKitRuntime.imageScreenScale = scale
@@ -74,7 +92,9 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     // MEASURED (realappprobe, iPhone 16 / iOS 26.1): the window's safe area
     // is [59, 0, 34, 0]; the sheet's detent height gets the 34 added
     // (343 + 34 = 377), which the port could not reproduce with zero insets.
-    window._setSafeAreaInsets(UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0))
+    // iPad (A16) uses `RealAppScreen.padSafeArea`, filled from that
+    // capture's window dump — not the phone 59/34.
+    window._setSafeAreaInsets(variant.safeAreaInsets)
     window.overrideUserInterfaceStyle = variant.style
     let root = variant.makeRoot()
     window.rootViewController = root
@@ -100,8 +120,15 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
 
     var views: [JSONValue] = []
     dumpLayout(window, path: "", into: &views)
-    let layout = JSONValue.object(["name": .string(variant.name),
-                                   "views": .array(views)])
+    let layout = JSONValue.object([
+        "name": .string(variant.name),
+        "views": .array(views),
+        "screen": .object([
+            "scale": .number(Double(scale)),
+            "bounds": .array([.number(Double(size.width)), .number(Double(size.height))]),
+        ]),
+        "userInterfaceIdiom": .string(variant.idiom == .pad ? "pad" : "phone"),
+    ])
     // The nib parser's own honesty log: anything the archive carried that
     // UINib did not model. Printed with the render so a fidelity gap in a
     // nib-loaded variant shows up as a key name, not just as pixels.
@@ -112,6 +139,9 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     }
     let bmp = UIRenderer.render(window, scale: scale)
     OpenUIKitRuntime.animationTime = 0
+    UIDevice.current.userInterfaceIdiom = savedIdiom
+    OpenUIKitRuntime.assetCatalogIdiom = savedAssetIdiom
+    UITraitCollection.current = savedTraits
     realAppRetained.append(window)
     realAppRetained.append(root)
     return SceneResult(name: variant.name,

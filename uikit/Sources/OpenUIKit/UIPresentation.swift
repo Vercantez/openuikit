@@ -336,9 +336,12 @@ public final class UISheetPresentationController: UIPresentationController {
 
     /// `containerHeight - topInset - bottomSafeArea` (measured: 759 on a
     /// 393x852 iPhone container, 637 on the SE 375x667 at the compact 30 pt
-    /// inset).
+    /// inset). iPad formSheet is the card's own max height (650), not the
+    /// page-sheet formula — MEASURED ipadprobe on iPad (A16) 820×1180 @2x:
+    /// `maximumDetentValue` 650 for every formSheet custom detent.
     var maximumDetentValue: CGFloat {
         guard let c = containerView else { return 0 }
+        if isPadFormSheet { return _UIPageSheetView.iOSPadFormSheetMaxHeight }
         return max(0, c.bounds.height - _UIPageSheetView.topInset(in: c)
                       - c.safeAreaInsets.bottom)
     }
@@ -357,10 +360,14 @@ public final class UISheetPresentationController: UIPresentationController {
                 // iPhone SE 2x, window SA [0,0,0,0]: unscaled height 356.5
                 // of maximumDetentValue 637 (top inset 30). Same ratio,
                 // rounded to the device pixel, plus bottom SA.
+                // iPad formSheet (ipadprobe form-medium): 425/759 of 650
+                // = 364, NO extra bottom SA (card SA is [0,0,0,0]).
                 let scale = max(c.traitCollection.displayScale, 1)
                 let raw = maximumDetentValue * _UIPageSheetView.mediumDetentValue
                     / _UIPageSheetView.mediumDetentMaximum
-                return (raw * scale).rounded() / scale + c.safeAreaInsets.bottom
+                let h = (raw * scale).rounded() / scale
+                if isPadFormSheet { return h }
+                return h + c.safeAreaInsets.bottom
             }
             // Catalyst: half the container plus bottom SA (the pre-iOS-cut
             // reading, 1 pt off the iPhone 16 sample).
@@ -372,6 +379,7 @@ public final class UISheetPresentationController: UIPresentationController {
         guard let v = detent.resolve(ctx) else { return nil }
         // Above the maximum UIKit collapses to the large frame (measured).
         guard v < maximumDetentValue else { return nil }
+        if isPadFormSheet { return max(0, v) }
         return max(0, v) + c.safeAreaInsets.bottom
     }
 
@@ -383,10 +391,18 @@ public final class UISheetPresentationController: UIPresentationController {
     ///   frame [8, 482.349, 377, 361.651]  (8 pt in from each side, bottom
     ///   8 pt above the container's bottom edge, scale (W-16)/W).
     /// Mac Catalyst has no floating card (its sheet is edge to edge).
+    /// iPad formSheet is a centred identity-transform card, not this.
     static let floatingInset: CGFloat = 8
     var isFloatingCard: Bool {
         sheetStyle == .pageSheet && OpenUIKitRuntime.systemFontCut == .iOS
             && resolvedDetentHeight() != nil
+    }
+    /// iOS-cut pad formSheet. MEASURED ipadprobe / realapp_settings_light_ipad,
+    /// iPad (A16) 820×1180 @2x / iOS 26.1.
+    var isPadFormSheet: Bool {
+        sheetStyle == .formSheet && OpenUIKitRuntime.systemFontCut == .iOS
+            && (UITraitCollection.current.userInterfaceIdiom == .pad
+                || UIDevice.current.userInterfaceIdiom == .pad)
     }
     /// The card's scale about its centre: (containerWidth - 16) / containerWidth.
     var floatingScale: CGFloat {
@@ -396,6 +412,10 @@ public final class UISheetPresentationController: UIPresentationController {
 
     public override var frameOfPresentedViewInContainerView: CGRect {
         guard let c = containerView else { return .zero }
+        if isPadFormSheet {
+            let h = resolvedDetentHeight() ?? _UIPageSheetView.iOSPadFormSheetMaxHeight
+            return _UIPageSheetView.iOSPadFormSheetFrame(in: c, height: h)
+        }
         guard sheetStyle == .pageSheet else { return c.bounds }
         if let h = resolvedDetentHeight() {
             if isFloatingCard {
@@ -427,21 +447,25 @@ public final class UISheetPresentationController: UIPresentationController {
         // nothing else; the animator winds it back to the start and plays
         // forward.
         dim.alpha = _UIDimmingView.maxAlpha(for: container.traitCollection, floatingCard: isFloatingCard)
-        if sheetStyle == .pageSheet { container.addSubview(dim) }
+        let paintsAsSheet = sheetStyle == .pageSheet || sheetStyle == .formSheet
+        if paintsAsSheet { container.addSubview(dim) }
 
         // The floating card is the unscaled sheet under a scale transform
         // (UIView.frame's setter inverts an axis-aligned scale, so the
         // measured frame yields the measured 393-wide bounds).
         platter.transform = isFloatingCard
             ? CGAffineTransform(scaleX: floatingScale, y: floatingScale) : .identity
-        platter.floating = isFloatingCard
+        // Pad formSheet is not the phone floating card (identity transform,
+        // dim 0.2) but still paints a rounded fill + drop shadow.
+        platter.padFormSheet = isPadFormSheet
+        platter.floating = isFloatingCard || isPadFormSheet
         platter.frame = frameOfPresentedViewInContainerView
         platter.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         vc.loadViewIfNeeded()
         let cv = vc.view!
         savedBackgroundColor = cv.backgroundColor
-        if sheetStyle == .pageSheet {
+        if paintsAsSheet {
             if let bg = cv.backgroundColor { platter.fillColor = bg }
             cv.backgroundColor = nil
         } else if cv.backgroundColor == nil {
@@ -456,6 +480,10 @@ public final class UISheetPresentationController: UIPresentationController {
             var sa = UIEdgeInsets.zero
             sa.bottom = container.safeAreaInsets.bottom
             cv._setSafeAreaInsets(sa)
+        } else if isPadFormSheet {
+            // MEASURED ipadprobe / realapp_settings_light_ipad: the form
+            // sheet's content `safeAreaInsets` are `[0,0,0,0]`.
+            cv._setSafeAreaInsets(.zero)
         }
         platter.addSubview(cv)
         if sheetStyle == .pageSheet {
@@ -584,6 +612,35 @@ final class _UIPageSheetView: UIView {
     /// SE 2x is the same ratio (356.5 / 637).
     static let mediumDetentValue: CGFloat = 425
     static let mediumDetentMaximum: CGFloat = 759
+    /// MEASURED ipadprobe + realapp_settings_light_ipad, iPad (A16)
+    /// 820×1180 @2x / iOS 26.1, `.formSheet`:
+    ///   default / `.large()` / over-max custom: `[120, 260, 580, 650]`
+    ///   custom 343 (the Settings picker detent): `[120, 567, 580, 343]`
+    ///   `maximumDetentValue` 650; `.medium()` 364 = 425/759 of 650.
+    /// Width 580 is a constant of this size class (x = (820−580)/2 = 120).
+    /// Height 650 is the large frame. Custom detents keep the SAME bottom
+    /// edge (260+650 = 910) and grow up: y = 910 − h. That bottom is
+    /// `(H − maxH − 10)/2 + maxH` — the 10 pt slack centres the 650-tall
+    /// card 5 pt above the geometric mid (ipadprobe form-default y 260
+    /// vs (1180−650)/2 = 265).
+    static let iOSPadFormSheetWidth: CGFloat = 580
+    static let iOSPadFormSheetMaxHeight: CGFloat = 650
+    static let iOSPadFormSheetVerticalSlack: CGFloat = 10
+    /// MEASURED realapp_settings_light_ipad dump, iPad (A16) 820×1180 @2x
+    /// / iOS 26.1: the form-sheet `UIDropShadowView` `cornerConfiguration`
+    /// is `.fixed(32)` on all four corners (continuous). Same 32 on the
+    /// four clip wrappers. Not the phone floating card's 38 / 47.74.
+    static let iOSPadFormSheetCornerRadius: CGFloat = 32
+
+    static func iOSPadFormSheetFrame(in container: UIView, height: CGFloat) -> CGRect {
+        let w = iOSPadFormSheetWidth
+        let maxH = iOSPadFormSheetMaxHeight
+        let h = min(max(height, 0), maxH)
+        let x = (container.bounds.width - w) / 2
+        let yLarge = (container.bounds.height - maxH - iOSPadFormSheetVerticalSlack) / 2
+        return CGRect(x: x, y: yLarge + maxH - h, width: w, height: h)
+    }
+
     static let topCornerRadius: CGFloat = 37.7
     static let bottomCornerRadius: CGFloat = 58.2
     /// MEASURED 2026-09-04 (realappprobe, iPhone 16 / iOS 26.1): the floating
@@ -592,6 +649,8 @@ final class _UIPageSheetView: UIView {
     /// a known residual at the four corners).
     static let floatingTopCornerRadius: CGFloat = 38
     static let floatingBottomCornerRadius: CGFloat = 47.74074074074074
+    /// iOS-cut pad formSheet chrome (identity transform, 32 pt corners).
+    var padFormSheet = false
     /// Drawn as the iOS 26 floating card (set by the presentation controller).
     var floating = false {
         didSet {
@@ -602,7 +661,10 @@ final class _UIPageSheetView: UIView {
             // the layer-space numbers are those divided by the scale. (The
             // private _UIRoundedRectShadowView's 9-slice image has alpha 0
             // at capture time; this is what the pixels show.)
-            let s: CGFloat = floating ? 377.0 / 393.0 : 1
+            // Pad formSheet (ipadprobe / realapp_settings_light_ipad) is
+            // identity-transform, so the same screen-space numbers apply
+            // directly (s = 1). Corners 32, not 38/47.74.
+            let s: CGFloat = (floating && !padFormSheet) ? 377.0 / 393.0 : 1
             layer.shadowColor = floating ? UIColor.black.cgColor : nil
             layer.shadowOpacity = floating ? 0.09 : 0
             layer.shadowRadius = floating ? 15.5 / s : 3
@@ -613,7 +675,10 @@ final class _UIPageSheetView: UIView {
             // at the larger (bottom) radius: that rect lies entirely under
             // the two-radius path drawn on top, so only the shadow shows it.
             backgroundColor = floating ? paintedFillColor : nil
-            layer.cornerRadius = floating ? _UIPageSheetView.floatingBottomCornerRadius : 0
+            layer.cornerRadius = floating
+                ? (padFormSheet ? _UIPageSheetView.iOSPadFormSheetCornerRadius
+                                : _UIPageSheetView.floatingBottomCornerRadius)
+                : 0
             setNeedsDisplay()
         }
     }
@@ -642,6 +707,7 @@ final class _UIPageSheetView: UIView {
 
     var paintedFillColor: UIColor {
         guard floating,
+              !padFormSheet,
               OpenUIKitRuntime.systemFontCut == .iOS,
               traitCollection.userInterfaceStyle != .dark,
               case .semantic(let name) = fillColor.storage,
@@ -694,12 +760,20 @@ final class _UIPageSheetView: UIView {
     }
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        let top: CGFloat
+        let bottom: CGFloat
+        if padFormSheet {
+            top = _UIPageSheetView.iOSPadFormSheetCornerRadius
+            bottom = top
+        } else if floating {
+            top = _UIPageSheetView.floatingTopCornerRadius
+            bottom = _UIPageSheetView.floatingBottomCornerRadius
+        } else {
+            top = _UIPageSheetView.topCornerRadius
+            bottom = _UIPageSheetView.bottomCornerRadius
+        }
         let path = _UIPageSheetView.sheetPath(
-            in: bounds,
-            topRadius: floating ? _UIPageSheetView.floatingTopCornerRadius
-                                : _UIPageSheetView.topCornerRadius,
-            bottomRadius: floating ? _UIPageSheetView.floatingBottomCornerRadius
-                                   : _UIPageSheetView.bottomCornerRadius)
+            in: bounds, topRadius: top, bottomRadius: bottom)
         let color = paintedFillColor.resolvedColor(with: traitCollection).cgColor
         canvas.fill(path, color: color)
     }
@@ -968,7 +1042,15 @@ extension UIViewController {
         switch modalPresentationStyle {
         case .automatic: return .pageSheet
         // Measured: iPhone-width formSheet == pageSheet (file header).
-        case .formSheet: return .pageSheet
+        // iPad (A16) formSheet is a centred 580×650 card, not a pageSheet
+        // (ipadprobe form-default / realapp_settings_light_ipad).
+        case .formSheet:
+            if OpenUIKitRuntime.systemFontCut == .iOS,
+               (UITraitCollection.current.userInterfaceIdiom == .pad
+                || UIDevice.current.userInterfaceIdiom == .pad) {
+                return .formSheet
+            }
+            return .pageSheet
         case .popover: return _popoverController?.adaptedStyle ?? .pageSheet
         default: return modalPresentationStyle
         }
@@ -1126,7 +1208,10 @@ extension UIViewController {
     /// UIKit's accessor: non-nil exactly when this controller is (or will be)
     /// presented as a sheet.
     public var sheetPresentationController: UISheetPresentationController? {
-        guard _resolvedPresentationStyle == .pageSheet else { return nil }
+        switch _resolvedPresentationStyle {
+        case .pageSheet, .formSheet: break
+        default: return nil
+        }
         if let existing = _sheetController { return existing }
         let c = UISheetPresentationController(presentedViewController: self, presenting: nil)
         _sheetController = c

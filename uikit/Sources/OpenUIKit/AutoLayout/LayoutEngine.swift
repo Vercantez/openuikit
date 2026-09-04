@@ -377,7 +377,8 @@ enum LayoutEngine {
             // CAPPED wrapping label (numberOfLines > 1) re-measures too:
             // Feed t200, iPhone SE 2x / iOS 26.1, a 2-line subheadline body
             // pinned leading/trailing in a 343 pt card is abs.h 38, not
-            // the one-line 18.
+            // the one-line 18. The remaining 38 vs a 15 pt system font's
+            // 36 is preferred-font leading (FontEngine.labelBlockHeight).
             let wrapWidth: CGFloat?
             if fitting != nil {
                 wrapWidth = CGFloat(solver.value(of: vv.width))
