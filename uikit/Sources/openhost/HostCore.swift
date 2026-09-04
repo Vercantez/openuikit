@@ -250,6 +250,11 @@ func buildNavDemoScene(scaleOverride: CGFloat?, largeTitles: Bool = false) -> Ho
     let scale = scaleOverride ?? 2
     let size = CGSize(width: 390, height: 700)
     GlyphInkTable.windowCompositing = false
+    // OPENUIKIT_FORCE_IOS=1 runs the demo under the iOS cut, the same switch
+    // `openrender` takes. Without it the demo renders macOS chrome, and the
+    // iOS-only bar rules (large titles, the bar transition) never fire — so
+    // the recording could not be compared with Tools/oracle2/navprobe's.
+    OpenUIKitRuntime.systemFontCut = forceIOSCut ? .iOS : .macOS
     UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
                                                   displayScale: scale)
     UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size),
