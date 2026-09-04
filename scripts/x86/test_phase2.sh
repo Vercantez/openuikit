@@ -333,8 +333,8 @@ expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
 expect_grep 'stage_fe_sysroot_x86.20' "$COMMON" \
     "recipe bump restages so overlay-copied SYS matches main (VM extras only on *-fe-clang)"
-expect_grep 'owns it so tgmath.swift.gyb' "$COMMON" \
-    "FE Darwin.modulemap expand documents Darwin.C vs naming math.h on Darwin"
+expect_grep 'Overlay SDK extra-inserts header "math.h"' "$COMMON" \
+    "FE Darwin.modulemap expand documents extra-insert on overlay SDK, Darwin.C on SYS"
 expect_grep 'Darwin_C.modulemap' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
     "dual-run fixture is main's Darwin.C (math.h not on Darwin.modulemap)"
 expect_grep '1a8d31fa51df8db9' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
