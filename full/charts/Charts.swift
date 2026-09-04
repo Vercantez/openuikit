@@ -1,5 +1,9 @@
+#if canImport(SwiftUI)
 @_exported import SwiftUI
+#endif
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 import Foundation
 
 public enum ChartsPortable {
@@ -31,6 +35,12 @@ extension Float: Plottable {}
 extension Double: Plottable {}
 extension String: Plottable {}
 extension Date: Plottable {}
+
+public extension Plottable {
+    typealias PrimitivePlottable = Self
+    var primitivePlottable: Self { self }
+    init?(primitivePlottable: Self) { self = primitivePlottable }
+}
 
 private func _chartScalar<Value: Plottable>(_ value: Value) -> Double? {
     switch value {
@@ -117,7 +127,6 @@ public struct _ChartEitherContent<First: ChartContent, Second: ChartContent>:
     }
 }
 
-@MainActor
 @resultBuilder
 public enum ChartContentBuilder {
     public static func buildBlock() -> _ChartViewContent<EmptyView> {
@@ -307,7 +316,7 @@ public struct RuleMark: ChartContent {
     }
 }
 
-public enum InterpolationMethod: String, Hashable, Sendable {
+public enum InterpolationMethod: String, Hashable, Sendable, CustomStringConvertible {
     case linear
     case catmullRom
     case cardinal
@@ -315,14 +324,40 @@ public enum InterpolationMethod: String, Hashable, Sendable {
     case stepStart
     case stepCenter
     case stepEnd
+
+    public var description: String { rawValue }
+
+    public static func catmullRom(alpha: CGFloat) -> InterpolationMethod {
+        _ = alpha
+        return .catmullRom
+    }
+
+    public static func cardinal(tension: CGFloat) -> InterpolationMethod {
+        _ = tension
+        return .cardinal
+    }
 }
 
-public struct BasicChartSymbolShape: Hashable, Sendable {
+public struct BasicChartSymbolShape: Hashable, Sendable, View {
     private let name: String
     private init(_ name: String) { self.name = name }
 
     public static let circle = BasicChartSymbolShape("circle")
     public static let square = BasicChartSymbolShape("square")
+    public static let plus = BasicChartSymbolShape("plus")
+    public static let cross = BasicChartSymbolShape("cross")
+    public static let diamond = BasicChartSymbolShape("diamond")
+    public static let asterisk = BasicChartSymbolShape("asterisk")
+    public static let pentagon = BasicChartSymbolShape("pentagon")
+    public static let triangle = BasicChartSymbolShape("triangle")
+    public static let role = ShapeRole.fill
+
+    public var body: some View { EmptyView() }
+
+    public func path(in rect: CGRect) -> Path {
+        _ = rect
+        return Path()
+    }
 }
 
 public struct _ChartInterpolationContent<Content: View>: View {
@@ -361,6 +396,7 @@ public extension View {
 }
 
 public struct PlotDimensionScaleRange: Hashable, Sendable {
+    public typealias VisualValue = CGFloat
     public let startPadding: CGFloat
     public let endPadding: CGFloat
 
@@ -416,6 +452,34 @@ public struct ChartProxy: Sendable {
         guard let scalar = _chartScalar(value) else { return nil }
         return xPosition?(scalar)
     }
+
+    public func position<P: Plottable>(forY value: P) -> CGFloat? {
+        _ = value
+        return nil
+    }
+
+    public func position<X: Plottable, Y: Plottable>(
+        for point: (x: X, y: Y)
+    ) -> CGPoint? {
+        _ = point
+        return nil
+    }
+
+    public var plotAreaSize: CGSize { .zero }
+    public var plotSize: CGSize { .zero }
+
+    public func selectXRange(from: CGFloat, to: CGFloat) {
+        _ = from
+        _ = to
+    }
+
+    public func selectYRange(from: CGFloat, to: CGFloat) {
+        _ = from
+        _ = to
+    }
+
+    public func selectXValue(at xPosition: CGFloat) { _ = xPosition }
+    public func selectYValue(at yPosition: CGFloat) { _ = yPosition }
 }
 
 public extension GeometryProxy {
@@ -448,7 +512,7 @@ public struct AxisValueLabel: AxisMark {
     public var body: some View { EmptyView() }
 }
 
-public struct AxisMarkPosition: Hashable, Sendable {
+public struct AxisMarkPosition: Hashable, Sendable, CustomStringConvertible {
     private let name: String
     private init(_ name: String) { self.name = name }
 
@@ -457,13 +521,14 @@ public struct AxisMarkPosition: Hashable, Sendable {
     public static let trailing = AxisMarkPosition("trailing")
     public static let top = AxisMarkPosition("top")
     public static let bottom = AxisMarkPosition("bottom")
+
+    public var description: String { name }
 }
 
 public struct _EmptyAxisMark: AxisMark {
     public var body: some View { EmptyView() }
 }
 
-@MainActor
 @resultBuilder
 public enum AxisMarkBuilder {
     public static func buildBlock<Content: AxisMark>(
@@ -473,7 +538,6 @@ public enum AxisMarkBuilder {
     }
 }
 
-@MainActor
 @resultBuilder
 public enum AxisContentBuilder {
     public static func buildBlock<Content: AxisContent>(
@@ -556,5 +620,57 @@ public extension View {
         overlay {
             content(ChartProxy())
         }
+    }
+}
+
+public extension ChartContent {
+    func annotation<C: View>(
+        position: AnnotationPosition = .automatic,
+        alignment: Alignment = .center,
+        spacing: CGFloat? = nil,
+        overflowResolution: AnnotationOverflowResolution = AnnotationOverflowResolution(),
+        @ViewBuilder content: () -> C
+    ) -> some ChartContent {
+        _ = position
+        _ = alignment
+        _ = spacing
+        _ = overflowResolution
+        _ = content
+        return self
+    }
+
+    func annotation<C: View>(
+        position: AnnotationPosition = .automatic,
+        alignment: Alignment = .center,
+        spacing: CGFloat? = nil,
+        @ViewBuilder content: () -> C
+    ) -> some ChartContent {
+        _ = position
+        _ = alignment
+        _ = spacing
+        _ = content
+        return self
+    }
+
+    func symbolSize<D: Plottable>(by value: PlottableValue<D>) -> some ChartContent {
+        _ = value
+        return self
+    }
+
+    func symbolSize(_ area: CGFloat) -> some ChartContent {
+        _ = area
+        return self
+    }
+
+    func symbolSize(_ size: CGSize) -> some ChartContent {
+        _ = size
+        return self
+    }
+
+    func compositingLayer() -> some ChartContent { self }
+
+    func alignsMarkStylesWithPlotArea(_ aligns: Bool = true) -> some ChartContent {
+        _ = aligns
+        return self
     }
 }
