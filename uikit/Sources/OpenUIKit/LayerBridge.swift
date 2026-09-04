@@ -94,6 +94,11 @@ public enum LayerBridge {
     /// Render a laid-out view hierarchy into a fresh bitmap via the QZLayer
     /// compositor. Bit-compatible contract with UIRenderer.render.
     public static func render(_ root: UIView, scale: CGFloat) -> Bitmap {
+        // Oversized cornerRadius model follows the platform cut (see
+        // QZLayerSetCornerModel): iOS 26.1 intersects the corner discs,
+        // the Mac oracle draws the self-intersecting kappa path.
+        QZLayerSetCornerModel(OpenUIKitRuntime.systemFontCut == .iOS
+                              ? Int32(QZCornerModelDisc) : Int32(QZCornerModelKappa))
         // Validate before CGFloat-to-Int conversion and before Bitmap's
         // width*height*4 allocation. Hostile root geometry must yield an
         // empty frame, not a conversion trap or unbounded allocation.

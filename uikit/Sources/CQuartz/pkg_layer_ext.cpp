@@ -92,6 +92,10 @@ void QZLayerSetShadow(QZLayerRef layer, QZFloat ox, QZFloat oy, QZFloat radius,
     layer->layer_shadow_color = {r, g, b, 1};
     layer->layer_shadow_opacity = qz::clampd(opacity, 0, 1);
 }
+static int g_qz_corner_model = QZCornerModelKappa;
+void QZLayerSetCornerModel(int model) { g_qz_corner_model = model == QZCornerModelDisc ? 1 : 0; }
+int QZLayerGetCornerModel(void) { return g_qz_corner_model; }
+
 void QZLayerSetMaskedCorners(QZLayerRef layer, uint32_t corners) {
     if (layer) layer->masked_corners = corners & 0x0fu;
 }

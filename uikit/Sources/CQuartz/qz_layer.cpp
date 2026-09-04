@@ -138,6 +138,48 @@ static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius,
         QZContextAddRoundedRect(ctx, r, radius);
         return;
     }
+    if (radius > half && QZLayerGetCornerModel() == QZCornerModelDisc) {
+        /* iOS 26.1 (MEASURED 2026-09-04, corner_radius on the iPhone SE):
+         * the region is the rect intersected with every masked corner's
+         * disc constraint. It is convex (the discs and the rect all
+         * contain the centre), so trace it as a polygon by radial
+         * bisection — 720 rays from the rational circle, no trig. */
+        double x0 = r.origin.x, y0 = r.origin.y;
+        double x1 = x0 + r.size.width, y1 = y0 + r.size.height;
+        double cx = (x0 + x1) * 0.5, cy = (y0 + y1) * 0.5;
+        auto inside = [&](double px, double py) -> bool {
+            if (px < x0 || px > x1 || py < y0 || py > y1) return false;
+            const double rr = radius * radius;
+            auto disc = [&](double ccx, double ccy) {
+                double dx = px - ccx, dy = py - ccy;
+                return dx * dx + dy * dy <= rr;
+            };
+            if ((masked_corners & 0x01) && px < x0 + radius && py < y0 + radius && !disc(x0 + radius, y0 + radius)) return false;
+            if ((masked_corners & 0x02) && px > x1 - radius && py < y0 + radius && !disc(x1 - radius, y0 + radius)) return false;
+            if ((masked_corners & 0x04) && px < x0 + radius && py > y1 - radius && !disc(x0 + radius, y1 - radius)) return false;
+            if ((masked_corners & 0x08) && px > x1 - radius && py > y1 - radius && !disc(x1 - radius, y1 - radius)) return false;
+            return true;
+        };
+        if (!inside(cx, cy)) { QZContextMoveToPoint(ctx, cx, cy); QZContextClosePath(ctx); return; }
+        const int steps = 720, half_steps = steps / 2;
+        double reach = std::max(r.size.width, r.size.height);
+        for (int i = 0; i < steps; ++i) {
+            double t = (double)(i % half_steps) / half_steps * 2.0 - 1.0;
+            double d = 1.0 + t * t;
+            double dx = (1.0 - t * t) / d, dy = 2.0 * t / d;
+            if (i >= half_steps) { dx = -dx; dy = -dy; }
+            double lo = 0, hi = reach;
+            for (int it = 0; it < 24; ++it) {
+                double m = (lo + hi) * 0.5;
+                if (inside(cx + dx * m, cy + dy * m)) lo = m; else hi = m;
+            }
+            double px = cx + dx * lo, py = cy + dy * lo;
+            if (i == 0) QZContextMoveToPoint(ctx, px, py);
+            else QZContextAddLineToPoint(ctx, px, py);
+        }
+        QZContextClosePath(ctx);
+        return;
+    }
     /* CoreAnimation does NOT clamp layer cornerRadius to half the smaller
      * side (iOS 26): an oversized radius produces the classic
      * self-intersecting kappa rounded-rect (spikes past the corners, a

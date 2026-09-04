@@ -155,6 +155,20 @@ extension AttributedTextLayout {
         let x1 = (x + width) * ctm.a + ctm.tx
         let y0 = y * ctm.d + ctm.ty
         let y1 = (y + height) * ctm.d + ctm.ty
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            // iOS 26.1 (MEASURED, attrtext_underline_strike on the 2x
+            // device): rules are HARD device-pixel rectangles — the 17 pt
+            // underline is exactly two device rows of solid colour, the
+            // strikethrough likewise — where Catalyst's are blurred by the
+            // text filter. Snap the top edge to the pixel grid and keep the
+            // thickness a whole number of pixels (at least one).
+            let sy0 = y0.rounded(.toNearestOrAwayFromZero)
+            let sy1 = Swift.max(sy0 + 1, y1.rounded(.toNearestOrAwayFromZero))
+            let ux0 = (x0 - ctm.tx) / ctm.a, ux1 = (x1 - ctm.tx) / ctm.a
+            let uy0 = (sy0 - ctm.ty) / ctm.d, uy1 = (sy1 - ctm.ty) / ctm.d
+            canvas.fill(rect: CGRect(x: ux0, y: uy0, width: ux1 - ux0, height: uy1 - uy0), color: color)
+            return
+        }
         let px0 = Int(x0.rounded(.down)) - 1
         let px1 = Int(x1.rounded(.up)) + 1
         let py0 = Int(y0.rounded(.down)) - 1

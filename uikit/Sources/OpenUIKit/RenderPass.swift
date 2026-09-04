@@ -41,6 +41,10 @@ public enum UIRenderer {
            radius <= Swift.min(r.width, r.height) / 2 {
             return .roundedRect(r, cornerRadius: radius)
         }
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           radius > Swift.min(r.width, r.height) / 2 {
+            return iOSOversizedCornerPath(r, cornerRadius: radius, corners: corners)
+        }
         // Per-corner, unclamped kappa construction. With all four bits this
         // is the same oversized-radius path as before; square corners use a
         // line to the vertex instead of a cubic quarter-circle.
@@ -86,6 +90,64 @@ public enum UIRenderer {
         }
         p.close()
         return p
+    }
+
+    /// iOS 26.1 (MEASURED 2026-09-04, corner_radius on the iPhone SE: the
+    /// 80 x 60 view with cornerRadius 100 renders as a 23 x 20 pt curved
+    /// diamond centred in the view, nothing outside it): unlike the Mac
+    /// oracle's self-intersecting kappa path, iOS treats each rounded
+    /// corner as a DISC CONSTRAINT — a point in a corner's quadrant (past
+    /// the inset lines at `radius` from that corner) must lie within
+    /// `radius` of the corner's centre — and never clamps the radius, so
+    /// an oversized radius leaves the intersection of the four discs
+    /// (23 = 2 * (sqrt(100^2 - 70^2) - 60), 20 = 2 * (sqrt(100^2 - 60^2) - 70)).
+    /// The region is convex (discs and a rect that all contain the view's
+    /// centre), so it is traced as a polygon by radial bisection.
+    static func iOSOversizedCornerPath(_ r: CGRect, cornerRadius radius: CGFloat,
+                                       corners: CACornerMask) -> Path {
+        let centres: [(CACornerMask, CGPoint, (CGPoint) -> Bool)] = [
+            (.layerMinXMinYCorner, CGPoint(x: r.minX + radius, y: r.minY + radius),
+             { $0.x < r.minX + radius && $0.y < r.minY + radius }),
+            (.layerMaxXMinYCorner, CGPoint(x: r.maxX - radius, y: r.minY + radius),
+             { $0.x > r.maxX - radius && $0.y < r.minY + radius }),
+            (.layerMinXMaxYCorner, CGPoint(x: r.minX + radius, y: r.maxY - radius),
+             { $0.x < r.minX + radius && $0.y > r.maxY - radius }),
+            (.layerMaxXMaxYCorner, CGPoint(x: r.maxX - radius, y: r.maxY - radius),
+             { $0.x > r.maxX - radius && $0.y > r.maxY - radius }),
+        ].filter { corners.contains($0.0) }
+        func inside(_ p: CGPoint) -> Bool {
+            guard p.x >= r.minX, p.x <= r.maxX, p.y >= r.minY, p.y <= r.maxY else { return false }
+            for (_, c, quadrant) in centres where quadrant(p) {
+                let dx = p.x - c.x, dy = p.y - c.y
+                if dx * dx + dy * dy > radius * radius { return false }
+            }
+            return true
+        }
+        let mid = CGPoint(x: r.midX, y: r.midY)
+        guard inside(mid) else { return Path() }
+        let reach = Swift.max(r.width, r.height)
+        var path = Path()
+        // Directions from the rational circle ((1 - t^2, 2t) / (1 + t^2),
+        // t in [-1, 1] for the right half, mirrored for the left): no trig
+        // needed, and the sampling is dense enough (720 points) that the
+        // polygon error is far below a device pixel at any view size.
+        let steps = 720
+        for i in 0..<steps {
+            let half = steps / 2
+            let t = CGFloat(i % half) / CGFloat(half) * 2 - 1
+            let d = 1 + t * t
+            var dir = CGPoint(x: (1 - t * t) / d, y: 2 * t / d)
+            if i >= half { dir.x = -dir.x; dir.y = -dir.y }
+            var lo: CGFloat = 0, hi: CGFloat = reach
+            for _ in 0..<24 {
+                let t = (lo + hi) / 2
+                if inside(CGPoint(x: mid.x + dir.x * t, y: mid.y + dir.y * t)) { lo = t } else { hi = t }
+            }
+            let pt = CGPoint(x: mid.x + dir.x * lo, y: mid.y + dir.y * lo)
+            if i == 0 { path.move(to: pt) } else { path.addLine(to: pt) }
+        }
+        path.close()
+        return path
     }
 
     /// Render a laid-out view hierarchy into a fresh bitmap.
