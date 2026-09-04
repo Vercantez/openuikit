@@ -25,7 +25,8 @@ Without --write it prints the markdown only. Rows carry a "status":
 import argparse, json, os, re, subprocess, sys, datetime
 
 THRESH = {"geometry": 99.5, "effects": 98.0, "text": 97.0, "control": 96.0, "chrome": 97.5}
-REALAPP_FLOOR = {"realapp_history_light": 99.0, "realapp_settings_light": 98.4, "realapp_settings_dark": 98.4}
+REALAPP_FLOOR = {"realapp_history_light": 99.0, "realapp_settings_light": 98.4, "realapp_settings_dark": 98.4,
+                 "realapp_storage_light": 99.0}   # xib-driven Storage & Data Use screen: 99.41 on 2026-09-05
 
 def parse_compare(path):
     rows = []
