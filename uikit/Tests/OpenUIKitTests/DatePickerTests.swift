@@ -734,3 +734,33 @@ final class DatePickerTests: XCTestCase {
         return hash
     }
 }
+
+extension DatePickerTests {
+    /// Forms t200, iPhone SE 2x, iOS 26.1: compact `.date` chrome.
+    func testIOSCompactDateChromeMatchesFormsCapture() throws {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        let picker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: 128, height: 34))
+        picker.calendar = utcCalendar()
+        picker.timeZone = TimeZone(secondsFromGMT: 0)
+        picker.locale = Locale(identifier: "en_US_POSIX")
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .compact
+        picker.date = date(2026, 9, 4)
+        picker.layoutIfNeeded()
+
+        let label = try XCTUnwrap(
+            picker.subviews.compactMap { $0 as? UILabel }
+                .first { $0.text == "Sep 4, 2026" },
+            "compact title should be DateFormatter.medium")
+        XCTAssertEqual(label.font.pointSize, 17)
+        XCTAssertEqual(label.layer.cornerRadius, 17)
+        // Trailing-aligned capsule: title intrinsic 93.5 + 24 = 117.5.
+        XCTAssertEqual(label.frame.height, 34)
+        XCTAssertEqual(label.frame.maxX, 128, accuracy: 0.5)
+        XCTAssertGreaterThan(label.frame.width, 100)
+        XCTAssertLessThan(label.frame.minX, 16)
+    }
+}

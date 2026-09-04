@@ -123,7 +123,11 @@ open class UIResponder: NSObject {
     /// `NSNibAwaking` category), so this is an override there and a fresh
     /// declaration everywhere else — either way app source spells it
     /// `override func awakeFromNib()`.
-#if canImport(ObjectiveC)
+    // The NSObject declaration comes from AppKit's NSNibAwaking category,
+    // not from Foundation: the Linux-hosted arm64-apple-macos GUEST route
+    // can import ObjectiveC but has no AppKit, and there `override` does not
+    // compile (x86 authority, fc0b97d8). Key on AppKit, not ObjectiveC.
+#if canImport(AppKit)
     open override func awakeFromNib() {}
 #else
     open func awakeFromNib() {}

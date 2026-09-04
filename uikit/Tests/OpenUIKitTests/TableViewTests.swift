@@ -1074,3 +1074,214 @@ final class TableViewAnimatedUpdateTests: XCTestCase {
                        ["a", "b", "c", "x"])
     }
 }
+
+// MARK: - iOS plain subtitle + edit chrome (TableEditor conformance)
+
+@MainActor
+private final class SubtitleListSource: UITableViewDataSource, UITableViewDelegate {
+    var titles = ["Alpha", "Bravo", "Charlie"]
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        titles.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        cell.textLabel.text = titles[indexPath.row]
+        cell.detailTextLabel?.text = "item \(indexPath.row)"
+        return cell
+    }
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
+}
+
+@MainActor
+final class TableViewIOSEditChromeTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut!
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+    }
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        super.tearDown()
+    }
+
+    /// MEASURED TableEditor t200, iPhone SE 2x: plain subtitle cells are
+    /// 62 pt, primary at y 9, detail at y 32.5, text x 16.
+    func testPlainSubtitleRowIs62OnIOS() {
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.frame.height, 62, accuracy: 0.001)
+        XCTAssertEqual(cell.frame.minY, 0, accuracy: 0.001)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
+                       62, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.y, 9, accuracy: 0.001)
+        XCTAssertEqual(cell.detailTextLabel!.frame.origin.y, 32.5, accuracy: 0.001)
+    }
+
+    /// MEASURED TableEditor t900, iPhone SE 2x: content view at x 40 width
+    /// 292, delete control [15, 18, 26, 26] in a 62 pt row, reorder at
+    /// x 332 width 27.
+    func testEditModeInsetsAndControlsOnIOS() {
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        table.setEditing(true, animated: false)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.contentView.frame.origin.x, 40, accuracy: 0.001)
+        XCTAssertEqual(cell.contentView.frame.width, 292, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        let edit = cell._editControl
+        XCTAssertEqual(edit?.isHidden, false)
+        XCTAssertEqual(edit?.frame, CGRect(x: 15, y: 18, width: 26, height: 26))
+        let reorder = cell._reorderControl!
+        XCTAssertEqual(reorder.isHidden, false)
+        XCTAssertEqual(reorder.frame.origin.x, 332, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.width, 27, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.height, 62, accuracy: 0.001)
+    }
+}
+
+// MARK: - iOS row insert/delete spring (TableEditor t1350 / t2350)
+
+@MainActor
+final class TableViewIOSRowAnimationTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut!
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        OpenUIKitRuntime.animationTime = 0
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+    }
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        OpenUIKitRuntime.animationTime = 0
+        super.tearDown()
+    }
+
+    private func makeList(_ titles: [String]) -> (UIWindow, UITableView, SubtitleListSource) {
+        let source = SubtitleListSource()
+        source.titles = titles
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        return (window, table, source)
+    }
+
+    /// MEASURED rowanimprobe, iPhone SE 2x, iOS 26.1: `.fade` delete keeps
+    /// the departing cell in place (Charlie frame y 124 throughout) and
+    /// springs its opacity 1 → 0; neighbours spring up by one row height.
+    /// CASpringAnimation mass 1, stiffness 438.649, damping 41.888, D 0.441.
+    func testFadeDeleteSpringsOpacityInPlaceAndSlidesNeighbours() {
+        let (window, table, source) = makeList(["Alpha", "Bravo", "Charlie", "Delta"])
+        let charlie = table.cellForRow(at: IndexPath(row: 2, section: 0))!
+        let delta = table.cellForRow(at: IndexPath(row: 3, section: 0))!
+        let charlieFrame = charlie.frame
+        let deltaOld = delta.frame
+
+        source.titles.remove(at: 2)
+        table.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+
+        XCTAssertEqual(charlie.alpha, 0)
+        XCTAssertEqual(charlie.frame, charlieFrame)
+        let fade = charlie.animations.first { $0.property == .alpha }
+        XCTAssertNotNil(fade)
+        XCTAssertEqual(fade!.duration, UITableView.iOSRowAnimationDuration, accuracy: 0.001)
+        if case let .spring(z, v) = fade!.timing {
+            XCTAssertEqual(z, UITableView.iOSRowAnimationDamping, accuracy: 0.001)
+            XCTAssertEqual(v, 0, accuracy: 0.001)
+        } else {
+            XCTFail("delete opacity must be the measured ζ=1 spring")
+        }
+        if case let .scalar(from) = fade!.from { XCTAssertEqual(from, 1) }
+
+        XCTAssertEqual(delta.frame.minY, deltaOld.minY - charlieFrame.height, accuracy: 0.001)
+        let move = delta.animations.first { $0.property == .position }
+        XCTAssertNotNil(move, "Delta must spring from its old slot into Charlie's")
+        XCTAssertEqual(move!.duration, UITableView.iOSRowAnimationDuration, accuracy: 0.001)
+
+        OpenUIKitRuntime.animationTime = 0.5
+        window.tick(timestamp: 0.5)
+        XCTAssertNil(charlie.superview, "the departing cell is removed after the spring")
+        XCTAssertTrue(delta.animations.isEmpty)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 2, section: 0))?.textLabel.text, "Delta")
+    }
+
+    /// MEASURED rowanimprobe insert of Zero: the new cell is already at the
+    /// destination with opacity 1 and no CAAnimation; neighbours spring down
+    /// by one row height (Alpha from y 0 to y 62).
+    func testAutomaticInsertLeavesNewCellAtRestAndSlidesNeighbours() {
+        let (_, table, source) = makeList(["Alpha", "Bravo", "Charlie"])
+        let alpha = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        let alphaOld = alpha.frame
+
+        source.titles.insert("Zero", at: 0)
+        table.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+
+        let zero = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(zero.textLabel.text, "Zero")
+        XCTAssertEqual(zero.alpha, 1)
+        XCTAssertEqual(zero.frame.minY, alphaOld.minY, accuracy: 0.001)
+        XCTAssertNil(zero.animations.first { $0.property == .alpha },
+                     "the inserted cell does not fade")
+
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 1, section: 0)) === alpha)
+        XCTAssertEqual(alpha.frame.minY, alphaOld.minY + zero.frame.height, accuracy: 0.001)
+        XCTAssertNotNil(alpha.animations.first { $0.property == .position })
+    }
+
+    /// MEASURED TableEditor t2350: a row that the insert pushes off the
+    /// bottom stays in the hierarchy mid-flight (Juliet still in the golden
+    /// dump) instead of being retired at dest y.
+    func testInsertKeepsARowSpringingOffTheBottom() {
+        let titles = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot",
+                      "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima"]
+        let (_, table, source) = makeList(titles)
+        let leaving = table.visibleCells.max { $0.frame.minY < $1.frame.minY }!
+        let leavingText = leaving.textLabel.text
+        let oldY = leaving.frame.minY
+
+        source.titles.insert("Zero", at: 0)
+        table.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+
+        XCTAssertEqual(leaving.superview, table, "\(leavingText ?? "?") must stay while it springs off")
+        XCTAssertGreaterThan(leaving.frame.minY, oldY)
+        XCTAssertNotNil(leaving.animations.first { $0.property == .position })
+        XCTAssertFalse(table.visibleCells.contains { $0 === leaving },
+                       "off-screen dest is not in the visible map")
+    }
+
+    /// `.none` stays a snap even under the iOS cut — it was not on the
+    /// display-tick recording.
+    func testNoneStillSnapsOnIOS() {
+        let (_, table, source) = makeList(["Alpha", "Bravo", "Charlie"])
+        let charlie = table.cellForRow(at: IndexPath(row: 2, section: 0))!
+        source.titles.remove(at: 2)
+        table.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .none)
+        XCTAssertNil(charlie.superview)
+        XCTAssertEqual(table.visibleCells.count, 2)
+        XCTAssertTrue(table.visibleCells.allSatisfy { $0.animations.isEmpty })
+    }
+}

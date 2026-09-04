@@ -1,8 +1,11 @@
 // UINavigationController. Owner: viewcontroller module (M7.5 navigation).
 //
-// Container layout: navigation bar (20pt status inset + 44pt content, see
-// UINavigationBar) above a clipped content area; child VC views fill the
-// content area (autoresized).
+// Container layout: Catalyst's inline bar sits above a clipped content
+// area (opaque 64 pt). iOS 26 inline bars are a transparent overlay —
+// content fills the container and underlaps, the same geometry large-title
+// mode already used (MEASURED Forms t200, iPhone SE 2x: table frame fills
+// the window, safeAreaInsets.top 64, adjustedContentInset [64,0,0,0],
+// contentOffset (0, -64), bar zone reads the table's grouped background).
 //
 // Push transition per docs/APP_FEEL.md (0.35s, UIKit's transition curve ≈
 // easeInOut, driven through UIView.animate so frames are deterministic and
@@ -250,33 +253,55 @@ open class UINavigationController: UIViewController {
 
     // MARK: Large-title container mode (M10)
 
-    /// Frame the bar + content area for the current bar mode. Classic mode:
-    /// opaque bar above a clipped content area. Large-title mode (iOS 26):
-    /// content fills the WHOLE view and underlaps the transparent bar; the
-    /// bar overlays the top `largeTitleExpandedInset` points.
+    /// Frame the bar + content area for the current bar mode. Classic mode
+    /// (Catalyst): opaque bar above a clipped content area. Large-title mode
+    /// and the iOS cut (iOS 26.1): content fills the WHOLE view and underlaps
+    /// the bar; the child's `safeAreaInsets.top` is the bar's bottom edge.
     func updateContainerLayout() {
         guard isViewLoaded else { return }
         let v = view!
+        let w = v.bounds.width, h = v.bounds.height
         if isNavigationBarHidden {
-            contentView.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
-                                       height: v.bounds.height - toolbarHeight)
-            navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
+            contentView.frame = CGRect(x: 0, y: 0, width: w, height: h - toolbarHeight)
+            navigationBar.frame = CGRect(x: 0, y: 0, width: w,
                                          height: UINavigationBar.barHeight)
+        } else if UINavigationBar.isIOS {
+            // MEASURED 2026-09-04, Tools/oracle2/navprobe variant "barorigin",
+            // iPhone SE 2x + iPhone 16 / iOS 26.1, at rest, with and without
+            // prefersLargeTitles:
+            //   bar.frame.y = max(nav.view.safeAreaInsets.top, 10)
+            //   bar.frame.height = 54 (inline / collapsed) or 106 (large)
+            //   _UIBarBackground = [0, −y, W, y+height] (covers from y = 0)
+            //   child view fills the container; safeAreaInsets.top = y+height
+            // The 10 is a FLOOR, not an addend: window SA 0 (SE, status bar
+            // hidden) → y 10 / overlay 64 or 116; a 20 pt status bar and a
+            // 59 pt notch set y to that inset (additionalSafeAreaInsets 20/59
+            // on a zero-SA window match the real status-bar / notch samples).
+            let pad = iOSBarTop
+            let barH = navigationBar.prefersLargeTitles
+                ? navigationBar.largeTitleOverlayHeight
+                : UINavigationBar.iOSBarContentHeight
+            contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)
+            navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
         } else if navigationBar.prefersLargeTitles {
             contentView.frame = v.bounds
             navigationBar.frame = CGRect(
-                x: 0, y: 0, width: v.bounds.width,
+                x: 0, y: 0, width: w,
                 height: navigationBar.largeTitleOverlayHeight)
         } else {
             let barH = UINavigationBar.barHeight
-            contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
-                                       height: v.bounds.height - barH - toolbarHeight)
-            navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
-                                         height: barH)
+            contentView.frame = CGRect(x: 0, y: barH, width: w,
+                                       height: h - barH - toolbarHeight)
+            navigationBar.frame = CGRect(x: 0, y: 0, width: w, height: barH)
         }
-        toolbar.frame = CGRect(x: 0, y: v.bounds.height - toolbarHeight,
-                               width: v.bounds.width, height: UIToolbar.defaultHeight)
+        toolbar.frame = CGRect(x: 0, y: h - toolbarHeight,
+                               width: w, height: UIToolbar.defaultHeight)
         updateContentSafeArea()
+    }
+
+    /// iOS 26.1 bar origin: `max(safeArea.top, 10)`. See updateContainerLayout.
+    var iOSBarTop: CGFloat {
+        max(view.safeAreaInsets.top, UINavigationBar.iOSMinimumBarTop)
     }
 
     /// The bars a child underlaps are SAFE AREA, not a scroll-view inset.

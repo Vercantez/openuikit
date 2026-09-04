@@ -2315,10 +2315,15 @@ scroll view hand-off. Not shipped:
   preserves identity for a direct or pure-single begin/end move, but it has
   no animation pixels. UIKit's `performBatchUpdates` is still absent.
   `performUpdates` instead takes a stable per-index-path identity and diffs;
-  it covers animated moves and inserts, while **deletes do not animate** — a
-  row whose identity vanishes is retired immediately. Structural
-  `RowAnimation` values are accepted as visual hints, but the ordinary
-  insert/delete/reload paths rebuild without style-specific animation.
+  it covers animated moves and inserts, while **deletes through that helper
+  do not animate** — a row whose identity vanishes is retired immediately.
+  Under the iOS cut, `insertRows` / `deleteRows` with `.fade` or `.automatic`
+  run the measured TableEditor spring (duration 0.441, ζ = 1): a `.fade`
+  delete keeps the departing cell in place and springs opacity 1 → 0 while
+  neighbours slide; an `.automatic` insert places the new cell at the
+  destination with no fade and springs the rows below. Catalyst and `.none`
+  still snap. Other `RowAnimation` styles (`.left` / `.right` / `.middle`
+  / …) are still a snap — they were not on the display-tick recording.
 - Scrolling DURING an update is not handled: the animation's recorded
   endpoints are the frames computed at update time, so a re-tile triggered
   by a contentOffset change mid-flight assigns model frames the in-flight
@@ -2351,8 +2356,10 @@ scroll view hand-off. Not shipped:
   first/last row it is NOT clipped to the card's 26 pt corners.
 - No delete/reorder accessories or data-source reorder interaction; animated
   identity-diff moves/inserts arrived with `performUpdates` (see above), and
-  direct/pure-single UIKit-shaped moves are nonanimated. There is no delete
-  animation or style-specific structural `RowAnimation`, and no index titles.
+  direct/pure-single UIKit-shaped moves are nonanimated. iOS-cut
+  `insertRows`/`.automatic` and `deleteRows`/`.fade` use the measured
+  TableEditor spring; other structural `RowAnimation` styles and Catalyst
+  still snap. No index titles.
   Default anonymous title chrome is rebuilt as sections enter the viewport;
   registered/dequeued `UITableViewHeaderFooterView` instances use the
   existing reusable header-footer registry.

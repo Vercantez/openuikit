@@ -614,15 +614,16 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         XCTAssertEqual(scroll.contentOffset.y, -116)
         XCTAssertEqual(bar.largeTitleLabel!.alpha, 1)
         XCTAssertEqual(bar.titleLabel.alpha, 0)
-        XCTAssertEqual(bar.frame.height, 116)
+        XCTAssertEqual(bar.frame.origin.y, 10)
+        XCTAssertEqual(bar.frame.height, 106)
         XCTAssertEqual(bar.largeTitleLabel!.font.pointSize, 34)
 
         scroll.contentOffset = CGPoint(x: 0, y: -116 + 36)
-        XCTAssertEqual(bar.largeTitleLabel!.frame.origin.y, 67.5 - 36, accuracy: 1e-9)
+        XCTAssertEqual(bar.largeTitleLabel!.frame.origin.y, 57.5 - 36, accuracy: 1e-9)
         XCTAssertEqual(bar.largeTitleLabel!.alpha, 1)
         XCTAssertEqual(bar.titleLabel.alpha, 0)
         XCTAssertEqual(bar.largeTitleLabel!.font.pointSize, 34)
-        XCTAssertEqual(bar.frame.height, 116)
+        XCTAssertEqual(bar.frame.height, 106)
     }
 
     /// At d = 52 the bar snaps to the 64 pt overlay, the large title is
@@ -633,6 +634,19 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         XCTAssertEqual(bar.largeTitleLabel!.alpha, 0)
         XCTAssertEqual(bar.titleLabel.alpha, 1)
         XCTAssertEqual(bar.frame.height, UINavigationBar.iOSCollapsedBarHeight)
+    }
+
+    /// MEASURED 2026-09-04, suite golden `navbar_inline` (SE 2x / iOS 26.1):
+    /// `ScrollEdgeEffectView` starts at the container origin. The 72 pt
+    /// pocket is a bar subview, so it sits at y = −bar.y (= −10 when SA is 0).
+    func testIOSCollapsedPocketStartsAtContainerOrigin() {
+        let (nav, _) = makeLargeScrollNav(offset: 160)
+        let bar = nav.navigationBar
+        XCTAssertFalse(bar.pocketView.isHidden)
+        XCTAssertEqual(bar.frame.origin.y, 10)
+        XCTAssertEqual(bar.pocketView.frame,
+                       CGRect(x: 0, y: -10, width: 390,
+                              height: UINavigationBar.pocketHeight))
     }
 
     /// Zero-velocity release: d = 36 expands, d = 37 collapses
@@ -647,6 +661,79 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         scroll.contentOffset = CGPoint(x: 0, y: -116 + 37)
         nav.scrollViewDidEndDragging(scroll, willDecelerate: false)
         XCTAssertEqual(scroll.contentOffset.y, -116 + 52)
+    }
+
+    /// MEASURED 2026-09-04, navprobe.barorigin hide_sa0, iPhone SE 2x /
+    /// iOS 26.1, window safeAreaInsets.top 0: the bar sits at y 10 with
+    /// height 54 (inline) / 106 (large), the child fills the container, and
+    /// the child's safeAreaInsets.top is the overlay (64 / 116). The inline
+    /// title's HostedViewWrapper is y 11.5 (center 22) when the large title
+    /// is off, and y 26.5 (center 37, alpha 0) while it shows.
+    func testIOSBarOriginIsTenWhenSafeAreaTopIsZero() {
+        let inline = makeNav(largeTitles: false)
+        XCTAssertEqual(inline.navigationBar.frame,
+                       CGRect(x: 0, y: 10, width: 390, height: 54))
+        XCTAssertEqual(inline.contentView.frame.origin, .zero)
+        XCTAssertEqual(inline.contentView.frame.size, CGSize(width: 390, height: 700))
+        XCTAssertEqual(inline.topViewController!.view.safeAreaInsets.top, 64)
+        XCTAssertEqual(inline.navigationBar.titleLabel.center.y, 22, accuracy: 0.01)
+        XCTAssertEqual(inline.navigationBar.titleLabel.alpha, 1)
+
+        let large = makeNav(largeTitles: true)
+        XCTAssertEqual(large.navigationBar.frame,
+                       CGRect(x: 0, y: 10, width: 390, height: 106))
+        XCTAssertEqual(large.topViewController!.view.safeAreaInsets.top, 116)
+        XCTAssertEqual(large.navigationBar.largeTitleLabel!.frame.origin.y, 57.5,
+                       accuracy: 1e-9)
+        XCTAssertEqual(large.navigationBar.titleLabel.center.y, 37, accuracy: 0.01)
+        XCTAssertEqual(large.navigationBar.titleLabel.alpha, 0)
+    }
+
+    /// Same probe, hide_add59 / iPhone 16 window SA 59: y follows the inset
+    /// (not 10 + inset). Overlay = y + height = 113 inline, 165 large.
+    func testIOSBarOriginFollowsSafeAreaTopAboveTheFloor() {
+        let nav = makeNav(largeTitles: false)
+        nav.view._setSafeAreaInsets(UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0))
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 59, width: 390, height: 54))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 113)
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.bottom, 34)
+
+        nav.navigationBar.prefersLargeTitles = true
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 59, width: 390, height: 106))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 165)
+    }
+
+    /// A 20 pt status bar (SE, status bar shown; also additionalSafeAreaInsets
+    /// 20 on a zero-SA window) is the same rule: y = 20, overlay 74 / 126.
+    func testIOSBarOriginMatchesAStatusBarSafeArea() {
+        let nav = makeNav(largeTitles: true)
+        nav.view._setSafeAreaInsets(UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0))
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 20, width: 390, height: 106))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 126)
+        XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 37, accuracy: 0.01)
+    }
+
+    /// Forms t200, iPhone SE 2x, iOS 26.1: an inline bar with no explicit
+    /// appearance is transparent at rest, and the child fills the container
+    /// (underlaps), reporting safeAreaInsets.top = 64. Catalyst keeps the
+    /// opaque bar above a clipped content area (`testClassicModeUsesMeasuredBarZone`).
+    func testIOSInlineBarIsTransparentAndContentUnderlaps() {
+        let nav = makeNav(largeTitles: false)
+        XCTAssertNil(nav.navigationBar.backgroundColor)
+        XCTAssertEqual(nav.navigationBar.standardAppearance._configuration, .default)
+        XCTAssertEqual(nav.contentView.frame,
+                       CGRect(x: 0, y: 0, width: 390, height: 700))
+        XCTAssertEqual(nav.topViewController!.view.frame,
+                       CGRect(x: 0, y: 0, width: 390, height: 700))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 64)
+        XCTAssertEqual(nav.navigationBar.frame.height, 54)   // bar-origin probe: 54 at y 10
+        XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 22, accuracy: 1e-9)   // bar-local 11.5 + 10.5
     }
 
     /// Catalyst keeps the M7.5 cross-fade: no groups, and the old title

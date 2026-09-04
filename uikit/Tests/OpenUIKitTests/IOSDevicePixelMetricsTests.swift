@@ -40,7 +40,10 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UITableView.headerHeight(style: .insetGrouped, firstSection: false, compact: true), 38, accuracy: 1e-9)
         XCTAssertEqual(UITableView.untitledGroupedFooterHeight, 17.5, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.subtitleRowHeight, 69.5, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.plainSubtitleRowHeight, 62, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.subtitlePrimaryY, 15.5, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.plainSubtitlePrimaryY, 9, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.plainSubtitleDetailY, 32.5, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.disclosureSize.width, 10.5, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.checkmarkSize.height, 18, accuracy: 1e-9)
         XCTAssertEqual(UITableView.valueCellPadding, 0)
@@ -131,10 +134,13 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
 
     func testLargeTitleMetricsUnderTheIOSCut() {
         XCTAssertEqual(UINavigationBar.largeTitleX, 16)
-        XCTAssertEqual(UINavigationBar.largeTitleLabelY, 67.5)
+        XCTAssertEqual(UINavigationBar.largeTitleLabelY, 57.5)
         XCTAssertEqual(UINavigationBar.largeTitleLabelHeight, 41)
         XCTAssertEqual(UINavigationBar.iOSSnapCollapseDistance, 36)
-        XCTAssertEqual(UINavigationBar.iOSCollapsedBarHeight, 64)
+        XCTAssertEqual(UINavigationBar.iOSCollapsedBarHeight, 54)
+        XCTAssertEqual(UINavigationBar.iOSBarContentHeight, 54)
+        XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight, 106)
+        XCTAssertEqual(UINavigationBar.iOSMinimumBarTop, 10)
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
             XCTAssertEqual(UINavigationBar.largeTitleX, 20)

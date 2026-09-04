@@ -14,6 +14,7 @@
 	<key>UIDeviceFamily</key><array><integer>1</integer></array>
 	<!-- Modern (non-letterboxed) layout without a storyboard. -->
 	<key>UILaunchScreen</key><dict/>
+	<key>UIViewControllerBasedStatusBarAppearance</key><true/>
 	<!-- Legacy (non-scene) lifecycle: no UIApplicationSceneManifest. -->
 </dict>
 </plist>

@@ -44,8 +44,13 @@ let appName = ProcessInfo.processInfo.environment["CONFPROBE_APP"] ?? "App"
 func round3(_ v: CGFloat) -> Double {
     // JSONSerialization throws on NaN/inf (it aborted SimScene once the dump
     // carried layer facts); non-finite values are written as -1.
-    guard v.isFinite else { return -1 }
-    return (Double(v) * 1000).rounded() / 1000
+    // A finite but enormous intrinsic (UIView.noIntrinsicMetric is -1, but some
+    // private chrome reports CGFloat.greatestFiniteMagnitude) overflows the
+    // 1000× rounding to +inf, which is the same crash — Forms' UIDatePicker /
+    // UISlider / UIStepper subviews hit that on the first capture.
+    guard v.isFinite, abs(Double(v)) < 1_000_000 else { return -1 }
+    let r = (Double(v) * 1000).rounded() / 1000
+    return r.isFinite ? r : -1
 }
 
 func rectArr(_ r: CGRect) -> [Double] {
@@ -103,6 +108,18 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
                               i.height == UIView.noIntrinsicMetric ? -1 : round3(i.height)]
     }
     if let sw = v as? UISwitch { entry["isOn"] = sw.isOn }
+    if let tf = v as? UITextField {
+        entry["isEditing"] = tf.isEditing
+    }
+    if let tv = v as? UITextView {
+        if let t = tv.text { entry["text"] = t }
+        entry["isEditing"] = tv.isFirstResponder
+    }
+    if let sl = v as? UISlider { entry["value"] = round3(CGFloat(sl.value)) }
+    if let st = v as? UIStepper { entry["value"] = round3(CGFloat(st.value)) }
+    if let sg = v as? UISegmentedControl {
+        entry["selectedSegmentIndex"] = sg.selectedSegmentIndex
+    }
     if let sv = v as? UIScrollView {
         entry["contentOffset"] = [round3(sv.contentOffset.x), round3(sv.contentOffset.y)]
         entry["contentSize"] = [round3(sv.contentSize.width), round3(sv.contentSize.height)]
@@ -227,7 +244,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                                           round3(sa.bottom), round3(sa.right)]],
             "views": views,
         ]
-        let data = try! JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+        let data: Data
+        do {
+            data = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+        } catch {
+            print("confprobe: JSON dump failed at t=\(t): \(error)")
+            try? "json failed: \(error)".write(toFile: docsDir + "/DONE",
+                                               atomically: true, encoding: .utf8)
+            return
+        }
         try! data.write(to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).layout.json"))
         print("captured \(appName).\(suffix).png")
     }
