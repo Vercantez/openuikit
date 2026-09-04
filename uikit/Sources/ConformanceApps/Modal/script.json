@@ -1,0 +1,17 @@
+{
+  "comment": "Modal conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. The medium sheet has a mid-flight capture at +0.2 s (t=0.60). Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app Modal` (the port).",
+  "app": "Modal",
+  "events": [
+    { "t": 0.40, "action": "sheet-medium" },
+    { "t": 1.50, "action": "dismiss" },
+    { "t": 2.40, "action": "sheet-large" },
+    { "t": 3.50, "action": "dismiss" },
+    { "t": 4.40, "action": "alert" },
+    { "t": 5.50, "action": "dismiss" },
+    { "t": 6.40, "action": "action-sheet" },
+    { "t": 7.50, "action": "dismiss" },
+    { "t": 8.40, "action": "popover" },
+    { "t": 9.50, "action": "dismiss" }
+  ],
+  "captures": [0.20, 0.60, 1.20, 2.10, 3.20, 4.10, 5.20, 6.10, 7.20, 8.10, 9.20, 10.10]
+}

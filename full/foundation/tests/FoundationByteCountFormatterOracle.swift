@@ -83,3 +83,13 @@ emit(
         ByteCountFormatter.Units().rawValue,
     ]
 )
+
+// Zero with nonnumeric formatting OFF and every unit allowed: Darwin says
+// "0 bytes" (Pocket Casts' storage screen placeholder on iOS 26.1, the
+// realapp_storage_light golden), not the "0 KB" it says when KB is the only
+// allowed unit or the "Zero KB" it says with nonnumeric formatting on.
+let numericAll = ByteCountFormatter()
+numericAll.allowsNonnumericFormatting = false
+for value in [Int64(-1_024), 0, 1, 1_024, 1_500_000] {
+    emit("numeric-all.\(value)", numericAll.string(fromByteCount: value))
+}

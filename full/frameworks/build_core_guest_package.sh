@@ -410,7 +410,7 @@ EXPECTED_HOST_BLOCKS_RUNTIME_SHA256=47a4f774ed1f4c094f8510c50d0006fde89a837ae785
 EXPECTED_FOUNDATION_CACHE_ORACLE_SHA256=9a3479d559d4ba6c979868e6f34254547b13158c087319d78b72f177f88749a3
 EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256=0dd1fab4b09c76dfe6ab6fc07ac93d9350cf3bb19d31c7d8524c2df8e59e441c
 EXPECTED_FOUNDATION_BYTE_COUNT_ORACLE_SHA256=c5565bd04a7451f3ef828e3cc928718ce095fa5d2bdf2b41d8c40541e15f4616
-EXPECTED_FOUNDATION_BYTE_COUNT_GOLDEN_SHA256=1390be735b11d92409e81bb9e04115502bed76bd830daa440fde7377cb4773c0
+EXPECTED_FOUNDATION_BYTE_COUNT_GOLDEN_SHA256=04b140256b7090a59bfef77354fbcf202ec7085b2191f43ff7201f601ea17270
 
 usage() {
     cat <<'EOF'
@@ -6077,9 +6077,9 @@ cmp "$STAGE/attestation/foundation-byte-count-runtime.log" \
 foundation_byte_count_rows=$(wc -l \
     < "$STAGE/attestation/foundation-byte-count-runtime.log" \
     | tr -d '[:space:]')
-[ "$foundation_byte_count_rows" -eq 86 ] \
-    || die "Foundation byte-count runtime row count $foundation_byte_count_rows, expected 86"
-echo 'FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact'
+[ "$foundation_byte_count_rows" -eq 91 ] \
+    || die "Foundation byte-count runtime row count $foundation_byte_count_rows, expected 91"
+echo 'FOUNDATION_BYTE_COUNT_MACHO_OK rows=91 apple-differential=exact'
 
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
@@ -6360,7 +6360,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-cache\toracle=%s\tapple-golden=%s\trows=43\n' \
         "$(hash_file "$FOUNDATION_CACHE_ORACLE")" \
         "$(hash_file "$FOUNDATION_CACHE_GOLDEN")"
-    printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
+    printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=91\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
     printf 'frontier-frameworks\tframeworks=33\tsources=38\tinputs=132\n'

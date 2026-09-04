@@ -1,6 +1,6 @@
 {
- "head": "5398ac1c",
- "date": "2026-09-04T16:56Z",
+ "head": "2ab75364",
+ "date": "2026-09-04T19:01Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -11,41 +11,31 @@
  },
  "rows": [
   {
-   "scene": "NavFlow:t4800",
-   "category": "conformance",
-   "score": 88.388,
-   "blob": 77.5,
-   "layout_issues": 12,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "NavFlow:t200",
-   "category": "conformance",
-   "score": 89.252,
-   "blob": 77.5,
-   "layout_issues": 12,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "NavFlow:t2100",
-   "category": "conformance",
-   "score": 89.253,
-   "blob": 77.5,
-   "layout_issues": 12,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
    "scene": "NavFlow:t1200",
    "category": "conformance",
    "score": 93.007,
    "blob": 74.0,
-   "layout_issues": 16,
+   "layout_issues": 4,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t2350",
+   "category": "conformance",
+   "score": 94.637,
+   "blob": 14.2,
+   "layout_issues": 0,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t1350",
+   "category": "conformance",
+   "score": 95.952,
+   "blob": 32.8,
+   "layout_issues": 0,
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -91,11 +81,11 @@
    "status": "pass"
   },
   {
-   "scene": "NavFlow:t3000",
+   "scene": "NavFlow:t4800",
    "category": "conformance",
-   "score": 97.734,
-   "blob": 98.2,
-   "layout_issues": 3,
+   "score": 97.822,
+   "blob": 6.2,
+   "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -111,6 +101,16 @@
    "status": "pass"
   },
   {
+   "scene": "Forms:t3900",
+   "category": "conformance",
+   "score": 98.189,
+   "blob": 42.5,
+   "layout_issues": 6,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "attrtext_underline_strike",
    "category": "text",
    "score": 98.194,
@@ -118,6 +118,36 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t4800",
+   "category": "conformance",
+   "score": 98.196,
+   "blob": 42.5,
+   "layout_issues": 6,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t3000",
+   "category": "conformance",
+   "score": 98.2,
+   "blob": 96.5,
+   "layout_issues": 2,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t5700",
+   "category": "conformance",
+   "score": 98.232,
+   "blob": 17.8,
+   "layout_issues": 6,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -151,6 +181,16 @@
    "status": "pass"
   },
   {
+   "scene": "Forms:t3000",
+   "category": "conformance",
+   "score": 98.433,
+   "blob": 42.5,
+   "layout_issues": 6,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "button_configurations_2x",
    "category": "control",
    "score": 98.437,
@@ -163,9 +203,9 @@
   {
    "scene": "NavFlow:t3900",
    "category": "conformance",
-   "score": 98.489,
-   "blob": 100.0,
-   "layout_issues": 3,
+   "score": 98.482,
+   "blob": 97.5,
+   "layout_issues": 2,
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -241,6 +281,16 @@
    "status": "pass"
   },
   {
+   "scene": "Forms:t1200",
+   "category": "conformance",
+   "score": 98.716,
+   "blob": 40.5,
+   "layout_issues": 5,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "deep_mixed",
    "category": "control",
    "score": 98.723,
@@ -251,6 +301,16 @@
    "status": "pass"
   },
   {
+   "scene": "Forms:t200",
+   "category": "conformance",
+   "score": 98.731,
+   "blob": 17.8,
+   "layout_issues": 5,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "imageview_modes",
    "category": "control",
    "score": 98.769,
@@ -258,6 +318,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t2100",
+   "category": "conformance",
+   "score": 98.783,
+   "blob": 17.8,
+   "layout_issues": 6,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -281,6 +351,26 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor:t3800",
+   "category": "conformance",
+   "score": 98.96,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t2900",
+   "category": "conformance",
+   "score": 98.971,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "textview_basic",
    "category": "control",
    "score": 98.992,
@@ -288,6 +378,26 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t900",
+   "category": "conformance",
+   "score": 98.992,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t1900",
+   "category": "conformance",
+   "score": 98.992,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -318,6 +428,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t200",
+   "category": "conformance",
+   "score": 99.057,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -562,6 +682,16 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor:t4800",
+   "category": "conformance",
+   "score": 99.561,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "searchbar_text_clear",
    "category": "control",
    "score": 99.584,
@@ -576,6 +706,26 @@
    "category": "chrome",
    "score": 99.595,
    "blob": 3.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t200",
+   "category": "conformance",
+   "score": 99.624,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t2100",
+   "category": "conformance",
+   "score": 99.624,
+   "blob": 6.2,
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,

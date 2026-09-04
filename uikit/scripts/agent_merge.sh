@@ -18,11 +18,20 @@
 set -e
 cd "$(dirname "$0")/../.."          # monorepo root
 ROOT=$(pwd)
-BR=${1:?usage: agent_merge.sh <branch>}
+NAME=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
-git rev-parse --verify -q "$BR" >/dev/null || BR="origin/$BR"
-git rev-parse --verify -q "$BR" >/dev/null || { echo "no such branch: $1" >&2; exit 2 }
-echo "==> $BR: $(git log --oneline -1 "$BR")"
+# Resolve the agent branch FIRST: `cursor-agent --worktree <name>` also leaves
+# a local base branch called <name> at the commit the agent started from —
+# already in main — and a bare-name lookup once matched that, checked main
+# against itself and "merged" nothing (false green #439).
+BR=""
+for cand in "agent/$NAME" "$NAME" "origin/agent/$NAME" "origin/$NAME"; do
+  git rev-parse --verify -q "$cand" >/dev/null && { BR=$cand; break; }
+done
+[[ -n "$BR" ]] || { echo "no such branch: $NAME" >&2; exit 2; }
+ADDS=$(git rev-list --count main.."$BR")
+echo "==> $BR: $(git log --oneline -1 "$BR") — $ADDS commit(s) over main"
+[[ "$ADDS" -gt 0 ]] || { echo "REFUSED: $BR adds no commits over main (stale base branch?)"; exit 3; }
 echo "==> files changed vs main:"
 git diff --stat main..."$BR" | tail -15
 if git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -q .; then
@@ -35,17 +44,24 @@ if git diff --name-only main..."$BR" | grep -qE 'Package\.resolved$|\.app/'; the
   echo "REFUSED: the branch commits Package.resolved or a probe .app bundle"; exit 3
 fi
 rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks the merge
+# The Linux-hosted arm64-apple-macos GUEST route builds OpenUIKit against the
+# port's own Foundation (no DateFormatter / NumberFormatter / NSAttributedString
+# ...); the Docker check below uses corelibs and cannot see that. Refuse the
+# common traps in changed sources; the arm64/x86 authorities are the real check.
+if git diff main..."$BR" -- 'uikit/Sources/*.swift' | grep -E '^\+' | grep -qE 'DateFormatter|NumberFormatter|DateComponentsFormatter|ISO8601DateFormatter|NSRegularExpression|JSONSerialization'; then
+  echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
+fi
 
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
 trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
-git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4 }
+git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 cd "$WT/uikit"
 echo "==> macOS build + Catalyst gate"
 swift build -c release --product openrender 2>&1 | grep -E 'error|Build of' | tail -3
 rm -rf /tmp/agent_merge_gate; ./.build/release/openrender render /tmp/agent_merge_gate fixtures/scenes/*.json >/dev/null
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -E '^FAIL|scenes pass' | tail -5
-python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5 }
+python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5; }
 echo "==> real-app screens"
 rm -rf /tmp/agent_merge_app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/agent_merge_app >/dev/null
 python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out /tmp/agent_merge_app --scale 3 2>&1 | grep pixels | cut -c1-80
@@ -59,10 +75,10 @@ for name, floor in floors.items():
 PY
 echo "==> Linux build"
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender 2>&1 | grep -E "error|Build of" | tail -3' | tail -3
-docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1' || { echo "LINUX BUILD RED"; exit 7 }
+docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1' || { echo "LINUX BUILD RED"; exit 7; }
 cd "$WT" && git merge --abort 2>/dev/null || true
 cd "$ROOT"
-[[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0 }
+[[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0; }
 
 echo "==> merging into main"
 git checkout -q main && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" "$BR"
@@ -70,7 +86,7 @@ OLD=$(grep -o 'EXPECTED_INREPO_UIKIT_TREE=[0-9a-f]*' scripts/vendor_pins.sh | cu
 sed -i "s/$OLD/$NEW/" scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 python3 scripts/env/test_contract.py 2>&1 | tail -1
 rm -f uikit/Package.resolved uikit/1
-bash scripts/test_vendor_tree.sh 2>&1 | grep -q VENDOR_TREE_ATTESTATION_OK || { echo "VENDOR TREE ATTESTATION FAILED — fix before pushing"; exit 8 }
+bash scripts/test_vendor_tree.sh 2>&1 | grep -q VENDOR_TREE_ATTESTATION_OK || { echo "VENDOR TREE ATTESTATION FAILED — fix before pushing"; exit 8; }
 git add scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 git commit -q -m "Advance the uikit vendor pin and env contract after merging $BR
 
