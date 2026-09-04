@@ -42,7 +42,8 @@ the vendor pin. Do NOT touch `scripts/vendor_pins.sh`, `env/`, or
    - the whole iOS suite against fresh goldens once at the end:
      `scripts/ios_suite.sh /tmp/suite-$AGENT` (~12 min; it must not drop
      any scene that passed before your change — `git stash` to compare)
-   - the Catalyst gate, which must stay 109/109:
+   - the Catalyst gate, which must not lose a scene (its total grows as
+     scenes are added; `git stash` to compare when in doubt):
      `swift build -c release --product openrender && ./.build/release/openrender render /tmp/gate-$AGENT fixtures/scenes/*.json && python3 Tools/compare/compare.py --out /tmp/gate-$AGENT | tail -1`
    - the real-app screens, which must not drop:
      `OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/app-$AGENT && python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out /tmp/app-$AGENT --scale 3`
@@ -71,7 +72,10 @@ the vendor pin. Do NOT touch `scripts/vendor_pins.sh`, `env/`, or
 - One SimScene process per sheet/alert scene; capture scale-2 scenes on
   the SE; compare simulator goldens with `--golden-straight-alpha`. The
   capture hazards in `docs/ORACLE_FLOW.md` are all real and all measured.
-- Do not commit files outside `uikit/` and do not commit `.env`,
+- Do not touch anything outside `uikit/` in your worktree — do not delete
+  sibling directories to speed a build, do not run `scripts/vendor_pins.sh`
+  or `scripts/env/*`, do not edit `env/contract.json`. A branch that changes
+  or deletes files outside `uikit/` is refused unread. Do not commit `.env`,
   `Package.resolved`, probe `.app` bundles or anything under `/tmp`.
 - Commit messages: what was measured, the rule, the numbers before/after.
   End every commit message with a `Co-Authored-By:` line naming the model
