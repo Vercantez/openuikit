@@ -249,7 +249,15 @@ open class UITableView: UIScrollView {
         // The iOS margin above depends on the window's width.
         if UITableView.isIOSChrome, _insetGroupedSideInsetOverride == nil { setNeedsMetrics() }
     }
-    var groupedHeaderLabelX: CGFloat { insetGroupedSideInset + 16 }
+    var groupedHeaderLabelX: CGFloat {
+        // MEASURED Forms t200, iPhone SE 2x, iOS 26.1: a `.grouped` table
+        // (no card — cells are full-bleed 375) puts the section header
+        // label at x = 16, the window's system margin. `insetGroupedSideInset
+        // + 16` is the insetGrouped reading (card at 16, header at 32) and
+        // stays the rule for `.insetGrouped` / Catalyst.
+        if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
+        return insetGroupedSideInset + 16
+    }
 
     // MARK: Public configuration
 
