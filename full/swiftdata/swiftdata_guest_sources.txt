@@ -1,2 +1,6 @@
 full/swiftdata/SwiftData.swift
+full/swiftdata/SwiftDataActor.swift
+full/swiftdata/SwiftDataHistory.swift
+full/swiftdata/SwiftDataSchema.swift
+full/swiftdata/SwiftDataStore.swift
 full/swiftdata/SwiftDataSwiftUI.swift
