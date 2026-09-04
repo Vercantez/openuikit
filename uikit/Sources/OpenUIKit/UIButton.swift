@@ -336,7 +336,14 @@ open class UIButton: UIControl {
     /// Legacy plain buttons ignore the constraint entirely (oracle:
     /// sizeThatFits(200) of a 211pt title reports 211).
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let title = _titleLabel.intrinsicContentSize
+        var title = _titleLabel.intrinsicContentSize
+        // iOS cut, MEASURED 2026-09-04 (scripts/ios_suite.sh button_states,
+        // iOS 26.1): a legacy button's title box is the font's lineHeight
+        // rounded up to a WHOLE point (11 pt -> 14, 13 -> 16, 17 -> 21,
+        // 24 -> 29), unlike a UILabel's pixel-grid ceiling (20.333 for 17).
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            title.height = _titleLabel.font.lineHeight.rounded(.up)
+        }
         let titleSize = (_titleLabel.text?.isEmpty == false) ? title : .zero
         let imageSize = currentImage?.size ?? .zero
         // The image+title rect oracle floors the title's half-point

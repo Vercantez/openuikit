@@ -34,8 +34,9 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   echo "==> real iOS capture ($GOLD)"
   rm -rf "$GOLD"
   zsh scripts/render_sim_scenes.sh "$GOLD" "${scenes[@]}" | tail -1
-  # The simulator's renderer tags Display P3 unless the probe asks for the
-  # standard range; convert anything still tagged so the diff is sRGB vs sRGB.
+  # The probe captures in the standard (sRGB) range with STRAIGHT alpha, so
+  # compare.py reads the goldens like openrender's own PNGs; a P3-tagged
+  # capture (older SimScene builds) is converted so the diff is sRGB vs sRGB.
   python3 - "$GOLD" <<'EOF'
 import glob, io, sys
 from PIL import Image, ImageCms
@@ -59,7 +60,7 @@ swift build -c release --product openrender >/dev/null
 rm -rf "$OUT"
 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender render "$OUT" "${scenes[@]}" >/dev/null
 echo "==> compare"
-python3 Tools/compare/compare.py --golden-premultiplied --golden "$GOLD" --out "$OUT" "${names[@]}" > "$WORK/compare.txt" 2>&1 || true
+python3 Tools/compare/compare.py --golden "$GOLD" --out "$OUT" "${names[@]}" > "$WORK/compare.txt" 2>&1 || true
 grep -E 'scenes pass' "$WORK/compare.txt"
 grep '^FAIL' "$WORK/compare.txt" | sort -t= -k2 -n | head -25
 echo "full report: $WORK/compare.txt"

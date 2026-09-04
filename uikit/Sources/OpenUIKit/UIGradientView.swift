@@ -108,7 +108,19 @@ enum _CAGradientColorSpace {
     /// sRGB-lerp gradient contract). 24 subdivisions per segment.
     static func densify(colors: [CGColor], locations: [CGFloat])
         -> ([CGColor], [CGFloat]) {
-        let enc = colors.map { encode($0) }
+        // MEASURED 2026-09-04 (scripts/ios_suite.sh, gradient_basic on the
+        // iOS 26.1 simulator): real iOS interpolates CAGradientLayer stops
+        // LINEARLY IN sRGB — every sample of three gradients matched the
+        // plain sRGB lerp within 1/255 (e.g. #E03131→#1971C2 at t=0.5 is
+        // (124, 81, 122); the Generic-RGB model gives (138, 79, 129)). The
+        // Generic-RGB path below is Catalyst's, kept for the Catalyst cut.
+        let ios = OpenUIKitRuntime.systemFontCut == .iOS
+        let enc = colors.map { c -> (CGFloat, CGFloat, CGFloat) in
+            ios ? (c.red, c.green, c.blue) : encode(c)
+        }
+        func decodeStop(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, alpha: CGFloat) -> CGColor {
+            ios ? CGColor(red: r, green: g, blue: b, alpha: alpha) : decode(r, g, b, alpha: alpha)
+        }
         var outColors: [CGColor] = [colors[0]]
         var outLocs: [CGFloat] = [locations[0]]
         let sub = 24
@@ -122,10 +134,10 @@ enum _CAGradientColorSpace {
             if !flat {
                 for k in 1..<sub {
                     let u = CGFloat(k) / CGFloat(sub)
-                    outColors.append(decode(r0 + (r1 - r0) * u,
-                                            g0 + (g1 - g0) * u,
-                                            b0 + (b1 - b0) * u,
-                                            alpha: a0 + (a1 - a0) * u))
+                    outColors.append(decodeStop(r0 + (r1 - r0) * u,
+                                                g0 + (g1 - g0) * u,
+                                                b0 + (b1 - b0) * u,
+                                                alpha: a0 + (a1 - a0) * u))
                     outLocs.append(l0 + (l1 - l0) * u)
                 }
             }

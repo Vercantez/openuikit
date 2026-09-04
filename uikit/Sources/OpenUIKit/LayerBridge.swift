@@ -827,13 +827,23 @@ public enum LayerBridge {
         } else {
             locs = (0..<n).map { QZFloat($0) / QZFloat(n - 1) }
         }
+        // Quartz interpolates stops in CA's Generic RGB (Catalyst's rule).
+        // Under the iOS cut the stops are densified in plain sRGB first
+        // (see _CAGradientColorSpace.densify) so the per-segment Generic
+        // RGB lerp collapses to the sRGB-linear ramp real iOS draws.
+        var stops = resolved
+        var stopLocs = locs.map { CGFloat($0) }
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            (stops, stopLocs) = _CAGradientColorSpace.densify(colors: resolved, locations: stopLocs)
+            locs = stopLocs.map { QZFloat($0) }
+        }
         var rgba = [QZFloat]()
-        rgba.reserveCapacity(n * 4)
-        for c in resolved {
+        rgba.reserveCapacity(stops.count * 4)
+        for c in stops {
             rgba.append(QZFloat(c.red)); rgba.append(QZFloat(c.green))
             rgba.append(QZFloat(c.blue)); rgba.append(QZFloat(c.alpha))
         }
-        QZGradientLayerSetColors(l, &rgba, &locs, Int32(n))
+        QZGradientLayerSetColors(l, &rgba, &locs, Int32(stops.count))
         QZGradientLayerSetStartPoint(l, QZPoint(x: view.startPoint.x,
                                                 y: view.startPoint.y))
         QZGradientLayerSetEndPoint(l, QZPoint(x: view.endPoint.x,
@@ -850,13 +860,19 @@ public enum LayerBridge {
         } else {
             locs = (0..<n).map { QZFloat($0) / QZFloat(n - 1) }
         }
+        var stops = colors
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            var stopLocs = locs.map { CGFloat($0) }
+            (stops, stopLocs) = _CAGradientColorSpace.densify(colors: colors, locations: stopLocs)
+            locs = stopLocs.map { QZFloat($0) }
+        }
         var rgba = [QZFloat]()
-        rgba.reserveCapacity(n * 4)
-        for color in colors {
+        rgba.reserveCapacity(stops.count * 4)
+        for color in stops {
             rgba.append(QZFloat(color.red)); rgba.append(QZFloat(color.green))
             rgba.append(QZFloat(color.blue)); rgba.append(QZFloat(color.alpha))
         }
-        QZGradientLayerSetColors(l, &rgba, &locs, Int32(n))
+        QZGradientLayerSetColors(l, &rgba, &locs, Int32(stops.count))
         QZGradientLayerSetStartPoint(l, QZPoint(x: layer.startPoint.x,
                                                 y: layer.startPoint.y))
         QZGradientLayerSetEndPoint(l, QZPoint(x: layer.endPoint.x,

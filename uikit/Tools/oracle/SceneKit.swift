@@ -1243,6 +1243,41 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
         let s = v.sizeThatFits(CGSize(width: 200, height: CGFloat.greatestFiniteMagnitude))
         entry["sizeThatFits200"] = [round3(s.width), round3(s.height)]
     }
+    // Facts a frame cannot carry (compare.py ignores keys it does not
+    // know): a shifted bounds origin moves every child visually, a hidden
+    // or transparent view draws nothing, and a background/corner radius
+    // says what a private wrapper (iOS 26 list cells) actually paints.
+    if v.bounds.origin != .zero {
+        entry["boundsOrigin"] = [round3(v.bounds.origin.x), round3(v.bounds.origin.y)]
+    }
+    if v.transform != .identity {
+        let t = v.transform
+        entry["transform"] = [round3(t.a), round3(t.b), round3(t.c), round3(t.d), round3(t.tx), round3(t.ty)]
+    }
+    if let pl = v.layer.presentation(), pl.frame != v.layer.frame {
+        entry["presentationFrame"] = [round3(pl.frame.origin.x), round3(pl.frame.origin.y),
+                                      round3(pl.frame.width), round3(pl.frame.height)]
+    }
+    if v.layer.sublayers?.count ?? 0 > v.subviews.count {
+        entry["extraSublayers"] = (v.layer.sublayers ?? []).filter { $0.delegate == nil }.map {
+            ["class": String(describing: type(of: $0)),
+             "frame": [round3($0.frame.origin.x), round3($0.frame.origin.y), round3($0.frame.width), round3($0.frame.height)],
+             "cornerRadius": round3($0.cornerRadius)] as JSON
+        }
+    }
+    if v.isHidden { entry["hidden"] = true }
+    if v.alpha != 1 { entry["alpha"] = round3(v.alpha) }
+    if v.layer.cornerRadius != 0 { entry["cornerRadius"] = round3(v.layer.cornerRadius) }
+    if let bg = v.backgroundColor {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        if bg.getRed(&r, green: &g, blue: &b, alpha: &a), a > 0 {
+            entry["bg"] = [round3(r), round3(g), round3(b), round3(a)]
+        }
+    }
+    if let l = v as? UILabel, let t = l.text { entry["text"] = t }
+    if let l = v as? UILabel {
+        entry["font"] = [l.font.fontName, round3(l.font.pointSize)]
+    }
     out.append(entry)
     for (i, sub) in v.subviews.enumerated() {
         dumpLayout(sub, path: path.isEmpty ? "\(i)" : "\(path).\(i)", into: &out)

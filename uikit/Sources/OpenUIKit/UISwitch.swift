@@ -37,18 +37,22 @@ open class UISwitch: UIControl {
             : UIColor(white: 0, alpha: 66.0 / 255.0)
     })
 
-    /// Default on-track fill for the iOS cut. MEASURED 2026-09-04
-    /// (realappprobe, iPhone 16 / iOS 26.1): the on track view is
-    /// systemGreen (52, 199, 89) under a same-green sheen image and the
-    /// liquid-glass thumb, and the RENDERED track pixels are #65C466 in light
-    /// and #68CE67 in dark — the composite is what the golden shows, so the
-    /// composite is what the port paints. Catalyst's default stays
-    /// systemBlue (measured golden/switch_onoff).
-    static let iOSDefaultOnColor = UIColor(dynamicProvider: { traits in
-        traits.userInterfaceStyle == .dark
-            ? UIColor(red: 0x68 / 255.0, green: 0xCE / 255.0, blue: 0x67 / 255.0, alpha: 1)
-            : UIColor(red: 0x65 / 255.0, green: 0xC4 / 255.0, blue: 0x66 / 255.0, alpha: 1)
-    })
+    /// Default on-track fill for the iOS cut: systemGreen, dynamic. MEASURED
+    /// 2026-09-04 on the iOS 26.1 simulator (scripts/ios_suite.sh
+    /// switch_dark, sRGB capture): the rendered on track is exactly
+    /// (48, 209, 88) in dark and (52, 199, 89) in light — the sheen image
+    /// and liquid-glass thumb do not lighten it. (An earlier reading of
+    /// #65C466 came from a Display-P3-tagged capture read raw.) Catalyst's
+    /// default stays systemBlue (measured golden/switch_onoff).
+    static let iOSDefaultOnColor: UIColor = .systemGreen
+    /// Off-state track for the iOS cut: tertiaryLabel, dynamic. MEASURED
+    /// (same capture): dark off track (70, 70, 73) over black =
+    /// (235, 235, 245) @ 0.3; the realapp dump's off view is (60, 60, 67) @
+    /// 0.298 in light. Catalyst's stays `offTrackColor`.
+    static let iOSOffTrackColor: UIColor = .tertiaryLabel
+    var effectiveOffColor: UIColor {
+        OpenUIKitRuntime.systemFontCut == .iOS ? UISwitch.iOSOffTrackColor : UISwitch.offTrackColor
+    }
     /// `onTintColor`, or the platform's default on fill.
     var effectiveOnColor: UIColor {
         if let c = onTintColor { return c }
@@ -209,7 +213,7 @@ open class UISwitch: UIControl {
                                      : UISwitch.offTrackDuration
             if elapsed >= 0, elapsed < trackDur {
                 let onColor = effectiveOnColor.resolvedCGColor(with: traits)
-                let offColor = UISwitch.offTrackColor.resolvedCGColor(with: traits)
+                let offColor = effectiveOffColor.resolvedCGColor(with: traits)
                 // Track: off capsule + on-color plateaus (left/right of the
                 // thumb) at the golden-fitted coverages.
                 let omega = turningOn ? UISwitch.onTrackSpringOmega
@@ -257,7 +261,7 @@ open class UISwitch: UIControl {
         // Static state (or settled animation): the original exact drawing.
         let trackColor: CGColor = isOn
             ? effectiveOnColor.resolvedCGColor(with: traits)
-            : UISwitch.offTrackColor.resolvedCGColor(with: traits)
+            : effectiveOffColor.resolvedCGColor(with: traits)
         canvas.fill(trackPath, color: trackColor)
 
         let x = isOn ? onX : offX

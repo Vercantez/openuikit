@@ -370,6 +370,7 @@ goldens stay the regression gate (109/109); this is the fidelity measurement.
 |---|---|---|
 | 2026-09-04 | 17/98 | first capture; Display P3 captures read raw, Catalyst palette |
 | 2026-09-04 | 31/98 | sRGB captures, iOS palette; worst families: gradients (56–85), grouped table views (78–94), text (88–95), group-opacity shadow (76), `corner_radius` (blob 3889 pt²) |
+| 2026-09-04 | 37/98 | gradients interpolate in plain sRGB on iOS (Generic RGB is Catalyst's); switch on = systemGreen / off = tertiaryLabel; legacy button title box = whole-point ceil of lineHeight; simulator captures are standard-range straight alpha. Left: text rasterization (~20 scenes, iOS stems are crisper and ~20 % lighter than the Catalyst-harvested masks, baseline 1 px lower), iOS 26 inset-grouped cells (drawn 12 pt inside their frames, mechanism not in any dump), group-opacity shadow, `corner_radius` > half |
 
 
 Still wrong:
