@@ -76,6 +76,16 @@ the vendor pin. Do NOT touch `scripts/vendor_pins.sh`, `env/`, or
   that adds those is refused. AppKit-category methods on NSObject
   (`awakeFromNib`) exist only under `canImport(AppKit)`, not
   `canImport(ObjectiveC)`.
+- The guest links only the dylibs the Focus widget gate pins. Any String
+  algorithm that lives in `_StringProcessing` — `contains("…")` with a
+  String argument, `ranges(of:)`, `firstRange(of:)`, `replacing(_:with:)`,
+  `split(separator: "…")` with a String, `trimmingPrefix`, any `Regex` or
+  `#/…/#` literal — resolves to that library on the guest (the port's
+  Foundation has no `StringProtocol.contains`), adds
+  `libswift_StringProcessing.dylib` to the load list and fails GATE_B on
+  both authorities (measured at 54be0035). Use `hasPrefix`/`hasSuffix`, a
+  Character (`contains("\\")` is fine), `split(separator: Character)`, or
+  a small index scan.
 - One SimScene process per sheet/alert scene; capture scale-2 scenes on
   the SE; compare simulator goldens with `--golden-straight-alpha`. The
   capture hazards in `docs/ORACLE_FLOW.md` are all real and all measured.
