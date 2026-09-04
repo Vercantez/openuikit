@@ -1656,7 +1656,8 @@ phase2_expand_darwin_modulemap_for_fe() {
         grep -q "header \"$h\"" "$map" && continue
         kind="header"
         # timeval / timespec / sem_t must land in SwiftOverlayShims
-        # (Darwin.swiftinterface names SwiftOverlayShims.{timeval,timespec,sem_t}).
+        # (Darwin.swiftinterface names SwiftOverlayShims.timeval,
+        # SwiftOverlayShims.timespec, SwiftOverlayShims.sem_t).
         # A modular Darwin header hides the type from the overlay shims module.
         case "$h" in
             sys/time.h|time.h|semaphore.h) kind="textual header" ;;
