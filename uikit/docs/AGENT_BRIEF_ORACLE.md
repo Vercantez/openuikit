@@ -14,7 +14,9 @@ scenes match real iOS 26.1 better, each commit carrying the measurement it
 came from, plus a short report (in the final commit message or a
 `REPORT.md` at the worktree root) with the before/after numbers and what
 was measured. Do not open a pull request; the operator merges and advances
-the vendor pin. Do NOT touch `scripts/vendor_pins.sh`, `env/`, or
+the vendor pin. The report file, if you write one, goes to
+`uikit/docs/agent_reports/<branch-name>.md` — a `REPORT.md` at the worktree
+root is outside `uikit/` and the merge path refuses the branch. Do NOT touch `scripts/vendor_pins.sh`, `env/`, or
 `scripts/env/` — pin advances are the operator's job.
 
 ## The loop (read `docs/ORACLE_FLOW.md` first)
