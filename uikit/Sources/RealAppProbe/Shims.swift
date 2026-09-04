@@ -28,8 +28,10 @@ import OpenUIKit
 
 public enum ThemeStyle {
     case primaryText01, primaryText02
-    case primaryUi01, primaryUi01Active, primaryUi05
-    case primaryIcon01
+    case primaryUi01, primaryUi01Active, primaryUi02, primaryUi02Active
+    case primaryUi04, primaryUi05
+    case primaryIcon01, primaryIcon02
+    case primaryInteractive01
     case support01, support05
 }
 
@@ -61,9 +63,33 @@ enum ThemeColor {
     static func primaryUi01Active(for t: Theme.ThemeType? = nil) -> UIColor {
         resolve(t) == .dark ? hex(0x383A3D) : hex(0xF7F9FA)
     }
+    // theme.csv $primary-ui-02
+    static func primaryUi02(for t: Theme.ThemeType? = nil) -> UIColor {
+        resolve(t) == .dark ? hex(0x1A1B1D) : hex(0xFFFFFF)
+    }
+    // theme.csv $primary-ui-02-active
+    static func primaryUi02Active(for t: Theme.ThemeType? = nil) -> UIColor {
+        resolve(t) == .dark ? hex(0x222427) : hex(0xF7F9FA)
+    }
+    // theme.csv $primary-ui-04
+    static func primaryUi04(for t: Theme.ThemeType? = nil) -> UIColor {
+        resolve(t) == .dark ? hex(0x161718) : hex(0xF7F9FA)
+    }
     // theme.csv $primary-ui-05
     static func primaryUi05(for t: Theme.ThemeType? = nil) -> UIColor {
         resolve(t) == .dark ? hex(0x393A3C) : hex(0xE0E6EA)
+    }
+    // theme.csv $secondary-ui-01
+    static func secondaryUi01(for t: Theme.ThemeType? = nil) -> UIColor {
+        resolve(t) == .dark ? hex(0x292B2E) : hex(0xFFFFFF)
+    }
+    // theme.csv $primary-icon-02
+    static func primaryIcon02(for t: Theme.ThemeType? = nil) -> UIColor {
+        resolve(t) == .dark ? hex(0x8F97A4) : hex(0xB8C3C9)
+    }
+    // theme.csv $primary-interactive-01
+    static func primaryInteractive01(for t: Theme.ThemeType? = nil) -> UIColor {
+        resolve(t) == .dark ? hex(0x40C3FF) : hex(0x03A9F4)
     }
     // theme.csv $primary-text-01
     static func primaryText01(for t: Theme.ThemeType? = nil) -> UIColor {
@@ -102,6 +128,9 @@ enum AppTheme {
     static func tableDividerColor(for t: Theme.ThemeType? = nil) -> UIColor {
         ThemeColor.primaryUi05(for: t)
     }
+    static func indicatorStyle() -> UIScrollView.IndicatorStyle {
+        Theme.isDarkTheme() ? .white : .black
+    }
     static func colorForStyle(_ style: ThemeStyle,
                               themeOverride: Theme.ThemeType? = nil) -> UIColor {
         switch style {
@@ -109,8 +138,13 @@ enum AppTheme {
         case .primaryText02: return ThemeColor.primaryText02(for: themeOverride)
         case .primaryUi01: return ThemeColor.primaryUi01(for: themeOverride)
         case .primaryUi01Active: return ThemeColor.primaryUi01Active(for: themeOverride)
+        case .primaryUi02: return ThemeColor.primaryUi02(for: themeOverride)
+        case .primaryUi02Active: return ThemeColor.primaryUi02Active(for: themeOverride)
+        case .primaryUi04: return ThemeColor.primaryUi04(for: themeOverride)
         case .primaryUi05: return ThemeColor.primaryUi05(for: themeOverride)
         case .primaryIcon01: return ThemeColor.primaryIcon01(for: themeOverride)
+        case .primaryIcon02: return ThemeColor.primaryIcon02(for: themeOverride)
+        case .primaryInteractive01: return ThemeColor.primaryInteractive01(for: themeOverride)
         case .support01: return ThemeColor.support01(for: themeOverride)
         case .support05: return ThemeColor.support05(for: themeOverride)
         }
@@ -120,6 +154,112 @@ enum AppTheme {
 // Replaces podcasts/ThemeableSwitch.swift — a UISwitch subclass that repaints
 // on theme change. The harness renders one theme, so the repaint is a no-op.
 final class ThemeableSwitch: UISwitch {}
+
+// Replaces podcasts/ThemeableUIButton.swift and HitTargetButton.swift. Only
+// SettingsTableHeader's right-button and info-button paths build them, and the
+// storage screen's headers take neither, so nothing here is rendered.
+class ThemeableUIButton: UIButton {
+    var style: ThemeStyle = .primaryInteractive01
+}
+final class HitTargetButton: ThemeableUIButton {}
+
+// Replaces podcasts/Common Components/ReusableTableCell.swift, a marker
+// protocol whose default `reuseIdentifier` is the type name. The two cells the
+// storage screen dequeues are registered by string, so only the conformance
+// on ThemeableCell is load-bearing.
+protocol ReusableTableCell {}
+extension ReusableTableCell {
+    static var reuseIdentifier: String { String(describing: Self.self) }
+}
+
+// MARK: - Settings screen infrastructure
+//
+// None of the following paints. They are the app's own services, replaced by
+// the smallest deterministic stand-in, because the harness renders one frame
+// with no database, no network and no analytics sink.
+
+// Replaces podcasts/Common Components/View Controllers/PCViewController.swift
+// (~290 lines) and its SimpleNotificationsViewController base. All of the real
+// class's body configures a UINavigationBar appearance, a Google Cast button
+// and an InsetAdjuster; the harness renders the controller's own view with no
+// navigation controller, so `navigationController` is nil and every one of
+// those paths is already a no-op in the real class too.
+class PCViewController: UIViewController {
+    var supportsGoogleCast = false
+    var insetAdjuster = InsetAdjuster()
+    func handleThemeChanged() {}
+    func handleAppDidEnterBackground() {}
+    func handleAppWillBecomeActive() {}
+}
+
+/// Replaces podcasts/InsetAdjuster.swift — adds bottom inset for the mini
+/// player. `PCViewController` only holds it; the storage screen never calls in.
+final class InsetAdjuster {}
+
+// Replaces the generated PocketCastsStrings L10n table. Values are the exact
+// en.lproj strings from the app's Localizable.strings, quoted below, so the
+// rendered text is the app's text.
+enum L10n {
+    static let settingsStorage = "Storage & Data Use"
+    static let settingsStorageUsage = "USAGE"
+    static let settingsStorageMobileData = "MOBILE DATA"
+    static let settingsStorageDataWarning = "Warn Before Using Data"
+    static let settingsStorageUsageFooter = "This may differ from the storage shown in your iPhone Settings. iOS manages cached data automatically and frees it up when needed."
+    static let downloadedFiles = "Downloaded Files"
+}
+
+// Replaces podcasts/Constants.swift (~600 lines of keys and notification
+// names). The three members below are copied verbatim from it.
+enum Constants {
+    enum Values {
+        static let tableSectionHeaderHeight: CGFloat = 38
+    }
+    enum Notifications {
+        static let themeChanged = NSNotification.Name(rawValue: "ThemeChanged")
+    }
+    enum Animation {
+        static let defaultAnimationTime: TimeInterval = 0.3
+    }
+}
+
+// Replaces podcasts/Analytics/Analytics.swift. Events are recorded so a test
+// can assert the screen fired one, but nothing is sent anywhere.
+enum AnalyticsEvent { case settingsStorageShown }
+enum Analytics {
+    nonisolated(unsafe) static var tracked: [AnalyticsEvent] = []
+    static func track(_ event: AnalyticsEvent) { tracked.append(event) }
+}
+
+// Replaces podcasts/ManageDownloads/ManageDownloadsCoordinator.swift, which
+// presents a modal when downloads exceed a threshold. The harness has no
+// download database, so the real coordinator's own guard fails too.
+enum ManageDownloadsCoordinator {
+    @MainActor
+    static func showModalIfNeeded(from: UIViewController, source: String) {}
+}
+
+// Replaces podcasts/EpisodeManager.swift's disk accounting (a Core Data sum
+// over every downloaded episode). Fixed at zero so the DisclosureCell's
+// secondary label is deterministic — see SizeFormatter.placeholder, which is
+// the string the real app shows for an empty library.
+enum EpisodeManager {
+    static func downloadSizeOfAllEpisodes() -> Int { 0 }
+}
+
+// Replaces podcasts/Settings.swift (~1.5k lines over UserDefaults). The one
+// key this screen reads defaults to false in the real app, i.e. the switch
+// ("Warn Before Using Data") renders ON.
+enum Settings {
+    nonisolated(unsafe) private static var mobileData = false
+    static func mobileDataAllowed() -> Bool { mobileData }
+    static func setMobileDataAllowed(_ allowed: Bool, userInitiated: Bool) {
+        mobileData = allowed
+    }
+}
+
+// Replaces podcasts/DownloadedFilesViewController.swift, pushed only from
+// `didSelectRowAt`, which the harness does not drive.
+final class DownloadedFilesViewController: UIViewController {}
 
 // Replaces podcasts' LiquidGlass feature flag (iOS 26 glass materials).
 // OpenUIKit now has UIVisualEffectView's object/view semantics and a Canvas

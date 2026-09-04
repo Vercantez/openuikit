@@ -26,6 +26,25 @@ public enum RealAppScreen {
         UIImage.clearNamedCache()
     }
 
+    /// Where `UINib(nibName:bundle:)` finds the app's compiled xibs. In the
+    /// app these are resources inside the bundle; the harness points the
+    /// runtime at fixtures/realapp/nibs, the `ibtool --compile` output
+    /// scripts/compile_realapp_nibs.sh produces.
+    public static func configureNibs(directory: String) {
+        OpenUIKitRuntime.nibSearchPaths = [directory]
+    }
+
+    /// Repo-relative default, the twin of `defaultAssetsDirectory`.
+    public static let defaultNibsDirectory = "fixtures/realapp/nibs"
+
+    /// Publishes the nib class registry and the outlet tables
+    /// (NibClasses.swift). Real UIKit gets both from the Objective-C runtime,
+    /// so scripts/realapp_probe_sim.sh empties this body for the Darwin build,
+    /// the same way it drops SelectorTables.swift.
+    static func registerNibClasses() {
+        RealAppNibClasses.register()
+    }
+
     /// pocket-casts-ios podcasts/ListeningHistoryViewController.swift:234
     /// `menuTapped(_:)` — the History screen's "..." menu, verbatim apart from
     /// the analytics calls and the `self?` captures into app state.
@@ -38,6 +57,10 @@ public enum RealAppScreen {
     public enum Variant {
         case listeningHistory
         case settings
+        /// pocket-casts-ios podcasts/StorageAndDataUseViewController.swift —
+        /// a whole settings SCREEN rather than a sheet, and the first variant
+        /// whose views come out of a compiled xib.
+        case storage
     }
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
@@ -93,12 +116,23 @@ public enum RealAppScreen {
     public static let defaultAssetsDirectory = "fixtures/realapp/assets"
 
 
+    /// The storage screen the way the app pushes it: a bare
+    /// `StorageAndDataUseViewController()`, whose view, table and both cell
+    /// prototypes all come from nibs. Nothing here configures the screen —
+    /// that is the point of the variant.
+    static func makeStorageScreen(theme: Theme.ThemeType) -> UIViewController {
+        Theme.sharedTheme.activeTheme = theme
+        return StorageAndDataUseViewController()
+    }
+
     public static func makeRoot(variant: Variant,
                                 theme: Theme.ThemeType) -> UIViewController {
+        registerNibClasses()
         let picker: OptionsPicker
         switch variant {
         case .listeningHistory: picker = makeListeningHistoryPicker(theme: theme)
         case .settings:         picker = makeSettingsPicker(theme: theme)
+        case .storage:          return makeStorageScreen(theme: theme)
         }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker
