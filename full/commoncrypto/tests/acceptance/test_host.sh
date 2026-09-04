@@ -313,13 +313,15 @@ if set(seed) != expected_seed:
 
 framework = json.loads(confined("reference/framework.json").read_text(encoding="utf-8"))
 required_keys = {
-    "schema", "module", "slug", "lane", "risks", "dependencies",
-    "symbolCount", "relationshipCount", "symbolGraph", "symbolConflicts",
-    "publicSurface", "apiDigester", "apiCrosswalk", "tbdExports",
-    "corpusSummary", "externalEvidence", "sdkInputs", "guestManifest",
-    "runtimeMarker", "coveragePolicy", "provenance"
+    "apiCrosswalk", "apiDigester", "corpusSummary", "coveragePolicy", "dependencies", "externalEvidence", "guestManifest", "lane", "module", "provenance", "publicSurface", "relationshipCount", "risks", "runtimeMarker", "schema", "sdkInputs", "slug", "symbolConflicts", "symbolCount", "symbolGraph", "tbdExports"
 }
-if set(framework) != required_keys or framework["schema"] != 2:
+optional_keys = {"moduleLocation", "roadmap"}
+actual_keys = set(framework)
+if (
+    required_keys - actual_keys
+    or actual_keys - (required_keys | optional_keys)
+    or framework["schema"] != 2
+):
     fail("framework.json schema/keys differ")
 if root.name != framework["slug"]:
     fail("framework slug differs from directory")
