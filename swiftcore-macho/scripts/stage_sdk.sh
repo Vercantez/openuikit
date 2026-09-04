@@ -46,6 +46,7 @@ if [ "${OVERLAY_SYSROOT_REUSE:-0}" = 1 ]; then
   # Stamp hashes FE source map bytes, not dest. A leftover expanded
   # Darwin.modulemap would MATCH-inputs and keep dest ≠ sysroot.
   overlay_sysroot_sync_darwin_modulemap "$W/sdk/MacOSX.sdk" || exit 2
+  overlay_sysroot_ensure_intel_math_h "$W/sdk/MacOSX.sdk" || exit 2
   overlay_sysroot_fill_modulemap_headers "$W/sdk/MacOSX.sdk"
   overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
   overlay_sysroot_refuse_incomplete "$W/sdk/MacOSX.sdk" || exit 2

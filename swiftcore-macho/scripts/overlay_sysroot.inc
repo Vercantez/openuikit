@@ -61,10 +61,11 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 # header closure, the required staged-header / tbd completeness gate, the
 # tbd / swiftmodule / HEAD:machorun stamp inputs, the FE Darwin.modulemap
 # byte hash, dest Darwin.modulemap sync (SDK copy must cmp the overlay-copied
-# sysroot), the include_next wrapper layout, or the include_next wrapper
+# sysroot), the overlay SDK Libm math.h insert (SYS keeps machorun math.h),
+# the include_next wrapper layout, or the include_next wrapper
 # predicate (first directive after comments/guard is `#include_next
 # <same-basename>`; not every `#include_next` in Apple's i386/arm limits.h).
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.8
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.9
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -178,8 +179,10 @@ overlay_sysroot_tree_has_tbds() {
 }
 
 # FE Swift expand lives on scratch/sysroot_fe4-$ARCH-fe-clang. Overlay ninja
-# -sdk is $W/sdk/MacOSX.sdk, which must stay byte-identical to the
-# overlay-copied sysroot (scratch/sysroot_fe4-$ARCH), not that snapshot.
+# -sdk is $W/sdk/MacOSX.sdk. Darwin.modulemap dest-syncs from SYS (both
+# 1918 B / 68c22176 on main). math.h does NOT: SYS keeps machorun
+# (2ee3efbf, 10344 B); the overlay stage inserts Libm Intel (64c43951,
+# 24257 B) so tgmath sees acosf/nanl. module.modulemap also differs.
 overlay_sysroot_is_fe_clang_snapshot() {
     case "${1%/}" in
         *-fe-clang) return 0 ;;
@@ -212,6 +215,44 @@ overlay_sysroot_sync_darwin_modulemap() {
         return 2
     fi
     echo "overlay_sysroot: Darwin.modulemap dest matches source $map"
+}
+
+# Overlay SDK math.h is Libm Intel (fmaxl / acosf / nanl). SYS keeps
+# machorun's math.h. Dest-sync is Darwin.modulemap only — copying SYS
+# math.h onto the SDK was the misread of this insert as residue.
+# Never write SYS or *-fe-clang. overlay_sysroot_ensure_intel_math_h <dest>
+overlay_sysroot_ensure_intel_math_h() {
+    local dest=${1:?overlay_sysroot_ensure_intel_math_h: dest}
+    local pin=$SWIFTCORE_ROOT/sdk/overlay-darwin/math.h
+    local i386=$SWIFTCORE_ROOT/sdk/overlay-darwin/architecture/i386/math.h
+    local resolved
+    resolved=$(realpath "$dest" 2>/dev/null || printf '%s' "$dest")
+    case "${resolved%/}" in
+        *-fe-clang)
+            echo "overlay_sysroot: skipping Libm math.h insert on FE-clang snapshot $dest"
+            return 0
+            ;;
+        */scratch/sysroot_fe4-x86_64|*/scratch/sysroot_fe4)
+            echo "overlay_sysroot: REFUSING Libm math.h insert onto overlay-copied SYS $dest" >&2
+            return 2
+            ;;
+    esac
+    [ "${SWIFTCORE_DARWIN_ARCH:-x86_64}" = x86_64 ] || return 0
+    if overlay_sysroot_has_fmaxl "$dest/usr/include/math.h"; then
+        echo "overlay_sysroot: SDK math.h has fmaxl (Libm insert present)"
+        return 0
+    fi
+    [ -f "$pin" ] || {
+        echo "overlay_sysroot: REFUSING missing Libm pin $pin" >&2
+        return 2
+    }
+    mkdir -p "$dest/usr/include"
+    cp -f "$pin" "$dest/usr/include/math.h"
+    if [ -f "$i386" ]; then
+        mkdir -p "$dest/usr/include/architecture/i386"
+        cp -f "$i386" "$dest/usr/include/architecture/i386/math.h"
+    fi
+    echo "overlay_sysroot: inserted Libm Intel math.h (SYS keeps machorun math.h)"
 }
 
 overlay_sysroot_resolve_source() {
@@ -897,6 +938,7 @@ overlay_sysroot_header_search_roots() {
     do
         [ -n "$cand" ] || continue
         [ -d "$cand" ] || continue
+        case "$cand" in *-fe-clang/usr/include) continue ;; esac
         root=$(realpath "$cand" 2>/dev/null || printf '%s' "$cand")
         [ -n "$dest_inc" ] && [ "$root" = "$dest_inc" ] && continue
         case " $seen " in *" $root "*) continue ;; esac
@@ -1293,6 +1335,7 @@ overlay_sysroot_finish() {
     # fill enumerates quoted headers (comments included). Extra-insert /
     # FE-clang copies otherwise leave dest ≠ SYS after finish.
     overlay_sysroot_sync_darwin_modulemap "$fresh" || return $?
+    overlay_sysroot_ensure_intel_math_h "$fresh" || return $?
     overlay_sysroot_fill_modulemap_headers "$fresh"
     overlay_sysroot_fill_include_next_wrappers "$fresh"
     overlay_sysroot_write_stamp "$fresh"

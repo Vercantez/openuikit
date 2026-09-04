@@ -1688,12 +1688,12 @@ phase2_expand_darwin_modulemap_for_fe() {
     return 0
 }
 
-# Overlay ninja -sdk copies scratch/sysroot_fe4-x86_64 into sdk/MacOSX.sdk.
-# Expanding Darwin.modulemap there (unistd.h, …) makes _DarwinFoundation3 /
-# Darwin fail (`#error "Do not include this header directly, include
-# <inttypes.h> instead"`). FE Swift still needs that expansion. Snapshot the
-# overlay-clean tree, then mutate only the copy (same split as CF compile
-# vs machorun/sdk).
+# Overlay ninja -sdk is sdk/MacOSX.sdk. Darwin.modulemap dest-syncs from
+# scratch/sysroot_fe4-x86_64; math.h does not (SDK gets Libm Intel so
+# tgmath sees acosf/nanl). Expanding Darwin.modulemap on SYS (unistd.h, …)
+# makes _DarwinFoundation3 / Darwin fail (`#error "Do not include this
+# header directly, include <inttypes.h> instead"`). FE Swift still needs
+# that expansion on *-fe-clang only.
 phase2_fe_clang_sysroot() {
     printf '%s-fe-clang\n' "${1%/}"
 }
@@ -1722,9 +1722,10 @@ phase2_apply_darwin_modulemap_fe_mutations() {
 }
 
 # Overlay-copied SYS (scratch/sysroot_fe4-x86_64) must stay byte-identical
-# to main's stage_fe_sysroot.sh. Overlay-darwin Intel math.h, MacTypes
-# restore, overlay-posix semaphore, ioctl stub, removefile_compat, artifact
-# Darwin overlays, and SwiftOnone belong only on the FE clang sibling.
+# to main's stage_fe_sysroot.sh (machorun math.h, pruned Darwin.C maps).
+# Overlay SDK Libm math.h is overlay_sysroot_ensure_intel_math_h, not SYS.
+# MacTypes restore, overlay-posix semaphore, ioctl stub, removefile_compat,
+# artifact Darwin overlays, and SwiftOnone belong only on the FE clang sibling.
 phase2_apply_vm_only_fe_sysroot() {
     local dest=$1
     local repo=${2:-}
