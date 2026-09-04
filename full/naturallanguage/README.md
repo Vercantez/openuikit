@@ -1,37 +1,64 @@
-# Portable NaturalLanguage frontier
+# NaturalLanguage (Linux starting point)
 
-This tranche implements the exact `NaturalLanguage` boundary that blocks the
-untouched IceCubes `StatusKit` package on Linux. The pinned app commit imports
-the framework in three files; its concrete runtime path creates
-`NLLanguageRecognizer`, calls `processString`, asks for one hypothesis, checks
-the probability against `0.85`, and consumes `NLLanguage.rawValue`.
+This directory is a clean-room Linux starting point for Apple's public
+`NaturalLanguage` module, seeded from the Xcode 26.1 iPhoneOS 26.1 symbol
+graph, API digester, and TBD exports. It is not wired into the shared guest
+package; that integration is a later central-review step.
 
-The implementation is a real local classifier, not a service-success stub. It
-first identifies distinctive Unicode scripts, then classifies Latin text with
-compact character-trigram profiles and marker-word evidence. Incremental
-processing, reset, language constraints, and prior hints are supported. Short
-or content-free input deliberately produces low/no evidence, preserving
-IceCubes' `nil` fallback instead of inventing a confident language.
+The existing portable `NLLanguageRecognizer` from the earlier IceCubes
+frontier is kept. This wave-6 pass adds tokenizer/tagger/gazetteer/embedding
+declarations, schema-v2 coverage accounting, and the sealed host-gate probes.
 
-`tests/NaturalLanguageIceCubesOracle.swift` is compiled twice with the exact,
-unmodified 34-line IceCubes `LanguageDetection.swift`: once against Apple
-NaturalLanguage 26.1 and once against this framework. The 17-line transcript
-must match byte-for-byte. It covers six Latin languages, three non-Latin
-scripts, IceCubes' mention/hashtag/emoji stripping, low-evidence fallback,
-direct and incremental recognition, reset, constraints, and hints.
+## What is real
 
-An independent 29-sentence generalization oracle then exercises 19 Latin
-profiles and ten script routes with text that is not used by IceCubes. Both the
-top BCP-47 identity and IceCubes' `>= 0.85` confidence decision match Apple
-26.1 for all 29 cases. This broader corpus is also compiled and cold-run as an
-ARM64 Mach-O executable, preventing a native-host-only classifier result.
+- `NLLanguage` is a BCP-47 string newtype. The IceCubes `StatusKit` consumer
+  still classifies Latin text with the compact trigram/marker-word model and
+  non-Latin text by Unicode script. Incremental `processString`, `reset`,
+  constraints, and hints are unchanged.
+- `NLScript`, `NLTag`, and `NLTagScheme` are string newtypes. Script raw
+  values are ISO 15924 codes. Tag/scheme raw values follow the documented
+  `NSLinguisticTag` strings until an Apple oracle records the NL* CFStrings.
+- `NLTokenizer` splits word/sentence/paragraph/document ranges using Swift
+  `Character` classes (letter/number/whitespace/punctuation). This is a local
+  tokenizer, not Apple's ICU word-break.
+- `NLTagger` implements `.tokenType`, `.language`, and `.script` locally.
+  Gazetteers overlay labels for whatever scheme they are attached to.
+  `.lemma`, `.lexicalClass`, `.nameType`, and `.sentimentScore` return nil
+  without Apple models. `requestAssets` reports `.available` only for the
+  three local schemes.
+- `NLGazetteer` stores an in-memory label→terms map and round-trips a Linux
+  JSON file (`nlGazetteerFormat=1`). It does not read Apple gazetteer binaries.
+- `NLEmbedding.write` / `init(contentsOf:)` round-trip a Linux JSON vector
+  table and compute cosine distance (`1 − cosine similarity`). Apple word and
+  sentence embedding tables are absent: factory methods return nil, revision
+  0, and an empty `IndexSet`.
+- Integer enums and option sets use the sequential / bit-shift raw values
+  corroborated by the pinned dotnet/macios bindings (`NLTokenUnit`,
+  `NLDistanceType`, `NLModel.ModelType`, asset-result enums, `NLTagger.Options`,
+  `NLTokenizer.Attributes`).
 
-The guest builder additionally emits `libNaturalLanguage.dylib`, compiles the
-same untouched consumer for `arm64-apple-ios18.0-simulator`, audits the Mach-O
-module/dylib/executable identities, cold-runs it through the published Linux
-guest root, and brackets every app/framework/oracle input by hash. It only
-creates a narrowly named output directory; it never edits IceCubes or a
-platform package.
+`tests/agent/NaturalLanguageRuntime.swift` is a standalone probe that prints
+`NATURALLANGUAGE_AGENT_RUNTIME_OK`. The sealed schema-v2 gate derives its
+runner from `implemented` coverage and `*Tests.swift`.
 
-This tranche intentionally does not claim Apple's private tokenizer, tagger,
-embedding, model, or gazetteer APIs. Those are separate evidence boundaries.
+## Fail-closed boundaries
+
+Linux has no Apple NaturalLanguage models, asset downloads, Create ML
+runtime, or `NSOrthography`.
+
+- `NLEmbedding.wordEmbedding(for:)` / `sentenceEmbedding(for:)` return nil.
+- `NLModel(contentsOf:)` throws a Linux-local `NSError`.
+- `NLContextualEmbedding` failable inits return nil; `contextualEmbeddings(forValues:)` is empty.
+- Model-backed tag schemes return nil tags.
+- `init(mlModel:)` is omitted (CoreML is not a declared dependency).
+- `setOrthography(_:range:)` is omitted (`NSOrthography` is unavailable in
+  swift-corelibs-foundation).
+
+## Still deferred
+
+See `oracle-questions.tsv` for ICU word-break parity, NLTag CFString
+payloads, Apple embedding revisions, gazetteer binary layout, asset-request
+queues, and Create ML import.
+
+Keep generated products out of the tree. Run
+`bash tests/acceptance/test_host.sh` from this directory.
