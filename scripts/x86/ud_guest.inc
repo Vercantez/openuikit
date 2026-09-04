@@ -1274,6 +1274,10 @@ phase2_try_ud_score_guest() {
     if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
         extra="$extra -I $fe_out/collections"
     fi
+    posix_dir=$(phase2_posix_overlay_dir "$repo" || true)
+    if [ -n "$posix_dir" ]; then
+        extra="$extra -Xcc -I$posix_dir"
+    fi
 
     set +e
     W="$ud_w" \

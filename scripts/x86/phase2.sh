@@ -1110,7 +1110,7 @@ if [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
     score_report=$(phase2_try_ud_score_guest \
         "$W" \
         "${UD_GUEST_W:-$W/scratch/ud-guest-x86_64}" \
-        "$SYS" \
+        "$FE_CLANG_SYS" \
         "$MC" \
         "$FE_OUT" \
         || true)

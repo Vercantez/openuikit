@@ -1709,6 +1709,19 @@ args = re.findall(r'"\$([A-Z0-9_]+)"', chunk)
 if len(args) < 3 or args[2] != "FE_CLANG_SYS":
     raise SystemExit(f"args={args} chunk={chunk!r}")
 PY
+python3 - "$PHASE2" <<'PY' && ok "try_ud_score_guest sysroot arg is FE_CLANG_SYS" || die_test "try_ud_score_guest still passes overlay-copied SYS"
+import pathlib, re, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find("score_report=$(phase2_try_ud_score_guest")
+if start < 0:
+    raise SystemExit("score call not found")
+end = text.find("|| true)", start)
+chunk = text[start:end]
+if '"$FE_CLANG_SYS"' not in chunk:
+    raise SystemExit(chunk)
+if re.search(r'"\$SYS"', chunk):
+    raise SystemExit(f"still passes SYS: {chunk!r}")
+PY
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
     "producer names the committed linker"
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
