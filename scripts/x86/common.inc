@@ -1757,11 +1757,18 @@ phase2_select_fe_compile_sysroot() {
 
 # os-module compile summary for tests: sys=<path> posix_xcc=<none|-Xcc -I...>
 # On main-copy this is SYS=<overlay-copied SYS> posix_xcc=none (main's argv).
+# Optional $2/$3 override the last select() globals (command substitution
+# runs select in a subshell).
 phase2_os_module_compile_argv_summary() {
     local repo=${1:-${W:-}}
-    local sys=${PHASE2_FE_COMPILE_SYSROOT:?phase2_os_module_compile_argv_summary: select first}
+    local sys=${2:-${PHASE2_FE_COMPILE_SYSROOT-}}
+    local kind=${3:-${PHASE2_FE_SYSROOT_KIND-}}
     local extra=none d
-    if [ "${PHASE2_FE_SYSROOT_KIND:-}" = fe-clang ]; then
+    [ -n "$sys" ] || {
+        echo "phase2_os_module_compile_argv_summary: select first" >&2
+        return 2
+    }
+    if [ "$kind" = fe-clang ]; then
         d=$(phase2_posix_overlay_dir "$repo" || true)
         [ -n "$d" ] && extra="-Xcc -I$d"
     fi

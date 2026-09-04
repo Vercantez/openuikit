@@ -283,10 +283,11 @@ case "$sel" in
         die_test "expected FE_SYSROOT_SELECT=main-copy sys=$SYS_OURS got: $sel"
         ;;
 esac
-[ "$PHASE2_FE_COMPILE_SYSROOT" = "$SYS_OURS" ] \
+sel_sys=${sel##* sys=}
+[ "$sel_sys" = "$SYS_OURS" ] \
     && ok "compile sysroot is overlay-copied SYS (same as main)" \
-    || die_test "compile sysroot $PHASE2_FE_COMPILE_SYSROOT != $SYS_OURS"
-argv=$(phase2_os_module_compile_argv_summary "$ROOT")
+    || die_test "compile sysroot $sel_sys != $SYS_OURS"
+argv=$(phase2_os_module_compile_argv_summary "$ROOT" "$sel_sys" main-copy)
 echo "$argv"
 case "$argv" in
     sys="$SYS_OURS"\ posix_xcc=none)
