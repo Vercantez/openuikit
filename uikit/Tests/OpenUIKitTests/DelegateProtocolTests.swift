@@ -520,6 +520,21 @@ final class AdaptivePresentationDelegateTests: XCTestCase {
         XCTAssertEqual(popover.adaptedStyle, .pageSheet)
         XCTAssertEqual(vc._resolvedPresentationStyle, .pageSheet)
     }
+
+    /// `barButtonItem` is stored so Modal's popover-from-bar-button compiles
+    /// against OpenUIKit the same way it does against real UIKit. Adaptation
+    /// is unchanged: compact width still becomes a sheet.
+    func testPopoverBarButtonItemIsStored() {
+        let vc = UIViewController()
+        vc.modalPresentationStyle = .popover
+        let popover = try! XCTUnwrap(vc.popoverPresentationController)
+        XCTAssertNil(popover.barButtonItem)
+        let item = UIBarButtonItem(primaryAction: UIAction(title: "More") { _ in })
+        popover.barButtonItem = item
+        XCTAssertTrue(popover.barButtonItem === item)
+        popover.barButtonItem = nil
+        XCTAssertNil(popover.barButtonItem)
+    }
 }
 
 // MARK: - UISearchBar
