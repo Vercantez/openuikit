@@ -1,1 +1,7 @@
 full/commoncrypto/CommonCrypto.swift
+full/commoncrypto/CommonCryptor.swift
+full/commoncrypto/CommonDigest.swift
+full/commoncrypto/CommonHMAC.swift
+full/commoncrypto/CommonKeyDerivation.swift
+full/commoncrypto/CommonRandom.swift
+full/commoncrypto/CommonSymmetricKeywrap.swift
