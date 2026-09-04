@@ -36,8 +36,14 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UITableView.iOSLabelHeight17, 20.5, accuracy: 1e-9)
         XCTAssertEqual(UITableView.headerHeight(style: .insetGrouped, firstSection: true), 55.5, accuracy: 1e-9)
         XCTAssertEqual(UITableView.headerHeight(style: .insetGrouped, firstSection: false), 45.5, accuracy: 1e-9)
+        XCTAssertEqual(UITableView.headerHeight(style: .insetGrouped, firstSection: true, compact: true), 38, accuracy: 1e-9)
+        XCTAssertEqual(UITableView.headerHeight(style: .insetGrouped, firstSection: false, compact: true), 38, accuracy: 1e-9)
+        XCTAssertEqual(UITableView.untitledGroupedFooterHeight, 17.5, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.subtitleRowHeight, 69.5, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.plainSubtitleRowHeight, 62, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.subtitlePrimaryY, 15.5, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.plainSubtitlePrimaryY, 9, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.plainSubtitleDetailY, 32.5, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.disclosureSize.width, 10.5, accuracy: 1e-9)
         XCTAssertEqual(UITableViewCell.checkmarkSize.height, 18, accuracy: 1e-9)
         XCTAssertEqual(UITableView.valueCellPadding, 0)
@@ -138,4 +144,52 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
             XCTAssertEqual(UINavigationBar.largeTitleLabelHeight, 40.5)
         }
     }
+
+    // MARK: Untitled grouped footers + compact headers (headerprobe / NavFlow)
+
+    func testUntitledGroupedFooterAndCompactHeadersMatchHeaderprobe() {
+        device(375, 667, scale: 2)
+        let source = UntitledGroupedSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                style: .insetGrouped)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        // noNav: first header 55.5, untitled footer 17.5, later header 38.
+        XCTAssertEqual(table.metrics[0].headerHeight, 55.5, accuracy: 1e-9)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).minY, 55.5, accuracy: 1e-9)
+        XCTAssertEqual(table.metrics[0].footerHeight, 17.5, accuracy: 1e-9)
+        XCTAssertFalse(table.metrics[0].footerHasView)
+        XCTAssertEqual(table.metrics[1].headerY, 205, accuracy: 1e-9)
+        XCTAssertEqual(table.metrics[1].headerHeight, 38, accuracy: 1e-9)
+        XCTAssertTrue(table.metrics[1].compactHeader)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 243, accuracy: 1e-9)
+        XCTAssertNil(table.footerViews[0], "untitled footer is spacing, no view")
+
+        table._setSafeAreaInsets(UIEdgeInsets(top: 116, left: 0, bottom: 0, right: 0))
+        table.layoutIfNeeded()
+        // navLarge: first header compact 38, later still 38 after untitled footer.
+        XCTAssertEqual(table.metrics[0].headerHeight, 38, accuracy: 1e-9)
+        XCTAssertTrue(table.metrics[0].compactHeader)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).minY, 38, accuracy: 1e-9)
+        XCTAssertEqual(table.metrics[1].headerY, 187.5, accuracy: 1e-9)
+        XCTAssertEqual(table.metrics[1].headerHeight, 38, accuracy: 1e-9)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 225.5, accuracy: 1e-9)
+    }
+}
+
+@MainActor
+private final class UntitledGroupedSource: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int { 2 }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        section == 0 ? 3 : 2
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        section == 0 ? "General" : "Storage"
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        UITableViewCell(style: .value1, reuseIdentifier: nil)
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 44 }
 }

@@ -159,6 +159,131 @@ final class UITableCellAccessoryView: UIView {
     }
 }
 
+// MARK: - Edit / reorder controls (iOS 26.1, MEASURED TableEditor t900, SE 2x)
+
+/// Red minus disc. Golden class name matches real UIKit's so the dump is
+/// comparable. Fill (235, 75, 70) and 22 pt disc / 10.5 × 1.5 pt white
+/// minus read off TableEditor t900, Alpha's control at [15, 133, 26, 26]
+/// @2x (crop 52×52, solid fill rows, minus rows 27–29 = 1.5 pt).
+@preconcurrency @MainActor
+final class UITableViewCellEditControl: UIView {
+    static let fill = UIColor(red: 235.0 / 255.0, green: 75.0 / 255.0,
+                              blue: 70.0 / 255.0, alpha: 1)
+    /// 2 pt inset → 22 pt disc in the 26 pt box (red cols 4–47 of 52).
+    static let discInset: CGFloat = 2
+    static let minusWidth: CGFloat = 10.5
+    static let minusHeight: CGFloat = 1.5
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = true
+        isOpaque = false
+        backgroundColor = nil
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        isUserInteractionEnabled = true
+        isOpaque = false
+        backgroundColor = nil
+    }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        let inset = UITableViewCellEditControl.discInset
+        let disc = CGRect(x: bounds.minX + inset, y: bounds.minY + inset,
+                          width: bounds.width - 2 * inset,
+                          height: bounds.height - 2 * inset)
+        canvas.fill(UITableViewCellEditControl.ellipse(in: disc),
+                    color: UITableViewCellEditControl.fill.resolvedCGColor(with: traitCollection))
+        let mw = UITableViewCellEditControl.minusWidth
+        let mh = UITableViewCellEditControl.minusHeight
+        let minus = CGRect(x: bounds.midX - mw / 2,
+                           y: bounds.midY - mh / 2,
+                           width: mw, height: mh)
+        canvas.fill(UITableViewCellEditControl.rectPath(minus),
+                    color: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+    }
+
+    static func ellipse(in rect: CGRect) -> Path {
+        let k: CGFloat = 0.5522847498307936
+        let rx = rect.width / 2
+        let ry = rect.height / 2
+        let cx = rect.midX
+        let cy = rect.midY
+        var path = Path()
+        path.move(to: CGPoint(x: cx + rx, y: cy))
+        path.addCurve(to: CGPoint(x: cx, y: cy + ry),
+                      control1: CGPoint(x: cx + rx, y: cy + k * ry),
+                      control2: CGPoint(x: cx + k * rx, y: cy + ry))
+        path.addCurve(to: CGPoint(x: cx - rx, y: cy),
+                      control1: CGPoint(x: cx - k * rx, y: cy + ry),
+                      control2: CGPoint(x: cx - rx, y: cy + k * ry))
+        path.addCurve(to: CGPoint(x: cx, y: cy - ry),
+                      control1: CGPoint(x: cx - rx, y: cy - k * ry),
+                      control2: CGPoint(x: cx - k * rx, y: cy - ry))
+        path.addCurve(to: CGPoint(x: cx + rx, y: cy),
+                      control1: CGPoint(x: cx + k * rx, y: cy - k * ry),
+                      control2: CGPoint(x: cx + rx, y: cy - k * ry))
+        path.close()
+        return path
+    }
+
+    static func rectPath(_ r: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: r.minX, y: r.minY))
+        path.addLine(to: CGPoint(x: r.maxX, y: r.minY))
+        path.addLine(to: CGPoint(x: r.maxX, y: r.maxY))
+        path.addLine(to: CGPoint(x: r.minX, y: r.maxY))
+        path.close()
+        return path
+    }
+}
+
+/// Three-line reorder handle. MEASURED TableEditor t900, SE 2x: control
+/// [332, cellY, 27, 62], glyph [332, cellY+24, 27, 15], three 1.5 pt
+/// bars at glyph-local y 2.0 / 6.5 / 11.5, ink (197, 197, 199).
+@preconcurrency @MainActor
+final class UITableViewCellReorderControl: UIView {
+    static let glyphSize = CGSize(width: 27, height: 15)
+    static let ink = UIColor(red: 197.0 / 255.0, green: 197.0 / 255.0,
+                             blue: 199.0 / 255.0, alpha: 1)
+    static let lineHeight: CGFloat = 1.5
+    static let lineOrigins: [CGFloat] = [2.0, 6.5, 11.5]
+    static let lineInsetX: CGFloat = 2.5
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = true
+        isOpaque = false
+        backgroundColor = nil
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        isUserInteractionEnabled = true
+        isOpaque = false
+        backgroundColor = nil
+    }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        let color = UITableViewCellReorderControl.ink.resolvedCGColor(with: traitCollection)
+        let glyphH = UITableViewCellReorderControl.glyphSize.height
+        // MEASURED TableEditor t900: glyph at cellY+24 in a 62 pt row —
+        // iOSCeilToPixel((62 − 15) / 2) = 24 at 2x.
+        let glyphY = UITableView.isIOSChrome
+            ? UITableView.iOSCeilToPixel((bounds.height - glyphH) / 2)
+            : (bounds.height - glyphH) / 2
+        let x = bounds.minX + UITableViewCellReorderControl.lineInsetX
+        let w = bounds.width - 2 * UITableViewCellReorderControl.lineInsetX
+        let h = UITableViewCellReorderControl.lineHeight
+        for y in UITableViewCellReorderControl.lineOrigins {
+            canvas.fill(UITableViewCellEditControl.rectPath(
+                CGRect(x: x, y: bounds.minY + glyphY + y, width: w, height: h)),
+                        color: color)
+        }
+    }
+}
+
 // MARK: - UITableViewCell
 
 @preconcurrency @MainActor
@@ -192,6 +317,12 @@ open class UITableViewCell: UIView, ReusableView {
     public static var subtitleRowHeight: CGFloat {
         isIOSChrome ? 49 + UITableView.iOSLabelHeight17 : 70.5
     }
+    /// Plain-style subtitle row on iOS. MEASURED 2026-09-04, TableEditor t200,
+    /// iPhone SE 2x, iOS 26.1: Alpha abs [0, 116, 375, 62], Bravo
+    /// [0, 178, 375, 62] — stride **62**. Grouped subtitle stays
+    /// `subtitleRowHeight` (tableview_grouped: 69.5 / 69.333). Catalyst
+    /// automaticDimension is still `defaultRowHeight`.
+    public static var plainSubtitleRowHeight: CGFloat { isIOSChrome ? 62 : 70.5 }
     static let labelX: CGFloat = 16
     static let primaryLabelY: CGFloat = 15.5
     /// iOS: the two-line block (17 pt + 15 pt labels) centred in the row and
@@ -203,6 +334,23 @@ open class UITableViewCell: UIView, ReusableView {
         return UITableView.iOSCeilToPixel((subtitleRowHeight - block) / 2)
     }
     static let subtitleDetailY: CGFloat = 36
+    /// Plain iOS subtitle primary origin. MEASURED TableEditor t200, SE 2x:
+    /// Alpha text abs y 125, cell y 116 → **9**.
+    static let plainSubtitlePrimaryY: CGFloat = 9
+    /// Plain iOS subtitle detail origin. MEASURED TableEditor t200, SE 2x:
+    /// "First item" abs y 148.5, cell y 116 → **32.5** (9 + 20.5 + 3 pt gap).
+    static let plainSubtitleDetailY: CGFloat = 32.5
+    /// Edit-mode contentView.x. MEASURED TableEditor t900, SE 2x: content
+    /// view abs [40, cellY, 292, 62] with labels at x 56 (= 40 + 16).
+    static let editLeadingGutter: CGFloat = 40
+    /// Delete-control box. MEASURED TableEditor t900: UITableViewCellEditControl
+    /// abs [15, cellY+17, 26, 26]; the disc is 22 pt (2 pt inset).
+    static let editControlSize: CGFloat = 26
+    static let editControlX: CGFloat = 15
+    /// Reorder handle. MEASURED TableEditor t900: UITableViewCellReorderControl
+    /// abs [332, cellY, 27, 62] — 27 wide, 16 pt (SE system margin) from the
+    /// trailing edge (375 − 16 − 27 = 332).
+    static let reorderWidth: CGFloat = 27
     /// iOS: the window's system layout margin (20 on the iPhone 16, 16 on
     /// the SE — see UITableView.iOSSystemMargin).
     var trailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin : 16 }
@@ -336,6 +484,9 @@ open class UITableViewCell: UIView, ReusableView {
     /// The portable vector backing for `accessoryType`. Keep it separate from
     /// UIKit's public `accessoryView`, which is application-owned content.
     let _accessoryGlyphView = UITableCellAccessoryView()
+    /// iOS edit-mode chrome (nil until the cell first enters editing).
+    var _editControl: UITableViewCellEditControl?
+    var _reorderControl: UITableViewCellReorderControl?
     public var selectedBackgroundView: UIView? {
         didSet {
             guard selectedBackgroundView !== oldValue else { return }
@@ -438,6 +589,15 @@ open class UITableViewCell: UIView, ReusableView {
         setNeedsLayout()
     }
 
+    private var showsDeleteControl: Bool {
+        isEditing && UITableViewCell.isIOSChrome
+            && (tableView?._editingStyle(for: self) == .delete)
+    }
+    private var showsReorderControlNow: Bool {
+        isEditing && UITableViewCell.isIOSChrome
+            && (tableView?._canMove(self) ?? false)
+    }
+
     // MARK: Selection / highlight
 
     open func setSelected(_ selected: Bool, animated: Bool) {
@@ -507,8 +667,15 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: Layout (measured cell geometry)
 
-    /// Width of the content region for the current accessory.
+    /// Width of the content region for the current accessory / edit chrome.
     var contentWidth: CGFloat {
+        var leading: CGFloat = 0
+        var trailing: CGFloat = 0
+        if showsDeleteControl { leading = UITableViewCell.editLeadingGutter }
+        if showsReorderControlNow {
+            trailing = UITableViewCell.reorderWidth + trailingMargin
+        }
+        let available = max(0, bounds.width - leading - trailing)
         if let accessoryView {
             // iOS butts the content view straight up against a custom
             // accessory: no gap between them.
@@ -521,19 +688,19 @@ open class UITableViewCell: UIView, ReusableView {
             // stays that below — left it 8 pt short on both.
             let gap = UITableViewCell.isIOSChrome
                 ? 0 : UITableViewCell.detailAccessoryGap
-            return max(0, bounds.width - trailingMargin
+            return max(0, available - trailingMargin
                        - accessoryView.frame.width - gap)
         }
         switch accessoryType {
         case .none:
-            return bounds.width
+            return available
         case .disclosureIndicator:
-            return bounds.width - trailingMargin
-                - UITableViewCell.disclosureSize.width
+            return max(0, available - trailingMargin
+                       - UITableViewCell.disclosureSize.width)
         case .checkmark:
-            return bounds.width - checkmarkTrailingMargin
-                - UITableViewCell.checkmarkSize.width
-                - UITableViewCell.checkmarkContentGap
+            return max(0, available - checkmarkTrailingMargin
+                       - UITableViewCell.checkmarkSize.width
+                       - UITableViewCell.checkmarkContentGap)
         }
     }
 
@@ -544,6 +711,50 @@ open class UITableViewCell: UIView, ReusableView {
         return (v * 2).rounded(.up) / 2
     }
 
+    private func layoutEditChrome(pad: CGFloat, height h: CGFloat, width w: CGFloat) {
+        if showsDeleteControl {
+            let control: UITableViewCellEditControl
+            if let existing = _editControl {
+                control = existing
+            } else {
+                let v = UITableViewCellEditControl()
+                v.isHidden = true
+                addSubview(v)
+                _editControl = v
+                control = v
+            }
+            let size = UITableViewCell.editControlSize
+            // MEASURED TableEditor t900: image at cellY+18 in a 62 pt row,
+            // (62 − 26) / 2 = 18. Control view itself sat 1 pt higher; the
+            // disc is what the pixels show.
+            let y = UITableView.iOSFloorToPixel((h - size) / 2)
+            control.isHidden = false
+            control.frame = CGRect(x: UITableViewCell.editControlX, y: pad + y,
+                                   width: size, height: size)
+        } else {
+            _editControl?.isHidden = true
+        }
+
+        if showsReorderControlNow {
+            let control: UITableViewCellReorderControl
+            if let existing = _reorderControl {
+                control = existing
+            } else {
+                let v = UITableViewCellReorderControl()
+                v.isHidden = true
+                addSubview(v)
+                _reorderControl = v
+                control = v
+            }
+            control.isHidden = false
+            control.frame = CGRect(x: w - trailingMargin - UITableViewCell.reorderWidth,
+                                   y: pad,
+                                   width: UITableViewCell.reorderWidth, height: h)
+        } else {
+            _reorderControl?.isHidden = true
+        }
+    }
+
     open override func layoutSubviews() {
         super.layoutSubviews()
         let w = bounds.width
@@ -551,7 +762,13 @@ open class UITableViewCell: UIView, ReusableView {
         let h = bounds.height - pad
 
         selectedBackgroundView?.frame = bounds
-        contentView.frame = CGRect(x: 0, y: pad, width: contentWidth, height: h)
+        if let tableView {
+            _textInset = tableView.style == .plain
+                ? tableView.plainTextInset : UITableViewCell.labelX
+        }
+        let lead = showsDeleteControl ? UITableViewCell.editLeadingGutter : 0
+        contentView.frame = CGRect(x: lead, y: pad, width: contentWidth, height: h)
+        layoutEditChrome(pad: pad, height: h, width: w)
 
         // Accessory. A custom view owns its size and replaces the stock glyph.
         if let custom = accessoryView {
@@ -620,10 +837,16 @@ open class UITableViewCell: UIView, ReusableView {
         // the device pixel ((53 - 20.333) / 2 = 16.333 at 3x; (53 - 20.5) / 2
         // = 16.25 -> 16.5 at 2x, both measured); a subtitle cell's primary
         // sits at subtitlePrimaryY.
-        let primaryY: CGFloat = UITableViewCell.isIOSChrome
-            ? (style == .subtitle ? UITableViewCell.subtitlePrimaryY
-                                  : UITableView.iOSCeilToPixel((h - primary.height) / 2))
-            : UITableViewCell.primaryLabelY
+        let primaryY: CGFloat
+        if UITableViewCell.isIOSChrome, style == .subtitle {
+            primaryY = tableView?.style == .plain
+                ? UITableViewCell.plainSubtitlePrimaryY
+                : UITableViewCell.subtitlePrimaryY
+        } else if UITableViewCell.isIOSChrome {
+            primaryY = UITableView.iOSCeilToPixel((h - primary.height) / 2)
+        } else {
+            primaryY = UITableViewCell.primaryLabelY
+        }
         textLabel.frame = CGRect(x: labelX,
                                  y: primaryY,
                                  width: min(primary.width, max(0, maxTextW)),
@@ -633,8 +856,11 @@ open class UITableViewCell: UIView, ReusableView {
                                           height: h))
             switch style {
             case .subtitle:
+                let detailY = (UITableViewCell.isIOSChrome && tableView?.style == .plain)
+                    ? UITableViewCell.plainSubtitleDetailY
+                    : UITableViewCell.subtitleDetailY
                 d.frame = CGRect(x: labelX,
-                                 y: UITableViewCell.subtitleDetailY,
+                                 y: detailY,
                                  width: min(s.width, max(0, maxTextW)),
                                  height: s.height)
             default: // value1 / value2: right-aligned detail
@@ -739,7 +965,8 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
     }
 
     func configure(kind: Kind, text: String?, labelX: CGFloat,
-                   style: UITableView.Style = .plain, firstSection: Bool = false) {
+                   style: UITableView.Style = .plain, firstSection: Bool = false,
+                   compact: Bool = false) {
         self.kind = kind
         self.labelX = labelX
         if UITableView.isIOSChrome {
@@ -748,9 +975,15 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
             case .grouped, .insetGrouped:
                 // MEASURED: 28.667 / 18.667 on the iPhone 16 (3x), 29.5 /
                 // 19.5 on the iPhone SE (2x) — not one value rounded two
-                // ways, so both readings are carried.
+                // ways, so both readings are carried. Compact 38 pt
+                // headers (headerprobe / NavFlow t200, SE 2x) put the
+                // label at y = 12.
                 let threeX = UIScreen.main.scale >= 3
-                _headerLabelY = firstSection ? (threeX ? 28.666667 : 29.5) : (threeX ? 18.666667 : 19.5)
+                if compact {
+                    _headerLabelY = 12
+                } else {
+                    _headerLabelY = firstSection ? (threeX ? 28.666667 : 29.5) : (threeX ? 18.666667 : 19.5)
+                }
                 _wholePointLabelHeight = false
             }
         } else {

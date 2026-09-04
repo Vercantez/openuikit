@@ -64,6 +64,7 @@ let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewContro
     // the scripted replay and the recorder.
     "NavFlow": (NavFlowApp.windowSize, NavFlowApp.makeRoot),
     "Forms": (FormsApp.windowSize, FormsApp.makeRoot),
+    "TableEditor": (TableEditorApp.windowSize, TableEditorApp.makeRoot),
 ]
 
 /// The host's app delegate: builds the key window in didFinishLaunching and
