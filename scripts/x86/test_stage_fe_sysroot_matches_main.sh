@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Run origin/main's stage_fe_sysroot.sh and this branch's on the same inputs.
-# Overlay-copied SYS trees must be byte-identical (diff -r). VM-only
-# expansions belong in the *-fe-clang sibling, not scratch/sysroot_fe4-x86_64.
+# Dual-run SYS vs origin/main. Overlay-copied SYS must be byte-identical
+# (diff -r). Arm64-copied Darwin family is FE_SYSROOT_SELECT=main-copy:
+# no *-fe-clang sibling, compiles against SYS like main.
 set -euo pipefail
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)
@@ -240,20 +240,15 @@ n_include=$(find "$SYS_OURS/usr/include" -type f | wc -l | tr -d ' ')
 ok "SYS usr/include file count = $n_include (box MAIN cycle is 506; CI fixture is smaller)"
 
 FE_OURS=$(printf '%s-fe-clang\n' "${SYS_OURS%/}")
-if [ -d "$FE_OURS/usr/include" ]; then
-    ok "VM-only sibling exists at $FE_OURS"
+if [ -d "$FE_OURS" ]; then
+    die_test "stager wrote *-fe-clang sibling for arm64-copied Darwin family (box is main-copy)"
 else
-    die_test "missing FE clang sibling $FE_OURS"
+    ok "arm64-copied Darwin family does not stage *-fe-clang sibling"
 fi
 if [ -f "$SYS_OURS/usr/include/sys/ioctl.h" ]; then
     die_test "overlay-copied SYS has sys/ioctl.h (ioctl stub is VM-only)"
 else
     ok "overlay-copied SYS has no sys/ioctl.h"
-fi
-if [ -f "$FE_OURS/usr/include/sys/ioctl.h" ]; then
-    ok "FE clang dest has ioctl stub"
-else
-    die_test "FE clang dest missing sys/ioctl.h stub"
 fi
 if [ -f "$SYS_OURS/usr/include/semaphore.h" ]; then
     die_test "overlay-copied SYS has semaphore.h (overlay-posix is VM-only)"
@@ -276,16 +271,31 @@ if [ -f "$INTEL_MATH" ] && [ -f "$SYS_OURS/usr/include/math.h" ]; then
     fi
 fi
 
-if grep -q 'header "math.h"' "$FE_OURS/usr/include/Darwin.modulemap"; then
-    ok "FE clang Darwin.modulemap names math.h (expand stays off the overlay-copied SYS)"
-else
-    die_test "FE clang Darwin.modulemap missing math.h expand"
-fi
-if cmp -s "$SYS_OURS/usr/include/Darwin.modulemap" "$FE_OURS/usr/include/Darwin.modulemap"; then
-    die_test "FE clang Darwin.modulemap cmp SYS (expand leaked onto overlay-copied tree)"
-else
-    ok "FE clang Darwin.modulemap differs from SYS (expand is sibling-only)"
-fi
+# shellcheck disable=SC1091
+. "$ROOT/scripts/x86/common.inc"
+sel=$(phase2_select_fe_compile_sysroot "$SYS_OURS" "$ARM")
+echo "$sel"
+case "$sel" in
+    FE_SYSROOT_SELECT=main-copy\ sys="$SYS_OURS")
+        ok "FE_SYSROOT_SELECT=main-copy for arm64-copied Darwin family"
+        ;;
+    *)
+        die_test "expected FE_SYSROOT_SELECT=main-copy sys=$SYS_OURS got: $sel"
+        ;;
+esac
+[ "$PHASE2_FE_COMPILE_SYSROOT" = "$SYS_OURS" ] \
+    && ok "compile sysroot is overlay-copied SYS (same as main)" \
+    || die_test "compile sysroot $PHASE2_FE_COMPILE_SYSROOT != $SYS_OURS"
+argv=$(phase2_os_module_compile_argv_summary "$ROOT")
+echo "$argv"
+case "$argv" in
+    sys="$SYS_OURS"\ posix_xcc=none)
+        ok "os-module argv equals main (SYS=overlay-copied SYS, no overlay-posix -I)"
+        ;;
+    *)
+        die_test "os-module argv != main's: $argv"
+        ;;
+esac
 
 echo "pass=$pass fail=$fail"
 if [ "$fail" -ne 0 ]; then
