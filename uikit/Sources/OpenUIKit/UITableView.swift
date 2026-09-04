@@ -179,29 +179,75 @@ open class UITableView: UIScrollView {
         guard isIOSChrome else { return headerHeight }
         switch style {
         case .plain: return 28
-        case .grouped, .insetGrouped: return firstSection ? 55.333333 : 45.333333
+        // 35 (first section) / 25 above the 17 pt semibold label, whose
+        // height is the line height rounded up to the DEVICE pixel:
+        // 55.333 / 45.333 on the iPhone 16 (3x), 55.5 / 45.5 on the SE (2x).
+        case .grouped, .insetGrouped: return (firstSection ? 35 : 25) + iOSLabelHeight17
         }
     }
-    /// Plain cells' text inset (Catalyst 16; iOS 20) and plain header label x
-    /// (Catalyst 8; iOS 20).
-    static var plainTextInset: CGFloat { isIOSChrome ? 20 : UITableViewCell.labelX }
-    static var plainHeaderTextX: CGFloat { isIOSChrome ? 20 : plainHeaderLabelX }
-    static var plainSeparatorInsets: (left: CGFloat, right: CGFloat) {
-        isIOSChrome ? (20, 20) : (separatorLeftInset, plainSeparatorRightInset)
+    /// The 17 pt label height under the iOS cut on the current screen
+    /// (20.333 at 3x, 20.5 at 2x — FontEngine.labelLineHeight).
+    static var iOSLabelHeight17: CGFloat {
+        FontEngine.labelLineHeight(for: .systemFont(ofSize: 17))
+    }
+    /// One device pixel in points under the iOS cut.
+    static var iOSPixel: CGFloat { 1 / max(1, UIScreen.main.scale) }
+    static func iOSCeilToPixel(_ v: CGFloat) -> CGFloat { (v / iOSPixel).rounded(.up) * iOSPixel }
+    static func iOSFloorToPixel(_ v: CGFloat) -> CGFloat { (v / iOSPixel).rounded(.down) * iOSPixel }
+    /// iOS's system layout margin for a window of `width` points: 20 on the
+    /// 390+ pt phones (iPhone 16: real app, window scenes), 16 on the 375 pt
+    /// iPhone SE (MEASURED 2026-09-04 on both oracle devices — inset-grouped
+    /// cards, plain text insets, separator insets and accessory margins all
+    /// move by the same 4 pt).
+    static func iOSSystemMargin(width: CGFloat) -> CGFloat { width >= 390 ? 20 : 16 }
+    /// This table's margin (window width; its own width without a window).
+    var iOSMargin: CGFloat { UITableView.iOSSystemMargin(width: window?.bounds.width ?? bounds.width) }
+    /// Plain cells' text inset (Catalyst 16; iOS: the system margin) and
+    /// plain header label x (Catalyst 8; iOS: the system margin).
+    var plainTextInset: CGFloat { UITableView.isIOSChrome ? iOSMargin : UITableViewCell.labelX }
+    var plainHeaderTextX: CGFloat { UITableView.isIOSChrome ? iOSMargin : UITableView.plainHeaderLabelX }
+    var plainSeparatorInsets: (left: CGFloat, right: CGFloat) {
+        UITableView.isIOSChrome ? (iOSMargin, iOSMargin)
+            : (UITableView.separatorLeftInset, UITableView.plainSeparatorRightInset)
     }
     /// Extra height iOS 26 gives a value1/value2 cell that has NO accessory
     /// (its content shifts down by it). MEASURED: "Name / Miguel" is 55 tall
     /// while "Plan / Pro >" and "Theme / Dark >" are 53 (tableview_grouped,
     /// tableview_dark); default and subtitle cells are unaffected.
-    static var valueCellPadding: CGFloat { isIOSChrome ? 2 : 0 }
+    /// Only on the 3x device: the same cells measure 53 on the iPhone SE
+    /// (2x, tableview_grouped 2026-09-04), so the padding is a rounding
+    /// artefact of the thirds grid, not a metric.
+    static var valueCellPadding: CGFloat { isIOSChrome && UIScreen.main.scale >= 3 ? 2 : 0 }
 
     /// Side margin of the inset-grouped card. MEASURED 8 pt in the
     /// offscreen Catalyst oracle (golden/tableview_grouped) but 16 pt when
     /// the same table renders in a real UIWindow (golden/tableview_dark,
     /// oracle2) — real-device metrics use the 16 pt reading. Header/footer
     /// text indents by this + 16.
-    public var insetGroupedSideInset: CGFloat = UITableView.isIOSChrome ? 20 : 8 {
-        didSet { if insetGroupedSideInset != oldValue { setNeedsMetrics() } }
+    ///
+    /// iOS 26.1 (MEASURED 2026-09-04 on both oracle devices): the margin is
+    /// the window's system layout margin — 20 pt on the iPhone 16 (393 pt
+    /// wide: real app, window scenes) and 16 pt on the iPhone SE (375 pt:
+    /// tableview_grouped cards at x = 16, header text at 32). Modelled on
+    /// the host window's width (the table's own when it has no window):
+    /// 20 from 390 pt, 16 below. Assigning the property pins a value.
+    public var insetGroupedSideInset: CGFloat {
+        get {
+            if let pinned = _insetGroupedSideInsetOverride { return pinned }
+            return UITableView.isIOSChrome ? iOSMargin : 8
+        }
+        set {
+            let old = insetGroupedSideInset
+            _insetGroupedSideInsetOverride = newValue
+            if newValue != old { setNeedsMetrics() }
+        }
+    }
+    var _insetGroupedSideInsetOverride: CGFloat?
+
+    open override func didMoveToWindow() {
+        super.didMoveToWindow()
+        // The iOS margin above depends on the window's width.
+        if UITableView.isIOSChrome, _insetGroupedSideInsetOverride == nil { setNeedsMetrics() }
     }
     var groupedHeaderLabelX: CGFloat { insetGroupedSideInset + 16 }
 
@@ -1113,7 +1159,7 @@ open class UITableView: UIScrollView {
                 (header as? UITableViewHeaderFooterView)?.configure(
                     kind: .header, text: m.headerTitle,
                     labelX: style == .plain
-                        ? UITableView.plainHeaderTextX
+                        ? plainHeaderTextX
                         : groupedHeaderLabelX,
                     style: style, firstSection: s == 0)
                 header.backgroundColor = style == .plain ? .systemBackground : nil
@@ -1137,7 +1183,7 @@ open class UITableView: UIScrollView {
                 (footer as? UITableViewHeaderFooterView)?.configure(
                     kind: .footer, text: m.footerTitle,
                     labelX: style == .plain
-                        ? UITableView.plainHeaderTextX
+                        ? plainHeaderTextX
                         : groupedHeaderLabelX,
                     style: style, firstSection: s == 0)
                 footer.frame = CGRect(x: 0, y: m.rowsEnd, width: bounds.width,
@@ -1155,7 +1201,7 @@ open class UITableView: UIScrollView {
                 guard let ds = dataSource else { break }
                 cell = ds.tableView(self, cellForRowAt: path)
                 cell.tableView = self
-                cell._textInset = style == .plain ? UITableView.plainTextInset : UITableViewCell.labelX
+                cell._textInset = style == .plain ? plainTextInset : UITableViewCell.labelX
                 cell._leadingPadding = valueCellPadding(path)
                 cell.frame = rectForRow(at: path)
                 if style == .insetGrouped || style == .grouped {
@@ -1198,7 +1244,7 @@ open class UITableView: UIScrollView {
         let defaults: (left: CGFloat, right: CGFloat)
         switch style {
         case .plain:
-            defaults = UITableView.plainSeparatorInsets
+            defaults = plainSeparatorInsets
         case .grouped, .insetGrouped:
             defaults = (UITableView.separatorLeftInset,
                         UITableView.groupedSeparatorRightInset)

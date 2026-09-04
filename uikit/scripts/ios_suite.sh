@@ -33,16 +33,20 @@ names=("${(@)scenes:t:r}")
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   echo "==> real iOS capture ($GOLD)"
   rm -rf "$GOLD"
-  # Two devices: scenes that capture the WINDOW (window/modal/alert — sheet
-  # insets, bars and safe areas are device geometry) on the iPhone 16 (3x),
-  # everything else on the iPhone SE (2x), whose pixel grid IS the scene's.
+  # Two devices: modal/alert scenes and windows wider than the SE's 375 pt
+  # (sheet insets, alert widths and safe areas are device geometry) on the
+  # iPhone 16 (3x); everything else, window scenes included, on the iPhone
+  # SE (2x), whose pixel grid IS the scene's — measured 2026-09-04: the
+  # 375-wide navbar_dark/navbar_large score 99.5 against the SE and 98.9
+  # against the iPhone 16 for the same render.
   python3 - "$WORK" <<'PYSPLIT'
 import json, sys
 work = sys.argv[1]
 win, plain = [], []
 for f in open(work + '/static_scenes.txt').read().split():
     d = json.load(open(f))
-    (win if (d.get('window') or d.get('modal') or d.get('alert')) else plain).append(f)
+    big = d.get('modal') or d.get('alert') or (d.get('window') and d.get('size', [0])[0] > 375)
+    (win if big else plain).append(f)
 open(work + '/scenes_3x.txt', 'w').write('\n'.join(win) + '\n')
 open(work + '/scenes_2x.txt', 'w').write('\n'.join(plain) + '\n')
 print(f"    {len(plain)} scenes on the 2x device, {len(win)} window scenes on the iPhone 16")

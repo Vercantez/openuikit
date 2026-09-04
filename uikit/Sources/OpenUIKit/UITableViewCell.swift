@@ -172,22 +172,46 @@ open class UITableViewCell: UIView, ReusableView {
     // "iOS 26.1 chrome").
     static var isIOSChrome: Bool { UITableView.isIOSChrome }
     public static var defaultRowHeight: CGFloat { isIOSChrome ? 53 : 51.5 }
-    public static var subtitleRowHeight: CGFloat { isIOSChrome ? 69.333333 : 70.5 }
+    /// iOS: 49 above the 17 pt primary label's device-pixel height
+    /// (69.333 at 3x, 69.5 at 2x — both measured).
+    public static var subtitleRowHeight: CGFloat {
+        isIOSChrome ? 49 + UITableView.iOSLabelHeight17 : 70.5
+    }
     static let labelX: CGFloat = 16
     static let primaryLabelY: CGFloat = 15.5
-    static var subtitlePrimaryY: CGFloat { isIOSChrome ? 15.666667 : primaryLabelY }
+    /// iOS: the two-line block (17 pt + 15 pt labels) centred in the row and
+    /// the top rounded UP to the device pixel — 15.5 -> 15.667 at 3x, 15.5
+    /// on the grid at 2x (measured on both devices).
+    static var subtitlePrimaryY: CGFloat {
+        guard isIOSChrome else { return primaryLabelY }
+        let block = UITableView.iOSLabelHeight17 + FontEngine.labelLineHeight(for: .systemFont(ofSize: 15))
+        return UITableView.iOSCeilToPixel((subtitleRowHeight - block) / 2)
+    }
     static let subtitleDetailY: CGFloat = 36
-    static var trailingMargin: CGFloat { isIOSChrome ? 20 : 16 }
+    /// iOS: the window's system layout margin (20 on the iPhone 16, 16 on
+    /// the SE — see UITableView.iOSSystemMargin).
+    var trailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin : 16 }
+    var iOSMargin: CGFloat {
+        UITableView.iOSSystemMargin(width: window?.bounds.width ?? tableView?.bounds.width ?? bounds.width)
+    }
     /// Right edge of a value1 detail label with no accessory (16 in on iOS).
     static var detailTrailingMargin: CGFloat { isIOSChrome ? 16 : 16 }
-    static var disclosureSize: CGSize { isIOSChrome ? CGSize(width: 10.333333, height: 14) : CGSize(width: 10.5, height: 14) }
-    static var checkmarkSize: CGSize { isIOSChrome ? CGSize(width: 19, height: 17.333333) : CGSize(width: 19, height: 18) }
+    /// iOS: the chevron symbol is 10.333 wide at 3x and 10.5 at 2x — a
+    /// width in (10, 10.333] rounded up to the device pixel; 14 tall on both.
+    static var disclosureSize: CGSize {
+        isIOSChrome ? CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14) : CGSize(width: 10.5, height: 14)
+    }
+    /// iOS: 19 x 17.333 at 3x, 19 x 18 at 2x (measured; no single rounding
+    /// of one value gives both, so the two readings are carried as such).
+    static var checkmarkSize: CGSize {
+        isIOSChrome ? CGSize(width: 19, height: UIScreen.main.scale >= 3 ? 17.333333 : 18) : CGSize(width: 19, height: 18)
+    }
     /// Leading text inset (16; the table sets 20 for plain cells on iOS).
     var _textInset: CGFloat = 16
     /// Extra top padding of a grouped section's first row on iOS (2 pt).
     var _leadingPadding: CGFloat = 0
     /// Checkmark trailing margin (measured 18.5, vs 16 for the chevron).
-    static var checkmarkTrailingMargin: CGFloat { isIOSChrome ? 22.5 : 18.5 }
+    var checkmarkTrailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin + 2.5 : 18.5 }
     /// Content-edge gap between the content view and a checkmark accessory.
     static let checkmarkContentGap: CGFloat = 2.5
     /// value1 detail gap from the content edge when an accessory is present.
@@ -432,7 +456,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// Width of the content region for the current accessory.
     var contentWidth: CGFloat {
         if let accessoryView {
-            return max(0, bounds.width - UITableViewCell.trailingMargin
+            return max(0, bounds.width - trailingMargin
                        - accessoryView.frame.width
                        - UITableViewCell.detailAccessoryGap)
         }
@@ -440,10 +464,10 @@ open class UITableViewCell: UIView, ReusableView {
         case .none:
             return bounds.width
         case .disclosureIndicator:
-            return bounds.width - UITableViewCell.trailingMargin
+            return bounds.width - trailingMargin
                 - UITableViewCell.disclosureSize.width
         case .checkmark:
-            return bounds.width - UITableViewCell.checkmarkTrailingMargin
+            return bounds.width - checkmarkTrailingMargin
                 - UITableViewCell.checkmarkSize.width
                 - UITableViewCell.checkmarkContentGap
         }
@@ -452,7 +476,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// Round up to the half-point grid (accessory centering, measured).
     /// iOS: down to the third-point grid ((53 - 14) / 2 = 19.5 -> 19.333).
     private static func ceilHalf(_ v: CGFloat) -> CGFloat {
-        if isIOSChrome { return (v * 3).rounded(.down) / 3 }
+        if isIOSChrome { return UITableView.iOSFloorToPixel(v) }
         return (v * 2).rounded(.up) / 2
     }
 
@@ -470,7 +494,7 @@ open class UITableViewCell: UIView, ReusableView {
             _accessoryGlyphView.isHidden = true
             let size = custom.frame.size
             custom.frame = CGRect(
-                x: w - UITableViewCell.trailingMargin - size.width,
+                x: w - trailingMargin - size.width,
                 y: pad + UITableViewCell.ceilHalf((h - size.height) / 2),
                 width: size.width, height: size.height)
         } else {
@@ -481,14 +505,14 @@ open class UITableViewCell: UIView, ReusableView {
                 _accessoryGlyphView.isHidden = false
                 let s = UITableViewCell.disclosureSize
                 _accessoryGlyphView.frame = CGRect(
-                    x: w - UITableViewCell.trailingMargin - s.width,
+                    x: w - trailingMargin - s.width,
                     y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),
                     width: s.width, height: s.height)
             case .checkmark:
                 _accessoryGlyphView.isHidden = false
                 let s = UITableViewCell.checkmarkSize
                 _accessoryGlyphView.frame = CGRect(
-                    x: w - UITableViewCell.checkmarkTrailingMargin - s.width,
+                    x: w - checkmarkTrailingMargin - s.width,
                     y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),
                     width: s.width, height: s.height)
             }
@@ -514,10 +538,13 @@ open class UITableViewCell: UIView, ReusableView {
         let maxTextW = contentWidth - labelX - _textInset
         let primary = textLabel.sizeThatFits(
             CGSize(width: CGFloat.greatestFiniteMagnitude, height: h))
-        // iOS: a single-line primary is centred exactly ((53 - 20.333) / 2 =
-        // 16.333); a subtitle cell's primary sits at 15.667.
+        // iOS: a single-line primary is centred and its top rounded UP to
+        // the device pixel ((53 - 20.333) / 2 = 16.333 at 3x; (53 - 20.5) / 2
+        // = 16.25 -> 16.5 at 2x, both measured); a subtitle cell's primary
+        // sits at subtitlePrimaryY.
         let primaryY: CGFloat = UITableViewCell.isIOSChrome
-            ? (style == .subtitle ? UITableViewCell.subtitlePrimaryY : (h - primary.height) / 2)
+            ? (style == .subtitle ? UITableViewCell.subtitlePrimaryY
+                                  : UITableView.iOSCeilToPixel((h - primary.height) / 2))
             : UITableViewCell.primaryLabelY
         textLabel.frame = CGRect(x: labelX,
                                  y: primaryY,
@@ -563,9 +590,12 @@ open class UITableViewCell: UIView, ReusableView {
 open class UITableViewHeaderFooterView: UIView, ReusableView {
     public static let headerHeight: CGFloat = 40.5
     static let headerLabelY: CGFloat = 10
-    static var footerLabelY: CGFloat { UITableView.isIOSChrome ? 7.666667 : 8 }
+    /// iOS: 7.667 at 3x, 7.5 at 2x (measured on both devices; the 30 pt
+    /// one-line footer holds on each grid: 7.667 + 15.667 + 6.667 and
+    /// 7.5 + 16 + 6.5).
+    static var footerLabelY: CGFloat { UITableView.isIOSChrome ? (UIScreen.main.scale >= 3 ? 7.666667 : 7.5) : 8 }
     /// Footer height = labelY + text height + 6 (measured 30 for one line).
-    static var footerBottomPadding: CGFloat { UITableView.isIOSChrome ? 6.666667 : 6 }
+    static var footerBottomPadding: CGFloat { UITableView.isIOSChrome ? (UIScreen.main.scale >= 3 ? 6.666667 : 6.5) : 6 }
     /// Header label y (iOS 26: plain 4; grouped 28.667 for the first section,
     /// 18.667 after).
     var _headerLabelY: CGFloat = UITableViewHeaderFooterView.headerLabelY
@@ -633,7 +663,11 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
             switch style {
             case .plain: _headerLabelY = 4; _wholePointLabelHeight = true
             case .grouped, .insetGrouped:
-                _headerLabelY = firstSection ? 28.666667 : 18.666667
+                // MEASURED: 28.667 / 18.667 on the iPhone 16 (3x), 29.5 /
+                // 19.5 on the iPhone SE (2x) — not one value rounded two
+                // ways, so both readings are carried.
+                let threeX = UIScreen.main.scale >= 3
+                _headerLabelY = firstSection ? (threeX ? 28.666667 : 29.5) : (threeX ? 18.666667 : 19.5)
                 _wholePointLabelHeight = false
             }
         } else {

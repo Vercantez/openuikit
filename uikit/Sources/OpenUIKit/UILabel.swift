@@ -142,7 +142,14 @@ open class UILabel: UIView {
     /// line-box bottom. Verified against golden/constraints_baseline.
     override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
         let ascender = FontEngine.metrics(for: font).ascender
-        let first: CGFloat = (ascender + 0.5).rounded(.down)
+        var first: CGFloat = (ascender + 0.5).rounded(.down)
+        if let s = LayoutEngine.iOSPixelScale {
+            // iOS (MEASURED 2026-09-04, constraints_baseline on the 2x
+            // device): the baseline anchor is the ascender rounded to the
+            // nearest DEVICE pixel — 26.66 -> 26.5, 12.38 -> 12.5, 20.95 ->
+            // 21, 10.47 -> 10.5 — not to the whole point.
+            first = (ascender * s).rounded(.toNearestOrAwayFromZero) / s
+        }
         return (first, lineBoxHeight - first)
     }
 
@@ -175,7 +182,25 @@ open class UILabel: UIView {
                                     maxLines: numberOfLines)
         guard !lines.isEmpty else { return .zero }
         var maxW: CGFloat = 0
-        for l in lines { maxW = Swift.max(maxW, l.measuredWidth) }
+        for (i, l) in lines.enumerated() {
+            if i == lines.count - 1, l.text.endIndex < text.endIndex,
+               OpenUIKitRuntime.systemFontCut == .iOS {
+                // iOS: a capped label reports the width of the line it
+                // DRAWS — the remainder tail-truncated into the last line
+                // (iOS 26.1, label_multiline: 196 for a 200 pt fit whose
+                // last whole-word line measures 185). Catalyst reports 192
+                // there — neither the whole-word line nor the squeezed draw
+                // width — so it keeps the whole-word measure (within the
+                // golden's tolerance).
+                let remainder = String(text[l.text.startIndex...]).replacingNewlines()
+                let t = TextLayout.truncate(remainder, font: font, maxWidth: size.width,
+                                            mode: .byTruncatingTail)
+                maxW = Swift.max(maxW, FontEngine.measure(t.text, font: font)
+                                 + t.delta * CGFloat(t.text.unicodeScalars.count))
+            } else {
+                maxW = Swift.max(maxW, l.measuredWidth)
+            }
+        }
         return CGSize(width: FontEngine.ceilToPixel(maxW, scale: scale),
                       height: CGFloat(lines.count) * lineH)
     }

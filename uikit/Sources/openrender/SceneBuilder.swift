@@ -733,8 +733,10 @@ func makeTableView(_ j: SceneJSON) -> UITableView {
     // metrics: the card side margin measures 16 pt there vs 8 pt in the
     // offscreen Catalyst oracle (see UITableView.insetGroupedSideInset).
     // runScene has already latched the scene's "window" flag here.
-    if GlyphInkTable.windowCompositing {
-        t.insetGroupedSideInset = OpenUIKitRuntime.systemFontCut == .iOS ? 20 : 16
+    // Under the iOS cut the table derives the margin from its window's
+    // width itself (20 from 390 pt, 16 below — both oracle devices).
+    if GlyphInkTable.windowCompositing, OpenUIKitRuntime.systemFontCut != .iOS {
+        t.insetGroupedSideInset = 16
     }
     let driver = SceneTableDriver(sectionsJSON: j["sections"]?.arrayValue ?? [])
     sceneTableDrivers.append(driver)   // dataSource/delegate are weak
@@ -1586,6 +1588,13 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // thing that fires them, and it rewinds per scene.
     Timer._reset()
     let scale = num(scene["scale"]) ?? 2
+    // The screen IS the scene: the iOS cut rounds label heights, table
+    // metrics and layout origins to the DEVICE pixel (1/3 pt on the iPhone
+    // 16, 1/2 pt on the iPhone SE the 2x goldens come from). Left at the
+    // default 3x, every 2x scene laid out on the thirds grid (measured
+    // 2026-09-04: cell labels 20.333 tall where iOS has 20.5).
+    UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: CGFloat(sz[0]), height: CGFloat(sz[1])),
+                                 scale: CGFloat(scale))
     let style: UIUserInterfaceStyle = scene["style"]?.stringValue == "dark" ? .dark : .light
     // Window scenes ("window": true, rendered by oracle2 via drawHierarchy
     // in a real UIWindow) get the render server's darker glyph rasterization

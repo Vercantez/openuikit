@@ -181,9 +181,15 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     static let largeInlineZoneTop: CGFloat = 10
     static let largeInlineZoneHeight: CGFloat = 54
     static let largeTitleZoneHeight: CGFloat = 52
-    static let largeTitleX: CGFloat = 20
-    static let largeTitleLabelY: CGFloat = 67       // 10 + 54 + 3
-    static let largeTitleLabelHeight: CGFloat = 40.5
+    /// Catalyst: label [20, 3, w, 40.5] inside the zone. iOS 26.1 (MEASURED
+    /// 2026-09-04, `navbar_dark`/`navbar_large` on the iPhone SE 3rd gen and
+    /// the iPhone 16 alike): `_UINavigationBarLargeTitleView`'s label is
+    /// [16, 3.5, textWidth, 41] — 4 pt further left and half a point lower,
+    /// which moved every large-title glyph a whole 2x pixel.
+    static var largeTitleX: CGFloat { isIOS ? 16 : 20 }
+    static var largeTitleLabelY: CGFloat { isIOS ? 67.5 : 67 }   // 10 + 54 + 3(.5)
+    static var largeTitleLabelHeight: CGFloat { isIOS ? 41 : 40.5 }
+    static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
     static let largeTitleFontSize: CGFloat = 34
     static let largeInlineTitleCenterY: CGFloat = 32
 

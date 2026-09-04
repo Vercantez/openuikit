@@ -275,8 +275,18 @@ open class UIStackView: UIView {
 
         for (i, view) in arranged.enumerated() {
             let (o, l) = exact[i]
-            let axisOrigin = UIStackView.roundOrigin(axisOffset + o)
-            let axisLen = view.isHidden ? 0 : UIStackView.roundSize(l)
+            var axisOrigin = UIStackView.roundOrigin(axisOffset + o)
+            var axisLen = view.isHidden ? 0 : UIStackView.roundSize(l)
+            if let s = LayoutEngine.iOSPixelScale {
+                // iOS (MEASURED 2026-09-04, stack_vertical on the iPhone SE,
+                // 2x: 280 / 3 with spacing 10 -> [10, 93.5], [113.5, 93],
+                // [216.5, 93.5]): both EDGES of each arranged view round to
+                // the nearest device pixel; the length is their difference,
+                // so a 93.333 slot is 93.5 or 93 depending on where it sits.
+                let r: (CGFloat) -> CGFloat = { ($0 * s).rounded(.toNearestOrAwayFromZero) / s }
+                axisOrigin = r(axisOffset + o)
+                axisLen = view.isHidden ? 0 : r(axisOffset + o + l) - axisOrigin
+            }
             let (crossOrigin, crossLen) = crossPlacement(
                 content: crossLength(contents[i]),
                 total: crossLength(layoutRect.size), offset: crossOffset)
