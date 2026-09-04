@@ -209,6 +209,26 @@ let package = Package(
         // 6.2.1 and Linux 6.2.4).
         .target(name: "RealAppProbe", dependencies: ["OpenUIKit", "UIKit"],
                 swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
+        // CONFORMANCE APPS (docs/HILLCLIMB.md): small UIKit apps written the
+        // way real apps are, whose source is compiled BOTH against OpenUIKit
+        // (here, hosted by `openhost --app <name>`) and against real UIKit in
+        // the iOS simulator (Tools/oracle2/confprobe), and whose scripted
+        // replays are compared capture by capture
+        // (scripts/conformance_flow.sh). Their only imports are UIKit and
+        // Foundation — the `UIKit` shim re-exports both, exactly as real
+        // UIKit's swiftinterface does — so the same bytes compile on the two
+        // sides with no patching, unlike Sources/RealAppProbe.
+        //
+        // `-default-isolation MainActor` for the same reason RealAppProbe
+        // carries it: that IS the build setting an Xcode 26 app target has,
+        // and the simulator compile in scripts/conformance_probe_sim.sh
+        // passes the identical flag.
+        // Each app's script.json is a HARNESS input read from the repo path
+        // (openhost --script, and copied into the probe bundle by
+        // scripts/conformance_probe_sim.sh), not a bundled resource.
+        .target(name: "ConformanceApps", dependencies: ["OpenUIKit", "UIKit"],
+                exclude: ["NavFlow/script.json"],
+                swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).
         .executableTarget(name: "openrender", dependencies: ["OpenUIKit", "RealAppProbe"]),
@@ -225,7 +245,7 @@ let package = Package(
         // see Sources/openhost/main.swift header); openrender itself stays
         // byte-identical.
         // May use Foundation (it is a host, like openrender).
-        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp", "RealAppProbe"]),
+        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp", "RealAppProbe", "ConformanceApps"]),
         // The TYPES half of the C ABI (the ObjC callback vtable), shared by
         // the Swift side and the ObjC facade so its layout cannot drift.
         .target(name: "COpenUIKitABI", publicHeadersPath: "include"),

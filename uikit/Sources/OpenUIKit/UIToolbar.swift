@@ -99,7 +99,9 @@ public final class UIToolbar: UIView, _UIBarItemContainer {
             v.appliesRefraction = false     // measured: toolbars have no band
             v.barTintColor = barTintColor ?? tintColor ?? .systemBlue
             v.addTarget(for: .touchUpInside) { [weak item] control, event in
-                guard let item, let action = item.action else { return }
+                guard let item else { return }
+                item.primaryAction?.performWithSender(item, target: nil)
+                guard let action = item.action else { return }
                 SelectorDispatch.send(action, to: item.target, sender: item,
                                       event: event)
                 _ = control

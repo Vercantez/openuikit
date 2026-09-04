@@ -1,0 +1,12 @@
+{
+  "comment": "NavFlow conformance timeline. Every capture is taken at REST, at least 0.3 s after the action that precedes it, so the comparison is of settled layout and not of two animation curves. Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app NavFlow` (the port).",
+  "app": "NavFlow",
+  "events": [
+    { "t": 0.40, "action": "present" },
+    { "t": 1.50, "action": "dismiss" },
+    { "t": 2.40, "action": "push" },
+    { "t": 3.30, "action": "toggle" },
+    { "t": 4.20, "action": "pop" }
+  ],
+  "captures": [0.20, 1.20, 2.10, 3.00, 3.90, 4.80]
+}
