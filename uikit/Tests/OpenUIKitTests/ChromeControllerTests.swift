@@ -439,3 +439,162 @@ final class LargeTitleNavigationTests: XCTestCase {
         XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 32, accuracy: 1e-9)
     }
 }
+
+// MARK: - iOS 26 bar transition (Tools/oracle2/navprobe)
+
+/// The push/pop bar behaviour MEASURED with Tools/oracle2/navprobe on the
+/// iPhone 16 / iOS 26.1: the bar's title content translates with its own view
+/// controller instead of cross-fading in place, and the controller that
+/// arrives owns the large title.
+@MainActor
+final class IOSNavigationBarTransitionTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut = .macOS
+
+    override func setUp() {
+        super.setUp()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+    }
+
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        super.tearDown()
+    }
+
+    private func makeNav(largeTitles: Bool) -> UINavigationController {
+        let root = UIViewController()
+        root.title = "Settings"
+        root.view.backgroundColor = .systemBackground
+        let nav = UINavigationController(rootViewController: root)
+        nav.navigationBar.prefersLargeTitles = largeTitles
+        nav.view.frame = CGRect(x: 0, y: 0, width: 390, height: 700)
+        nav.view.layoutIfNeeded()
+        return nav
+    }
+
+    /// navprobe.large / navprobe.inline, push: the incoming side sits at
+    /// w(1 - q) full width, the outgoing side at -0.3 w q clipped to the
+    /// incoming leading edge, both at alpha 1. Sample from the recording
+    /// (q = 0.4587): outgoing x -53.67 w 264.76, incoming x 211.09 — and
+    /// -53.67 + 264.76 = 211.09.
+    func testPushTranslatesBarContentWithItsController() {
+        for largeTitles in [true, false] {
+            let nav = makeNav(largeTitles: largeTitles)
+            let bar = nav.navigationBar
+            let detail = UIViewController()
+            detail.title = "About"
+            bar.beginTransition(title: "About", backTitle: "Settings", push: true)
+            let t = bar.transition!
+            let old = t.oldGroup!, new = t.newGroup!
+            let w: CGFloat = 390
+
+            bar.setTransitionProgress(0)
+            XCTAssertEqual(new.frame.origin.x, w)
+            XCTAssertEqual(old.frame, CGRect(x: 0, y: 0, width: w, height: bar.bounds.height))
+
+            for q: CGFloat in [0.25, 0.4587, 0.8] {
+                bar.setTransitionProgress(q)
+                XCTAssertEqual(new.frame.origin.x, w * (1 - q), accuracy: 1e-6)
+                XCTAssertEqual(new.frame.width, w, accuracy: 1e-6)
+                XCTAssertEqual(old.frame.origin.x, -0.3 * w * q, accuracy: 1e-6)
+                XCTAssertEqual(old.frame.maxX, new.frame.origin.x, accuracy: 1e-6)
+                XCTAssertEqual(old.alpha, 1)
+                XCTAssertEqual(new.alpha, 1)
+                XCTAssertTrue(old.clipsToBounds)
+            }
+            _ = detail
+        }
+    }
+
+    /// The pop is the same relation with the roles swapped: the outgoing
+    /// (popped) controller is the one on top. Recording sample, q = 0.6994:
+    /// outgoing x 117.25 w 390, incoming x -81.83 w 199.08 -> right edge
+    /// 117.25.
+    func testPopTranslatesBarContentWithItsController() {
+        let nav = makeNav(largeTitles: true)
+        let bar = nav.navigationBar
+        bar.beginTransition(title: "Settings", backTitle: nil, push: false)
+        let t = bar.transition!
+        let old = t.oldGroup!, new = t.newGroup!
+        let w: CGFloat = 390
+        for p: CGFloat in [0, 0.3006, 0.7] {
+            bar.setTransitionProgress(p)
+            let q = 1 - p
+            XCTAssertEqual(old.frame.origin.x, w * (1 - q), accuracy: 1e-6)
+            XCTAssertEqual(old.frame.width, w, accuracy: 1e-6)
+            XCTAssertEqual(new.frame.origin.x, -0.3 * w * q, accuracy: 1e-6)
+            XCTAssertEqual(new.frame.maxX, old.frame.origin.x, accuracy: 1e-6)
+        }
+    }
+
+    /// The large title travels inside the group with its controller's title,
+    /// at the same vertical rest position on both sides (recording: abs y
+    /// 123.00 at every frame of the push).
+    func testBothLargeTitlesRideTheirGroups() {
+        let nav = makeNav(largeTitles: true)
+        let bar = nav.navigationBar
+        bar.beginTransition(title: "About", backTitle: "Settings", push: true)
+        let t = bar.transition!
+        XCTAssertEqual(t.oldLarge?.text, "Settings")
+        XCTAssertEqual(t.newLarge?.text, "About")
+        XCTAssertTrue(t.oldLarge?.superview === t.oldGroup)
+        XCTAssertTrue(t.newLarge?.superview === t.newGroup)
+        XCTAssertEqual(t.oldLarge?.frame.origin.y, UINavigationBar.largeTitleLabelY)
+        XCTAssertEqual(t.newLarge?.frame.origin.y, UINavigationBar.largeTitleLabelY)
+        XCTAssertEqual(t.oldLarge?.frame.origin.x, UINavigationBar.largeTitleX)
+        XCTAssertEqual(t.newLarge?.frame.origin.x, UINavigationBar.largeTitleX)
+    }
+
+    /// MEASURED (navprobe.large rest_pushed): a controller pushed with the
+    /// default `largeTitleDisplayMode` (.automatic) shows the LARGE title —
+    /// the bar's label reads "About" at [16, 3.67, 97, 40.67] while the
+    /// inline title stays at alpha 0. Before this the port's large title kept
+    /// the root's text for the rest of the run.
+    func testPushedControllerOwnsTheLargeTitle() {
+        let nav = makeNav(largeTitles: true)
+        let bar = nav.navigationBar
+        XCTAssertEqual(bar.largeTitleLabel?.text, "Settings")
+        let detail = UIViewController()
+        detail.title = "About"
+        XCTAssertEqual(detail.navigationItem.largeTitleDisplayMode, .automatic)
+        nav.pushViewController(detail, animated: true)
+        nav.finishActiveTransition()
+        XCTAssertEqual(bar.largeTitleLabel?.text, "About")
+        XCTAssertTrue(bar.largeTitleLabel?.superview === bar)
+        XCTAssertEqual(bar.largeTitleLabel?.alpha, 1)
+        XCTAssertNil(bar.transition)
+
+        nav.popViewController(animated: true)
+        nav.finishActiveTransition()
+        XCTAssertEqual(bar.largeTitleLabel?.text, "Settings")
+    }
+
+    /// The back button does not travel: the recording has the platter at
+    /// x 16.0 on every frame of both transitions, in both variants.
+    func testBackButtonDoesNotTranslate() {
+        let nav = makeNav(largeTitles: true)
+        let bar = nav.navigationBar
+        bar.beginTransition(title: "About", backTitle: "Settings", push: true)
+        let back = bar.transition!.newBack!
+        var seen: Set<CGFloat> = []
+        for p: CGFloat in [0, 0.25, 0.5, 0.75, 1] {
+            bar.setTransitionProgress(p)
+            seen.insert(back.frame.origin.x)
+        }
+        XCTAssertEqual(seen, [0])
+    }
+
+    /// Catalyst keeps the M7.5 cross-fade: no groups, and the old title
+    /// morphs toward the back-button position.
+    func testCatalystKeepsTheCrossFade() {
+        OpenUIKitRuntime.systemFontCut = .macOS
+        let nav = makeNav(largeTitles: false)
+        let bar = nav.navigationBar
+        bar.beginTransition(title: "About", backTitle: "Settings", push: true)
+        XCTAssertNil(bar.transition?.oldGroup)
+        XCTAssertNil(bar.transition?.newGroup)
+        bar.setTransitionProgress(0.5)
+        XCTAssertEqual(bar.transition!.oldTitle.alpha, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(bar.transition!.newTitle.alpha, 0.5, accuracy: 1e-9)
+    }
+}

@@ -745,6 +745,14 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         var oldBack: _UINavigationBarBackButton?
         var newTitle: UILabel
         var newBack: _UINavigationBarBackButton?
+        /// iOS cut only: the two translating title groups (see
+        /// `setTransitionProgress`). Nil on Catalyst, which keeps the
+        /// cross-fade.
+        var oldGroup: UIView?
+        var newGroup: UIView?
+        /// The outgoing / incoming large titles, parented to those groups.
+        var oldLarge: UILabel?
+        var newLarge: UILabel?
     }
     var transition: BarTransition?
 
@@ -758,12 +766,50 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     func beginTransition(title: String?, backTitle: String?, push: Bool) {
         if transition != nil { endTransition() }
         let newTitle = UINavigationBar.makeTitleLabel(title)
-        addSubview(newTitle)
         let newBack = makeBackButton(backTitle)
-        if let b = newBack { addSubview(b) }
-        transition = BarTransition(push: push, oldTitle: titleLabel,
-                                   oldBack: backButton, newTitle: newTitle,
-                                   newBack: newBack)
+        var t = BarTransition(push: push, oldTitle: titleLabel,
+                              oldBack: backButton, newTitle: newTitle,
+                              newBack: newBack)
+        if UINavigationBar.isIOS {
+            // iOS 26 moves the bar's TITLE CONTENT with its view controller
+            // (see setTransitionProgress), so each side needs a container of
+            // its own: the outgoing one clips, the incoming one does not.
+            let oldGroup = UIView(frame: bounds)
+            oldGroup.clipsToBounds = true
+            let newGroup = UIView(frame: bounds)
+            titleLabel.removeFromSuperview()
+            oldGroup.addSubview(titleLabel)
+            newGroup.addSubview(newTitle)
+            if prefersLargeTitles {
+                if let old = largeTitleLabel {
+                    old.removeFromSuperview()
+                    oldGroup.addSubview(old)
+                    t.oldLarge = old
+                }
+                let l = makeLargeTitleLabel(title)
+                // The incoming controller arrives at ITS OWN rest offset, so
+                // the new large title starts fully expanded. (A push made
+                // while the outgoing controller is scrolled into its
+                // large-title zone is not measured — docs/KNOWN_GAPS.md.)
+                l.frame = largeTitleFrame(for: l, collapsedBy: 0)
+                newGroup.addSubview(l)
+                t.newLarge = l
+                largeTitleLabel = l
+            }
+            addSubview(oldGroup)
+            addSubview(newGroup)
+            t.oldGroup = oldGroup
+            t.newGroup = newGroup
+            // The back button is NOT in either group: measured (navprobe,
+            // both variants, push and pop) the platter's x stays 16.0 at
+            // every recorded frame while the titles translate.
+            if let b = t.oldBack { bringSubviewToFront(b) }
+            if let b = newBack { addSubview(b) }
+        } else {
+            addSubview(newTitle)
+            if let b = newBack { addSubview(b) }
+        }
+        transition = t
         titleLabel = newTitle
         backButton = newBack
         setTransitionProgress(0)
@@ -774,6 +820,10 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// inside a UIView.animate block, scrubs the model otherwise.
     func setTransitionProgress(_ p: CGFloat) {
         guard let t = transition else { return }
+        if let oldGroup = t.oldGroup, let newGroup = t.newGroup {
+            setIOSTransitionProgress(p, t, oldGroup: oldGroup, newGroup: newGroup)
+            return
+        }
         let w = bounds.width
         let mid = w / 2
         let slide = UINavigationBar.titleSlide * w
@@ -805,6 +855,47 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         }
     }
 
+    /// iOS 26's bar transition, MEASURED with Tools/oracle2/navprobe on the
+    /// iPhone 16 / iOS 26.1 (390 x 700 container, no top safe area, push at
+    /// recorder t 0.50 and pop at 1.50, presentation geometry every display
+    /// tick; the numbers below are from `navprobe.large.frames.json` and
+    /// `navprobe.inline.frames.json`, which agree):
+    ///
+    /// The bar does NOT cross-fade its titles. UIKit builds one
+    /// `ViewControllerMatchingView` per side and TRANSLATES each with its own
+    /// view controller's content view, at opacity 1 throughout:
+    ///
+    ///   front (the controller on top — incoming on push, outgoing on pop)
+    ///       x = w * (1 - q),  width w, unclipped
+    ///   back  (the controller underneath, carrying the parallax)
+    ///       x = -0.3 * w * q, width w * (1 - 0.7 q), CLIPPED
+    ///
+    /// where q is the coverage the content views already use. The back side's
+    /// width is exactly "up to the front side's leading edge": at q = 0.4587
+    /// the recording has the outgoing group at x -53.67 w 264.76 and the
+    /// incoming at 211.09, and -53.67 + 264.76 = 211.09. The pop is the same
+    /// relation with the roles swapped (q 0.6994: outgoing x 117.25 w 390,
+    /// incoming x -81.83 w 199.08 -> right edge 117.25).
+    ///
+    /// The large title rides along inside the group; it neither fades
+    /// (`_UIReplicantView` / `_UIPortalView` opacity 1.000 at every frame)
+    /// nor moves vertically (abs y 123.00 at every frame).
+    private func setIOSTransitionProgress(_ p: CGFloat, _ t: BarTransition,
+                                          oldGroup: UIView, newGroup: UIView) {
+        let w = bounds.width
+        let h = bounds.height
+        // Coverage of the FRONT controller, the same q the content views use.
+        let q = t.push ? p : 1 - p
+        let frontX = w * (1 - q)
+        let backX = -UINavigationController.parallaxFraction * w * q
+        let (frontGroup, backGroup) = t.push ? (newGroup, oldGroup) : (oldGroup, newGroup)
+        frontGroup.frame = CGRect(x: frontX, y: 0, width: w, height: h)
+        backGroup.frame = CGRect(x: backX, y: 0, width: frontX - backX, height: h)
+        // Fixed leading position for both back buttons; only the alpha moves.
+        if let b = t.oldBack { place(back: b, alpha: Swift.max(0, 1 - 2.5 * p)) }
+        if let b = t.newBack { place(back: b, alpha: p) }
+    }
+
     /// Animated transitions: re-record the outgoing back button's fade over
     /// the FIRST 40% of the transition (the piecewise alpha in
     /// setTransitionProgress only shapes interactive scrubs; a UIView.animate
@@ -825,6 +916,20 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let (keepTitle, keepBack, dropTitle, dropBack) = cancelled
             ? (t.oldTitle, t.oldBack, t.newTitle, t.newBack)
             : (t.newTitle, t.newBack, t.oldTitle, t.oldBack)
+        if let oldGroup = t.oldGroup, let newGroup = t.newGroup {
+            // Re-parent the surviving title (and large title) to the bar and
+            // drop both translating groups.
+            if let large = cancelled ? t.oldLarge : t.newLarge {
+                large.removeFromSuperview()
+                large.removeAllAnimations()
+                largeTitleLabel = large
+                addSubview(large)
+            }
+            keepTitle.removeFromSuperview()
+            addSubview(keepTitle)
+            oldGroup.removeFromSuperview()
+            newGroup.removeFromSuperview()
+        }
         dropTitle.removeFromSuperview()
         dropBack?.removeFromSuperview()
         titleLabel = keepTitle
@@ -837,15 +942,31 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     // MARK: Large titles (M10)
 
+    /// A large-title label carrying `text`, styled from the effective
+    /// appearance (`applyTitleAttributes` re-styles the installed one).
+    func makeLargeTitleLabel(_ text: String?) -> UILabel {
+        let l = UILabel()
+        l.text = text
+        l.font = .systemFont(ofSize: UINavigationBar.largeTitleFontSize,
+                             weight: .bold)
+        l.textColor = .label
+        return l
+    }
+
+    /// Where `label` sits as the large title for a collapse distance of `d`.
+    func largeTitleFrame(for label: UILabel, collapsedBy d: CGFloat) -> CGRect {
+        CGRect(x: UINavigationBar.largeTitleX,
+               y: UINavigationBar.largeTitleLabelY - d,
+               width: Swift.min(label.intrinsicContentSize.width,
+                                bounds.width - 2 * UINavigationBar.largeTitleX),
+               height: UINavigationBar.largeTitleLabelHeight)
+    }
+
     func configureLargeTitleAppearance() {
         if prefersLargeTitles {
             backgroundColor = nil            // iOS 26: transparent at rest
             hairline.isHidden = true
-            let l = UILabel()
-            l.text = titleLabel.text
-            l.font = .systemFont(ofSize: UINavigationBar.largeTitleFontSize,
-                                 weight: .bold)
-            l.textColor = .label
+            let l = makeLargeTitleLabel(titleLabel.text)
             largeTitleLabel?.removeFromSuperview()
             largeTitleLabel = l
             addSubview(l)
@@ -873,15 +994,15 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// offset, and refresh the scroll-edge pocket. Called from
     /// layoutSubviews and from every observed scroll.
     func updateFromScroll() {
-        guard prefersLargeTitles else { return }
+        // A bar mid-transition is driven by setTransitionProgress: the two
+        // large titles belong to their groups, and the tracked scroll view is
+        // still the OUTGOING controller's, so a scroll event arriving during
+        // the transition would move the INCOMING title by the outgoing
+        // offset. `layoutSubviews` already stands back for the same reason.
+        guard prefersLargeTitles, transition == nil else { return }
         let d = collapseDistance
         if let l = largeTitleLabel {
-            let s = l.intrinsicContentSize
-            l.frame = CGRect(x: UINavigationBar.largeTitleX,
-                             y: UINavigationBar.largeTitleLabelY - d,
-                             width: min(s.width, bounds.width
-                                        - 2 * UINavigationBar.largeTitleX),
-                             height: UINavigationBar.largeTitleLabelHeight)
+            l.frame = largeTitleFrame(for: l, collapsedBy: d)
             l.alpha = 1 - smoothstep01((d - 20) / 32)
         }
         // Inline title fades in as the large title leaves its zone.

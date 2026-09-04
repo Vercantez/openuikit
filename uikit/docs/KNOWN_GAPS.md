@@ -1,5 +1,33 @@
 # Known gaps (living document — fixers: read this)
 
+## Large-title push: what `Tools/oracle2/navprobe` did NOT measure (2026-09-04)
+
+The bar transition is now the measured iOS 26 one — both sides translate with
+their view controllers, the outgoing group clipped to the incoming group's
+leading edge, and the pushed controller owns the large title. Three things the
+probe could not settle, left unmodelled rather than guessed:
+
+- **The curve of `q` itself.** UIKit scrubs the push with a paced animator
+  (`UIPacingAnimationForAnimatorsKey` on the transition views, `speed = 0`), so
+  the presentation layers report their model values and the `CASpringAnimation`
+  objects are never evaluated on their own clock. Every geometry frame in
+  `navprobe.*.frames.json` reads the rest value; the translation relation
+  (front `x = w(1-q)`, back `x = -0.3 w q` clipped to the front's leading edge)
+  was read off the `drawHierarchy` pixels instead, at whatever `q` each frame
+  happened to be at. The port keeps its own existing `q`, so the two curves are
+  only known to agree at `q = 0` and `q = 1`.
+- **A push started from a collapsed large title.** The probe only pushes from a
+  root at scroll offset 0. `beginTransition` therefore builds the incoming
+  large title fully expanded (`collapsedBy: 0`). What real iOS does when the
+  outgoing controller is scrolled into its collapse zone at the moment of the
+  push is not measured.
+- **`_UIReplicantView` / `_UIPortalView`.** Real UIKit routes the outgoing
+  bar content through a replicant and two portal views (recorded at opacity
+  1.000 and abs y 123.00 at every frame of the push). The port translates the
+  real labels in a clipping container instead; that reproduces the measured
+  pixels but not the mechanism, and it will diverge for anything that depends
+  on the title view still being in its original place in the hierarchy.
+
 ## Focus launch-core successor (2026-08-30)
 
 The unchanged Focus main-target census uses the exact 129-source manifest at
