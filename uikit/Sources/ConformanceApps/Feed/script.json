@@ -1,0 +1,12 @@
+{
+  "comment": "Feed conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. refresh (beginRefreshing) at t=0.40; t=0.70 is mid-spin (+0.3 s); end-refresh at t=1.20 settles before t=1.80. scroll-300, select-card-1 and scroll-stories each captured at rest. Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app Feed` (the port).",
+  "app": "Feed",
+  "events": [
+    { "t": 0.40, "action": "refresh" },
+    { "t": 1.20, "action": "end-refresh" },
+    { "t": 2.20, "action": "scroll-300" },
+    { "t": 3.20, "action": "select-card-1" },
+    { "t": 4.20, "action": "scroll-stories" }
+  ],
+  "captures": [0.20, 0.70, 1.80, 2.80, 3.80, 4.80]
+}

@@ -227,7 +227,7 @@ let package = Package(
         // (openhost --script, and copied into the probe bundle by
         // scripts/conformance_probe_sim.sh), not a bundled resource.
         .target(name: "ConformanceApps", dependencies: ["OpenUIKit", "UIKit"],
-                exclude: ["NavFlow/script.json", "TableEditor/script.json", "Forms/script.json", "Modal/script.json"],
+                exclude: ["NavFlow/script.json", "TableEditor/script.json", "Forms/script.json", "Feed/script.json", "Modal/script.json"],
                 swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).

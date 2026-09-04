@@ -38,6 +38,7 @@ let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
     "NavFlow": NavFlowApp.perform,
     "Forms": FormsApp.perform,
     "TableEditor": TableEditorApp.perform,
+    "Feed": FeedApp.perform,
     "Modal": ModalApp.perform,
 ]
 
@@ -48,6 +49,7 @@ let conformanceScaleRegistry: [String: CGFloat] = [
     "NavFlow": 2,
     "Forms": 2,
     "TableEditor": 2,
+    "Feed": 2,
     "Modal": 2,
 ]
 

@@ -590,6 +590,12 @@ open class UICollectionView: UIScrollView {
 
     public func scrollToItem(at indexPath: IndexPath, at position: ScrollPosition,
                              animated: Bool) {
+        collectionViewLayout.prepareIfNeeded()
+        if collectionViewLayout.handleScrollToItem(at: indexPath, at: position) {
+            setNeedsLayout()
+            layoutIfNeeded()
+            return
+        }
         guard let a = layoutAttributesForItem(at: indexPath) else { return }
         let rect = a.frame
         var target = contentOffset

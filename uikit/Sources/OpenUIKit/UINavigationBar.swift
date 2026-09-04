@@ -1082,7 +1082,16 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         if collapseDistance >= UINavigationBar.largeTitleZoneHeight {
             return UINavigationBar.iOSCollapsedBarHeight
         }
-        return UINavigationBar.iOSLargeTitleBarHeight
+        var h = UINavigationBar.iOSLargeTitleBarHeight
+        // MEASURED Feed t700, iPhone SE 2x / iOS 26.1: programmatic
+        // beginRefreshing while overscrolled stretches the large-title bar
+        // 106 → 166 (the refresh control's 60 pt). contentInset stays
+        // [0,0,0,0]; adjustedContentInset.top 116 → 176.
+        if let rc = trackedScrollView?._refreshControl, rc.isRefreshing,
+           collapseDistance < 0 {
+            h += UIRefreshControl.controlHeight
+        }
+        return h
     }
 
     /// Position/fade the large + inline titles for the current tracked
