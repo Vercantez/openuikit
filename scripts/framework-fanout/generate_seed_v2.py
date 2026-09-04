@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import ctypes
+from dataclasses import dataclass
 import errno
 import hashlib
 import json
@@ -125,6 +126,60 @@ API_LIST_FIELDS = frozenset(("accessors", "children", "conformances", "declAttri
 FORBIDDEN_API_KEY_NORMALIZATIONS = frozenset(("location", "toolarguments"))
 MODULE_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 SLUG_RE = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
+MODULE_LOCATION_KINDS = (
+    "framework",
+    "framework-clang-module",
+    "swift-module",
+    "clang-module",
+    "clang-submodule",
+)
+ROADMAP_OPERATOR_OVERRIDE = "none (operator override)"
+IGNORED_REEXPORT_MODULES = frozenset(
+    {
+        "Block",
+        "CFNetwork",
+        "CoreFoundation",
+        "Darwin",
+        "Dispatch",
+        "Foundation",
+        "ObjectiveC",
+        "Swift",
+        "SwiftOnoneSupport",
+        "SwiftShims",
+        "XPC",
+        "_Concurrency",
+        "_StringProcessing",
+        "os",
+        "os_object",
+        "os_workgroup",
+        "ptrauth",
+        "ptrcheck",
+    }
+)
+_MODULEMAP_DECL_RE = re.compile(
+    r"(?:(?P<extern>extern)\s+)?(?:explicit\s+)?(?:framework\s+)?"
+    r"(?<![A-Za-z0-9_])module\s+"
+    r"(?P<name>\*|[_A-Za-z][_A-Za-z0-9]*)"
+)
+_MODULEMAP_HEADER_RE = re.compile(
+    r"""(?:exclude\s+)?(?:umbrella\s+)?header\s+("(?:\\.|[^"\\])*"|<(?:\\.|[^>\\])*>)"""
+)
+_MODULEMAP_UMBRELLA_DIR_RE = re.compile(
+    r"""umbrella\s+("(?:\\.|[^"\\])*")"""
+)
+_MODULEMAP_EXPORT_RE = re.compile(
+    r"export\s+(\*|[_A-Za-z][_A-Za-z0-9]*(?:\.[_A-Za-z][_A-Za-z0-9]*)*)"
+)
+_MODULEMAP_ALIAS_RE = re.compile(
+    r"=\s*([_A-Za-z][_A-Za-z0-9]*)"
+)
+_SWIFT_EXPORTED_IMPORT_RE = re.compile(
+    r"@_exported\s+import\s+(?:(?:class|enum|func|let|protocol|struct|typealias|var)\s+)?"
+    r"([A-Za-z_][A-Za-z0-9_]*)"
+)
+_OBJC_IMPORT_RE = re.compile(
+    r"""(?:@import\s+([A-Za-z_][A-Za-z0-9_]*)|#\s*(?:import|include)\s*<([A-Za-z_][A-Za-z0-9_]*)/)"""
+)
 CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 EXTERNAL_EVIDENCE_LOCK = "full/framework-fanout/external-evidence-sources.json"
@@ -476,10 +531,18 @@ def looks_like_tbd(path: Path) -> bool:
     return b"!tapi-tbd" in prefix or b"tbd-version:" in prefix
 
 
-def classify_sdk_input(path: Path, framework_root: Path) -> str | None:
-    relative = path.relative_to(framework_root)
-    parts = relative.parts
-    if "Headers" in parts and "PrivateHeaders" not in parts:
+def classify_sdk_input(
+    path: Path, walk_root: Path, *, allow_loose_headers: bool = False
+) -> str | None:
+    try:
+        parts = path.relative_to(walk_root).parts
+    except ValueError:
+        parts = path.parts
+    if "PrivateHeaders" in parts:
+        return None
+    if "Headers" in parts:
+        return "header"
+    if allow_loose_headers and path.suffix == ".h":
         return "header"
     if path.name.endswith("modulemap"):
         return "modulemap"
@@ -490,28 +553,13 @@ def classify_sdk_input(path: Path, framework_root: Path) -> str | None:
     return None
 
 
-def collect_sdk_inputs(
-    framework_root: Path, sdk_root: Path, module: str
+def _sdk_input_records(
+    selected: dict[str, tuple[str, Path]], sdk_root: Path, module: str
 ) -> tuple[list[dict[str, Any]], list[Path]]:
-    selected: dict[str, tuple[str, Path]] = {}
-    tbd_paths: dict[str, Path] = {}
-    logical_binary = framework_root / module
-    for path in logical_sdk_walk(framework_root, sdk_root):
-        category = classify_sdk_input(path, framework_root)
-        if path == logical_binary and looks_like_tbd(path):
-            category = "tbd"
-        if category is None:
-            continue
-        sdk_relative = path.relative_to(sdk_root).as_posix()
-        if sdk_relative in selected:
-            raise SeedError(f"duplicate logical SDK input: {sdk_relative}")
-        selected[sdk_relative] = (category, path)
-        if category == "tbd":
-            tbd_paths[sdk_relative] = path
     if not selected:
         raise SeedError(f"no public SDK inputs found for {module}")
-
     records: list[dict[str, Any]] = []
+    tbd_paths: dict[str, Path] = {}
     for sdk_relative, (category, path) in sorted(selected.items()):
         real = path.resolve(strict=True)
         mode = real.stat().st_mode
@@ -528,7 +576,33 @@ def collect_sdk_inputs(
                 "sha256": digest,
             }
         )
+        if category == "tbd":
+            tbd_paths[sdk_relative] = path
     return records, [tbd_paths[key] for key in sorted(tbd_paths)]
+
+
+def collect_sdk_inputs(
+    framework_root: Path,
+    sdk_root: Path,
+    module: str,
+    *,
+    allow_loose_headers: bool = False,
+) -> tuple[list[dict[str, Any]], list[Path]]:
+    selected: dict[str, tuple[str, Path]] = {}
+    logical_binary = framework_root / module
+    for path in logical_sdk_walk(framework_root, sdk_root):
+        category = classify_sdk_input(
+            path, framework_root, allow_loose_headers=allow_loose_headers
+        )
+        if path == logical_binary and looks_like_tbd(path):
+            category = "tbd"
+        if category is None:
+            continue
+        sdk_relative = path.relative_to(sdk_root).as_posix()
+        if sdk_relative in selected:
+            raise SeedError(f"duplicate logical SDK input: {sdk_relative}")
+        selected[sdk_relative] = (category, path)
+    return _sdk_input_records(selected, sdk_root, module)
 
 
 def write_sdk_input_ledger(path: Path, records: Sequence[dict[str, Any]]) -> None:
@@ -547,6 +621,689 @@ def write_sdk_input_ledger(path: Path, records: Sequence[dict[str, Any]]) -> Non
     write_text(path, "\n".join(lines) + "\n")
 
 
+@dataclass(frozen=True)
+class ModuleLocation:
+    """Resolved public SDK module location and extractor path."""
+
+    kind: str
+    sdk_relative_path: str
+    reason: str
+    input_root: Path
+    module_map: Path | None
+
+    def record(self) -> dict[str, str]:
+        return {
+            "kind": self.kind,
+            "sdkRelativePath": self.sdk_relative_path,
+            "reason": self.reason,
+        }
+
+
+def _require_inside_sdk(path: Path, sdk_root: Path) -> Path:
+    try:
+        real = path.resolve(strict=True)
+        sdk_real = sdk_root.resolve(strict=True)
+    except OSError as error:
+        raise SeedError(f"cannot resolve SDK path {path}: {error}") from error
+    if not within(real, sdk_real):
+        raise SeedError(f"SDK path escapes SDK root: {path}")
+    return path
+
+
+def _existing_sdk_path(sdk_root: Path, *parts: str) -> Path | None:
+    path = sdk_root.joinpath(*parts)
+    if not path.exists():
+        return None
+    return _require_inside_sdk(path, sdk_root)
+
+
+def _sdk_relative(path: Path, sdk_root: Path) -> str:
+    return path.relative_to(sdk_root).as_posix()
+
+
+def _framework_has_swift_artifacts(
+    framework_root: Path, sdk_root: Path, module: str
+) -> bool:
+    modules_dir = framework_root / "Modules"
+    swiftmodule = modules_dir / f"{module}.swiftmodule"
+    if swiftmodule.exists():
+        _require_inside_sdk(swiftmodule, sdk_root)
+        return True
+    if not modules_dir.is_dir():
+        return False
+    _require_inside_sdk(modules_dir, sdk_root)
+    for path in logical_sdk_walk(modules_dir, sdk_root):
+        if path.name.endswith(".swiftinterface") or path.name.endswith(".swiftmodule"):
+            return True
+    return False
+
+
+def _framework_module_map(framework_root: Path, sdk_root: Path) -> Path | None:
+    for candidate in (
+        framework_root / "Modules" / "module.modulemap",
+        framework_root / "Modules" / "module.map",
+    ):
+        if candidate.is_file():
+            return _require_inside_sdk(candidate, sdk_root)
+    return None
+
+
+def _strip_modulemap_comments(text: str) -> str:
+    output: list[str] = []
+    index = 0
+    length = len(text)
+    while index < length:
+        if text.startswith("//", index):
+            newline = text.find("\n", index)
+            if newline < 0:
+                break
+            output.append("\n")
+            index = newline + 1
+            continue
+        if text.startswith("/*", index):
+            end = text.find("*/", index + 2)
+            if end < 0:
+                raise SeedError("unterminated module map comment")
+            output.append(" ")
+            index = end + 2
+            continue
+        char = text[index]
+        if char == '"':
+            index += 1
+            output.append('"')
+            while index < length:
+                current = text[index]
+                output.append(current)
+                index += 1
+                if current == "\\" and index < length:
+                    output.append(text[index])
+                    index += 1
+                    continue
+                if current == '"':
+                    break
+            else:
+                raise SeedError("unterminated module map string")
+            continue
+        output.append(char)
+        index += 1
+    return "".join(output)
+
+
+def _quoted_modulemap_path(token: str) -> str:
+    if len(token) >= 2 and token[0] == '"' and token[-1] == '"':
+        return token[1:-1].replace("\\\\", "\\").replace('\\"', '"')
+    if len(token) >= 2 and token[0] == "<" and token[-1] == ">":
+        return token[1:-1]
+    raise SeedError(f"invalid module map path token: {token!r}")
+
+
+def _matching_brace_end(text: str, open_index: int) -> int:
+    if open_index >= len(text) or text[open_index] != "{":
+        raise SeedError("module map body is not a brace group")
+    depth = 0
+    index = open_index
+    length = len(text)
+    while index < length:
+        char = text[index]
+        if char == '"':
+            index += 1
+            while index < length:
+                current = text[index]
+                index += 1
+                if current == "\\":
+                    index += 1
+                    continue
+                if current == '"':
+                    break
+            else:
+                raise SeedError("unterminated module map string")
+            continue
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    raise SeedError("unterminated module map body")
+
+
+def _iter_modulemap_decls(text: str) -> Iterator[tuple[str, str | None, str | None]]:
+    """Yield (module_name, body_or_none, extern_or_alias_target)."""
+
+    stripped = _strip_modulemap_comments(text)
+    search_from = 0
+    while True:
+        match = _MODULEMAP_DECL_RE.search(stripped, search_from)
+        if match is None:
+            return
+        name = match.group("name")
+        cursor = match.end()
+        while cursor < len(stripped) and stripped[cursor] in " \t\r\n":
+            cursor += 1
+        while cursor < len(stripped) and stripped[cursor] == "[":
+            close = stripped.find("]", cursor)
+            if close < 0:
+                raise SeedError("unterminated module map attribute")
+            cursor = close + 1
+            while cursor < len(stripped) and stripped[cursor] in " \t\r\n":
+                cursor += 1
+        if match.group("extern"):
+            if cursor >= len(stripped) or stripped[cursor] != '"':
+                raise SeedError(f"extern module {name} is missing a module map path")
+            end = cursor + 1
+            while end < len(stripped) and stripped[end] != '"':
+                if stripped[end] == "\\":
+                    end += 2
+                    continue
+                end += 1
+            if end >= len(stripped):
+                raise SeedError("unterminated extern module map path")
+            yield name, None, _quoted_modulemap_path(stripped[cursor : end + 1])
+            search_from = end + 1
+            continue
+        if cursor < len(stripped) and stripped[cursor] == "=":
+            alias = _MODULEMAP_ALIAS_RE.match(stripped, cursor)
+            if alias is None:
+                raise SeedError(f"module {name} has an invalid alias")
+            yield name, None, alias.group(1)
+            search_from = alias.end()
+            continue
+        if cursor >= len(stripped) or stripped[cursor] != "{":
+            search_from = match.end()
+            continue
+        close = _matching_brace_end(stripped, cursor)
+        yield name, stripped[cursor + 1 : close], None
+        search_from = close + 1
+
+
+def _find_named_module_in_map(
+    text: str, module: str
+) -> tuple[str | None, str | None]:
+    """Return (body, alias_or_extern_target) for the first named module."""
+
+    for name, body, target in _iter_modulemap_decls(text):
+        if name == module:
+            return body, target
+        if body:
+            nested_body, nested_target = _find_named_module_in_map(body, module)
+            if nested_body is not None or nested_target is not None:
+                return nested_body, nested_target
+    return None, None
+
+
+def module_map_declares(text: str, module: str) -> bool:
+    body, target = _find_named_module_in_map(text, module)
+    return body is not None or target is not None
+
+
+def _read_sdk_text(path: Path, *, label: str) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise SeedError(f"cannot read {label}: {error}") from error
+
+
+def _resolve_clang_module_map(
+    map_path: Path, sdk_root: Path, module: str, *, seen: frozenset[Path]
+) -> tuple[Path, str | None, str | None]:
+    real = map_path.resolve(strict=True)
+    if real in seen:
+        raise SeedError(f"cyclic Clang module map redirect for {module}")
+    text = _read_sdk_text(map_path, label=f"module map {map_path.name}")
+    body, target = _find_named_module_in_map(text, module)
+    if body is None and target is None:
+        raise SeedError(f"module map does not declare {module}: {map_path}")
+    if body is not None:
+        return map_path, body, None
+    assert target is not None
+    if MODULE_RE.fullmatch(target):
+        return map_path, None, target
+    redirected = (map_path.parent / target).resolve(strict=False)
+    if not redirected.is_file():
+        raise SeedError(f"extern module map for {module} is missing: {target}")
+    _require_inside_sdk(redirected, sdk_root)
+    return _resolve_clang_module_map(
+        redirected, sdk_root, module, seen=seen | {real}
+    )
+
+
+def _collect_loose_headers(directory: Path, sdk_root: Path) -> list[Path]:
+    headers: list[Path] = []
+    for path in logical_sdk_walk(directory, sdk_root):
+        if path.suffix == ".h" and "PrivateHeaders" not in path.parts:
+            headers.append(path)
+    return headers
+
+
+def _clang_module_headers(
+    map_path: Path, body: str, sdk_root: Path
+) -> list[Path]:
+    headers: list[Path] = []
+    search_from = 0
+    while True:
+        next_module = _MODULEMAP_DECL_RE.search(body, search_from)
+        next_header = _MODULEMAP_HEADER_RE.search(body, search_from)
+        next_umbrella = _MODULEMAP_UMBRELLA_DIR_RE.search(body, search_from)
+        candidates: list[tuple[int, str, re.Match[str]]] = []
+        if next_module is not None:
+            candidates.append((next_module.start(), "module", next_module))
+        if next_header is not None:
+            candidates.append((next_header.start(), "header", next_header))
+        if (
+            next_umbrella is not None
+            and "header"
+            not in body[max(0, next_umbrella.start() - 8) : next_umbrella.start()]
+        ):
+            candidates.append((next_umbrella.start(), "umbrella", next_umbrella))
+        if not candidates:
+            break
+        candidates.sort(key=lambda item: item[0])
+        kind = candidates[0][1]
+        match = candidates[0][2]
+        if kind == "module":
+            name = match.group("name")
+            cursor = match.end()
+            while cursor < len(body) and body[cursor] in " \t\r\n":
+                cursor += 1
+            while cursor < len(body) and body[cursor] == "[":
+                close = body.find("]", cursor)
+                if close < 0:
+                    break
+                cursor = close + 1
+                while cursor < len(body) and body[cursor] in " \t\r\n":
+                    cursor += 1
+            if cursor < len(body) and body[cursor] == "{":
+                close = _matching_brace_end(body, cursor)
+                if name != "*":
+                    headers.extend(
+                        _clang_module_headers(
+                            map_path, body[cursor + 1 : close], sdk_root
+                        )
+                    )
+                search_from = close + 1
+            else:
+                search_from = match.end()
+            continue
+        if kind == "header" and not match.group(0).startswith("exclude"):
+            relative = _quoted_modulemap_path(match.group(1))
+            header = map_path.parent / relative
+            if header.is_file():
+                headers.append(_require_inside_sdk(header, sdk_root))
+        elif kind == "umbrella":
+            relative = _quoted_modulemap_path(match.group(1))
+            directory = map_path.parent / relative
+            if directory.is_dir():
+                _require_inside_sdk(directory, sdk_root)
+                headers.extend(_collect_loose_headers(directory, sdk_root))
+        search_from = match.end()
+    return headers
+
+
+def _module_map_export_names(body: str, module: str) -> set[str]:
+    names: set[str] = set()
+    for match in _MODULEMAP_EXPORT_RE.finditer(body):
+        value = match.group(1)
+        if value == "*":
+            continue
+        exported = value.split(".", 1)[0]
+        if exported != module and MODULE_RE.fullmatch(exported):
+            names.add(exported)
+    return names
+
+
+def locate_sdk_module(sdk_root: Path, module: str) -> ModuleLocation:
+    """Locate a public iPhoneOS framework, Swift module, or Clang module."""
+
+    if not MODULE_RE.fullmatch(module):
+        raise SeedError(f"invalid Swift module identifier: {module!r}")
+    _require_inside_sdk(sdk_root, sdk_root)
+
+    framework_root = _existing_sdk_path(
+        sdk_root, "System", "Library", "Frameworks", f"{module}.framework"
+    )
+    if framework_root is not None and framework_root.is_dir():
+        relative = _sdk_relative(framework_root, sdk_root)
+        module_map = _framework_module_map(framework_root, sdk_root)
+        if _framework_has_swift_artifacts(framework_root, sdk_root, module):
+            return ModuleLocation(
+                kind="framework",
+                sdk_relative_path=relative,
+                reason=(
+                    "public iPhoneOS framework bundle is present at "
+                    f"{relative}"
+                ),
+                input_root=framework_root,
+                module_map=module_map,
+            )
+        if module_map is None:
+            raise SeedError(
+                f"public iPhoneOS framework {module}.framework has no Swift "
+                "module and no Clang module map"
+            )
+        return ModuleLocation(
+            kind="framework-clang-module",
+            sdk_relative_path=relative,
+            reason=(
+                "public iPhoneOS framework bundle is present at "
+                f"{relative} but has no Swift module; using Clang module map at "
+                f"{_sdk_relative(module_map, sdk_root)}"
+            ),
+            input_root=framework_root,
+            module_map=module_map,
+        )
+
+    swiftmodule = _existing_sdk_path(
+        sdk_root, "usr", "lib", "swift", f"{module}.swiftmodule"
+    )
+    if swiftmodule is not None:
+        relative = _sdk_relative(swiftmodule, sdk_root)
+        return ModuleLocation(
+            kind="swift-module",
+            sdk_relative_path=relative,
+            reason=(
+                "public iPhoneOS framework is absent; located Swift module at "
+                f"{relative}"
+            ),
+            input_root=swiftmodule,
+            module_map=None,
+        )
+
+    clang_dir_map = _existing_sdk_path(
+        sdk_root, "usr", "include", module, "module.modulemap"
+    )
+    if clang_dir_map is not None and clang_dir_map.is_file():
+        relative = _sdk_relative(clang_dir_map, sdk_root)
+        text = _read_sdk_text(
+            clang_dir_map, label=f"Clang module map {relative}"
+        )
+        if not module_map_declares(text, module):
+            raise SeedError(
+                f"module map at {relative} does not declare {module}"
+            )
+        return ModuleLocation(
+            kind="clang-module",
+            sdk_relative_path=relative,
+            reason=(
+                "public iPhoneOS framework is absent; located Clang module map "
+                f"at {relative}"
+            ),
+            input_root=clang_dir_map.parent,
+            module_map=clang_dir_map,
+        )
+
+    top_level_map = _existing_sdk_path(
+        sdk_root, "usr", "include", "module.modulemap"
+    )
+    if top_level_map is not None and top_level_map.is_file():
+        text = _read_sdk_text(top_level_map, label="usr/include/module.modulemap")
+        if module_map_declares(text, module):
+            resolved_map, _body, alias = _resolve_clang_module_map(
+                top_level_map, sdk_root, module, seen=frozenset()
+            )
+            relative = _sdk_relative(resolved_map, sdk_root)
+            reason = (
+                "public iPhoneOS framework is absent; located Clang submodule "
+                f"{module} in usr/include/module.modulemap"
+            )
+            if resolved_map != top_level_map:
+                reason += f" (redirected to {relative})"
+            if alias is not None:
+                reason += f"; module aliases {alias}"
+            return ModuleLocation(
+                kind="clang-submodule",
+                sdk_relative_path=relative,
+                reason=reason,
+                input_root=resolved_map.parent,
+                module_map=resolved_map,
+            )
+
+    raise SeedError(
+        "public iPhoneOS module is missing: no "
+        f"{module}.framework, usr/lib/swift/{module}.swiftmodule, "
+        f"usr/include/{module}/module.modulemap, or {module} submodule in "
+        "usr/include/module.modulemap"
+    )
+
+
+def extractor_clang_module_args(location: ModuleLocation) -> list[str]:
+    if location.kind not in {
+        "clang-module",
+        "clang-submodule",
+        "framework-clang-module",
+    }:
+        return []
+    if location.module_map is None:
+        raise SeedError(
+            f"Clang module location is missing a module map: {location.sdk_relative_path}"
+        )
+    return ["-Xcc", f"-fmodule-map-file={location.module_map}"]
+
+
+def collect_located_sdk_inputs(
+    location: ModuleLocation, sdk_root: Path, module: str
+) -> tuple[list[dict[str, Any]], list[Path]]:
+    if location.kind in {"framework", "framework-clang-module"}:
+        return collect_sdk_inputs(location.input_root, sdk_root, module)
+    if location.kind == "swift-module":
+        root = location.input_root
+        if root.is_dir():
+            return collect_sdk_inputs(
+                root, sdk_root, module, allow_loose_headers=True
+            )
+        selected: dict[str, tuple[str, Path]] = {}
+        category = classify_sdk_input(root, root.parent, allow_loose_headers=True)
+        if category is None and root.name.endswith(".swiftinterface"):
+            category = "swiftinterface"
+        if category is None:
+            raise SeedError(f"no public SDK inputs found for {module}")
+        selected[_sdk_relative(root, sdk_root)] = (category, root)
+        return _sdk_input_records(selected, sdk_root, module)
+    if location.kind == "clang-module":
+        return collect_sdk_inputs(
+            location.input_root, sdk_root, module, allow_loose_headers=True
+        )
+    if location.kind != "clang-submodule" or location.module_map is None:
+        raise SeedError(f"unsupported module location kind: {location.kind}")
+    selected = {}
+    map_path = location.module_map
+    selected[_sdk_relative(map_path, sdk_root)] = ("modulemap", map_path)
+    _resolved, body, _alias = _resolve_clang_module_map(
+        map_path, sdk_root, module, seen=frozenset()
+    )
+    if body:
+        for header in _clang_module_headers(map_path, body, sdk_root):
+            relative = _sdk_relative(header, sdk_root)
+            selected.setdefault(relative, ("header", header))
+    return _sdk_input_records(selected, sdk_root, module)
+
+
+def _iter_location_text_files(
+    location: ModuleLocation, sdk_root: Path
+) -> Iterator[Path]:
+    roots: list[Path] = []
+    if location.module_map is not None and location.module_map.is_file():
+        yield location.module_map
+    if location.input_root.is_file():
+        yield location.input_root
+        return
+    if location.input_root.is_dir():
+        roots.append(location.input_root)
+    seen: set[Path] = set()
+    for root in roots:
+        for path in logical_sdk_walk(root, sdk_root):
+            resolved = path.resolve(strict=True)
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            if path.suffix in {".h", ".swiftinterface"} or path.name.endswith(
+                "modulemap"
+            ):
+                yield path
+
+
+def _imported_module_names_from_header(text: str) -> set[str]:
+    names: set[str] = set()
+    for match in _OBJC_IMPORT_RE.finditer(text):
+        imported = match.group(1) or match.group(2)
+        if imported:
+            names.add(imported)
+    return names
+
+
+def _strip_c_comments_and_strings(text: str) -> str:
+    output: list[str] = []
+    index = 0
+    length = len(text)
+    while index < length:
+        if text.startswith("//", index):
+            newline = text.find("\n", index)
+            if newline < 0:
+                break
+            output.append("\n")
+            index = newline + 1
+            continue
+        if text.startswith("/*", index):
+            end = text.find("*/", index + 2)
+            if end < 0:
+                break
+            output.append(" ")
+            index = end + 2
+            continue
+        char = text[index]
+        if char in {'"', "'"}:
+            quote = char
+            index += 1
+            while index < length:
+                current = text[index]
+                index += 1
+                if current == "\\":
+                    index += 1
+                    continue
+                if current == quote:
+                    break
+            output.append(" ")
+            continue
+        output.append(char)
+        index += 1
+    return "".join(output)
+
+
+def _header_is_import_only(text: str) -> bool:
+    for raw_line in _strip_c_comments_and_strings(text).splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line.startswith("#"):
+            continue
+        if line.startswith("@import "):
+            continue
+        if line in {"{", "}", "@end"}:
+            continue
+        return False
+    return True
+
+
+def _swiftinterface_exports(text: str) -> tuple[set[str], bool]:
+    exported: set[str] = set()
+    has_other_api = False
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("//") or stripped.startswith("#"):
+            continue
+        match = _SWIFT_EXPORTED_IMPORT_RE.search(stripped)
+        if match:
+            exported.add(match.group(1))
+            continue
+        if stripped.startswith("import "):
+            continue
+        if stripped.startswith("@_"):
+            continue
+        has_other_api = True
+    return exported, has_other_api
+
+
+def candidate_reexport_modules(
+    module: str, location: ModuleLocation, sdk_root: Path
+) -> set[str]:
+    names: set[str] = set()
+    if location.module_map is not None:
+        text = _read_sdk_text(location.module_map, label="module map")
+        body, target = _find_named_module_in_map(text, module)
+        if target and MODULE_RE.fullmatch(target):
+            names.add(target)
+        if body:
+            names |= _module_map_export_names(body, module)
+    for path in _iter_location_text_files(location, sdk_root):
+        if path.name.endswith("modulemap"):
+            continue
+        text = _read_sdk_text(path, label=path.name)
+        if path.name.endswith(".swiftinterface"):
+            exported, _has_other = _swiftinterface_exports(text)
+            names |= exported
+            continue
+        if path.suffix == ".h":
+            names |= _imported_module_names_from_header(text)
+    names.discard(module)
+    names -= IGNORED_REEXPORT_MODULES
+    return names
+
+
+def surface_looks_like_pure_reexport(
+    module: str, location: ModuleLocation, sdk_root: Path
+) -> bool:
+    saw_surface = False
+    if location.module_map is not None:
+        text = _read_sdk_text(location.module_map, label="module map")
+        _body, target = _find_named_module_in_map(text, module)
+        if target and MODULE_RE.fullmatch(target) and target != module:
+            return True
+    for path in _iter_location_text_files(location, sdk_root):
+        if path.name.endswith("modulemap"):
+            continue
+        text = _read_sdk_text(path, label=path.name)
+        if path.name.endswith(".swiftinterface"):
+            saw_surface = True
+            _exported, has_other = _swiftinterface_exports(text)
+            if has_other:
+                return False
+            continue
+        if path.suffix == ".h":
+            saw_surface = True
+            if not _header_is_import_only(text):
+                return False
+    return saw_surface
+
+
+def detect_umbrella_reexport(
+    module: str,
+    location: ModuleLocation,
+    sdk_root: Path,
+    *,
+    require_pure: bool = False,
+) -> str | None:
+    candidates = candidate_reexport_modules(module, location, sdk_root)
+    if len(candidates) != 1:
+        return None
+    if require_pure and not surface_looks_like_pure_reexport(
+        module, location, sdk_root
+    ):
+        return None
+    return next(iter(candidates))
+
+
+def refuse_empty_or_umbrella(
+    module: str, symbol_count: int, reexport: str | None
+) -> None:
+    if symbol_count > 0:
+        return
+    if reexport:
+        raise SeedError(
+            f"umbrella re-export of {reexport}; seed {reexport} instead"
+        )
+    raise SeedError(f"public surface is empty (0 symbols) for {module}")
+
+
 def generate_symbol_graphs(
     module: str,
     sdk_root: Path,
@@ -554,6 +1311,7 @@ def generate_symbol_graphs(
     reference_root: Path,
     clean_env: dict[str, str],
     extractor: Path,
+    extra_frontend_args: Sequence[str] = (),
 ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     raw_root = temp_root / "symbol-graphs"
     raw_root.mkdir()
@@ -565,6 +1323,7 @@ def generate_symbol_graphs(
         TARGET,
         "-sdk",
         str(sdk_root),
+        *extra_frontend_args,
         "-minimum-access-level",
         "public",
         "-module-cache-path",
@@ -1038,6 +1797,7 @@ def generate_api_digester(
     clean_env: dict[str, str],
     digester: Path,
     symbols_by_precise: dict[str, dict[str, Any]],
+    extra_frontend_args: Sequence[str] = (),
 ) -> dict[str, int]:
     """Emit a location-free Swift API-digester tree for declaration identity.
 
@@ -1059,6 +1819,7 @@ def generate_api_digester(
         TARGET,
         "-sdk",
         str(sdk_root),
+        *extra_frontend_args,
         "-avoid-location",
         "-avoid-tool-args",
         "-abort-on-module-fail",
@@ -1297,7 +2058,9 @@ def write_tbd_exports(
     return len(rows)
 
 
-def roadmap_summary(roadmap_path: Path, module: str) -> dict[str, Any]:
+def roadmap_summary(
+    roadmap_path: Path, module: str, *, allow_missing: bool = False
+) -> dict[str, Any]:
     try:
         roadmap = json.loads(roadmap_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
@@ -1305,9 +2068,16 @@ def roadmap_summary(roadmap_path: Path, module: str) -> dict[str, Any]:
     if not isinstance(roadmap, dict) or not isinstance(roadmap.get("modules"), list):
         raise SeedError("framework roadmap has an unsupported schema")
     matches = [item for item in roadmap["modules"] if item.get("module") == module]
-    if len(matches) != 1:
+    if len(matches) > 1:
         raise SeedError(f"framework roadmap must contain exactly one {module} record")
-    module_record = matches[0]
+    if not matches:
+        if not allow_missing:
+            raise SeedError(
+                f"framework roadmap must contain exactly one {module} record"
+            )
+        module_record: Any = {"roadmap": ROADMAP_OPERATOR_OVERRIDE}
+    else:
+        module_record = matches[0]
     families = [
         family
         for family in roadmap.get("requested_roadmap_families", [])
@@ -2845,20 +3615,23 @@ def generate(args: argparse.Namespace) -> Path:
         clean_env = prepare_clean_environment(temp_root, developer_dir)
         toolchain = validate_xcode(developer_dir, clean_env)
         sdk_root = Path(toolchain["_sdkPath"])
-        framework_root = (
-            sdk_root / "System/Library/Frameworks" / f"{module}.framework"
+        location = locate_sdk_module(sdk_root, module)
+        extra_frontend_args = extractor_clang_module_args(location)
+        umbrella = detect_umbrella_reexport(
+            module, location, sdk_root, require_pure=True
         )
-        if not framework_root.is_dir():
-            raise SeedError(f"public iPhoneOS framework is missing: {module}.framework")
-        framework_real = framework_root.resolve(strict=True)
-        if not within(framework_real, sdk_root.resolve(strict=True)):
-            raise SeedError("framework path escapes the iPhoneOS SDK")
+        if umbrella is not None:
+            raise SeedError(
+                f"umbrella re-export of {umbrella}; seed {umbrella} instead"
+            )
 
         reference_root = stage / "reference"
         reference_root.mkdir()
         (stage / "tests/acceptance").mkdir(parents=True)
 
-        sdk_records, tbd_paths = collect_sdk_inputs(framework_root, sdk_root, module)
+        sdk_records, tbd_paths = collect_located_sdk_inputs(
+            location, sdk_root, module
+        )
         write_sdk_input_ledger(reference_root / "sdk-inputs.tsv", sdk_records)
 
         graph_manifest, symbols = generate_symbol_graphs(
@@ -2868,9 +3641,15 @@ def generate(args: argparse.Namespace) -> Path:
             reference_root,
             clean_env,
             Path(toolchain["_symbolGraphExtractorExecutable"]),
+            extra_frontend_args,
         )
         write_json(reference_root / "symbol-graphs.json", graph_manifest)
         write_public_surface(reference_root / "public-surface.tsv", symbols)
+        refuse_empty_or_umbrella(
+            module,
+            graph_manifest["symbolCount"],
+            detect_umbrella_reexport(module, location, sdk_root),
+        )
         api_stats = generate_api_digester(
             module,
             sdk_root,
@@ -2879,12 +3658,17 @@ def generate(args: argparse.Namespace) -> Path:
             clean_env,
             Path(toolchain["_apiDigesterExecutable"]),
             symbols,
+            extra_frontend_args,
         )
         tbd_export_count = write_tbd_exports(
             reference_root / "tbd-exports.tsv", tbd_paths, sdk_root, clean_env
         )
 
-        corpus = roadmap_summary(roadmap_path, module)
+        corpus = roadmap_summary(
+            roadmap_path,
+            module,
+            allow_missing=bool(getattr(args, "allow_no_roadmap_record", False)),
+        )
         write_json(reference_root / "corpus-summary.json", corpus)
         external_evidence = external_evidence_summary(
             external_evidence_lock_path, module
@@ -2980,7 +3764,7 @@ def generate(args: argparse.Namespace) -> Path:
                 "sdkName": toolchain["sdkName"],
                 "sdkVersion": toolchain["sdkVersion"],
                 "target": TARGET,
-                "frameworkSDKRelativePath": framework_root.relative_to(sdk_root).as_posix(),
+                "frameworkSDKRelativePath": location.sdk_relative_path,
                 "symbolGraphExtractorPath": toolchain[
                     "symbolGraphExtractorPath"
                 ],
@@ -3020,6 +3804,9 @@ def generate(args: argparse.Namespace) -> Path:
                 ),
             },
         }
+        framework_json["moduleLocation"] = location.record()
+        if corpus.get("moduleRecord") == {"roadmap": ROADMAP_OPERATOR_OVERRIDE}:
+            framework_json["roadmap"] = ROADMAP_OPERATOR_OVERRIDE
         write_json(reference_root / "framework.json", framework_json)
 
         immutable_paths = [
@@ -3076,6 +3863,14 @@ def argument_parser() -> argparse.ArgumentParser:
         "--output-root",
         required=True,
         help="existing destination parent (the repository's full directory)",
+    )
+    parser.add_argument(
+        "--allow-no-roadmap-record",
+        action="store_true",
+        help=(
+            "if the framework roadmap has no module record, record "
+            f"{ROADMAP_OPERATOR_OVERRIDE!r} instead of refusing; default still refuses"
+        ),
     )
     return parser
 
