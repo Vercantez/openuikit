@@ -281,6 +281,12 @@ open class UITableView: UIScrollView {
     public var separatorStyle: SeparatorStyle = .singleLine {
         didSet { if separatorStyle != oldValue { retile() } }
     }
+    /// Colour of the hairline under each row. `nil` restores the system
+    /// `.separator`, which is what the cell paints itself with when the table
+    /// has no opinion (UITableViewCell.setUp).
+    public var separatorColor: UIColor? = .separator {
+        didSet { applySeparatorColor() }
+    }
     public var allowsSelection = true
     public var allowsMultipleSelection = false
     public var allowsSelectionDuringEditing = false
@@ -293,6 +299,15 @@ open class UITableView: UIScrollView {
     public var estimatedRowHeight: CGFloat = UITableView.automaticDimension
     public var estimatedSectionHeaderHeight: CGFloat = UITableView.automaticDimension
     public var estimatedSectionFooterHeight: CGFloat = UITableView.automaticDimension
+    /// Height for a section header the delegate supplies no height for.
+    /// `automaticDimension` means "size the header view by its own
+    /// constraints", which every pocket-casts settings screen relies on.
+    public var sectionHeaderHeight: CGFloat = UITableView.automaticDimension {
+        didSet { if sectionHeaderHeight != oldValue { setNeedsMetrics() } }
+    }
+    public var sectionFooterHeight: CGFloat = UITableView.automaticDimension {
+        didSet { if sectionFooterHeight != oldValue { setNeedsMetrics() } }
+    }
 
     public var backgroundView: UIView? {
         didSet {
@@ -420,7 +435,101 @@ open class UITableView: UIScrollView {
             if h >= 0 { return h }
         }
         if rowHeight >= 0 { return rowHeight }
+        // `automaticDimension`: the row is as tall as its cell's content
+        // demands, but a row whose cell does not exist yet cannot be measured
+        // — so metrics use the ESTIMATE and `refineSelfSizedRows` replaces it
+        // once tiling has built the cell. UIKit's own two-step, and the reason
+        // `estimatedRowHeight` exists at all: building every row's cell here
+        // instead defeats reuse, MEASURED as 10013 cells instantiated for the
+        // 13-row viewport of Tests/…/TableViewTests' 10k-row table.
+        if let measured = selfSizedRowHeights[path] { return measured }
+        if estimatedRowHeight >= 0 { return estimatedRowHeight }
         return UITableViewCell.defaultRowHeight
+    }
+
+    /// Measure the cells tiling has actually built and record any height that
+    /// differs from the estimate metrics used. Returns true when something
+    /// moved, i.e. when the metrics have to be redone.
+    ///
+    /// MEASURED (realapp_storage_light, iPhone 16 / iOS 26.1): both nib cells
+    /// come out 65 pt from their xib's own label constraints; the port had
+    /// them at `defaultRowHeight` (53), which put every view below them 24 pt
+    /// too high.
+    private func refineSelfSizedRows() -> Bool {
+        guard rowHeight < 0, LayoutEngine.installedConstraintCount > 0
+        else { return false }
+        var changed = false
+        for (path, cell) in visibleCellsByPath.views {
+            if let d = tableDelegate, d.tableView(self, heightForRowAt: path) >= 0 {
+                continue
+            }
+            // The cell's own contentView is what a xib constrains, and what
+            // UIKit pins the cell's height to.
+            guard let fitted = constraintFittingHeight(of: cell.contentView)
+            else { continue }
+            // Plus the separator. MEASURED (same golden): the xib gives
+            // SwitchCell's label a height of exactly 64, the golden row is 65,
+            // and the golden's own `_UITableViewCellSeparatorView` sits at
+            // y = 64 with height 1 — the content owns 0..64 and the separator
+            // the point after it. A row drawing no separator has no such point
+            // to give away.
+            let separator = separatorStyle == .none
+                ? 0 : UITableViewCell.separatorThickness
+            let height = fitted + separator
+            if selfSizedRowHeights[path] != height {
+                selfSizedRowHeights[path] = height
+                changed = true
+            }
+        }
+        return changed
+    }
+
+    /// Heights `refineSelfSizedRows` has measured, by path. Survives a metrics
+    /// rebuild — that is the whole point, the rebuild is what consumes them —
+    /// and is dropped when the data source is reloaded.
+    var selfSizedRowHeights: [IndexPath: CGFloat] = [:]
+    /// Refinement passes spent on the current `retile`, so a cell whose
+    /// measured height never settles cannot spin.
+    private var selfSizingPass = 0
+
+    /// The delegate's own header view for `s`, created once and cached.
+    ///
+    /// Metrics need it before tiling does, because a self-sizing header's
+    /// height IS a property of the view, and the delegate builds a fresh one
+    /// per call (pocket-casts' storage screen returns
+    /// `SettingsTableHeader(frame:title:)`), so it has to be the same object
+    /// both passes see. Returns nil when the delegate supplies no view, which
+    /// leaves the title-driven chrome path untouched.
+    private func delegateHeaderView(for s: Int) -> UIView? {
+        if let cached = headerViews[s] { return cached }
+        guard let view = tableDelegate?.tableView(self, viewForHeaderInSection: s)
+        else { return nil }
+        headerViews[s] = view
+        addSubview(view)
+        return view
+    }
+
+    private func delegateFooterView(for s: Int) -> UIView? {
+        if let cached = footerViews[s] { return cached }
+        guard let view = tableDelegate?.tableView(self, viewForFooterInSection: s)
+        else { return nil }
+        footerViews[s] = view
+        addSubview(view)
+        return view
+    }
+
+    /// Height a view asks for at the table's width, or nil when its subtree
+    /// installs no constraints and it therefore has no opinion. Used for a
+    /// self-sizing row and for a delegate-supplied section header/footer.
+    private func constraintFittingHeight(of view: UIView) -> CGFloat? {
+        let width = bounds.width > 0 ? bounds.width : metricsWidth
+        guard width > 0 else { return nil }
+        guard let fitted = view.constraintFittingSize(
+            CGSize(width: width, height: 0),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel),
+            fitted.height > 0 else { return nil }
+        return fitted.height
     }
 
     private func rebuildMetrics() {
@@ -445,8 +554,23 @@ open class UITableView: UIScrollView {
             var headerH = tableDelegate?.tableView(self, heightForHeaderInSection: s)
                 ?? UITableView.automaticDimension
             if headerH < 0 {
-                headerH = m.headerTitle != nil
-                    ? UITableView.headerHeight(style: style, firstSection: s == 0) : 0
+                if let view = delegateHeaderView(for: s),
+                   let selfSized = sectionHeaderHeight >= 0
+                       ? sectionHeaderHeight : constraintFittingHeight(of: view) {
+                    // A delegate-supplied VIEW with no delegate height: UIKit
+                    // falls back to `sectionHeaderHeight`, and
+                    // `automaticDimension` there means "size the view by its
+                    // own constraints". MEASURED (realapp_storage_light,
+                    // iPhone 16 / iOS 26.1): the screen sets
+                    // sectionHeaderHeight = automaticDimension and implements
+                    // no heightForHeaderInSection, and both of its
+                    // SettingsTableHeaders come out 38 pt — the
+                    // `heightAnchor >= 38` the header itself installs.
+                    headerH = selfSized
+                } else {
+                    headerH = m.headerTitle != nil
+                        ? UITableView.headerHeight(style: style, firstSection: s == 0) : 0
+                }
             }
             if style == .plain, headerH > 0 {
                 y += sectionHeaderTopPadding
@@ -467,7 +591,14 @@ open class UITableView: UIScrollView {
 
             var footerH = tableDelegate?.tableView(self, heightForFooterInSection: s)
                 ?? UITableView.automaticDimension
-            if footerH < 0 {
+            if footerH < 0, let view = delegateFooterView(for: s),
+               let selfSized = sectionFooterHeight >= 0
+                   ? sectionFooterHeight : constraintFittingHeight(of: view) {
+                // Same rule as the header. MEASURED (same golden): the usage
+                // section's footer is 70.667 pt — its label's three wrapped
+                // lines (46.667) inside the 12 pt insets the screen installs.
+                footerH = selfSized
+            } else if footerH < 0 {
                 if let t = m.footerTitle, style != .plain {
                     footerSizer.text = t
                     let maxW = bounds.width - 2 * groupedHeaderLabelX
@@ -578,6 +709,9 @@ open class UITableView: UIScrollView {
     }
 
     private func discardVisibleData(clearSelection: Bool) {
+        // Measured row heights are keyed by path and the paths are about to
+        // mean something else.
+        selfSizedRowHeights.removeAll()
         visibleCellsByPath.removeAll { _, cell in
             cell.removeFromSuperview()
             recycle(cell)
@@ -1164,7 +1298,15 @@ open class UITableView: UIScrollView {
         }
         cardViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
 
-        // Section chrome.
+        // Section chrome. Only `.insetGrouped` gets a card — a `.grouped`
+        // section's rows run edge to edge and paint their own background,
+        // which is why the branch below leaves their `backgroundColor` alone.
+        //
+        // MEASURED (realapp_storage_light, iPhone 16 / iOS 26.1): the golden's
+        // rows are white to both edges. The port cleared every grouped cell's
+        // background for a card that is never built for this style, so the 91
+        // pt of SwitchCell outside its (accessory-shortened) content view
+        // showed the table's grey through.
         for s in neededSections {
             let m = metrics[s]
             if style == .insetGrouped, m.rowsEnd > m.rowsStart {
@@ -1182,9 +1324,8 @@ open class UITableView: UIScrollView {
                                               card.bounds.width / 2)
             }
             if m.headerHeight > 0 {
-                let header = headerViews[s] ?? {
-                    let h = tableDelegate?.tableView(self, viewForHeaderInSection: s)
-                        ?? UITableViewHeaderFooterView()
+                let header = delegateHeaderView(for: s) ?? {
+                    let h = UITableViewHeaderFooterView()
                     headerViews[s] = h
                     addSubview(h)
                     return h
@@ -1206,9 +1347,8 @@ open class UITableView: UIScrollView {
                                       height: m.headerHeight)
             }
             if m.footerHeight > 0 {
-                let footer = footerViews[s] ?? {
-                    let f = tableDelegate?.tableView(self, viewForFooterInSection: s)
-                        ?? UITableViewHeaderFooterView()
+                let footer = delegateFooterView(for: s) ?? {
+                    let f = UITableViewHeaderFooterView()
                     footerViews[s] = f
                     addSubview(f)
                     return f
@@ -1237,7 +1377,7 @@ open class UITableView: UIScrollView {
                 cell._textInset = style == .plain ? plainTextInset : UITableViewCell.labelX
                 cell._leadingPadding = valueCellPadding(path)
                 cell.frame = rectForRow(at: path)
-                if style == .insetGrouped || style == .grouped {
+                if style == .insetGrouped {
                     // The section card draws the background.
                     cell.backgroundColor = nil
                 } else if cell.backgroundColor == nil {
@@ -1268,19 +1408,70 @@ open class UITableView: UIScrollView {
         if let bar = horizontalIndicator { bringSubviewToFront(bar) }
 
         updateSeparators()
+
+        // Self-sizing rows, step two: the cells exist now, so measure them
+        // and redo the pass if metrics guessed wrong. The second pass reuses
+        // the very cells the first one built, which is what keeps this off the
+        // reuse gate.
+        if selfSizingPass < 2, refineSelfSizedRows() {
+            selfSizingPass += 1
+            metricsDirty = true
+            inTile = false
+            retile()
+            return
+        }
+        selfSizingPass = 0
     }
 
     // MARK: Separators
 
+    /// UIKit's `UITableView.SeparatorInsetReference`. `fromCellEdges` reads
+    /// ``separatorInset`` as an absolute inset from the cell's own edges;
+    /// `fromAutomaticInsets` adds it to the style's automatic inset.
+    public enum SeparatorInsetReference: Int, Sendable {
+        case fromCellEdges = 0, fromAutomaticInsets = 1
+    }
+
+    /// Table-wide separator inset. Untouched, the style's measured default
+    /// applies; assigning any value (including `.zero`) makes it explicit,
+    /// the same contract ``UITableViewCell/separatorInset`` has.
+    public var separatorInset: UIEdgeInsets = .zero {
+        didSet {
+            _hasExplicitSeparatorInset = true
+            setNeedsLayout()
+        }
+    }
+    var _hasExplicitSeparatorInset = false
+    public var separatorInsetReference: SeparatorInsetReference = .fromCellEdges {
+        didSet { setNeedsLayout() }
+    }
+
     /// Horizontal separator insets for `cell` (style-dependent, measured).
     func separatorDrawInsets(for cell: UITableViewCell) -> (left: CGFloat, right: CGFloat) {
-        let defaults: (left: CGFloat, right: CGFloat)
+        var defaults: (left: CGFloat, right: CGFloat)
         switch style {
         case .plain:
             defaults = plainSeparatorInsets
         case .grouped, .insetGrouped:
             defaults = (UITableView.separatorLeftInset,
                         UITableView.groupedSeparatorRightInset)
+        }
+        // A table-wide inset displaces the style default. `fromCellEdges`
+        // replaces it outright; `fromAutomaticInsets` adds to it.
+        //
+        // MEASURED (realapp_storage_light, iPhone 16 / iOS 26.1): the screen's
+        // xib archives `UISeparatorInsetReference = 0` with no
+        // `UISeparatorInset`, and every separator in the golden runs the full
+        // 393 pt — [0, 64, 393, 1] and [0, 0, 393, 1] per cell — where the
+        // grouped style's own default would inset it 16 pt on each side.
+        if _hasExplicitSeparatorInset {
+            switch separatorInsetReference {
+            case .fromCellEdges:
+                defaults = (separatorInset.left, separatorInset.right)
+            case .fromAutomaticInsets:
+                defaults = (defaults.left + separatorInset.left,
+                            defaults.right + separatorInset.right)
+            }
         }
         guard cell._hasExplicitSeparatorInset else { return defaults }
         return (cell.separatorInset.left, cell.separatorInset.right)
@@ -1292,7 +1483,14 @@ open class UITableView: UIScrollView {
     func updateSeparators() {
         for (path, cell) in visibleCellsByPath.views {
             var hidden = separatorStyle == .none
-            if style != .plain,
+            // The card style closes its own bottom edge, so its last row
+            // draws no line. `.grouped` has no card: MEASURED
+            // (realapp_storage_light, iPhone 16 / iOS 26.1) each of the two
+            // single-row sections carries a line at BOTH edges of the block —
+            // `_UITableViewCellSeparatorView` at cell-relative y = 0 and
+            // y = 64 — so the last row keeps its separator and the first row
+            // gains one above it.
+            if style == .insetGrouped,
                path.row == metrics[path.section].rowEnds.count - 1 {
                 hidden = true
             }
@@ -1305,6 +1503,17 @@ open class UITableView: UIScrollView {
                 hidden = true
             }
             cell.separatorView.isHidden = hidden
+            cell.topSeparatorView.isHidden = separatorStyle == .none
+                || style != .grouped || path.row != 0
+        }
+        applySeparatorColor()
+    }
+
+    private func applySeparatorColor() {
+        let color = separatorColor ?? .separator
+        for (_, cell) in visibleCellsByPath.views {
+            cell.separatorView.backgroundColor = color
+            cell.topSeparatorView.backgroundColor = color
         }
     }
 

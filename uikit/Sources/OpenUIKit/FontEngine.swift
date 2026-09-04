@@ -371,6 +371,25 @@ public enum FontEngine {
         return lh + bonus
     }
 
+    /// Height of a `lines`-line label. iOS rounds the WHOLE block up to the
+    /// pixel grid, not each line — the two agree at one line, and diverge by
+    /// up to a pixel below the true total as the lines pile up.
+    ///
+    /// MEASURED (realapp_storage_light, iPhone 16 3x / iOS 26.1): the storage
+    /// screen's 13 pt footnote footer wraps to three lines and the golden
+    /// reports 46.667. The raw line height is 15.514, so the block is
+    /// ceil(46.542) = 46.667, while three ceiled lines are 3 x 15.667 = 47.
+    /// The same font's single-line label is 15.667 either way, which is the
+    /// number `labelLineHeight` was measured against.
+    public static func labelBlockHeight(for font: UIFont, lines: Int) -> CGFloat {
+        let n = CGFloat(max(1, lines))
+        guard OpenUIKitRuntime.systemFontCut == .iOS, font.design != .monospaced,
+              !tablesIOS.families.isEmpty
+        else { return n * labelLineHeight(for: font) }
+        let scale = max(1, UIScreen.main.scale)
+        return (metrics(for: font).lineHeight * n * scale).rounded(.up) / scale
+    }
+
     // MARK: - Truncation ("tight") metrics — system font, from SFNS.ttf
     //
     // When a label truncates, real UIKit lays the line out with the font's

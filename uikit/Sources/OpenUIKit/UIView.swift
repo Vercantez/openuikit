@@ -676,8 +676,21 @@ open class UIView: UIResponder, CALayerDelegate {
     /// `UIViewController.additionalSafeAreaInsets` of the controller managing
     /// this view, added on top of the inherited insets.
     var _additionalSafeAreaInsets: UIEdgeInsets = .zero
-    /// UIKit's default base margins: 8 pt on every edge.
-    var _baseLayoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+    /// An assignment to ``layoutMargins``, which wins over the class default.
+    var _baseLayoutMarginsOverride: UIEdgeInsets?
+    /// The base margins ``layoutMargins`` starts from: whatever was assigned,
+    /// else the class's own default.
+    var _baseLayoutMargins: UIEdgeInsets {
+        get { _baseLayoutMarginsOverride ?? _defaultBaseLayoutMargins }
+        set { _baseLayoutMarginsOverride = newValue }
+    }
+    /// UIKit's default base margins: 8 pt on every edge. Computed rather than
+    /// stored so a subclass whose margins depend on its geometry can override
+    /// it and stay live as that geometry changes — `UITableViewCell`'s do,
+    /// they follow the window's system margin.
+    var _defaultBaseLayoutMargins: UIEdgeInsets {
+        UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+    }
     /// UIKit default true: `layoutMargins` = base + `safeAreaInsets`.
     public var insetsLayoutMarginsFromSafeArea = true {
         didSet { if insetsLayoutMarginsFromSafeArea != oldValue { _notifyLayoutMarginsChanged() } }
@@ -723,7 +736,9 @@ open class UIView: UIResponder, CALayerDelegate {
 
     /// Trait override; `.unspecified` inherits from superview / current.
     public var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
-    public var tintColor: UIColor! {
+    /// `open`, as UIKit declares it: pocket-casts' TintableImageView overrides
+    /// it to re-tint its image on assignment.
+    open var tintColor: UIColor! {
         get { _tintColor ?? superview?.tintColor ?? .systemBlue }
         set { _tintColor = newValue }
     }

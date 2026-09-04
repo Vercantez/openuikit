@@ -51,6 +51,21 @@ import Foundation
 @preconcurrency @MainActor
 final class UITableViewCellContentView: UIView {
     var cell: UITableViewCell? { superview as? UITableViewCell }
+
+    /// The content view takes the cell's margins, except on a trailing edge
+    /// an accessory view already ate — there it keeps `UIView`'s 8 pt.
+    ///
+    /// MEASURED (realapp_storage_light, both oracle devices): the content
+    /// view of the accessory-less DisclosureCell reports the cell's own
+    /// [15, 20, 15, 20], while SwitchCell's — 310 wide, with the switch as
+    /// its accessory view — reports [15, 20, 15, 8] on the iPhone 16 and
+    /// [15, 16, 15, 8] on the SE.
+    override var _defaultBaseLayoutMargins: UIEdgeInsets {
+        guard let cell else { return super._defaultBaseLayoutMargins }
+        var m = cell.layoutMargins
+        if cell.accessoryView != nil { m.right = super._defaultBaseLayoutMargins.right }
+        return m
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         cell?.touchesBegan(touches, with: event)
     }
@@ -191,6 +206,21 @@ open class UITableViewCell: UIView, ReusableView {
     /// iOS: the window's system layout margin (20 on the iPhone 16, 16 on
     /// the SE — see UITableView.iOSSystemMargin).
     var trailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin : 16 }
+
+    /// A cell's layout margins are the window's system margin horizontally
+    /// and a flat 15 vertically — NOT `UIView`'s 8 pt default. Invisible
+    /// until something constrains against them, which is exactly what a xib
+    /// cell does: IB writes its leading constraints against
+    /// `contentView.leadingMargin`.
+    ///
+    /// MEASURED (realapp_storage_light, both oracle devices, 2026-09-04):
+    /// `SwitchCell.layoutMargins` and its content view's are [15, 20, 15, 20]
+    /// on the iPhone 16 (393 pt) and [15, 16, 15, 16] on the SE (375 pt) —
+    /// the same 390 pt threshold `UITableView.iOSSystemMargin` already
+    /// carries, confirmed here on a second view class.
+    override var _defaultBaseLayoutMargins: UIEdgeInsets {
+        UIEdgeInsets(top: 15, left: trailingMargin, bottom: 15, right: trailingMargin)
+    }
     var iOSMargin: CGFloat {
         UITableView.iOSSystemMargin(width: window?.bounds.width ?? tableView?.bounds.width ?? bounds.width)
     }
@@ -234,7 +264,12 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: State
 
-    public let style: CellStyle
+    /// INTERNAL, deliberately. UIKit takes `style` in the initializer and
+    /// never gives it back — `UITableViewCell` has no `style` property at all —
+    /// so publishing one here breaks any app class that declares its own.
+    /// pocket-casts' ThemeableCell declares `var style: ThemeStyle`, which
+    /// collided with this until it went internal.
+    let style: CellStyle
     /// UIKit declares this read-only; a cell built from a nib has no
     /// `init(style:reuseIdentifier:)` to carry it, so the table stamps it on
     /// after instantiation (`_setNibReuseIdentifier`), which is what UIKit
@@ -295,6 +330,9 @@ open class UITableViewCell: UIView, ReusableView {
     weak var tableView: UITableView?
     /// Managed by the table's tiling pass.
     let separatorView = UIView()
+    /// The line above the row. Only `.grouped` uses it, and only on the first
+    /// row of a section — see `UITableView.updateSeparators`.
+    let topSeparatorView = UIView()
     /// The portable vector backing for `accessoryType`. Keep it separate from
     /// UIKit's public `accessoryView`, which is application-owned content.
     let _accessoryGlyphView = UITableCellAccessoryView()
@@ -377,6 +415,11 @@ open class UITableViewCell: UIView, ReusableView {
         separatorView.backgroundColor = .separator
         separatorView.isUserInteractionEnabled = false
         addSubview(separatorView)
+
+        topSeparatorView.backgroundColor = .separator
+        topSeparatorView.isUserInteractionEnabled = false
+        topSeparatorView.isHidden = true
+        addSubview(topSeparatorView)
     }
 
     // MARK: Reuse
@@ -386,6 +429,7 @@ open class UITableViewCell: UIView, ReusableView {
         setHighlighted(false, animated: false)
         setEditing(false, animated: false)
         separatorView.isHidden = false
+        topSeparatorView.isHidden = true
     }
 
     public func setEditing(_ editing: Bool, animated: Bool) {
@@ -396,13 +440,13 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: Selection / highlight
 
-    public func setSelected(_ selected: Bool, animated: Bool) {
+    open func setSelected(_ selected: Bool, animated: Bool) {
         guard selected != isSelected else { return }
         isSelected = selected
         updateSelectionOverlay(animated: animated)
     }
 
-    public func setHighlighted(_ highlighted: Bool, animated: Bool) {
+    open func setHighlighted(_ highlighted: Bool, animated: Bool) {
         guard highlighted != isHighlighted else { return }
         isHighlighted = highlighted
         updateSelectionOverlay(animated: animated)
@@ -466,9 +510,19 @@ open class UITableViewCell: UIView, ReusableView {
     /// Width of the content region for the current accessory.
     var contentWidth: CGFloat {
         if let accessoryView {
+            // iOS butts the content view straight up against a custom
+            // accessory: no gap between them.
+            //
+            // MEASURED (realapp_storage_light, both oracle devices): the
+            // SwitchCell content view is 310 wide with its 63 pt switch at
+            // x = 310 on the iPhone 16 (393 - 20 - 63) and 296 wide with the
+            // switch at x = 296 on the SE (375 - 16 - 63). The port's 8 pt
+            // `detailAccessoryGap` — which is the DETAIL LABEL's gap, and
+            // stays that below — left it 8 pt short on both.
+            let gap = UITableViewCell.isIOSChrome
+                ? 0 : UITableViewCell.detailAccessoryGap
             return max(0, bounds.width - trailingMargin
-                       - accessoryView.frame.width
-                       - UITableViewCell.detailAccessoryGap)
+                       - accessoryView.frame.width - gap)
         }
         switch accessoryType {
         case .none:
@@ -503,10 +557,24 @@ open class UITableViewCell: UIView, ReusableView {
         if let custom = accessoryView {
             _accessoryGlyphView.isHidden = true
             let size = custom.frame.size
-            custom.frame = CGRect(
-                x: w - trailingMargin - size.width,
-                y: pad + UITableViewCell.ceilHalf((h - size.height) / 2),
-                width: size.width, height: size.height)
+            // A custom accessory centres UP to the pixel, where the stock
+            // glyph below centres DOWN (`ceilHalf`). Two code paths in UIKit,
+            // and each was measured on its own: the glyph's
+            // (53 - 14) / 2 = 19.5 -> 19.333, and this one's.
+            //
+            // MEASURED (realapp_storage_light, iPhone 16 3x / iOS 26.1): the
+            // 28 pt switch in a 65 pt SwitchCell sits at y = 18.667, not the
+            // 18.333 the glyph rule gives. Consistent with the Auto Layout
+            // centre in the same golden — the sibling DisclosureCell's
+            // xib-constrained 32 pt chevron rounds (65 - 32) / 2 = 16.5 up to
+            // 16.667 too. The SE (2x) has both on the grid at 18.5 and 16.5,
+            // so it neither confirms nor contradicts the direction.
+            let y = UITableView.isIOSChrome
+                ? UITableView.iOSCeilToPixel((h - size.height) / 2)
+                : UITableViewCell.ceilHalf((h - size.height) / 2)
+            custom.frame = CGRect(x: w - trailingMargin - size.width,
+                                  y: pad + y,
+                                  width: size.width, height: size.height)
         } else {
             switch accessoryType {
             case .none:
@@ -582,10 +650,15 @@ open class UITableViewCell: UIView, ReusableView {
         // Separator: bottom-aligned; horizontal inset applied by the table.
         let inset = tableView?.separatorDrawInsets(for: self)
             ?? (left: UITableViewCell.labelX, right: 0)
+        let separatorWidth = max(0, w - inset.left - inset.right)
         separatorView.frame = CGRect(
             x: inset.left,
             y: h - UITableViewCell.separatorThickness,
-            width: max(0, w - inset.left - inset.right),
+            width: separatorWidth,
+            height: UITableViewCell.separatorThickness)
+        topSeparatorView.frame = CGRect(
+            x: inset.left, y: 0,
+            width: separatorWidth,
             height: UITableViewCell.separatorThickness)
     }
 }

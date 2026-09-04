@@ -129,6 +129,13 @@ open class UIResponder: NSObject {
     open func awakeFromNib() {}
 #endif
 
+    /// UIKit's `UIAccessibilityAction` hook (declared on NSObject there).
+    /// Storage-only accessibility means nothing calls it — see
+    /// docs/REAL_APP_TEST.md blocker 10 — but a real cell overrides it
+    /// (pocket-casts' `SwitchCell` returns its locked state), so the
+    /// declaration has to exist for that source to compile.
+    open func accessibilityActivate() -> Bool { false }
+
     /// Accessibility attributes (storage only — see UIViewCompat.swift for
     /// the accessors and for why nothing consults them).
     var _accessibility = AccessibilityState()

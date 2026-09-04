@@ -153,9 +153,12 @@ open class UIGestureRecognizer: NSObject {
     ///     view.addGestureRecognizer(
     ///         UITapGestureRecognizer(target: self,
     ///                                action: #selector(handleTap(_:))))
-    public convenience init(target: AnyObject, action: Selector) {
+    /// `Any?`/`Selector?`, as UIKit spells it — a caller that forwards an
+    /// optional target and selector straight through (pocket-casts'
+    /// SettingsTableHeader does) needs exactly this signature.
+    public convenience init(target: Any?, action: Selector?) {
         self.init(handler: nil)
-        addTarget(target, action: action)
+        if let action { addTarget(target, action: action) }
     }
 
     // MARK: Targets
@@ -177,14 +180,18 @@ open class UIGestureRecognizer: NSObject {
     /// methods dispatch through NSObject metadata where available;
     /// ``SelectorDispatching`` is the native-ELF/fallback route. Supported
     /// framework-owned actions such as `UIView.endEditing(_:)` are built in.
-    public func addTarget(_ target: AnyObject, action: Selector) {
+    public func addTarget(_ target: Any?, action: Selector) {
         nextToken += 1
         actions.append(Action(token: nextToken, handler: nil,
-                              target: target, selector: action))
+                              target: target.flatMap { $0 as? AnyObject },
+                              selector: action))
     }
 
     /// UIKit's `removeTarget(_:action:)`. `nil` matches any target / action.
-    public func removeTarget(_ target: AnyObject?, action: Selector?) {
+    public func removeTarget(_ target: Any?, action: Selector?) {
+        // See UIControl.removeTarget: `as?` would bridge a nil `Any?` to
+        // NSNull and match nothing.
+        let target = target.flatMap { $0 as? AnyObject }
         actions.removeAll { a in
             guard a.handler == nil else { return false }   // closures unaffected
             if let target, a.target !== target { return false }

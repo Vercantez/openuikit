@@ -707,11 +707,18 @@ final class NibDecoder {
 
     private func makeColor(_ object: NibArchive.Object) -> AnyObject? {
         // A system colour is archived by name AND by the components it
-        // resolved to in Interface Builder's light appearance. OpenUIKit's
-        // palette is measured per appearance (SystemColors.swift), so the
-        // archived components would freeze a semantic colour to light mode —
-        // recorded as a gap rather than silently used.
+        // resolved to in Interface Builder's light appearance. Prefer the
+        // NAME: OpenUIKit's palette is measured per appearance
+        // (SystemColors.swift), so taking the archived components would freeze
+        // a semantic colour to light mode. IB writes the ObjC accessor
+        // (`separatorColor`), the palette is keyed on the Swift property
+        // (`separator`), hence the suffix strip.
         if let name = string(object.first("UISystemColorName")) {
+            let stripped = name.hasSuffix("Color") && name != "tintColor"
+                ? String(name.dropLast(5)) : name
+            if SystemColors.isKnown(stripped) {
+                return UIColor(semantic: stripped)
+            }
             UINib.noteUnhandled("UISystemColorName:\(name)")
         }
         let alpha = cgFloat(object.first("UIAlpha-Double"))
@@ -793,6 +800,24 @@ final class NibDecoder {
             }
             return .notAnAttribute
         }
+        // IB archives a margin constraint TWICE: the modern form (V2 attribute
+        // `leadingMargin`, constant 0) and a pre-iOS-8 fallback that spends the
+        // old 8 pt default margin as a plain `leading` constant. So the
+        // constant has to come from the same generation as the attribute, and
+        // an absent `NSConstantV2` beside a V2 attribute means zero, not
+        // "inherit `NSConstant`".
+        //
+        // MEASURED (SwitchCell.nib #28, `imageView.leading` ==
+        // `contentView.{leadingMargin, V2} / {leading, legacy}`, NSConstant 8,
+        // no NSConstantV2): the golden puts that image view at x = 20, which
+        // is the content view's 20 pt leading margin plus nothing. Reading the
+        // legacy pair put it at 16 and dragged every label in both nib cells
+        // 4 pt left with it.
+        let isV2 = object.first("NSFirstAttributeV2") != nil
+            || object.first("NSSecondAttributeV2") != nil
+        let constant = isV2
+            ? cgFloat(object.first("NSConstantV2")) ?? 0
+            : cgFloat(object.first("NSConstant")) ?? 0
         guard let first = item("NSFirstItem") else {
             UINib.noteUnhandled("NSLayoutConstraint:NSFirstItem")
             return nil
@@ -805,8 +830,7 @@ final class NibDecoder {
             toItem: item("NSSecondItem"),
             attribute: attribute("NSSecondAttributeV2", "NSSecondAttribute"),
             multiplier: cgFloat(object.first("NSMultiplier")) ?? 1,
-            constant: cgFloat(object.first("NSConstantV2"))
-                ?? cgFloat(object.first("NSConstant")) ?? 0)
+            constant: constant)
         if let priority = cgFloat(object.first("NSPriority")) {
             constraint.priority = UILayoutPriority(Float(priority))
         }
@@ -892,7 +916,7 @@ final class NibDecoder {
                  "UIViewLargeContentStoredProperties", "UISystemBackgroundView",
                  "UIContentConfigurationView", "UITextLabel", "UIDetailTextLabel",
                  "UIImageView", "UIPrefetchingEnabled", "UIFillerRowHeight",
-                 "UIInsetsContentViewsToSafeArea", "UISeparatorInsetReference",
+                 "UIInsetsContentViewsToSafeArea",
                  "UIScrollViewIndicatorInsetAdjustmentBehavior",
                  "UIScrollViewContentInsetAdjustmentBehavior",
                  "UIShadowOffset", "UIHighlightedColor", "UIBaselineAdjustment",
@@ -900,7 +924,7 @@ final class NibDecoder {
                  "UIDisableUpdateTextColorOnTraitCollectionChange",
                  "UIStyle", "UISeparatorStyleIOS5AndLater", "UIBouncesZoom",
                  "UIMultipleTouchEnabled", "UIClearsContextBeforeDrawing",
-                 "UISectionHeaderTopPadding", "UISeparatorColor",
+                 "UISectionHeaderTopPadding",
                  "UIAdjustsFontSizeToFit", "UIEnabled":
                 continue
 
@@ -1034,6 +1058,29 @@ final class NibDecoder {
                 return
             case "UIEstimatedSectionFooterHeight":
                 if let h = cgFloat(pair.value) { table.estimatedSectionFooterHeight = h }
+                return
+            case "UISectionHeaderHeight":
+                if let h = cgFloat(pair.value) { table.sectionHeaderHeight = h }
+                return
+            case "UISectionFooterHeight":
+                if let h = cgFloat(pair.value) { table.sectionFooterHeight = h }
+                return
+            case "UISeparatorColor":
+                if case .reference(let i) = pair.value {
+                    table.separatorColor = (build(i) as? UIColor)
+                }
+                return
+            case "UISeparatorInsetReference":
+                // Present whenever IB has an opinion, and an opinion is
+                // exactly what makes the inset explicit. The three fixture
+                // nibs all archive a zero inset (no `UISeparatorInset` key),
+                // so a non-zero one stays unhandled rather than guessed —
+                // there is nothing to measure its encoding against.
+                if let raw = int(pair.value),
+                   let reference = UITableView.SeparatorInsetReference(rawValue: raw) {
+                    table.separatorInsetReference = reference
+                    table.separatorInset = .zero
+                }
                 return
             case "UISeparatorStyle":
                 // UIKit: none = 0, singleLine = 1 (the etched styles are
