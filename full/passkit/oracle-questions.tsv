@@ -1,0 +1,7 @@
+precise	question	risk	reason
+c:objc(cs)PKPass(im)initWithData:error:	What exact NSError domain/code does Apple return for PKPass.init(data:) on truncated or unsigned pkpass bytes?	fail-closed	Linux throws PassKitPortableError.passValidationUnavailable; that is not an Apple payload.
+c:objc(cs)PKPaymentAuthorizationViewController(cm)canMakePayments	Does canMakePayments ever return true without an Apple Pay entitlement and pass library on iPhoneOS 26.1?	fail-closed	Linux returns false; the Apple default when Wallet is absent is unobserved here.
+c:objc(cs)PKPassLibrary(cm)isPassLibraryAvailable	What does isPassLibraryAvailable return on an iPhone without a Secure Element versus Simulator?	fail-closed	Linux always returns false; hardware/simulator split is unobserved.
+module	When UIKit is linked on the integration host, which PassKit types must subclass the real UIViewController/UIButton rather than the Foundation-host lookalikes?	ui	Isolated host cannot import UIKit; lookalikes are compile-only stand-ins.
+s:16_PassKit_SwiftUI012PayWithAppleE6ButtonV	What is the Apple Pay button's exact intrinsic size and fallback View when Wallet is unavailable on iOS 26.1?	ui	Linux overlay is an EmptyView identity; Apple layout is unobserved.
+c:@PKPaymentNetworkAmex	Is the NSString payload of PKPaymentNetworkAmex exactly "AmEx" on iPhoneOS 26.1?	fail-closed	Linux uses the historical identifier spelling; TBD exports the symbol but not the bytes.

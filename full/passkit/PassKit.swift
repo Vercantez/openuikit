@@ -1,11 +1,13 @@
-import Foundation
-#if canImport(UIKit)
-import UIKit
-#elseif canImport(OpenUIKit)
-import OpenUIKit
-#else
-#error("PassKit requires UIKit or OpenUIKit")
-#endif
+@_exported import Foundation
+
+/// Linux starting point for Apple's public `PassKit` module.
+///
+/// In-process payment-request models, pass identity fields, option sets, and
+/// fail-closed Wallet / Apple Pay presentation are real on this isolated host.
+/// Signed `.pkpass` validation, the pass library, Apple Pay authorization,
+/// identity documents, and Wallet UI are unavailable: those APIs throw
+/// `PassKitPortableError`, return `false`/`nil`/empty, or never present chrome.
+/// Nothing here is a claim of Apple service, entitlement, or UI parity.
 
 public struct PassKitPortableError: Error, Equatable, Sendable,
     CustomStringConvertible
@@ -32,14 +34,35 @@ public struct PassKitPortableError: Error, Equatable, Sendable,
     }
 }
 
-public final class PKPass {
+open class PKObject: NSObject, @unchecked Sendable {
+    public override init() {
+        super.init()
+    }
+}
+
+open class PKPass: PKObject, @unchecked Sendable {
     public let passURL: URL?
     public let serialNumber: String
     public let passTypeIdentifier: String
+    public var authenticationToken: String?
+    public var deviceName: String = ""
+    public var icon: UIImage = UIImage()
+    public var localizedDescription: String = ""
+    public var localizedName: String = ""
+    public var organizationName: String = ""
+    public var passType: PKPassType = .barcode
+    public var paymentPass: PKPaymentPass? { self as? PKPaymentPass }
+    public var relevantDate: Date?
+    public var relevantDates: [PKPassRelevantDate] = []
+    public var isRemotePass = false
+    public var secureElementPass: PKSecureElementPass? { self as? PKSecureElementPass }
+    public var userInfo: [AnyHashable: Any]?
+    public var webServiceURL: URL?
 
     public init(data: Data) throws {
         // A pkpass is a signed archive. Accepting arbitrary bytes without
         // signature/archive validation would create a counterfeit pass.
+        _ = data
         throw PassKitPortableError(.passValidationUnavailable)
     }
 
@@ -51,22 +74,180 @@ public final class PKPass {
         serialNumber = portableSerialNumber
         self.passTypeIdentifier = passTypeIdentifier
         self.passURL = passURL
+        super.init()
+    }
+
+    public func localizedValue(forFieldKey key: String) -> Any? {
+        _ = key
+        return nil
+    }
+
+    public override init() {
+        serialNumber = ""
+        passTypeIdentifier = ""
+        passURL = nil
+        super.init()
     }
 }
 
-public final class PKPassLibrary {
-    public init() {}
-    public func containsPass(_ pass: PKPass) -> Bool { false }
+public final class PKPassLibrary: NSObject, @unchecked Sendable {
+    public enum AuthorizationStatus: Int, Hashable, Sendable {
+        case notDetermined = -1
+        case denied = 0
+        case authorized = 1
+        case restricted = 2
+    }
+
+    public enum Capability: Int, Hashable, Sendable {
+        case backgroundAddPasses = 0
+    }
+
+    public var remoteSecureElementPasses: [PKSecureElementPass] { [] }
+    public var isSecureElementPassActivationAvailable: Bool { false }
+
+    public override init() {
+        super.init()
+    }
+
+    public static func isPassLibraryAvailable() -> Bool { false }
+    public static func isPaymentPassActivationAvailable() -> Bool { false }
+    public static func isSuppressingAutomaticPassPresentation() -> Bool { false }
+
+    public static func requestAutomaticPassPresentationSuppression(
+        responseHandler: @escaping (PKAutomaticPassPresentationSuppressionResult) -> Void
+    ) -> PKSuppressionRequestToken {
+        responseHandler(.notSupported)
+        return 0
+    }
+
+    public static func endAutomaticPassPresentationSuppression(
+        withRequestToken requestToken: PKSuppressionRequestToken
+    ) {
+        _ = requestToken
+    }
+
+    public func containsPass(_ pass: PKPass) -> Bool {
+        _ = pass
+        return false
+    }
+
     public func passes() -> [PKPass] { [] }
+
+    public func passes(of passType: PKPassType) -> [PKPass] {
+        _ = passType
+        return []
+    }
+
+    public func passes(withReaderIdentifier readerIdentifier: String) -> Set<PKSecureElementPass> {
+        _ = readerIdentifier
+        return []
+    }
+
     public func pass(
         withPassTypeIdentifier identifier: String,
         serialNumber: String
-    ) -> PKPass? { nil }
+    ) -> PKPass? {
+        _ = (identifier, serialNumber)
+        return nil
+    }
+
     public func addPasses(
         _ passes: [PKPass],
         withCompletionHandler completion: ((Bool) -> Void)? = nil
     ) {
+        _ = passes
         completion?(false)
+    }
+
+    public func addPasses(_ passes: [PKPass]) async -> PKPassLibraryAddPassesStatus {
+        _ = passes
+        return .didCancelAddPasses
+    }
+
+    public func removePass(_ pass: PKPass) { _ = pass }
+
+    public func replacePass(with pass: PKPass) -> Bool {
+        _ = pass
+        return false
+    }
+
+    public func canAddFelicaPass() -> Bool { false }
+
+    public func canAddPaymentPass(withPrimaryAccountIdentifier primaryAccountIdentifier: String) -> Bool {
+        _ = primaryAccountIdentifier
+        return false
+    }
+
+    public func canAddSecureElementPass(primaryAccountIdentifier: String) -> Bool {
+        _ = primaryAccountIdentifier
+        return false
+    }
+
+    public func isPaymentPassActivationAvailable() -> Bool { false }
+
+    public func openPaymentSetup() {}
+
+    public func present(_ pass: PKPaymentPass) { _ = pass }
+    public func present(_ pass: PKSecureElementPass) { _ = pass }
+
+    public func remotePaymentPasses() -> [PKPaymentPass] { [] }
+
+    public func authorizationStatus(for capability: Capability) -> AuthorizationStatus {
+        _ = capability
+        return .denied
+    }
+
+    public func requestAuthorization(for capability: Capability) async -> AuthorizationStatus {
+        _ = capability
+        return .denied
+    }
+
+    public func activate(
+        _ paymentPass: PKPaymentPass,
+        withActivationCode activationCode: String,
+        completion: ((Bool, any Error) -> Void)? = nil
+    ) {
+        _ = (paymentPass, activationCode)
+        completion?(false, PassKitPortableError(.passLibraryUnavailable))
+    }
+
+    public func activate(
+        _ paymentPass: PKPaymentPass,
+        withActivationData activationData: Data,
+        completion: ((Bool, any Error) -> Void)? = nil
+    ) {
+        _ = (paymentPass, activationData)
+        completion?(false, PassKitPortableError(.passLibraryUnavailable))
+    }
+
+    public func activate(
+        _ secureElementPass: PKSecureElementPass,
+        activationData: Data
+    ) async throws -> Bool {
+        _ = (secureElementPass, activationData)
+        throw PassKitPortableError(.passLibraryUnavailable)
+    }
+
+    public func encryptedServiceProviderData(
+        for secureElementPass: PKSecureElementPass
+    ) async throws -> [AnyHashable: Any] {
+        _ = secureElementPass
+        throw PassKitPortableError(.passLibraryUnavailable)
+    }
+
+    public func serviceProviderData(
+        for secureElementPass: PKSecureElementPass
+    ) async throws -> Data {
+        _ = secureElementPass
+        throw PassKitPortableError(.passLibraryUnavailable)
+    }
+
+    public func sign(
+        _ signData: Data,
+        using secureElementPass: PKSecureElementPass
+    ) async throws -> (Data, Data) {
+        _ = (signData, secureElementPass)
+        throw PassKitPortableError(.passLibraryUnavailable)
     }
 }
 
@@ -78,8 +259,8 @@ public protocol PKAddPassesViewControllerDelegate: AnyObject {
 }
 
 @MainActor
-open class PKAddPassesViewController: UIViewController {
-    public weak var delegate: PKAddPassesViewControllerDelegate?
+open class PKAddPassesViewController: UIViewController, @unchecked Sendable {
+    public weak var delegate: (any PKAddPassesViewControllerDelegate)?
     public let passes: [PKPass]
 
     public static func canAddPasses() -> Bool { false }
@@ -96,6 +277,13 @@ open class PKAddPassesViewController: UIViewController {
         return nil
     }
 
+    public init(issuerData: Data, signature: Data) throws {
+        _ = (issuerData, signature)
+        passes = []
+        super.init(nibName: nil, bundle: nil)
+        throw PassKitPortableError(.passLibraryUnavailable)
+    }
+
     public override init() {
         passes = []
         super.init()
@@ -107,25 +295,60 @@ public struct PKPaymentNetwork: RawRepresentable, Hashable, Sendable,
 {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
+    public init(_ rawValue: String) { self.rawValue = rawValue }
     public init(stringLiteral value: String) { rawValue = value }
 
     public static let amex = PKPaymentNetwork(rawValue: "AmEx")
-    public static let masterCard = PKPaymentNetwork(rawValue: "MasterCard")
-    public static let visa = PKPaymentNetwork(rawValue: "Visa")
-    public static let discover = PKPaymentNetwork(rawValue: "Discover")
-    public static let maestro = PKPaymentNetwork(rawValue: "Maestro")
+    public static let bancomat = PKPaymentNetwork(rawValue: "Bancomat")
+    public static let bancontact = PKPaymentNetwork(rawValue: "Bancontact")
+    public static let bankAxept = PKPaymentNetwork(rawValue: "BankAxept")
+    public static let barcode = PKPaymentNetwork(rawValue: "Barcode")
+    public static let carteBancaire = PKPaymentNetwork(rawValue: "CarteBancaire")
+    public static let carteBancaires = PKPaymentNetwork(rawValue: "CarteBancaires")
+    public static let cartesBancaires = PKPaymentNetwork(rawValue: "CartesBancaires")
     public static let chinaUnionPay = PKPaymentNetwork(rawValue: "ChinaUnionPay")
+    public static let dankort = PKPaymentNetwork(rawValue: "Dankort")
+    public static let discover = PKPaymentNetwork(rawValue: "Discover")
+    public static let eftpos = PKPaymentNetwork(rawValue: "Eftpos")
+    public static let electron = PKPaymentNetwork(rawValue: "Electron")
+    public static let elo = PKPaymentNetwork(rawValue: "Elo")
+    public static let girocard = PKPaymentNetwork(rawValue: "Girocard")
+    public static let himyan = PKPaymentNetwork(rawValue: "Himyan")
+    public static let idCredit = PKPaymentNetwork(rawValue: "IDCredit")
+    public static let interac = PKPaymentNetwork(rawValue: "Interac")
     public static let JCB = PKPaymentNetwork(rawValue: "JCB")
+    public static let jaywan = PKPaymentNetwork(rawValue: "Jaywan")
     public static let mada = PKPaymentNetwork(rawValue: "Mada")
+    public static let maestro = PKPaymentNetwork(rawValue: "Maestro")
+    public static let masterCard = PKPaymentNetwork(rawValue: "MasterCard")
+    public static let meeza = PKPaymentNetwork(rawValue: "Meeza")
+    public static let mir = PKPaymentNetwork(rawValue: "Mir")
+    public static let myDebit = PKPaymentNetwork(rawValue: "MyDebit")
+    public static let NAPAS = PKPaymentNetwork(rawValue: "NAPAS")
+    public static let nanaco = PKPaymentNetwork(rawValue: "Nanaco")
+    public static let pagoBancomat = PKPaymentNetwork(rawValue: "PagoBancomat")
+    public static let postFinance = PKPaymentNetwork(rawValue: "PostFinance")
+    public static let privateLabel = PKPaymentNetwork(rawValue: "PrivateLabel")
+    public static let quicPay = PKPaymentNetwork(rawValue: "QuicPay")
+    public static let suica = PKPaymentNetwork(rawValue: "Suica")
+    public static let tmoney = PKPaymentNetwork(rawValue: "Tmoney")
+    public static let vPay = PKPaymentNetwork(rawValue: "VPay")
+    public static let visa = PKPaymentNetwork(rawValue: "Visa")
+    public static let waon = PKPaymentNetwork(rawValue: "Waon")
 }
 
-public struct PKMerchantCapability: OptionSet, Sendable {
+public struct PKMerchantCapability: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
     public static let threeDSecure = PKMerchantCapability(rawValue: 1 << 0)
     public static let emv = PKMerchantCapability(rawValue: 1 << 1)
     public static let credit = PKMerchantCapability(rawValue: 1 << 2)
     public static let debit = PKMerchantCapability(rawValue: 1 << 3)
+    public static let instantFundsOut = PKMerchantCapability(rawValue: 1 << 7)
+    public static var capability3DS: PKMerchantCapability { .threeDSecure }
+    public static var capabilityEMV: PKMerchantCapability { .emv }
+    public static var capabilityCredit: PKMerchantCapability { .credit }
+    public static var capabilityDebit: PKMerchantCapability { .debit }
 }
 
 public enum PKPaymentSummaryItemType: Int, Sendable {
@@ -133,34 +356,70 @@ public enum PKPaymentSummaryItemType: Int, Sendable {
     case pending = 1
 }
 
-open class PKPaymentSummaryItem {
+open class PKPaymentSummaryItem: NSObject, @unchecked Sendable {
     public var label: String
-    public var amount: Decimal
+    public var amount: NSDecimalNumber
     public var type: PKPaymentSummaryItemType
 
     public init(
         label: String,
-        amount: Decimal,
+        amount: NSDecimalNumber,
         type: PKPaymentSummaryItemType = .final
     ) {
         self.label = label
         self.amount = amount
         self.type = type
+        super.init()
+    }
+
+    public convenience init(label: String, amount: NSDecimalNumber) {
+        self.init(label: label, amount: amount, type: .final)
+    }
+
+    public convenience init(
+        label: String,
+        amount: Decimal,
+        type: PKPaymentSummaryItemType = .final
+    ) {
+        self.init(label: label, amount: NSDecimalNumber(decimal: amount), type: type)
+    }
+
+    public override init() {
+        label = ""
+        amount = 0
+        type = .final
+        super.init()
     }
 }
 
-public final class PKRecurringPaymentSummaryItem: PKPaymentSummaryItem {
-    public enum IntervalUnit: Int, Sendable {
-        case day, week, month, year
-    }
-
-    public var intervalUnit: IntervalUnit = .month
+public final class PKRecurringPaymentSummaryItem: PKPaymentSummaryItem, @unchecked Sendable {
+    public var intervalUnit: NSCalendar.Unit = .month
     public var intervalCount = 1
     public var startDate: Date?
     public var endDate: Date?
 }
 
-public final class PKPaymentRequest {
+open class PKPaymentRequest: NSObject, @unchecked Sendable {
+    public struct MerchantCategoryCode: RawRepresentable, Hashable, Sendable, Codable, CustomStringConvertible {
+        public typealias RawValue = Int16
+        public let rawValue: Int16
+        public init(rawValue: Int16) { self.rawValue = rawValue }
+        public init?(_ description: String) {
+            guard let value = Int16(description) else { return nil }
+            rawValue = value
+        }
+        public var description: String { String(rawValue) }
+    }
+
+    public enum ApplePayLaterAvailability: Hashable, Sendable {
+        public enum Reason: Hashable, Sendable {
+            case itemIneligible
+            case recurringTransaction
+        }
+        case available
+        case unavailable(Reason)
+    }
+
     public var merchantIdentifier = ""
     public var countryCode = ""
     public var currencyCode = ""
@@ -169,10 +428,98 @@ public final class PKPaymentRequest {
     public var paymentSummaryItems: [PKPaymentSummaryItem] = []
     public var requiredBillingContactFields: Set<PKContactField> = []
     public var requiredShippingContactFields: Set<PKContactField> = []
+    public var requiredBillingAddressFields: PKAddressField = []
+    public var requiredShippingAddressFields: PKAddressField = []
+    public var applicationData: Data?
+    public var attributionIdentifier: String?
+    public var automaticReloadPaymentRequest: PKAutomaticReloadPaymentRequest?
+    public var billingAddress: ABRecord?
+    public var billingContact: PKContact?
+    public var couponCode: String?
+    public var deferredPaymentRequest: PKDeferredPaymentRequest?
+    public var multiTokenContexts: [PKPaymentTokenContext] = []
+    public var recurringPaymentRequest: PKRecurringPaymentRequest?
+    public var shippingAddress: ABRecord?
+    public var shippingContact: PKContact?
+    public var shippingContactEditingMode: PKShippingContactEditingMode = .enabled
+    public var shippingMethods: [PKShippingMethod]?
+    public var shippingType: PKShippingType = .shipping
+    public var supportedCountries: Set<String>?
+    public var supportsCouponCode = false
+    public var merchantCategoryCode: MerchantCategoryCode?
+    public var applePayLaterAvailability: ApplePayLaterAvailability = .available
 
-    public init() {}
+    public override init() {
+        super.init()
+    }
 
     public static func availableNetworks() -> [PKPaymentNetwork] { [] }
+
+    public static func paymentBillingAddressInvalidError(
+        withKey postalAddressKey: String,
+        localizedDescription: String?
+    ) -> any Error {
+        PKPaymentError(
+            .billingContactInvalidError,
+            userInfo: [
+                PKPaymentErrorKey.postalAddressUserInfoKey.rawValue: postalAddressKey,
+                NSLocalizedDescriptionKey: localizedDescription ?? "",
+            ]
+        )
+    }
+
+    public static func paymentContactInvalidError(
+        withContactField field: PKContactField,
+        localizedDescription: String?
+    ) -> any Error {
+        PKPaymentError(
+            .shippingContactInvalidError,
+            userInfo: [
+                PKPaymentErrorKey.contactFieldUserInfoKey.rawValue: field.rawValue,
+                NSLocalizedDescriptionKey: localizedDescription ?? "",
+            ]
+        )
+    }
+
+    public static func paymentShippingAddressInvalidError(
+        withKey postalAddressKey: String,
+        localizedDescription: String?
+    ) -> any Error {
+        PKPaymentError(
+            .shippingContactInvalidError,
+            userInfo: [
+                PKPaymentErrorKey.postalAddressUserInfoKey.rawValue: postalAddressKey,
+                NSLocalizedDescriptionKey: localizedDescription ?? "",
+            ]
+        )
+    }
+
+    public static func paymentShippingAddressUnserviceableError(
+        withLocalizedDescription localizedDescription: String?
+    ) -> any Error {
+        PKPaymentError(
+            .shippingAddressUnserviceableError,
+            userInfo: [NSLocalizedDescriptionKey: localizedDescription ?? ""]
+        )
+    }
+
+    public static func paymentCouponCodeInvalidError(
+        localizedDescription: String? = nil
+    ) -> any Error {
+        PKPaymentError(
+            .couponCodeInvalidError,
+            userInfo: [NSLocalizedDescriptionKey: localizedDescription ?? ""]
+        )
+    }
+
+    public static func paymentCouponCodeExpiredError(
+        localizedDescription: String? = nil
+    ) -> any Error {
+        PKPaymentError(
+            .couponCodeExpiredError,
+            userInfo: [NSLocalizedDescriptionKey: localizedDescription ?? ""]
+        )
+    }
 }
 
 public struct PKContactField: RawRepresentable, Hashable, Sendable {
@@ -182,30 +529,45 @@ public struct PKContactField: RawRepresentable, Hashable, Sendable {
     public static let emailAddress = PKContactField(rawValue: "emailAddress")
     public static let phoneNumber = PKContactField(rawValue: "phoneNumber")
     public static let name = PKContactField(rawValue: "name")
+    public static let phoneticName = PKContactField(rawValue: "phoneticName")
 }
 
-public final class PKContact {
+public final class PKContact: NSObject, @unchecked Sendable {
     public var emailAddress: String?
-    public var phoneNumber: String?
-    public init() {}
-}
-
-public final class PKPaymentToken {
-    public let paymentData: Data
-    public let transactionIdentifier: String
-    public init(paymentData: Data = Data(), transactionIdentifier: String = "") {
-        self.paymentData = paymentData
-        self.transactionIdentifier = transactionIdentifier
+    public var phoneNumber: CNPhoneNumber?
+    public var name: PersonNameComponents?
+    public var postalAddress: CNPostalAddress?
+    public var supplementarySubLocality: String?
+    public override init() {
+        super.init()
     }
 }
 
-public final class PKPayment {
+public final class PKPaymentToken: NSObject, @unchecked Sendable {
+    public let paymentData: Data
+    public let transactionIdentifier: String
+    public var paymentInstrumentName: String = ""
+    public var paymentMethod: PKPaymentMethod = PKPaymentMethod()
+    public var paymentNetwork: String = ""
+
+    public init(paymentData: Data = Data(), transactionIdentifier: String = "") {
+        self.paymentData = paymentData
+        self.transactionIdentifier = transactionIdentifier
+        super.init()
+    }
+}
+
+public final class PKPayment: NSObject, @unchecked Sendable {
     public let token: PKPaymentToken
     public var billingContact: PKContact?
     public var shippingContact: PKContact?
+    public var billingAddress: ABRecord?
+    public var shippingAddress: ABRecord?
+    public var shippingMethod: PKShippingMethod?
 
     public init(token: PKPaymentToken = PKPaymentToken()) {
         self.token = token
+        super.init()
     }
 }
 
@@ -220,13 +582,15 @@ public enum PKPaymentAuthorizationStatus: Int, Sendable {
     case pinLockout = 7
 }
 
-public final class PKPaymentAuthorizationResult {
-    public let status: PKPaymentAuthorizationStatus
-    public let errors: [Error]?
+public final class PKPaymentAuthorizationResult: NSObject, @unchecked Sendable {
+    public var status: PKPaymentAuthorizationStatus
+    public var errors: [any Error]?
+    public var orderDetails: PKPaymentOrderDetails?
 
-    public init(status: PKPaymentAuthorizationStatus, errors: [Error]?) {
+    public init(status: PKPaymentAuthorizationStatus, errors: [any Error]?) {
         self.status = status
         self.errors = errors
+        super.init()
     }
 }
 
@@ -248,6 +612,7 @@ public extension PKPaymentAuthorizationViewControllerDelegate {
         didAuthorizePayment payment: PKPayment,
         handler completion: @escaping (PKPaymentAuthorizationResult) -> Void
     ) {
+        _ = (controller, payment)
         completion(
             PKPaymentAuthorizationResult(
                 status: .failure,
@@ -255,26 +620,157 @@ public extension PKPaymentAuthorizationViewControllerDelegate {
             )
         )
     }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didAuthorizePayment payment: PKPayment,
+        completion: @escaping (PKPaymentAuthorizationStatus) -> Void
+    ) {
+        _ = (controller, payment)
+        completion(.failure)
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didAuthorizePayment payment: PKPayment
+    ) async -> PKPaymentAuthorizationResult {
+        _ = (controller, payment)
+        return PKPaymentAuthorizationResult(
+            status: .failure,
+            errors: [PassKitPortableError(.paymentsUnavailable)]
+        )
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didChangeCouponCode couponCode: String
+    ) async -> PKPaymentRequestCouponCodeUpdate {
+        _ = (controller, couponCode)
+        return PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: [])
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didRequestMerchantSessionUpdate handler: @escaping (PKPaymentRequestMerchantSessionUpdate) -> Void
+    ) {
+        _ = controller
+        handler(PKPaymentRequestMerchantSessionUpdate(status: .failure, session: nil))
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect paymentMethod: PKPaymentMethod,
+        completion: @escaping ([PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, paymentMethod)
+        completion([])
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect paymentMethod: PKPaymentMethod
+    ) async -> PKPaymentRequestPaymentMethodUpdate {
+        _ = (controller, paymentMethod)
+        return PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: [])
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelectShippingAddress address: ABRecord,
+        completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, address)
+        completion(.failure, [], [])
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelectShippingContact contact: PKContact,
+        completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, contact)
+        completion(.failure, [], [])
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelectShippingContact contact: PKContact
+    ) async -> PKPaymentRequestShippingContactUpdate {
+        _ = (controller, contact)
+        return PKPaymentRequestShippingContactUpdate(
+            errors: [PassKitPortableError(.paymentsUnavailable)],
+            paymentSummaryItems: [],
+            shippingMethods: []
+        )
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect shippingMethod: PKShippingMethod,
+        completion: @escaping (PKPaymentAuthorizationStatus, [PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, shippingMethod)
+        completion(.failure, [])
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect shippingMethod: PKShippingMethod
+    ) async -> PKPaymentRequestShippingMethodUpdate {
+        _ = (controller, shippingMethod)
+        return PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: [])
+    }
+
+    func paymentAuthorizationViewControllerWillAuthorizePayment(
+        _ controller: PKPaymentAuthorizationViewController
+    ) {
+        _ = controller
+    }
 }
 
 @MainActor
-open class PKPaymentAuthorizationViewController: UIViewController {
-    public weak var delegate: PKPaymentAuthorizationViewControllerDelegate?
+open class PKPaymentAuthorizationViewController: UIViewController, @unchecked Sendable {
+    public weak var delegate: (any PKPaymentAuthorizationViewControllerDelegate)?
     public let paymentRequest: PKPaymentRequest
 
-    public static func canMakePayments() -> Bool { false }
-    public static func canMakePayments(
+    public nonisolated static func canMakePayments() -> Bool { false }
+    public nonisolated static func canMakePayments(
         usingNetworks supportedNetworks: [PKPaymentNetwork]
-    ) -> Bool { false }
-    public static func canMakePayments(
+    ) -> Bool {
+        _ = supportedNetworks
+        return false
+    }
+    public nonisolated static func canMakePayments(
         usingNetworks supportedNetworks: [PKPaymentNetwork],
         capabilities: PKMerchantCapability
-    ) -> Bool { false }
+    ) -> Bool {
+        _ = (supportedNetworks, capabilities)
+        return false
+    }
+    public static func supportsDisbursements() -> Bool { false }
+    public static func supportsDisbursements(
+        using supportedNetworks: [PKPaymentNetwork]
+    ) -> Bool {
+        _ = supportedNetworks
+        return false
+    }
+    public static func supportsDisbursements(
+        using supportedNetworks: [PKPaymentNetwork],
+        capabilities: PKMerchantCapability
+    ) -> Bool {
+        _ = (supportedNetworks, capabilities)
+        return false
+    }
 
     public init?(paymentRequest request: PKPaymentRequest) {
         paymentRequest = request
         super.init(nibName: nil, bundle: nil)
         return nil
+    }
+
+    public convenience init(disbursementRequest request: PKDisbursementRequest) {
+        self.init()
+        _ = request
     }
 
     public override init() {
@@ -295,20 +791,159 @@ public protocol PKPaymentAuthorizationControllerDelegate: AnyObject {
     )
 }
 
-@MainActor
+public extension PKPaymentAuthorizationControllerDelegate {
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didAuthorizePayment payment: PKPayment,
+        handler completion: @escaping (PKPaymentAuthorizationResult) -> Void
+    ) {
+        _ = (controller, payment)
+        completion(
+            PKPaymentAuthorizationResult(
+                status: .failure,
+                errors: [PassKitPortableError(.paymentsUnavailable)]
+            )
+        )
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didAuthorizePayment payment: PKPayment,
+        completion: @escaping (PKPaymentAuthorizationStatus) -> Void
+    ) {
+        _ = (controller, payment)
+        completion(.failure)
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didAuthorizePayment payment: PKPayment
+    ) async -> PKPaymentAuthorizationResult {
+        _ = (controller, payment)
+        return PKPaymentAuthorizationResult(
+            status: .failure,
+            errors: [PassKitPortableError(.paymentsUnavailable)]
+        )
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didChangeCouponCode couponCode: String
+    ) async -> PKPaymentRequestCouponCodeUpdate {
+        _ = (controller, couponCode)
+        return PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: [])
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didRequestMerchantSessionUpdate handler: @escaping (PKPaymentRequestMerchantSessionUpdate) -> Void
+    ) {
+        _ = controller
+        handler(PKPaymentRequestMerchantSessionUpdate(status: .failure, session: nil))
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        completion: @escaping ([PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, paymentMethod)
+        completion([])
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod
+    ) async -> PKPaymentRequestPaymentMethodUpdate {
+        _ = (controller, paymentMethod)
+        return PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: [])
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingContact contact: PKContact,
+        completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, contact)
+        completion(.failure, [], [])
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingContact contact: PKContact
+    ) async -> PKPaymentRequestShippingContactUpdate {
+        _ = (controller, contact)
+        return PKPaymentRequestShippingContactUpdate(
+            errors: [PassKitPortableError(.paymentsUnavailable)],
+            paymentSummaryItems: [],
+            shippingMethods: []
+        )
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingMethod shippingMethod: PKShippingMethod,
+        completion: @escaping (PKPaymentAuthorizationStatus, [PKPaymentSummaryItem]) -> Void
+    ) {
+        _ = (controller, shippingMethod)
+        completion(.failure, [])
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingMethod shippingMethod: PKShippingMethod
+    ) async -> PKPaymentRequestShippingMethodUpdate {
+        _ = (controller, shippingMethod)
+        return PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: [])
+    }
+
+    func paymentAuthorizationControllerWillAuthorizePayment(
+        _ controller: PKPaymentAuthorizationController
+    ) {
+        _ = controller
+    }
+
+    func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+        _ = controller
+        return nil
+    }
+}
+
 public final class PKPaymentAuthorizationController {
-    public weak var delegate: PKPaymentAuthorizationControllerDelegate?
+    public weak var delegate: (any PKPaymentAuthorizationControllerDelegate)?
     public let paymentRequest: PKPaymentRequest
 
     public init(paymentRequest: PKPaymentRequest) {
         self.paymentRequest = paymentRequest
     }
 
+    public convenience init(disbursementRequest request: PKDisbursementRequest) {
+        self.init(paymentRequest: PKPaymentRequest())
+        _ = request
+    }
+
     public static func canMakePayments() -> Bool { false }
     public static func canMakePayments(
         usingNetworks supportedNetworks: [PKPaymentNetwork],
         capabilities: PKMerchantCapability = []
-    ) -> Bool { false }
+    ) -> Bool {
+        _ = (supportedNetworks, capabilities)
+        return false
+    }
+    public static func supportsDisbursements() -> Bool { false }
+    public static func supportsDisbursements(
+        using supportedNetworks: [PKPaymentNetwork]
+    ) -> Bool {
+        _ = supportedNetworks
+        return false
+    }
+    public static func supportsDisbursements(
+        using supportedNetworks: [PKPaymentNetwork],
+        capabilities: PKMerchantCapability
+    ) -> Bool {
+        _ = (supportedNetworks, capabilities)
+        return false
+    }
 
     public func present(completion: ((Bool) -> Void)? = nil) {
         completion?(false)
@@ -328,6 +963,15 @@ public enum PKPaymentButtonType: Int, Sendable {
     case checkout = 5
     case book = 6
     case subscribe = 7
+    case reload = 8
+    case addMoney = 9
+    case topUp = 10
+    case order = 11
+    case rent = 12
+    case support = 13
+    case contribute = 14
+    case tip = 15
+    case `continue` = 16
 }
 
 public enum PKPaymentButtonStyle: Int, Sendable {
@@ -338,9 +982,10 @@ public enum PKPaymentButtonStyle: Int, Sendable {
 }
 
 @MainActor
-open class PKPaymentButton: UIButton {
+open class PKPaymentButton: UIButton, @unchecked Sendable {
     public let paymentButtonType: PKPaymentButtonType
     public let paymentButtonStyle: PKPaymentButtonStyle
+    public var cornerRadius: CGFloat = 4
 
     public init(
         paymentButtonType type: PKPaymentButtonType,
@@ -350,6 +995,24 @@ open class PKPaymentButton: UIButton {
         paymentButtonStyle = style
         super.init(frame: .zero)
         isEnabled = false
+    }
+
+    public convenience init(
+        type: PKPaymentButtonType,
+        style: PKPaymentButtonStyle,
+        disableCardArt: Bool
+    ) {
+        self.init(paymentButtonType: type, paymentButtonStyle: style)
+        _ = disableCardArt
+    }
+
+    public convenience init(
+        paymentButtonType type: PKPaymentButtonType,
+        paymentButtonStyle style: PKPaymentButtonStyle,
+        disableCardArt: Bool
+    ) {
+        self.init(paymentButtonType: type, paymentButtonStyle: style)
+        _ = disableCardArt
     }
 
     public override init(frame: CGRect) {
