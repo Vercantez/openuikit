@@ -63,6 +63,11 @@ the vendor pin. Do NOT touch `scripts/vendor_pins.sh`, `env/`, or
   unless the rule is guarded by the iOS cut.
 - Never model from memory. If you cannot measure it, write it up as an
   open question in the report instead of guessing.
+- Every constant in a rule must be read off a sample and be nameable
+  (a frame, a coverage value, a ratio of two measurements). A parameter
+  search that targets the comparison score is not a measurement — a branch
+  that lands exactly on a bar that way is rejected. When no rule fits every
+  sample, add the scene to `scoreboard/open.txt` with the samples.
 - One SimScene process per sheet/alert scene; capture scale-2 scenes on
   the SE; compare simulator goldens with `--golden-straight-alpha`. The
   capture hazards in `docs/ORACLE_FLOW.md` are all real and all measured.
