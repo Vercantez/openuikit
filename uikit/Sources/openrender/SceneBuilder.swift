@@ -1165,7 +1165,17 @@ func makeNavigationStack(_ j: SceneJSON, scale: CGFloat,
     // post-attach application; the bar recomputes for observed offsets).
     if let co = numArray(j["contentOffset"]), co.count == 2 {
         pendingChromeActions.append {
-            scroll.contentOffset = CGPoint(x: co[0], y: co[1])
+            let p = CGPoint(x: co[0], y: co[1])
+            scroll.contentOffset = p
+            // iOS 26.1 (MEASURED probe_collapse_rebase, SE 2x): shrinking
+            // safeArea.top rebases offset by the delta (160 → 212). Real
+            // SimScene applies the JSON offset onto a bar that starts
+            // collapsed, so the authored value IS the settled offset.
+            // Layout so the collapse rebase runs, then pin back.
+            var root: UIView = scroll
+            while let s = root.superview { root = s }
+            root.layoutIfNeeded()
+            scroll.contentOffset = p
         }
     }
     return stack
