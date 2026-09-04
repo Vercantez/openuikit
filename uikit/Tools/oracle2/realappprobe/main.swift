@@ -238,6 +238,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // the 1/3-pt grid, so the pixels must be too; `openrender realapp`
         // renders at OPENUIKIT_REALAPP_SCALE=3 for the comparison.
         format.scale = UIScreen.main.scale
+        // sRGB, not Display P3 (see simscene/main.swift).
+        format.preferredRange = .standard
         format.opaque = true
         let renderer = UIGraphicsImageRenderer(bounds: w.bounds, format: format)
         let img = renderer.image { _ in

@@ -19,10 +19,20 @@ public enum SystemColors {
     /// Parsed + cached color table. `static let` gives us lazy, thread-safe,
     /// once-only initialization.
     static let table: Table = loadTable()
+    /// The iOS palette (Resources/system_colors_ios.json, resolved on the
+    /// iPhone 16 / iOS 26.1 simulator by Tools/oracle2/colorprobe on
+    /// 2026-09-04). system_colors.json is Mac Catalyst's, and 10 light + 13
+    /// dark names differ: `label` is opaque black/white on iOS (0.847 alpha
+    /// on Catalyst), dark `systemBackground` is #000000 (#1E1E1E), dark
+    /// `secondarySystemBackground` #1C1C1E (#323232), light
+    /// `secondarySystemBackground` #F2F2F7 (#ECECEC), the grey labels are
+    /// (60,60,67)/(235,235,245) tints, `separator` (84,84,88)@0.5 in dark.
+    /// Empty when the file is absent; the Catalyst table then serves both.
+    static let tableIOS: Table = loadTable(resource: "system_colors_ios.json")
 
-    private static func loadTable() -> Table {
+    private static func loadTable(resource: String = "system_colors.json") -> Table {
         var t = Table()
-        guard let json = ResourceIO.loadJSONResource("system_colors.json"),
+        guard let json = ResourceIO.loadJSONResource(resource),
               let root = json.objectValue else {
             return t
         }
@@ -48,10 +58,12 @@ public enum SystemColors {
     /// Resolve a semantic color name for the given traits.
     /// `.unspecified` resolves as light. Unknown names resolve to magenta.
     static func resolve(_ name: String, traits: UITraitCollection) -> CGColor {
+        let t = (OpenUIKitRuntime.systemFontCut == .iOS && !tableIOS.light.isEmpty)
+            ? tableIOS : table
         let styleTable: [String: CGColor]
         switch traits.userInterfaceStyle {
-        case .dark: styleTable = table.dark
-        case .light, .unspecified: styleTable = table.light
+        case .dark: styleTable = t.dark
+        case .light, .unspecified: styleTable = t.light
         }
         return styleTable[name] ?? missing
     }

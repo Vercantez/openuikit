@@ -375,6 +375,8 @@ def main():
     ap.add_argument("--scenes", default="fixtures/scenes")
     ap.add_argument("--json", default=None)
     ap.add_argument("scene_names", nargs="*")
+    ap.add_argument("--golden-premultiplied", action="store_true",
+                    help="every golden PNG is premultiplied (simulator captures)")
     args = ap.parse_args()
 
     names = args.scene_names or sorted(
@@ -400,8 +402,10 @@ def main():
         entry["layout_problems"] = problems
         layout_ok = not problems
 
-        # oracle2 ("window" scenes) goldens are premultiplied
-        premul = bool(scene.get("window", False))
+        # oracle2 ("window" scenes) goldens are premultiplied, and so is
+        # every drawHierarchy capture from the iOS simulator
+        # (--golden-premultiplied, scripts/ios_suite.sh).
+        premul = bool(scene.get("window", False)) or args.golden_premultiplied
         scale = scene.get("scale", 1)
         pixel_ok = True
         struct_ok = True

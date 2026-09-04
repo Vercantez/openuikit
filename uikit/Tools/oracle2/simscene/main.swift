@@ -38,6 +38,10 @@ final class SimSceneRenderer {
     func snapshot(_ view: UIView, size: CGSize, scale: CGFloat) -> UIImage {
         let fmt = UIGraphicsImageRendererFormat()
         fmt.scale = scale
+        // sRGB, not the device's Display P3: the PNG is diffed against an
+        // sRGB render, and a P3-tagged capture read raw is off by 30/255 on
+        // saturated colours (measured 2026-09-04: #1971C2 read as (54,111,188)).
+        fmt.preferredRange = .standard
         fmt.opaque = false
         return UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
             view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)

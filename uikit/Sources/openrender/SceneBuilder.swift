@@ -1515,6 +1515,12 @@ func activateConstraints(_ specs: [JSONValue], container: UIView) {
 
 func round3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
 
+/// Render EVERY scene with the iOS font cut (and the iOS pixel-grid layout
+/// rounding that comes with it) — for diffing the whole scene suite against
+/// real-iOS captures (scripts/render_sim_scenes.sh) instead of the Catalyst
+/// goldens. main.swift sets it from OPENUIKIT_FORCE_IOS=1.
+nonisolated(unsafe) var forceIOSCut = false
+
 @MainActor
 func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     var entry: [String: JSONValue] = [
@@ -1598,7 +1604,7 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // real iOS chrome explicitly with `"ios": true` (the bars cluster —
     // Catalyst is not the ground truth for iOS 26 bar platters).
     OpenUIKitRuntime.systemFontCut =
-        (scene["alert"] != nil || scene["modal"] != nil
+        (forceIOSCut || scene["alert"] != nil || scene["modal"] != nil
          || scene["ios"]?.boolValue == true) ? .iOS : .macOS
 
     // Mirror oracle's traits.performAsCurrent { build } — semantic colors

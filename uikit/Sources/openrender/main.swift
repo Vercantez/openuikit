@@ -35,6 +35,7 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_BACKEND"] {
 
 // Compositor override: OPENUIKIT_COMPOSITOR=layers|renderpass (default:
 // library default; layers requires the quartz backend).
+if ProcessInfo.processInfo.environment["OPENUIKIT_FORCE_IOS"] == "1" { forceIOSCut = true }
 if let v = ProcessInfo.processInfo.environment["OPENUIKIT_COMPOSITOR"] {
     switch v {
     case "layers": OpenUIKitRuntime.compositor = .layers

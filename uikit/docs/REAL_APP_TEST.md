@@ -356,6 +356,22 @@ the golden: black, σ ≈ 15.5 pt, opacity 0.09, offset +7.5 pt down — cast fr
 background rounded at the larger radius, since neither compositor casts a
 shadow from custom-drawn content).
 
+### The whole scene suite against real iOS
+
+`scripts/ios_suite.sh` captures every static scene with real UIKit on the
+iOS 26.1 simulator (sRGB) and diffs `OPENUIKIT_FORCE_IOS=1 openrender`
+against it — the port under the iOS font cut, the iOS palette
+(`system_colors_ios.json`, measured by `Tools/oracle2/colorprobe`: 10 light
+and 13 dark semantic colours differ from Catalyst's — `label` is opaque on
+iOS, dark `systemBackground` is black) and pixel-grid rounding. The Catalyst
+goldens stay the regression gate (109/109); this is the fidelity measurement.
+
+| date | pass | note |
+|---|---|---|
+| 2026-09-04 | 17/98 | first capture; Display P3 captures read raw, Catalyst palette |
+| 2026-09-04 | 31/98 | sRGB captures, iOS palette; worst families: gradients (56–85), grouped table views (78–94), text (88–95), group-opacity shadow (76), `corner_radius` (blob 3889 pt²) |
+
+
 Still wrong:
 
 1. **Circular corners where iOS draws continuous ones** (the card, the switch
