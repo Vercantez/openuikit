@@ -965,7 +965,8 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
     }
 
     func configure(kind: Kind, text: String?, labelX: CGFloat,
-                   style: UITableView.Style = .plain, firstSection: Bool = false) {
+                   style: UITableView.Style = .plain, firstSection: Bool = false,
+                   compact: Bool = false) {
         self.kind = kind
         self.labelX = labelX
         if UITableView.isIOSChrome {
@@ -974,9 +975,15 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
             case .grouped, .insetGrouped:
                 // MEASURED: 28.667 / 18.667 on the iPhone 16 (3x), 29.5 /
                 // 19.5 on the iPhone SE (2x) — not one value rounded two
-                // ways, so both readings are carried.
+                // ways, so both readings are carried. Compact 38 pt
+                // headers (headerprobe / NavFlow t200, SE 2x) put the
+                // label at y = 12.
                 let threeX = UIScreen.main.scale >= 3
-                _headerLabelY = firstSection ? (threeX ? 28.666667 : 29.5) : (threeX ? 18.666667 : 19.5)
+                if compact {
+                    _headerLabelY = 12
+                } else {
+                    _headerLabelY = firstSection ? (threeX ? 28.666667 : 29.5) : (threeX ? 18.666667 : 19.5)
+                }
                 _wholePointLabelHeight = false
             }
         } else {
