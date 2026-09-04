@@ -660,7 +660,58 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         scroll.removeAllAnimations()
         scroll.contentOffset = CGPoint(x: 0, y: -116 + 37)
         nav.scrollViewDidEndDragging(scroll, willDecelerate: false)
-        XCTAssertEqual(scroll.contentOffset.y, -116 + 52)
+        nav.view.layoutIfNeeded()
+        // Snap writes y = 52 − 116 = −64; the collapse shrinks
+        // safeArea.top 116 → 64 and rebases +52 → −12
+        // (probe_collapse_rebase sv.set.-64).
+        XCTAssertEqual(scroll.contentOffset.y, -12, accuracy: 0.5)
+    }
+
+    /// MEASURED 2026-09-04, probe_collapse_rebase + Feed t2800,
+    /// iPhone SE 2x / iOS 26.1: a programmatic setContentOffset past
+    /// collapse distance 52 rebases y by +52 when the large-title overlay
+    /// shrinks (adj 116 → 64). Same numbers on UIScrollView and
+    /// UICollectionView, and on a plain scroll view whose
+    /// additionalSafeAreaInsets.top shrinks 116 → 64 with no nav bar.
+    func testIOSSafeAreaTopShrinkRebasesOffset() {
+        let (nav, scroll) = makeLargeScrollNav()
+        XCTAssertEqual(scroll.contentOffset.y, -116, accuracy: 0.5)
+        XCTAssertEqual(scroll.adjustedContentInset.top, 116, accuracy: 0.5)
+
+        scroll.setContentOffset(CGPoint(x: 0, y: -65), animated: false)
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(scroll.contentOffset.y, -65, accuracy: 0.5)
+        XCTAssertEqual(scroll.adjustedContentInset.top, 116, accuracy: 0.5)
+        XCTAssertEqual(nav.navigationBar.frame.height, 106, accuracy: 0.5)
+
+        scroll.setContentOffset(CGPoint(x: 0, y: -116), animated: false)
+        nav.view.layoutIfNeeded()
+        scroll.setContentOffset(CGPoint(x: 0, y: 300), animated: false)
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(scroll.contentOffset.y, 352, accuracy: 0.5)
+        XCTAssertEqual(scroll.adjustedContentInset.top, 64, accuracy: 0.5)
+        XCTAssertEqual(nav.navigationBar.frame.height, 54, accuracy: 0.5)
+
+        scroll.setContentOffset(CGPoint(x: 0, y: 160), animated: false)
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(scroll.contentOffset.y, 160, accuracy: 0.5)
+        XCTAssertEqual(scroll.adjustedContentInset.top, 64, accuracy: 0.5)
+
+        let vc = UIViewController()
+        let sv = UIScrollView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        sv.contentSize = CGSize(width: 375, height: 2400)
+        vc.view.addSubview(sv)
+        vc.additionalSafeAreaInsets.top = 116
+        vc.view.frame = CGRect(x: 0, y: 0, width: 375, height: 667)
+        vc.view.layoutIfNeeded()
+        sv.setContentOffset(CGPoint(x: 0, y: 300), animated: false)
+        vc.view.layoutIfNeeded()
+        XCTAssertEqual(sv.contentOffset.y, 300, accuracy: 0.5)
+        XCTAssertEqual(sv.adjustedContentInset.top, 116, accuracy: 0.5)
+        vc.additionalSafeAreaInsets.top = 64
+        vc.view.layoutIfNeeded()
+        XCTAssertEqual(sv.contentOffset.y, 352, accuracy: 0.5)
+        XCTAssertEqual(sv.adjustedContentInset.top, 64, accuracy: 0.5)
     }
 
     /// MEASURED 2026-09-04, navprobe.barorigin hide_sa0, iPhone SE 2x /

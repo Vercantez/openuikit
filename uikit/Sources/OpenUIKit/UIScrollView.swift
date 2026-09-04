@@ -623,17 +623,34 @@ open class UIScrollView: UIView {
         let previous = adjustedSafeAreaTop
         adjustedSafeAreaTop = safeAreaInsets.top
         super.safeAreaInsetsDidChange()
-        // Content resting at the top stays at the top when the safe area
-        // grows — the same rule `contentInset`'s setter applies, and for the
-        // same reason: `adjustedContentInset` folds the two together.
-        // MEASURED (realapp_storage_light, iPhone 16 / iOS 26.1): the screen
-        // sets no contentInset at all, yet UIKit reports the table's
-        // contentOffset as (0, -59) and adjustedContentInset [59, 0, 34, 0] —
-        // the window's own safe area. The port left the offset at 0 and drew
-        // the whole screen 59 pt too high.
-        if safeAreaInsets.top != previous,
-           contentOffset.y <= -(previous + contentInset.top) {
-            contentOffset.y = -(safeAreaInsets.top + contentInset.top)
+        let newTop = safeAreaInsets.top
+        if newTop != previous {
+            if OpenUIKitRuntime.systemFontCut == .iOS,
+               newTop < previous,
+               !isDragging, !isTracking, !isDecelerating {
+                // MEASURED 2026-09-04, probe_collapse_rebase + Feed t2800,
+                // iPhone SE 2x / iOS 26.1. When safeAreaInsets.top shrinks
+                // and the scroll view is not tracking, contentOffset.y
+                // grows by the same delta so the distance from rest is
+                // unchanged:
+                //   requested y >= −64 (collapse d ≥ 52) → actual = y + 52
+                //   setContentOffset(300) → 352, adj 116 → 64
+                //   y = −65 (d = 51) stays −65, adj 116 (still expanded)
+                //   already-collapsed set(160) stays 160 (no inset change)
+                // A plain UIScrollView with additionalSafeAreaInsets
+                // 116 → 64 at offset 300 also lands on 352 — the rule is
+                // the inset shrink, not the large-title bar itself.
+                // Finger-down pans skip this: a +52 jump under the finger
+                // at d = 52 is not what the 1:1 title translation does.
+                contentOffset.y += previous - newTop
+            } else if contentOffset.y <= -(previous + contentInset.top) {
+                // Content resting at the top stays at the top when the
+                // safe area grows — the same rule `contentInset`'s setter
+                // applies. MEASURED (realapp_storage_light, iPhone 16 /
+                // iOS 26.1): no contentInset, yet UIKit reports offset
+                // (0, −59) and adjustedContentInset [59, 0, 34, 0].
+                contentOffset.y = -(newTop + contentInset.top)
+            }
         }
         delegate?.scrollViewDidChangeAdjustedContentInset(self)
         setNeedsLayout()
