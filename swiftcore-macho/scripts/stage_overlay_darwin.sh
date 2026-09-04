@@ -53,8 +53,19 @@ DARWIN_MODULE_HEADERS=(
 
 resolve_fe_sysroot() {
   local cand
+  # Named FE sysroot is exclusive: do not silently copy OPENUIKIT_ROOT's
+  # live scratch when the caller pointed at a fixture or a missing tree.
+  if [ -n "${SWIFTCORE_FE_SYSROOT:-}" ]; then
+    case "${SWIFTCORE_FE_SYSROOT%/}" in
+      *-fe-clang) return 1 ;;
+    esac
+    if [ -f "$SWIFTCORE_FE_SYSROOT/usr/include/Darwin.modulemap" ]; then
+      printf '%s\n' "$SWIFTCORE_FE_SYSROOT"
+      return 0
+    fi
+    return 1
+  fi
   for cand in \
-      ${SWIFTCORE_FE_SYSROOT:+$SWIFTCORE_FE_SYSROOT} \
       "$W/scratch/sysroot_fe4-${SWIFTCORE_DARWIN_ARCH}" \
       "$W/scratch/sysroot_fe4-x86_64" \
       "$OPENUIKIT_ROOT/scratch/sysroot_fe4-${SWIFTCORE_DARWIN_ARCH}" \

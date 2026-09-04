@@ -7,11 +7,16 @@ ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 fail=0
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
+# A live cycle exports SWIFTCORE_FE_SYSROOT and W=$TREE. Tests that stage a
+# fixture FE tree (or generate from overlay-darwin pins) must not inherit those.
+unset SWIFTCORE_FE_SYSROOT
+unset W
 
 echo "=== stage into empty sysroot (x86_64) replaces nothing, writes Darwin.modulemap ==="
-mkdir -p "$tmp/sdk"
+mkdir -p "$tmp/sdk" "$tmp/no-fe"
 set +e
-out=$(SWIFTCORE_DARWIN_ARCH=x86_64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk" 2>&1)
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/no-fe" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk" 2>&1)
 rc=$?
 set -e
 printf '%s\n' "$out"
@@ -59,7 +64,8 @@ mkdir -p "$tmp/sdk2/usr/include"
 echo '/* clean-room stand-in */' > "$tmp/sdk2/usr/include/math.h"
 echo '/* clean-room stand-in */' > "$tmp/sdk2/usr/include/MacTypes.h"
 set +e
-out=$(SWIFTCORE_DARWIN_ARCH=x86_64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk2" 2>&1)
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/no-fe" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk2" 2>&1)
 rc=$?
 set -e
 printf '%s\n' "$out" | tail -20
@@ -74,7 +80,8 @@ echo "=== arm64 path does not overwrite math.h with Intel Libm ==="
 mkdir -p "$tmp/sdk3/usr/include"
 echo '/* arm64 clean-room math.h */' > "$tmp/sdk3/usr/include/math.h"
 set +e
-out=$(SWIFTCORE_DARWIN_ARCH=arm64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk3" 2>&1)
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/no-fe" SWIFTCORE_DARWIN_ARCH=arm64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk3" 2>&1)
 rc=$?
 set -e
 [ "$rc" -eq 0 ] && echo "  OK  arm64 rc=0" || { echo "  FAIL arm64 rc=$rc"; fail=1; }
@@ -183,7 +190,7 @@ echo 'extern long double fmaxl(long double, long double);' >> "$tmp/feC/usr/incl
 echo 'struct extern_proc { int p_pid; };' > "$tmp/feC/usr/include/sys/proc.h"
 ln -sfn "$tmp/feC" "$tmp/workC/scratch/sysroot_fe4-x86_64"
 set +e
-out=$(W="$tmp/workC" SWIFTCORE_DARWIN_ARCH=x86_64 \
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/feC" W="$tmp/workC" SWIFTCORE_DARWIN_ARCH=x86_64 \
   bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdkC" 2>&1)
 rc=$?
 set -e

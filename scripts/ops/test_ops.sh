@@ -264,8 +264,8 @@ ln -sfn "$LAYOUT/machorun" "$LAYOUT/machorun/machorun"
 [ -L "$LAYOUT/machorun/machorun" ] \
     && ok "fixture nested symlink at machorun/machorun" \
     || die_test "failed to nest machorun/machorun symlink"
-nested_sz=$(wc -c < "$LAYOUT/machorun/machorun" | tr -d ' ')
-# The symlink itself is small; the target path is LAYOUT/machorun.
+nested_sz=$(stat -c %s "$LAYOUT/machorun/machorun")
+# GNU stat on a symlink (no -L) is the target-path length; the box residue was 44.
 [ -n "$nested_sz" ] && [ "$nested_sz" -lt 200 ] \
     && ok "nested symlink is a short path ($nested_sz bytes), not the loader ELF" \
     || die_test "nested symlink size unexpected: $nested_sz"
