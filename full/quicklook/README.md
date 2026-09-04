@@ -1,14 +1,23 @@
 # Portable QuickLook
 
 This directory owns the portable `QuickLook` framework and its
-`_QuickLook_SwiftUI` cross-import overlay. The base framework implements the
-Apple-shaped preview item, data source, delegate, controller, and AR item
-surface. On OpenUIKit it renders local PNG/JPEG files and a truthful metadata
-fallback, while unsupported proprietary preview generators and editing remain
-disabled.
+`_QuickLook_SwiftUI` cross-import overlay.
 
-The overlay implements both `quickLookPreview` overloads. It synchronizes the
-selection binding, validates collection membership, presents through the local
-controller when a key-window presenter exists, and otherwise fails closed.
-Hosts may replace presentation through the `OpenUIKitHost` SPI. No app,
-package, or vendor source is patched.
+The Linux host module (`quicklook_guest_sources.txt`) compiles with Foundation
+only. It implements the Apple-shaped preview item, editing-mode enum, AR item,
+preview controller data source/delegate (Foundation methods), file-preview
+request, file-URL reply, scene-activation configuration, and the previewing
+controller contract as fail-closed throwing defaults.
+
+On OpenUIKit, `QLPreviewController` remains a `UIViewController` that renders
+local PNG/JPEG files and a truthful metadata fallback. Proprietary preview
+generators and editing stay disabled. Hosts may replace presentation through
+the `OpenUIKitHost` SPI.
+
+Still deferred on the isolated host: SwiftUI `quickLookPreview` overloads (the
+overlay is a separate guest and imports SwiftUI), UIKit transition
+frame/image/view delegate methods, UniformTypeIdentifiers-typed attachment
+API, and CoreGraphics/PDFKit reply initializers. Those types are not declared
+host dependencies, and this lane does not publish public lookalikes for them.
+
+No app, package, or vendor source is patched.
