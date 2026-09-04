@@ -69,7 +69,7 @@ docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1' || { echo "LINUX BUILD RED"; exit 7 }
 cd "$WT" && git merge --abort 2>/dev/null || true
 cd "$ROOT"
-[[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0 }
+[[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0; }
 
 echo "==> merging into main"
 git checkout -q main && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" "$BR"
@@ -77,7 +77,7 @@ OLD=$(grep -o 'EXPECTED_INREPO_UIKIT_TREE=[0-9a-f]*' scripts/vendor_pins.sh | cu
 sed -i "s/$OLD/$NEW/" scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 python3 scripts/env/test_contract.py 2>&1 | tail -1
 rm -f uikit/Package.resolved uikit/1
-bash scripts/test_vendor_tree.sh 2>&1 | grep -q VENDOR_TREE_ATTESTATION_OK || { echo "VENDOR TREE ATTESTATION FAILED — fix before pushing"; exit 8 }
+bash scripts/test_vendor_tree.sh 2>&1 | grep -q VENDOR_TREE_ATTESTATION_OK || { echo "VENDOR TREE ATTESTATION FAILED — fix before pushing"; exit 8; }
 git add scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 git commit -q -m "Advance the uikit vendor pin and env contract after merging $BR
 
