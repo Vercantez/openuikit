@@ -446,7 +446,8 @@ Row object keys:
 | `style` | string | `default` (default), `subtitle`, `value1` — the `UITableViewCell.CellStyle` the cell is created with. |
 | `text` | string | primary text. |
 | `detailText` | string | secondary text (subtitle below / value1 right-aligned). |
-| `accessory` | string | `none` (default), `disclosureIndicator`, `checkmark`. |
+| `accessory` | string | `none` (default), `disclosureIndicator`, `checkmark`, `switch`. |
+| `switchOn` | bool | v5.4. Only used when `accessory` is `switch`; default `false`. |
 | `selected` | bool | `true` renders the row's selection highlight (`setSelected` in `willDisplay`). |
 
 Layout dumps include the private cell tree (`UITableViewCell`,

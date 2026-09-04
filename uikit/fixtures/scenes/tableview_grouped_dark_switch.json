@@ -1,0 +1,30 @@
+{
+  "name": "tableview_grouped_dark_switch",
+  "size": [375, 620],
+  "scale": 2,
+  "style": "dark",
+  "ios": true,
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 620], "backgroundColor": "systemGroupedBackground" },
+      {
+        "class": "UITableView",
+        "frame": [0, 40, 375, 580],
+        "style": "insetGrouped",
+        "sections": [
+          {
+            "header": "Playback",
+            "footer": "Updates apply to all devices on this account.",
+            "rows": [
+              { "style": "value1", "text": "Quality", "detailText": "High", "accessory": "disclosureIndicator" },
+              { "style": "default", "text": "Cellular Downloads", "accessory": "switch", "switchOn": true },
+              { "style": "subtitle", "text": "Download Queue", "detailText": "Pause large episodes on metered data" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

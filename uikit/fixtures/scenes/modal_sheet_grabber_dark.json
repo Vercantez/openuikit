@@ -1,0 +1,27 @@
+{
+  "name": "modal_sheet_grabber_dark",
+  "size": [393, 852],
+  "scale": 2,
+  "style": "dark",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 393, 852], "backgroundColor": "#333333" },
+      { "class": "UILabel", "frame": [24, 80, 300, 24], "text": "Base screen", "fontSize": 20, "fontWeight": "semibold" },
+      { "class": "UIView", "frame": [24, 120, 345, 60], "backgroundColor": "secondarySystemBackground", "cornerRadius": 10 }
+    ]
+  },
+  "modal": {
+    "style": "pageSheet",
+    "grabber": true,
+    "content": {
+      "class": "UIView",
+      "subviews": [
+        { "class": "UILabel", "frame": [24, 40, 300, 28], "text": "Sheet title", "fontSize": 22, "fontWeight": "bold" },
+        { "class": "UIView", "frame": [24, 84, 345, 44], "backgroundColor": "tertiarySystemBackground", "cornerRadius": 8 },
+        { "class": "UILabel", "frame": [40, 95, 260, 22], "text": "Sheet row", "fontSize": 17 }
+      ]
+    }
+  }
+}

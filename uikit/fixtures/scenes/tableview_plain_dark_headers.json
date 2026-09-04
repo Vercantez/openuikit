@@ -1,0 +1,42 @@
+{
+  "name": "tableview_plain_dark_headers",
+  "size": [375, 560],
+  "scale": 2,
+  "style": "dark",
+  "ios": true,
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 560], "backgroundColor": "black" },
+      {
+        "class": "UITableView",
+        "frame": [0, 40, 375, 500],
+        "style": "plain",
+        "sections": [
+          {
+            "header": "Recently Played",
+            "rows": [
+              { "text": "Daily Mix", "accessory": "disclosureIndicator" },
+              { "text": "Night Drive" }
+            ]
+          },
+          {
+            "header": "Saved",
+            "rows": [
+              { "text": "Top Episodes", "accessory": "checkmark" },
+              { "text": "Favorites" }
+            ]
+          },
+          {
+            "header": "Archived",
+            "rows": [
+              { "text": "2025 Highlights" },
+              { "text": "Classic Interviews", "accessory": "disclosureIndicator" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
