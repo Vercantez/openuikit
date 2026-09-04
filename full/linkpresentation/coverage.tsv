@@ -1,0 +1,52 @@
+precise	status	evidence	notes
+c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Bridged Code enum; macios Unknown=1 then sequential.
+c:@E@LPErrorCode@LPErrorMetadataFetchCancelled	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Case metadataFetchCancelled; raw value 3.
+c:@E@LPErrorCode@LPErrorMetadataFetchFailed	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Case metadataFetchFailed; raw value 2.
+c:@E@LPErrorCode@LPErrorMetadataFetchNotAllowed	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Case metadataFetchNotAllowed; raw value 5.
+c:@E@LPErrorCode@LPErrorMetadataFetchTimedOut	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Case metadataFetchTimedOut; raw value 4.
+c:@E@LPErrorCode@LPErrorUnknown	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Case unknown; raw value 1.
+c:@LPErrorDomain	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorDomain	String LPErrorDomain from macios ErrorDomain annotation.
+c:objc(cs)LPLinkMetadata	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkMetadataStoresFields	Open NSObject; stores title/url fields; no Apple fetch.
+c:objc(cs)LPLinkMetadata(py)URL	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkMetadataStoresFields	Optional URL get/set.
+c:objc(cs)LPLinkMetadata(py)iconProvider	deferred		NSItemProvider is Foundation-owned and missing from isolated Linux Foundation; a public lookalike is forbidden.
+c:objc(cs)LPLinkMetadata(py)imageProvider	deferred		NSItemProvider is Foundation-owned and missing from isolated Linux Foundation; a public lookalike is forbidden.
+c:objc(cs)LPLinkMetadata(py)originalURL	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkMetadataStoresFields	Optional originalURL get/set.
+c:objc(cs)LPLinkMetadata(py)remoteVideoURL	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkMetadataStoresFields	Optional remoteVideoURL get/set.
+c:objc(cs)LPLinkMetadata(py)title	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkMetadataStoresFields	Optional title get/set.
+c:objc(cs)LPLinkMetadata(py)videoProvider	deferred		NSItemProvider is Foundation-owned and missing from isolated Linux Foundation; a public lookalike is forbidden.
+c:objc(cs)LPLinkView	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkViewInitsAndCopiedMetadata	NSObject on isolated host; stores copied metadata; no UIView chrome.
+c:objc(cs)LPLinkView(im)initWithMetadata:	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkViewInitsAndCopiedMetadata	Copies the supplied LPLinkMetadata.
+c:objc(cs)LPLinkView(im)initWithURL:	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkViewInitsAndCopiedMetadata	init(url:) records originalURL; does not fetch.
+c:objc(cs)LPLinkView(im)initWithURL:::SYNTHESIZED::c:objc(cs)LPLinkView	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkViewInitsAndCopiedMetadata	init(URL:) records originalURL; does not fetch.
+c:objc(cs)LPLinkView(py)metadata	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkViewInitsAndCopiedMetadata	@NSCopying setter; mutation of the source does not leak.
+c:objc(cs)LPMetadataProvider	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPMetadataProviderStoresFlagsAndFailClosesFetch	Stores flags; fetches fail closed.
+c:objc(cs)LPMetadataProvider(im)cancel	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPMetadataProviderStoresFlagsAndFailClosesFetch	No-op; no in-flight Apple fetch exists.
+c:objc(cs)LPMetadataProvider(im)startFetchingMetadataForRequest:completionHandler:	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPMetadataProviderStoresFlagsAndFailClosesFetch	Throws LPError.metadataFetchFailed; does not perform the request.
+c:objc(cs)LPMetadataProvider(im)startFetchingMetadataForURL:completionHandler:	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPMetadataProviderStoresFlagsAndFailClosesFetch	Throws LPError.metadataFetchFailed; no Apple metadata service.
+c:objc(cs)LPMetadataProvider(py)shouldFetchSubresources	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPMetadataProviderStoresFlagsAndFailClosesFetch	Linux stored default false; Darwin default unobserved.
+c:objc(cs)LPMetadataProvider(py)timeout	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPMetadataProviderStoresFlagsAndFailClosesFetch	Linux stored default 0; Darwin default unobserved.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)LPLinkMetadata	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPLinkMetadataCopyAndSecureCoding	Linux overlay archive; Apple keys unobserved.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorDomain	CustomNSError.errorDomain matches LPErrorDomain.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	errorUserInfo stores supplied keys.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	errorCode is the Code raw value.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorPatternMatch	Code ~= Error pattern match.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	Bridged errorUserInfo.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	Equality is userInfo-sensitive.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	code property matches Code.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorProtocolConformance	Linux hashes domain and code so Foundation defaults do not trap.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	userInfo stores supplied keys.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	Bridged errorCode.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorProtocolConformance	hashValue from domain and code.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	init(_:userInfo:) stores code and userInfo.
+s:SC11LPErrorCodeLeV	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Bridged struct LPError.
+s:SC11LPErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorDomain	Static errorDomain.
+s:SC11LPErrorCodeLeV19metadataFetchFailedSoAAVvpZ	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Static metadataFetchFailed Code.
+s:SC11LPErrorCodeLeV21metadataFetchTimedOutSoAAVvpZ	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Static metadataFetchTimedOut Code.
+s:SC11LPErrorCodeLeV22metadataFetchCancelledSoAAVvpZ	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Static metadataFetchCancelled Code.
+s:SC11LPErrorCodeLeV23metadataFetchNotAllowedSoAAVvpZ	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Static metadataFetchNotAllowed Code.
+s:SC11LPErrorCodeLeV7unknownSoAAVvpZ	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	Static unknown Code.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorInequality	Distinct codes compare unequal.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	RawRepresentable hash(into:).
+s:So11LPErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorCodes	init?(rawValue:) accepts 1...5.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@LPErrorCode	implemented	test:full/linkpresentation/tests/agent/LinkPresentationTests.swift#testLPErrorEqualityAndHash	localizedDescription is nonempty; Darwin wording is unobserved.
