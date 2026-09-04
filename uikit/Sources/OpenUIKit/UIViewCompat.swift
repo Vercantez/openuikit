@@ -237,6 +237,9 @@ public enum UITraitVerticalSizeClass: UITraitDefinition {
 public enum UITraitHorizontalSizeClass: UITraitDefinition {
     public static var name: String { "horizontalSizeClass" }
 }
+public enum UITraitUserInterfaceIdiom: UITraitDefinition {
+    public static var name: String { "userInterfaceIdiom" }
+}
 
 /// The opaque token UIKit hands back so a registration can be dropped.
 @preconcurrency @MainActor
@@ -270,6 +273,8 @@ public final class UITraitChangeRegistration {
                 if previous.verticalSizeClass != current.verticalSizeClass { return true }
             } else if trait == ObjectIdentifier(UITraitHorizontalSizeClass.self) {
                 if previous.horizontalSizeClass != current.horizontalSizeClass { return true }
+            } else if trait == ObjectIdentifier(UITraitUserInterfaceIdiom.self) {
+                if previous.userInterfaceIdiom != current.userInterfaceIdiom { return true }
             } else {
                 return true
             }

@@ -87,24 +87,46 @@ rm -rf "$TMPSRC"
 # it — the layout dumps carry `layoutMargins`, and a margin that varies with
 # width can only be caught by asking twice. A non-default device writes to
 # whatever outdir the caller names; it must not be the golden one.
-DEVNAME="OpenUIKit-Chrome${REALAPP_DEVICE:+-$REALAPP_DEVICE}${SIM_DEVICE_SUFFIX:-}"
-DEVTYPE="com.apple.CoreSimulator.SimDeviceType.${REALAPP_DEVICE:-iPhone-16}"
-RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)
-UDID=$(xcrun simctl list devices | grep "$DEVNAME" | grep -o '[0-9A-F-]\{36\}' | head -1)
-if [[ -z "$UDID" ]]; then
-  UDID=$(xcrun simctl create "$DEVNAME" "$DEVTYPE" "$RUNTIME")
+#
+# Pad rows (`realapp_settings_light_ipad`) capture on a private
+# "iPad (A16)" (820×1180 @2x). The probe itself skips rows whose idiom
+# does not match the booted device, so the two launches do not overwrite
+# each other's goldens.
+boot_and_capture() {
+  local DEVTYPE_SHORT=$1
+  local NAME_INFIX=$2
+  local DEVNAME="OpenUIKit-Chrome${NAME_INFIX:+-$NAME_INFIX}${SIM_DEVICE_SUFFIX:-}"
+  local DEVTYPE="com.apple.CoreSimulator.SimDeviceType.${DEVTYPE_SHORT}"
+  local RUNTIME
+  RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)
+  local UDID
+  UDID=$(xcrun simctl list devices | grep "$DEVNAME" | grep -o '[0-9A-F-]\{36\}' | head -1)
+  if [[ -z "$UDID" ]]; then
+    UDID=$(xcrun simctl create "$DEVNAME" "$DEVTYPE" "$RUNTIME")
+  fi
+  local STATE
+  STATE=$(xcrun simctl list devices | grep "$UDID" | grep -o '(Booted)' || true)
+  if [[ -z "$STATE" ]]; then
+    xcrun simctl boot "$UDID"
+    xcrun simctl bootstatus "$UDID"
+  fi
+  xcrun simctl uninstall "$UDID" com.openuikit.realappprobe 2>/dev/null || true
+  xcrun simctl install "$UDID" "$APP"
+  local CONTAINER
+  CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.realappprobe data)
+  rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
+  xcrun simctl launch --console-pty "$UDID" com.openuikit.realappprobe >/dev/null || true
+  local i
+  for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
+  [[ -f "$CONTAINER/Documents/DONE" ]] || { echo "realapp_probe_sim: no DONE marker on $DEVNAME"; exit 1; }
+  cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
+  echo "goldens from $DEVNAME -> $OUTDIR"
+}
+
+if [[ -n "${REALAPP_DEVICE:-}" ]]; then
+  boot_and_capture "$REALAPP_DEVICE" "$REALAPP_DEVICE"
+else
+  boot_and_capture "iPhone-16" ""
+  boot_and_capture "iPad-A16" "iPad-A16"
 fi
-STATE=$(xcrun simctl list devices | grep "$UDID" | grep -o '(Booted)' || true)
-if [[ -z "$STATE" ]]; then
-  xcrun simctl boot "$UDID"
-  xcrun simctl bootstatus "$UDID"
-fi
-xcrun simctl uninstall "$UDID" com.openuikit.realappprobe 2>/dev/null || true
-xcrun simctl install "$UDID" "$APP"
-CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.realappprobe data)
-rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
-xcrun simctl launch --console-pty "$UDID" com.openuikit.realappprobe >/dev/null || true
-for i in {1..60}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
-[[ -f "$CONTAINER/Documents/DONE" ]] || { echo "realapp_probe_sim: no DONE marker"; exit 1; }
-cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
 echo "goldens in $OUTDIR:"; ls "$OUTDIR"

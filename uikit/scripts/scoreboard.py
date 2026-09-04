@@ -36,6 +36,9 @@ REALAPP_FLOOR = {
     "realapp_settings_light_xs": 98.4,     # 98.639
     "realapp_settings_light_xxxl": 98.0,   # 98.133
     "realapp_settings_light_ax1": 97.0,    # 97.516
+    # iPad (A16) 820×1180 @2x portrait of Settings. MEASURED 2026-09-04
+    # after the pad formSheet card rule: 99.511.
+    "realapp_settings_light_ipad": 99.4,   # 99.511
 }
 
 def parse_compare(path):
