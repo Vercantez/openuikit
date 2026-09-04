@@ -373,6 +373,36 @@ sysroot_input_changed() {
     return 1
 }
 
+# Overlay-copied SYS Darwin.swiftmodule / Darwin.modulemap holes are fatal
+# only on main-copy (operator box). A fresh VM has no arm64 Darwin family;
+# completeness is the *-fe-clang sibling after overlay-darwin.
+sysroot_cannot_main_copy_incomplete() {
+    local where=${1:-already at}
+    if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
+        && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
+        cannot sysroot-fe4-x86 STAGE_XCODE_DARWIN_OVERLAYS \
+            "headers+x86 dylibs $where $SYS; Darwin.swiftmodule/swiftinterface absent (Linux cannot materialize Apple's overlay interfaces; arm64 sysroot_fe4 also lacks them). FE compile needs canImport(Darwin)==true."
+    elif [ ! -f "$SYS/usr/include/Darwin.modulemap" ]; then
+        cannot sysroot-fe4-x86 DARWIN_CLANG_MODULEMAP \
+            "Darwin.swiftinterface is present but usr/include/Darwin.modulemap is not (underlying Objective-C module Darwin). Generator needs Xcode; arm64 sysroot_fe4 had no pruned maps to copy. FE fails with 'underlying Objective-C module Darwin not found' / '_DarwinFoundation1._errno'."
+    elif ! phase2_darwin_modulemap_headers_ok "$SYS"; then
+        cannot sysroot-fe4-x86 DARWIN_MODULEMAP_HEADERS \
+            "Darwin.modulemap present but header paths named by staged modulemaps are absent: missing=$(phase2_darwin_modulemap_missing_headers "$SYS" || true). The Linux fallback must copy generator outputs from the arm64 sysroot including usr/include/_modules, not maps alone."
+    elif ! phase2_measurement_headers_ok "$SYS"; then
+        cannot sysroot-fe4-x86 FE_MEASUREMENT_HEADERS \
+            "FileManager/sdk-gap measurement headers absent after restage: missing=$(phase2_measurement_headers_missing "$SYS" || true). x86 stages this set from arm64 sysroot_fe4 with stage_absent (shared list full/foundation/fe_sysroot_measurement_headers.txt)."
+    elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
+        cannot sysroot-fe4-x86 STAGE_LIBSWIFTCORE \
+            "x86 libswiftCore is in artifacts but was not staged into $SYS/usr/lib/swift"
+    elif [ ! -e "$SYS/usr/lib/libobjc.tbd" ] || ! phase2_tbd_is_x86_target "$SYS/usr/lib/libobjc.tbd"; then
+        cannot sysroot-fe4-x86 X86_SYSROOT_TBDS \
+            "libobjc.tbd absent or not x86_64-macos after restage; -lobjc cannot resolve render_full.o's _objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache"
+    else
+        cannot sysroot-fe4-x86 STAGE_FE_SYSROOT \
+            "sysroot is incomplete at $SYS"
+    fi
+}
+
 run_sysroot_stager() {
     local st
     set +e
@@ -384,33 +414,11 @@ run_sysroot_stager() {
         if phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
             note sysroot-fe4-x86 cold-built "darwin_headers=ok measurement_headers=ok"
             SYSROOT_OK=1
-        elif [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
-            && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
-            cannot sysroot-fe4-x86 STAGE_XCODE_DARWIN_OVERLAYS \
-                "headers+x86 dylibs staged at $SYS; Darwin.swiftmodule/swiftinterface absent (Linux cannot materialize Apple's overlay interfaces; arm64 sysroot_fe4 also lacks them). FE compile needs canImport(Darwin)==true."
-        elif [ ! -f "$SYS/usr/include/Darwin.modulemap" ]; then
-            cannot sysroot-fe4-x86 DARWIN_CLANG_MODULEMAP \
-                "Darwin.swiftinterface is present but usr/include/Darwin.modulemap is not (underlying Objective-C module Darwin). Generator needs Xcode; arm64 sysroot_fe4 had no pruned maps to copy. FE fails with 'underlying Objective-C module Darwin not found' / '_DarwinFoundation1._errno'."
-        elif ! phase2_darwin_modulemap_headers_ok "$SYS"; then
-            cannot sysroot-fe4-x86 DARWIN_MODULEMAP_HEADERS \
-                "Darwin.modulemap present but header paths named by staged modulemaps are absent: missing=$(phase2_darwin_modulemap_missing_headers "$SYS" || true). The Linux fallback must copy generator outputs from the arm64 sysroot including usr/include/_modules, not maps alone."
-        elif ! phase2_measurement_headers_ok "$SYS"; then
-            cannot sysroot-fe4-x86 FE_MEASUREMENT_HEADERS \
-                "FileManager/sdk-gap measurement headers absent after restage: missing=$(phase2_measurement_headers_missing "$SYS" || true). x86 stages this set from arm64 sysroot_fe4 with stage_absent (shared list full/foundation/fe_sysroot_measurement_headers.txt)."
-        elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
-            cannot sysroot-fe4-x86 STAGE_LIBSWIFTCORE \
-                "x86 libswiftCore is in artifacts but was not staged into $SYS/usr/lib/swift"
-        elif [ ! -e "$SYS/usr/lib/libobjc.tbd" ] || ! phase2_tbd_is_x86_target "$SYS/usr/lib/libobjc.tbd"; then
-            cannot sysroot-fe4-x86 X86_SYSROOT_TBDS \
-                "libobjc.tbd absent or not x86_64-macos after restage; -lobjc cannot resolve render_full.o's _objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache"
-        else
-            cannot sysroot-fe4-x86 STAGE_FE_SYSROOT \
-                "stage_fe_sysroot.sh exit 0 but sysroot is incomplete at $SYS"
         fi
+        # Incomplete SYS is named after FE_SYSROOT_SELECT: main-copy CANNOTs
+        # on overlay-copied SYS; fe-clang completeness is the sibling.
     elif [ "$st" -eq 3 ]; then
         if [ -d "$SYS/usr/include" ]; then
-            cannot sysroot-fe4-x86 STAGE_XCODE_DARWIN_OVERLAYS \
-                "headers+x86 dylibs staged at $SYS; Darwin.swiftmodule/swiftinterface absent (Linux cannot materialize Apple's overlay interfaces; arm64 sysroot_fe4 also lacks them). FE compile needs canImport(Darwin)==true."
             SYSROOT_HEADERS=1
         else
             cannot sysroot-fe4-x86 STAGE_FE_SYSROOT "stage_fe_sysroot.sh exit 3 and $SYS missing"
@@ -433,32 +441,26 @@ elif phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
     SYSROOT_OK=1
     SYSROOT_HEADERS=1
 else
-    # Stamp matches but the tree is incomplete: restaging cannot invent overlays
-    # or Darwin.modulemap that the inputs do not provide. Name the hole.
+    # Stamp matches but overlay-copied SYS is incomplete. Restage when the
+    # hole is something a restage can fill (headers, maps, libswiftCore).
+    # Darwin.swiftmodule / Darwin.modulemap absence is named after select:
+    # main-copy cannot invent Xcode overlays; fe-clang uses the sibling.
     SYSROOT_HEADERS=0
     [ -d "$SYS/usr/include" ] && SYSROOT_HEADERS=1
     if [ ! -d "$SYS/usr/include" ]; then
         echo "  re-stage sysroot-fe4-x86 (no sysroot yet)"
         run_sysroot_stager
-    elif [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
-        && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
-        cannot sysroot-fe4-x86 STAGE_XCODE_DARWIN_OVERLAYS \
-            "headers+x86 dylibs already at $SYS; Darwin.swiftmodule/swiftinterface absent (Linux cannot materialize Apple's overlay interfaces; arm64 sysroot_fe4 also lacks them). FE compile needs canImport(Darwin)==true."
-    elif [ ! -f "$SYS/usr/include/Darwin.modulemap" ]; then
-        cannot sysroot-fe4-x86 DARWIN_CLANG_MODULEMAP \
-            "Darwin.swiftinterface is present at $SYS but usr/include/Darwin.modulemap is not. Inputs unchanged; generator needs Xcode and arm64 sysroot_fe4 has no pruned maps to copy."
     elif [ -f "$SYS/usr/include/Darwin.modulemap" ] \
         && ! phase2_darwin_modulemap_headers_ok "$SYS"; then
         echo "  re-stage sysroot-fe4-x86 (Darwin modulemap headers missing: $(phase2_darwin_modulemap_missing_headers "$SYS" || true))"
         run_sysroot_stager
-    elif ! phase2_measurement_headers_ok "$SYS"; then
+    elif [ -f "$SYS/usr/include/Darwin.modulemap" ] \
+        && ! phase2_measurement_headers_ok "$SYS"; then
         echo "  re-stage sysroot-fe4-x86 (measurement headers missing: $(phase2_measurement_headers_missing "$SYS" || true))"
         run_sysroot_stager
     elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
         echo "  re-stage sysroot-fe4-x86 (libswiftCore artifact present, not in sysroot; stamp should have caught this)"
         run_sysroot_stager
-    else
-        cannot sysroot-fe4-x86 STAGE_FE_SYSROOT "sysroot at $SYS is incomplete and inputs are unchanged"
     fi
 fi
 # Never copy arm64 dylibs into the x86 sysroot.
@@ -468,17 +470,26 @@ if [ -f "$SYS/usr/lib/libSystem.B.dylib" ] && phase2_is_arm64_macho "$SYS/usr/li
 fi
 
 # Box (arm64-copied Darwin family): compile against $SYS like main.
-# VM (no arm64 Darwin family): expand *-fe-clang and compile against that.
-# Leftover *-fe-clang from a previous cycle must not win on the box.
-phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"
-FE_CLANG_SYS=$PHASE2_FE_COMPILE_SYSROOT
-if [ "$PHASE2_FE_SYSROOT_KIND" = fe-clang ]; then
-    if [ "$SYSROOT_OK" -eq 1 ] || [ "$SYSROOT_HEADERS" -eq 1 ]; then
-        if [ ! -d "$FE_CLANG_SYS" ]; then
-            phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
-        fi
-        if [ -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
-            FE_CLANG_SYS=$(phase2_fe_clang_sysroot "$SYS")
+# VM (no arm64 Darwin family): overlay-darwin + artifact overlays on
+# *-fe-clang; compile against that sibling. Leftover *-fe-clang from a
+# previous cycle must not win on the box.
+if phase2_ensure_selected_compile_sysroot "$SYS" "$ARM_SYS" "$W" "$need_core" "$need_bf"; then
+    FE_CLANG_SYS=$PHASE2_FE_COMPILE_SYSROOT
+    if [ "$SYSROOT_OK" -eq 0 ]; then
+        note sysroot-fe4-x86 cold-built "fe-clang Darwin family at $FE_CLANG_SYS"
+        SYSROOT_OK=1
+        SYSROOT_HEADERS=1
+    fi
+else
+    FE_CLANG_SYS=${PHASE2_FE_COMPILE_SYSROOT:-$SYS}
+    if [ "$PHASE2_FE_SYSROOT_KIND" = fe-clang ]; then
+        cannot sysroot-fe4-x86 STAGE_FE_CLANG_SYSROOT \
+            "fe-clang sibling incomplete at $FE_CLANG_SYS (overlay-darwin Darwin.modulemap + artifact Darwin overlays). Overlay-copied SYS at $SYS stays without Darwin.modulemap."
+    elif [ "$SYSROOT_OK" -eq 0 ]; then
+        if [ -n "${changed:-}" ]; then
+            sysroot_cannot_main_copy_incomplete "staged at"
+        else
+            sysroot_cannot_main_copy_incomplete "already at"
         fi
     fi
 fi
@@ -509,7 +520,7 @@ try_collections() {
     fi
     stamp_rebuild_reason "$out/OrderedCollections.o" "$key"
     [ -d "$SC" ] || { cannot collections-x86 PINNED_SWIFT_COLLECTIONS "no $SC"; return 1; }
-    [ "$SYSROOT_OK" -eq 1 ] || { cannot collections-x86 NEEDS_X86_SYSROOT "collections compile needs $SYS"; return 1; }
+    [ "$SYSROOT_OK" -eq 1 ] || { cannot collections-x86 NEEDS_X86_SYSROOT "collections compile needs $FE_CLANG_SYS"; return 1; }
     [ "$LIBSWIFTCORE_X86" -eq 1 ] || {
         cannot collections-x86 BUILD_LIBSWIFTCORE_X86 "swiftc -target $TARGET cannot compile without an x86_64 Swift.swiftmodule (measured above)"
         return 1
@@ -545,7 +556,7 @@ try_cshims() {
     stamp_rebuild_reason "$out/uuid.o" "$key"
     [ -d "$SF" ] || { cannot cshims-x86 PINNED_SWIFT_FOUNDATION "no $SF"; return 1; }
     [ "$SYSROOT_HEADERS" -eq 1 ] || [ "$SYSROOT_OK" -eq 1 ] || {
-        cannot cshims-x86 NEEDS_X86_SYSROOT "cshims compile needs $SYS"
+        cannot cshims-x86 NEEDS_X86_SYSROOT "cshims compile needs $FE_CLANG_SYS"
         return 1
     }
     mkdir -p "$out"
@@ -589,7 +600,7 @@ try_os_module() {
     fi
     stamp_rebuild_reason "$out/os.o" "$key"
     [ "$SYSROOT_OK" -eq 1 ] || {
-        cannot os-module-x86 NEEDS_X86_SYSROOT "os.swift @_exported-imports Darwin; needs $SYS"
+        cannot os-module-x86 NEEDS_X86_SYSROOT "os.swift @_exported-imports Darwin; needs $FE_CLANG_SYS"
         return 1
     }
     [ "$LIBSWIFTCORE_X86" -eq 1 ] || {
@@ -688,7 +699,7 @@ try_fe() {
 
     if [ "$have_fe" -eq 1 ]; then
         [ "$SYSROOT_HEADERS" -eq 1 ] || [ "$SYSROOT_OK" -eq 1 ] || {
-            cannot foundationessentials-x86 NEEDS_X86_SYSROOT "removefile_compat.c needs $SYS"
+            cannot foundationessentials-x86 NEEDS_X86_SYSROOT "removefile_compat.c needs $FE_CLANG_SYS"
             return 1
         }
         compile_fe_removefile_compat || return 1
@@ -698,7 +709,7 @@ try_fe() {
     fi
 
     [ -d "$SF" ] || { cannot foundationessentials-x86 PINNED_SWIFT_FOUNDATION "no $SF"; return 1; }
-    [ "$SYSROOT_OK" -eq 1 ] || { cannot foundationessentials-x86 NEEDS_X86_SYSROOT "FE compile needs $SYS"; return 1; }
+    [ "$SYSROOT_OK" -eq 1 ] || { cannot foundationessentials-x86 NEEDS_X86_SYSROOT "FE compile needs $FE_CLANG_SYS"; return 1; }
     [ "$LIBSWIFTCORE_X86" -eq 1 ] || {
         cannot foundationessentials-x86 BUILD_LIBSWIFTCORE_X86 "swiftc -target $TARGET cannot compile 202 FE files without x86_64 Swift/_Concurrency modules"
         return 1
