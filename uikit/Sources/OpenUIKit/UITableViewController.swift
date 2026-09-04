@@ -61,6 +61,13 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
                         commit editingStyle: UITableViewCell.EditingStyle,
                         forRowAt indexPath: IndexPath) {}
 
+    open func tableView(_ tableView: UITableView,
+                        canMoveRowAt indexPath: IndexPath) -> Bool { false }
+
+    open func tableView(_ tableView: UITableView,
+                        moveRowAt sourceIndexPath: IndexPath,
+                        to destinationIndexPath: IndexPath) {}
+
     // MARK: UITableViewDelegate (override in subclasses)
 
     open func tableView(_ tableView: UITableView,

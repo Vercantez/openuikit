@@ -95,6 +95,9 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
             --script/--record it replays the script's named actions and
             records the capture PNGs + layout dumps the simulator probe
             records (docs/HILLCLIMB.md; scripts/conformance_flow.sh)
+  TableEditor a CONFORMANCE app (Sources/ConformanceApps/TableEditor): a
+            plain UITableView of subtitle rows with Edit / insert / delete /
+            select. Same harness as NavFlow.
 """
 
 var scenePath: String? = nil

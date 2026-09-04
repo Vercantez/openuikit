@@ -1074,3 +1074,86 @@ final class TableViewAnimatedUpdateTests: XCTestCase {
                        ["a", "b", "c", "x"])
     }
 }
+
+// MARK: - iOS plain subtitle + edit chrome (TableEditor conformance)
+
+@MainActor
+private final class SubtitleListSource: UITableViewDataSource, UITableViewDelegate {
+    var titles = ["Alpha", "Bravo", "Charlie"]
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        titles.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        cell.textLabel.text = titles[indexPath.row]
+        cell.detailTextLabel?.text = "item \(indexPath.row)"
+        return cell
+    }
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
+}
+
+@MainActor
+final class TableViewIOSEditChromeTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut!
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+    }
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        super.tearDown()
+    }
+
+    /// MEASURED TableEditor t200, iPhone SE 2x: plain subtitle cells are
+    /// 62 pt, primary at y 9, detail at y 32.5, text x 16.
+    func testPlainSubtitleRowIs62OnIOS() {
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.frame.height, 62, accuracy: 0.001)
+        XCTAssertEqual(cell.frame.minY, 0, accuracy: 0.001)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
+                       62, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.y, 9, accuracy: 0.001)
+        XCTAssertEqual(cell.detailTextLabel!.frame.origin.y, 32.5, accuracy: 0.001)
+    }
+
+    /// MEASURED TableEditor t900, iPhone SE 2x: content view at x 40 width
+    /// 292, delete control [15, 18, 26, 26] in a 62 pt row, reorder at
+    /// x 332 width 27.
+    func testEditModeInsetsAndControlsOnIOS() {
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        table.setEditing(true, animated: false)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.contentView.frame.origin.x, 40, accuracy: 0.001)
+        XCTAssertEqual(cell.contentView.frame.width, 292, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        let edit = cell._editControl
+        XCTAssertEqual(edit?.isHidden, false)
+        XCTAssertEqual(edit?.frame, CGRect(x: 15, y: 18, width: 26, height: 26))
+        let reorder = cell._reorderControl!
+        XCTAssertEqual(reorder.isHidden, false)
+        XCTAssertEqual(reorder.frame.origin.x, 332, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.width, 27, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.height, 62, accuracy: 0.001)
+    }
+}

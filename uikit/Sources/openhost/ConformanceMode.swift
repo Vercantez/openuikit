@@ -36,6 +36,7 @@ import ConformanceApps
 @MainActor
 let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
     "NavFlow": NavFlowApp.perform,
+    "TableEditor": TableEditorApp.perform,
 ]
 
 /// Capture scale per conformance app: the scale of the simulator device its
@@ -43,6 +44,7 @@ let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
 /// which is 2x (docs/ORACLE_FLOW.md: capture scale-2 work on the SE).
 let conformanceScaleRegistry: [String: CGFloat] = [
     "NavFlow": 2,
+    "TableEditor": 2,
 ]
 
 // MARK: - Script
