@@ -1,0 +1,24 @@
+{
+  "name": "control_slider_stepper_2x",
+  "size": [375, 180],
+  "scale": 2,
+  "ios": true,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 180], "backgroundColor": "#FFFFFF" },
+      {
+        "class": "UISlider",
+        "frame": [20, 24, 280, 34],
+        "value": 0.35,
+        "minimumTrackTintColor": "systemPink"
+      },
+      {
+        "class": "UIStepper",
+        "frame": [20, 88, 94, 32],
+        "value": 2
+      }
+    ]
+  }
+}

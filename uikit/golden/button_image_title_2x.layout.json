@@ -1,0 +1,116 @@
+{
+  "name" : "button_image_title_2x",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        375,
+        140
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        140
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        44,
+        220,
+        36
+      ],
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        44,
+        220,
+        36
+      ],
+      "intrinsic" : [
+        63,
+        18
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        63,
+        18
+      ]
+    },
+    {
+      "absFrame" : [
+        98.5,
+        55,
+        14,
+        14
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        78.5,
+        11,
+        14,
+        14
+      ],
+      "intrinsic" : [
+        14,
+        14
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        112.5,
+        53,
+        49,
+        18
+      ],
+      "class" : "UIButtonLabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        92.5,
+        9,
+        49,
+        18
+      ],
+      "intrinsic" : [
+        49,
+        18
+      ],
+      "path" : "1.1",
+      "sizeThatFits200" : [
+        49,
+        18
+      ],
+      "text" : "Upload"
+    }
+  ]
+}
