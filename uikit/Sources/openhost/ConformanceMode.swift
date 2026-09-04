@@ -36,6 +36,7 @@ import ConformanceApps
 @MainActor
 let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
     "NavFlow": NavFlowApp.perform,
+    "Forms": FormsApp.perform,
     "TableEditor": TableEditorApp.perform,
 ]
 
@@ -44,6 +45,7 @@ let conformanceActionRegistry: [String: @MainActor (String) -> Void] = [
 /// which is 2x (docs/ORACLE_FLOW.md: capture scale-2 work on the SE).
 let conformanceScaleRegistry: [String: CGFloat] = [
     "NavFlow": 2,
+    "Forms": 2,
     "TableEditor": 2,
 ]
 
@@ -125,6 +127,18 @@ func dumpConformanceLayout(_ v: UIView, path: String, absOrigin: CGPoint,
         ])
     }
     if let sw = v as? UISwitch { entry["isOn"] = .bool(sw.isOn) }
+    if let tf = v as? UITextField {
+        entry["isEditing"] = .bool(tf.isEditing)
+    }
+    if let tv = v as? UITextView {
+        if let t = tv.text { entry["text"] = .string(t) }
+        entry["isEditing"] = .bool(tv.isFirstResponder)
+    }
+    if let sl = v as? UISlider { entry["value"] = .number(round3(CGFloat(sl.value))) }
+    if let st = v as? UIStepper { entry["value"] = .number(round3(CGFloat(st.value))) }
+    if let sg = v as? UISegmentedControl {
+        entry["selectedSegmentIndex"] = .number(Double(sg.selectedSegmentIndex))
+    }
     if let sv = v as? UIScrollView {
         entry["contentOffset"] = .array([.number(round3(sv.contentOffset.x)),
                                          .number(round3(sv.contentOffset.y))])

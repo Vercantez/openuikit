@@ -331,13 +331,41 @@ open class UIScrollView: UIView {
     /// Effective viewport inset after the view hierarchy's safe area is
     /// incorporated. This portable host currently models UIKit's automatic
     /// adjustment mode, the behavior used by embedded browser shells.
+    ///
+    /// Under the iOS cut the keyboard overlap is folded in too. MEASURED
+    /// Forms t1200, iPhone SE 2x, iOS 26.1: focusing a UITextField in a
+    /// grouped UITableViewController leaves `contentInset` [0,0,0,0] and
+    /// `safeAreaInsets.bottom` 0, but `adjustedContentInset.bottom` goes
+    /// 0 → **260**. The software keyboard is a separate window (the app
+    /// window's drawHierarchy does not include it); 260 pt is the overlap
+    /// onto this 667 pt window. t200 (unfocused) reads bottom 0.
     public var adjustedContentInset: UIEdgeInsets {
         UIEdgeInsets(
             top: contentInset.top + safeAreaInsets.top,
             left: contentInset.left + safeAreaInsets.left,
-            bottom: contentInset.bottom + safeAreaInsets.bottom,
+            bottom: contentInset.bottom + safeAreaInsets.bottom + iOSKeyboardAvoidanceBottom,
             right: contentInset.right + safeAreaInsets.right
         )
+    }
+
+    /// iPhone SE (3rd gen) default keyboard + suggestion bar, measured as
+    /// the delta in `adjustedContentInset.bottom` (Forms t1200 vs t200).
+    static let iOSKeyboardOverlap: CGFloat = 260
+
+    var iOSKeyboardAvoidanceBottom: CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
+        guard let responder = window?.firstResponder else { return 0 }
+        guard responder is UIKeyInput else { return 0 }
+        // The editor itself is often a UIScrollView (UITextView). The
+        // 260 pt is applied to an ENCLOSING scroll view (the table), not
+        // to the editor — Forms t1200's UITextView keeps
+        // adjustedContentInset [0,0,0,0] while the table reads bottom 260.
+        var node: UIView? = (responder as? UIView)?.superview
+        while let cur = node {
+            if cur === self { return UIScrollView.iOSKeyboardOverlap }
+            node = cur.superview
+        }
+        return 0
     }
     public var verticalScrollIndicatorInsets: UIEdgeInsets = .zero {
         didSet { if verticalScrollIndicatorInsets != oldValue { updateIndicators() } }

@@ -66,11 +66,20 @@ def abs_rows(dump):
     coordinates.
     """
     rows = {}
+    hidden_prefixes = []
     for v in dump["views"]:
+        path = v.get("path") or ""
+        if v.get("hidden"):
+            hidden_prefixes.append(path)
+            continue
+        if any(path == p or path.startswith(p + ".") for p in hidden_prefixes):
+            continue
         key = None
         if v.get("text"):
             key = ("text", v["text"])
-        elif v["class"] in ("UISwitch",):
+        elif v["class"] in ("UISwitch", "UISlider", "UIDatePicker",
+                            "UIStepper", "UISegmentedControl",
+                            "UITextField", "UITextView"):
             key = ("class", v["class"])
         if key is None:
             continue

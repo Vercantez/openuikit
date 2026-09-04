@@ -216,6 +216,32 @@ final class FirstResponderTests: XCTestCase {
 }
 
 @MainActor
+final class KeyboardAvoidanceInsetTests: XCTestCase {
+    /// Forms t1200 vs t200, iPhone SE 2x, iOS 26.1: focusing a UITextField
+    /// inside a table raises `adjustedContentInset.bottom` 0 → 260, while
+    /// `contentInset` stays zero. The editor itself does not pick up the 260.
+    func testTablePicksUpKeyboardOverlapOnlyWhileEditing() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .grouped)
+        let field = UITextField(frame: CGRect(x: 16, y: 10, width: 343, height: 22))
+        table.addSubview(field)
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.adjustedContentInset.bottom, 0)
+        XCTAssertTrue(field.becomeFirstResponder())
+        XCTAssertEqual(table.contentInset.bottom, 0)
+        XCTAssertEqual(table.adjustedContentInset.bottom, 260)
+        _ = field.resignFirstResponder()
+        XCTAssertEqual(table.adjustedContentInset.bottom, 0)
+    }
+}
+
+@MainActor
 final class TextFieldEditingTests: XCTestCase {
     var w: UIWindow!
     var tf: UITextField!

@@ -690,6 +690,9 @@ open class UIDatePicker: UIControl {
     }
 
     private var compactTitle: String {
+        if OpenUIKitRuntime.systemFontCut == .iOS, datePickerMode == .date {
+            return iOSCompactDateTitle
+        }
         let c = dateComponents(for: _date)
         let year = c.year ?? 1
         let month = c.month ?? 1
@@ -709,6 +712,21 @@ open class UIDatePicker: UIControl {
         case .yearAndMonth:
             return "\(monthTitle(month, short: false)) \(year)"
         }
+    }
+
+    /// MEASURED Forms t200, iPhone SE 2x, iOS 26.1: compact `.date` title is
+    /// DateFormatter.dateStyle = .medium ("Sep 4, 2026" for 2026-09-04 UTC
+    /// / en_US), 17 pt regular, not the `MM/dd/yyyy` compact string.
+    /// `en_US_POSIX` medium produces the same reading (verified on macOS).
+    private var iOSCompactDateTitle: String {
+        let formatter = DateFormatter()
+        formatter.calendar = effectiveCalendar
+        formatter.timeZone = storedTimeZone ?? effectiveCalendar.timeZone
+        formatter.locale = storedLocale ?? effectiveCalendar.locale
+            ?? Locale(identifier: "en_US")
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: _date)
     }
 
     private var timeTitle: String {
@@ -731,7 +749,7 @@ open class UIDatePicker: UIControl {
         case .wheels:
             wheelPicker.frame = bounds
         case .compact, .automatic:
-            compactLabel.frame = bounds
+            layoutCompactLabel()
         case .inline:
             if datePickerMode == .time {
                 wheelPicker.frame = bounds
@@ -745,6 +763,36 @@ open class UIDatePicker: UIControl {
                 }
             }
         }
+    }
+
+    /// Compact chrome under the iOS cut. MEASURED Forms t200, iPhone SE 2x,
+    /// iOS 26.1, a 128 × 34 `.date` picker trailing-aligned in a grouped
+    /// cell:
+    ///   * `_UIDatePickerCompactDateLabel` [10.5, 0, 117.5, 34] — trailing
+    ///     aligned, height 34, width = title intrinsic 93.5 + 24;
+    ///   * inner `UIButton` cornerRadius 17 (a capsule);
+    ///   * fill (118, 118, 128) @ 0.12 = `tertiarySystemFill`;
+    ///   * title 17 pt regular `.label`, vertically centred (y = 7 in 34).
+    /// Catalyst keeps the full-bounds 15 pt capsule on `secondarySystemBackground`.
+    private func layoutCompactLabel() {
+        if OpenUIKitRuntime.systemFontCut != .iOS {
+            compactLabel.font = .systemFont(ofSize: 15)
+            compactLabel.textColor = .label
+            compactLabel.backgroundColor = .secondarySystemBackground
+            compactLabel.layer.cornerRadius = 7
+            compactLabel.frame = bounds
+            return
+        }
+        compactLabel.font = .systemFont(ofSize: 17)
+        compactLabel.textColor = .label
+        compactLabel.backgroundColor = .tertiarySystemFill
+        let height: CGFloat = datePickerMode == .date ? 34 : 36
+        compactLabel.layer.cornerRadius = height / 2
+        let textWidth = compactLabel.intrinsicContentSize.width
+        let width = min(bounds.width, max(0, textWidth + 24))
+        let x = bounds.maxX - width
+        let y = bounds.minY + (bounds.height - height) / 2
+        compactLabel.frame = CGRect(x: x, y: y, width: width, height: height)
     }
 
     private var hasSupportedPresentationViewport: Bool {
