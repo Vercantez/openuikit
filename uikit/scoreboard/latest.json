@@ -1,6 +1,6 @@
 {
- "head": "d465dbc9",
- "date": "2026-09-04T21:51Z",
+ "head": "35271f2a",
+ "date": "2026-09-04T22:29Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -10,66 +10,6 @@
   "total": 124
  },
  "rows": [
-  {
-   "scene": "Feed:t200",
-   "category": "conformance",
-   "score": 60.708,
-   "blob": 0.0,
-   "layout_issues": 2,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t1800",
-   "category": "conformance",
-   "score": 60.708,
-   "blob": 0.0,
-   "layout_issues": 2,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t2800",
-   "category": "conformance",
-   "score": 61.439,
-   "blob": 3.5,
-   "layout_issues": 3,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t3800",
-   "category": "conformance",
-   "score": 61.451,
-   "blob": 3.5,
-   "layout_issues": 3,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t4800",
-   "category": "conformance",
-   "score": 61.451,
-   "blob": 3.5,
-   "layout_issues": 3,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Feed:t700",
-   "category": "conformance",
-   "score": 67.201,
-   "blob": 32.0,
-   "layout_issues": 1,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
   {
    "scene": "Modal:t600",
    "category": "conformance",
@@ -102,6 +42,36 @@
    "threshold": 97.5,
    "status": "open",
    "open_reason": "95.95 vs 97.5: fade-delete +0.15 s remaining travel is 0.162 of 62 pt from delete-control centres on the GCD golden (Delta cy 280.99 vs dest 270.95), vs openhost's exact 0.15 of the measured CASpringAnimation (\u03c9=20.944, remaining (1+\u03c9t)e^(\u2212\u03c9t)=0.179, ours disc dy +1.14 pt). Display-tick rowanimprobe at media +0.15 s reads remaining 0.238, matching env(t\u22121/60) (CATransaction commits on the next vsync). Three clocks, one spring: no begin-time offset fits GCD golden, vsync, and openhost together. A duration retarget to remaining 0.162 at t=0.15 is a score fit, not a measurement. Extra fail vs t900 rest is 3.46 % (text of the 7 sliding rows); layout 0."
+  },
+  {
+   "scene": "Feed:t3800",
+   "category": "conformance",
+   "score": 95.956,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t4800",
+   "category": "conformance",
+   "score": 95.956,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t2800",
+   "category": "conformance",
+   "score": 95.961,
+   "blob": 3.5,
+   "layout_issues": 0,
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
   },
   {
    "scene": "label_truncate",
@@ -166,7 +136,7 @@
   {
    "scene": "label_multiline",
    "category": "text",
-   "score": 97.612,
+   "score": 97.79,
    "blob": 15.2,
    "layout_issues": 0,
    "verdict": "PASS",
@@ -754,16 +724,6 @@
    "status": "pass"
   },
   {
-   "scene": "realapp_storage_light",
-   "category": "realapp",
-   "score": 99.408,
-   "blob": 3.9,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 99.0,
-   "status": "pass"
-  },
-  {
    "scene": "corner_radius",
    "category": "geometry",
    "score": 99.411,
@@ -832,6 +792,26 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t700",
+   "category": "conformance",
+   "score": 99.466,
+   "blob": 32.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "realapp_storage_light",
+   "category": "realapp",
+   "score": 99.469,
+   "blob": 3.9,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 99.0,
    "status": "pass"
   },
   {
@@ -999,6 +979,26 @@
    "category": "chrome",
    "score": 99.658,
    "blob": 4.8,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t200",
+   "category": "conformance",
+   "score": 99.658,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t1800",
+   "category": "conformance",
+   "score": 99.658,
+   "blob": 0.0,
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
