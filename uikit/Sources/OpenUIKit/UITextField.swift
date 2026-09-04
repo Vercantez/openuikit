@@ -140,6 +140,18 @@ final class UITextFieldCanvasView: UIView {}
 /// as an approximation because SF Symbols cannot be redistributed.
 @preconcurrency @MainActor
 final class UITextFieldClearButton: UIControl {
+    /// Glyph colours, supplied by the owning field (`clearButtonPalette`):
+    /// a plain field draws `tertiaryLabel` knocked out to `systemBackground`,
+    /// a search field `secondaryLabel` knocked out to the pill's fill.
+    var circleColor: UIColor = .tertiaryLabel
+    var knockoutColor: UIColor = .systemBackground
+    /// The filled circle's diameter. Zero (the default) means "fill the
+    /// button's bounds", which is the plain field's measured geometry.
+    var circleDiameter: CGFloat = 0
+    /// Tip-to-tip length of the knocked-out cross, round caps included.
+    /// Zero means the plain field's fixed 5.5 pt inset.
+    var crossSpan: CGFloat = 0
+
     override func stateDidChange() {
         super.stateDidChange()
         setNeedsDisplay()
@@ -147,22 +159,30 @@ final class UITextFieldClearButton: UIControl {
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
         guard bounds.width > 0, bounds.height > 0 else { return }
-        let baseCircleColor = UIColor.tertiaryLabel
-            .resolvedCGColor(with: traitCollection)
+        var circle = bounds
+        if circleDiameter > 0 {
+            circle = CGRect(x: bounds.midX - circleDiameter / 2,
+                            y: bounds.midY - circleDiameter / 2,
+                            width: circleDiameter, height: circleDiameter)
+        }
+        let baseCircleColor = circleColor.resolvedCGColor(with: traitCollection)
         // CGColor.withAlpha multiplies the existing component, so pass only
         // the state factor (passing the resolved alpha again would square it).
-        let circleColor = baseCircleColor.withAlpha(isHighlighted ? 0.65 : 1)
-        canvas.fill(Path.roundedRect(bounds, cornerRadius: bounds.height / 2),
-                    color: circleColor)
+        let color = baseCircleColor.withAlpha(isHighlighted ? 0.65 : 1)
+        canvas.fill(Path.roundedRect(circle, cornerRadius: circle.height / 2),
+                    color: color)
 
-        let inset: CGFloat = 5.5
+        let lineWidth: CGFloat = 1.5
+        // The round caps add half a line width past each tip, so a cross that
+        // reads `crossSpan` tip to tip is inset by (d - crossSpan + w) / 2.
+        let inset = crossSpan > 0 ? (circle.height - crossSpan + lineWidth) / 2 : 5.5
         var cross = Path()
-        cross.move(to: CGPoint(x: bounds.minX + inset, y: bounds.minY + inset))
-        cross.addLine(to: CGPoint(x: bounds.maxX - inset, y: bounds.maxY - inset))
-        cross.move(to: CGPoint(x: bounds.maxX - inset, y: bounds.minY + inset))
-        cross.addLine(to: CGPoint(x: bounds.minX + inset, y: bounds.maxY - inset))
-        let foreground = UIColor.systemBackground.resolvedCGColor(with: traitCollection)
-        canvas.stroke(cross, color: foreground, lineWidth: 1.5,
+        cross.move(to: CGPoint(x: circle.minX + inset, y: circle.minY + inset))
+        cross.addLine(to: CGPoint(x: circle.maxX - inset, y: circle.maxY - inset))
+        cross.move(to: CGPoint(x: circle.maxX - inset, y: circle.minY + inset))
+        cross.addLine(to: CGPoint(x: circle.minX + inset, y: circle.maxY - inset))
+        let foreground = knockoutColor.resolvedCGColor(with: traitCollection)
+        canvas.stroke(cross, color: foreground, lineWidth: lineWidth,
                       cap: .round, join: .round)
     }
 }
@@ -414,10 +434,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         refreshContent()
     }
 
+    /// Colour of a placeholder the field itself built (an app-supplied
+    /// `attributedPlaceholder` carries its own). `UISearchTextField`
+    /// overrides it.
+    var defaultPlaceholderColor: UIColor { .placeholderText }
+
     private func makeDefaultAttributedPlaceholder(_ text: String) -> NSAttributedString {
         NSAttributedString(string: text,
                            attributes: [.font: font,
-                                        .foregroundColor: UIColor.placeholderText])
+                                        .foregroundColor: defaultPlaceholderColor])
     }
 
     private func replaceAccessoryView(_ oldView: UIView?, with newView: UIView?) {
@@ -438,6 +463,19 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             view.removeFromSuperview()
         }
     }
+
+    /// Clear-glyph colours. `UISearchTextField` overrides both.
+    var clearButtonPalette: (circle: UIColor, knockout: UIColor) {
+        (.tertiaryLabel, .systemBackground)
+    }
+
+    /// Diameter of the filled circle inside the clear button's box; 0 means
+    /// "the whole box", which is the plain field's measured glyph.
+    var clearButtonCircleDiameter: CGFloat { 0 }
+
+    /// Tip-to-tip length of the cross knocked out of that circle; 0 means the
+    /// plain field's fixed 5.5 pt inset.
+    var clearButtonCrossSpan: CGFloat { 0 }
 
     private func ensureClearButton() {
         if let clearButton {
@@ -761,7 +799,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             textLabel.text = _text
         }
         placeholderLabel.font = font
-        placeholderLabel.textColor = .placeholderText
+        placeholderLabel.textColor = defaultPlaceholderColor
         placeholderLabel.attributedText = _attributedPlaceholder
         textLabel.isHidden = _text.isEmpty
         placeholderLabel.isHidden = !_text.isEmpty || (_placeholder ?? "").isEmpty
@@ -911,6 +949,11 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                 clearButton.isHidden = !showsClearButton
                 clearButton.frame = showsClearButton
                     ? clearButtonRect(forBounds: bounds) : .zero
+                let palette = clearButtonPalette
+                clearButton.circleColor = palette.circle
+                clearButton.knockoutColor = palette.knockout
+                clearButton.circleDiameter = clearButtonCircleDiameter
+                clearButton.crossSpan = clearButtonCrossSpan
             }
         }
         let tr = textRect(forBounds: bounds)
