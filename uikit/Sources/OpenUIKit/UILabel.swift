@@ -456,7 +456,7 @@ open class UILabel: UIView {
             if GlyphInkTable.usesIOSTable {
                 // Real-iOS masks are true coverage of an opaque colour:
                 // plain alpha compositing, no calibration LUT; 1/8-pt phases.
-                let (itag, ianchor) = GlyphInkTable.phaseIOS(frac: frac)
+                let (itag, ianchor) = GlyphInkTable.phaseIOS(size: font.pointSize, frac: frac)
                 if let m = GlyphInkTable.maskIOS(familyKey: famKey, sizeKey: sizeKey,
                                                  dark: dark, tag: itag, scalar: ch) {
                     canvas.drawMask(m.mask, width: m.width, height: m.height,

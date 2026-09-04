@@ -13,8 +13,17 @@ rm -rf "$APP"; mkdir -p "$APP"
 swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
   -module-name layoutprobe Tools/oracle2/layoutprobe/main.swift Tools/oracle2/layoutprobe/Scenarios.swift -o "$APP/layoutprobe"
 cp Tools/oracle2/LayoutProbe-Info.plist "$APP/Info.plist"
-DEVNAME="OpenUIKit-Chrome"
-DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"
+# SIM_DEVICE=2x selects a 2x device (iPhone SE 3rd generation, 375 x 667):
+# the honest oracle for scale-2 scenes — a 3x device captured at 2x
+# resamples every view edge (measured 2026-09-04: label backgrounds off by
+# 2-4/255 along their frame edges). Window/modal scenes need the iPhone 16.
+if [[ "${SIM_DEVICE:-}" == "2x" ]]; then
+  DEVNAME="OpenUIKit-2x"
+  DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+else
+  DEVNAME="OpenUIKit-Chrome"
+  DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"
+fi
 RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)
 UDID=$(xcrun simctl list devices | grep "$DEVNAME" | grep -o '[0-9A-F-]\{36\}' | head -1)
 if [[ -z "$UDID" ]]; then UDID=$(xcrun simctl create "$DEVNAME" "$DEVTYPE" "$RUNTIME"); fi

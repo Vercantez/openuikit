@@ -57,8 +57,9 @@ public enum GlyphInkTable {
     private static var cache: [String: GlyphInkMask] = [:]
 
     /// The iOS table (Resources/glyph_ink_ios.json): masks harvested from
-    /// real iOS 26.1 by Tools/oracle2/inkprobe (scripts/ink_probe_sim.sh)
-    /// with the same key/phase model, calibration "opaque" — each mask IS
+    /// real iOS 26.1 on a 2x device (iPhone SE 3rd gen) by
+    /// Tools/oracle2/inkprobe (SIM_DEVICE=2x scripts/ink_probe_sim.sh)
+    /// through a real UILabel, calibration "opaque" — each mask IS
     /// the coverage of an opaque label colour (no gamma LUT), and oy is
     /// relative to round(2 * (top + (labelHeight - lineHeight) / 2 +
     /// ascender)), which UILabel's iOS path reproduces. Selected under the
@@ -77,14 +78,18 @@ public enum GlyphInkTable {
     /// origins are quantized to quarter device pixels at 2x, not to
     /// Catalyst's size-dependent {0, 1/4, 1/3, 1/2, 2/3, 3/4} sets. The tag
     /// is "F<k/8>" and the anchor floor(2 * phase), as the probe writes it.
-    static func phaseIOS(frac: CGFloat) -> (tag: String, anchor: Int) {
-        // 8 phases. A 16-phase table (11 MB) scored identically on every
-        // text scene (label_align 93.6 either way): the residual is
-        // per-glyph pen-position drift of up to 0.5 px against CoreText,
-        // not phase quantization (measured 2026-09-04).
-        let k = Int((frac * 8).rounded(.down)) & 7
-        let f = Double(k) / 8
-        return ("F\(f)", (2 * k) / 8)
+    static func phaseIOS(size: CGFloat, frac: CGFloat) -> (tag: String, anchor: Int) {
+        // MEASURED 2026-09-04 (inkprobe pen sweeps THROUGH UILABEL on the
+        // iPhone SE 3rd gen, 2x, iOS 26.1 — the device the table is
+        // harvested on): glyph origins snap to QUARTER points up to 16 pt
+        // (4 masks per point at 10-16 pt, regular and bold) and to HALF
+        // points from 17 pt (one mask per half point at 17-34 pt, regular
+        // and semibold). Floor onto the grid; the anchor is floor(2 * phase).
+        if size < 17 {
+            let k = Int((frac * 4).rounded(.down)) & 3
+            return ("F\(Double(k) / 4)", (2 * k) / 4)
+        }
+        return frac < 0.5 ? ("F0.0", 0) : ("F0.5", 1)
     }
     /// True-coverage mask from the iOS table (nil = not harvested).
     public static func maskIOS(familyKey: String, sizeKey: Int, dark: Bool,

@@ -196,6 +196,14 @@ public enum _UIBarMetrics {
     public static let contentInset: CGFloat = 16
     /// A platter is never narrower than it is tall.
     public static var minPlatterWidth: CGFloat { platterHeight }
+    /// IMAGE items are narrower than title items. MEASURED (iOS 26.1, a
+    /// dark opaque bar, five solid images 10/18/24/30/40 pt wide): the
+    /// `_UIModernBarButton` is `max(22, imageWidth)` wide, the
+    /// `_UIButtonBarButton` adds 7 a side and the platter 4 a side, so an
+    /// 18 pt image sits centred in a 44 pt platter (not 18 + 2 × 16 = 50,
+    /// which pushed every item leading it 6 pt off in `navitem_dark`).
+    public static let imageContentMinWidth: CGFloat = 22
+    public static let imageContentInset: CGFloat = 11
     /// Gap accounting (measured, `toolbar_basic`): a 12 pt gap separates
     /// consecutive bar items, EXCEPT after a space item — a fixed space of
     /// 40 pt shows up as 12 + 40 before the next item, and the item after a
@@ -344,6 +352,12 @@ final class _UIBarButtonItemView: UIControl {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         if item.customView != nil {
             return CGSize(width: contentSize.width, height: platterHeight)
+        }
+        if item.title == nil, item.image != nil || item._symbol != nil {
+            // Image / symbol items: see `_UIBarMetrics.imageContentMinWidth`.
+            let w = max(_UIBarMetrics.imageContentMinWidth, contentSize.width)
+                + 2 * _UIBarMetrics.imageContentInset
+            return CGSize(width: w, height: platterHeight)
         }
         let w = max(contentSize.width + 2 * _UIBarMetrics.contentInset,
                     platterHeight)

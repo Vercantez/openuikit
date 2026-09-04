@@ -33,13 +33,26 @@ names=("${(@)scenes:t:r}")
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   echo "==> real iOS capture ($GOLD)"
   rm -rf "$GOLD"
-  zsh scripts/render_sim_scenes.sh "$GOLD" "${scenes[@]}" | tail -1
-  # SimScene captures in the EXTENDED range: sRGB values, straight alpha,
-  # untagged, and the private glass materials still render (the standard
-  # range dropped the sheet grabber; automatic tags Display P3). A P3-tagged
-  # capture from an older SimScene build is converted so the diff is sRGB vs
-  # sRGB.
-  python3 - "$GOLD" <<'EOF'
+  # Two devices: scenes that capture the WINDOW (window/modal/alert — sheet
+  # insets, bars and safe areas are device geometry) on the iPhone 16 (3x),
+  # everything else on the iPhone SE (2x), whose pixel grid IS the scene's.
+  python3 - "$WORK" <<'PYSPLIT'
+import json, sys
+work = sys.argv[1]
+win, plain = [], []
+for f in open(work + '/static_scenes.txt').read().split():
+    d = json.load(open(f))
+    (win if (d.get('window') or d.get('modal') or d.get('alert')) else plain).append(f)
+open(work + '/scenes_3x.txt', 'w').write('\n'.join(win) + '\n')
+open(work + '/scenes_2x.txt', 'w').write('\n'.join(plain) + '\n')
+print(f"    {len(plain)} scenes on the 2x device, {len(win)} window scenes on the iPhone 16")
+PYSPLIT
+  s2=("${(@f)$(cat "$WORK/scenes_2x.txt")}"); s3=("${(@f)$(cat "$WORK/scenes_3x.txt")}")
+  if (( ${#s2} > 0 )); then SIM_DEVICE=2x zsh scripts/render_sim_scenes.sh "$GOLD" "${s2[@]}" | tail -1; fi
+  if (( ${#s3} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3[@]}" | tail -1; fi
+  # A P3-tagged capture from an older SimScene build is converted so the diff
+  # is sRGB vs sRGB (SimScene itself now writes untagged straight-alpha sRGB).
+  python3 - "$GOLD" <<'PYCONV'
 import glob, io, sys
 from PIL import Image, ImageCms
 dst = ImageCms.createProfile('sRGB'); n = 0
@@ -54,7 +67,7 @@ for f in glob.glob(sys.argv[1] + '/*.png'):
     except Exception as e:
         print('  not converted:', f, e)
 print(f"    converted {n} P3-tagged captures to sRGB")
-EOF
+PYCONV
 fi
 
 echo "==> OpenUIKit render with the iOS cut ($OUT)"

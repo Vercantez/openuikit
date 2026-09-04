@@ -36,15 +36,22 @@ final class BarButtonItemTests: XCTestCase {
     }
 
     func testImageOnlyItemIsACircle() {
+        // MEASURED on iOS 26.1 (five solid images on a dark bar): the platter
+        // is max(22, imageWidth) + 22 — an 18 pt image sits in a 44 pt circle,
+        // a 4 pt one too, a 30 pt one in a 52 pt capsule; 40 x 24 gives 62.
         let img = UIImage(bitmap: Bitmap(width: 36, height: 36), scale: 2)  // 18 x 18 pt
         let v = _UIBarButtonItemView(item: UIBarButtonItem(image: img))
-        // 18 + 32 = 50 > 44, so the content inset wins here; a smaller glyph
-        // clamps to the platter height.
-        XCTAssertEqual(v.sizeThatFits(.zero).width, 50, accuracy: 1e-9)
+        XCTAssertEqual(v.sizeThatFits(.zero).width, 44, accuracy: 1e-9)
         let tiny = UIImage(bitmap: Bitmap(width: 8, height: 8), scale: 2)   // 4 x 4 pt
         let tv = _UIBarButtonItemView(item: UIBarButtonItem(image: tiny))
         XCTAssertEqual(tv.sizeThatFits(.zero).width,
                        _UIBarMetrics.platterHeight, accuracy: 1e-9)
+        let wide = UIImage(bitmap: Bitmap(width: 60, height: 36), scale: 2)  // 30 x 18 pt
+        let wv = _UIBarButtonItemView(item: UIBarButtonItem(image: wide))
+        XCTAssertEqual(wv.sizeThatFits(.zero).width, 52, accuracy: 1e-9)
+        let wider = UIImage(bitmap: Bitmap(width: 80, height: 48), scale: 2) // 40 x 24 pt
+        let ww = _UIBarButtonItemView(item: UIBarButtonItem(image: wider))
+        XCTAssertEqual(ww.sizeThatFits(.zero).width, 62, accuracy: 1e-9)
     }
 
     func testToolbarPlattersAreTallerThanNavigationBarPlatters() {

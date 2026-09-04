@@ -107,7 +107,44 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             try! img2.pngData()!.write(to: URL(fileURLWithPath: "\(docsDir)/diag_ct_\(i).png"))
             host.removeFromSuperview()
         }
-        let data = try! JSONSerialization.data(withJSONObject: ["cases": cases, "device": UIDevice.current.systemVersion],
+        // Alignment diagnostic: a right- and a centre-aligned 300 pt label
+        // (drawHierarchy) next to CTLineDraw renders at candidate origins,
+        // so the origin rule UILabel applies can be read off pixel-exactly.
+        var alignDiag: [String: Any] = [:]
+        for (i, (text, align)) in [("Right aligned", NSTextAlignment.right), ("Center aligned", .center)].enumerated() {
+            let f = UIFont.systemFont(ofSize: 17)
+            let host = UIView(frame: CGRect(x: 0, y: 300, width: 320, height: 60)); host.backgroundColor = .white
+            w.rootViewController!.view.addSubview(host)
+            let label = UILabel(frame: CGRect(x: 10, y: 20, width: 300, height: 22))
+            label.font = f; label.text = text; label.textColor = .label; label.textAlignment = align
+            host.addSubview(label); host.layoutIfNeeded()
+            let fmt = UIGraphicsImageRendererFormat(); fmt.scale = 2; fmt.opaque = true; fmt.preferredRange = .extended
+            let img = UIGraphicsImageRenderer(size: host.bounds.size, format: fmt).image { _ in
+                host.drawHierarchy(in: host.bounds, afterScreenUpdates: true)
+            }
+            try! img.pngData()!.write(to: URL(fileURLWithPath: "\(docsDir)/align_label_\(i).png"))
+            let attr = NSAttributedString(string: text, attributes: [.font: f])
+            let line = CTLineCreateWithAttributedString(attr)
+            let width = CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil))
+            let exact = align == .right ? 300 - width : (300 - width) / 2
+            alignDiag["\(i)_lineWidth"] = Double(width); alignDiag["\(i)_exactOrigin"] = Double(10 + exact)
+            let candidates: [(String, CGFloat)] = [("exact", exact), ("floorHalf", (exact * 2).rounded(.down) / 2), ("nearestHalf", (exact * 2).rounded() / 2),
+                                                   ("floorThird", (exact * 3).rounded(.down) / 3), ("nearestThird", (exact * 3).rounded() / 3), ("floor", exact.rounded(.down)), ("ceilWidthHalf", align == .right ? 300 - (width * 2).rounded(.up) / 2 : (300 - (width * 2).rounded(.up) / 2) / 2)]
+            for (name, origin) in candidates {
+                let img2 = UIGraphicsImageRenderer(size: host.bounds.size, format: fmt).image { rc in
+                    let ctx = rc.cgContext; UIColor.white.setFill(); ctx.fill(host.bounds)
+                    let a2 = NSAttributedString(string: text, attributes: [.font: f, .foregroundColor: UIColor.label])
+                    let l2 = CTLineCreateWithAttributedString(a2)
+                    ctx.textMatrix = CGAffineTransform(scaleX: 1, y: -1)
+                    ctx.textPosition = CGPoint(x: 10 + origin, y: 20 + (22 - f.lineHeight) / 2 + f.ascender)
+                    CTLineDraw(l2, ctx)
+                }
+                try! img2.pngData()!.write(to: URL(fileURLWithPath: "\(docsDir)/align_ct_\(i)_\(name).png"))
+                alignDiag["\(i)_\(name)"] = Double(10 + origin)
+            }
+            host.removeFromSuperview()
+        }
+        let data = try! JSONSerialization.data(withJSONObject: ["cases": cases, "device": UIDevice.current.systemVersion, "alignDiag": alignDiag],
                                                options: [.sortedKeys])
         try! data.write(to: URL(fileURLWithPath: "\(docsDir)/text_positions_ios.json"))
         try! "ok".write(toFile: docsDir + "/DONE", atomically: true, encoding: .utf8)
