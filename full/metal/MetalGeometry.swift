@@ -1,0 +1,279 @@
+public struct MTLOrigin: Equatable, Hashable, Sendable {
+    public var x: Int
+    public var y: Int
+    public var z: Int
+
+    public init() {
+        self.x = 0
+        self.y = 0
+        self.z = 0
+    }
+
+    public init(x: Int, y: Int, z: Int) {
+        self.x = x
+        self.y = y
+        self.z = z
+    }
+}
+
+public func MTLOriginMake(_ x: Int, _ y: Int, _ z: Int) -> MTLOrigin {
+    MTLOrigin(x: x, y: y, z: z)
+}
+
+public struct MTLSize: Equatable, Hashable, Sendable {
+    public var width: Int
+    public var height: Int
+    public var depth: Int
+
+    public init() {
+        self.width = 0
+        self.height = 0
+        self.depth = 0
+    }
+
+    public init(width: Int, height: Int, depth: Int) {
+        self.width = width
+        self.height = height
+        self.depth = depth
+    }
+}
+
+public func MTLSizeMake(_ width: Int, _ height: Int, _ depth: Int) -> MTLSize {
+    MTLSize(width: width, height: height, depth: depth)
+}
+
+public struct MTLRegion: Equatable, Hashable, Sendable {
+    public var origin: MTLOrigin
+    public var size: MTLSize
+
+    public init() {
+        self.origin = MTLOrigin()
+        self.size = MTLSize()
+    }
+
+    public init(origin: MTLOrigin, size: MTLSize) {
+        self.origin = origin
+        self.size = size
+    }
+}
+
+public func MTLRegionMake1D(_ x: Int, _ width: Int) -> MTLRegion {
+    MTLRegion(
+        origin: MTLOrigin(x: x, y: 0, z: 0),
+        size: MTLSize(width: width, height: 1, depth: 1)
+    )
+}
+
+public func MTLRegionMake2D(_ x: Int, _ y: Int, _ width: Int, _ height: Int) -> MTLRegion {
+    MTLRegion(
+        origin: MTLOrigin(x: x, y: y, z: 0),
+        size: MTLSize(width: width, height: height, depth: 1)
+    )
+}
+
+public func MTLRegionMake3D(
+    _ x: Int,
+    _ y: Int,
+    _ z: Int,
+    _ width: Int,
+    _ height: Int,
+    _ depth: Int
+) -> MTLRegion {
+    MTLRegion(
+        origin: MTLOrigin(x: x, y: y, z: z),
+        size: MTLSize(width: width, height: height, depth: depth)
+    )
+}
+
+public struct MTLSizeAndAlign: Equatable, Hashable, Sendable {
+    public var size: Int
+    public var align: Int
+
+    public init() {
+        self.size = 0
+        self.align = 0
+    }
+
+    public init(size: Int, align: Int) {
+        self.size = size
+        self.align = align
+    }
+}
+
+public struct MTLClearColor: Equatable, Sendable {
+    public var red: Double
+    public var green: Double
+    public var blue: Double
+    public var alpha: Double
+
+    public init() {
+        self.red = 0
+        self.green = 0
+        self.blue = 0
+        self.alpha = 1
+    }
+
+    public init(red: Double, green: Double, blue: Double, alpha: Double) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
+    }
+}
+
+public func MTLClearColorMake(
+    _ red: Double,
+    _ green: Double,
+    _ blue: Double,
+    _ alpha: Double
+) -> MTLClearColor {
+    MTLClearColor(red: red, green: green, blue: blue, alpha: alpha)
+}
+
+public struct MTLViewport: Equatable, Sendable {
+    public var originX: Double
+    public var originY: Double
+    public var width: Double
+    public var height: Double
+    public var znear: Double
+    public var zfar: Double
+
+    public init() {
+        self.originX = 0
+        self.originY = 0
+        self.width = 0
+        self.height = 0
+        self.znear = 0
+        self.zfar = 1
+    }
+
+    public init(
+        originX: Double,
+        originY: Double,
+        width: Double,
+        height: Double,
+        znear: Double,
+        zfar: Double
+    ) {
+        self.originX = originX
+        self.originY = originY
+        self.width = width
+        self.height = height
+        self.znear = znear
+        self.zfar = zfar
+    }
+}
+
+public struct MTLScissorRect: Equatable, Hashable, Sendable {
+    public var x: Int
+    public var y: Int
+    public var width: Int
+    public var height: Int
+
+    public init() {
+        self.x = 0
+        self.y = 0
+        self.width = 0
+        self.height = 0
+    }
+
+    public init(x: Int, y: Int, width: Int, height: Int) {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+    }
+}
+
+public struct MTLSamplePosition: Equatable, Sendable {
+    public var x: Float
+    public var y: Float
+
+    public init() {
+        self.x = 0
+        self.y = 0
+    }
+
+    public init(x: Float, y: Float) {
+        self.x = x
+        self.y = y
+    }
+}
+
+public func MTLSamplePositionMake(_ x: Float, _ y: Float) -> MTLSamplePosition {
+    MTLSamplePosition(x: x, y: y)
+}
+
+public func MTLCoordinate2DMake(_ x: Float, _ y: Float) -> MTLCoordinate2D {
+    MTLSamplePosition(x: x, y: y)
+}
+
+public struct MTLIndirectCommandBufferExecutionRange: Equatable, Hashable, Sendable {
+    public var location: UInt32
+    public var length: UInt32
+
+    public init() {
+        self.location = 0
+        self.length = 0
+    }
+
+    public init(location: UInt32, length: UInt32) {
+        self.location = location
+        self.length = length
+    }
+}
+
+public func MTLIndirectCommandBufferExecutionRangeMake(
+    _ location: UInt32,
+    _ length: UInt32
+) -> MTLIndirectCommandBufferExecutionRange {
+    MTLIndirectCommandBufferExecutionRange(location: location, length: length)
+}
+
+public struct MTL4BufferRange: Equatable, Hashable, Sendable {
+    public var bufferAddress: MTLGPUAddress
+    public var length: UInt64
+
+    public init() {
+        self.bufferAddress = 0
+        self.length = 0
+    }
+
+    public init(bufferAddress: MTLGPUAddress, length: UInt64) {
+        self.bufferAddress = bufferAddress
+        self.length = length
+    }
+}
+
+public func MTL4BufferRangeMake(
+    _ bufferAddress: MTLGPUAddress,
+    _ length: UInt64
+) -> MTL4BufferRange {
+    MTL4BufferRange(bufferAddress: bufferAddress, length: length)
+}
+
+public struct MTLTextureSwizzleChannels: Equatable, Hashable, Sendable {
+    public var red: MTLTextureSwizzle
+    public var green: MTLTextureSwizzle
+    public var blue: MTLTextureSwizzle
+    public var alpha: MTLTextureSwizzle
+
+    public init() {
+        self.red = .red
+        self.green = .green
+        self.blue = .blue
+        self.alpha = .alpha
+    }
+
+    public init(
+        red: MTLTextureSwizzle,
+        green: MTLTextureSwizzle,
+        blue: MTLTextureSwizzle,
+        alpha: MTLTextureSwizzle
+    ) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
+    }
+}
