@@ -21,7 +21,16 @@ class NaturalLanguageFrontierTests(unittest.TestCase):
     def test_guest_source_manifest_is_exact(self):
         self.assertEqual(
             MANIFEST.read_text(encoding="utf-8").splitlines(),
-            ["full/naturallanguage/NaturalLanguage.swift"],
+            [
+                "full/naturallanguage/NLContextualEmbedding.swift",
+                "full/naturallanguage/NLEmbedding.swift",
+                "full/naturallanguage/NLGazetteer.swift",
+                "full/naturallanguage/NLModel.swift",
+                "full/naturallanguage/NLTagger.swift",
+                "full/naturallanguage/NLTokenizer.swift",
+                "full/naturallanguage/NLTypes.swift",
+                "full/naturallanguage/NaturalLanguage.swift",
+            ],
         )
 
     def test_classifier_is_substantive_local_inference(self):

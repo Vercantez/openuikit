@@ -20,6 +20,10 @@ public struct NLLanguage: RawRepresentable, Hashable, Sendable, Codable,
         self.rawValue = rawValue
     }
 
+    public init(_ rawValue: String) {
+        self.rawValue = rawValue
+    }
+
     public var description: String { rawValue }
 
     public static let undetermined = Self(rawValue: "und")
