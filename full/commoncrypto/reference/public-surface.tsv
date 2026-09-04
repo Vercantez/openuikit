@@ -1,0 +1,224 @@
+precise	kind	title	path	declaration
+c:@CCrfc3394_iv	swift.var	CCrfc3394_iv	CCrfc3394_iv	let CCrfc3394_iv: UnsafePointer<UInt8>!
+c:@CCrfc3394_ivLen	swift.var	CCrfc3394_ivLen	CCrfc3394_ivLen	let CCrfc3394_ivLen: Int
+c:@Ea@ccNoPadding@ccNoPadding	swift.var	ccNoPadding	ccNoPadding	var ccNoPadding: Int { get }
+c:@Ea@ccNoPadding@ccPKCS7Padding	swift.var	ccPKCS7Padding	ccPKCS7Padding	var ccPKCS7Padding: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithm3DES	swift.var	kCCAlgorithm3DES	kCCAlgorithm3DES	var kCCAlgorithm3DES: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmAES	swift.var	kCCAlgorithmAES	kCCAlgorithmAES	var kCCAlgorithmAES: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmAES128	swift.var	kCCAlgorithmAES128	kCCAlgorithmAES128	var kCCAlgorithmAES128: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmBlowfish	swift.var	kCCAlgorithmBlowfish	kCCAlgorithmBlowfish	var kCCAlgorithmBlowfish: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmCAST	swift.var	kCCAlgorithmCAST	kCCAlgorithmCAST	var kCCAlgorithmCAST: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmDES	swift.var	kCCAlgorithmDES	kCCAlgorithmDES	var kCCAlgorithmDES: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmRC2	swift.var	kCCAlgorithmRC2	kCCAlgorithmRC2	var kCCAlgorithmRC2: Int { get }
+c:@Ea@kCCAlgorithmAES128@kCCAlgorithmRC4	swift.var	kCCAlgorithmRC4	kCCAlgorithmRC4	var kCCAlgorithmRC4: Int { get }
+c:@Ea@kCCBlockSizeAES128@kCCBlockSize3DES	swift.var	kCCBlockSize3DES	kCCBlockSize3DES	var kCCBlockSize3DES: Int { get }
+c:@Ea@kCCBlockSizeAES128@kCCBlockSizeAES128	swift.var	kCCBlockSizeAES128	kCCBlockSizeAES128	var kCCBlockSizeAES128: Int { get }
+c:@Ea@kCCBlockSizeAES128@kCCBlockSizeBlowfish	swift.var	kCCBlockSizeBlowfish	kCCBlockSizeBlowfish	var kCCBlockSizeBlowfish: Int { get }
+c:@Ea@kCCBlockSizeAES128@kCCBlockSizeCAST	swift.var	kCCBlockSizeCAST	kCCBlockSizeCAST	var kCCBlockSizeCAST: Int { get }
+c:@Ea@kCCBlockSizeAES128@kCCBlockSizeDES	swift.var	kCCBlockSizeDES	kCCBlockSizeDES	var kCCBlockSizeDES: Int { get }
+c:@Ea@kCCBlockSizeAES128@kCCBlockSizeRC2	swift.var	kCCBlockSizeRC2	kCCBlockSizeRC2	var kCCBlockSizeRC2: Int { get }
+c:@Ea@kCCContextSizeAES128@kCCContextSize3DES	swift.var	kCCContextSize3DES	kCCContextSize3DES	var kCCContextSize3DES: Int { get }
+c:@Ea@kCCContextSizeAES128@kCCContextSizeAES128	swift.var	kCCContextSizeAES128	kCCContextSizeAES128	var kCCContextSizeAES128: Int { get }
+c:@Ea@kCCContextSizeAES128@kCCContextSizeCAST	swift.var	kCCContextSizeCAST	kCCContextSizeCAST	var kCCContextSizeCAST: Int { get }
+c:@Ea@kCCContextSizeAES128@kCCContextSizeDES	swift.var	kCCContextSizeDES	kCCContextSizeDES	var kCCContextSizeDES: Int { get }
+c:@Ea@kCCContextSizeAES128@kCCContextSizeRC4	swift.var	kCCContextSizeRC4	kCCContextSizeRC4	var kCCContextSizeRC4: Int { get }
+c:@Ea@kCCEncrypt@kCCDecrypt	swift.var	kCCDecrypt	kCCDecrypt	var kCCDecrypt: Int { get }
+c:@Ea@kCCEncrypt@kCCEncrypt	swift.var	kCCEncrypt	kCCEncrypt	var kCCEncrypt: Int { get }
+c:@Ea@kCCHmacAlgSHA1@kCCHmacAlgMD5	swift.var	kCCHmacAlgMD5	kCCHmacAlgMD5	var kCCHmacAlgMD5: Int { get }
+c:@Ea@kCCHmacAlgSHA1@kCCHmacAlgSHA1	swift.var	kCCHmacAlgSHA1	kCCHmacAlgSHA1	var kCCHmacAlgSHA1: Int { get }
+c:@Ea@kCCHmacAlgSHA1@kCCHmacAlgSHA224	swift.var	kCCHmacAlgSHA224	kCCHmacAlgSHA224	var kCCHmacAlgSHA224: Int { get }
+c:@Ea@kCCHmacAlgSHA1@kCCHmacAlgSHA256	swift.var	kCCHmacAlgSHA256	kCCHmacAlgSHA256	var kCCHmacAlgSHA256: Int { get }
+c:@Ea@kCCHmacAlgSHA1@kCCHmacAlgSHA384	swift.var	kCCHmacAlgSHA384	kCCHmacAlgSHA384	var kCCHmacAlgSHA384: Int { get }
+c:@Ea@kCCHmacAlgSHA1@kCCHmacAlgSHA512	swift.var	kCCHmacAlgSHA512	kCCHmacAlgSHA512	var kCCHmacAlgSHA512: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySize3DES	swift.var	kCCKeySize3DES	kCCKeySize3DES	var kCCKeySize3DES: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeAES128	swift.var	kCCKeySizeAES128	kCCKeySizeAES128	var kCCKeySizeAES128: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeAES192	swift.var	kCCKeySizeAES192	kCCKeySizeAES192	var kCCKeySizeAES192: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeAES256	swift.var	kCCKeySizeAES256	kCCKeySizeAES256	var kCCKeySizeAES256: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeDES	swift.var	kCCKeySizeDES	kCCKeySizeDES	var kCCKeySizeDES: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMaxBlowfish	swift.var	kCCKeySizeMaxBlowfish	kCCKeySizeMaxBlowfish	var kCCKeySizeMaxBlowfish: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMaxCAST	swift.var	kCCKeySizeMaxCAST	kCCKeySizeMaxCAST	var kCCKeySizeMaxCAST: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMaxRC2	swift.var	kCCKeySizeMaxRC2	kCCKeySizeMaxRC2	var kCCKeySizeMaxRC2: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMaxRC4	swift.var	kCCKeySizeMaxRC4	kCCKeySizeMaxRC4	var kCCKeySizeMaxRC4: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMinBlowfish	swift.var	kCCKeySizeMinBlowfish	kCCKeySizeMinBlowfish	var kCCKeySizeMinBlowfish: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMinCAST	swift.var	kCCKeySizeMinCAST	kCCKeySizeMinCAST	var kCCKeySizeMinCAST: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMinRC2	swift.var	kCCKeySizeMinRC2	kCCKeySizeMinRC2	var kCCKeySizeMinRC2: Int { get }
+c:@Ea@kCCKeySizeAES128@kCCKeySizeMinRC4	swift.var	kCCKeySizeMinRC4	kCCKeySizeMinRC4	var kCCKeySizeMinRC4: Int { get }
+c:@Ea@kCCModeECB@kCCModeCBC	swift.var	kCCModeCBC	kCCModeCBC	var kCCModeCBC: Int { get }
+c:@Ea@kCCModeECB@kCCModeCFB	swift.var	kCCModeCFB	kCCModeCFB	var kCCModeCFB: Int { get }
+c:@Ea@kCCModeECB@kCCModeCFB8	swift.var	kCCModeCFB8	kCCModeCFB8	var kCCModeCFB8: Int { get }
+c:@Ea@kCCModeECB@kCCModeCTR	swift.var	kCCModeCTR	kCCModeCTR	var kCCModeCTR: Int { get }
+c:@Ea@kCCModeECB@kCCModeECB	swift.var	kCCModeECB	kCCModeECB	var kCCModeECB: Int { get }
+c:@Ea@kCCModeECB@kCCModeOFB	swift.var	kCCModeOFB	kCCModeOFB	var kCCModeOFB: Int { get }
+c:@Ea@kCCModeECB@kCCModeRC4	swift.var	kCCModeRC4	kCCModeRC4	var kCCModeRC4: Int { get }
+c:@Ea@kCCModeOptionCTR_BE@kCCModeOptionCTR_BE	swift.var	kCCModeOptionCTR_BE	kCCModeOptionCTR_BE	var kCCModeOptionCTR_BE: Int { get }
+c:@Ea@kCCOptionPKCS7Padding@kCCOptionECBMode	swift.var	kCCOptionECBMode	kCCOptionECBMode	var kCCOptionECBMode: Int { get }
+c:@Ea@kCCOptionPKCS7Padding@kCCOptionPKCS7Padding	swift.var	kCCOptionPKCS7Padding	kCCOptionPKCS7Padding	var kCCOptionPKCS7Padding: Int { get }
+c:@Ea@kCCPBKDF2@kCCPBKDF2	swift.var	kCCPBKDF2	kCCPBKDF2	var kCCPBKDF2: Int { get }
+c:@Ea@kCCPRFHmacAlgSHA1@kCCPRFHmacAlgSHA1	swift.var	kCCPRFHmacAlgSHA1	kCCPRFHmacAlgSHA1	var kCCPRFHmacAlgSHA1: Int { get }
+c:@Ea@kCCPRFHmacAlgSHA1@kCCPRFHmacAlgSHA224	swift.var	kCCPRFHmacAlgSHA224	kCCPRFHmacAlgSHA224	var kCCPRFHmacAlgSHA224: Int { get }
+c:@Ea@kCCPRFHmacAlgSHA1@kCCPRFHmacAlgSHA256	swift.var	kCCPRFHmacAlgSHA256	kCCPRFHmacAlgSHA256	var kCCPRFHmacAlgSHA256: Int { get }
+c:@Ea@kCCPRFHmacAlgSHA1@kCCPRFHmacAlgSHA384	swift.var	kCCPRFHmacAlgSHA384	kCCPRFHmacAlgSHA384	var kCCPRFHmacAlgSHA384: Int { get }
+c:@Ea@kCCPRFHmacAlgSHA1@kCCPRFHmacAlgSHA512	swift.var	kCCPRFHmacAlgSHA512	kCCPRFHmacAlgSHA512	var kCCPRFHmacAlgSHA512: Int { get }
+c:@Ea@kCCSuccess@kCCAlignmentError	swift.var	kCCAlignmentError	kCCAlignmentError	var kCCAlignmentError: Int { get }
+c:@Ea@kCCSuccess@kCCBufferTooSmall	swift.var	kCCBufferTooSmall	kCCBufferTooSmall	var kCCBufferTooSmall: Int { get }
+c:@Ea@kCCSuccess@kCCCallSequenceError	swift.var	kCCCallSequenceError	kCCCallSequenceError	var kCCCallSequenceError: Int { get }
+c:@Ea@kCCSuccess@kCCDecodeError	swift.var	kCCDecodeError	kCCDecodeError	var kCCDecodeError: Int { get }
+c:@Ea@kCCSuccess@kCCInvalidKey	swift.var	kCCInvalidKey	kCCInvalidKey	var kCCInvalidKey: Int { get }
+c:@Ea@kCCSuccess@kCCKeySizeError	swift.var	kCCKeySizeError	kCCKeySizeError	var kCCKeySizeError: Int { get }
+c:@Ea@kCCSuccess@kCCMemoryFailure	swift.var	kCCMemoryFailure	kCCMemoryFailure	var kCCMemoryFailure: Int { get }
+c:@Ea@kCCSuccess@kCCOverflow	swift.var	kCCOverflow	kCCOverflow	var kCCOverflow: Int { get }
+c:@Ea@kCCSuccess@kCCParamError	swift.var	kCCParamError	kCCParamError	var kCCParamError: Int { get }
+c:@Ea@kCCSuccess@kCCRNGFailure	swift.var	kCCRNGFailure	kCCRNGFailure	var kCCRNGFailure: Int { get }
+c:@Ea@kCCSuccess@kCCSuccess	swift.var	kCCSuccess	kCCSuccess	var kCCSuccess: Int { get }
+c:@Ea@kCCSuccess@kCCUnimplemented	swift.var	kCCUnimplemented	kCCUnimplemented	var kCCUnimplemented: Int { get }
+c:@Ea@kCCSuccess@kCCUnspecifiedError	swift.var	kCCUnspecifiedError	kCCUnspecifiedError	var kCCUnspecifiedError: Int { get }
+c:@Ea@kCCWRAPAES@kCCWRAPAES	swift.var	kCCWRAPAES	kCCWRAPAES	var kCCWRAPAES: Int { get }
+c:@F@CCCalibratePBKDF	swift.func	CCCalibratePBKDF(_:_:_:_:_:_:)	CCCalibratePBKDF(_:_:_:_:_:_:)	func CCCalibratePBKDF(_ algorithm: CCPBKDFAlgorithm, _ passwordLen: Int, _ saltLen: Int, _ prf: CCPseudoRandomAlgorithm, _ derivedKeyLen: Int, _ msec: UInt32) -> UInt32
+c:@F@CCCrypt	swift.func	CCCrypt(_:_:_:_:_:_:_:_:_:_:_:)	CCCrypt(_:_:_:_:_:_:_:_:_:_:_:)	func CCCrypt(_ op: CCOperation, _ alg: CCAlgorithm, _ options: CCOptions, _ key: UnsafeRawPointer!, _ keyLength: Int, _ iv: UnsafeRawPointer!, _ dataIn: UnsafeRawPointer!, _ dataInLength: Int, _ dataOut: UnsafeMutableRawPointer!, _ dataOutAvailable: Int, _ dataOutMoved: UnsafeMutablePointer<Int>!) -> CCCryptorStatus
+c:@F@CCCryptorCreate	swift.func	CCCryptorCreate(_:_:_:_:_:_:_:)	CCCryptorCreate(_:_:_:_:_:_:_:)	func CCCryptorCreate(_ op: CCOperation, _ alg: CCAlgorithm, _ options: CCOptions, _ key: UnsafeRawPointer!, _ keyLength: Int, _ iv: UnsafeRawPointer!, _ cryptorRef: UnsafeMutablePointer<CCCryptorRef?>!) -> CCCryptorStatus
+c:@F@CCCryptorCreateFromData	swift.func	CCCryptorCreateFromData(_:_:_:_:_:_:_:_:_:_:)	CCCryptorCreateFromData(_:_:_:_:_:_:_:_:_:_:)	func CCCryptorCreateFromData(_ op: CCOperation, _ alg: CCAlgorithm, _ options: CCOptions, _ key: UnsafeRawPointer!, _ keyLength: Int, _ iv: UnsafeRawPointer!, _ data: UnsafeRawPointer!, _ dataLength: Int, _ cryptorRef: UnsafeMutablePointer<CCCryptorRef?>!, _ dataUsed: UnsafeMutablePointer<Int>!) -> CCCryptorStatus
+c:@F@CCCryptorCreateWithMode	swift.func	CCCryptorCreateWithMode(_:_:_:_:_:_:_:_:_:_:_:_:)	CCCryptorCreateWithMode(_:_:_:_:_:_:_:_:_:_:_:_:)	func CCCryptorCreateWithMode(_ op: CCOperation, _ mode: CCMode, _ alg: CCAlgorithm, _ padding: CCPadding, _ iv: UnsafeRawPointer!, _ key: UnsafeRawPointer!, _ keyLength: Int, _ tweak: UnsafeRawPointer!, _ tweakLength: Int, _ numRounds: Int32, _ options: CCModeOptions, _ cryptorRef: UnsafeMutablePointer<CCCryptorRef?>!) -> CCCryptorStatus
+c:@F@CCCryptorFinal	swift.func	CCCryptorFinal(_:_:_:_:)	CCCryptorFinal(_:_:_:_:)	func CCCryptorFinal(_ cryptorRef: CCCryptorRef!, _ dataOut: UnsafeMutableRawPointer!, _ dataOutAvailable: Int, _ dataOutMoved: UnsafeMutablePointer<Int>!) -> CCCryptorStatus
+c:@F@CCCryptorGetOutputLength	swift.func	CCCryptorGetOutputLength(_:_:_:)	CCCryptorGetOutputLength(_:_:_:)	func CCCryptorGetOutputLength(_ cryptorRef: CCCryptorRef!, _ inputLength: Int, _ final: Bool) -> Int
+c:@F@CCCryptorRelease	swift.func	CCCryptorRelease(_:)	CCCryptorRelease(_:)	func CCCryptorRelease(_ cryptorRef: CCCryptorRef!) -> CCCryptorStatus
+c:@F@CCCryptorReset	swift.func	CCCryptorReset(_:_:)	CCCryptorReset(_:_:)	func CCCryptorReset(_ cryptorRef: CCCryptorRef!, _ iv: UnsafeRawPointer!) -> CCCryptorStatus
+c:@F@CCCryptorUpdate	swift.func	CCCryptorUpdate(_:_:_:_:_:_:)	CCCryptorUpdate(_:_:_:_:_:_:)	func CCCryptorUpdate(_ cryptorRef: CCCryptorRef!, _ dataIn: UnsafeRawPointer!, _ dataInLength: Int, _ dataOut: UnsafeMutableRawPointer!, _ dataOutAvailable: Int, _ dataOutMoved: UnsafeMutablePointer<Int>!) -> CCCryptorStatus
+c:@F@CCHmac	swift.func	CCHmac(_:_:_:_:_:_:)	CCHmac(_:_:_:_:_:_:)	func CCHmac(_ algorithm: CCHmacAlgorithm, _ key: UnsafeRawPointer!, _ keyLength: Int, _ data: UnsafeRawPointer!, _ dataLength: Int, _ macOut: UnsafeMutableRawPointer!)
+c:@F@CCHmacFinal	swift.func	CCHmacFinal(_:_:)	CCHmacFinal(_:_:)	func CCHmacFinal(_ ctx: UnsafeMutablePointer<CCHmacContext>!, _ macOut: UnsafeMutableRawPointer!)
+c:@F@CCHmacInit	swift.func	CCHmacInit(_:_:_:_:)	CCHmacInit(_:_:_:_:)	func CCHmacInit(_ ctx: UnsafeMutablePointer<CCHmacContext>!, _ algorithm: CCHmacAlgorithm, _ key: UnsafeRawPointer!, _ keyLength: Int)
+c:@F@CCHmacUpdate	swift.func	CCHmacUpdate(_:_:_:)	CCHmacUpdate(_:_:_:)	func CCHmacUpdate(_ ctx: UnsafeMutablePointer<CCHmacContext>!, _ data: UnsafeRawPointer!, _ dataLength: Int)
+c:@F@CCKeyDerivationPBKDF	swift.func	CCKeyDerivationPBKDF(_:_:_:_:_:_:_:_:_:)	CCKeyDerivationPBKDF(_:_:_:_:_:_:_:_:_:)	func CCKeyDerivationPBKDF(_ algorithm: CCPBKDFAlgorithm, _ password: UnsafePointer<CChar>!, _ passwordLen: Int, _ salt: UnsafePointer<UInt8>!, _ saltLen: Int, _ prf: CCPseudoRandomAlgorithm, _ rounds: UInt32, _ derivedKey: UnsafeMutablePointer<UInt8>!, _ derivedKeyLen: Int) -> Int32
+c:@F@CCRandomGenerateBytes	swift.func	CCRandomGenerateBytes(_:_:)	CCRandomGenerateBytes(_:_:)	func CCRandomGenerateBytes(_ bytes: UnsafeMutableRawPointer!, _ count: Int) -> CCRNGStatus
+c:@F@CCSymmetricKeyUnwrap	swift.func	CCSymmetricKeyUnwrap(_:_:_:_:_:_:_:_:_:)	CCSymmetricKeyUnwrap(_:_:_:_:_:_:_:_:_:)	func CCSymmetricKeyUnwrap(_ algorithm: CCWrappingAlgorithm, _ iv: UnsafePointer<UInt8>!, _ ivLen: Int, _ kek: UnsafePointer<UInt8>!, _ kekLen: Int, _ wrappedKey: UnsafePointer<UInt8>!, _ wrappedKeyLen: Int, _ rawKey: UnsafeMutablePointer<UInt8>!, _ rawKeyLen: UnsafeMutablePointer<Int>!) -> Int32
+c:@F@CCSymmetricKeyWrap	swift.func	CCSymmetricKeyWrap(_:_:_:_:_:_:_:_:_:)	CCSymmetricKeyWrap(_:_:_:_:_:_:_:_:_:)	func CCSymmetricKeyWrap(_ algorithm: CCWrappingAlgorithm, _ iv: UnsafePointer<UInt8>!, _ ivLen: Int, _ kek: UnsafePointer<UInt8>!, _ kekLen: Int, _ rawKey: UnsafePointer<UInt8>!, _ rawKeyLen: Int, _ wrappedKey: UnsafeMutablePointer<UInt8>!, _ wrappedKeyLen: UnsafeMutablePointer<Int>!) -> Int32
+c:@F@CCSymmetricUnwrappedSize	swift.func	CCSymmetricUnwrappedSize(_:_:)	CCSymmetricUnwrappedSize(_:_:)	func CCSymmetricUnwrappedSize(_ algorithm: CCWrappingAlgorithm, _ wrappedKeyLen: Int) -> Int
+c:@F@CCSymmetricWrappedSize	swift.func	CCSymmetricWrappedSize(_:_:)	CCSymmetricWrappedSize(_:_:)	func CCSymmetricWrappedSize(_ algorithm: CCWrappingAlgorithm, _ rawKeyLen: Int) -> Int
+c:@F@CC_MD2	swift.func	CC_MD2(_:_:_:)	CC_MD2(_:_:_:)	func CC_MD2(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_MD2_Final	swift.func	CC_MD2_Final(_:_:)	CC_MD2_Final(_:_:)	func CC_MD2_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_MD2_CTX>!) -> Int32
+c:@F@CC_MD2_Init	swift.func	CC_MD2_Init(_:)	CC_MD2_Init(_:)	func CC_MD2_Init(_ c: UnsafeMutablePointer<CC_MD2_CTX>!) -> Int32
+c:@F@CC_MD2_Update	swift.func	CC_MD2_Update(_:_:_:)	CC_MD2_Update(_:_:_:)	func CC_MD2_Update(_ c: UnsafeMutablePointer<CC_MD2_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_MD4	swift.func	CC_MD4(_:_:_:)	CC_MD4(_:_:_:)	func CC_MD4(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_MD4_Final	swift.func	CC_MD4_Final(_:_:)	CC_MD4_Final(_:_:)	func CC_MD4_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_MD4_CTX>!) -> Int32
+c:@F@CC_MD4_Init	swift.func	CC_MD4_Init(_:)	CC_MD4_Init(_:)	func CC_MD4_Init(_ c: UnsafeMutablePointer<CC_MD4_CTX>!) -> Int32
+c:@F@CC_MD4_Update	swift.func	CC_MD4_Update(_:_:_:)	CC_MD4_Update(_:_:_:)	func CC_MD4_Update(_ c: UnsafeMutablePointer<CC_MD4_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_MD5	swift.func	CC_MD5(_:_:_:)	CC_MD5(_:_:_:)	func CC_MD5(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_MD5_Final	swift.func	CC_MD5_Final(_:_:)	CC_MD5_Final(_:_:)	func CC_MD5_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_MD5_CTX>!) -> Int32
+c:@F@CC_MD5_Init	swift.func	CC_MD5_Init(_:)	CC_MD5_Init(_:)	func CC_MD5_Init(_ c: UnsafeMutablePointer<CC_MD5_CTX>!) -> Int32
+c:@F@CC_MD5_Update	swift.func	CC_MD5_Update(_:_:_:)	CC_MD5_Update(_:_:_:)	func CC_MD5_Update(_ c: UnsafeMutablePointer<CC_MD5_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_SHA1	swift.func	CC_SHA1(_:_:_:)	CC_SHA1(_:_:_:)	func CC_SHA1(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_SHA1_Final	swift.func	CC_SHA1_Final(_:_:)	CC_SHA1_Final(_:_:)	func CC_SHA1_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_SHA1_CTX>!) -> Int32
+c:@F@CC_SHA1_Init	swift.func	CC_SHA1_Init(_:)	CC_SHA1_Init(_:)	func CC_SHA1_Init(_ c: UnsafeMutablePointer<CC_SHA1_CTX>!) -> Int32
+c:@F@CC_SHA1_Update	swift.func	CC_SHA1_Update(_:_:_:)	CC_SHA1_Update(_:_:_:)	func CC_SHA1_Update(_ c: UnsafeMutablePointer<CC_SHA1_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_SHA224	swift.func	CC_SHA224(_:_:_:)	CC_SHA224(_:_:_:)	func CC_SHA224(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_SHA224_Final	swift.func	CC_SHA224_Final(_:_:)	CC_SHA224_Final(_:_:)	func CC_SHA224_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_SHA256_CTX>!) -> Int32
+c:@F@CC_SHA224_Init	swift.func	CC_SHA224_Init(_:)	CC_SHA224_Init(_:)	func CC_SHA224_Init(_ c: UnsafeMutablePointer<CC_SHA256_CTX>!) -> Int32
+c:@F@CC_SHA224_Update	swift.func	CC_SHA224_Update(_:_:_:)	CC_SHA224_Update(_:_:_:)	func CC_SHA224_Update(_ c: UnsafeMutablePointer<CC_SHA256_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_SHA256	swift.func	CC_SHA256(_:_:_:)	CC_SHA256(_:_:_:)	func CC_SHA256(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_SHA256_Final	swift.func	CC_SHA256_Final(_:_:)	CC_SHA256_Final(_:_:)	func CC_SHA256_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_SHA256_CTX>!) -> Int32
+c:@F@CC_SHA256_Init	swift.func	CC_SHA256_Init(_:)	CC_SHA256_Init(_:)	func CC_SHA256_Init(_ c: UnsafeMutablePointer<CC_SHA256_CTX>!) -> Int32
+c:@F@CC_SHA256_Update	swift.func	CC_SHA256_Update(_:_:_:)	CC_SHA256_Update(_:_:_:)	func CC_SHA256_Update(_ c: UnsafeMutablePointer<CC_SHA256_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_SHA384	swift.func	CC_SHA384(_:_:_:)	CC_SHA384(_:_:_:)	func CC_SHA384(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_SHA384_Final	swift.func	CC_SHA384_Final(_:_:)	CC_SHA384_Final(_:_:)	func CC_SHA384_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_SHA512_CTX>!) -> Int32
+c:@F@CC_SHA384_Init	swift.func	CC_SHA384_Init(_:)	CC_SHA384_Init(_:)	func CC_SHA384_Init(_ c: UnsafeMutablePointer<CC_SHA512_CTX>!) -> Int32
+c:@F@CC_SHA384_Update	swift.func	CC_SHA384_Update(_:_:_:)	CC_SHA384_Update(_:_:_:)	func CC_SHA384_Update(_ c: UnsafeMutablePointer<CC_SHA512_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@F@CC_SHA512	swift.func	CC_SHA512(_:_:_:)	CC_SHA512(_:_:_:)	func CC_SHA512(_ data: UnsafeRawPointer!, _ len: CC_LONG, _ md: UnsafeMutablePointer<UInt8>!) -> UnsafeMutablePointer<UInt8>!
+c:@F@CC_SHA512_Final	swift.func	CC_SHA512_Final(_:_:)	CC_SHA512_Final(_:_:)	func CC_SHA512_Final(_ md: UnsafeMutablePointer<UInt8>!, _ c: UnsafeMutablePointer<CC_SHA512_CTX>!) -> Int32
+c:@F@CC_SHA512_Init	swift.func	CC_SHA512_Init(_:)	CC_SHA512_Init(_:)	func CC_SHA512_Init(_ c: UnsafeMutablePointer<CC_SHA512_CTX>!) -> Int32
+c:@F@CC_SHA512_Update	swift.func	CC_SHA512_Update(_:_:_:)	CC_SHA512_Update(_:_:_:)	func CC_SHA512_Update(_ c: UnsafeMutablePointer<CC_SHA512_CTX>!, _ data: UnsafeRawPointer!, _ len: CC_LONG) -> Int32
+c:@S@CC_MD2state_st	swift.struct	CC_MD2state_st	CC_MD2state_st	struct CC_MD2state_st
+c:@S@CC_MD2state_st@FI@cksm	swift.property	cksm	CC_MD2state_st.cksm	var cksm: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_MD2state_st@FI@data	swift.property	data	CC_MD2state_st.data	var data: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
+c:@S@CC_MD2state_st@FI@num	swift.property	num	CC_MD2state_st.num	var num: Int32
+c:@S@CC_MD2state_st@FI@state	swift.property	state	CC_MD2state_st.state	var state: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_MD4state_st	swift.struct	CC_MD4state_st	CC_MD4state_st	struct CC_MD4state_st
+c:@S@CC_MD4state_st@FI@A	swift.property	A	CC_MD4state_st.A	var A: CC_LONG
+c:@S@CC_MD4state_st@FI@B	swift.property	B	CC_MD4state_st.B	var B: CC_LONG
+c:@S@CC_MD4state_st@FI@C	swift.property	C	CC_MD4state_st.C	var C: CC_LONG
+c:@S@CC_MD4state_st@FI@D	swift.property	D	CC_MD4state_st.D	var D: CC_LONG
+c:@S@CC_MD4state_st@FI@Nh	swift.property	Nh	CC_MD4state_st.Nh	var Nh: CC_LONG
+c:@S@CC_MD4state_st@FI@Nl	swift.property	Nl	CC_MD4state_st.Nl	var Nl: CC_LONG
+c:@S@CC_MD4state_st@FI@data	swift.property	data	CC_MD4state_st.data	var data: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_MD4state_st@FI@num	swift.property	num	CC_MD4state_st.num	var num: UInt32
+c:@S@CC_MD5state_st	swift.struct	CC_MD5state_st	CC_MD5state_st	struct CC_MD5state_st
+c:@S@CC_MD5state_st@FI@A	swift.property	A	CC_MD5state_st.A	var A: CC_LONG
+c:@S@CC_MD5state_st@FI@B	swift.property	B	CC_MD5state_st.B	var B: CC_LONG
+c:@S@CC_MD5state_st@FI@C	swift.property	C	CC_MD5state_st.C	var C: CC_LONG
+c:@S@CC_MD5state_st@FI@D	swift.property	D	CC_MD5state_st.D	var D: CC_LONG
+c:@S@CC_MD5state_st@FI@Nh	swift.property	Nh	CC_MD5state_st.Nh	var Nh: CC_LONG
+c:@S@CC_MD5state_st@FI@Nl	swift.property	Nl	CC_MD5state_st.Nl	var Nl: CC_LONG
+c:@S@CC_MD5state_st@FI@data	swift.property	data	CC_MD5state_st.data	var data: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_MD5state_st@FI@num	swift.property	num	CC_MD5state_st.num	var num: Int32
+c:@S@CC_SHA1state_st	swift.struct	CC_SHA1state_st	CC_SHA1state_st	struct CC_SHA1state_st
+c:@S@CC_SHA1state_st@FI@Nh	swift.property	Nh	CC_SHA1state_st.Nh	var Nh: CC_LONG
+c:@S@CC_SHA1state_st@FI@Nl	swift.property	Nl	CC_SHA1state_st.Nl	var Nl: CC_LONG
+c:@S@CC_SHA1state_st@FI@data	swift.property	data	CC_SHA1state_st.data	var data: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_SHA1state_st@FI@h0	swift.property	h0	CC_SHA1state_st.h0	var h0: CC_LONG
+c:@S@CC_SHA1state_st@FI@h1	swift.property	h1	CC_SHA1state_st.h1	var h1: CC_LONG
+c:@S@CC_SHA1state_st@FI@h2	swift.property	h2	CC_SHA1state_st.h2	var h2: CC_LONG
+c:@S@CC_SHA1state_st@FI@h3	swift.property	h3	CC_SHA1state_st.h3	var h3: CC_LONG
+c:@S@CC_SHA1state_st@FI@h4	swift.property	h4	CC_SHA1state_st.h4	var h4: CC_LONG
+c:@S@CC_SHA1state_st@FI@num	swift.property	num	CC_SHA1state_st.num	var num: Int32
+c:@S@CC_SHA256state_st	swift.struct	CC_SHA256state_st	CC_SHA256state_st	struct CC_SHA256state_st
+c:@S@CC_SHA256state_st@FI@count	swift.property	count	CC_SHA256state_st.count	var count: (CC_LONG, CC_LONG)
+c:@S@CC_SHA256state_st@FI@hash	swift.property	hash	CC_SHA256state_st.hash	var hash: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_SHA256state_st@FI@wbuf	swift.property	wbuf	CC_SHA256state_st.wbuf	var wbuf: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG)
+c:@S@CC_SHA512state_st	swift.struct	CC_SHA512state_st	CC_SHA512state_st	struct CC_SHA512state_st
+c:@S@CC_SHA512state_st@FI@count	swift.property	count	CC_SHA512state_st.count	var count: (CC_LONG64, CC_LONG64)
+c:@S@CC_SHA512state_st@FI@hash	swift.property	hash	CC_SHA512state_st.hash	var hash: (CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64)
+c:@S@CC_SHA512state_st@FI@wbuf	swift.property	wbuf	CC_SHA512state_st.wbuf	var wbuf: (CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64)
+c:@SA@CCHmacContext	swift.struct	CCHmacContext	CCHmacContext	struct CCHmacContext
+c:@SA@CCHmacContext@FI@ctx	swift.property	ctx	CCHmacContext.ctx	var ctx: (UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32)
+c:@T@CCAlgorithm	swift.typealias	CCAlgorithm	CCAlgorithm	typealias CCAlgorithm = UInt32
+c:@T@CCCryptorRef	swift.typealias	CCCryptorRef	CCCryptorRef	typealias CCCryptorRef = OpaquePointer
+c:@T@CCCryptorStatus	swift.typealias	CCCryptorStatus	CCCryptorStatus	typealias CCCryptorStatus = Int32
+c:@T@CCHmacAlgorithm	swift.typealias	CCHmacAlgorithm	CCHmacAlgorithm	typealias CCHmacAlgorithm = UInt32
+c:@T@CCMode	swift.typealias	CCMode	CCMode	typealias CCMode = UInt32
+c:@T@CCModeOptions	swift.typealias	CCModeOptions	CCModeOptions	typealias CCModeOptions = UInt32
+c:@T@CCOperation	swift.typealias	CCOperation	CCOperation	typealias CCOperation = UInt32
+c:@T@CCOptions	swift.typealias	CCOptions	CCOptions	typealias CCOptions = UInt32
+c:@T@CCPBKDFAlgorithm	swift.typealias	CCPBKDFAlgorithm	CCPBKDFAlgorithm	typealias CCPBKDFAlgorithm = UInt32
+c:@T@CCPadding	swift.typealias	CCPadding	CCPadding	typealias CCPadding = UInt32
+c:@T@CCPseudoRandomAlgorithm	swift.typealias	CCPseudoRandomAlgorithm	CCPseudoRandomAlgorithm	typealias CCPseudoRandomAlgorithm = UInt32
+c:@T@CCRNGStatus	swift.typealias	CCRNGStatus	CCRNGStatus	typealias CCRNGStatus = CCCryptorStatus
+c:@T@CCStatus	swift.typealias	CCStatus	CCStatus	typealias CCStatus = Int32
+c:@T@CCWrappingAlgorithm	swift.typealias	CCWrappingAlgorithm	CCWrappingAlgorithm	typealias CCWrappingAlgorithm = UInt32
+c:@T@CC_LONG	swift.typealias	CC_LONG	CC_LONG	typealias CC_LONG = UInt32
+c:@T@CC_LONG64	swift.typealias	CC_LONG64	CC_LONG64	typealias CC_LONG64 = UInt64
+c:@T@CC_MD2_CTX	swift.typealias	CC_MD2_CTX	CC_MD2_CTX	typealias CC_MD2_CTX = CC_MD2state_st
+c:@T@CC_MD4_CTX	swift.typealias	CC_MD4_CTX	CC_MD4_CTX	typealias CC_MD4_CTX = CC_MD4state_st
+c:@T@CC_MD5_CTX	swift.typealias	CC_MD5_CTX	CC_MD5_CTX	typealias CC_MD5_CTX = CC_MD5state_st
+c:@T@CC_SHA1_CTX	swift.typealias	CC_SHA1_CTX	CC_SHA1_CTX	typealias CC_SHA1_CTX = CC_SHA1state_st
+c:@T@CC_SHA256_CTX	swift.typealias	CC_SHA256_CTX	CC_SHA256_CTX	typealias CC_SHA256_CTX = CC_SHA256state_st
+c:@T@CC_SHA512_CTX	swift.typealias	CC_SHA512_CTX	CC_SHA512_CTX	typealias CC_SHA512_CTX = CC_SHA512state_st
+c:@macro@CC_DIGEST_DEPRECATION_WARNING	swift.var	CC_DIGEST_DEPRECATION_WARNING	CC_DIGEST_DEPRECATION_WARNING	var CC_DIGEST_DEPRECATION_WARNING: String { get }
+c:@macro@CC_HMAC_CONTEXT_SIZE	swift.var	CC_HMAC_CONTEXT_SIZE	CC_HMAC_CONTEXT_SIZE	var CC_HMAC_CONTEXT_SIZE: Int32 { get }
+c:@macro@CC_MD2_BLOCK_BYTES	swift.var	CC_MD2_BLOCK_BYTES	CC_MD2_BLOCK_BYTES	var CC_MD2_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_MD2_DIGEST_LENGTH	swift.var	CC_MD2_DIGEST_LENGTH	CC_MD2_DIGEST_LENGTH	var CC_MD2_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_MD4_BLOCK_BYTES	swift.var	CC_MD4_BLOCK_BYTES	CC_MD4_BLOCK_BYTES	var CC_MD4_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_MD4_DIGEST_LENGTH	swift.var	CC_MD4_DIGEST_LENGTH	CC_MD4_DIGEST_LENGTH	var CC_MD4_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_MD5_BLOCK_BYTES	swift.var	CC_MD5_BLOCK_BYTES	CC_MD5_BLOCK_BYTES	var CC_MD5_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_MD5_DIGEST_LENGTH	swift.var	CC_MD5_DIGEST_LENGTH	CC_MD5_DIGEST_LENGTH	var CC_MD5_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_SHA1_BLOCK_BYTES	swift.var	CC_SHA1_BLOCK_BYTES	CC_SHA1_BLOCK_BYTES	var CC_SHA1_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_SHA1_DIGEST_LENGTH	swift.var	CC_SHA1_DIGEST_LENGTH	CC_SHA1_DIGEST_LENGTH	var CC_SHA1_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_SHA224_BLOCK_BYTES	swift.var	CC_SHA224_BLOCK_BYTES	CC_SHA224_BLOCK_BYTES	var CC_SHA224_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_SHA224_DIGEST_LENGTH	swift.var	CC_SHA224_DIGEST_LENGTH	CC_SHA224_DIGEST_LENGTH	var CC_SHA224_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_SHA256_BLOCK_BYTES	swift.var	CC_SHA256_BLOCK_BYTES	CC_SHA256_BLOCK_BYTES	var CC_SHA256_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_SHA256_DIGEST_LENGTH	swift.var	CC_SHA256_DIGEST_LENGTH	CC_SHA256_DIGEST_LENGTH	var CC_SHA256_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_SHA384_BLOCK_BYTES	swift.var	CC_SHA384_BLOCK_BYTES	CC_SHA384_BLOCK_BYTES	var CC_SHA384_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_SHA384_DIGEST_LENGTH	swift.var	CC_SHA384_DIGEST_LENGTH	CC_SHA384_DIGEST_LENGTH	var CC_SHA384_DIGEST_LENGTH: Int32 { get }
+c:@macro@CC_SHA512_BLOCK_BYTES	swift.var	CC_SHA512_BLOCK_BYTES	CC_SHA512_BLOCK_BYTES	var CC_SHA512_BLOCK_BYTES: Int32 { get }
+c:@macro@CC_SHA512_DIGEST_LENGTH	swift.var	CC_SHA512_DIGEST_LENGTH	CC_SHA512_DIGEST_LENGTH	var CC_SHA512_DIGEST_LENGTH: Int32 { get }
+s:So13CCHmacContexta3ctxABs6UInt32V_A95Et_tcfc	swift.init	init(ctx:)	CCHmacContext.init(ctx:)	init(ctx: (UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32, UInt32))
+s:So13CCHmacContextaABycfc	swift.init	init()	CCHmacContext.init()	init()
+s:So14CC_MD2state_stV3num4data4cksm5stateABs5Int32V_s5UInt8V_A15Jts6UInt32V_A15LtAL_A15Lttcfc	swift.init	init(num:data:cksm:state:)	CC_MD2state_st.init(num:data:cksm:state:)	init(num: Int32, data: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8), cksm: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG), state: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG))
+s:So14CC_MD2state_stVABycfc	swift.init	init()	CC_MD2state_st.init()	init()
+s:So14CC_MD4state_stV1A1B1C1D2Nl2Nh4data3numABs6UInt32V_A6L_A15LtALtcfc	swift.init	init(A:B:C:D:Nl:Nh:data:num:)	CC_MD4state_st.init(A:B:C:D:Nl:Nh:data:num:)	init(A: CC_LONG, B: CC_LONG, C: CC_LONG, D: CC_LONG, Nl: CC_LONG, Nh: CC_LONG, data: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG), num: UInt32)
+s:So14CC_MD4state_stVABycfc	swift.init	init()	CC_MD4state_st.init()	init()
+s:So14CC_MD5state_stV1A1B1C1D2Nl2Nh4data3numABs6UInt32V_A6L_A15Lts5Int32Vtcfc	swift.init	init(A:B:C:D:Nl:Nh:data:num:)	CC_MD5state_st.init(A:B:C:D:Nl:Nh:data:num:)	init(A: CC_LONG, B: CC_LONG, C: CC_LONG, D: CC_LONG, Nl: CC_LONG, Nh: CC_LONG, data: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG), num: Int32)
+s:So14CC_MD5state_stVABycfc	swift.init	init()	CC_MD5state_st.init()	init()
+s:So15CC_SHA1state_stV2h02h12h22h32h42Nl2Nh4data3numABs6UInt32V_A7M_A15Mts5Int32Vtcfc	swift.init	init(h0:h1:h2:h3:h4:Nl:Nh:data:num:)	CC_SHA1state_st.init(h0:h1:h2:h3:h4:Nl:Nh:data:num:)	init(h0: CC_LONG, h1: CC_LONG, h2: CC_LONG, h3: CC_LONG, h4: CC_LONG, Nl: CC_LONG, Nh: CC_LONG, data: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG), num: Int32)
+s:So15CC_SHA1state_stVABycfc	swift.init	init()	CC_SHA1state_st.init()	init()
+s:So17CC_SHA256state_stV5count4hash4wbufABs6UInt32V_AGt_AG_A7GtAG_A15Gttcfc	swift.init	init(count:hash:wbuf:)	CC_SHA256state_st.init(count:hash:wbuf:)	init(count: (CC_LONG, CC_LONG), hash: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG), wbuf: (CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG, CC_LONG))
+s:So17CC_SHA256state_stVABycfc	swift.init	init()	CC_SHA256state_st.init()	init()
+s:So17CC_SHA512state_stV5count4hash4wbufABs6UInt64V_AGt_AG_A7GtAG_A15Gttcfc	swift.init	init(count:hash:wbuf:)	CC_SHA512state_st.init(count:hash:wbuf:)	init(count: (CC_LONG64, CC_LONG64), hash: (CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64), wbuf: (CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64, CC_LONG64))
+s:So17CC_SHA512state_stVABycfc	swift.init	init()	CC_SHA512state_st.init()	init()

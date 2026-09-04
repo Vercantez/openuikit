@@ -1,0 +1,95 @@
+precise	kind	title	path	declaration
+c:@EA@compression_algorithm	swift.struct	compression_algorithm	compression_algorithm	struct compression_algorithm
+c:@EA@compression_algorithm@COMPRESSION_BROTLI	swift.var	COMPRESSION_BROTLI	COMPRESSION_BROTLI	var COMPRESSION_BROTLI: compression_algorithm { get }
+c:@EA@compression_algorithm@COMPRESSION_LZ4	swift.var	COMPRESSION_LZ4	COMPRESSION_LZ4	var COMPRESSION_LZ4: compression_algorithm { get }
+c:@EA@compression_algorithm@COMPRESSION_LZ4_RAW	swift.var	COMPRESSION_LZ4_RAW	COMPRESSION_LZ4_RAW	var COMPRESSION_LZ4_RAW: compression_algorithm { get }
+c:@EA@compression_algorithm@COMPRESSION_LZBITMAP	swift.var	COMPRESSION_LZBITMAP	COMPRESSION_LZBITMAP	var COMPRESSION_LZBITMAP: compression_algorithm { get }
+c:@EA@compression_algorithm@COMPRESSION_LZFSE	swift.var	COMPRESSION_LZFSE	COMPRESSION_LZFSE	var COMPRESSION_LZFSE: compression_algorithm { get }
+c:@EA@compression_algorithm@COMPRESSION_LZMA	swift.var	COMPRESSION_LZMA	COMPRESSION_LZMA	var COMPRESSION_LZMA: compression_algorithm { get }
+c:@EA@compression_algorithm@COMPRESSION_ZLIB	swift.var	COMPRESSION_ZLIB	COMPRESSION_ZLIB	var COMPRESSION_ZLIB: compression_algorithm { get }
+c:@EA@compression_status	swift.struct	compression_status	compression_status	struct compression_status
+c:@EA@compression_status@COMPRESSION_STATUS_END	swift.var	COMPRESSION_STATUS_END	COMPRESSION_STATUS_END	var COMPRESSION_STATUS_END: compression_status { get }
+c:@EA@compression_status@COMPRESSION_STATUS_ERROR	swift.var	COMPRESSION_STATUS_ERROR	COMPRESSION_STATUS_ERROR	var COMPRESSION_STATUS_ERROR: compression_status { get }
+c:@EA@compression_status@COMPRESSION_STATUS_OK	swift.var	COMPRESSION_STATUS_OK	COMPRESSION_STATUS_OK	var COMPRESSION_STATUS_OK: compression_status { get }
+c:@EA@compression_stream_flags	swift.struct	compression_stream_flags	compression_stream_flags	struct compression_stream_flags
+c:@EA@compression_stream_flags@COMPRESSION_STREAM_FINALIZE	swift.var	COMPRESSION_STREAM_FINALIZE	COMPRESSION_STREAM_FINALIZE	var COMPRESSION_STREAM_FINALIZE: compression_stream_flags { get }
+c:@EA@compression_stream_operation	swift.struct	compression_stream_operation	compression_stream_operation	struct compression_stream_operation
+c:@EA@compression_stream_operation@COMPRESSION_STREAM_DECODE	swift.var	COMPRESSION_STREAM_DECODE	COMPRESSION_STREAM_DECODE	var COMPRESSION_STREAM_DECODE: compression_stream_operation { get }
+c:@EA@compression_stream_operation@COMPRESSION_STREAM_ENCODE	swift.var	COMPRESSION_STREAM_ENCODE	COMPRESSION_STREAM_ENCODE	var COMPRESSION_STREAM_ENCODE: compression_stream_operation { get }
+c:@F@compression_decode_buffer	swift.func	compression_decode_buffer(_:_:_:_:_:_:)	compression_decode_buffer(_:_:_:_:_:_:)	func compression_decode_buffer(_ dst_buffer: UnsafeMutablePointer<UInt8>, _ dst_size: Int, _ src_buffer: UnsafePointer<UInt8>, _ src_size: Int, _ scratch_buffer: UnsafeMutableRawPointer?, _ algorithm: compression_algorithm) -> Int
+c:@F@compression_decode_scratch_buffer_size	swift.func	compression_decode_scratch_buffer_size(_:)	compression_decode_scratch_buffer_size(_:)	func compression_decode_scratch_buffer_size(_ algorithm: compression_algorithm) -> Int
+c:@F@compression_encode_buffer	swift.func	compression_encode_buffer(_:_:_:_:_:_:)	compression_encode_buffer(_:_:_:_:_:_:)	func compression_encode_buffer(_ dst_buffer: UnsafeMutablePointer<UInt8>, _ dst_size: Int, _ src_buffer: UnsafePointer<UInt8>, _ src_size: Int, _ scratch_buffer: UnsafeMutableRawPointer?, _ algorithm: compression_algorithm) -> Int
+c:@F@compression_encode_scratch_buffer_size	swift.func	compression_encode_scratch_buffer_size(_:)	compression_encode_scratch_buffer_size(_:)	func compression_encode_scratch_buffer_size(_ algorithm: compression_algorithm) -> Int
+c:@F@compression_stream_destroy	swift.func	compression_stream_destroy(_:)	compression_stream_destroy(_:)	func compression_stream_destroy(_ stream: UnsafeMutablePointer<compression_stream>) -> compression_status
+c:@F@compression_stream_init	swift.func	compression_stream_init(_:_:_:)	compression_stream_init(_:_:_:)	func compression_stream_init(_ stream: UnsafeMutablePointer<compression_stream>, _ operation: compression_stream_operation, _ algorithm: compression_algorithm) -> compression_status
+c:@F@compression_stream_process	swift.func	compression_stream_process(_:_:)	compression_stream_process(_:_:)	func compression_stream_process(_ stream: UnsafeMutablePointer<compression_stream>, _ flags: Int32) -> compression_status
+c:@SA@compression_stream	swift.struct	compression_stream	compression_stream	struct compression_stream
+c:@SA@compression_stream@FI@dst_ptr	swift.property	dst_ptr	compression_stream.dst_ptr	var dst_ptr: UnsafeMutablePointer<UInt8>
+c:@SA@compression_stream@FI@dst_size	swift.property	dst_size	compression_stream.dst_size	var dst_size: Int
+c:@SA@compression_stream@FI@src_ptr	swift.property	src_ptr	compression_stream.src_ptr	var src_ptr: UnsafePointer<UInt8>
+c:@SA@compression_stream@FI@src_size	swift.property	src_size	compression_stream.src_size	var src_size: Int
+c:@SA@compression_stream@FI@state	swift.property	state	compression_stream.state	var state: UnsafeMutableRawPointer?
+s:11Compression11FilterErrorO	swift.enum	FilterError	FilterError	enum FilterError
+s:11Compression11FilterErrorO11invalidDatayA2CmF	swift.enum.case	FilterError.invalidData	FilterError.invalidData	case invalidData
+s:11Compression11FilterErrorO12invalidStateyA2CmF	swift.enum.case	FilterError.invalidState	FilterError.invalidState	case invalidState
+s:11Compression11FilterErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	FilterError.==(_:_:)	static func == (a: FilterError, b: FilterError) -> Bool
+s:11Compression11FilterErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FilterError.hash(into:)	func hash(into hasher: inout Hasher)
+s:11Compression11FilterErrorO9hashValueSivp	swift.property	hashValue	FilterError.hashValue	var hashValue: Int { get }
+s:11Compression11InputFilterC	swift.class	InputFilter	InputFilter	class InputFilter<D> where D : DataProtocol
+s:11Compression11InputFilterC8readData8ofLength10Foundation0E0VSgSi_tKF	swift.method	readData(ofLength:)	InputFilter.readData(ofLength:)	func readData(ofLength count: Int) throws -> Data?
+s:11Compression11InputFilterC_5using14bufferCapacity11readingFromACyxGAA0C9OperationO_AA9AlgorithmOSixSgSiKctKcfc	swift.init	init(_:using:bufferCapacity:readingFrom:)	InputFilter.init(_:using:bufferCapacity:readingFrom:)	init(_ operation: FilterOperation, using algorithm: Algorithm, bufferCapacity: Int = 65536, readingFrom readFunc: @escaping (Int) throws -> D?) throws
+s:11Compression12OutputFilterC	swift.class	OutputFilter	OutputFilter	class OutputFilter
+s:11Compression12OutputFilterC5writeyyxSgK10Foundation12DataProtocolRzlF	swift.method	write(_:)	OutputFilter.write(_:)	func write<D>(_ data: D?) throws where D : DataProtocol
+s:11Compression12OutputFilterC8finalizeyyKF	swift.method	finalize()	OutputFilter.finalize()	func finalize() throws
+s:11Compression12OutputFilterC_5using14bufferCapacity9writingToAcA0C9OperationO_AA9AlgorithmOSiy10Foundation4DataVSgKctKcfc	swift.init	init(_:using:bufferCapacity:writingTo:)	OutputFilter.init(_:using:bufferCapacity:writingTo:)	init(_ operation: FilterOperation, using algorithm: Algorithm, bufferCapacity: Int = 65536, writingTo writeFunc: @escaping (Data?) throws -> Void) throws
+s:11Compression15FilterOperationO	swift.enum	FilterOperation	FilterOperation	enum FilterOperation
+s:11Compression15FilterOperationO10decompressyA2CmF	swift.enum.case	FilterOperation.decompress	FilterOperation.decompress	case decompress
+s:11Compression15FilterOperationO8RawValuea	swift.typealias	FilterOperation.RawValue	FilterOperation.RawValue	typealias RawValue = compression_stream_operation
+s:11Compression15FilterOperationO8compressyA2CmF	swift.enum.case	FilterOperation.compress	FilterOperation.compress	case compress
+s:11Compression15FilterOperationO8rawValueACSgSo28compression_stream_operationa_tcfc	swift.init	init(rawValue:)	FilterOperation.init(rawValue:)	init?(rawValue: compression_stream_operation)
+s:11Compression15FilterOperationO8rawValueSo28compression_stream_operationavp	swift.property	rawValue	FilterOperation.rawValue	var rawValue: compression_stream_operation { get }
+s:11Compression9AlgorithmO	swift.enum	Algorithm	Algorithm	enum Algorithm
+s:11Compression9AlgorithmO3lz4yA2CmF	swift.enum.case	Algorithm.lz4	Algorithm.lz4	case lz4
+s:11Compression9AlgorithmO4lzmayA2CmF	swift.enum.case	Algorithm.lzma	Algorithm.lzma	case lzma
+s:11Compression9AlgorithmO4zlibyA2CmF	swift.enum.case	Algorithm.zlib	Algorithm.zlib	case zlib
+s:11Compression9AlgorithmO5lzfseyA2CmF	swift.enum.case	Algorithm.lzfse	Algorithm.lzfse	case lzfse
+s:11Compression9AlgorithmO6brotliyA2CmF	swift.enum.case	Algorithm.brotli	Algorithm.brotli	case brotli
+s:11Compression9AlgorithmO8AllCasesa	swift.typealias	Algorithm.AllCases	Algorithm.AllCases	typealias AllCases = [Algorithm]
+s:11Compression9AlgorithmO8RawValuea	swift.typealias	Algorithm.RawValue	Algorithm.RawValue	typealias RawValue = compression_algorithm
+s:11Compression9AlgorithmO8allCasesSayACGvpZ	swift.type.property	allCases	Algorithm.allCases	nonisolated static var allCases: [Algorithm] { get }
+s:11Compression9AlgorithmO8lzbitmapyA2CmF	swift.enum.case	Algorithm.lzbitmap	Algorithm.lzbitmap	case lzbitmap
+s:11Compression9AlgorithmO8rawValueACSgSo21compression_algorithma_tcfc	swift.init	init(rawValue:)	Algorithm.init(rawValue:)	init?(rawValue: compression_algorithm)
+s:11Compression9AlgorithmO8rawValueSo21compression_algorithmavp	swift.property	rawValue	Algorithm.rawValue	var rawValue: compression_algorithm { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@compression_algorithm	swift.func.op	!=(_:_:)	compression_algorithm.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@compression_status	swift.func.op	!=(_:_:)	compression_status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@compression_stream_flags	swift.func.op	!=(_:_:)	compression_stream_flags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@compression_stream_operation	swift.func.op	!=(_:_:)	compression_stream_operation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:11Compression11FilterErrorO	swift.func.op	!=(_:_:)	FilterError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:11Compression15FilterOperationO	swift.func.op	!=(_:_:)	FilterOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:11Compression9AlgorithmO	swift.func.op	!=(_:_:)	Algorithm.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@compression_algorithm	swift.property	hashValue	compression_algorithm.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@compression_status	swift.property	hashValue	compression_status.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@compression_stream_flags	swift.property	hashValue	compression_stream_flags.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@compression_stream_operation	swift.property	hashValue	compression_stream_operation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:11Compression15FilterOperationO	swift.property	hashValue	FilterOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:11Compression9AlgorithmO	swift.property	hashValue	Algorithm.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@compression_algorithm	swift.method	hash(into:)	compression_algorithm.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@compression_status	swift.method	hash(into:)	compression_status.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@compression_stream_flags	swift.method	hash(into:)	compression_stream_flags.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@compression_stream_operation	swift.method	hash(into:)	compression_stream_operation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:11Compression15FilterOperationO	swift.method	hash(into:)	FilterOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:11Compression9AlgorithmO	swift.method	hash(into:)	Algorithm.hash(into:)	func hash(into hasher: inout Hasher)
+s:So18compression_statusa8rawValueABs5Int32V_tcfc	swift.init	init(rawValue:)	compression_status.init(rawValue:)	init(rawValue: Int32)
+s:So18compression_statusa8rawValues5Int32Vvp	swift.property	rawValue	compression_status.rawValue	var rawValue: Int32
+s:So18compression_statusayABs5Int32Vcfc	swift.init	init(_:)	compression_status.init(_:)	init(_ rawValue: Int32)
+s:So18compression_streama7dst_ptr0C5_size04src_D00f1_E05stateABSpys5UInt8VG_SiSPyAIGSiSvSgtcfc	swift.init	init(dst_ptr:dst_size:src_ptr:src_size:state:)	compression_stream.init(dst_ptr:dst_size:src_ptr:src_size:state:)	init(dst_ptr: UnsafeMutablePointer<UInt8>, dst_size: Int, src_ptr: UnsafePointer<UInt8>, src_size: Int, state: UnsafeMutableRawPointer?)
+s:So21compression_algorithma8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	compression_algorithm.init(rawValue:)	init(rawValue: UInt32)
+s:So21compression_algorithma8rawValues6UInt32Vvp	swift.property	rawValue	compression_algorithm.rawValue	var rawValue: UInt32
+s:So21compression_algorithmayABs6UInt32Vcfc	swift.init	init(_:)	compression_algorithm.init(_:)	init(_ rawValue: UInt32)
+s:So24compression_stream_flagsa8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	compression_stream_flags.init(rawValue:)	init(rawValue: UInt32)
+s:So24compression_stream_flagsa8rawValues6UInt32Vvp	swift.property	rawValue	compression_stream_flags.rawValue	var rawValue: UInt32
+s:So24compression_stream_flagsayABs6UInt32Vcfc	swift.init	init(_:)	compression_stream_flags.init(_:)	init(_ rawValue: UInt32)
+s:So28compression_stream_operationa8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	compression_stream_operation.init(rawValue:)	init(rawValue: UInt32)
+s:So28compression_stream_operationa8rawValues6UInt32Vvp	swift.property	rawValue	compression_stream_operation.rawValue	var rawValue: UInt32
+s:So28compression_stream_operationayABs6UInt32Vcfc	swift.init	init(_:)	compression_stream_operation.init(_:)	init(_ rawValue: UInt32)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:11Compression11FilterErrorO	swift.property	localizedDescription	FilterError.localizedDescription	var localizedDescription: String { get }

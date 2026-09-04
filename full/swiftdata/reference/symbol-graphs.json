@@ -1,0 +1,60 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 19,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SwiftData.symbols.json",
+      "relationshipCount": 1065,
+      "sha256": "67e9af911703e3a35690d475898c77e823489155efccb9cc88ab2bec843d2c33",
+      "symbolCount": 833
+    },
+    {
+      "path": "reference/symbol-graphs/SwiftData@Swift.symbols.json",
+      "relationshipCount": 6,
+      "sha256": "32feb23881ebb41ade936651ca03a84388e3d90b5dc3ab0b538904497725ee86",
+      "symbolCount": 2
+    },
+    {
+      "path": "reference/symbol-graphs/_SwiftData_CoreData@CoreData.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "5531cb4ccb7e484e1b17efdc806abf90ee0fa618608a9e3cb31ebaee42c099e9",
+      "symbolCount": 4
+    },
+    {
+      "path": "reference/symbol-graphs/_SwiftData_CoreData@SwiftData.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "72f2caa350c5e686e9fe1e399e7ea294d6143268ee60ff78eee8dd7860c6ddcf",
+      "symbolCount": 0
+    },
+    {
+      "path": "reference/symbol-graphs/_SwiftData_SwiftUI@SwiftData.symbols.json",
+      "relationshipCount": 16,
+      "sha256": "02242e0323cc98483db1c83aa2cb4f574100c20d61adb5aecb6cb0ca5ea79d55",
+      "symbolCount": 26
+    },
+    {
+      "path": "reference/symbol-graphs/_SwiftData_SwiftUI@SwiftUI.symbols.json",
+      "relationshipCount": 14,
+      "sha256": "38830946d1d6557ab4e8de0ef65045b80e7ab62712b1f705d41b96bac9f4240e",
+      "symbolCount": 14
+    },
+    {
+      "path": "reference/symbol-graphs/_SwiftData_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 5,
+      "sha256": "6b631f3284d41fd5452ffaf7c6526b8f3c770fb60a3c38a0001e25e405981900",
+      "symbolCount": 5
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SwiftData",
+  "relationshipCount": 1110,
+  "relationshipMultisetSHA256": "f511ecf8c91af1ed9fd5307b32162f710807386414456d4f47fcd32e2dc666a3",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 884,
+  "symbolMultisetSHA256": "6153982603075326290fb9feee11c9b25d78e12c01d702db49903ea18b340dfe",
+  "target": "arm64-apple-ios26.0"
+}

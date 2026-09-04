@@ -1,0 +1,56 @@
+{
+  "module": "Compression",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS SDK/system-module runtime-port allowlist",
+    "file_count": 8,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 85,
+    "iphoneos_runtime_focus_launch_build_rank": 81,
+    "module": "Compression",
+    "occurrence_count": 8,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "b2d8e33c9029f549fb16a79fb5de3f352d9a228f26d3c3f45bfa448e9342251c",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "submodules/AnimatedStickerNode/Sources/AnimatedStickerFrameSource.swift",
+          "submodules/AnimatedStickerNode/Sources/AnimatedStickerNode.swift",
+          "submodules/AnimatedStickerNode/Sources/FrameCompression.swift",
+          "submodules/AnimatedStickerNode/Sources/VideoStickerFrameSource.swift",
+          "submodules/TelegramAnimatedStickerNode/Sources/AnimatedStickerUtils.swift",
+          "submodules/TelegramUI/Components/Chat/ChatMessageAnimatedStickerItemNode/Sources/ChatMessageAnimatedStickerItemNode.swift",
+          "submodules/TelegramUI/Components/DCTAnimationCacheImpl/Sources/DCTAnimationCacheImpl.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "71598d3b818c65e1371246e44c85fdeeda38fd9e6cb60e519a3a44d8f0837568",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "podcasts/Fingerprint/FingerprintReferenceRetriever.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 85,
+    "byFocusLaunchBuildRelevance": 81
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,3189 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "_Builtin_stdint",
+        "printedName": "_Builtin_stdint"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "Darwin.os.base",
+        "printedName": "Darwin.os.base"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "_DarwinFoundation2.sys_types",
+        "printedName": "_DarwinFoundation2.sys_types"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "_DarwinFoundation1.availability.Availability",
+        "printedName": "_DarwinFoundation1.availability.Availability"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo18COMPRESSION_BROTLISo21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So18COMPRESSION_BROTLISo21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_BROTLI",
+        "printedName": "COMPRESSION_BROTLI",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_BROTLI"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo15COMPRESSION_LZ4So21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So15COMPRESSION_LZ4So21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_LZ4",
+        "printedName": "COMPRESSION_LZ4",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_LZ4"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo19COMPRESSION_LZ4_RAWSo21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So19COMPRESSION_LZ4_RAWSo21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_LZ4_RAW",
+        "printedName": "COMPRESSION_LZ4_RAW",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_LZ4_RAW"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo20COMPRESSION_LZBITMAPSo21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So20COMPRESSION_LZBITMAPSo21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_LZBITMAP",
+        "printedName": "COMPRESSION_LZBITMAP",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_LZBITMAP"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo17COMPRESSION_LZFSESo21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So17COMPRESSION_LZFSESo21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_LZFSE",
+        "printedName": "COMPRESSION_LZFSE",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_LZFSE"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo16COMPRESSION_LZMASo21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So16COMPRESSION_LZMASo21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_LZMA",
+        "printedName": "COMPRESSION_LZMA",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_LZMA"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_status",
+                "printedName": "Compression.compression_status",
+                "usr": "c:@EA@compression_status"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo22COMPRESSION_STATUS_ENDSo18compression_statusavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So22COMPRESSION_STATUS_ENDSo18compression_statusavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_status",
+            "printedName": "Compression.compression_status",
+            "usr": "c:@EA@compression_status"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_STATUS_END",
+        "printedName": "COMPRESSION_STATUS_END",
+        "usr": "c:@EA@compression_status@COMPRESSION_STATUS_END"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_status",
+                "printedName": "Compression.compression_status",
+                "usr": "c:@EA@compression_status"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo24COMPRESSION_STATUS_ERRORSo18compression_statusavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So24COMPRESSION_STATUS_ERRORSo18compression_statusavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_status",
+            "printedName": "Compression.compression_status",
+            "usr": "c:@EA@compression_status"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_STATUS_ERROR",
+        "printedName": "COMPRESSION_STATUS_ERROR",
+        "usr": "c:@EA@compression_status@COMPRESSION_STATUS_ERROR"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_status",
+                "printedName": "Compression.compression_status",
+                "usr": "c:@EA@compression_status"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo21COMPRESSION_STATUS_OKSo18compression_statusavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So21COMPRESSION_STATUS_OKSo18compression_statusavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_status",
+            "printedName": "Compression.compression_status",
+            "usr": "c:@EA@compression_status"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_STATUS_OK",
+        "printedName": "COMPRESSION_STATUS_OK",
+        "usr": "c:@EA@compression_status@COMPRESSION_STATUS_OK"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo25COMPRESSION_STREAM_DECODESo28compression_stream_operationavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So25COMPRESSION_STREAM_DECODESo28compression_stream_operationavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_stream_operation",
+            "printedName": "Compression.compression_stream_operation",
+            "usr": "c:@EA@compression_stream_operation"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_STREAM_DECODE",
+        "printedName": "COMPRESSION_STREAM_DECODE",
+        "usr": "c:@EA@compression_stream_operation@COMPRESSION_STREAM_DECODE"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo25COMPRESSION_STREAM_ENCODESo28compression_stream_operationavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So25COMPRESSION_STREAM_ENCODESo28compression_stream_operationavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_stream_operation",
+            "printedName": "Compression.compression_stream_operation",
+            "usr": "c:@EA@compression_stream_operation"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_STREAM_ENCODE",
+        "printedName": "COMPRESSION_STREAM_ENCODE",
+        "usr": "c:@EA@compression_stream_operation@COMPRESSION_STREAM_ENCODE"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_flags",
+                "printedName": "Compression.compression_stream_flags",
+                "usr": "c:@EA@compression_stream_flags"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo27COMPRESSION_STREAM_FINALIZESo24compression_stream_flagsavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So27COMPRESSION_STREAM_FINALIZESo24compression_stream_flagsavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_stream_flags",
+            "printedName": "Compression.compression_stream_flags",
+            "usr": "c:@EA@compression_stream_flags"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_STREAM_FINALIZE",
+        "printedName": "COMPRESSION_STREAM_FINALIZE",
+        "usr": "c:@EA@compression_stream_flags@COMPRESSION_STREAM_FINALIZE"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSo16COMPRESSION_ZLIBSo21compression_algorithmavg",
+            "moduleName": "Compression",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:So16COMPRESSION_ZLIBSo21compression_algorithmavg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "Compression",
+        "name": "COMPRESSION_ZLIB",
+        "printedName": "COMPRESSION_ZLIB",
+        "usr": "c:@EA@compression_algorithm@COMPRESSION_ZLIB"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo21compression_algorithmayABs6UInt32Vcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:So21compression_algorithmayABs6UInt32Vcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo21compression_algorithma8rawValueABs6UInt32V_tcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:So21compression_algorithma8rawValueABs6UInt32V_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$sSo21compression_algorithma8rawValues6UInt32Vvp",
+            "moduleName": "Compression",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:So21compression_algorithma8rawValues6UInt32Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "implicit": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo21compression_algorithma8RawValuea",
+            "moduleName": "Compression",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:So21compression_algorithma8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt32",
+                        "printedName": "Swift.UInt32",
+                        "usr": "s:s6UInt32V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Compression.compression_algorithm.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "Compression",
+        "name": "compression_algorithm",
+        "printedName": "compression_algorithm",
+        "usr": "c:@EA@compression_algorithm"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.UInt8>",
+            "usr": "s:Sp"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafePointer",
+            "printedName": "Swift.UnsafePointer<Swift.UInt8>",
+            "usr": "s:SP"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnsafeMutableRawPointer",
+                "printedName": "Swift.UnsafeMutableRawPointer",
+                "usr": "s:Sv"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "Optional",
+            "printedName": "Swift.UnsafeMutableRawPointer?",
+            "usr": "s:Sq"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_decode_buffer",
+        "printedName": "compression_decode_buffer(_:_:_:_:_:_:)",
+        "usr": "c:@F@compression_decode_buffer"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_decode_scratch_buffer_size",
+        "printedName": "compression_decode_scratch_buffer_size(_:)",
+        "usr": "c:@F@compression_decode_scratch_buffer_size"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.UInt8>",
+            "usr": "s:Sp"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafePointer",
+            "printedName": "Swift.UnsafePointer<Swift.UInt8>",
+            "usr": "s:SP"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnsafeMutableRawPointer",
+                "printedName": "Swift.UnsafeMutableRawPointer",
+                "usr": "s:Sv"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "Optional",
+            "printedName": "Swift.UnsafeMutableRawPointer?",
+            "usr": "s:Sq"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_encode_buffer",
+        "printedName": "compression_encode_buffer(_:_:_:_:_:_:)",
+        "usr": "c:@F@compression_encode_buffer"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_encode_scratch_buffer_size",
+        "printedName": "compression_encode_scratch_buffer_size(_:)",
+        "usr": "c:@F@compression_encode_scratch_buffer_size"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_status",
+                "printedName": "Compression.compression_status",
+                "usr": "c:@EA@compression_status"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo18compression_statusayABs5Int32Vcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:So18compression_statusayABs5Int32Vcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_status",
+                "printedName": "Compression.compression_status",
+                "usr": "c:@EA@compression_status"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo18compression_statusa8rawValueABs5Int32V_tcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:So18compression_statusa8rawValueABs5Int32V_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$sSo18compression_statusa8rawValues5Int32Vvp",
+            "moduleName": "Compression",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:So18compression_statusa8rawValues5Int32Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "implicit": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo18compression_statusa8RawValuea",
+            "moduleName": "Compression",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:So18compression_statusa8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int32",
+                        "printedName": "Swift.Int32",
+                        "usr": "s:s5Int32V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Compression.compression_status.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "Compression",
+        "name": "compression_status",
+        "printedName": "compression_status",
+        "usr": "c:@EA@compression_status"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream",
+                "printedName": "Compression.compression_stream",
+                "usr": "c:@SA@compression_stream"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "UnsafeMutablePointer",
+                "printedName": "Swift.UnsafeMutablePointer<Swift.UInt8>",
+                "usr": "s:Sp"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt8",
+                    "printedName": "Swift.UInt8",
+                    "usr": "s:s5UInt8V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "UnsafePointer",
+                "printedName": "Swift.UnsafePointer<Swift.UInt8>",
+                "usr": "s:SP"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UnsafeMutableRawPointer",
+                    "printedName": "Swift.UnsafeMutableRawPointer",
+                    "usr": "s:Sv"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.UnsafeMutableRawPointer?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo18compression_streama7dst_ptr0C5_size04src_D00f1_E05stateABSpys5UInt8VG_SiSPyAIGSiSvSgtcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(dst_ptr:dst_size:src_ptr:src_size:state:)",
+            "usr": "s:So18compression_streama7dst_ptr0C5_size04src_D00f1_E05stateABSpys5UInt8VG_SiSPyAIGSiSvSgtcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "Compression",
+        "name": "compression_stream",
+        "printedName": "compression_stream",
+        "usr": "c:@SA@compression_stream"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_status",
+            "printedName": "Compression.compression_status",
+            "usr": "c:@EA@compression_status"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream",
+                "printedName": "Compression.compression_stream",
+                "usr": "c:@SA@compression_stream"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Compression.compression_stream>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_stream_destroy",
+        "printedName": "compression_stream_destroy(_:)",
+        "usr": "c:@F@compression_stream_destroy"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_flags",
+                "printedName": "Compression.compression_stream_flags",
+                "usr": "c:@EA@compression_stream_flags"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo24compression_stream_flagsayABs6UInt32Vcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:So24compression_stream_flagsayABs6UInt32Vcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_flags",
+                "printedName": "Compression.compression_stream_flags",
+                "usr": "c:@EA@compression_stream_flags"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo24compression_stream_flagsa8rawValueABs6UInt32V_tcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:So24compression_stream_flagsa8rawValueABs6UInt32V_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$sSo24compression_stream_flagsa8rawValues6UInt32Vvp",
+            "moduleName": "Compression",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:So24compression_stream_flagsa8rawValues6UInt32Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "implicit": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo24compression_stream_flagsa8RawValuea",
+            "moduleName": "Compression",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:So24compression_stream_flagsa8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt32",
+                        "printedName": "Swift.UInt32",
+                        "usr": "s:s6UInt32V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Compression.compression_stream_flags.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "Compression",
+        "name": "compression_stream_flags",
+        "printedName": "compression_stream_flags",
+        "usr": "c:@EA@compression_stream_flags"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_status",
+            "printedName": "Compression.compression_status",
+            "usr": "c:@EA@compression_status"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream",
+                "printedName": "Compression.compression_stream",
+                "usr": "c:@SA@compression_stream"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Compression.compression_stream>",
+            "usr": "s:Sp"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "compression_stream_operation",
+            "printedName": "Compression.compression_stream_operation",
+            "usr": "c:@EA@compression_stream_operation"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "compression_algorithm",
+            "printedName": "Compression.compression_algorithm",
+            "usr": "c:@EA@compression_algorithm"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_stream_init",
+        "printedName": "compression_stream_init(_:_:_:)",
+        "usr": "c:@F@compression_stream_init"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo28compression_stream_operationayABs6UInt32Vcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:So28compression_stream_operationayABs6UInt32Vcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSo28compression_stream_operationa8rawValueABs6UInt32V_tcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:So28compression_stream_operationa8rawValueABs6UInt32V_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$sSo28compression_stream_operationa8rawValues6UInt32Vvp",
+            "moduleName": "Compression",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:So28compression_stream_operationa8rawValues6UInt32Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UInt32",
+                "printedName": "Swift.UInt32",
+                "usr": "s:s6UInt32V"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "implicit": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo28compression_stream_operationa8RawValuea",
+            "moduleName": "Compression",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:So28compression_stream_operationa8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt32",
+                        "printedName": "Swift.UInt32",
+                        "usr": "s:s6UInt32V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Compression.compression_stream_operation.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "Compression",
+        "name": "compression_stream_operation",
+        "printedName": "compression_stream_operation",
+        "usr": "c:@EA@compression_stream_operation"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "compression_status",
+            "printedName": "Compression.compression_status",
+            "usr": "c:@EA@compression_status"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream",
+                "printedName": "Compression.compression_stream",
+                "usr": "c:@SA@compression_stream"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Compression.compression_stream>",
+            "usr": "s:Sp"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "9.0",
+        "kind": "Function",
+        "moduleName": "Compression",
+        "name": "compression_stream_process",
+        "printedName": "compression_stream_process(_:_:)",
+        "usr": "c:@F@compression_stream_process"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "Compression",
+        "printedName": "Compression"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "Darwin",
+        "printedName": "Darwin"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Compression",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.Algorithm.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.Algorithm.Type) -> Compression.Algorithm"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO5lzfseyA2CmF",
+            "moduleName": "Compression",
+            "name": "lzfse",
+            "printedName": "lzfse",
+            "usr": "s:11Compression9AlgorithmO5lzfseyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.Algorithm.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.Algorithm.Type) -> Compression.Algorithm"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO4zlibyA2CmF",
+            "moduleName": "Compression",
+            "name": "zlib",
+            "printedName": "zlib",
+            "usr": "s:11Compression9AlgorithmO4zlibyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.Algorithm.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.Algorithm.Type) -> Compression.Algorithm"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO3lz4yA2CmF",
+            "moduleName": "Compression",
+            "name": "lz4",
+            "printedName": "lz4",
+            "usr": "s:11Compression9AlgorithmO3lz4yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.Algorithm.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.Algorithm.Type) -> Compression.Algorithm"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO4lzmayA2CmF",
+            "moduleName": "Compression",
+            "name": "lzma",
+            "printedName": "lzma",
+            "usr": "s:11Compression9AlgorithmO4lzmayA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.Algorithm.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.Algorithm.Type) -> Compression.Algorithm"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO8lzbitmapyA2CmF",
+            "moduleName": "Compression",
+            "name": "lzbitmap",
+            "printedName": "lzbitmap",
+            "usr": "s:11Compression9AlgorithmO8lzbitmapyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.Algorithm.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.Algorithm.Type) -> Compression.Algorithm"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO6brotliyA2CmF",
+            "moduleName": "Compression",
+            "name": "brotli",
+            "printedName": "brotli",
+            "usr": "s:11Compression9AlgorithmO6brotliyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Compression.Algorithm?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s11Compression9AlgorithmO8rawValueACSgSo21compression_algorithma_tcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:11Compression9AlgorithmO8rawValueACSgSo21compression_algorithma_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "compression_algorithm",
+                    "printedName": "Compression.compression_algorithm",
+                    "usr": "c:@EA@compression_algorithm"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s11Compression9AlgorithmO8rawValueSo21compression_algorithmavg",
+                "moduleName": "Compression",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:11Compression9AlgorithmO8rawValueSo21compression_algorithmavg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO8rawValueSo21compression_algorithmavp",
+            "moduleName": "Compression",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:11Compression9AlgorithmO8rawValueSo21compression_algorithmavp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Compression.Algorithm]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "10.15",
+            "intro_iOS": "13",
+            "intro_tvOS": "13",
+            "intro_watchOS": "6",
+            "kind": "TypeAlias",
+            "mangledName": "$s11Compression9AlgorithmO8AllCasesa",
+            "moduleName": "Compression",
+            "name": "AllCases",
+            "printedName": "AllCases",
+            "usr": "s:11Compression9AlgorithmO8AllCasesa"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_algorithm",
+                "printedName": "Compression.compression_algorithm",
+                "usr": "c:@EA@compression_algorithm"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "10.15",
+            "intro_iOS": "13",
+            "intro_tvOS": "13",
+            "intro_watchOS": "6",
+            "kind": "TypeAlias",
+            "mangledName": "$s11Compression9AlgorithmO8RawValuea",
+            "moduleName": "Compression",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:11Compression9AlgorithmO8RawValuea"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Algorithm",
+                        "printedName": "Compression.Algorithm",
+                        "usr": "s:11Compression9AlgorithmO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Compression.Algorithm]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s11Compression9AlgorithmO8allCasesSayACGvgZ",
+                "moduleName": "Compression",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:11Compression9AlgorithmO8allCasesSayACGvgZ"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Algorithm",
+                    "printedName": "Compression.Algorithm",
+                    "usr": "s:11Compression9AlgorithmO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Compression.Algorithm]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s11Compression9AlgorithmO8allCasesSayACGvpZ",
+            "moduleName": "Compression",
+            "name": "allCases",
+            "printedName": "allCases",
+            "static": true,
+            "usr": "s:11Compression9AlgorithmO8allCasesSayACGvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Algorithm",
+                            "printedName": "Compression.Algorithm",
+                            "usr": "s:11Compression9AlgorithmO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Compression.Algorithm]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "AllCases",
+                    "printedName": "Compression.Algorithm.AllCases"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "AllCases",
+                "printedName": "AllCases"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12CaseIterableP",
+            "name": "CaseIterable",
+            "printedName": "CaseIterable",
+            "usr": "s:s12CaseIterableP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "compression_algorithm",
+                        "printedName": "Compression.compression_algorithm",
+                        "usr": "c:@EA@compression_algorithm"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Compression.Algorithm.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13",
+        "intro_tvOS": "13",
+        "intro_watchOS": "6",
+        "kind": "TypeDecl",
+        "mangledName": "$s11Compression9AlgorithmO",
+        "moduleName": "Compression",
+        "name": "Algorithm",
+        "printedName": "Algorithm",
+        "usr": "s:11Compression9AlgorithmO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FilterOperation",
+                    "printedName": "Compression.FilterOperation",
+                    "usr": "s:11Compression15FilterOperationO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FilterOperation",
+                        "printedName": "Compression.FilterOperation",
+                        "usr": "s:11Compression15FilterOperationO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.FilterOperation.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.FilterOperation.Type) -> Compression.FilterOperation"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression15FilterOperationO8compressyA2CmF",
+            "moduleName": "Compression",
+            "name": "compress",
+            "printedName": "compress",
+            "usr": "s:11Compression15FilterOperationO8compressyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FilterOperation",
+                    "printedName": "Compression.FilterOperation",
+                    "usr": "s:11Compression15FilterOperationO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FilterOperation",
+                        "printedName": "Compression.FilterOperation",
+                        "usr": "s:11Compression15FilterOperationO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.FilterOperation.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.FilterOperation.Type) -> Compression.FilterOperation"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression15FilterOperationO10decompressyA2CmF",
+            "moduleName": "Compression",
+            "name": "decompress",
+            "printedName": "decompress",
+            "usr": "s:11Compression15FilterOperationO10decompressyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FilterOperation",
+                    "printedName": "Compression.FilterOperation",
+                    "usr": "s:11Compression15FilterOperationO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Compression.FilterOperation?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s11Compression15FilterOperationO8rawValueACSgSo28compression_stream_operationa_tcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:11Compression15FilterOperationO8rawValueACSgSo28compression_stream_operationa_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "compression_stream_operation",
+                    "printedName": "Compression.compression_stream_operation",
+                    "usr": "c:@EA@compression_stream_operation"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s11Compression15FilterOperationO8rawValueSo28compression_stream_operationavg",
+                "moduleName": "Compression",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:11Compression15FilterOperationO8rawValueSo28compression_stream_operationavg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s11Compression15FilterOperationO8rawValueSo28compression_stream_operationavp",
+            "moduleName": "Compression",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:11Compression15FilterOperationO8rawValueSo28compression_stream_operationavp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "compression_stream_operation",
+                "printedName": "Compression.compression_stream_operation",
+                "usr": "c:@EA@compression_stream_operation"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "10.15",
+            "intro_iOS": "13",
+            "intro_tvOS": "13",
+            "intro_watchOS": "6",
+            "kind": "TypeAlias",
+            "mangledName": "$s11Compression15FilterOperationO8RawValuea",
+            "moduleName": "Compression",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:11Compression15FilterOperationO8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "compression_stream_operation",
+                        "printedName": "Compression.compression_stream_operation",
+                        "usr": "c:@EA@compression_stream_operation"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Compression.FilterOperation.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13",
+        "intro_tvOS": "13",
+        "intro_watchOS": "6",
+        "kind": "TypeDecl",
+        "mangledName": "$s11Compression15FilterOperationO",
+        "moduleName": "Compression",
+        "name": "FilterOperation",
+        "printedName": "FilterOperation",
+        "usr": "s:11Compression15FilterOperationO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FilterError",
+                    "printedName": "Compression.FilterError",
+                    "usr": "s:11Compression11FilterErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FilterError",
+                        "printedName": "Compression.FilterError",
+                        "usr": "s:11Compression11FilterErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.FilterError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.FilterError.Type) -> Compression.FilterError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression11FilterErrorO12invalidStateyA2CmF",
+            "moduleName": "Compression",
+            "name": "invalidState",
+            "printedName": "invalidState",
+            "usr": "s:11Compression11FilterErrorO12invalidStateyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FilterError",
+                    "printedName": "Compression.FilterError",
+                    "usr": "s:11Compression11FilterErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FilterError",
+                        "printedName": "Compression.FilterError",
+                        "usr": "s:11Compression11FilterErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Compression.FilterError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Compression.FilterError.Type) -> Compression.FilterError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s11Compression11FilterErrorO11invalidDatayA2CmF",
+            "moduleName": "Compression",
+            "name": "invalidData",
+            "printedName": "invalidData",
+            "usr": "s:11Compression11FilterErrorO11invalidDatayA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilterError",
+                "printedName": "Compression.FilterError",
+                "usr": "s:11Compression11FilterErrorO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilterError",
+                "printedName": "Compression.FilterError",
+                "usr": "s:11Compression11FilterErrorO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s11Compression11FilterErrorO2eeoiySbAC_ACtFZ",
+            "moduleName": "Compression",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:11Compression11FilterErrorO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s11Compression11FilterErrorO4hash4intoys6HasherVz_tF",
+            "moduleName": "Compression",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:11Compression11FilterErrorO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s11Compression11FilterErrorO9hashValueSivg",
+                "moduleName": "Compression",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:11Compression11FilterErrorO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s11Compression11FilterErrorO9hashValueSivp",
+            "moduleName": "Compression",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:11Compression11FilterErrorO9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13",
+        "intro_tvOS": "13",
+        "intro_watchOS": "6",
+        "kind": "TypeDecl",
+        "mangledName": "$s11Compression11FilterErrorO",
+        "moduleName": "Compression",
+        "name": "FilterError",
+        "printedName": "FilterError",
+        "usr": "s:11Compression11FilterErrorO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OutputFilter",
+                "printedName": "Compression.OutputFilter",
+                "usr": "s:11Compression12OutputFilterC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilterOperation",
+                "printedName": "Compression.FilterOperation",
+                "usr": "s:11Compression15FilterOperationO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Algorithm",
+                "printedName": "Compression.Algorithm",
+                "usr": "s:11Compression9AlgorithmO"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Data?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Foundation.Data?) throws -> Swift.Void"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s11Compression12OutputFilterC_5using14bufferCapacity9writingToAcA0C9OperationO_AA9AlgorithmOSiy10Foundation4DataVSgKctKcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(_:using:bufferCapacity:writingTo:)",
+            "throwing": true,
+            "usr": "s:11Compression12OutputFilterC_5using14bufferCapacity9writingToAcA0C9OperationO_AA9AlgorithmOSiy10Foundation4DataVSgKctKcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "D"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "D?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<D where D : Foundation.DataProtocol>",
+            "kind": "Function",
+            "mangledName": "$s11Compression12OutputFilterC5writeyyxSgK10Foundation12DataProtocolRzlF",
+            "moduleName": "Compression",
+            "name": "write",
+            "printedName": "write(_:)",
+            "throwing": true,
+            "usr": "s:11Compression12OutputFilterC5writeyyxSgK10Foundation12DataProtocolRzlF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s11Compression12OutputFilterC8finalizeyyKF",
+            "moduleName": "Compression",
+            "name": "finalize",
+            "printedName": "finalize()",
+            "throwing": true,
+            "usr": "s:11Compression12OutputFilterC8finalizeyyKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13",
+        "intro_tvOS": "13",
+        "intro_watchOS": "6",
+        "kind": "TypeDecl",
+        "mangledName": "$s11Compression12OutputFilterC",
+        "moduleName": "Compression",
+        "name": "OutputFilter",
+        "printedName": "OutputFilter",
+        "usr": "s:11Compression12OutputFilterC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "D"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "InputFilter",
+                "printedName": "Compression.InputFilter<D>",
+                "usr": "s:11Compression11InputFilterC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilterOperation",
+                "printedName": "Compression.FilterOperation",
+                "usr": "s:11Compression15FilterOperationO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Algorithm",
+                "printedName": "Compression.Algorithm",
+                "usr": "s:11Compression9AlgorithmO"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "D"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "D?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Int) throws -> D?"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<D where D : Foundation.DataProtocol>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s11Compression11InputFilterC_5using14bufferCapacity11readingFromACyxGAA0C9OperationO_AA9AlgorithmOSixSgSiKctKcfc",
+            "moduleName": "Compression",
+            "name": "init",
+            "printedName": "init(_:using:bufferCapacity:readingFrom:)",
+            "throwing": true,
+            "usr": "s:11Compression11InputFilterC_5using14bufferCapacity11readingFromACyxGAA0C9OperationO_AA9AlgorithmOSixSgSiKctKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<D where D : Foundation.DataProtocol>",
+            "kind": "Function",
+            "mangledName": "$s11Compression11InputFilterC8readData8ofLength10Foundation0E0VSgSi_tKF",
+            "moduleName": "Compression",
+            "name": "readData",
+            "printedName": "readData(ofLength:)",
+            "throwing": true,
+            "usr": "s:11Compression11InputFilterC8readData8ofLength10Foundation0E0VSgSi_tKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "genericSig": "<D where D : Foundation.DataProtocol>",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13",
+        "intro_tvOS": "13",
+        "intro_watchOS": "6",
+        "kind": "TypeDecl",
+        "mangledName": "$s11Compression11InputFilterC",
+        "moduleName": "Compression",
+        "name": "InputFilter",
+        "printedName": "InputFilter",
+        "usr": "s:11Compression11InputFilterC"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "Compression",
+    "printedName": "Compression"
+  }
+}
