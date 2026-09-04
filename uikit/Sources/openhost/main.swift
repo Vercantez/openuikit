@@ -95,6 +95,9 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
             --script/--record it replays the script's named actions and
             records the capture PNGs + layout dumps the simulator probe
             records (docs/HILLCLIMB.md; scripts/conformance_flow.sh)
+  Forms     a CONFORMANCE app (Sources/ConformanceApps/Forms): grouped
+            UITableView form (text field, text view, switch, slider,
+            segmented control, compact date picker, stepper). Same harness.
 """
 
 var scenePath: String? = nil
