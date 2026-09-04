@@ -83,3 +83,5 @@ public enum FeedApp {
         }
     }
 }
+
+extension ConformanceApps { static let _registerFeed: Void = register("Feed", windowSize: FeedApp.windowSize, makeRoot: FeedApp.makeRoot, perform: FeedApp.perform, scriptPath: "Sources/ConformanceApps/Feed/script.json") }

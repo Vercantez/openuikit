@@ -40,6 +40,13 @@ the reason). The climb only assigns `fail` rows.
    modal flows, settings at every Dynamic Type size and in dark mode.
    `scripts/conformance_flow.sh <workdir> <app>` runs one; its
    `summary.json` feeds the scoreboard.
+
+   Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
+   `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
+   a `script.json`, and one `ConformanceApps.register` line) plus
+   `scripts/gen_conformance_registry.sh`. openhost, confprobe and
+   Package.swift's script.json exclude list all read that generated
+   table; there is no fifth-place hand registration.
 3. **Real open-source apps** are the exam: one vendored screen at a time,
    whose failures choose the next runtime surface (nib loading, UserDefaults,
    asset catalogs, URLSession) — see `docs/REAL_APP_TEST.md`.

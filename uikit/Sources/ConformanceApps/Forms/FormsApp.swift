@@ -83,3 +83,5 @@ public enum FormsApp {
         }
     }
 }
+
+extension ConformanceApps { static let _registerForms: Void = register("Forms", windowSize: FormsApp.windowSize, makeRoot: FormsApp.makeRoot, perform: FormsApp.perform, scriptPath: "Sources/ConformanceApps/Forms/script.json") }

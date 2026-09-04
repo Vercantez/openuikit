@@ -77,3 +77,5 @@ public enum TableEditorApp {
         }
     }
 }
+
+extension ConformanceApps { static let _registerTableEditor: Void = register("TableEditor", windowSize: TableEditorApp.windowSize, makeRoot: TableEditorApp.makeRoot, perform: TableEditorApp.perform, scriptPath: "Sources/ConformanceApps/TableEditor/script.json") }
