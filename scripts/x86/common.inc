@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.6
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.20
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -455,6 +455,33 @@ EOF
     fi
 }
 
+# ioctl.h lives in swiftcore-macho/sdk/overlay-posix, not the Darwin sysroot.
+# Staging it into usr/include makes CFSocket compile; the CF census then
+# reports CANNOT_CFOBJC_OBJECTS extra=CFSocket. Swift compiles that
+# @_exported-import Darwin (os-module, FE, UserDefaultsGuest) pass
+# -Xcc -I this tree so SwiftOverlayShims can see <sys/ioctl.h>.
+phase2_posix_overlay_dir() {
+    local repo=${1:-${W:-}}
+    local d=$repo/swiftcore-macho/sdk/overlay-posix
+    [ -n "$repo" ] && [ -d "$d" ] && [ -f "$d/sys/ioctl.h" ] || return 1
+    printf '%s\n' "$d"
+}
+
+# overlay-posix -I is VM-only. Main's os-module / FE / ud-guest argv has none.
+# Print "-Xcc" / "-I$dir" lines when compiling against *-fe-clang; nothing
+# when compiling against the overlay-copied SYS (box / main-copy).
+phase2_posix_xcc_for_sysroot() {
+    local repo=$1 sys=$2
+    local d
+    case "${sys%/}" in
+        *-fe-clang) ;;
+        *) return 0 ;;
+    esac
+    d=$(phase2_posix_overlay_dir "$repo" || true)
+    [ -n "$d" ] || return 0
+    printf -- '-Xcc\n-I%s\n' "$d"
+}
+
 # Prefer the x86_64 Darwin.swiftinterface the overlays already ship; fall back
 # to the arm64 slice (same text family) or a loose Darwin.swiftinterface.
 phase2_arm_overlay_interface() {
@@ -470,6 +497,30 @@ phase2_arm_overlay_interface() {
         fi
     done
     return 1
+}
+
+# Same Darwin.swiftinterface the stager and the restage check hash. Arm64
+# sysroot first; artifacts on a fresh VM that has no Xcode tree.
+phase2_sysroot_overlay_if() {
+    local arm=$1 artifacts=$2 f
+    f=$(phase2_arm_overlay_interface "$arm" || true)
+    if [ -n "$f" ]; then
+        printf '%s\n' "$f"
+        return 0
+    fi
+    f=$artifacts/swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface
+    if [ -f "$f" ]; then
+        printf '%s\n' "$f"
+        return 0
+    fi
+    return 1
+}
+
+# Darwin.modulemap INPUT is the arm64 pruned map when present. The staged
+# dest is not an input: hashing it made every VM restage (HASH->ABSENT)
+# because check used ARM_SYS (missing) and write used SYS (present).
+phase2_sysroot_dmap_input() {
+    printf '%s\n' "$1/usr/include/Darwin.modulemap"
 }
 
 # phase2_sysroot_input_lines <libswiftCore> <Swift.swiftmodule> <_Builtin_float.swiftmodule>
@@ -1545,6 +1596,449 @@ phase2_stage_x86_mrroot_layout() {
     uniq=$(printf '%s\n' "${missing[@]}" | sort -u)
     printf 'MISSING=%s\n' "$(printf '%s\n' "$uniq" | paste -sd, -)"
     return 1
+}
+
+# Park leftover arm64 Mach-O dylibs beside darwin/usr/lib so gen_tbd CHECK 4
+# does not mix slices. Sibling directory (not a library path). check_undefined.sh
+# prunes `*-park`. Always scans content; never skips because the park exists.
+phase2_park_arm64_darwin_dylibs() {
+    local libdir=$1
+    local park parked=0 d rel
+    [ -d "$libdir" ] || return 0
+    park=$(dirname "$libdir")/lib-arm64-park
+    mkdir -p "$park"
+    while IFS= read -r -d '' d; do
+        phase2_is_arm64_macho "$d" || continue
+        rel=${d#"$libdir"/}
+        mkdir -p "$park/$(dirname "$rel")"
+        mv "$d" "$park/$rel"
+        echo "  parked arm64 $rel -> $(basename "$park")" >&2
+        parked=$((parked + 1))
+    done < <(find "$libdir" -type f -name '*.dylib' -print0 2>/dev/null)
+    echo "phase2: parked $parked arm64 dylib(s) from $libdir" >&2
+}
+
+# C headers FoundationEssentials / os-module / Darwin.swiftinterface actually
+# name. overlay-darwin's generated map is pruned (~11 headers) and omits
+# unistd.h, so Darwin.write is invisible until these are appended.
+phase2_darwin_fe_extra_headers() {
+    printf '%s\n' \
+        unistd.h \
+        fcntl.h \
+        sys/stat.h \
+        errno.h \
+        time.h \
+        semaphore.h \
+        signal.h \
+        stdio.h \
+        pwd.h \
+        grp.h \
+        dlfcn.h \
+        math.h \
+        sys/mman.h \
+        sys/mount.h \
+        sys/quota.h \
+        sys/sysctl.h \
+        sys/time.h \
+        stdlib.h \
+        string.h \
+        strings.h \
+        ctype.h \
+        dirent.h \
+        fts.h \
+        copyfile.h \
+        removefile.h \
+        pthread.h \
+        malloc/malloc.h \
+        sys/xattr.h \
+        sys/utsname.h \
+        os/base.h \
+        os/lock.h \
+        mach/mach_time.h
+}
+
+# Append missing `header "…"` lines before the outer Darwin module close.
+# Does not rewrite a map that already names the header. Requires the file
+# to exist under usr/include (do not name an absent header).
+#
+# Overlay-copied SYS Darwin.modulemap does not name math.h; Darwin.C
+# (Darwin_C.modulemap) owns it. Overlay SDK extra-inserts header "math.h"
+# and header "sys/proc.h" onto its own Darwin.modulemap (recipe overlay-
+# darwin.6) plus Libm Intel math.h so tgmath sees acosf/nanl. Expanding
+# SYS puts those FE-only headers on Darwin and hides Darwin.C. Dest-sync
+# of SYS onto the overlay SDK deleted the extra-insert. Only expand on
+# *-fe-clang.
+phase2_expand_darwin_modulemap_for_fe() {
+    local sys=$1
+    local map=$sys/usr/include/Darwin.modulemap
+    local h added=0 kind
+    [ -f "$map" ] || return 1
+    while IFS= read -r h; do
+        [ -n "$h" ] || continue
+        [ -f "$sys/usr/include/$h" ] || continue
+        grep -q "header \"$h\"" "$map" && continue
+        kind="header"
+        # timeval / timespec / sem_t must land in SwiftOverlayShims
+        # (Darwin.swiftinterface names SwiftOverlayShims.timeval,
+        # SwiftOverlayShims.timespec, SwiftOverlayShims.sem_t).
+        # A modular Darwin header hides the type from the overlay shims module.
+        case "$h" in
+            sys/time.h|time.h|semaphore.h) kind="textual header" ;;
+        esac
+        sed -i '$i\  '"$kind"' "'"$h"'"' "$map"
+        echo "  Darwin.modulemap now names $h ($kind)" >&2
+        added=$((added + 1))
+    done < <(phase2_darwin_fe_extra_headers)
+    # overlay-darwin may already have named these as modular `header`. Flip
+    # them textual so a restage does not hide the overlay-shims types.
+    local th
+    for th in sys/time.h time.h semaphore.h; do
+        if grep -q "^  header \"$th\"" "$map"; then
+            sed -i "s|^  header \"$th\"|  textual header \"$th\"|" "$map"
+            echo "  Darwin.modulemap $th is textual (SwiftOverlayShims)" >&2
+        fi
+    done
+    echo "phase2: Darwin.modulemap FE expand added=$added" >&2
+    phase2_ensure_darwin_named_submodules "$sys"
+    phase2_ensure_macho_modulemap "$sys"
+    return 0
+}
+
+# Overlay ninja -sdk is $W/sdk/MacOSX.sdk with W=${W:-$HOME/work}
+# (/root/work on the box). Darwin.modulemap extra-inserts math.h /
+# sys/proc.h; math.h is Libm Intel. Expanding Darwin.modulemap on SYS
+# (unistd.h, …) makes _DarwinFoundation3 / Darwin fail (`#error "Do not
+# include this header directly, include <inttypes.h> instead"`). FE Swift
+# still needs that expansion on *-fe-clang only.
+phase2_fe_clang_sysroot() {
+    printf '%s-fe-clang\n' "${1%/}"
+}
+
+# Compile os-module / FoundationEssentials / ud-guest / ud_score_guest
+# against the overlay-copied SYS when that tree's Darwin family is the
+# arm64 copy (operator box / main). A fresh VM has no arm64 sysroot and
+# stage_overlay_darwin writes the Darwin family onto *-fe-clang; only
+# then compile against the sibling. One place, one printed marker.
+#
+# phase2_select_fe_compile_sysroot <sys> [arm]
+# Sets PHASE2_FE_SYSROOT_KIND (main-copy|fe-clang) and
+# PHASE2_FE_COMPILE_SYSROOT. Prints FE_SYSROOT_SELECT=...
+phase2_select_fe_compile_sysroot() {
+    local sys=${1:?phase2_select_fe_compile_sysroot: sys}
+    local arm=${2:-}
+    local sys_map=$sys/usr/include/Darwin.modulemap
+    local arm_map=
+    [ -n "$arm" ] && arm_map=$arm/usr/include/Darwin.modulemap
+    PHASE2_FE_SYSROOT_KIND=
+    PHASE2_FE_COMPILE_SYSROOT=
+
+    if [ -n "$arm" ] && [ -f "$arm_map" ] && [ -f "$sys_map" ] \
+        && ! grep -q 'GENERATED by stage_overlay_darwin.sh' "$sys_map"; then
+        PHASE2_FE_SYSROOT_KIND=main-copy
+        PHASE2_FE_COMPILE_SYSROOT=$sys
+        echo "FE_SYSROOT_SELECT=main-copy sys=$sys"
+        return 0
+    fi
+
+    PHASE2_FE_SYSROOT_KIND=fe-clang
+    PHASE2_FE_COMPILE_SYSROOT=$(phase2_fe_clang_sysroot "$sys")
+    local reason=no-arm64-darwin-family
+    if [ -f "$sys_map" ] && grep -q 'GENERATED by stage_overlay_darwin.sh' "$sys_map"; then
+        reason=darwin-family-from-stage_overlay_darwin
+    elif [ -z "$arm" ] || [ ! -d "$arm" ]; then
+        reason=no-arm64-sysroot
+    elif [ ! -f "$arm_map" ]; then
+        reason=no-arm64-darwin-family
+    elif [ ! -f "$sys_map" ]; then
+        reason=sys-darwin-family-absent
+    fi
+    echo "FE_SYSROOT_SELECT=fe-clang reason=$reason sys=$PHASE2_FE_COMPILE_SYSROOT"
+}
+
+# os-module compile summary for tests: sys=<path> posix_xcc=<none|-Xcc -I...>
+# On main-copy this is SYS=<overlay-copied SYS> posix_xcc=none (main's argv).
+# Optional $2/$3 override the last select() globals (command substitution
+# runs select in a subshell).
+phase2_os_module_compile_argv_summary() {
+    local repo=${1:-${W:-}}
+    local sys=${2:-${PHASE2_FE_COMPILE_SYSROOT-}}
+    local kind=${3:-${PHASE2_FE_SYSROOT_KIND-}}
+    local extra=none d
+    [ -n "$sys" ] || {
+        echo "phase2_os_module_compile_argv_summary: select first" >&2
+        return 2
+    }
+    if [ "$kind" = fe-clang ]; then
+        d=$(phase2_posix_overlay_dir "$repo" || true)
+        [ -n "$d" ] && extra="-Xcc -I$d"
+    fi
+    printf 'sys=%s posix_xcc=%s\n' "$sys" "$extra"
+}
+
+phase2_apply_darwin_modulemap_fe_mutations() {
+    local sys=$1
+    local repo=${2:-}
+    phase2_expand_darwin_modulemap_for_fe "$sys" || true
+    if [ -n "$repo" ] && [ -f "$repo/scripts/x86/fe_clock_realtime.h" ]; then
+        cp -f "$repo/scripts/x86/fe_clock_realtime.h" "$sys/usr/include/fe_clock_realtime.h"
+        if [ -f "$sys/usr/include/Darwin.modulemap" ] \
+            && ! grep -q 'fe_clock_realtime.h' "$sys/usr/include/Darwin.modulemap"; then
+            sed -i '$i\  textual header "fe_clock_realtime.h"' "$sys/usr/include/Darwin.modulemap"
+            echo "  Darwin.modulemap textual header fe_clock_realtime.h" >&2
+        fi
+        if [ -f "$repo/scripts/x86/Darwin.apinotes" ]; then
+            cp -f "$repo/scripts/x86/Darwin.apinotes" "$sys/usr/include/Darwin.apinotes"
+            echo "  Darwin.apinotes SwiftName CLOCK_REALTIME <- _CLOCK_REALTIME" >&2
+        fi
+    fi
+    if [ -f "$sys/usr/include/sys/types.h" ] \
+        && ! grep -q 'sys/time.h' "$sys/usr/include/sys/types.h"; then
+        printf '\n#include <sys/time.h>\n' >> "$sys/usr/include/sys/types.h"
+        echo "  sys/types.h now includes sys/time.h (timespec in SwiftOverlayShims)" >&2
+    fi
+}
+
+# Overlay-copied SYS (scratch/sysroot_fe4-x86_64) must stay byte-identical
+# to main's stage_fe_sysroot.sh (machorun math.h, pruned Darwin.C maps).
+# Overlay SDK Libm math.h is overlay_sysroot_ensure_intel_math_h, not SYS.
+# MacTypes restore, overlay-posix semaphore, ioctl stub, removefile_compat,
+# artifact Darwin overlays, and SwiftOnone belong only on the FE clang sibling.
+phase2_apply_vm_only_fe_sysroot() {
+    local dest=$1
+    local repo=${2:-}
+    local machorun artifacts posix_sem ioctl_stub ioctl_dest dylib
+    local _saved
+    [ -n "$repo" ] || repo="${W:-${PHASE2_REPO:-}}"
+    [ -n "$repo" ] || return 0
+    machorun=${MACHORUN:-$repo/machorun}
+    artifacts=$repo/swiftcore-macho/artifacts
+
+    if [ ! -f "$dest/usr/include/Darwin.modulemap" ]; then
+        echo "== VM-only Darwin.modulemap via stage_overlay_darwin.sh ($dest)"
+        _saved="${SWIFTCORE_FE_SYSROOT-}"
+        # Named dest is exclusive. *-fe-clang is skipped as a copy source, so
+        # overlay-darwin falls through to vendor pins instead of the overlay-
+        # copied SYS (or a live mutated scratch). Extra-insert of math.h /
+        # sys/proc.h is overlay SDK only (overlay_sysroot skips *-fe-clang).
+        SWIFTCORE_FE_SYSROOT="$dest"
+        export SWIFTCORE_FE_SYSROOT
+        set +e
+        SWIFTCORE_DARWIN_ARCH=x86_64 W="$repo" \
+            bash "$repo/swiftcore-macho/scripts/stage_overlay_darwin.sh" "$dest"
+        set -e
+        if [ -n "$_saved" ]; then
+            SWIFTCORE_FE_SYSROOT="$_saved"
+            export SWIFTCORE_FE_SYSROOT
+        else
+            unset SWIFTCORE_FE_SYSROOT
+        fi
+    fi
+
+    if [ -f "$machorun/sdk/usr/include/MacTypes.h" ]; then
+        mkdir -p "$dest/usr/include"
+        cp -f "$machorun/sdk/usr/include/MacTypes.h" "$dest/usr/include/MacTypes.h"
+        echo "  restored machorun/sdk MacTypes.h after overlay-darwin (FE clang dest)"
+    fi
+
+    posix_sem=$repo/swiftcore-macho/sdk/overlay-posix/semaphore.h
+    if [ -f "$posix_sem" ] && [ ! -e "$dest/usr/include/semaphore.h" ]; then
+        cp "$posix_sem" "$dest/usr/include/semaphore.h"
+        echo "  + semaphore.h   [overlay-posix; FE clang dest]"
+    fi
+    ioctl_stub=$repo/scripts/x86/fe_ioctl_stub.h
+    ioctl_dest=$dest/usr/include/sys/ioctl.h
+    if [ -f "$ioctl_stub" ]; then
+        mkdir -p "$dest/usr/include/sys"
+        if [ -e "$ioctl_dest" ] && grep -q FIONBIO "$ioctl_dest"; then
+            echo "  REFUSED to replace real ioctl.h (has FIONBIO; CFSocket would compile)" >&2
+        else
+            cp -f "$ioctl_stub" "$ioctl_dest"
+            echo "  + sys/ioctl.h   [fe_ioctl_stub.h; FE clang dest]"
+        fi
+    fi
+
+    if [ ! -e "$dest/usr/include/removefile.h" ] \
+        && [ -f "$repo/full/foundation/removefile_compat.h" ]; then
+        cp "$repo/full/foundation/removefile_compat.h" "$dest/usr/include/removefile.h"
+        echo "  + removefile.h   [removefile_compat.h; FE clang dest]"
+    fi
+
+    echo "== VM-only x86 overlay modules from committed artifacts ($dest)"
+    phase2_copy_artifact_swift_overlays "$dest" "$artifacts/swift-macosx"
+    if [ -d "$artifacts/swift-macosx/x86_64" ]; then
+        mkdir -p "$dest/usr/lib/swift"
+        for dylib in "$artifacts/swift-macosx/x86_64"/*.dylib; do
+            [ -f "$dylib" ] || continue
+            if phase2_is_arm64_macho "$dylib"; then
+                echo "  skip arm64 Mach-O $(basename "$dylib")" >&2
+                continue
+            fi
+            phase2_is_x86_macho "$dylib" || continue
+            cp -a "$dylib" "$dest/usr/lib/swift/$(basename "$dylib")"
+        done
+    fi
+
+    if [ -f "$dest/usr/lib/swift/libswiftCore.dylib" ]; then
+        echo "== VM-only SwiftOnoneSupport stub ($dest)"
+        phase2_ensure_swift_onone_support "$dest" "${TARGET:-x86_64-apple-macos15.0}" \
+            || echo "  SwiftOnoneSupport stub failed; collections without -O will not compile"
+    fi
+}
+
+phase2_stage_fe_clang_sysroot() {
+    local sys=$1
+    local repo=${2:-}
+    local fe
+    [ -d "$sys/usr/include" ] || return 1
+    fe=$(phase2_fe_clang_sysroot "$sys")
+    rm -rf "$fe"
+    cp -a "$sys" "$fe"
+    phase2_apply_vm_only_fe_sysroot "$fe" "$repo"
+    phase2_apply_darwin_modulemap_fe_mutations "$fe" "$repo"
+    echo "phase2: FE clang sysroot $fe (Darwin.modulemap expanded; overlay SDK copies $sys unexpanded)" >&2
+}
+
+# `import Darwin.sysdir` / `import Darwin.uuid` need named submodules, not a
+# flat `header "sysdir.h"` on Darwin. FE FileManager and UUID_Wrappers use them.
+phase2_ensure_darwin_named_submodules() {
+    local sys=$1
+    python3 - "$sys" <<'PY'
+import sys
+from pathlib import Path
+root = Path(sys.argv[1])
+map_path = root / "usr/include/Darwin.modulemap"
+if not map_path.is_file():
+    raise SystemExit(0)
+text = map_path.read_text()
+subs = []
+if (root / "usr/include/sysdir.h").is_file() and "module sysdir" not in text:
+    subs.append('  module sysdir {\n    header "sysdir.h"\n    export *\n  }\n')
+if (root / "usr/include/uuid/uuid.h").is_file() and "module uuid" not in text:
+    subs.append('  module uuid {\n    header "uuid/uuid.h"\n    export *\n  }\n')
+if not subs:
+    raise SystemExit(0)
+idx = text.rfind("}")
+if idx < 0:
+    raise SystemExit(0)
+text = text[:idx] + "".join(subs) + text[idx:]
+map_path.write_text(text)
+print("  Darwin.modulemap named submodules added", len(subs), file=sys.stderr)
+PY
+}
+
+# FoundationEssentials Platform.swift: `internal import MachO.dyld`.
+# machorun/sdk already stages mach-o/dyld.h; the VM sysroot had no MachO map.
+phase2_ensure_macho_modulemap() {
+    local sys=$1
+    local here map dest mm
+    here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+    map=$here/MachO.modulemap
+    dest=$sys/usr/include/MachO.modulemap
+    mm=$sys/usr/include/module.modulemap
+    [ -f "$map" ] || return 1
+    [ -f "$sys/usr/include/mach-o/dyld.h" ] || return 0
+    mkdir -p "$sys/usr/include"
+    cp -f "$map" "$dest"
+    if [ -f "$mm" ] && ! grep -q 'MachO.modulemap' "$mm"; then
+        printf '\nextern module MachO "MachO.modulemap"\n' >> "$mm"
+        echo "  module.modulemap extern MachO (import MachO.dyld)" >&2
+    fi
+}
+
+# Run-root umbrellas + Foundation slots: the same producers as the box's
+# full cycle. Loud-abort stubs live in BASE (mrroot-x86_64) from
+# build_runtime_shims.sh STUBS_ONLY. build_full.sh copies those into
+# ROOTDIR and splits libSystem.B / libc++.1 into umbrella + *.real.
+# BUILD_FULL_THROUGH=umbrellas stops before libquartz from /uikit.
+# Do not use foundation-macho build_foundation_placeholder.sh here: that
+# 4208-byte empty dylib is a different recipe than the box (17456-byte
+# fckstub + umbrella libSystem).
+phase2_stage_x86_build_full_umbrellas() {
+    local dest=$1 repo=$2
+    local log=$repo/scratch/build_full_umbrellas${FULL_OUT_SUFFIX:-}.log
+    local lib=$dest/darwin/usr/lib
+    local fw=$dest/darwin/System/Library/Frameworks
+    local base_fw=$repo/scratch/mrroot${FULL_OUT_SUFFIX:-}/darwin/System/Library/Frameworks
+    mkdir -p "$(dirname "$log")"
+    set +e
+    BUILD_FULL_THROUGH=umbrellas \
+        W="$repo" \
+        ROOTDIR="$dest" \
+        bash "$repo/full/scripts/build_full.sh" >"$log" 2>&1
+    local st=$?
+    set -e
+    if [ "$st" -ne 0 ]; then
+        echo "phase2: build_full THROUGH=umbrellas failed rc=$st log=$log" >&2
+        tail -n 40 "$log" >&2 || true
+        return 1
+    fi
+    if [ ! -f "$lib/libSystem.real.dylib" ] \
+        || ! phase2_is_x86_macho "$lib/libSystem.real.dylib" \
+        || ! phase2_is_x86_macho "$lib/libSystem.B.dylib" \
+        || ! llvm-nm-18 --extern-only --defined-only "$lib/libSystem.B.dylib" 2>/dev/null \
+            | awk '$NF=="_nan"{f=1} END{exit !f}'; then
+        echo "phase2: run-root libSystem is not build_full's umbrella (need .real + _nan) log=$log" >&2
+        return 1
+    fi
+    if ! cmp -s "$fw/Foundation.framework/Foundation" \
+            "$base_fw/Foundation.framework/Foundation" \
+        || ! cmp -s "$fw/CoreFoundation.framework/CoreFoundation" \
+            "$base_fw/CoreFoundation.framework/CoreFoundation"; then
+        echo "phase2: run-root Foundation/CF are not byte-identical to BASE loud-abort stubs log=$log" >&2
+        return 1
+    fi
+    echo "  umbrellas log=$log libSystem.B=$(wc -c < "$lib/libSystem.B.dylib") Foundation=$(wc -c < "$fw/Foundation.framework/Foundation")" >&2
+}
+
+# Copy x86_64 Swift overlay modules (Darwin, ObjectiveC, …) from committed
+# artifacts. A fresh VM has no arm64 sysroot_fe4 Xcode overlays.
+phase2_copy_artifact_swift_overlays() {
+    local sys=$1 artifacts=$2
+    local d name f copied=0
+    [ -d "$artifacts" ] || return 0
+    mkdir -p "$sys/usr/lib/swift"
+    for d in "$artifacts"/*.swiftmodule; do
+        [ -d "$d" ] || continue
+        name=$(basename "$d")
+        mkdir -p "$sys/usr/lib/swift/$name"
+        for f in "$d"/x86_64-apple-macos.*; do
+            [ -f "$f" ] || continue
+            cp -f "$f" "$sys/usr/lib/swift/$name/$(basename "$f")"
+            copied=$((copied + 1))
+        done
+    done
+    echo "  + $copied x86_64 overlay module files from $artifacts" >&2
+}
+
+# SwiftOnoneSupport is required when collections / os-module compile without
+# -O. Committed Darwin artifacts do not ship it; the Linux toolchain module
+# is x86_64-unknown-linux-gnu. Compile an empty -O parse-as-library stub.
+phase2_ensure_swift_onone_support() {
+    local sys=$1 target=${2:-${TARGET:-x86_64-apple-macos15.0}}
+    local dest=$sys/usr/lib/swift/SwiftOnoneSupport.swiftmodule
+    local src=$sys/.swift-onone-stub.swift
+    local log=$sys/.swift-onone-stub.log
+    local key
+    mkdir -p "$dest"
+    printf 'public enum _SwiftOnoneSupportStub {}\n' > "$src"
+    key=$(stamp_key "$dest" "$src" "$target")
+    if stamp_reuse "$dest" "$key"; then
+        return 0
+    fi
+    stamp_rebuild_reason "$dest" "$key"
+    phase2_ensure_sdk_settings "$sys"
+    set +e
+    swiftc -parse-as-library -O -emit-module -module-name SwiftOnoneSupport \
+        -target "$target" -sdk "$sys" \
+        -emit-module-path "$dest/x86_64-apple-macos.swiftmodule" \
+        "$src" >"$log" 2>&1
+    local st=$?
+    set -e
+    if [ "$st" -ne 0 ] || [ ! -f "$dest/x86_64-apple-macos.swiftmodule" ]; then
+        echo "phase2: SwiftOnoneSupport stub failed rc=$st log=$log" >&2
+        return 1
+    fi
+    stamp_write "$dest" "$key"
 }
 
 # shellcheck source=ud_guest.inc

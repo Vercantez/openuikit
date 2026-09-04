@@ -133,6 +133,8 @@ fi
 
 # ORDER: base module.modulemap (ObjectiveC) then the Darwin family. The
 # generator appends extern module lines; running it first would lose Darwin.
+# Box path: copy ARM's pruned maps unchanged (Darwin.modulemap does not
+# name math.h; Darwin.C does). Do not overlay-darwin / FE-expand SYS.
 echo "== Darwin family Clang modulemaps (underlying Objective-C module Darwin)"
 phase2_install_darwin_modulemaps \
     "$SYS" "$ARM_SYS" "$MACHORUN/scripts/gen_darwin_modulemap.py" \
@@ -202,12 +204,13 @@ empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
     exit 2
 }
 
-overlay_if=$(phase2_arm_overlay_interface "$ARM_SYS" || true)
+overlay_if=$(phase2_sysroot_overlay_if "$ARM_SYS" "$artifacts" || true)
+dmap_for_stamp=$(phase2_sysroot_dmap_input "$ARM_SYS")
 phase2_write_sysroot_stamp "$SYS/$PHASE2_SYSROOT_STAMP" \
     "$x86_core" "$x86_mod" "$x86_bf_mod" \
     "$MACHORUN/scripts/gen_darwin_modulemap.py" \
     "${overlay_if:-}" \
-    "$ARM_SYS/usr/include/Darwin.modulemap" \
+    "$dmap_for_stamp" \
     "$FE_SYSROOT_MEASUREMENT_HEADERS_FILE"
 echo "  wrote $SYS/$PHASE2_SYSROOT_STAMP (input-keyed; restage when these shas change)"
 
@@ -215,17 +218,40 @@ echo "== $SYS"
 echo "  usr/include : $(find "$SYS/usr/include" -type f | wc -l | tr -d ' ') headers"
 echo "  modulemaps  : $(find "$SYS/usr/include" -maxdepth 1 -name '*.modulemap' | wc -l | tr -d ' ')"
 echo "  textual overlays copied from arm64 sysroot: $OVERLAYS_COPIED"
+
+# Overlay SDK copies $SYS (unexpanded Darwin.modulemap, same bytes as main).
+# *-fe-clang is VM-only: stage it when the Darwin family is not the arm64 copy.
+phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"
+fe_clang=$(phase2_fe_clang_sysroot "$SYS")
+if [ "$PHASE2_FE_SYSROOT_KIND" = fe-clang ]; then
+    echo "== FE clang sysroot (VM Darwin family; overlay SDK copies SYS unexpanded)"
+    phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+    if [ -f "$fe_clang/usr/include/Darwin.modulemap" ]; then
+        echo "  FE clang Darwin.modulemap: $(wc -l < "$fe_clang/usr/include/Darwin.modulemap" | tr -d ' ') lines at $fe_clang"
+    fi
+else
+    echo "  skipping *-fe-clang sibling (box compiles os-module/FE/ud-guest against overlay-copied SYS)"
+fi
+
 if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
-    echo "  CANNOT_STAGE_XCODE_DARWIN_OVERLAYS: no Darwin.swiftmodule/swiftinterface in $ARM_SYS (Linux cannot materialize Apple's overlay interfaces)"
-    exit 3
+    if [ -d "$fe_clang/usr/lib/swift/Darwin.swiftmodule" ] \
+        || [ -f "$fe_clang/usr/lib/swift/Darwin.swiftinterface" ]; then
+        echo "  Darwin overlays: VM-only on $fe_clang (overlay-copied SYS matches main)"
+    else
+        echo "  CANNOT_STAGE_XCODE_DARWIN_OVERLAYS: no Darwin.swiftmodule/swiftinterface in $ARM_SYS (Linux cannot materialize Apple's overlay interfaces)"
+        exit 3
+    fi
 fi
 if [ -e "$SYS/usr/lib/libobjc.tbd" ] && phase2_tbd_is_x86_target "$SYS/usr/lib/libobjc.tbd"; then
     echo "  libobjc.tbd: x86_64-macos (alias for gen_tbd libobjc.A.tbd)"
 else
     echo "  libobjc.tbd: ABSENT or not x86_64-macos (-lobjc will not resolve render_full.o)"
 fi
-echo "  Darwin overlays: present (textual, from $ARM_SYS)"
+if [ -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
+    || [ -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
+    echo "  Darwin overlays: present (textual, from $ARM_SYS)"
+fi
 phase2_report_darwin_overlay_path "$SYS" "$ARM_SYS"
 if [ -f "$SYS/usr/include/Darwin.modulemap" ]; then
     miss=$(phase2_darwin_modulemap_missing_headers "$SYS" || true)

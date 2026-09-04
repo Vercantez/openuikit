@@ -3,7 +3,9 @@
 # clean-room math.h / no stamp is displaced, never rm'd; mismatch restages
 # into a fresh directory. Stamp also keys usr/lib/*.tbd from the FE sysroot
 # (scratch/sysroot_fe4[-x86_64], phase2 / machorun gen_tbd): a tbd-only
-# source change is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
+# source change is MISMATCH, not MATCH. Stamp also keys the FE source
+# usr/include/Darwin.modulemap bytes: regenerating that map (main unexpanded
+# vs an expanded overlay copy) is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
 # fmaxl, sys/proc.h lacks extern_proc, a Darwin Clang overlay map names a
 # header that is not on disk, or an include_next wrapper (objc4-priv
 # crt_externs.h: first directive `#include_next <same-basename>`) has no
@@ -23,6 +25,24 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 W=$tmp/work
 export W SWIFTCORE_DARWIN_ARCH=x86_64
+unset SWIFTCORE_FE_SYSROOT
+# A live $OPENUIKIT_ROOT/scratch/sysroot_fe4-x86_64 (or machorun/sdk tbds)
+# on the developer tree must not win these fixtures. Cycle sets
+# SWIFTCORE_FE_SYSROOT at the named FE sysroot; tests use W's scratch only.
+overlay_sysroot_source_candidates() {
+  local arch=${SWIFTCORE_DARWIN_ARCH:-x86_64}
+  [ -n "${SWIFTCORE_FE_SYSROOT:-}" ] && printf '%s\n' "$SWIFTCORE_FE_SYSROOT"
+  if [ -n "${W:-}" ]; then
+    printf '%s\n' "$W/scratch/sysroot_fe4-${arch}"
+    if [ "$arch" = x86_64 ]; then
+      printf '%s\n' "$W/scratch/sysroot_fe4-x86_64"
+    fi
+  fi
+}
+overlay_sysroot_gen_tbd_candidates() {
+  [ -n "${W:-}" ] && printf '%s\n' "$W/machorun-sdk"
+  [ -n "${W:-}" ] && printf '%s\n' "$W/machorun/sdk"
+}
 
 need() {
   local cond=$1 msg=$2
@@ -175,6 +195,7 @@ exports:
     symbols: [ _fmaxl ]
 TBD
 ln -sfn libSystem.B.tbd "$fe/usr/lib/libSystem.tbd"
+export SWIFTCORE_FE_SYSROOT=$fe
 echo '--- !tapi-tbd-v3' > "$fe/usr/lib/swift/libswiftCore.tbd"
 echo 'module System {}' > "$fe/usr/lib/swift/System.swiftmodule/x86_64-apple-macos.swiftinterface"
 # Darwin is one of the twelve overlays the build produces itself: its
@@ -223,6 +244,9 @@ grep -q '^machorun.HEAD=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
 grep -q '^usr/lib/libSystem.tbd=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
   && echo "  OK  stamp records usr/lib/libSystem.tbd" \
   || { echo "  FAIL stamp missing libSystem.tbd key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
+grep -q '^usr/include/Darwin.modulemap=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && echo "  OK  stamp records usr/include/Darwin.modulemap" \
+  || { echo "  FAIL stamp missing Darwin.modulemap key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
 
 echo
 echo "=== nothing changed in FE source → stamp=MATCH ==="
@@ -297,6 +321,170 @@ need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "post-restage unchanged source MATCH"
 grep -q 'stamp MATCH' "$tmp/begin_again" \
   && echo "  OK  post-restage stamp MATCH" \
   || { echo "  FAIL post-restage MATCH"; cat "$tmp/begin_again"; fail=1; }
+
+echo
+echo "=== Darwin.modulemap byte change in FE source → stamp=MISMATCH and restage ==="
+# Operator box: main regenerated the unexpanded FE sysroot map, but
+# sdk/MacOSX.sdk kept the expanded copy because the stamp keyed header
+# names, not map bytes.
+mkdir -p "$fe/usr/include"
+echo 'module Darwin [system] { header "math.h" export * }' \
+  > "$fe/usr/include/Darwin.modulemap"
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_dmap" 2>&1
+st=$?
+cat "$tmp/begin_dmap"
+[ "$st" -eq 0 ] && echo "  OK  Darwin.modulemap-mismatch begin rc=0" \
+  || { echo "  FAIL Darwin.modulemap-mismatch begin rc=$st"; fail=1; }
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "Darwin.modulemap byte change restages (REUSE=0)"
+grep -q 'overlay_sysroot: stamp=MISMATCH' "$tmp/begin_dmap" \
+  && echo "  OK  Darwin.modulemap stamp=MISMATCH" \
+  || { echo "  FAIL missing Darwin.modulemap stamp=MISMATCH"; cat "$tmp/begin_dmap"; fail=1; }
+grep -qE 'overlay_sysroot: usr/include/Darwin.modulemap ' "$tmp/begin_dmap" \
+  && echo "  OK  Darwin.modulemap old->new" \
+  || { echo "  FAIL Darwin.modulemap diff"; cat "$tmp/begin_dmap"; fail=1; }
+grep -q 'overlay-darwin.math.h' "$tmp/begin_dmap" \
+  && { echo "  FAIL header keys also mismatched on Darwin.modulemap-only change"; fail=1; } \
+  || echo "  OK  overlay-darwin headers did not mismatch"
+fresh_dmap=$OVERLAY_SYSROOT_DEST
+fill_required_headers "$fresh_dmap"
+set +e
+overlay_sysroot_finish "$sdk_tbd" "$fresh_dmap" >"$tmp/fe.finish_dmap" 2>&1
+fin_st=$?
+set -e
+cat "$tmp/fe.finish_dmap"
+[ "$fin_st" -eq 0 ] && echo "  OK  Darwin.modulemap restage finish rc=0" \
+  || { echo "  FAIL Darwin.modulemap restage finish rc=$fin_st"; fail=1; }
+grep -q '^usr/include/Darwin.modulemap=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && ! grep -q '^usr/include/Darwin.modulemap=ABSENT$' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && echo "  OK  restaged stamp hashes FE Darwin.modulemap bytes" \
+  || { echo "  FAIL restaged stamp still ABSENT or missing map key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
+
+echo
+echo "=== expanded Darwin.modulemap in FE source → MISMATCH again ==="
+echo 'module Darwin [system] { header "math.h" header "unistd.h" export * }' \
+  > "$fe/usr/include/Darwin.modulemap"
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_dmap2" 2>&1
+st=$?
+cat "$tmp/begin_dmap2"
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "expanded Darwin.modulemap restages"
+grep -q 'overlay_sysroot: stamp=MISMATCH' "$tmp/begin_dmap2" \
+  && echo "  OK  expanded map stamp=MISMATCH" \
+  || { echo "  FAIL expanded map did not mismatch"; cat "$tmp/begin_dmap2"; fail=1; }
+fresh_dmap2=$OVERLAY_SYSROOT_DEST
+fill_required_headers "$fresh_dmap2"
+set +e
+overlay_sysroot_finish "$sdk_tbd" "$fresh_dmap2" >"$tmp/fe.finish_dmap2" 2>&1
+fin_st=$?
+set -e
+[ "$fin_st" -eq 0 ] && echo "  OK  expanded map restage finish rc=0" \
+  || { echo "  FAIL expanded map restage finish rc=$fin_st"; fail=1; }
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_dmap_match" 2>&1
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "unchanged Darwin.modulemap MATCH"
+grep -q 'stamp MATCH' "$tmp/begin_dmap_match" \
+  && echo "  OK  post-map-restage stamp MATCH" \
+  || { echo "  FAIL post-map-restage MATCH"; cat "$tmp/begin_dmap_match"; fail=1; }
+
+echo
+echo "=== leftover dest Darwin.modulemap extra-inserts math.h; FE source unchanged ==="
+# Overlay SDK map is the FE copy PLUS header "math.h" / header "sys/proc.h".
+# Dest-sync onto the FE map deleted those lines.
+fe_map='module Darwin [system] [extern_c] {
+  export *
+  extern module C "Darwin_C.modulemap"
+}
+'
+printf '%s\n' "$fe_map" > "$fe/usr/include/Darwin.modulemap"
+mkdir -p "$tmp/leftover/usr/include/sys"
+printf '%s\n' "$fe_map" > "$tmp/leftover/usr/include/Darwin.modulemap"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$tmp/leftover/usr/include/math.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$tmp/leftover/usr/include/sys/proc.h"
+cp -a "$fe/usr/include/Darwin.modulemap" "$tmp/fe-map-before"
+set +e
+extra_out=$(overlay_sysroot_extra_insert_darwin_headers "$tmp/leftover" 2>&1)
+extra_st=$?
+set -e
+printf '%s\n' "$extra_out"
+[ "$extra_st" -eq 0 ] && echo "  OK  extra-insert rc=0" \
+  || { echo "  FAIL extra-insert rc=$extra_st"; fail=1; }
+grep -q 'header "math.h"' "$tmp/leftover/usr/include/Darwin.modulemap" \
+  && grep -q 'header "sys/proc.h"' "$tmp/leftover/usr/include/Darwin.modulemap" \
+  && echo "  OK  dest Darwin.modulemap names math.h and sys/proc.h" \
+  || { echo "  FAIL dest missing extra-insert lines"; fail=1; }
+cmp -s "$tmp/fe-map-before" "$fe/usr/include/Darwin.modulemap" \
+  && echo "  OK  FE Darwin.modulemap source unchanged" \
+  || { echo "  FAIL FE Darwin.modulemap mutated"; fail=1; }
+if cmp -s "$fe/usr/include/Darwin.modulemap" "$tmp/leftover/usr/include/Darwin.modulemap"; then
+  echo "  FAIL dest still cmps FE after extra-insert"
+  fail=1
+else
+  echo "  OK  dest Darwin.modulemap differs from FE (extra-insert)"
+fi
+printf '%s\n' "$extra_out" | grep -q 'Darwin.modulemap now names math.h' \
+  && echo "  OK  extra-insert logged math.h" \
+  || { echo "  FAIL missing extra-insert log"; fail=1; }
+
+echo
+echo "=== leftover dest SwiftOnoneSupport is stripped from overlay SDK copy ==="
+mkdir -p "$tmp/onone-dest/usr/lib/swift/SwiftOnoneSupport.swiftmodule" \
+         "$tmp/onone-src/usr/lib"
+printf 'stub\n' > "$tmp/onone-dest/usr/lib/swift/SwiftOnoneSupport.swiftmodule/x86_64-apple-macos.swiftmodule"
+cat > "$tmp/onone-src/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+TBD
+overlay_sysroot_copy_tbds_from "$tmp/onone-src" "$tmp/onone-dest" 1
+if [ -d "$tmp/onone-dest/usr/lib/swift/SwiftOnoneSupport.swiftmodule" ]; then
+  echo "  FAIL leftover SwiftOnoneSupport.swiftmodule still on dest"
+  fail=1
+else
+  echo "  OK  leftover SwiftOnoneSupport.swiftmodule removed from overlay SDK dest"
+fi
+
+echo
+echo "=== overlay SDK Libm math.h insert leaves SYS machorun math.h ==="
+# Main's overlay_sysroot stage inserts Libm (64c43951 / 24257) onto
+# sdk/MacOSX.sdk so tgmath sees acosf/nanl. SYS keeps machorun
+# (2ee3efbf / 10344). Darwin.modulemap extra-inserts math.h / sys/proc.h
+# onto the overlay SDK copy only.
+split_sys=$tmp/splitSYS
+split_sdk=$tmp/splitSDK
+mkdir -p "$split_sys/usr/include/sys" "$split_sys/usr/lib" \
+         "$split_sdk/usr/include/sys" "$split_sdk/usr/lib"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$split_sys/usr/include/math.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$split_sdk/usr/include/math.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/MacTypes.h" "$split_sys/usr/include/MacTypes.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/MacTypes.h" "$split_sdk/usr/include/MacTypes.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$split_sys/usr/include/sys/proc.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$split_sdk/usr/include/sys/proc.h"
+printf 'module Darwin [system] [extern_c] { export *\n  extern module C "Darwin_C.modulemap"\n}\n' \
+  > "$split_sys/usr/include/Darwin.modulemap"
+cp "$split_sys/usr/include/Darwin.modulemap" "$split_sdk/usr/include/Darwin.modulemap"
+cat > "$split_sys/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+TBD
+sys_math_before=$(sha256sum "$split_sys/usr/include/math.h" | awk '{print $1}')
+set +e
+split_ins=$(overlay_sysroot_ensure_intel_math_h "$split_sdk" 2>&1)
+split_st=$?
+set -e
+printf '%s\n' "$split_ins"
+[ "$split_st" -eq 0 ] && echo "  OK  Libm insert rc=0" || { echo "  FAIL Libm insert rc=$split_st"; fail=1; }
+sys_math_after=$(sha256sum "$split_sys/usr/include/math.h" | awk '{print $1}')
+[ "$sys_math_before" = "$sys_math_after" ] \
+  && echo "  OK  SYS math.h unchanged" \
+  || { echo "  FAIL SYS math.h mutated"; fail=1; }
+cmp -s "$ROOT/sdk/overlay-darwin/math.h" "$split_sdk/usr/include/math.h" \
+  && echo "  OK  dest math.h is Libm Intel pin" \
+  || { echo "  FAIL dest math.h not Libm pin"; fail=1; }
+cmp -s "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$split_sys/usr/include/math.h" \
+  && echo "  OK  SYS math.h is still machorun" \
+  || { echo "  FAIL SYS math.h not machorun"; fail=1; }
+printf '%s\n' "$split_ins" | grep -q 'inserted Libm Intel math.h' \
+  && echo "  OK  insert logged SYS keeps machorun math.h" \
+  || { echo "  FAIL missing insert log"; fail=1; }
 
 echo
 echo "=== listed required header missing → refuse (not stamp MATCH) ==="
@@ -507,6 +695,25 @@ fi
 grep -q 'overlay_sysroot_install_objc4_priv' "$SCRIPT_DIR/stage_sdk.sh" \
   && echo "  OK  stage_sdk calls overlay_sysroot_install_objc4_priv" \
   || { echo "  FAIL stage_sdk missing overlay_sysroot_install_objc4_priv"; fail=1; }
+grep -q 'overlay_sysroot_extra_insert_darwin_headers' "$SCRIPT_DIR/stage_sdk.sh" \
+  && echo "  OK  stage_sdk reuse path extra-inserts math.h / sys/proc.h on Darwin.modulemap" \
+  || { echo "  FAIL stage_sdk missing overlay_sysroot_extra_insert_darwin_headers"; fail=1; }
+grep -q 'overlay_sysroot_ensure_intel_math_h' "$SCRIPT_DIR/stage_sdk.sh" \
+  && echo "  OK  stage_sdk reuse path inserts Libm math.h onto SDK (not SYS)" \
+  || { echo "  FAIL stage_sdk missing overlay_sysroot_ensure_intel_math_h"; fail=1; }
+grep -q 'overlay_sysroot_ensure_intel_math_h' "$SCRIPT_DIR/overlay_sysroot.inc" \
+  && echo "  OK  overlay_sysroot_finish inserts Libm math.h after extra-insert" \
+  || { echo "  FAIL overlay_sysroot.inc missing overlay_sysroot_ensure_intel_math_h"; fail=1; }
+grep -q 'SwiftOnoneSupport.swiftmodule' "$SCRIPT_DIR/overlay_sysroot.inc" \
+  && echo "  OK  overlay SDK copy skips SwiftOnoneSupport (VM-only on *-fe-clang)" \
+  || { echo "  FAIL overlay_sysroot.inc missing SwiftOnoneSupport skip"; fail=1; }
+if grep -q 'overlay_sysroot_sync_darwin_modulemap' "$SCRIPT_DIR/stage_sdk.sh" \
+    || grep -q 'overlay_sysroot_sync_darwin_modulemap' "$SCRIPT_DIR/overlay_sysroot.inc"; then
+  echo "  FAIL dest-sync Darwin.modulemap still present (strips extra-insert)"
+  fail=1
+else
+  echo "  OK  no Darwin.modulemap dest-sync onto FE sysroot map"
+fi
 
 echo
 echo "=== include_next wrapper predicate: objc4 vs Apple limits.h ==="

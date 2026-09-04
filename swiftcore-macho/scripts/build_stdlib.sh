@@ -351,7 +351,19 @@ ls "$MACHORUN/sdk/usr/lib"/*.tbd | wc -l | sed 's/^/tbds generated: /'
 #    tree), not from a leftover MacOSX.sdk whose stamp ignored tbd bytes.
 # ---------------------------------------------------------------------------
 step "stage_sdk"
-ln -sfn "$MACHORUN" "$W/machorun"
+# GNU ln -sfn TARGET existing-directory creates existing-directory/basename
+# → TARGET. x86_cycle exports W=$TREE, so $W/machorun is the in-repo vendor
+# tree: a bare ln here wrote the 44-byte symlink ?? machorun/machorun the
+# box graded. Main's operator cycle uses W=~/work (a sibling), where this
+# ln is the intended MACHORUN alias. Do not nest inside a real vendor dir.
+if [ -d "$W/machorun" ] && [ ! -L "$W/machorun" ]; then
+  if [ -L "$W/machorun/machorun" ]; then
+    echo "build_stdlib: removing nested $W/machorun/machorun (ln -sfn into vendor dir)"
+    rm -f "$W/machorun/machorun"
+  fi
+else
+  ln -sfn "$MACHORUN" "$W/machorun"
+fi
 ln -sfn "$SWIFTCORE_ROOT/sdk/compat" "$W/compat"
 ln -sfn "$SWIFTCORE_ROOT/tests" "$W/tests" 2>/dev/null || true
 bash "$SCRIPT_DIR/stage_sdk.sh"

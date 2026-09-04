@@ -50,6 +50,7 @@ export PATH="/usr/lib/llvm-18/bin:${PATH:-}"
 
 MACHORUN=$W/machorun
 SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
+FE_CLANG_SYS=$SYS
 ARM_SYS=$W/scratch/sysroot_fe4
 # Base runtime (loader + x86 darwin userland + x86 libswiftCore). Same role as
 # arm64 scratch/mrroot from scripts/stage_swift_runtime.sh. build_full.sh
@@ -103,6 +104,22 @@ cannot() {
     ITEM_STATUS[$1]=CANNOT_$2
     CANNOT_N=$((CANNOT_N + 1))
     phase2_cannot "$1" "$2" "$3"
+}
+
+# PHASE2_RUNGS (default abc): which rungs to run. A rung that is not selected is
+# reported as SKIP on the scoreboard -- never as a pass -- so a sharded cycle
+# (run_box.sh x86 cycle --only b) stays honest about what it did not measure.
+# Defined before host-w-layout / focus-pin so those items only CANNOT when
+# the rung that needs them is selected.
+PHASE2_RUNGS=${PHASE2_RUNGS:-abc}
+phase2_rung_selected_quiet() {
+    case "$PHASE2_RUNGS" in *"$1"*) return 0 ;; esac
+    return 1
+}
+phase2_rung_selected() {
+    phase2_rung_selected_quiet "$1" && return 0
+    echo "== rung $1: SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
+    return 1
 }
 
 have() { [ -e "$1" ]; }
@@ -301,21 +318,8 @@ ensure_tbd() {
     # CHECK 4 scans every dylib under darwin/usr/lib. An arm64 staged
     # libswiftcompat beside a freshly built x86 libSystem is a mixed-slice
     # coin toss, not a generated stub. Park arm64 dylibs beside (do not
-    # delete) so the x86 .tbd projection is honest. The park lives at
-    # darwin/usr/lib-arm64-park (sibling of usr/lib, not a library path);
-    # check_undefined.sh prunes `*-park` directories so CHECK 5 does not
-    # grade the parked slice as part of the x86 root.
-    park=$MACHORUN/darwin/usr/lib-arm64-park
-    if [ -d "$MACHORUN/darwin/usr/lib" ]; then
-        mkdir -p "$park"
-        while IFS= read -r -d '' d; do
-            phase2_is_arm64_macho "$d" || continue
-            rel=${d#"$MACHORUN/darwin/usr/lib/"}
-            mkdir -p "$park/$(dirname "$rel")"
-            mv "$d" "$park/$rel"
-            echo "  parked arm64 $rel -> darwin/usr/lib-arm64-park"
-        done < <(find "$MACHORUN/darwin/usr/lib" -type f -name '*.dylib' -print0)
-    fi
+    # delete) so the x86 .tbd projection is honest.
+    phase2_park_arm64_darwin_dylibs "$MACHORUN/darwin/usr/lib"
     set +e
     sh "$MACHORUN/scripts/build.sh" tbd
     st=$?
@@ -348,8 +352,8 @@ SYSROOT_OK=0
 SYSROOT_HEADERS=0
 x86_bf=$artifacts/swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftmodule
 gen_py=$MACHORUN/scripts/gen_darwin_modulemap.py
-overlay_if=$(phase2_arm_overlay_interface "$ARM_SYS" || true)
-arm_dmap=$ARM_SYS/usr/include/Darwin.modulemap
+overlay_if=$(phase2_sysroot_overlay_if "$ARM_SYS" "$artifacts" || true)
+arm_dmap=$(phase2_sysroot_dmap_input "$ARM_SYS")
 stamp=$SYS/$PHASE2_SYSROOT_STAMP
 need_core=0
 need_bf=0
@@ -463,6 +467,22 @@ if [ -f "$SYS/usr/lib/libSystem.B.dylib" ] && phase2_is_arm64_macho "$SYS/usr/li
     SYSROOT_OK=0
 fi
 
+# Box (arm64-copied Darwin family): compile against $SYS like main.
+# VM (no arm64 Darwin family): expand *-fe-clang and compile against that.
+# Leftover *-fe-clang from a previous cycle must not win on the box.
+phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"
+FE_CLANG_SYS=$PHASE2_FE_COMPILE_SYSROOT
+if [ "$PHASE2_FE_SYSROOT_KIND" = fe-clang ]; then
+    if [ "$SYSROOT_OK" -eq 1 ] || [ "$SYSROOT_HEADERS" -eq 1 ]; then
+        if [ ! -d "$FE_CLANG_SYS" ]; then
+            phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+        fi
+        if [ -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
+            FE_CLANG_SYS=$(phase2_fe_clang_sysroot "$SYS")
+        fi
+    fi
+fi
+
 # ---------------------------------------------------------------------------
 # 4. FoundationEssentials + collections + cshims for x86
 echo "==== FoundationEssentials / collections / cshims ($TARGET) ===="
@@ -496,7 +516,7 @@ try_collections() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SC="$SC" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
+    W="$W" SC="$SC" SYS="$FE_CLANG_SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
         bash "$W/full/foundation/build_collections.sh"
     st=$?
     set -e
@@ -530,7 +550,7 @@ try_cshims() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SF="$SF" SYS="$SYS" OUT="$out" TARGET="$TARGET" \
+    W="$W" SF="$SF" SYS="$FE_CLANG_SYS" OUT="$out" TARGET="$TARGET" \
         bash "$W/full/foundation/build_cshims.sh"
     st=$?
     set -e
@@ -546,10 +566,22 @@ try_cshims() {
 
 try_os_module() {
     local out=$OSMOD
-    local key
-    key=$(stamp_key "$out/os.o" \
-        "$W/full/foundation/build_os_module.sh" \
-        "$TARGET")
+    local key posix_dir
+    local -a posix_xcc=()
+    if [ "${PHASE2_FE_SYSROOT_KIND:-}" = fe-clang ]; then
+        posix_dir=$(phase2_posix_overlay_dir "$W" || true)
+        if [ -n "$posix_dir" ]; then
+            posix_xcc=(-Xcc -I"$posix_dir")
+        fi
+        key=$(stamp_key "$out/os.o" \
+            "$W/full/foundation/build_os_module.sh" \
+            "$TARGET" \
+            "${posix_dir:-no-posix-overlay}")
+    else
+        key=$(stamp_key "$out/os.o" \
+            "$W/full/foundation/build_os_module.sh" \
+            "$TARGET")
+    fi
     if stamp_reuse "$out/os.o" "$key" && [ -f "$out/os.swiftmodule" ]; then
         note os-module-x86 satisfied "mc=$MC stamp=$(stamp_short "$key")"
         OS_OK=1
@@ -566,8 +598,8 @@ try_os_module() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
-        bash "$W/full/foundation/build_os_module.sh"
+    W="$W" SYS="$FE_CLANG_SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
+        bash "$W/full/foundation/build_os_module.sh" "${posix_xcc[@]}"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" \
@@ -584,7 +616,7 @@ try_os_module() {
 
 try_fe_imports() {
     local report
-    report=$(phase2_probe_fe_imports "$SYS" "$OSMOD" || true)
+    report=$(phase2_probe_fe_imports "$FE_CLANG_SYS" "$OSMOD" || true)
     case "$report" in
         MATCH*)
             note fe-imports satisfied
@@ -602,11 +634,24 @@ try_fe_imports() {
 try_fe() {
     local out=$FE_OUT/essentials
     local have_fe=0 have_compat=0
-    local fe_key compat_key tree
-    tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
-    fe_key=$(stamp_key "$out/FoundationEssentials.o" \
-        "$W/full/foundation/build_fe.sh" \
-        "$tree" "$TARGET")
+    local fe_key compat_key tree posix_dir
+    local -a posix_xcc=()
+    if [ "${PHASE2_FE_SYSROOT_KIND:-}" = fe-clang ]; then
+        posix_dir=$(phase2_posix_overlay_dir "$W" || true)
+        if [ -n "$posix_dir" ]; then
+            posix_xcc=(-Xcc -I"$posix_dir")
+        fi
+        tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+        fe_key=$(stamp_key "$out/FoundationEssentials.o" \
+            "$W/full/foundation/build_fe.sh" \
+            "$tree" "$TARGET" \
+            "${posix_dir:-no-posix-overlay}")
+    else
+        tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+        fe_key=$(stamp_key "$out/FoundationEssentials.o" \
+            "$W/full/foundation/build_fe.sh" \
+            "$tree" "$TARGET")
+    fi
     compat_key=$(stamp_key "$out/removefile_compat.o" \
         "$W/full/foundation/removefile_compat.c" \
         "$TARGET")
@@ -628,7 +673,7 @@ try_fe() {
         local cst
         mkdir -p "$out"
         set +e
-        phase2_compile_removefile_compat "$SYS" "$out/removefile_compat.o" "$TARGET" "$W"
+        phase2_compile_removefile_compat "$FE_CLANG_SYS" "$out/removefile_compat.o" "$TARGET" "$W"
         cst=$?
         set -e
         if [ "$cst" -eq 0 ] && [ -f "$out/removefile_compat.o" ] \
@@ -670,11 +715,12 @@ try_fe() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SF="$SF" SYS="$SYS" TARGET="$TARGET" OSMOD="$OSMOD" \
+    W="$W" SF="$SF" SYS="$FE_CLANG_SYS" TARGET="$TARGET" OSMOD="$OSMOD" \
         COLLECTIONS="$FE_OUT/collections" MC="$MC" \
         bash "$W/full/foundation/build_fe.sh" \
             -emit-module -emit-module-path "$out/FoundationEssentials.swiftmodule" \
-            -c -o "$out/FoundationEssentials.o"
+            -c -o "$out/FoundationEssentials.o" \
+            "${posix_xcc[@]}"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
@@ -709,7 +755,7 @@ if stamp_reuse "$oc_obj" "$oc_key"; then
 else
     stamp_rebuild_reason "$oc_obj" "$oc_key"
     set +e
-    W="$W" SYS="$SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" MC="$MC" \
+    W="$W" SYS="$FE_CLANG_SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" MC="$MC" \
         bash "$HERE/build_opencombine.sh"
     st=$?
     set -e
@@ -960,8 +1006,20 @@ else
         "no $MRROOT to stage overlays into (mrroot-x86 did not produce a dest)"
 fi
 
+echo "==== mrroot_full-x86_64 umbrellas (build_full THROUGH=umbrellas; BASE loud-abort Foundation) ===="
+if [ -d "$MRROOT" ]; then
+    if phase2_stage_x86_build_full_umbrellas "$MRROOT" "$W"; then
+        note mrroot-umbrellas-x86 satisfied
+    else
+        cannot mrroot-umbrellas-x86 STAGE_BUILD_FULL_UMBRELLAS \
+            "BUILD_FULL_THROUGH=umbrellas failed for $MRROOT; box run root is umbrella libSystem + BASE fckstub Foundation (not build_foundation_placeholder.sh). See $W/scratch/build_full_umbrellas${FULL_OUT_SUFFIX:-}.log"
+    fi
+fi
+
 # ---------------------------------------------------------------------------
-# 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts)
+# 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts). Rung a does
+#     not open /w. Cursor cloud already mounts /w, so ln -sfn $W /w fails.
+#     Only CANNOT when rung b is selected; otherwise note the fact.
 echo "==== /w layout (guest-visible fonts path) ===="
 W_LAYOUT=0
 w_resolved=$(readlink -f /w 2>/dev/null || true)
@@ -971,9 +1029,12 @@ if [ -d /w ] && [ "$w_resolved" = "$W" ]; then
 elif [ ! -e /w ] && ln -sfn "$W" /w 2>/dev/null; then
     note host-w-layout cold-built
     W_LAYOUT=1
-else
+elif phase2_rung_selected_quiet b; then
     cannot host-w-layout HOST_W_LAYOUT \
         "FocusWidgetGuestMain.swift opens /w/build/swiftui-guest/fonts; cannot ln -s $W /w (resolved=$(readlink -f /w 2>/dev/null || echo missing)). Widget argv already uses \$OUT; fonts still need this docker-era path. Operator: ln -sfn $W /w"
+else
+    note host-w-layout skipped \
+        "PHASE2_RUNGS=$PHASE2_RUNGS; /w resolved=${w_resolved:-missing} is not $W (Cursor mounts /w). Rung b would CANNOT_HOST_W_LAYOUT; do not fake /w."
 fi
 
 # ---------------------------------------------------------------------------
@@ -982,12 +1043,15 @@ fi
 #     are reused from build/full-x86_64/foundation; this does not compile FE
 #     again. Link-time does not need the nine overlay dylibs (tbd-first);
 #     rung a still needs them at load.
+# Overlay SDK copies $SYS unexpanded. Box compiles ud-guest against that
+# tree (FE_SYSROOT_SELECT=main-copy). VM compiles against *-fe-clang
+# (textual sys/time.h so Darwin.swiftinterface can see SwiftOverlayShims.timeval).
 echo "==== ud-guest-x86 (committed $PHASE2_UD_GUEST_LINKER) ===="
 UD_GUEST_ITEM_OK=0
 ud_report=$(phase2_try_ud_guest \
     "$W" \
     "$FE_OUT" \
-    "$SYS" \
+    "$FE_CLANG_SYS" \
     "$TARGET" \
     "$MC" \
     "$MACHORUN/darwin/usr/lib" \
@@ -1065,7 +1129,7 @@ if [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
     score_report=$(phase2_try_ud_score_guest \
         "$W" \
         "${UD_GUEST_W:-$W/scratch/ud-guest-x86_64}" \
-        "$SYS" \
+        "$FE_CLANG_SYS" \
         "$MC" \
         "$FE_OUT" \
         || true)
@@ -1229,19 +1293,7 @@ find_existing_file() {
 }
 
 
-# PHASE2_RUNGS (default abc): which rungs to run. A rung that is not selected is
-# reported as SKIP on the scoreboard -- never as a pass -- so a sharded cycle
-# (run_box.sh x86 cycle --only b) stays honest about what it did not measure.
-PHASE2_RUNGS=${PHASE2_RUNGS:-abc}
-phase2_rung_selected_quiet() {
-    case "$PHASE2_RUNGS" in *"$1"*) return 0 ;; esac
-    return 1
-}
-phase2_rung_selected() {
-    phase2_rung_selected_quiet "$1" && return 0
-    echo "== rung $1: SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
-    return 1
-}
+
 # Rung a: ud_guest smoke (14) + scoreboard + persist
 if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]; then
     echo "== rung a: foundation-macho run_ud_guest.sh + run_ud_persist.sh"
@@ -1260,6 +1312,10 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
         "$W/scratch/ud-guest/bin/ud_score_guest" \
         "$ud_r/bin/ud_score_guest" || true)
     if [ -n "$ud_bin" ] && phase2_is_x86_macho "$ud_bin"; then
+        # ud_dispatch_run.inc reuses $W/runroot if Foundation is present
+        # (existence, not content). A stale clone keeps the pre-mapping
+        # libCFTest and the smoke still exits 71.
+        rm -rf "${UD_GUEST_W:-$ud_w}/runroot"
         set +e
         W=${UD_GUEST_W:-$ud_w} \
             R=$ud_r \
@@ -1275,6 +1331,12 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
         if [ "$smoke_rc" -eq 0 ]; then
             RUNG_A_DETAIL="smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS ($smoke_pass)"
             if [ -n "$ud_score" ] && phase2_is_x86_macho "$ud_score"; then
+                # run_ud_persist.sh defaults PREFS=/root/Library/Preferences
+                # (operator EC2 is root). The guest writes under $HOME; a
+                # Cursor cloud agent is not root, so the witness must look
+                # there. Do not edit the committed runner.
+                : "${PREFS:=$HOME/Library/Preferences}"
+                mkdir -p "$PREFS"
                 set +e
                 W=${UD_GUEST_W:-$ud_w} \
                     R=$ud_r \
@@ -1282,6 +1344,7 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
                     MRUN=$MRROOT/machorun \
                     DISPATCH_HOST=${UD_DISPATCH_HOST:-} \
                     DISPATCH_DARWIN=${UD_DISPATCH_DARWIN:-} \
+                    PREFS=$PREFS \
                     bash "$ud_r/scripts/run_ud_persist.sh" "$MRROOT" \
                     2>&1 | tee "$W/scratch/phase2-rung-a-persist.log"
                 persist_rc=${PIPESTATUS[0]}
@@ -1294,7 +1357,7 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
                 # board was 579/579.
                 persist_board=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'GUEST SCOREBOARD' | head -1 | phase2_flatten || true)
                 persist_port=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'PORT: scored' | head -1 | phase2_flatten || true)
-                persist_presence=$(grep 'presence:' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
+                persist_presence=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'presence:' | head -1 | phase2_flatten || true)
                 if [ -n "$persist_board" ]; then
                     RUNG_A_DETAIL="smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS ($smoke_pass); persist $persist_board"
                 fi
@@ -1318,9 +1381,9 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
         RUNG_A_DETAIL="no ud_guest binary"
     fi
 else
-    cannot rung-a-ud_guest UD_GUEST_SUBSTRATE \
-        "needs x86 FE (fe=$FE_OK) + x86 mrroot with libswiftCore (mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86). Committed runners: run_ud_guest.sh smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS in tests/ud_guest_runner.swift; run_ud_persist.sh persist board. Denominators unchanged."
     if phase2_rung_selected_quiet a; then
+        cannot rung-a-ud_guest UD_GUEST_SUBSTRATE \
+            "needs x86 FE (fe=$FE_OK) + x86 mrroot with libswiftCore (mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86). Committed runners: run_ud_guest.sh smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS in tests/ud_guest_runner.swift; run_ud_persist.sh persist board. Denominators unchanged."
         RUNG_A_DETAIL="blocked by substrate"
     else
         RUNG_A_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
@@ -1336,7 +1399,14 @@ FOCUS_PIN=a2832521c1daa0c23419c73705ae043ed60c9791
 focus_pin_probe=$(phase2_probe_focus_pin "$FOCUS_REPO" "$FOCUS_PIN" || true)
 case "$focus_pin_probe" in
     MATCH*) note focus-pin satisfied ;;
-    *) cannot focus-pin FOCUS_PIN "$focus_pin_probe" ;;
+    *)
+        if phase2_rung_selected_quiet b; then
+            cannot focus-pin FOCUS_PIN "$focus_pin_probe"
+        else
+            note focus-pin skipped \
+                "PHASE2_RUNGS=$PHASE2_RUNGS; $focus_pin_probe. Rung b would CANNOT_FOCUS_PIN."
+        fi
+        ;;
 esac
 
 find_widget_bundle() {
@@ -1469,9 +1539,9 @@ if phase2_rung_selected b && [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRR
         fi
     fi
 else
-            cannot rung-b-focus SWIFTUI_SUBSTRATE \
-        "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), x86 sysroot tbds (tbds=$SYSROOT_TBDS_OK; else CANNOT_X86_SYSROOT_TBDS), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
     if phase2_rung_selected_quiet b; then
+        cannot rung-b-focus SWIFTUI_SUBSTRATE \
+            "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), x86 sysroot tbds (tbds=$SYSROOT_TBDS_OK; else CANNOT_X86_SYSROOT_TBDS), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
         RUNG_B_DETAIL="blocked by substrate"
     else
         RUNG_B_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
@@ -1516,20 +1586,19 @@ if phase2_rung_selected c && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
             "build_and_run_reminder_scene_guest.sh exit $rem_rc; success bar is REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true (committed inner script, not invented here)"
         RUNG_C_DETAIL="scene guest failed"
     fi
-elif [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
+elif phase2_rung_selected_quiet c \
+    && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
     && [ "$HOST_RUNTIME_OK" -eq 1 ] && [ "$LAYOUT_OK" -eq 1 ] \
     && [ "$SYSROOT_TBDS_OK" -eq 1 ]; then
     cannot rung-c-reminder REMINDER_INVENTORY \
         "substrate ready enough to invoke full/xcodeplan/build_and_run_reminder_scene_guest.sh, but Reminder 22-source inventory + source root are absent. Looked at scratch/ladder-corpus/reminder and REMINDER_INVENTORY/REMINDER_SOURCE_ROOT. Success bar remains: REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true."
     RUNG_C_DETAIL="needs Reminder inventory json + source root"
-else
+elif phase2_rung_selected_quiet c; then
     cannot rung-c-reminder REMINDER_SUBSTRATE \
         "needs x86 FE+mrroot+libswiftCore+host runtime+layout+sysroot tbds (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86 host=$HOST_RUNTIME_OK layout=$LAYOUT_OK tbds=$SYSROOT_TBDS_OK) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
-    if phase2_rung_selected_quiet c; then
-        RUNG_C_DETAIL="blocked by substrate"
-    else
-        RUNG_C_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
-    fi
+    RUNG_C_DETAIL="blocked by substrate"
+else
+    RUNG_C_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
 fi
 
 # ---------------------------------------------------------------------------

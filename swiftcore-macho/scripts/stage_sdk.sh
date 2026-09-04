@@ -43,6 +43,11 @@ if [ "${OVERLAY_SYSROOT_REUSE:-0}" = 1 ]; then
   SDK=$OVERLAY_SYSROOT_DEST
   echo "staged: $W/sdk/MacOSX.sdk (reused, overlay stamp MATCH)"
   overlay_sysroot_copy_tbds "$W/sdk/MacOSX.sdk"
+  # Overlay SDK Darwin.modulemap keeps extra-insert of math.h / sys/proc.h.
+  # Dest-sync onto the FE sysroot map deleted those two lines.
+  overlay_sysroot_extra_insert_darwin_headers "$W/sdk/MacOSX.sdk" || exit 2
+  overlay_sysroot_ensure_intel_math_h "$W/sdk/MacOSX.sdk" || exit 2
+  overlay_sysroot_fill_modulemap_headers "$W/sdk/MacOSX.sdk"
   overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
   overlay_sysroot_refuse_incomplete "$W/sdk/MacOSX.sdk" || exit 2
   overlay_sysroot_refuse_empty_tbds "$W/sdk/MacOSX.sdk" || exit 2

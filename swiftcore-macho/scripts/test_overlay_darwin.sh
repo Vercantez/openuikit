@@ -7,11 +7,17 @@ ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 fail=0
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
+# A leaked SWIFTCORE_FE_SYSROOT / W would retarget overlay staging. Tests
+# that stage a fixture FE tree (or generate from overlay-darwin pins) must
+# not inherit those.
+unset SWIFTCORE_FE_SYSROOT
+unset W
 
 echo "=== stage into empty sysroot (x86_64) replaces nothing, writes Darwin.modulemap ==="
-mkdir -p "$tmp/sdk"
+mkdir -p "$tmp/sdk" "$tmp/no-fe"
 set +e
-out=$(SWIFTCORE_DARWIN_ARCH=x86_64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk" 2>&1)
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/no-fe" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk" 2>&1)
 rc=$?
 set -e
 printf '%s\n' "$out"
@@ -59,7 +65,8 @@ mkdir -p "$tmp/sdk2/usr/include"
 echo '/* clean-room stand-in */' > "$tmp/sdk2/usr/include/math.h"
 echo '/* clean-room stand-in */' > "$tmp/sdk2/usr/include/MacTypes.h"
 set +e
-out=$(SWIFTCORE_DARWIN_ARCH=x86_64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk2" 2>&1)
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/no-fe" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk2" 2>&1)
 rc=$?
 set -e
 printf '%s\n' "$out" | tail -20
@@ -74,7 +81,8 @@ echo "=== arm64 path does not overwrite math.h with Intel Libm ==="
 mkdir -p "$tmp/sdk3/usr/include"
 echo '/* arm64 clean-room math.h */' > "$tmp/sdk3/usr/include/math.h"
 set +e
-out=$(SWIFTCORE_DARWIN_ARCH=arm64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk3" 2>&1)
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/no-fe" SWIFTCORE_DARWIN_ARCH=arm64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdk3" 2>&1)
 rc=$?
 set -e
 [ "$rc" -eq 0 ] && echo "  OK  arm64 rc=0" || { echo "  FAIL arm64 rc=$rc"; fail=1; }
@@ -166,6 +174,210 @@ grep -q fmaxl "$tmp/sdk5/usr/include/math.h" \
   && echo "  OK  repaired math.h has fmaxl" || { echo "  FAIL repaired math.h"; fail=1; }
 cmp -s "$ROOT/sdk/overlay-darwin/math.h" "$tmp/sdk5/usr/include/math.h" \
   && echo "  OK  repaired math.h is the Intel pin" || { echo "  FAIL not Intel pin"; fail=1; }
+
+echo
+echo "=== FE Darwin.modulemap extra-inserts math.h and sys/proc.h (FE source unchanged) ==="
+mkdir -p "$tmp/feC/usr/include/sys" "$tmp/sdkC/usr/include" "$tmp/workC/scratch"
+# Unexpanded FE map does not name math.h as a real header line. Extra-insert
+# of those two lines is main overlay-darwin.6 (tgmath sees acosf/nanl).
+cat > "$tmp/feC/usr/include/Darwin.modulemap" <<'EOF'
+module Darwin [system] [extern_c] {
+  export *
+}
+EOF
+echo 'extern module Darwin "Darwin.modulemap"' > "$tmp/feC/usr/include/module.modulemap"
+echo 'extern float acosf(float);' > "$tmp/feC/usr/include/math.h"
+echo 'extern long double fmaxl(long double, long double);' >> "$tmp/feC/usr/include/math.h"
+echo 'struct extern_proc { int p_pid; };' > "$tmp/feC/usr/include/sys/proc.h"
+ln -sfn "$tmp/feC" "$tmp/workC/scratch/sysroot_fe4-x86_64"
+cp -a "$tmp/feC/usr/include/Darwin.modulemap" "$tmp/feC-map-before"
+set +e
+out=$(SWIFTCORE_FE_SYSROOT="$tmp/feC" W="$tmp/workC" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$tmp/sdkC" 2>&1)
+rc=$?
+set -e
+printf '%s\n' "$out" | tail -15
+[ "$rc" -eq 0 ] && echo "  OK  FE-extra-insert rc=0" || { echo "  FAIL FE-extra-insert rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -q 'Darwin.modulemap now names math.h' \
+  && echo "  OK  extra-inserted header math.h onto overlay SDK map" \
+  || { echo "  FAIL missing math.h extra-insert"; fail=1; }
+printf '%s\n' "$out" | grep -q 'Darwin.modulemap now names sys/proc.h' \
+  && echo "  OK  extra-inserted header sys/proc.h onto overlay SDK map" \
+  || { echo "  FAIL missing sys/proc.h extra-insert"; fail=1; }
+grep -q 'header "math.h"' "$tmp/sdkC/usr/include/Darwin.modulemap" \
+  && grep -q 'header "sys/proc.h"' "$tmp/sdkC/usr/include/Darwin.modulemap" \
+  && echo "  OK  SDK Darwin.modulemap names math.h and sys/proc.h" \
+  || { echo "  FAIL SDK map missing extra-insert lines"; fail=1; }
+cmp -s "$tmp/feC-map-before" "$tmp/feC/usr/include/Darwin.modulemap" \
+  && echo "  OK  FE Darwin.modulemap source unchanged" \
+  || { echo "  FAIL FE Darwin.modulemap mutated"; fail=1; }
+if cmp -s "$tmp/feC/usr/include/Darwin.modulemap" "$tmp/sdkC/usr/include/Darwin.modulemap"; then
+  echo "  FAIL SDK Darwin.modulemap still cmps FE (extra-insert missing)"
+  fail=1
+else
+  echo "  OK  SDK Darwin.modulemap differs from FE (extra-insert)"
+fi
+
+echo
+echo "=== box-path pins (SYS machorun math.h, SDK Libm + extra-insert) ==="
+# Operator-box MAIN overlay SDK (/root/work, recipe overlay-darwin.6):
+#   Darwin.modulemap = FE map PLUS header "math.h" and header "sys/proc.h"
+#   math.h is Libm Intel; SYS keeps machorun. Dest-sync was the wrong rule.
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_sysroot.inc"
+OPENUIKIT_ROOT=$(cd "$ROOT/.." && pwd)
+box=$tmp/box
+sys=$box/scratch/sysroot_fe4-x86_64
+sdk=$box/sdk/MacOSX.sdk
+mkdir -p "$sys/usr/include/sys" "$sys/usr/lib" "$sdk/usr/include"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/math.h" "$sys/usr/include/math.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/MacTypes.h" "$sys/usr/include/MacTypes.h"
+cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" "$sys/usr/include/sys/proc.h"
+cat > "$sys/usr/include/Darwin.modulemap" <<'EOF'
+module Darwin [system] [extern_c] {
+  module MacTypes {
+    header "MacTypes.h"
+    export *
+  }
+  export *
+  extern module C "Darwin_C.modulemap"
+}
+EOF
+cat > "$sys/usr/include/Darwin_C.modulemap" <<'EOF'
+module Darwin.C [system] [extern_c] {
+  module math {
+    header "math.h"
+    export *
+  }
+  export *
+}
+EOF
+printf 'module ObjectiveC [system] { header "objc/objc.h" export * }\nextern module Darwin "Darwin.modulemap"\n' \
+  > "$sys/usr/include/module.modulemap"
+cat > "$sys/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+TBD
+cp -a "$sys" "$box/sys-before"
+cp -a "$sys/usr/include/." "$sdk/usr/include/"
+export W=$box
+export SWIFTCORE_FE_SYSROOT=$sys
+overlay_sysroot_source_candidates() {
+  printf '%s\n' "$SWIFTCORE_FE_SYSROOT"
+}
+set +e
+out=$(W="$box" SWIFTCORE_FE_SYSROOT="$sys" SWIFTCORE_DARWIN_ARCH=x86_64 \
+  bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$sdk" 2>&1)
+rc=$?
+ins_out=$(overlay_sysroot_ensure_intel_math_h "$sdk" 2>&1)
+ins_st=$?
+extra_out=$(overlay_sysroot_extra_insert_darwin_headers "$sdk" 2>&1)
+extra_st=$?
+set -e
+printf '%s\n' "$out" | tail -20
+printf '%s\n' "$ins_out"
+printf '%s\n' "$extra_out"
+[ "$rc" -eq 0 ] && echo "  OK  stage_overlay_darwin rc=0" || { echo "  FAIL stage rc=$rc"; fail=1; }
+[ "$ins_st" -eq 0 ] && echo "  OK  Libm insert rc=0" || { echo "  FAIL Libm insert rc=$ins_st"; fail=1; }
+[ "$extra_st" -eq 0 ] && echo "  OK  extra-insert rc=0" || { echo "  FAIL extra-insert rc=$extra_st"; fail=1; }
+if diff -rq "$box/sys-before" "$sys" >/dev/null; then
+  echo "  OK  SYS tree unchanged (Libm insert did not write SYS)"
+else
+  echo "  FAIL SYS mutated by overlay staging"
+  diff -rq "$box/sys-before" "$sys" | head -20
+  fail=1
+fi
+
+box_row() {
+  local p=$1 rel=$2
+  if [ -f "$p" ]; then
+    printf '%s  %6s  %s\n' \
+      "$(sha256sum "$p" | awk '{print substr($1,1,16)}')" \
+      "$(wc -c < "$p" | tr -d ' ')" \
+      "$rel"
+  else
+    echo "MISSING $rel"
+  fi
+}
+echo "HEAD=$(git -C "$OPENUIKIT_ROOT" rev-parse --short=9 HEAD 2>/dev/null || echo unknown)"
+box_row "$sys/usr/include/math.h" "scratch/sysroot_fe4-x86_64/usr/include/math.h"
+box_row "$sdk/usr/include/math.h" "sdk/MacOSX.sdk/usr/include/math.h"
+box_row "$sys/usr/include/tgmath.h" "scratch/sysroot_fe4-x86_64/usr/include/tgmath.h"
+box_row "$sdk/usr/include/tgmath.h" "sdk/MacOSX.sdk/usr/include/tgmath.h"
+box_row "$sys/usr/include/sys/proc.h" "scratch/sysroot_fe4-x86_64/usr/include/sys/proc.h"
+box_row "$sdk/usr/include/sys/proc.h" "sdk/MacOSX.sdk/usr/include/sys/proc.h"
+box_row "$sys/usr/include/MacTypes.h" "scratch/sysroot_fe4-x86_64/usr/include/MacTypes.h"
+box_row "$sdk/usr/include/MacTypes.h" "sdk/MacOSX.sdk/usr/include/MacTypes.h"
+box_row "$sys/usr/include/Darwin.modulemap" "scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap"
+box_row "$sdk/usr/include/Darwin.modulemap" "sdk/MacOSX.sdk/usr/include/Darwin.modulemap"
+box_row "$sys/usr/include/module.modulemap" "scratch/sysroot_fe4-x86_64/usr/include/module.modulemap"
+box_row "$sdk/usr/include/module.modulemap" "sdk/MacOSX.sdk/usr/include/module.modulemap"
+
+sys_math=$(sha256sum "$sys/usr/include/math.h" | awk '{print substr($1,1,16)}')
+sdk_math=$(sha256sum "$sdk/usr/include/math.h" | awk '{print substr($1,1,16)}')
+sys_math_sz=$(wc -c < "$sys/usr/include/math.h" | tr -d ' ')
+sdk_math_sz=$(wc -c < "$sdk/usr/include/math.h" | tr -d ' ')
+[ "$sys_math" = 2ee3efbfc91a89ef ] && [ "$sys_math_sz" = 10344 ] \
+  && echo "  OK  SYS math.h is machorun 2ee3efbfc91a89ef 10344" \
+  || { echo "  FAIL SYS math.h $sys_math $sys_math_sz"; fail=1; }
+[ "$sdk_math" = 64c43951eaec1da9 ] && [ "$sdk_math_sz" = 24257 ] \
+  && echo "  OK  SDK math.h is Libm 64c43951eaec1da9 24257" \
+  || { echo "  FAIL SDK math.h $sdk_math $sdk_math_sz"; fail=1; }
+[ ! -e "$sys/usr/include/tgmath.h" ] && [ ! -e "$sdk/usr/include/tgmath.h" ] \
+  && echo "  OK  tgmath.h MISSING on SYS and SDK" \
+  || { echo "  FAIL tgmath.h present"; fail=1; }
+sys_proc=$(sha256sum "$sys/usr/include/sys/proc.h" | awk '{print substr($1,1,16)}')
+sdk_proc=$(sha256sum "$sdk/usr/include/sys/proc.h" | awk '{print substr($1,1,16)}')
+[ "$sys_proc" = de7edcc6107af239 ] && [ "$sdk_proc" = de7edcc6107af239 ] \
+  && echo "  OK  sys/proc.h de7edcc6107af239 on SYS and SDK" \
+  || { echo "  FAIL sys/proc.h sys=$sys_proc sdk=$sdk_proc"; fail=1; }
+sys_mac=$(sha256sum "$sys/usr/include/MacTypes.h" | awk '{print substr($1,1,16)}')
+sdk_mac=$(sha256sum "$sdk/usr/include/MacTypes.h" | awk '{print substr($1,1,16)}')
+[ "$sys_mac" = 10499cb2286f2dc3 ] && [ "$sdk_mac" = 10499cb2286f2dc3 ] \
+  && echo "  OK  MacTypes.h 10499cb2286f2dc3 on SYS and SDK" \
+  || { echo "  FAIL MacTypes.h sys=$sys_mac sdk=$sdk_mac"; fail=1; }
+if cmp -s "$sys/usr/include/Darwin.modulemap" "$sdk/usr/include/Darwin.modulemap"; then
+  echo "  FAIL Darwin.modulemap dest-synced SYS == SDK (extra-insert missing)"
+  fail=1
+else
+  echo "  OK  Darwin.modulemap SDK differs from SYS (extra-insert)"
+fi
+if grep -q 'header "math.h"' "$sys/usr/include/Darwin.modulemap"; then
+  echo "  FAIL SYS Darwin.modulemap names math.h (must stay Darwin.C / FE pruned)"
+  fail=1
+else
+  echo "  OK  SYS Darwin.modulemap does not name math.h"
+fi
+grep -q 'header "math.h"' "$sdk/usr/include/Darwin.modulemap" \
+  && grep -q 'header "sys/proc.h"' "$sdk/usr/include/Darwin.modulemap" \
+  && echo "  OK  SDK Darwin.modulemap names math.h and sys/proc.h" \
+  || { echo "  FAIL SDK Darwin.modulemap missing extra-insert lines"; fail=1; }
+if cmp -s "$sys/usr/include/module.modulemap" "$sdk/usr/include/module.modulemap"; then
+  echo "  OK  module.modulemap happened to match (box MAIN cycle they differ)"
+else
+  echo "  OK  module.modulemap SYS vs SDK differ (legitimate on MAIN)"
+fi
+set +e
+sys_refuse=$(overlay_sysroot_ensure_intel_math_h "$sys" 2>&1)
+sys_refuse_st=$?
+set -e
+[ "$sys_refuse_st" -ne 0 ] \
+  && echo "  OK  Libm insert refuses overlay-copied SYS" \
+  || { echo "  FAIL Libm insert wrote SYS rc=$sys_refuse_st"; fail=1; }
+printf '%s\n' "$sys_refuse" | grep -q 'REFUSING Libm math.h insert onto overlay-copied SYS' \
+  && echo "  OK  SYS refuse named overlay-copied SYS" \
+  || { echo "  FAIL SYS refuse text"; fail=1; }
+set +e
+sys_extra_refuse=$(overlay_sysroot_extra_insert_darwin_headers "$sys" 2>&1)
+sys_extra_st=$?
+set -e
+[ "$sys_extra_st" -ne 0 ] \
+  && echo "  OK  extra-insert refuses overlay-copied SYS" \
+  || { echo "  FAIL extra-insert wrote SYS rc=$sys_extra_st"; fail=1; }
+printf '%s\n' "$sys_extra_refuse" | grep -q 'REFUSING Darwin.modulemap extra-insert onto overlay-copied SYS' \
+  && echo "  OK  extra-insert SYS refuse named overlay-copied SYS" \
+  || { echo "  FAIL extra-insert SYS refuse text"; fail=1; }
 
 echo
 if [ "$fail" -eq 0 ]; then

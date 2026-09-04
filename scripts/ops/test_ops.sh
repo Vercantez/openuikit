@@ -172,6 +172,203 @@ echo "$cyc" | grep -q 'RUNG_SCOREBOARD' && ok "cycle stub quotes scoreboard" \
 echo "$cyc" | grep -q 'positive board' && ok "cycle stub quotes positive persist board" \
     || die_test "missing positive board"
 
+echo "== run_logged captures child rc (not the if-status)"
+python3 - "$ROOT/scripts/ops/x86_cycle.sh" <<'PY'
+import pathlib, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.index("run_logged()")
+end = text.index("emit_stage()", start)
+body = text[start:end]
+assert 'local rc=0' in body, body
+assert '"$@" >"$log" 2>&1 || rc=$?' in body, body
+assert 'if "$@" >"$log" 2>&1; then' not in body, body
+# The old mask: capture $? after the if, which is always 0.
+assert "set +e" not in body, body
+print("run_logged ok")
+PY
+ok 'run_logged saves rc via || rc=$? (failed child is a failure)'
+
+echo "== SKIP_PHASE2 / SKIP_OVERLAYS / ensure_machorun / real roots"
+grep -q 'OPENUIKIT_CYCLE_SKIP_PHASE2' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "cycle honours OPENUIKIT_CYCLE_SKIP_PHASE2" \
+    || die_test "missing SKIP_PHASE2"
+# The SKIP_PHASE2 branch must not grep phase2.log (that file is not written).
+python3 - "$ROOT/scripts/ops/x86_cycle.sh" <<'PY' && ok "SKIP_PHASE2 does not grep a missing phase2.log" || die_test "SKIP_PHASE2 still greps phase2.log"
+import pathlib, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find('if [ "${OPENUIKIT_CYCLE_SKIP_PHASE2:-0}" = 1 ]; then')
+if start < 0:
+    raise SystemExit(1)
+chunk = text[start:]
+# First branch is skip; grep of phase2.log must not appear before elif.
+skip, _, rest = chunk.partition("elif ")
+if "phase2.log" in skip:
+    raise SystemExit(1)
+PY
+grep -q 'scripts/x86/ensure_machorun.sh' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "cycle calls ensure_machorun before tbd" \
+    || die_test "missing ensure_machorun"
+grep -q 'scripts/x86/stage_cycle_roots.sh' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "cycle roots stage calls stage_cycle_roots.sh" \
+    || die_test "roots still a no-op stamp"
+grep -q 'phase2_park_arm64_darwin_dylibs' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun parks leftover arm64 dylibs" \
+    || die_test "ensure_machorun missing park"
+grep -q 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun asserts git status --short machorun is empty" \
+    || die_test "ensure_machorun missing vendor-clean assertion"
+grep -qF -- 'status --short --untracked-files=all -- machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun git-status pathspec is machorun" \
+    || die_test "ensure_machorun missing git status --short machorun"
+grep -q 'MACHORUN/build/machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun loader product is machorun/build/machorun" \
+    || die_test "ensure_machorun loader path is not build/machorun"
+
+echo "== ensure_machorun --layout-only moves stray loader and leaves git status empty"
+LAYOUT=$STUBDIR/ensure-layout
+mkdir -p "$LAYOUT/machorun"
+printf 'tracked\n' > "$LAYOUT/machorun/README"
+cp "$ROOT/machorun/.gitignore" "$LAYOUT/machorun/.gitignore"
+git -C "$LAYOUT" init -q
+git -C "$LAYOUT" add machorun/README machorun/.gitignore
+git -C "$LAYOUT" commit -qm 'machorun pin'
+# Box finding: cold-build left an untracked ELF at the subtree root.
+printf 'ELF-STRAY-LOADER\n' > "$LAYOUT/machorun/machorun"
+chmod +x "$LAYOUT/machorun/machorun"
+dirty=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
+printf '%s\n' "$dirty" | grep -q 'machorun/machorun' \
+    && ok "fixture starts with ?? machorun/machorun" \
+    || die_test "fixture not dirty: $dirty"
+if bash "$ROOT/scripts/x86/ensure_machorun.sh" --layout-only "$LAYOUT" \
+        >"$STUBDIR/layout.out" 2>"$STUBDIR/layout.err"; then
+    ok "ensure_machorun --layout-only exits 0"
+else
+    die_test "layout-only rc!=0 err=$(cat "$STUBDIR/layout.err") out=$(cat "$STUBDIR/layout.out")"
+fi
+[ -x "$LAYOUT/machorun/build/machorun" ] \
+    && grep -q ELF-STRAY-LOADER "$LAYOUT/machorun/build/machorun" \
+    && ok "stray loader moved to machorun/build/machorun" \
+    || die_test "missing committed-layout loader at build/machorun"
+[ ! -e "$LAYOUT/machorun/machorun" ] \
+    && ok "subtree-root machorun/machorun is gone" \
+    || die_test "stray loader still at machorun/machorun"
+clean=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
+[ -z "$clean" ] \
+    && ok "git status --short machorun is empty after ensure_machorun" \
+    || die_test "machorun still dirty: $clean"
+
+echo "== ensure_machorun --layout-only removes nested machorun/machorun symlink"
+# Box residue: GNU ln -sfn "$MACHORUN" "$W/machorun" with W=$TREE nested a
+# directory-symlink (~44 bytes), not the loader ELF.
+ln -sfn "$LAYOUT/machorun" "$LAYOUT/machorun/machorun"
+[ -L "$LAYOUT/machorun/machorun" ] \
+    && ok "fixture nested symlink at machorun/machorun" \
+    || die_test "failed to nest machorun/machorun symlink"
+nested_sz=$(stat -c %s "$LAYOUT/machorun/machorun")
+# GNU stat on a symlink (no -L) is the target-path length; the box residue was 44.
+[ -n "$nested_sz" ] && [ "$nested_sz" -lt 200 ] \
+    && ok "nested symlink is a short path ($nested_sz bytes), not the loader ELF" \
+    || die_test "nested symlink size unexpected: $nested_sz"
+if bash "$ROOT/scripts/x86/ensure_machorun.sh" --layout-only "$LAYOUT" \
+        >"$STUBDIR/layout-sym.out" 2>"$STUBDIR/layout-sym.err"; then
+    ok "ensure_machorun --layout-only exits 0 on nested symlink"
+else
+    die_test "layout-only symlink rc!=0 err=$(cat "$STUBDIR/layout-sym.err")"
+fi
+[ ! -e "$LAYOUT/machorun/machorun" ] \
+    && ok "nested machorun/machorun symlink is gone" \
+    || die_test "nested symlink still at machorun/machorun"
+clean=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
+[ -z "$clean" ] \
+    && ok "git status --short machorun is empty after nested-symlink removal" \
+    || die_test "machorun still dirty after symlink: $clean"
+
+echo "== build_stdlib does not ln -sfn MACHORUN into an in-tree vendor dir"
+grep -qF 'if [ -d "$W/machorun" ] && [ ! -L "$W/machorun" ]' \
+    "$ROOT/swiftcore-macho/scripts/build_stdlib.sh" \
+    && ok "build_stdlib guards ln -sfn into a real \$W/machorun directory" \
+    || die_test "build_stdlib still unconditionally ln -sfn MACHORUN → W/machorun"
+# Reproduce GNU ln nesting, then the same guard the cycle uses.
+NEST=$STUBDIR/ln-nest
+mkdir -p "$NEST/machorun"
+ln -sfn "$NEST/machorun" "$NEST/machorun"
+[ -L "$NEST/machorun/machorun" ] \
+    && ok "GNU ln -sfn TARGET existing-dir nests TARGET/basename" \
+    || die_test "this ln does not nest; the box residue writer would be elsewhere"
+rm -f "$NEST/machorun/machorun"
+if [ -d "$NEST/machorun" ] && [ ! -L "$NEST/machorun" ]; then
+    [ ! -e "$NEST/machorun/machorun" ] \
+        && ok "guard skips ln when W/machorun is the vendor directory" \
+        || die_test "guard left a nested path"
+else
+    die_test "fixture W/machorun is not a real directory"
+fi
+
+echo "== x86_cycle asserts machorun git-status; overlays match main OVERLAY_CMD"
+grep -q 'x86_cycle_assert_machorun_clean' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "x86_cycle defines end-of-cycle machorun git-status assertion" \
+    || die_test "x86_cycle missing x86_cycle_assert_machorun_clean"
+grep -qF -- 'status --short --untracked-files=all -- machorun' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "x86_cycle git-status pathspec is machorun" \
+    || die_test "x86_cycle missing git status --short machorun"
+if grep -q 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
+        || grep -q 'cmp -s "$sys_map" "$sdk_map"' "$ROOT/scripts/ops/x86_cycle.sh"; then
+    die_test "x86_cycle still dest-syncs overlay SDK Darwin.modulemap onto the FE sysroot map"
+else
+    ok "x86_cycle does not dest-sync overlay SDK Darwin.modulemap onto the FE map"
+fi
+if grep -q 'export W=$TREE' "$ROOT/scripts/ops/x86_cycle.sh"; then
+    die_test "x86_cycle still exports W globally (overlays would hit \$TREE/sdk)"
+else
+    ok "x86_cycle does not export W globally"
+fi
+grep -q "SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh" \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "overlays OVERLAY_CMD matches main (no W, no SWIFTCORE_FE_SYSROOT)" \
+    || die_test "overlays OVERLAY_CMD drifted from main"
+grep -q 'env -u W -u SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "overlays stage unsets leaked W / SWIFTCORE_FE_SYSROOT (box keeps /root/work)" \
+    || die_test "overlays stage missing env -u W -u SWIFTCORE_FE_SYSROOT"
+grep -q 'env W="$TREE" bash "$TREE/scripts/x86/stage_fe_sysroot.sh"' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "sysroot stage still gets env W=\$TREE" \
+    || die_test "sysroot stage lost env W=\$TREE"
+
+# End-of-cycle assertion on a fixture tree (machorun-clean only).
+# Overlay SDK Darwin.modulemap is the FE map PLUS header "math.h" /
+# header "sys/proc.h"; it must not be dest-synced onto the SYS map.
+CYC=$STUBDIR/cycle-assert
+mkdir -p "$CYC/machorun" "$CYC/sdk/MacOSX.sdk/usr/include" \
+    "$CYC/scratch/sysroot_fe4-x86_64/usr/include"
+printf 'tracked\n' > "$CYC/machorun/README"
+cp "$ROOT/machorun/.gitignore" "$CYC/machorun/.gitignore"
+git -C "$CYC" init -q
+git -C "$CYC" add machorun/README machorun/.gitignore
+git -C "$CYC" commit -qm 'machorun pin'
+printf 'module Darwin [system] { export *\n  extern module C "Darwin_C.modulemap"\n}\n' \
+    > "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap"
+printf 'module Darwin [system] { export *\n  extern module C "Darwin_C.modulemap"\n  header "math.h"\n  header "sys/proc.h"\n}\n' \
+    > "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"
+ln -sfn "$CYC/machorun" "$CYC/machorun/machorun"
+# Same body as x86_cycle_assert_machorun_clean.
+if [ -L "$CYC/machorun/machorun" ]; then
+    rm -f "$CYC/machorun/machorun"
+fi
+cyc_status=$(git -C "$CYC" status --short --untracked-files=all -- machorun)
+[ -z "$cyc_status" ] \
+    && ok "cycle-end git status --short machorun is empty after symlink removal" \
+    || die_test "cycle-end machorun dirty: $cyc_status"
+if cmp -s "$CYC/scratch/sysroot_fe4-x86_64/usr/include/Darwin.modulemap" \
+        "$CYC/sdk/MacOSX.sdk/usr/include/Darwin.modulemap"; then
+    die_test "fixture SDK Darwin.modulemap dest-synced onto SYS (extra-insert missing)"
+else
+    ok "cycle-end SDK Darwin.modulemap may differ from SYS (extra-insert)"
+fi
+[ ! -e "$CYC/machorun/machorun" ] \
+    && ok "cycle-end assertion removed nested machorun/machorun" \
+    || die_test "cycle-end left nested machorun/machorun"
+
 echo "== premerge"
 cat > "$STUBDIR/gh" <<'EOF'
 #!/usr/bin/env bash

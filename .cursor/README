@@ -1,0 +1,77 @@
+# Cursor Build snapshot (x86_64)
+
+The Cursor environment **Build** runs `.cursor/install.sh` once and snapshots
+the result. A later agent boots from that snapshot: `start` does not rebuild,
+and verify should finish in seconds.
+
+## What the snapshot contains
+
+- Pinned macios evidence (`OPENUIKIT_MACIOS_ROOT`)
+- Scratch corpus from `.cursor/scratch-corpus-pins.json`
+- ICU + CoreFoundation checkouts from `env/contract.json` (not dual-locked
+  in the corpus pin file)
+- x86 cycle substrate: loader at `machorun/build/machorun`, darwin dylibs,
+  sysroot `scratch/sysroot_fe4-x86_64`, run root `scratch/mrroot_full-x86_64`
+  (build_full.sh `BUILD_FULL_THROUGH=umbrellas`: libSystem.B umbrella +
+  `libSystem.real.dylib`, Foundation/CoreFoundation copied from BASE
+  loud-abort stubs — not `build_foundation_placeholder.sh`)
+- objc4 via `scripts/x86/ensure_machorun.sh` (`machorun/scripts/build.sh objc4`)
+- Loader scoreboard inputs: stamp-keyed `machorun/scripts/build_fixtures_linux_x86_64.sh`
+  → `machorun/tests/bin-x86_64/` so `machorun/scripts/scoreboard_x86_64.sh` does
+  not rebuild fixtures
+- Phase2 **rung a** compile/link products (install exports `PHASE2_RUNGS=a`
+  and does **not** set `OPENUIKIT_CYCLE_SKIP_PHASE2`):
+  - `scratch/ud-guest-x86_64/cfobjc/obj`
+  - `scratch/ud-guest-x86_64/lib/libCFTest.dylib`
+  - `scratch/ud-guest-x86_64/bin/ud_guest`
+  - `scratch/ud-guest-x86_64/bin/ud_score_guest`
+  - `scratch/mrroot_full-x86_64`
+- Overlays: VM install sets `OPENUIKIT_CYCLE_SKIP_OVERLAYS=1` and stages
+  committed `swiftcore-macho/artifacts`. The overlays stage is green on the
+  operator box (stdlib source present).
+
+Rungs **b** and **c** stay unsatisfied on this VM until Focus bundles /
+Reminder inventory exist. Install selects `PHASE2_RUNGS=a`, so the scoreboard
+prints `b=SKIPPED` / `c=SKIPPED` rather than running them into `CANNOT`. A
+full `abc` run would name those CANNOT until the inputs exist.
+
+`start` prints `CURSOR_ENV_START_OK rebuild=0` and rebuilds nothing.
+
+`ensure_machorun` leaves `git status --short --untracked-files=all -- machorun`
+empty and does not write into `sdk/MacOSX.sdk`.
+
+## Markers on a fresh start
+
+```
+bash .cursor/verify-cloud-environment.sh
+```
+
+Expect (x86_64):
+
+```
+CURSOR_ENV_START_OK rebuild=0          # from start.sh, not verify
+CURSOR_TOOLCHAIN_INVENTORY_OK ...
+CURSOR_SWIFT_ENVIRONMENT_OK ...
+CURSOR_SCRATCH_CORPUS_VERIFIED sources=...
+CURSOR_BUILT_PRODUCTS_VERIFIED ...
+CURSOR_ENV_CAN_EXECUTE arch=x86_64 loader=...
+CURSOR_ENV_X86_FIXTURES_OK built=...
+CURSOR_ENV_UD_PRODUCTS_OK ...
+CURSOR_ENV_PHASE2_REUSE_LINES=N        # N>=1 after a snapshotted install
+RUNG_SCOREBOARD a=... b=SKIPPED/... c=SKIPPED/...
+CURSOR_ENV_RUNG_A=PASS                 # or CANNOT (guest exit 71) with products present
+CURSOR_ENV_OK=1 ...
+CURSOR_ENVIRONMENT_METRICS ...
+```
+
+A `PHASE2_RUNGS=a` rerun after install must show compile/link stages as
+`reused=1 stamp=`, not a cold CF rebuild. The guest smoke may still be
+`CURSOR_ENV_RUNG_A=CANNOT` (`run_ud_guest.sh` exit 71, foreign malloc
+zone) until that abort is fixed; cfobjc/obj, libCFTest, and the UD
+binaries stay in the snapshot so the expensive work is not repeated.
+
+## One command that reruns rung a
+
+```
+PHASE2_RUNGS=a bash scripts/x86/phase2.sh "$PWD"
+```

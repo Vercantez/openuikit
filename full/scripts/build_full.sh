@@ -630,6 +630,22 @@ echo "== manifest ($ROOTDIR/.manifest)"
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'
 } > "$ROOTDIR/.manifest"
 
+# Reduced form for hosts that cannot finish quartz / OpenUIKit / UIHelpers
+# (Cursor x86 install is PHASE2_RUNGS=a). Same guest-root copy, loud-abort
+# Foundation slots from BASE, and umbrella split as a full run; stop before
+# libquartz from /uikit. BUILD_FULL_THROUGH=all (default) continues.
+case "${BUILD_FULL_THROUGH:-all}" in
+    umbrellas)
+        echo "build_full: stopping after umbrellas (BUILD_FULL_THROUGH=umbrellas) root=$ROOTDIR"
+        exit 0
+        ;;
+    all) ;;
+    *)
+        echo "build_full: invalid BUILD_FULL_THROUGH=${BUILD_FULL_THROUGH} (want all|umbrellas)" >&2
+        exit 2
+        ;;
+esac
+
 # ---- libquartz, from ~/uikit's CQuartz -------------------------------------
 # Flags mirror machorun/scripts/build_quartz.sh exactly (-fno-exceptions
 # -fno-rtti because machorun has no unwinder for compact __unwind_info; stock

@@ -74,6 +74,7 @@ run_logged() {
     # $? after `if cmd; then ...; fi` is the if's status (0), not cmd's:
     # every failed stage printed "failed rc=0" and was reported rebuilt
     # (measured 2026-09-03: sysroot, overlays and phase2 all "failed rc=0").
+    # Do not capture rc=$? after the if; that reintroduces the mask.
     local rc=0
     "$@" >"$log" 2>&1 || rc=$?
     if [ "$rc" -eq 0 ]; then
@@ -101,6 +102,27 @@ status_from_log() {
     printf 'rebuilt\n'
 }
 
+# A nested $TREE/machorun/machorun symlink is untracked (44-byte residue the
+# box graded). Overlays can write it after ensure_machorun's assertion.
+# Refuse unless `git status --short --untracked-files=all machorun` is empty.
+x86_cycle_assert_machorun_clean() {
+    local status stray=$TREE/machorun/machorun
+    if [ -L "$stray" ]; then
+        echo "x86_cycle: removing nested machorun symlink $stray" >&2
+        rm -f "$stray"
+    fi
+    if ! git -C "$TREE" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "x86_cycle: $TREE is not a git work tree" >&2
+        return 1
+    fi
+    status=$(git -C "$TREE" status --short --untracked-files=all -- machorun)
+    if [ -n "$status" ]; then
+        echo "x86_cycle: machorun subtree is dirty: $status" >&2
+        return 1
+    fi
+    return 0
+}
+
 if [ "$STUB" = 1 ]; then
     mkdir -p "$TREE" 2>/dev/null || TREE=$(mktemp -d /tmp/x86-cycle-stub.XXXXXX)
     while IFS= read -r name; do
@@ -112,6 +134,26 @@ if [ "$STUB" = 1 ]; then
 fi
 
 cd "$TREE"
+# Do not export W globally. build_stdlib.sh uses W=${W:-$HOME/work}
+# (/root/work on the operator box). stage_fe_sysroot.sh gets env W=$TREE;
+# phase2 receives the tree as $1. Overlays run main's OVERLAY_CMD (no W,
+# no SWIFTCORE_FE_SYSROOT). A fresh Cursor VM still needs clang/Swift
+# defaults for later stages.
+# shellcheck disable=SC1091
+. "$TREE/full/scripts/guest_arch.inc"
+export CC="${CC:-clang-18}"
+export DARWIN_CLANG="${DARWIN_CLANG:-clang-18}"
+if [ -z "${SWIFT_TOOLCHAIN:-}" ]; then
+    if [ -x /opt/swift/usr/bin/swiftc ]; then
+        SWIFT_TOOLCHAIN=/opt/swift
+    elif [ -x /opt/swift624/usr/bin/swiftc ]; then
+        SWIFT_TOOLCHAIN=/opt/swift624
+    else
+        SWIFT_TOOLCHAIN=/usr
+    fi
+fi
+export SWIFT_TOOLCHAIN
+
 LOGDIR=${OPENUIKIT_CYCLE_LOGDIR:-$TREE/scratch/x86-cycle-logs}
 mkdir -p "$LOGDIR"
 
@@ -168,13 +210,22 @@ else
     emit_stage checkout reused "$TREE"
 fi
 
-# 3. prepare.py (loader/darwin/tbd through stamps)
-if run_logged prepare "$LOGDIR/prepare.log" python3 "$TREE/scripts/env/prepare.py"; then
-    emit_stage prepare "$(status_from_log "$LOGDIR/prepare.log")" "$TREE/machorun/build/machorun"
-else
+# 3. prepare.py (loader/darwin/tbd through stamps). On x86_64 a missing
+# loader is CANNOT (the operator EC2 already has one). A fresh VM then
+# cold-builds via ensure_machorun.sh and parks leftover arm64 dylibs
+# before tbd. STAGE prepare names the loader that actually exists.
+if ! run_logged prepare "$LOGDIR/prepare.log" python3 "$TREE/scripts/env/prepare.py"; then
     emit_stage prepare cannot "$TREE/machorun/build/machorun"
     exit 2
 fi
+if ! run_logged ensure_machorun "$LOGDIR/ensure_machorun.log" \
+    bash "$TREE/scripts/x86/ensure_machorun.sh" "$TREE"; then
+    echo "x86_cycle: ensure_machorun failed (loader/darwin/objc4/quartz or arm64 park)" >&2
+    emit_stage prepare cannot "$TREE/machorun/build/machorun"
+    exit 2
+fi
+emit_stage prepare "$(status_from_log "$LOGDIR/ensure_machorun.log")" \
+    "$TREE/machorun/build/machorun"
 
 # 4. build.sh tbd must be clean (after darwin, before overlays)
 if run_logged tbd "$LOGDIR/tbd.log" sh "$TREE/machorun/scripts/build.sh" tbd; then
@@ -221,17 +272,29 @@ fi
 if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
     emit_stage overlays reused "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64 (skipped by request)"
 elif run_logged overlays "$LOGDIR/overlays.log" \
-    env NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
+    env -u W -u SWIFTCORE_FE_SYSROOT \
+        NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
         SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \
         bash "$TREE/swiftcore-macho/scripts/build_stdlib.sh"; then
     emit_stage overlays "$(status_from_log "$LOGDIR/overlays.log")" "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
 else
     emit_stage overlays cannot "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
+    # build_stdlib ln -sfn may have nested $TREE/machorun/machorun before fail.
+    rm -f "$TREE/machorun/machorun"
     exit 2
 fi
+x86_cycle_assert_machorun_clean || exit 2
 
-# 7. stage roots happens inside phase2; call it out so the scoreboard names it
-emit_stage roots rebuilt "$TREE/scratch/mrroot-x86_64"
+# 7. stage roots. Operator box lets phase2 do this; SKIP_PHASE2 callers
+# (tests, box -o) still need the trees. Cursor install no longer skips phase2.
+# Mirror phase2's helpers (base + host + layout + build_full umbrellas).
+if run_logged roots "$LOGDIR/roots.log" \
+    bash "$TREE/scripts/x86/stage_cycle_roots.sh" "$TREE"; then
+    emit_stage roots "$(status_from_log "$LOGDIR/roots.log")" "$TREE/scratch/mrroot-x86_64"
+else
+    emit_stage roots cannot "$TREE/scratch/mrroot-x86_64"
+    exit 2
+fi
 
 # 7b. inputs phase2 needs that the proven operator driver staged by hand
 # (measured 2026-09-03, first committed cycle: rung b CANNOT_FOCUS_BUNDLE, rung c
@@ -273,14 +336,20 @@ fi
 
 # 8. phase2 rungs. Quote POSITIVE boards (phase2 already does; do not tail -1
 # the persist log past NEGATIVE CONTROL).
-if run_logged phase2 "$LOGDIR/phase2.log" \
+# OPENUIKIT_CYCLE_SKIP_PHASE2=1: substrate only (tests / run_box.sh -o).
+# Cursor install does not set this; it exports PHASE2_RUNGS=a so rung a is
+# snapshotted. Same skip contract as OPENUIKIT_CYCLE_SKIP_OVERLAYS.
+if [ "${OPENUIKIT_CYCLE_SKIP_PHASE2:-0}" = 1 ]; then
+    emit_stage phase2 reused "$TREE (skipped by OPENUIKIT_CYCLE_SKIP_PHASE2=1)"
+elif run_logged phase2 "$LOGDIR/phase2.log" \
     bash "$TREE/scripts/x86/phase2.sh" "$TREE"; then
     emit_stage phase2 "$(status_from_log "$LOGDIR/phase2.log")" "$TREE"
+    grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|ENV_PREPARE_SUMMARY|CANNOT_' \
+        "$LOGDIR/phase2.log" || true
 else
     emit_stage phase2 cannot "$TREE"
     grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_' "$LOGDIR/phase2.log" || true
     exit 2
 fi
-grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|ENV_PREPARE_SUMMARY|CANNOT_' \
-    "$LOGDIR/phase2.log" || true
+x86_cycle_assert_machorun_clean || exit 2
 exit 0

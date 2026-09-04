@@ -53,14 +53,28 @@ DARWIN_MODULE_HEADERS=(
 
 resolve_fe_sysroot() {
   local cand
+  # Named FE sysroot is exclusive: do not silently copy OPENUIKIT_ROOT's
+  # live scratch when the caller pointed at a fixture or a missing tree.
+  if [ -n "${SWIFTCORE_FE_SYSROOT:-}" ]; then
+    case "${SWIFTCORE_FE_SYSROOT%/}" in
+      *-fe-clang) return 1 ;;
+    esac
+    if [ -f "$SWIFTCORE_FE_SYSROOT/usr/include/Darwin.modulemap" ]; then
+      printf '%s\n' "$SWIFTCORE_FE_SYSROOT"
+      return 0
+    fi
+    return 1
+  fi
   for cand in \
-      ${SWIFTCORE_FE_SYSROOT:+$SWIFTCORE_FE_SYSROOT} \
       "$W/scratch/sysroot_fe4-${SWIFTCORE_DARWIN_ARCH}" \
       "$W/scratch/sysroot_fe4-x86_64" \
       "$OPENUIKIT_ROOT/scratch/sysroot_fe4-${SWIFTCORE_DARWIN_ARCH}" \
       "$OPENUIKIT_ROOT/scratch/sysroot_fe4-x86_64"
   do
     [ -n "$cand" ] || continue
+    case "${cand%/}" in
+      *-fe-clang) continue ;;
+    esac
     if [ -f "$cand/usr/include/Darwin.modulemap" ]; then
       printf '%s\n' "$cand"
       return 0
@@ -247,6 +261,9 @@ if [ -f "$PROC_PIN" ]; then
   fi
 fi
 if [ -f "$SDK/usr/include/Darwin.modulemap" ]; then
+  # Overlay SDK Darwin.modulemap is the FE copy PLUS these two lines
+  # (overlay-darwin.6). Dest-sync onto the FE sysroot map deleted them
+  # and tgmath missed acosf/nanl. Do not skip when FE is present.
   for h in math.h sys/proc.h; do
     if [ -f "$SDK/usr/include/$h" ] \
         && ! grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap"; then

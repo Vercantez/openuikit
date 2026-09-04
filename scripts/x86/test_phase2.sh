@@ -42,6 +42,7 @@ expect_not_grep() {
 PHASE2=$ROOT/scripts/x86/phase2.sh
 COMMON=$ROOT/scripts/x86/common.inc
 STAGE=$ROOT/scripts/x86/stage_fe_sysroot.sh
+UDINC=$ROOT/scripts/x86/ud_guest.inc
 OC=$ROOT/scripts/x86/build_opencombine.sh
 GUEST=$ROOT/full/scripts/guest_arch.inc
 WIDGET=$ROOT/full/swiftui/build_focus_widget_guest.sh
@@ -67,6 +68,7 @@ echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/scripts/x86/stamp.inc" \
     "$ROOT/scripts/x86/test_stamp.sh" \
+    "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
     "$ROOT/scripts/x86/test_no_existence_reuse.sh" \
     "$ROOT/scripts/ops/x86_cycle.sh" \
     "$ROOT/scripts/ops/run_box.sh" \
@@ -91,6 +93,7 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/foundation-macho/scripts/test_build_cftest_harness.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
+    "$ROOT/scripts/x86/ensure_machorun.sh" \
     "$ROOT/full/swiftui/guest_gate_inventories.inc" \
     "$ROOT/full/swiftui/test_guest_gate_inventories_x86_oracle.sh" \
     "$ROOT/scripts/build_runtime_shims.sh" \
@@ -312,22 +315,160 @@ expect_grep '_Builtin_float.swiftmodule' "$STAGE" \
     "stager copies _Builtin_float into usr/lib/swift"
 expect_grep 'phase2_write_sysroot_stamp' "$STAGE" \
     "stager writes an input stamp"
+expect_grep 'phase2_sysroot_overlay_if' "$STAGE" \
+    "stager hashes the same Darwin.swiftinterface the restage check hashes"
+expect_grep 'phase2_sysroot_overlay_if' "$PHASE2" \
+    "restage check hashes artifacts Darwin.swiftinterface when arm64 overlay is absent"
+expect_grep 'phase2_sysroot_dmap_input' "$STAGE" \
+    "stager stamps the arm64 Darwin.modulemap path, not the dest"
+expect_grep 'phase2_sysroot_dmap_input' "$PHASE2" \
+    "restage check stamps the arm64 Darwin.modulemap path, not the dest"
+expect_not_grep 'dmap_for_stamp=$SYS/usr/include/Darwin.modulemap' "$STAGE" \
+    "stager does not hash the dest Darwin.modulemap (that was HASH->ABSENT every run)"
 expect_grep 're-stage sysroot-fe4-x86 (input changed:' "$PHASE2" \
     "phase2 restages when input shas change and prints which"
 expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.6' "$COMMON" \
-    "recipe bump restages a sysroot that lacked libobjc.tbd aliases"
+expect_grep 'stage_fe_sysroot_x86.20' "$COMMON" \
+    "recipe bump restages so overlay-copied SYS matches main (VM extras only on *-fe-clang)"
+expect_grep 'Overlay SDK extra-inserts header "math.h"' "$COMMON" \
+    "FE Darwin.modulemap expand documents extra-insert on overlay SDK, Darwin.C on SYS"
+expect_grep 'Darwin_C.modulemap' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
+    "dual-run fixture is main's Darwin.C (math.h not on Darwin.modulemap)"
+expect_grep '1a8d31fa51df8db9' "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh" \
+    "dual-run documents operator-box MAIN include-tree digest"
+expect_grep '2ee3efbfc91a89ef' "$ROOT/swiftcore-macho/scripts/test_overlay_darwin.sh" \
+    "overlay Darwin test pins SYS machorun math.h sha256[:16]"
+expect_grep '64c43951eaec1da9' "$ROOT/swiftcore-macho/scripts/test_overlay_darwin.sh" \
+    "overlay Darwin test pins SDK Libm math.h sha256[:16]"
+expect_grep 'overlay-darwin.10' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay sysroot stamp recipe keys extra-insert and SDK Libm math.h insert"
+expect_grep 'overlay_sysroot_ensure_intel_math_h' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay finish inserts Libm Intel math.h onto SDK (SYS keeps machorun math.h)"
+expect_grep 'REFUSING Libm math.h insert onto overlay-copied SYS' \
+    "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "Libm math.h insert refuses to write SYS"
+expect_grep 'overlay_sysroot_extra_insert_darwin_headers' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay finish extra-inserts math.h / sys/proc.h onto the SDK Darwin.modulemap"
+expect_not_grep 'overlay_sysroot_sync_darwin_modulemap' \
+    "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay dest-sync onto the FE Darwin.modulemap is removed"
+expect_grep 'usr/include/Darwin.modulemap=' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay stamp hashes FE Darwin.modulemap bytes so a regenerated map restages"
+expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    "ensure_machorun refuses a dirty machorun vendor subtree"
+expect_grep 'status --short --untracked-files=all -- machorun' \
+    "$ROOT/scripts/x86/ensure_machorun.sh" \
+    "ensure_machorun asserts git status --short machorun is empty"
+expect_grep 'x86_cycle_assert_machorun_clean' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle asserts git status --short machorun is empty at the end"
+expect_not_grep 'x86_cycle_assert_overlay_darwin_modulemap' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle does not dest-sync overlay SDK Darwin.modulemap onto the FE sysroot map"
+expect_not_grep 'export W=$TREE' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle does not export W globally (overlays use \$HOME/work)"
+expect_grep 'env W="$TREE" bash "$TREE/scripts/x86/stage_fe_sysroot.sh"' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "sysroot stage still gets env W=\$TREE"
+expect_grep "SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh" \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "overlays OVERLAY_CMD matches main (no W, no SWIFTCORE_FE_SYSROOT)"
+expect_not_grep 'SWIFTCORE_FE_SYSROOT="$TREE/scratch/sysroot_fe4-x86_64"' \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "overlays stage does not set SWIFTCORE_FE_SYSROOT"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
     "every header in the FileManager/sdk-gap list is checked after restage"
 expect_grep 'FE_MEASUREMENT_HEADERS' "$PHASE2" \
     "missing measurement headers are CANNOT_FE_MEASUREMENT_HEADERS"
-expect_grep 'phase2_stage_measurement_headers_from_arm' "$STAGE" \
-    "x86 stager stages the shared list from arm64 sysroot_fe4"
+expect_grep 'phase2_copy_artifact_swift_overlays' "$COMMON" \
+    "artifact Darwin overlays are a helper for the FE clang dest on a fresh VM"
+expect_not_grep 'phase2_copy_artifact_swift_overlays "$SYS"' "$STAGE" \
+    "stager does not copy artifact overlays onto the overlay-copied SYS"
+expect_grep 'phase2_stage_fe_clang_sysroot' "$STAGE" \
+    "x86 stager expands Darwin.modulemap on an FE-only snapshot, not the overlay-copied sysroot"
+expect_not_grep 'phase2_expand_darwin_modulemap_for_fe "$SYS"' "$STAGE" \
+    "stager does not expand Darwin.modulemap in-place on the overlay-copied FE sysroot"
+expect_grep 'phase2_select_fe_compile_sysroot' "$COMMON" \
+    "one FE_SYSROOT_SELECT helper chooses overlay-copied SYS vs *-fe-clang"
+expect_grep 'FE_SYSROOT_SELECT=main-copy' "$COMMON" \
+    "box Darwin family prints FE_SYSROOT_SELECT=main-copy"
+expect_grep 'FE_SYSROOT_SELECT=fe-clang reason=' "$COMMON" \
+    "VM Darwin family prints FE_SYSROOT_SELECT=fe-clang reason=..."
+expect_grep 'phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"' "$PHASE2" \
+    "phase2 selects the compile sysroot in one place before os-module/FE/ud-guest"
+expect_grep 'phase2_select_fe_compile_sysroot "$SYS" "$ARM_SYS"' "$STAGE" \
+    "stager uses the same selector (no *-fe-clang sibling on the box)"
+expect_grep 'env -u W -u SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "overlays stage unsets leaked W and SWIFTCORE_FE_SYSROOT so build_stdlib uses \$HOME/work"
+expect_grep 'phase2_ensure_swift_onone_support' "$COMMON" \
+    "SwiftOnoneSupport stub helper exists for collections without -O"
+expect_not_grep 'phase2_ensure_swift_onone_support "$SYS"' "$STAGE" \
+    "stager does not stage SwiftOnoneSupport on the overlay-copied SYS"
+expect_grep 'overlay-posix' "$COMMON" \
+    "POSIX semaphore.h is staged on the FE clang dest; real ioctl stays out of overlay-copied SYS"
+expect_not_grep 'overlay-posix' "$STAGE" \
+    "stager does not copy overlay-posix onto the overlay-copied SYS"
+expect_grep 'fe_ioctl_stub.h' "$COMMON" \
+    "ioctl stub is staged on the FE clang dest so SwiftOverlayShims builds"
+expect_not_grep 'fe_ioctl_stub.h' "$STAGE" \
+    "stager does not write fe_ioctl_stub.h into the overlay-copied SYS"
+expect_not_grep 'stage_overlay_darwin.sh "$SYS"' "$STAGE" \
+    "stager does not run overlay-darwin on the overlay-copied SYS"
+expect_grep 'stage_overlay_darwin.sh' "$COMMON" \
+    "overlay-darwin runs against the FE clang dest when Darwin.modulemap is absent"
+expect_grep 'phase2_ensure_darwin_named_submodules' "$COMMON" \
+    "Darwin.modulemap grows sysdir and uuid submodules for import Darwin.sysdir"
+expect_grep 'malloc/malloc.h' "$COMMON" \
+    "Darwin.modulemap names malloc_good_size's header for FoundationEssentials Data.swift"
+expect_grep 'phase2_ensure_macho_modulemap' "$COMMON" \
+    "sysroot grows MachO.dyld for FoundationEssentials Platform.swift"
+expect_file "$ROOT/scripts/x86/MachO.modulemap"
+expect_grep 'SwiftOverlayShims.timeval' "$COMMON" \
+    "sys/time.h is textual so SwiftOverlayShims.timeval is visible"
+expect_grep 'sys/time.h|time.h|semaphore.h) kind="textual header"' "$COMMON" \
+    "time.h and semaphore.h are textual so SwiftOverlayShims.timespec/sem_t are visible"
+expect_grep 'phase2_posix_overlay_dir' "$COMMON" \
+    "overlay-posix dir helper exists for Swift -Xcc -I (UD guest)"
+expect_file "$ROOT/scripts/x86/fe_ioctl_stub.h"
+expect_grep 'phase2_posix_xcc_for_sysroot' "$COMMON" \
+    "overlay-posix -I is VM-only (*-fe-clang); main-copy argv has none"
+expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/build_os_module.sh" \
+    "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
+expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
+    "rung a drops a stale runroot clone so libCFTest content is fresh"
+if [ ! -f "$ROOT/scripts/x86/patch_cf_system_allocator.py" ]; then
+    ok "allocator rewrite patcher is gone"
+else
+    die_test "allocator rewrite patcher still present"
+fi
+expect_not_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
+    "ud-guest does not rewrite CFAllocator isa/TSD (box cold-compile of the pin is the authority)"
+expect_not_grep 'cf-system-allocator' "$UDINC" \
+    "ud-guest compiles the CF pin, not a patched copy"
+expect_grep 'phase2_ud_guest_stage_cf_compile_sdk' "$UDINC" \
+    "CF objects compile against a machorun/sdk snapshot, not the FE sysroot overlay-darwin mutated"
+expect_grep 'CFOBJC_FORCE_COPY=1' "$UDINC" \
+    "cfobjc recopies the pin (existence of OUT/src is not freshness)"
+expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
+    "sysroot does not globally map malloc_zone_*"
+expect_grep 'stamp_key "$cfbase"' "$UDINC" \
+    "cfobjc objects rebuild when malloc/malloc.h or the CF pin changes; existence is not freshness"
+expect_file "$ROOT/scripts/x86/Darwin.apinotes"
+expect_grep 'Darwin.apinotes' "$COMMON" \
+    "FE clang snapshot stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
+expect_grep 'BUILD_FULL_THROUGH=umbrellas' "$COMMON" \
+    "run-root umbrellas come from build_full.sh, not build_foundation_placeholder.sh"
+expect_grep 'phase2_stage_x86_build_full_umbrellas' "$PHASE2" \
+    "phase2 invokes build_full THROUGH=umbrellas before rung a"
+expect_grep 'BUILD_FULL_THROUGH=umbrellas' "$BUILD_FULL" \
+    "build_full.sh accepts the reduced-form umbrellas stop"
+expect_not_grep 'phase2_stage_x86_foundation_placeholders' "$PHASE2" \
+    "phase2 does not stage empty Foundation placeholders into the run root"
+expect_not_grep 'phase2_stage_x86_foundation_placeholders' "$ROOT/scripts/x86/stage_cycle_roots.sh" \
+    "cycle roots do not stage empty Foundation placeholders into the run root"
 expect_grep 'fe_sysroot_append_vm_copy' "$STAGE" \
     "x86 stager uses the shared vm_copy append"
 expect_grep 'fe_sysroot_measurement.inc' "$ROOT/full/foundation/stage_fe_sysroot.sh" \
@@ -867,6 +1008,147 @@ else
     die_test "expected no missing headers after copy, got: $after"
 fi
 rm -rf "$MMWORK"
+
+echo "== FE clang snapshot: expand does not rewrite the overlay-copied Darwin.modulemap"
+SNAP=$(mktemp -d /tmp/phase2-fe-clang.XXXXXX)
+mkdir -p "$SNAP/sys/usr/include"
+# Overlay-copied SYS Darwin.modulemap does not name math.h; Darwin.C does.
+# Overlay SDK extra-inserts those two lines onto its own copy. FE expand of
+# unistd.h / clock headers must stay on *-fe-clang, not SYS.
+cat > "$SNAP/sys/usr/include/Darwin.modulemap" <<'EOF'
+module Darwin [system] [extern_c] {
+  export *
+  extern module C "Darwin_C.modulemap"
+}
+EOF
+cat > "$SNAP/sys/usr/include/Darwin_C.modulemap" <<'EOF'
+module Darwin.C [system] [extern_c] {
+  module math {
+    header "math.h"
+    export *
+  }
+  export *
+}
+EOF
+printf '/* math */\n' > "$SNAP/sys/usr/include/math.h"
+printf '/* unistd */\n' > "$SNAP/sys/usr/include/unistd.h"
+cp -a "$SNAP/sys/usr/include/Darwin.modulemap" "$SNAP/overlay-clean.modulemap"
+cp -a "$SNAP/sys/usr/include/Darwin_C.modulemap" "$SNAP/overlay-clean-C.modulemap"
+if phase2_stage_fe_clang_sysroot "$SNAP/sys" "$ROOT"; then
+    fe_clang=$(phase2_fe_clang_sysroot "$SNAP/sys")
+    if cmp -s "$SNAP/sys/usr/include/Darwin.modulemap" "$SNAP/overlay-clean.modulemap"; then
+        ok "overlay-copied Darwin.modulemap is unchanged after FE clang snapshot"
+    else
+        die_test "overlay-copied Darwin.modulemap was mutated"
+    fi
+    if grep -q 'header "math.h"' "$SNAP/sys/usr/include/Darwin.modulemap"; then
+        die_test "overlay-copied Darwin.modulemap names math.h (hides Darwin.C; tgmath misses acosf)"
+    else
+        ok "overlay-copied Darwin.modulemap does not name math.h (Darwin.C owns it)"
+    fi
+    if cmp -s "$SNAP/sys/usr/include/Darwin_C.modulemap" "$SNAP/overlay-clean-C.modulemap" \
+        && grep -q 'header "math.h"' "$SNAP/sys/usr/include/Darwin_C.modulemap"; then
+        ok "overlay-copied Darwin_C.modulemap still names math.h"
+    else
+        die_test "overlay-copied Darwin_C.modulemap was mutated"
+    fi
+    if grep -q 'header "unistd.h"' "$fe_clang/usr/include/Darwin.modulemap"; then
+        ok "FE clang snapshot Darwin.modulemap names unistd.h for Darwin.write"
+    else
+        die_test "FE clang snapshot missing unistd.h"
+    fi
+    if grep -q 'header "math.h"' "$fe_clang/usr/include/Darwin.modulemap"; then
+        ok "FE clang snapshot Darwin.modulemap names math.h (expand is sibling-only)"
+    else
+        die_test "FE clang snapshot missing math.h expand"
+    fi
+    if grep -q 'header "unistd.h"' "$SNAP/sys/usr/include/Darwin.modulemap"; then
+        die_test "overlay-copied Darwin.modulemap names unistd.h (would break _DarwinFoundation3)"
+    else
+        ok "overlay-copied Darwin.modulemap does not name unistd.h"
+    fi
+else
+    die_test "phase2_stage_fe_clang_sysroot failed on fixture"
+fi
+rm -rf "$SNAP"
+
+echo "== FE_SYSROOT_SELECT: arm64-copied Darwin family is main-copy; argv equals main"
+SEL=$(mktemp -d /tmp/phase2-fe-select.XXXXXX)
+mkdir -p "$SEL/sys/usr/include" "$SEL/arm/usr/include" \
+    "$SEL/sys-fe-clang/usr/include"
+cat > "$SEL/arm/usr/include/Darwin.modulemap" <<'EOF'
+/* GENERATED by machorun scripts/gen_darwin_modulemap.py */
+module Darwin [system] [extern_c] {
+  export *
+  extern module C "Darwin_C.modulemap"
+}
+EOF
+cp "$SEL/arm/usr/include/Darwin.modulemap" "$SEL/sys/usr/include/Darwin.modulemap"
+cat > "$SEL/sys/usr/include/Darwin_C.modulemap" <<'EOF'
+module Darwin.C [system] [extern_c] {
+  module math { header "math.h" export * }
+  export *
+}
+EOF
+cp "$SEL/sys/usr/include/Darwin_C.modulemap" "$SEL/arm/usr/include/Darwin_C.modulemap"
+# Leftover sibling from a previous cycle must not win on the box.
+printf 'module Darwin { header "unistd.h" }\n' \
+    > "$SEL/sys-fe-clang/usr/include/Darwin.modulemap"
+sel_out=$(phase2_select_fe_compile_sysroot "$SEL/sys" "$SEL/arm")
+echo "$sel_out"
+case "$sel_out" in
+    FE_SYSROOT_SELECT=main-copy\ sys="$SEL/sys")
+        ok "arm64-copied Darwin family selects main-copy (leftover *-fe-clang ignored)"
+        ;;
+    *)
+        die_test "expected FE_SYSROOT_SELECT=main-copy sys=$SEL/sys got: $sel_out"
+        ;;
+esac
+sel_sys=${sel_out##* sys=}
+[ "$sel_sys" = "$SEL/sys" ] \
+    && ok "main-copy compile sysroot is overlay-copied SYS" \
+    || die_test "compile sysroot $sel_sys != $SEL/sys"
+argv=$(phase2_os_module_compile_argv_summary "$ROOT" "$sel_sys" main-copy)
+echo "$argv"
+case "$argv" in
+    sys="$SEL/sys"\ posix_xcc=none)
+        ok "main-copy os-module argv equals main (SYS=\$SYS, no overlay-posix -I)"
+        ;;
+    *)
+        die_test "main-copy os-module argv != main's: $argv"
+        ;;
+esac
+python3 - "$PHASE2" "$ROOT/full/foundation/build_os_module.sh" <<'PY' && ok "try_os_module compile line is SYS=\$FE_CLANG_SYS plus optional posix_xcc (empty on main-copy)" || die_test "try_os_module compile line drifted from main"
+import pathlib, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find("try_os_module()")
+chunk = text[start:text.find("try_fe_imports()", start)]
+if 'SYS="$FE_CLANG_SYS"' not in chunk:
+    raise SystemExit("missing SYS=$FE_CLANG_SYS")
+if 'bash "$W/full/foundation/build_os_module.sh"' not in chunk:
+    raise SystemExit("missing build_os_module.sh")
+if 'posix_xcc' not in chunk:
+    raise SystemExit("posix_xcc not gated")
+# Main: W="$W" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" bash .../build_os_module.sh
+# Ours on main-copy: same with SYS="$FE_CLANG_SYS" (== $SYS) and empty posix_xcc.
+need = ['W="$W"', 'OUT="$out"', 'TARGET="$TARGET"', 'MC="$MC"']
+for n in need:
+    if n not in chunk:
+        raise SystemExit(f"missing {n}")
+PY
+# VM: no arm64 Darwin family → fe-clang
+rm -rf "$SEL/arm/usr/include/Darwin.modulemap"
+sel_vm=$(phase2_select_fe_compile_sysroot "$SEL/sys" "$SEL/arm")
+echo "$sel_vm"
+case "$sel_vm" in
+    FE_SYSROOT_SELECT=fe-clang\ reason=no-arm64-darwin-family\ sys="$SEL/sys-fe-clang")
+        ok "no arm64 Darwin family selects fe-clang reason=no-arm64-darwin-family"
+        ;;
+    *)
+        die_test "expected fe-clang reason=no-arm64-darwin-family got: $sel_vm"
+        ;;
+esac
+rm -rf "$SEL"
 
 echo "== FileManager measurement headers: fail before copy, pass after arm64 stage_absent"
 n_hdr=$(fe_sysroot_measurement_headers | wc -l | tr -d ' ')
@@ -1420,6 +1702,14 @@ expect_grep 'artifacts/libswiftcompat.dylib is arm64' "$COMMON" \
 expect_grep 'phase2_base_layout_macho_names' "$COMMON" \
     "layout inventory is a closed BASE Mach-O list"
 expect_grep 'LAYOUT_OK' "$PHASE2" "rungs b/c wait on LAYOUT_OK"
+expect_grep 'phase2_rung_selected_quiet b' "$PHASE2" \
+    "host-w-layout / focus-pin / SWIFTUI_SUBSTRATE only cannot when rung b is selected"
+expect_grep 'Rung b would CANNOT_HOST_W_LAYOUT' "$PHASE2" \
+    "PHASE2_RUNGS=a notes the /w mount instead of failing host-w-layout"
+expect_grep 'Rung b would CANNOT_FOCUS_PIN' "$PHASE2" \
+    "PHASE2_RUNGS=a notes a missing Focus pin instead of failing focus-pin"
+expect_grep 'elif phase2_rung_selected_quiet c' "$PHASE2" \
+    "unselected rung c does not cannot REMINDER_INVENTORY"
 awk '
     /cannot mrroot-layout-x86 X86_MRROOT_LAYOUT/ { l=NR }
     /build_focus_widget_guest.sh/ { if (!w) w=NR }
@@ -1575,10 +1865,36 @@ fi
 rm -rf "$PREP_FIX"
 
 echo "== ud-guest-x86 uses committed linker, suffixed tree, reused FE objects"
-UDINC=$ROOT/scripts/x86/ud_guest.inc
 expect_file "$UDINC"
 expect_grep 'ud-guest-x86' "$PHASE2" "phase2 item ud-guest-x86"
 expect_grep 'phase2_try_ud_guest' "$PHASE2" "phase2 invokes the ud-guest producer"
+expect_grep 'SwiftOverlayShims.timeval' "$PHASE2" \
+    "ud-guest -sdk comment names SwiftOverlayShims.timeval"
+python3 - "$PHASE2" <<'PY' && ok "try_ud_guest third arg is the selected FE_CLANG_SYS" || die_test "try_ud_guest sysroot arg drifted"
+import pathlib, re, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find("ud_report=$(phase2_try_ud_guest")
+if start < 0:
+    raise SystemExit("call not found")
+end = text.find("|| true)", start)
+chunk = text[start:end]
+args = re.findall(r'"\$([A-Z0-9_]+)"', chunk)
+if len(args) < 3 or args[2] != "FE_CLANG_SYS":
+    raise SystemExit(f"args={args} chunk={chunk!r}")
+PY
+python3 - "$PHASE2" <<'PY' && ok "try_ud_score_guest sysroot arg is the selected FE_CLANG_SYS" || die_test "try_ud_score_guest sysroot arg drifted"
+import pathlib, re, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find("score_report=$(phase2_try_ud_score_guest")
+if start < 0:
+    raise SystemExit("score call not found")
+end = text.find("|| true)", start)
+chunk = text[start:end]
+if '"$FE_CLANG_SYS"' not in chunk:
+    raise SystemExit(chunk)
+if re.search(r'"\$SYS"', chunk):
+    raise SystemExit(f"still hardcodes SYS instead of selected FE_CLANG_SYS: {chunk!r}")
+PY
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
     "producer names the committed linker"
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
@@ -1663,6 +1979,8 @@ expect_grep 'CANNOT_CFTEST_STUBS' "$PHASE2" "phase2 maps CANNOT_CFTEST_STUBS to 
 expect_grep 'Will not link ud_guest against it' "$PHASE2" \
     "unexpected stub set does not proceed to link_ud_guest.sh"
 expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
+expect_grep 'phase2_posix_xcc_for_sysroot' "$UDINC" \
+    "UserDefaultsGuest overlay-posix -I only when -sdk is *-fe-clang"
 expect_grep 'UserDefaultsGuest.swiftc.log' "$UDINC" "port swiftc output is spilled to a file"
 expect_grep 'runner.swiftc.log' "$UDINC" "runner swiftc output is spilled to a file"
 expect_grep '_FoundationCShims' "$UDINC" "port/runner pass the CShims module map"
@@ -1684,6 +2002,12 @@ expect_grep 'GUEST SCOREBOARD' "$PHASE2" \
     "phase2 reports run_ud_persist.sh GUEST SCOREBOARD denominators"
 expect_grep 'Success bar unchanged' "$PHASE2" \
     "persist success bar is still committed run_ud_persist.sh"
+expect_grep 'PREFS:=$HOME/Library/Preferences' "$PHASE2" \
+    "persist witness looks at \$HOME/Library/Preferences (Cursor HOME is not /root)"
+expect_grep 'persist_presence=$(sed -n' "$PHASE2" \
+    "presence line is taken from the positive persist board, not the control"
+expect_not_grep "grep 'presence:' \"\$W/scratch/phase2-rung-a-persist.log\" | tail -1" "$PHASE2" \
+    "does not quote the NEGATIVE CONTROL presence 0/17 on the scoreboard"
 expect_grep 'OrderedCollections.swiftmodule' "$UDINC" \
     "ud-guest stages OrderedCollections.swiftmodule next to the .o"
 expect_grep '_RopeModule.swiftmodule' "$UDINC" \
@@ -2061,8 +2385,15 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     mkdir -p "$STAMPW/cfobjc/obj" "$STAMPW/nscfobj" "$STAMPW/lib"
     echo 'int cfobjc_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
         -c -o "$STAMPW/cfobjc/obj/CFString.o" -x c -
+    echo 'int cfbase_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
+        -c -o "$STAMPW/cfobjc/obj/CFBase.o" -x c -
     echo 'int nscf_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
         -c -o "$STAMPW/nscfobj/NSCFConstantString.o" -x c -
+    stamp_write "$STAMPW/cfobjc/obj/CFBase.o" "$(stamp_key \
+        "$STAMPW/cfobjc/obj/CFBase.o" \
+        "$ROOT/foundation-macho/scripts/build_cfobjc.sh" \
+        "$SYS/usr/include/malloc/malloc.h" \
+        "$PHASE2_UD_GUEST_CF_COMMIT")"
     : > "$STAMPW/expect-func.txt"
     : > "$STAMPW/expect-data.txt"
     set +e
@@ -2311,11 +2642,16 @@ else
     rm -rf "$PROV_DEST" "$STALE_DEST" "$REFUSE_DEST" "$EXTRACT_W"
 fi
 
-echo "== stamp library + existence-reuse + ops"
+echo "== stamp library + existence-reuse + ops + SYS vs main"
 if bash "$ROOT/scripts/x86/test_stamp.sh"; then
     ok "test_stamp.sh"
 else
     die_test "test_stamp.sh"
+fi
+if bash "$ROOT/scripts/x86/test_stage_fe_sysroot_matches_main.sh"; then
+    ok "test_stage_fe_sysroot_matches_main.sh"
+else
+    die_test "test_stage_fe_sysroot_matches_main.sh"
 fi
 if bash "$ROOT/scripts/x86/test_no_existence_reuse.sh"; then
     ok "test_no_existence_reuse.sh"

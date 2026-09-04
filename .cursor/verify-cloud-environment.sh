@@ -23,11 +23,10 @@ esac
 [ -f "$repo_root/harness/Dockerfile" ] \
     || { printf 'cursor-environment: OpenUIKit repository marker is missing\n' >&2; exit 1; }
 
-# Wipe per-agent compile trees (.build, build) so a snapshot cannot bless
-# stale acceptance binaries. Do NOT wipe scratch/: install-scratch-corpus.sh
-# and install-built-products.sh populate pinned public checkouts and the
-# in-repo Mach-O products this VM can emit. Those trees are verified below.
-for relative in .build build; do
+# Wipe per-agent SwiftPM trees (.build). Do NOT wipe scratch/. Do NOT wipe
+# build/full-x86_64: that is the phase2 FE object tree install snapshots so a
+# PHASE2_RUNGS=a rerun is stamp reuse. Other build/ children are still cleared.
+for relative in .build; do
     tracked_paths=$(git -C "$repo_root" ls-files -- "$relative") \
         || { printf 'cursor-environment: cannot inspect tracked cleanup paths\n' >&2; exit 1; }
     if [ -n "$tracked_paths" ]; then
@@ -39,6 +38,14 @@ for relative in .build build; do
         rm -rf -- "$generated_root"
     fi
 done
+tracked_build=$(git -C "$repo_root" ls-files -- build) \
+    || { printf 'cursor-environment: cannot inspect tracked build path\n' >&2; exit 1; }
+[ -z "$tracked_build" ] \
+    || { printf 'cursor-environment: refusing to treat tracked build/ as generated\n' >&2; exit 1; }
+if [ -d "$repo_root/build" ] && [ ! -L "$repo_root/build" ]; then
+    find "$repo_root/build" -mindepth 1 -maxdepth 1 ! -name 'full-x86_64' \
+        -exec rm -rf -- {} +
+fi
 tracked_scratch=$(git -C "$repo_root" ls-files -- scratch) \
     || { printf 'cursor-environment: cannot inspect tracked scratch path\n' >&2; exit 1; }
 [ -z "$tracked_scratch" ] \
@@ -189,6 +196,59 @@ $corpus_ids
 EOF
 [ "$corpus_count" -gt 0 ] && [ "$corpus_ok" -eq "$corpus_count" ] \
     || { printf 'cursor-environment: corpus pins %s/%s\n' "$corpus_ok" "$corpus_count" >&2; exit 1; }
+
+# Same two checkouts the install path clones from env/contract.json (not the
+# corpus pin file). A checkout cannot be locked in two places.
+contract_rows=$(python3 - "$repo_root" <<'PY'
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+sys.path.insert(0, str(root / "scripts"))
+from env.contract import checkouts_by_id, load_contract
+
+ids = ("swift-foundation-icu", "swift-corelibs-foundation")
+by_id = checkouts_by_id(load_contract(root))
+for ident in ids:
+    row = by_id[ident]
+    print(
+        "\t".join(
+            [
+                ident,
+                row["repository"],
+                row["commit"],
+                row["tree"],
+                row["destination"],
+            ]
+        )
+    )
+PY
+)
+contract_count=0
+contract_ok=0
+while IFS=$'\t' read -r corpus_id repository commit tree destination; do
+    [ -n "$corpus_id" ] || continue
+    contract_count=$((contract_count + 1))
+    dest=$repo_root/$destination
+    [ -d "$dest/.git" ] && [ ! -L "$dest" ] \
+        || { printf 'cursor-environment: missing contract checkout: %s\n' "$destination" >&2; exit 1; }
+    git_corpus() { git -c safe.directory="$dest" -C "$dest" "$@"; }
+    [ "$(git_corpus rev-parse HEAD)" = "$commit" ] \
+        || { printf 'cursor-environment: %s commit differs\n' "$corpus_id" >&2; exit 1; }
+    [ "$(git_corpus rev-parse 'HEAD^{tree}')" = "$tree" ] \
+        || { printf 'cursor-environment: %s tree differs\n' "$corpus_id" >&2; exit 1; }
+    bash "$origin_guard" "$dest" "$repository"
+    corpus_status=$(git_corpus --no-optional-locks status \
+        --porcelain=v1 --untracked-files=all --ignored) \
+        || { printf 'cursor-environment: cannot inspect %s status\n' "$corpus_id" >&2; exit 1; }
+    [ -z "$corpus_status" ] \
+        || { printf 'cursor-environment: %s checkout is dirty\n' "$corpus_id" >&2; exit 1; }
+    contract_ok=$((contract_ok + 1))
+done <<EOF
+$contract_rows
+EOF
+[ "$contract_count" -eq 2 ] && [ "$contract_ok" -eq "$contract_count" ] \
+    || { printf 'cursor-environment: contract checkouts %s/%s\n' "$contract_ok" "$contract_count" >&2; exit 1; }
 pinned_inputs=$repo_root/full/foundation/pinned_inputs.pl
 if [ -f "$pinned_inputs" ] && [ ! -L "$pinned_inputs" ]; then
     perl "$pinned_inputs" verify \
@@ -298,28 +358,94 @@ PY
 
 can_execute=0
 host_arch=$(uname -m)
-if [ "$host_arch" = aarch64 ] || [ "$host_arch" = arm64 ]; then
-    can_execute=1
-fi
 loader_built=$(jq -r '.loaderBuilt | tostring' "$products_manifest")
 tbd_generated=$(jq -r '.tbdGenerated | tostring' "$products_manifest")
 file_count=$(jq -r '.files | length | tostring' "$products_manifest")
+product_arch=$(jq -r '.arch // empty' "$products_manifest")
+if [ "$host_arch" = aarch64 ] || [ "$host_arch" = arm64 ]; then
+    can_execute=1
+elif [ "$host_arch" = x86_64 ] && [ "$loader_built" = true ]; then
+    can_execute=1
+fi
 
 printf 'CURSOR_TOOLCHAIN_INVENTORY_OK swift=swift,swiftc clang=clang,clang++,clang-18,clang++-18 linker=ld64.lld,ld64.lld-18 llvm=llvm-nm,llvm-nm-18,llvm-otool,llvm-otool-18,llvm-objdump,llvm-objdump-18 utilities=perl,patch,jq,sha256sum,shasum,cmp,file,git,python3,pkg-config\n'
 printf 'CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios\n'
 printf 'CURSOR_SCRATCH_CORPUS_VERIFIED sources=%s/%s\n' "$corpus_ok" "$corpus_count"
-printf 'CURSOR_BUILT_PRODUCTS_VERIFIED files=%s sysroot_fe4=tree mrroot_full=tree loader=%s tbd=%s\n' \
-    "$file_count" "$loader_built" "$tbd_generated"
-printf 'CURSOR_ENV_PROOF_SPLIT compile_link_static=in-vm execution=arm64-ec2-authority macos_oracle=local-only\n'
+printf 'CURSOR_BUILT_PRODUCTS_VERIFIED files=%s sysroot_fe4=tree mrroot_full=tree loader=%s tbd=%s arch=%s\n' \
+    "$file_count" "$loader_built" "$tbd_generated" "${product_arch:-unknown}"
+printf 'CURSOR_ENV_PROOF_SPLIT compile_link_static=in-vm execution=host-arch macos_oracle=local-only\n'
 sysroot_surface=sysroot-headers+dylibs+swiftcore-module
 if [ "$tbd_generated" = true ]; then
     sysroot_surface=sysroot-headers+tbd+dylibs+swiftcore-module
 fi
-printf 'CURSOR_ENV_SUMMARY can=toolchain,corpus-pins[%s/%s],arm64-macho-emit,%s,darwin-userland-dylibs cannot=arm64-execute,machorun-loader-on-%s,tbd-without-loader,xcode-darwin-overlays,simruntime-overlay-dylibs,opencombine-export,modcache-swiftui-guest,macos-oracle unavailable=%s fingerprint=%s\n' \
-    "$corpus_ok" "$corpus_count" "$sysroot_surface" "$host_arch" "$unavailable_count" "$fingerprint_sha"
-if [ "$can_execute" -eq 0 ]; then
-    printf 'CURSOR_ENV_CANNOT_EXECUTE_ARM64 host=%s machorun=arm64-linux-native split=compile-link-static-in-vm/execution-arm64-ec2/macos-oracle-local-only\n' \
-        "$host_arch"
+
+phase2_ms=0
+if [ "$host_arch" = x86_64 ] && [ "$can_execute" -eq 1 ]; then
+    printf 'CURSOR_ENV_CAN_EXECUTE arch=x86_64 loader=%s\n' \
+        "$(sha256sum "$repo_root/machorun/build/machorun" | awk '{print substr($1,1,12)}')"
+
+    fixtures_bin=$repo_root/machorun/tests/bin-x86_64
+    [ -s "$fixtures_bin/.built_count" ] \
+        || { printf 'cursor-environment: missing x86 fixtures at %s\n' "$fixtures_bin" >&2; exit 1; }
+    fixtures_built=$(tr -d '[:space:]' < "$fixtures_bin/.built_count")
+    [ "$fixtures_built" -gt 0 ] \
+        || { printf 'cursor-environment: x86 fixtures built=0\n' >&2; exit 1; }
+    printf 'CURSOR_ENV_X86_FIXTURES_OK built=%s out=%s\n' "$fixtures_built" "$fixtures_bin"
+
+    ud=$repo_root/scratch/ud-guest-x86_64
+    [ -d "$ud/cfobjc/obj" ] && ls "$ud/cfobjc/obj"/*.o >/dev/null 2>&1 \
+        || { printf 'cursor-environment: missing %s/cfobjc/obj\n' "$ud" >&2; exit 1; }
+    [ -f "$ud/lib/libCFTest.dylib" ] \
+        || { printf 'cursor-environment: missing %s/lib/libCFTest.dylib\n' "$ud" >&2; exit 1; }
+    [ -x "$ud/bin/ud_guest" ] \
+        || { printf 'cursor-environment: missing %s/bin/ud_guest\n' "$ud" >&2; exit 1; }
+    [ -x "$ud/bin/ud_score_guest" ] \
+        || { printf 'cursor-environment: missing %s/bin/ud_score_guest\n' "$ud" >&2; exit 1; }
+    [ -d "$repo_root/scratch/mrroot_full-x86_64" ] \
+        || { printf 'cursor-environment: missing scratch/mrroot_full-x86_64\n' >&2; exit 1; }
+    printf 'CURSOR_ENV_UD_PRODUCTS_OK cfobjc_obj=1 libCFTest=1 ud_guest=1 ud_score_guest=1 mrroot_full-x86_64=1\n'
+
+    echo "== phase2 rung a (PHASE2_RUNGS=a; expected stamp reuse after install)"
+    phase2_start_ns=$(date +%s%N)
+    set +e
+    PHASE2_RUNGS=a bash "$repo_root/scripts/x86/phase2.sh" "$repo_root" \
+        > "$repo_root/scratch/phase2-verify-rung-a.log" 2>&1
+    phase2_rc=$?
+    set -e
+    cat "$repo_root/scratch/phase2-verify-rung-a.log"
+    phase2_ms=$(( ( $(date +%s%N) - phase2_start_ns ) / 1000000 ))
+    grep -E 'ENV_PREPARE_SUMMARY|RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_|reused=1 stamp=' \
+        "$repo_root/scratch/phase2-verify-rung-a.log" || true
+    reuse_n=$(grep -c 'reused=1 stamp=' "$repo_root/scratch/phase2-verify-rung-a.log" || true)
+    printf 'CURSOR_ENV_PHASE2_REUSE_LINES=%s rc=%s\n' "$reuse_n" "$phase2_rc"
+    [ "$reuse_n" -ge 1 ] \
+        || { printf 'cursor-environment: PHASE2_RUNGS=a rerun had no reused=1 stamp= lines\n' >&2; exit 1; }
+    if [ "$phase2_rc" -ne 0 ] && [ "$phase2_rc" -ne 2 ]; then
+        printf 'cursor-environment: phase2 rung a failed rc=%s (scoreboard quoted above)\n' \
+            "$phase2_rc" >&2
+        exit 1
+    fi
+    if grep -q '^RUNG_SCOREBOARD a=PASS' "$repo_root/scratch/phase2-verify-rung-a.log"; then
+        printf 'CURSOR_ENV_RUNG_A=PASS\n'
+        if [ "$phase2_rc" -ne 0 ]; then
+            printf 'cursor-environment: rung a PASS but phase2 rc=%s\n' "$phase2_rc" >&2
+            exit 1
+        fi
+    elif grep -q '^RUNG_SCOREBOARD a=CANNOT' "$repo_root/scratch/phase2-verify-rung-a.log"; then
+        printf 'CURSOR_ENV_RUNG_A=CANNOT (compile products present; scoreboard quoted above)\n'
+    else
+        printf 'cursor-environment: phase2 rung a did not print RUNG_SCOREBOARD a=PASS|CANNOT\n' >&2
+        exit 1
+    fi
 fi
-printf 'CURSOR_ENVIRONMENT_METRICS total_ms=%d cleanup_ms=%d tools_ms=%d evidence_ms=%d corpus_ms=%d products_ms=%d swift_ms=%d\n' \
-    "$total_ms" "$cleanup_ms" "$tools_ms" "$evidence_ms" "$corpus_ms" "$products_ms" "$swift_ms"
+
+printf 'CURSOR_ENV_OK=1 arch=%s fixtures=%s ud_products=1\n' \
+    "$host_arch" "${fixtures_built:-n/a}"
+printf 'CURSOR_ENV_SUMMARY can=toolchain,corpus-pins[%s/%s],%s-macho-emit,%s,darwin-userland-dylibs cannot=arm64-macho-execute-on-%s,simruntime-overlay-dylibs,opencombine-export,modcache-swiftui-guest,macos-oracle unavailable=%s fingerprint=%s\n' \
+    "$corpus_ok" "$corpus_count" "$host_arch" "$sysroot_surface" "$host_arch" "$unavailable_count" "$fingerprint_sha"
+if [ "$host_arch" != aarch64 ] && [ "$host_arch" != arm64 ]; then
+    printf 'CURSOR_ENV_CANNOT_EXECUTE_ARM64_MACHO host=%s needed=arm64 can_execute_x86_64=%s split=compile-link-static-in-vm/execution-host-arch/macos-oracle-local-only\n' \
+        "$host_arch" "$can_execute"
+fi
+printf 'CURSOR_ENVIRONMENT_METRICS total_ms=%d cleanup_ms=%d tools_ms=%d evidence_ms=%d corpus_ms=%d products_ms=%d swift_ms=%d phase2_ms=%d\n' \
+    "$total_ms" "$cleanup_ms" "$tools_ms" "$evidence_ms" "$corpus_ms" "$products_ms" "$swift_ms" "$phase2_ms"

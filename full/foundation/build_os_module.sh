@@ -16,12 +16,16 @@ mkdir -p "$OUT" "$MC"
 [ -d "$SYS" ] && SYS=$(realpath -P "$SYS")
 OUT=$(realpath -P "$OUT")
 MC=$(realpath -P "$MC" 2>/dev/null || readlink -f "$MC")
+# Extra argv (e.g. -Xcc -I overlay-posix) is for hosts whose Darwin sysroot
+# cannot carry ioctl.h (CFSocket census). Operator Xcode sysroots already
+# have it; passing nothing is the historical command.
 swiftc -target "${TARGET:-arm64-apple-macos15.0}" -sdk "$SYS" \
     -module-cache-path "$MC" \
     -module-name os -wmo -parse-as-library \
     -runtime-compatibility-version none \
     -emit-module -emit-module-path "$OUT/os.swiftmodule" \
     -c -o "$OUT/os.o" \
+    "$@" \
     "$W/full/foundation/os-module/os.swift"
 echo "== os module built:"
 ls -l "$OUT/os.swiftmodule" "$OUT/os.o"

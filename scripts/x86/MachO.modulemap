@@ -1,0 +1,8 @@
+// MachO.dyld for FoundationEssentials Platform.swift
+// (`internal import MachO.dyld`). Header is machorun/sdk usr/include/mach-o/dyld.h.
+module MachO [system] [extern_c] {
+  module dyld {
+    header "mach-o/dyld.h"
+    export *
+  }
+}
