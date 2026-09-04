@@ -184,6 +184,10 @@ check products_x86_umbrella \
     grep -q 'libSystem.real.dylib' "$script_dir/install-built-products.sh"
 check products_x86_base_foundation \
     grep -q 'BASE loud-abort stub' "$script_dir/install-built-products.sh"
+check products_x86_select_compile_sysroot \
+    grep -q 'phase2_select_fe_compile_sysroot' "$script_dir/install-built-products.sh"
+check products_x86_darwin_family_on_selected_sysroot \
+    grep -q 'compile_sys' "$script_dir/install-built-products.sh"
 check fixtures_wraps_vendor_script \
     grep -q 'build_fixtures_linux_x86_64.sh' "$script_dir/install-x86-fixtures.sh"
 check fixtures_stamp_keyed \
