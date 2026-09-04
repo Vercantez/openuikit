@@ -181,6 +181,18 @@ open class UITableView: UIScrollView {
     //                 16 inside the card; detail right edge 16 in; chevron
     //                 right edge 20 in; separators inset 16 / 16.
     static var isIOSChrome: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+
+    /// TableEditor row insert/delete spring. MEASURED 2026-09-04,
+    /// rowanimprobe on iPhone SE 2x / iOS 26.1 (TableEditor `.fade`
+    /// delete of Charlie at row 2, `.automatic` insert of Zero at row 0;
+    /// CADisplayLink presentation + the CASpringAnimation UIKit attached):
+    /// mass 1, stiffness 438.649, damping 41.888 → ζ = 1, ω = 20.944,
+    /// duration 0.441 (remaining 0.001 at t = D), settlingDuration 0.5,
+    /// initialVelocity 0. Same spring on opacity and on neighbour
+    /// position. `UIView.animate(usingSpringWithDamping: 1)` duration-fits
+    /// to this ω (file header of UIViewAnimation.swift: ω·D = 9.23341).
+    static let iOSRowAnimationDuration: Double = 0.441
+    static let iOSRowAnimationDamping: CGFloat = 1
     static func headerHeight(style: Style, firstSection: Bool,
                              compact: Bool = false) -> CGFloat {
         guard isIOSChrome else { return headerHeight }
@@ -798,6 +810,7 @@ open class UITableView: UIScrollView {
             cell.removeFromSuperview()
             recycle(cell)
         }
+        dropRowAnimationOrphans()
         headerViews.removeAll { _, view in
             view.removeFromSuperview()
             recycleHeaderFooter(view)
@@ -811,6 +824,16 @@ open class UITableView: UIScrollView {
             indexPathForSelectedRow = nil
             additionalSelectedRows.removeAll()
         }
+    }
+
+    private func dropRowAnimationOrphans() {
+        for cell in rowAnimationOrphans {
+            cell.removeFromSuperview()
+            cell.alpha = 1
+            cell.removeAllAnimations()
+            recycle(cell)
+        }
+        rowAnimationOrphans.removeAll()
     }
 
     // MARK: Editing and structural updates
@@ -839,6 +862,11 @@ open class UITableView: UIScrollView {
     private var structuralUpdatePending = false
     private var pendingRowMoves: [(source: IndexPath, destination: IndexPath)] = []
     private var pendingStructuralUpdateIncludesNonMove = false
+    private var pendingInsertedRows: [(IndexPath, RowAnimation)] = []
+    private var pendingDeletedRows: [(IndexPath, RowAnimation)] = []
+    /// Departing cells still fading after a measured delete. Dropped on
+    /// the next structural commit so a second update cannot leave a ghost.
+    private var rowAnimationOrphans: [UITableViewCell] = []
 
     public func beginUpdates() { updateNesting += 1 }
 
@@ -871,17 +899,23 @@ open class UITableView: UIScrollView {
         structuralUpdatePending = false
         pendingRowMoves.removeAll()
         pendingStructuralUpdateIncludesNonMove = false
-        // The data source is authoritative after an insert/delete call.  Drop
-        // only the visible presentation, preserve programmatic selection, and
-        // tile the new model immediately.  This is coherent UIKit behavior;
-        // RowAnimation is currently a visual hint rather than a different
-        // data-update algorithm.
+        let inserts = pendingInsertedRows
+        let deletes = pendingDeletedRows
+        pendingInsertedRows.removeAll()
+        pendingDeletedRows.removeAll()
+        if applyAnimatedRowUpdateIfMeasured(inserts: inserts, deletes: deletes) {
+            return
+        }
+        // Catalyst, `.none`, mixed batches, and unmeasured RowAnimation
+        // values snap: the data source is authoritative, drop the visible
+        // presentation, preserve programmatic selection, and tile immediately.
         discardVisibleData(clearSelection: false)
         setNeedsMetrics()
         retile()
     }
 
     public func insertRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+        pendingInsertedRows.append(contentsOf: indexPaths.map { ($0, animation) })
         noteStructuralUpdate()
     }
 
@@ -889,7 +923,165 @@ open class UITableView: UIScrollView {
         if let selected = indexPathForSelectedRow, indexPaths.contains(selected) {
             indexPathForSelectedRow = nil
         }
+        pendingDeletedRows.append(contentsOf: indexPaths.map { ($0, animation) })
         noteStructuralUpdate()
+    }
+
+    /// Whether this update is the measured iOS 26.1 row spring (TableEditor
+    /// t1350 / t2350). Other styles stay a snap — they were not on the
+    /// display-tick recording.
+    private func iOSRowAnimationIsMeasured(_ animation: RowAnimation) -> Bool {
+        animation == .fade || animation == .automatic
+    }
+
+    /// Run the measured insert/delete spring under the iOS cut. Returns
+    /// false when the update is out of the measured set so the caller can
+    /// snap. Driven by `UIView.animate` so openhost's `animationTime`
+    /// clock (ConformanceMode, 60 Hz) samples it.
+    private func applyAnimatedRowUpdateIfMeasured(
+        inserts: [(IndexPath, RowAnimation)],
+        deletes: [(IndexPath, RowAnimation)]
+    ) -> Bool {
+        guard UITableView.isIOSChrome, UIView.areAnimationsEnabled,
+              pendingRowMoves.isEmpty, dataSource != nil, bounds.width > 0, !inTile
+        else { return false }
+
+        let insertOnly = inserts.count == 1 && deletes.isEmpty
+        let deleteOnly = deletes.count == 1 && inserts.isEmpty
+        guard insertOnly || deleteOnly else { return false }
+
+        let animation = insertOnly ? inserts[0].1 : deletes[0].1
+        guard iOSRowAnimationIsMeasured(animation) else { return false }
+
+        dropRowAnimationOrphans()
+
+        let oldViews = visibleCellsByPath.views
+        var oldFrames: [ObjectIdentifier: CGRect] = [:]
+        for (_, cell) in oldViews { oldFrames[ObjectIdentifier(cell)] = cell.frame }
+
+        let insertPath = insertOnly ? inserts[0].0 : nil
+        let deletePath = deleteOnly ? deletes[0].0 : nil
+        let deletedHeight = deletePath.map { oldViews[$0]?.frame.height ?? 0 } ?? 0
+
+        func remap(_ path: IndexPath) -> IndexPath? {
+            if let deleted = deletePath {
+                if path == deleted { return nil }
+                if path.section == deleted.section, path.row > deleted.row {
+                    return IndexPath(row: path.row - 1, section: path.section)
+                }
+                return path
+            }
+            if let inserted = insertPath {
+                if path.section == inserted.section, path.row >= inserted.row {
+                    return IndexPath(row: path.row + 1, section: path.section)
+                }
+            }
+            return path
+        }
+
+        var rekeyed: [IndexPath: UITableViewCell] = [:]
+        var departing: [UITableViewCell] = []
+        var collision = false
+        for (oldPath, cell) in oldViews {
+            guard let newPath = remap(oldPath) else {
+                departing.append(cell)
+                continue
+            }
+            if rekeyed[newPath] != nil { collision = true; break }
+            rekeyed[newPath] = cell
+        }
+        guard !collision else { return false }
+
+        inTile = true
+        setNeedsMetrics()
+        metricsIfNeeded()
+        let needed = Set(neededViews().cells)
+        var kept: [IndexPath: UITableViewCell] = [:]
+        var slidingOut: [(cell: UITableViewCell, target: CGRect)] = []
+        for (path, cell) in rekeyed {
+            if needed.contains(path) {
+                kept[path] = cell
+            } else {
+                // MEASURED TableEditor t2350, SE 2x: Juliet stays in the
+                // window dump (abs y 674, pframe y 552.178) while springing
+                // off the bottom. Retiring her at dest y 558 (visBottom
+                // 558) would snap her off — keep her as a subview and
+                // spring her to the dest, then recycle.
+                slidingOut.append((cell, rectForRow(at: path)))
+            }
+        }
+        visibleCellsByPath.replaceAll(with: kept)
+        inTile = false
+        retile()
+
+        let insertedHeight = insertPath.map { rectForRow(at: $0).height } ?? 0
+        let shift: CGFloat = deletePath != nil ? deletedHeight : -insertedHeight
+
+        var moves: [(view: UIView, target: CGRect)] = []
+        for (path, cell) in visibleCellsByPath.views {
+            let target = cell.frame
+            if let inserted = insertPath, path == inserted {
+                continue
+            }
+            if let old = oldFrames[ObjectIdentifier(cell)] {
+                if old != target {
+                    cell.frame = old
+                    moves.append((cell, target))
+                }
+            } else if shift != 0 {
+                // Newly tiled at the viewport edge: it existed in the data
+                // source just off-screen. MEASURED Juliet on delete (from
+                // additive (0, +H)) and on insert (from (0, −H)).
+                let old = target.offsetBy(dx: 0, dy: shift)
+                cell.frame = old
+                moves.append((cell, target))
+            }
+        }
+        for extra in slidingOut {
+            if let old = oldFrames[ObjectIdentifier(extra.cell)], old != extra.target {
+                extra.cell.frame = old
+                moves.append((extra.cell, extra.target))
+            }
+        }
+
+        // MEASURED insert t=0 of the display-tick recording: Zero is already
+        // at the destination with opacity 1 and no CAAnimation; Alpha (the
+        // old occupant) is later in the subview list and slides off it.
+        if let inserted = insertPath, let newbie = visibleCellsByPath[inserted] {
+            let coverPath = IndexPath(row: inserted.row + 1, section: inserted.section)
+            if let cover = visibleCellsByPath[coverPath] {
+                insertSubview(newbie, belowSubview: cover)
+            }
+        }
+
+        guard !moves.isEmpty || !departing.isEmpty else { return true }
+
+        rowAnimationOrphans.append(contentsOf: departing)
+        rowAnimationOrphans.append(contentsOf: slidingOut.map(\.cell))
+        let animated = moves.map(\.view) + departing
+        UIView.animate(withDuration: UITableView.iOSRowAnimationDuration,
+                       delay: 0,
+                       usingSpringWithDamping: UITableView.iOSRowAnimationDamping,
+                       initialSpringVelocity: 0,
+                       options: [],
+                       animations: {
+            for m in moves { m.view.frame = m.target }
+            // MEASURED delete: Charlie's frame stays [0, 124, 375, 62];
+            // only opacity 1 → 0 is animated.
+            for cell in departing { cell.alpha = 0 }
+        }, completion: { _ in
+            let now = OpenUIKitRuntime.animationTime
+            for v in animated { v._removeFinishedAnimations(at: now) }
+            for cell in departing + slidingOut.map(\.cell) {
+                guard let i = self.rowAnimationOrphans.firstIndex(where: { $0 === cell })
+                else { continue }
+                self.rowAnimationOrphans.remove(at: i)
+                cell.removeFromSuperview()
+                cell.alpha = 1
+                self.recycle(cell)
+            }
+        })
+        return true
     }
 
     /// Re-key one data-source move without discarding visible cells. UIKit's
