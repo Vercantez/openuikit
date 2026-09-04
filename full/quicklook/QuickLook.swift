@@ -180,7 +180,117 @@ public enum QuickLookPortable {
   #endif
 }
 
-#if canImport(UIKit)
+/// System-created file-preview request. Apple does not publish a public
+/// initializer; the isolated host constructs instances through the OpenUIKit
+/// SPI so `fileURL` can be exercised without inventing a second public identity.
+open class QLFilePreviewRequest: NSObject {
+  public let fileURL: URL
+
+  @_spi(OpenUIKitHost)
+  public init(fileURL: URL) {
+    self.fileURL = fileURL
+    super.init()
+  }
+}
+
+/// Reply returned by a `QLPreviewingController`. Drawing, typed-data, and PDF
+/// convenience initializers stay undeclared on the Foundation-only host because
+/// they require CoreGraphics, UniformTypeIdentifiers, or PDFKit types.
+open class QLPreviewReply: NSObject {
+  public var stringEncoding: String.Encoding = .utf8
+  public var attachments: [String: QLPreviewReplyAttachment] = [:]
+  public var title: String = ""
+  private let sourceFileURL: URL
+
+  public init(fileURL: URL) {
+    sourceFileURL = fileURL
+    super.init()
+  }
+}
+
+/// Attachment payload. `contentType` and `init(data:contentType:)` require
+/// UniformTypeIdentifiers.UTType, which is not a declared host dependency.
+open class QLPreviewReplyAttachment: NSObject {
+  public let data: Data
+
+  @_spi(OpenUIKitHost)
+  public init(data: Data) {
+    self.data = data
+    super.init()
+  }
+}
+
+/// Extension-hosted preview provider. Apple instantiates this from the
+/// extension principal class; the isolated host only needs the type identity.
+open class QLPreviewProvider: NSObject {}
+
+/// Scene-activation options for Quick Look. The Apple type inherits
+/// `UIWindowSceneActivationConfiguration`; the Foundation host is `NSObject`.
+open class QLPreviewSceneActivationConfiguration: NSObject {
+  public final class Options: NSObject {
+    public var initialPreviewIndex: Int = 0
+  }
+
+  private let itemURLs: [URL]
+  private let sceneOptions: Options?
+
+  public init(itemsAt urls: [URL], options: Options?) {
+    itemURLs = urls
+    sceneOptions = options
+    super.init()
+  }
+
+  public convenience init(itemsAtURLs urls: [URL], options: Options?) {
+    self.init(itemsAt: urls, options: options)
+  }
+
+  @_spi(OpenUIKitHost)
+  public var _itemURLs: [URL] { itemURLs }
+
+  @_spi(OpenUIKitHost)
+  public var _sceneOptions: Options? { sceneOptions }
+}
+
+/// Fail-closed preview-generation contract. Optional Apple methods become
+/// throwing defaults; the isolated host never claims a generator or Spotlight
+/// preview pipeline.
+public protocol QLPreviewingController: NSObjectProtocol {
+  func preparePreviewOfFile(at url: URL) async throws
+  func preparePreviewOfSearchableItem(
+    identifier: String,
+    queryString: String?
+  ) async throws
+  func providePreview(for request: QLFilePreviewRequest) async throws
+    -> QLPreviewReply
+}
+
+public extension QLPreviewingController {
+  func preparePreviewOfFile(at url: URL) async throws {
+    _ = url
+    throw _QLPreviewingHostError.unsupported
+  }
+
+  func preparePreviewOfSearchableItem(
+    identifier: String,
+    queryString: String?
+  ) async throws {
+    _ = identifier
+    _ = queryString
+    throw _QLPreviewingHostError.unsupported
+  }
+
+  func providePreview(for request: QLFilePreviewRequest) async throws
+    -> QLPreviewReply
+  {
+    _ = request
+    throw _QLPreviewingHostError.unsupported
+  }
+}
+
+enum _QLPreviewingHostError: Error {
+  case unsupported
+}
+
 @MainActor
 public protocol QLPreviewControllerDataSource: AnyObject {
   func numberOfPreviewItems(in controller: QLPreviewController) -> Int
@@ -262,6 +372,7 @@ public extension QLPreviewControllerDelegate {
   }
 }
 
+#if canImport(UIKit)
 @MainActor
 open class QLPreviewController: UIViewController {
   public weak var dataSource: (any QLPreviewControllerDataSource)?
@@ -385,7 +496,68 @@ open class QLPreviewController: UIViewController {
     }
   }
 }
+#else
+@MainActor
+open class QLPreviewController: NSObject {
+  public weak var dataSource: (any QLPreviewControllerDataSource)?
+  public weak var delegate: (any QLPreviewControllerDelegate)?
 
+  public var currentPreviewItemIndex: Int = 0 {
+    didSet {
+      _normalizeIndex()
+      refreshCurrentPreviewItem()
+    }
+  }
+
+  public var currentPreviewItem: (any QLPreviewItem)? {
+    guard cachedItems.indices.contains(currentPreviewItemIndex) else {
+      return nil
+    }
+    return cachedItems[currentPreviewItemIndex]
+  }
+
+  private var cachedItems: [any QLPreviewItem] = []
+
+  open class func canPreview(_ item: any QLPreviewItem) -> Bool {
+    guard let url = item.previewItemURL, url.isFileURL else { return false }
+    return FileManager.default.fileExists(atPath: url.path)
+  }
+
+  open func reloadData() {
+    guard let dataSource else {
+      cachedItems = []
+      currentPreviewItemIndex = NSNotFound
+      return
+    }
+    let count = max(0, dataSource.numberOfPreviewItems(in: self))
+    cachedItems = (0..<count).map {
+      dataSource.previewController(self, previewItemAt: $0)
+    }
+    _normalizeIndex()
+  }
+
+  open func refreshCurrentPreviewItem() {}
+
+  private func _normalizeIndex() {
+    guard !cachedItems.isEmpty else {
+      if currentPreviewItemIndex != NSNotFound {
+        currentPreviewItemIndex = NSNotFound
+      }
+      return
+    }
+    if currentPreviewItemIndex == NSNotFound {
+      currentPreviewItemIndex = 0
+      return
+    }
+    let normalized = min(max(currentPreviewItemIndex, 0), cachedItems.count - 1)
+    if currentPreviewItemIndex != normalized {
+      currentPreviewItemIndex = normalized
+    }
+  }
+}
+#endif
+
+#if canImport(UIKit)
 @MainActor
 private final class _QLURLDataSource: QLPreviewControllerDataSource {
   private let items: [NSURL]
@@ -408,3 +580,4 @@ private final class _QLURLDataSource: QLPreviewControllerDataSource {
   }
 }
 #endif
+
