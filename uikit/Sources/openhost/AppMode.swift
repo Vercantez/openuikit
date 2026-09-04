@@ -63,6 +63,7 @@ let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewContro
     // the app lifecycle, not a scene builder — see ConformanceMode.swift for
     // the scripted replay and the recorder.
     "NavFlow": (NavFlowApp.windowSize, NavFlowApp.makeRoot),
+    "TableEditor": (TableEditorApp.windowSize, TableEditorApp.makeRoot),
 ]
 
 /// The host's app delegate: builds the key window in didFinishLaunching and

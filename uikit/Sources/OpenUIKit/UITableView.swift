@@ -63,6 +63,9 @@ public protocol UITableViewDataSource: AnyObject {
                    editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath)
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath,
+                   to destinationIndexPath: IndexPath)
 }
 
 public extension UITableViewDataSource {
@@ -76,6 +79,9 @@ public extension UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { false }
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath,
+                   to destinationIndexPath: IndexPath) {}
 }
 
 @preconcurrency @MainActor
@@ -475,26 +481,38 @@ open class UITableView: UIScrollView {
     /// them at `defaultRowHeight` (53), which put every view below them 24 pt
     /// too high.
     private func refineSelfSizedRows() -> Bool {
-        guard rowHeight < 0, LayoutEngine.installedConstraintCount > 0
-        else { return false }
+        guard rowHeight < 0 else { return false }
         var changed = false
         for (path, cell) in visibleCellsByPath.views {
             if let d = tableDelegate, d.tableView(self, heightForRowAt: path) >= 0 {
                 continue
             }
-            // The cell's own contentView is what a xib constrains, and what
-            // UIKit pins the cell's height to.
-            guard let fitted = constraintFittingHeight(of: cell.contentView)
-            else { continue }
-            // Plus the separator. MEASURED (same golden): the xib gives
-            // SwitchCell's label a height of exactly 64, the golden row is 65,
-            // and the golden's own `_UITableViewCellSeparatorView` sits at
-            // y = 64 with height 1 — the content owns 0..64 and the separator
-            // the point after it. A row drawing no separator has no such point
-            // to give away.
-            let separator = separatorStyle == .none
-                ? 0 : UITableViewCell.separatorThickness
-            let height = fitted + separator
+            var height: CGFloat?
+            if UITableView.isIOSChrome, style == .plain,
+               cell.style == .subtitle {
+                // MEASURED 2026-09-04, TableEditor t200, iPhone SE 2x,
+                // iOS 26.1: a plain subtitle cell is 62 pt (Alpha abs
+                // [0, 116, 375, 62], Bravo [0, 178, 375, 62]). Checked
+                // before the constraint fitter so a navigation bar's
+                // Auto Layout (which raises `installedConstraintCount`)
+                // cannot size a stock cell by its labels' intrinsic
+                // height. Grouped subtitle stays `subtitleRowHeight`;
+                // Catalyst automaticDimension stays `defaultRowHeight`.
+                height = UITableViewCell.plainSubtitleRowHeight
+            } else if LayoutEngine.installedConstraintCount > 0,
+               let fitted = constraintFittingHeight(of: cell.contentView) {
+                // Plus the separator. MEASURED (realapp_storage_light): the
+                // xib gives SwitchCell's label a height of exactly 64, the
+                // golden row is 65, and the golden's own
+                // `_UITableViewCellSeparatorView` sits at y = 64 with height
+                // 1 — the content owns 0..64 and the separator the point
+                // after it. A row drawing no separator has no such point to
+                // give away.
+                let separator = separatorStyle == .none
+                    ? 0 : UITableViewCell.separatorThickness
+                height = fitted + separator
+            }
+            guard let height else { continue }
             if selfSizedRowHeights[path] != height {
                 selfSizedRowHeights[path] = height
                 changed = true
@@ -726,6 +744,18 @@ open class UITableView: UIScrollView {
         visibleCellsByPath.first { $1 === cell }?.key
     }
 
+    /// Editing style the data source reports for this bound cell.
+    func _editingStyle(for cell: UITableViewCell) -> UITableViewCell.EditingStyle {
+        guard let path = indexPath(for: cell), let ds = dataSource else { return .delete }
+        if !ds.tableView(self, canEditRowAt: path) { return .none }
+        return ds.tableView(self, editingStyleForRowAt: path)
+    }
+
+    func _canMove(_ cell: UITableViewCell) -> Bool {
+        guard let path = indexPath(for: cell), let ds = dataSource else { return false }
+        return ds.tableView(self, canMoveRowAt: path)
+    }
+
     public var visibleCells: [UITableViewCell] {
         visibleCellsByPath.views.sorted { $0.key < $1.key }.map(\.value)
     }
@@ -786,6 +816,13 @@ open class UITableView: UIScrollView {
         isEditing = editing
         for cell in visibleCells { cell.setEditing(editing, animated: animated) }
         if editing && !allowsSelectionDuringEditing {
+            selectRow(at: nil, animated: animated)
+        }
+        if !editing, UITableView.isIOSChrome {
+            // MEASURED TableEditor t4800, iPhone SE 2x, iOS 26.1: after
+            // "done" the row selected in edit mode (Delta, t3800 fill
+            // (209, 209, 214) = systemGray4) is white again (~252). iOS
+            // drops the editing-time selection when leaving edit mode.
             selectRow(at: nil, animated: animated)
         }
     }
@@ -1423,6 +1460,7 @@ open class UITableView: UIScrollView {
             if let existing = visibleCellsByPath[path] {
                 cell = existing
                 cell.frame = rectForRow(at: path)
+                cell._textInset = style == .plain ? plainTextInset : UITableViewCell.labelX
             } else {
                 guard let ds = dataSource else { break }
                 cell = ds.tableView(self, cellForRowAt: path)

@@ -1,0 +1,12 @@
+{
+  "comment": "TableEditor conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. The delete (t=1.20, .fade) and insert (t=2.20, .automatic) each have a mid-flight capture at +0.15 s. swipe-actions is omitted: UIKit has no public programmatic reveal of UIContextualAction. Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app TableEditor` (the port).",
+  "app": "TableEditor",
+  "events": [
+    { "t": 0.40, "action": "edit" },
+    { "t": 1.20, "action": "delete-row-2" },
+    { "t": 2.20, "action": "insert-row-0" },
+    { "t": 3.20, "action": "select-row-3" },
+    { "t": 4.20, "action": "done" }
+  ],
+  "captures": [0.20, 0.90, 1.35, 1.90, 2.35, 2.90, 3.80, 4.80]
+}
