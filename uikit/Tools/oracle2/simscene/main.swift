@@ -140,6 +140,14 @@ final class SimSceneRenderer {
         wrapper.tintAdjustmentMode = .normal
         wrapper.backgroundColor = nil
         wrapper.overrideUserInterfaceStyle = spec.style
+        // Pin every descendant's local time (MEASURED 2026-09-04,
+        // control_activity, SE 2x): five fresh one-scene processes are
+        // byte-identical, but the same scene captured later in an 88-scene
+        // SimScene process differs by 4656 px (maxd 148) — UIActivityIndicator
+        // phase tracks process uptime. speed = 0 / timeOffset = 0 is the
+        // oracle2 freeze; isolated and suite captures then agree.
+        wrapper.layer.speed = 0
+        wrapper.layer.timeOffset = 0
         wrapper.addSubview(container)
         host.addSubview(wrapper)
         // Chrome scenes (spec v5.3): keep the scene OUT of the device's top
