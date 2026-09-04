@@ -141,11 +141,16 @@ for t in script["captures"]:
             m = res["missing"]
             lines.append(f"  content missing at {m['bbox']} (golden std {m['golden_std']},"
                          f" ours {m['our_std']})")
-    # A capture that caught an animation reports it: the simulator dump has a
-    # presentation frame only where the render tree differs from the model.
-    moving = [v["path"] for v in gdump["views"] if "pframe" in v]
+    # A capture that caught an animation reports it: `playing` is set when
+    # presentation() differs from the model LAYER (not view.frame — bar-button
+    # labels keep a 6 pt view/layer origin split at rest).
+    moving = [v["path"] for v in gdump["views"] if v.get("playing")]
     if moving:
         lines.append(f"  NOT AT REST on the golden side: {len(moving)} view(s) animating")
+    clock = gdump.get("clock") or {}
+    if clock:
+        lines.append(f"  clock frame={clock.get('frame')} hz={clock.get('hz')}"
+                     f" dl={clock.get('displayLinkTimestamp')}")
     lines += ["  " + p for p in problems]
     open(f"{d}/report.txt", "w").write("\n".join(lines) + "\n")
     captures.append(entry)

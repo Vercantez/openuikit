@@ -1,6 +1,6 @@
 {
- "head": "d465dbc9",
- "date": "2026-09-04T21:51Z",
+ "head": "1f67f80a",
+ "date": "2026-09-04T23:04Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -73,35 +73,13 @@
   {
    "scene": "Modal:t600",
    "category": "conformance",
-   "score": 92.765,
-   "blob": 103.2,
+   "score": 92.626,
+   "blob": 105.0,
    "layout_issues": 0,
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "open",
-   "open_reason": "92.765 vs 97.5: medium-sheet +0.2 s of the 0.4 s present spring. Golden sheet top 366.5 (remaining 49 pt of the 349.3 pt travel), openhost 344.5 (remaining 27 pt). Rest is 317.5 both sides (t1200). confprobe GCD timer + afterScreenUpdates:false vs openhost's exact animationTime; same three-clock split as TableEditor t1350. A duration retarget is a score fit, not a measurement. Fill now matches (245 vs 247, inside PIXEL_TOL). blob 103. layout 0."
-  },
-  {
-   "scene": "TableEditor:t2350",
-   "category": "conformance",
-   "score": 94.637,
-   "blob": 14.2,
-   "layout_issues": 0,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "open",
-   "open_reason": "94.64 vs 97.5: automatic-insert +0.15 s remaining 0.162 from discs (Alpha cy 198.88 vs dest 208.95) vs openhost 0.178 / vsync 0.238 \u2014 the same three-clock split as t1350. Extra fail vs t900 is 4.79 % (8 sliding rows). Zero is at rest both sides (dy 0.18 = rest disc residual). Insert Juliet dest is fully off-screen so it does not take the 52 pt clipped-row height spring. layout 0."
-  },
-  {
-   "scene": "TableEditor:t1350",
-   "category": "conformance",
-   "score": 95.952,
-   "blob": 32.8,
-   "layout_issues": 0,
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "open",
-   "open_reason": "95.95 vs 97.5: fade-delete +0.15 s remaining travel is 0.162 of 62 pt from delete-control centres on the GCD golden (Delta cy 280.99 vs dest 270.95), vs openhost's exact 0.15 of the measured CASpringAnimation (\u03c9=20.944, remaining (1+\u03c9t)e^(\u2212\u03c9t)=0.179, ours disc dy +1.14 pt). Display-tick rowanimprobe at media +0.15 s reads remaining 0.238, matching env(t\u22121/60) (CATransaction commits on the next vsync). Three clocks, one spring: no begin-time offset fits GCD golden, vsync, and openhost together. A duration retarget to remaining 0.162 at t=0.15 is a score fit, not a measurement. Extra fail vs t900 rest is 3.46 % (text of the 7 sliding rows); layout 0."
+   "open_reason": "92.626 vs 97.5: medium-sheet present at named frame 12 (0.2 s at 60 Hz). Five conformance_flow runs identical to 3 dp (92.626 all). Glass-fill top (interior 245) 359.5 golden vs 337.0 openhost; rest 317.5 both (t1200). Remaining 42.0 vs 19.5 of the 349.3 pt travel. iOS CA-seeked curve (glass top, frames after present, iPhone SE 2x / iOS 26.1): k=6 476.5, k=9 402.0, k=12 359.5, k=15 338.0, k=18 327.0; k=24 is a wait not a seek (d>20) and reads 320.0. openhost duration-fit \u03b6=1 D=0.4 PNG curve at the same k: 432.5, 366.5, 337.0, 332, 328, 317.5. Port matches (1+\u03c9t)e^(\u2212\u03c9t) with \u03c9\u00b7D=9.233 (UIViewAnimation duration-fit); iOS is slower at every overlapping sample. A duration/\u03c9 retarget to remaining 42 at frame 12 is a score fit, not a measurement. The three-clock split (GCD remaining 0.162 / openhost 0.179 / vsync 0.238) is closed; TableEditor t1350/t2350 now lock at remaining 0.1790 = env(9/60) and pass 98.269 / 98.214. blob 105. layout 0."
   },
   {
    "scene": "label_truncate",
@@ -244,6 +222,16 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor:t2350",
+   "category": "conformance",
+   "score": 98.214,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Forms:t5700",
    "category": "conformance",
    "score": 98.232,
@@ -274,6 +262,16 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor:t1350",
+   "category": "conformance",
+   "score": 98.269,
+   "blob": 13.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "button_configurations_dark_2x",
    "category": "control",
    "score": 98.315,
@@ -294,16 +292,6 @@
    "status": "pass"
   },
   {
-   "scene": "Forms:t3000",
-   "category": "conformance",
-   "score": 98.433,
-   "blob": 42.5,
-   "layout_issues": 6,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "button_configurations_2x",
    "category": "control",
    "score": 98.437,
@@ -311,6 +299,16 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t3000",
+   "category": "conformance",
+   "score": 98.45,
+   "blob": 17.8,
+   "layout_issues": 6,
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -474,16 +472,6 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t4100",
-   "category": "conformance",
-   "score": 98.92,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "navitem_buttons",
    "category": "chrome",
    "score": 98.923,
@@ -644,6 +632,16 @@
    "status": "pass"
   },
   {
+   "scene": "Modal:t10100",
+   "category": "conformance",
+   "score": 99.154,
+   "blob": 4.2,
+   "layout_issues": 5,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Modal:t200",
    "category": "conformance",
    "score": 99.167,
@@ -664,6 +662,16 @@
    "status": "pass"
   },
   {
+   "scene": "Modal:t4100",
+   "category": "conformance",
+   "score": 99.167,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Modal:t6100",
    "category": "conformance",
    "score": 99.167,
@@ -675,16 +683,6 @@
   },
   {
    "scene": "Modal:t8100",
-   "category": "conformance",
-   "score": 99.167,
-   "blob": 4.2,
-   "layout_issues": 0,
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Modal:t10100",
    "category": "conformance",
    "score": 99.167,
    "blob": 4.2,

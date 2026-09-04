@@ -34,7 +34,9 @@ the reason). The climb only assigns `fail` rows.
    written — Auto Layout, view controllers, xib cells, UserDefaults — with a
    scripted interaction and capture times. The same source is compiled into
    a simulator probe (real UIKit) and into openhost (the port); both replay
-   the script and dump frames and presentation geometry at the same times.
+   the script on a shared 60 Hz frame clock (`ConformanceClock`: confprobe
+   is a CADisplayLink, openhost steps `animationTime` by `frame / 60`) and
+   dump frames and presentation geometry at the same frame index.
    They cover lifecycle and interaction, which scenes cannot:
    navigation flows, table editing, forms and keyboards, collection layouts,
    modal flows, settings at every Dynamic Type size and in dark mode.
