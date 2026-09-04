@@ -240,6 +240,8 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     var leftItemViews: [_UIBarButtonItemView] = []
     var rightItemViews: [_UIBarButtonItemView] = []
+    /// iOS 26 shared platters behind runs of image-only items (layoutBarItems).
+    var sharedPlatterViews: [_UIBarSharedPlatterView] = []
     var titleViewHost: UIView?
     var promptLabel: UILabel?
 
@@ -625,19 +627,38 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let h = _UIBarMetrics.platterHeight
         let y = UINavigationBar.platterY + promptOffset
         var x = _UIBarMetrics.sideMargin + backButtonWidth
-        for v in leftItemViews where !v.item._isSpace {
+        for (i, v) in leftItemViews.enumerated() where !v.item._isSpace {
             let w = _UIBarItemLayout.width(of: v)
+            x += _UIBarItemLayout.gapBefore(leftItemViews, i)
             v.frame = CGRect(x: x, y: y, width: w, height: h)
-            x += w + _UIBarMetrics.gap
+            x += w
         }
         // UIKit's order: `rightBarButtonItems[0]` is the TRAILING-most item
         // (measured — a [.edit, "Add"] pair renders "Add" then "Edit").
         var right = bounds.width - _UIBarMetrics.sideMargin
-        for v in rightItemViews where !v.item._isSpace {
+        for (i, v) in rightItemViews.enumerated() where !v.item._isSpace {
             let w = _UIBarItemLayout.width(of: v)
+            right -= _UIBarItemLayout.gapBefore(rightItemViews, i)
             right -= w
             v.frame = CGRect(x: right, y: y, width: w, height: h)
-            right -= _UIBarMetrics.gap
+        }
+        // iOS 26: runs of adjacent image-only items share one platter.
+        let shared = _UIBarItemLayout.sharedPlatterFrames(leftItemViews)
+            + _UIBarItemLayout.sharedPlatterFrames(rightItemViews)
+        while sharedPlatterViews.count > shared.count { sharedPlatterViews.removeLast().removeFromSuperview() }
+        while sharedPlatterViews.count < shared.count {
+            let p = _UIBarSharedPlatterView(frame: .zero)
+            if let first = (leftItemViews + rightItemViews).first(where: { $0.superview === self }) {
+                insertSubview(p, belowSubview: first)
+            } else {
+                addSubview(p)
+            }
+            sharedPlatterViews.append(p)
+        }
+        for (p, f) in zip(sharedPlatterViews, shared) {
+            p.frame = f
+            p.backdropColor = leftItemViews.first?.backdropColor ?? rightItemViews.first?.backdropColor
+            p.isHidden = !(leftItemViews.first?.showsPlatter ?? rightItemViews.first?.showsPlatter ?? true)
         }
         if let l = promptLabel {
             let s = l.intrinsicContentSize
@@ -659,13 +680,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Trailing edge of the leading group (bar coordinates).
     var leadingGroupMaxX: CGFloat {
-        var x = _UIBarMetrics.sideMargin + backButtonWidth
-        var drawn = 0
-        for v in leftItemViews where !v.item._isSpace {
-            x += _UIBarItemLayout.width(of: v)
-            drawn += 1
-        }
-        return x + CGFloat(max(0, drawn - 1)) * _UIBarMetrics.gap
+        _UIBarMetrics.sideMargin + backButtonWidth + _UIBarItemLayout.naturalWidth(leftItemViews)
     }
 
     /// Leading edge of the trailing group.
@@ -692,7 +707,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
            centered + width / 2 <= trail - clearance {
             return centered
         }
-        return lead + _UIBarMetrics.gap + width / 2
+        // MEASURED (iOS 26.1, a title beside a wide trailing group and no
+        // leading item): the title sits at the side margin itself, x = 16;
+        // with a leading group it sits 12 past that group.
+        let leadingIsEmpty = backButton == nil && !leftItemViews.contains { !$0.item._isSpace }
+        return (leadingIsEmpty ? lead : lead + _UIBarMetrics.gap) + width / 2
     }
 
     private var contentMidY: CGFloat {
@@ -700,7 +719,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     }
 
     private func place(title l: UILabel, centerX: CGFloat, alpha: CGFloat) {
-        let s = l.intrinsicContentSize
+        var s = l.intrinsicContentSize
+        // iOS 26.1 (MEASURED, navitem_imgw / navitem_dark): the inline title
+        // label is a WHOLE-point 21 tall for the 17 pt semibold font (like
+        // a plain table header), centred in the 44 pt zone -> y 21.5.
+        if UINavigationBar.isIOS { s.height = l.font.lineHeight.rounded(.up) }
         l.bounds = CGRect(x: 0, y: 0, width: s.width, height: s.height)
         l.center = CGPoint(x: centerX, y: contentMidY)
         l.alpha = alpha

@@ -204,6 +204,12 @@ public enum _UIBarMetrics {
     /// which pushed every item leading it 6 pt off in `navitem_dark`).
     public static let imageContentMinWidth: CGFloat = 22
     public static let imageContentInset: CGFloat = 11
+    /// iOS 26 GROUPS adjacent image-only items into ONE platter (MEASURED
+    /// with five images: platter [97, 30, 280, 44] = 16 pt between the
+    /// 36-wide `_UIButtonBarButton`s plus 4 pt of platter padding at each
+    /// end). In item-view terms — each view already carries 4 pt of
+    /// platter on either side — that is an 8 pt gap between the views.
+    public static let groupedImageGap: CGFloat = 8
     /// Gap accounting (measured, `toolbar_basic`): a 12 pt gap separates
     /// consecutive bar items, EXCEPT after a space item — a fixed space of
     /// 40 pt shows up as 12 + 40 before the next item, and the item after a
@@ -327,15 +333,30 @@ final class _UIBarButtonItemView: UIControl {
             imageView.image = UITabBar.templateImage(
                 image, tint: color.resolvedColor(with: UITraitCollection.current))
         }
-        platter.backgroundColor = item.style == .done
-            ? (item.tintColor ?? barTintColor)
+        // The content is a subview of the platter, so a grouped item's own
+        // platter goes transparent (fill, shadow, band) rather than hidden.
+        platter.backgroundColor = _platterHiddenByGroup ? UIColor.clear
+            : item.style == .done ? (item.tintColor ?? barTintColor)
             : _UIBarMetrics.platterFill
+        platter.layer.shadowOpacity = _platterHiddenByGroup ? 0 : _UIBarMetrics.shadowOpacity
         platter.isHidden = !showsPlatter
     }
 
     /// Only navigation-bar platters show the refractive band (measured —
     /// see `_UIBarMetrics.platterRefractionHeight`).
     var appliesRefraction = true
+
+    /// An item that shows only an image / symbol (no title, no custom
+    /// view): iOS 26 merges runs of these into one platter.
+    var isImageOnly: Bool {
+        item.customView == nil && item.title == nil && !item._isSpace
+            && (item.image != nil || item._symbol != nil)
+    }
+    /// Set by the bar for the members of a merged run (their platter is
+    /// the bar's `_UIBarSharedPlatterView`).
+    var _platterHiddenByGroup = false {
+        didSet { if _platterHiddenByGroup != oldValue { applyColors(); setNeedsLayout() } }
+    }
 
     /// Content size inside the platter.
     var contentSize: CGSize {
@@ -372,7 +393,7 @@ final class _UIBarButtonItemView: UIControl {
         refractionBand.frame = CGRect(x: 0, y: 0, width: bounds.width, height: band)
         refractionBand.backgroundColor = backdropColor
         refractionHost.isHidden = backdropColor == nil || item.style == .done
-            || !showsPlatter || !appliesRefraction
+            || !showsPlatter || !appliesRefraction || _platterHiddenByGroup
         platter.sendSubviewToBack(refractionHost)   // under the content
         if let cv = item.customView {
             if cv.superview !== self { addSubview(cv) }
@@ -406,6 +427,45 @@ final class _UIBarButtonItemView: UIControl {
     }
 }
 
+// MARK: - Shared platter (iOS 26 image-item runs)
+
+/// The one platter behind a run of adjacent image-only items: the item
+/// platter's flat fill, shadow and refractive top band, sized by the bar.
+@preconcurrency @MainActor
+final class _UIBarSharedPlatterView: UIView {
+    let refractionHost = UIView()
+    let refractionBand = UIView()
+    var backdropColor: UIColor? { didSet { setNeedsLayout() } }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+        layer.cornerRadius = _UIBarMetrics.platterRadius
+        layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        layer.shadowOpacity = _UIBarMetrics.shadowOpacity
+        layer.shadowRadius = _UIBarMetrics.shadowRadius
+        layer.shadowOffset = _UIBarMetrics.shadowOffset
+        backgroundColor = _UIBarMetrics.platterFill
+        refractionHost.isUserInteractionEnabled = false
+        refractionHost.clipsToBounds = true
+        refractionHost.layer.cornerRadius = _UIBarMetrics.platterRadius
+        refractionHost.addSubview(refractionBand)
+        addSubview(refractionHost)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("not decodable") }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        refractionHost.frame = bounds
+        refractionBand.frame = CGRect(x: 0, y: 0, width: bounds.width,
+                                      height: _UIBarMetrics.platterRefractionHeight)
+        refractionBand.backgroundColor = backdropColor
+        refractionHost.isHidden = backdropColor == nil
+    }
+}
+
 // MARK: - Shared bar item layout
 
 /// Lays a row of `UIBarButtonItem`s out inside `bounds`, honoring flexible
@@ -428,7 +488,34 @@ enum _UIBarItemLayout {
     /// `12 + width`, and the item after a space gets no gap of its own.
     static func gapBefore(_ views: [_UIBarButtonItemView], _ i: Int) -> CGFloat {
         guard i > 0, !views[i - 1].item._isSpace else { return 0 }
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           views[i - 1].isImageOnly, views[i].isImageOnly {
+            return _UIBarMetrics.groupedImageGap
+        }
         return _UIBarMetrics.gap
+    }
+
+    /// iOS 26: each run of two or more adjacent image-only views (in
+    /// `views` order; a space breaks a run) shares ONE platter, a
+    /// `_UIBarSharedPlatterView` the bar owns and keeps beneath the items.
+    /// Returns the frames of the shared platters (bar coordinates) and
+    /// hides the members' own platters.
+    static func sharedPlatterFrames(_ views: [_UIBarButtonItemView]) -> [CGRect] {
+        for v in views { v._platterHiddenByGroup = false }
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return [] }
+        var frames: [CGRect] = []
+        var run: [_UIBarButtonItemView] = []
+        func flush() {
+            defer { run.removeAll() }
+            guard run.count >= 2 else { return }
+            frames.append(run.dropFirst().reduce(run[0].frame) { $0.union($1.frame) })
+            for v in run { v._platterHiddenByGroup = true }
+        }
+        for v in views {
+            if v.isImageOnly && !v.isHidden { run.append(v) } else { flush() }
+        }
+        flush()
+        return frames
     }
 
     /// Lay `views` out across `totalWidth`, left to right, distributing slack

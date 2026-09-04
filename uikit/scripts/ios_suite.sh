@@ -39,21 +39,40 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   # SE (2x), whose pixel grid IS the scene's — measured 2026-09-04: the
   # 375-wide navbar_dark/navbar_large score 99.5 against the SE and 98.9
   # against the iPhone 16 for the same render.
+  # The iPhone 16 is a 3x device: capturing it at the scene's scale 2
+  # resamples every edge, so its group is captured AND rendered at scale 3
+  # from patched copies of the scene files ($WORK/scenes). The 2x group is
+  # copied unchanged; compare.py reads the copies too.
   python3 - "$WORK" <<'PYSPLIT'
-import json, sys
+import json, sys, os, shutil
 work = sys.argv[1]
-win, plain = [], []
+os.makedirs(work + '/scenes', exist_ok=True)
+bars, modal, plain = [], [], []
 for f in open(work + '/static_scenes.txt').read().split():
     d = json.load(open(f))
     big = d.get('modal') or d.get('alert') or (d.get('window') and d.get('size', [0])[0] > 375)
-    (win if big else plain).append(f)
-open(work + '/scenes_3x.txt', 'w').write('\n'.join(win) + '\n')
+    dst = work + '/scenes/' + os.path.basename(f)
+    if big:
+        d['scale'] = 3
+        json.dump(d, open(dst, 'w'), indent=1)
+        # MEASURED 2026-09-04: once a SimScene process has shown an alert
+        # or a sheet, the glass bar platters no longer render in its later
+        # captures (navitem_dark came back with no platter at all, black
+        # where three stand-alone captures show the (25,25,25) capsule).
+        # Bar-chrome scenes therefore get their own process, run first.
+        (bars if d.get('ios') else modal).append(dst)
+    else:
+        shutil.copyfile(f, dst)
+        plain.append(dst)
+open(work + '/scenes_3x_bars.txt', 'w').write('\n'.join(bars) + '\n')
+open(work + '/scenes_3x_modal.txt', 'w').write('\n'.join(modal) + '\n')
 open(work + '/scenes_2x.txt', 'w').write('\n'.join(plain) + '\n')
-print(f"    {len(plain)} scenes on the 2x device, {len(win)} window scenes on the iPhone 16")
+print(f"    {len(plain)} scenes on the 2x device; on the iPhone 16 at 3x: {len(bars)} bar scenes, then {len(modal)} alert/sheet scenes")
 PYSPLIT
-  s2=("${(@f)$(cat "$WORK/scenes_2x.txt")}"); s3=("${(@f)$(cat "$WORK/scenes_3x.txt")}")
+  s2=("${(@f)$(cat "$WORK/scenes_2x.txt")}"); s3b=("${(@f)$(cat "$WORK/scenes_3x_bars.txt")}"); s3m=("${(@f)$(cat "$WORK/scenes_3x_modal.txt")}")
   if (( ${#s2} > 0 )); then SIM_DEVICE=2x zsh scripts/render_sim_scenes.sh "$GOLD" "${s2[@]}" | tail -1; fi
-  if (( ${#s3} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3[@]}" | tail -1; fi
+  if (( ${#s3b} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3b[@]}" | tail -1; fi
+  if (( ${#s3m} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3m[@]}" | tail -1; fi
   # A P3-tagged capture from an older SimScene build is converted so the diff
   # is sRGB vs sRGB (SimScene itself now writes untagged straight-alpha sRGB).
   python3 - "$GOLD" <<'PYCONV'
@@ -77,9 +96,10 @@ fi
 echo "==> OpenUIKit render with the iOS cut ($OUT)"
 swift build -c release --product openrender >/dev/null
 rm -rf "$OUT"
-OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender render "$OUT" "${scenes[@]}" >/dev/null
+suite_scenes=("${(@f)$(ls "$WORK"/scenes/*.json)}")
+OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender render "$OUT" "${suite_scenes[@]}" >/dev/null
 echo "==> compare"
-python3 Tools/compare/compare.py --golden "$GOLD" --out "$OUT" "${names[@]}" > "$WORK/compare.txt" 2>&1 || true
+python3 Tools/compare/compare.py --scenes "$WORK/scenes" --golden "$GOLD" --out "$OUT" "${names[@]}" > "$WORK/compare.txt" 2>&1 || true
 grep -E 'scenes pass' "$WORK/compare.txt"
 grep '^FAIL' "$WORK/compare.txt" | sort -t= -k2 -n | head -25
 echo "full report: $WORK/compare.txt"
