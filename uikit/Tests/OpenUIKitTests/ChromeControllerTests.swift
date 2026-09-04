@@ -719,6 +719,23 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 37, accuracy: 0.01)
     }
 
+    /// Forms t200, iPhone SE 2x, iOS 26.1: an inline bar with no explicit
+    /// appearance is transparent at rest, and the child fills the container
+    /// (underlaps), reporting safeAreaInsets.top = 64. Catalyst keeps the
+    /// opaque bar above a clipped content area (`testClassicModeUsesMeasuredBarZone`).
+    func testIOSInlineBarIsTransparentAndContentUnderlaps() {
+        let nav = makeNav(largeTitles: false)
+        XCTAssertNil(nav.navigationBar.backgroundColor)
+        XCTAssertEqual(nav.navigationBar.standardAppearance._configuration, .default)
+        XCTAssertEqual(nav.contentView.frame,
+                       CGRect(x: 0, y: 0, width: 390, height: 700))
+        XCTAssertEqual(nav.topViewController!.view.frame,
+                       CGRect(x: 0, y: 0, width: 390, height: 700))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 64)
+        XCTAssertEqual(nav.navigationBar.frame.height, 54)   // bar-origin probe: 54 at y 10
+        XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 22, accuracy: 1e-9)   // bar-local 11.5 + 10.5
+    }
+
     /// Catalyst keeps the M7.5 cross-fade: no groups, and the old title
     /// morphs toward the back-button position.
     func testCatalystKeepsTheCrossFade() {
