@@ -105,22 +105,28 @@ public enum UIRenderer {
     /// centre), so it is traced as a polygon by radial bisection.
     static func iOSOversizedCornerPath(_ r: CGRect, cornerRadius radius: CGFloat,
                                        corners: CACornerMask) -> Path {
-        let centres: [(CACornerMask, CGPoint, (CGPoint) -> Bool)] = [
-            (.layerMinXMinYCorner, CGPoint(x: r.minX + radius, y: r.minY + radius),
-             { $0.x < r.minX + radius && $0.y < r.minY + radius }),
-            (.layerMaxXMinYCorner, CGPoint(x: r.maxX - radius, y: r.minY + radius),
-             { $0.x > r.maxX - radius && $0.y < r.minY + radius }),
-            (.layerMinXMaxYCorner, CGPoint(x: r.minX + radius, y: r.maxY - radius),
-             { $0.x < r.minX + radius && $0.y > r.maxY - radius }),
-            (.layerMaxXMaxYCorner, CGPoint(x: r.maxX - radius, y: r.maxY - radius),
-             { $0.x > r.maxX - radius && $0.y > r.maxY - radius }),
-        ].filter { corners.contains($0.0) }
+        // (Spelled out with explicit types: an array literal of tuples with
+        // closures is what Linux Swift 6.2.4 refuses to type-check.)
+        let minX: CGFloat = r.minX, maxX: CGFloat = r.maxX
+        let minY: CGFloat = r.minY, maxY: CGFloat = r.maxY
+        let leftEdge: CGFloat = minX + radius, rightEdge: CGFloat = maxX - radius
+        let topEdge: CGFloat = minY + radius, bottomEdge: CGFloat = maxY - radius
+        let rr: CGFloat = radius * radius
+        let hasMinXMinY = corners.contains(.layerMinXMinYCorner)
+        let hasMaxXMinY = corners.contains(.layerMaxXMinYCorner)
+        let hasMinXMaxY = corners.contains(.layerMinXMaxYCorner)
+        let hasMaxXMaxY = corners.contains(.layerMaxXMaxYCorner)
+        func within(_ px: CGFloat, _ py: CGFloat, _ cx: CGFloat, _ cy: CGFloat) -> Bool {
+            let dx: CGFloat = px - cx
+            let dy: CGFloat = py - cy
+            return dx * dx + dy * dy <= rr
+        }
         func inside(_ p: CGPoint) -> Bool {
-            guard p.x >= r.minX, p.x <= r.maxX, p.y >= r.minY, p.y <= r.maxY else { return false }
-            for (_, c, quadrant) in centres where quadrant(p) {
-                let dx = p.x - c.x, dy = p.y - c.y
-                if dx * dx + dy * dy > radius * radius { return false }
-            }
+            if p.x < minX || p.x > maxX || p.y < minY || p.y > maxY { return false }
+            if hasMinXMinY && p.x < leftEdge && p.y < topEdge && !within(p.x, p.y, leftEdge, topEdge) { return false }
+            if hasMaxXMinY && p.x > rightEdge && p.y < topEdge && !within(p.x, p.y, rightEdge, topEdge) { return false }
+            if hasMinXMaxY && p.x < leftEdge && p.y > bottomEdge && !within(p.x, p.y, leftEdge, bottomEdge) { return false }
+            if hasMaxXMaxY && p.x > rightEdge && p.y > bottomEdge && !within(p.x, p.y, rightEdge, bottomEdge) { return false }
             return true
         }
         let mid = CGPoint(x: r.midX, y: r.midY)
