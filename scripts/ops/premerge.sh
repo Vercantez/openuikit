@@ -140,7 +140,7 @@ while IFS= read -r script; do
     [ -n "$script" ] || continue
     [ -f "$WT/$script" ] || continue
     case "$script" in
-        *tests/acceptance/test_host.sh|*/difftest.sh|*/build.sh|*build_fixtures_linux*|*scoreboard*)
+        *tests/acceptance/test_host.sh|*/difftest.sh|*/build.sh|*build_fixtures_linux*|*scoreboard*|*/test_phase2.sh|*/test_stage_fe_sysroot*)
             # (difftest/build/fixture/scoreboard scripts are Linux-only too:
             # measured 2026-09-03, PR #103 difftest printed PASS (exit 1) on
             # macOS with no build dirs at all.)
