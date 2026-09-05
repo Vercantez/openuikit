@@ -113,7 +113,21 @@ No new rendering rule. Catalyst stays on `glyph_ink.json`. No
 
 ## Guest verify (arm64 box)
 
-Graded only by `queue_box.sh arm64 verify <sha>` log lines
-(`build_full rc=0`, `GATE_B_PASS`, `GUEST_REALAPP_SCREENS=14`).
+Graded only by `queue_box.sh arm64 verify e4ea0f79` log lines.
+Instance `i-00da4d9ca172eb1ff`. Command
+`23615645-cdfe-4653-bbd3-987faf8142da`.
 
-Pending this commit's push.
+| line | value |
+|---|---|
+| `BUILD_OK` | yes |
+| `TBD_CHECK_OK` | yes |
+| `difftest rc=0` | yes |
+| `build_full rc=0` | **yes** |
+| `GATE_B_PASS` | **yes** |
+| `GUEST_REALAPP_RC` | **0** |
+| `GUEST_REALAPP_SCREENS` | **14** |
+| `[render_full] realapp rendered` | **14 failed=0** including `realapp_focus_home_light` |
+
+`OPENUIKIT_FONT_DIR=/opt/openuikit/verify-20260902/openuikit/scratch/fonts`
+has **no SFNS*.ttf** — the 14th screen drew from harvested iOS masks
+only. The 12 pt `'k'` at F0.25 is no longer a miss.
