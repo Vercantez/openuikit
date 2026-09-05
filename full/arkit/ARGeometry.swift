@@ -67,6 +67,30 @@ open class ARPlaneGeometry: NSObject, NSSecureCoding {
         super.init()
     }
 
+    static func rectangle(center: simd_float3, extent: simd_float3) -> ARPlaneGeometry {
+        let hx = extent.x / 2
+        let hz = extent.z / 2
+        let vertices = [
+            simd_float3(center.x - hx, center.y, center.z - hz),
+            simd_float3(center.x + hx, center.y, center.z - hz),
+            simd_float3(center.x + hx, center.y, center.z + hz),
+            simd_float3(center.x - hx, center.y, center.z + hz),
+        ]
+        let textureCoordinates: [vector_float2] = [
+            simd_float2(0, 0),
+            simd_float2(1, 0),
+            simd_float2(1, 1),
+            simd_float2(0, 1),
+        ]
+        let triangleIndices: [Int16] = [0, 1, 2, 0, 2, 3]
+        return ARPlaneGeometry(
+            vertices: vertices,
+            textureCoordinates: textureCoordinates,
+            triangleIndices: triangleIndices,
+            boundaryVertices: vertices
+        )
+    }
+
     public required init?(coder: NSCoder) {
         _ = coder
         return nil
@@ -82,6 +106,8 @@ open class ARGeometrySource: NSObject, NSSecureCoding {
     public var count: Int { _count }
     public var offset: Int { _offset }
     public var stride: Int { _stride }
+    public var buffer: any MTLBuffer { ARKitHostMTLBuffer() }
+    public var format: MTLVertexFormat { componentsPerVector == 3 ? .float3 : .float }
 
     private let _componentsPerVector: Int
     private let _count: Int
@@ -106,6 +132,11 @@ open class ARGeometrySource: NSObject, NSSecureCoding {
     public func encode(with coder: NSCoder) {
         _ = coder
     }
+
+    public subscript(index: Int32) -> (Float, Float, Float) {
+        _ = index
+        return (0, 0, 0)
+    }
 }
 
 open class ARGeometryElement: NSObject, NSSecureCoding {
@@ -113,6 +144,7 @@ open class ARGeometryElement: NSObject, NSSecureCoding {
     public var count: Int { _count }
     public var indexCountPerPrimitive: Int { _indexCountPerPrimitive }
     public var primitiveType: ARGeometryPrimitiveType { _primitiveType }
+    public var buffer: any MTLBuffer { ARKitHostMTLBuffer() }
 
     private let _bytesPerIndex: Int
     private let _count: Int
@@ -199,7 +231,7 @@ open class ARSkeletonDefinition: NSObject {
 
     init(jointNames: [String]) {
         self._jointNames = jointNames
-        self._parentIndices = Array(repeating: -1, count: jointNames.count)
+        self._parentIndices = jointNames.enumerated().map { index, _ in index == 0 ? -1 : 0 }
         super.init()
     }
 
@@ -224,6 +256,12 @@ open class ARSkeleton: NSObject {
         public static let rightHand = JointName(rawValue: "right_hand_joint")
         public static let leftFoot = JointName(rawValue: "left_foot_joint")
         public static let rightFoot = JointName(rawValue: "right_foot_joint")
+
+        public init?(_ recognizedPointKey: VNRecognizedPointKey) {
+            // Vision recognized-point keys are not observed on this host.
+            _ = recognizedPointKey
+            return nil
+        }
 
         static var knownNames: [String] {
             [

@@ -40,18 +40,46 @@ open class ARAnchor: NSObject, ARAnchorCopying, NSSecureCoding {
         super.init()
     }
 
-    public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
-    }
-
-    public func encode(with coder: NSCoder) {
-        _ = coder
+    init(identifier: UUID, name: String?, sessionIdentifier: UUID?, transform: simd_float4x4) {
+        self.identifier = identifier
+        self.name = name
+        self.sessionIdentifier = sessionIdentifier
+        self.transform = transform
+        super.init()
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
         _ = zone
         return type(of: self).init(anchor: self)
+    }
+
+    func applySessionIdentifier(_ identifier: UUID) {
+        sessionIdentifier = identifier
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(1, forKey: "version")
+        coder.encode(identifier.uuidString, forKey: "identifier")
+        coder.encode(name, forKey: "name")
+        coder.encode(sessionIdentifier?.uuidString, forKey: "sessionIdentifier")
+        coder.encode(arkitEncodeMatrix(transform).map { NSNumber(value: $0) }, forKey: "transform")
+    }
+
+    public required init?(coder: NSCoder) {
+        guard let identifierString = coder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
+              let identifier = UUID(uuidString: identifierString),
+              let numbers = coder.decodeObject(of: [NSArray.self, NSNumber.self], forKey: "transform") as? [NSNumber],
+              let transform = arkitDecodeMatrix(numbers.map { $0.floatValue })
+        else { return nil }
+        self.identifier = identifier
+        self.name = coder.decodeObject(of: NSString.self, forKey: "name") as String?
+        if let sessionString = coder.decodeObject(of: NSString.self, forKey: "sessionIdentifier") as String? {
+            self.sessionIdentifier = UUID(uuidString: sessionString)
+        } else {
+            self.sessionIdentifier = nil
+        }
+        self.transform = transform
+        super.init()
     }
 }
 
@@ -86,7 +114,7 @@ open class ARPlaneAnchor: ARAnchor, ARTrackable {
     public var geometry: ARPlaneGeometry { _geometry }
     public var planeExtent: ARPlaneExtent { _planeExtent }
     public var classification: Classification { _classification }
-    public var isTracked: Bool { false }
+    public var isTracked: Bool { _isTracked }
 
     private let _alignment: Alignment
     private let _center: simd_float3
@@ -94,6 +122,27 @@ open class ARPlaneAnchor: ARAnchor, ARTrackable {
     private let _geometry: ARPlaneGeometry
     private let _planeExtent: ARPlaneExtent
     private let _classification: Classification
+    private let _isTracked: Bool
+
+    public init(
+        transform: simd_float4x4,
+        alignment: Alignment,
+        center: simd_float3,
+        extent: simd_float3,
+        classification: Classification,
+        isTracked: Bool,
+        identifier: UUID,
+        sessionIdentifier: UUID?
+    ) {
+        self._alignment = alignment
+        self._center = center
+        self._extent = extent
+        self._geometry = ARPlaneGeometry.rectangle(center: center, extent: extent)
+        self._planeExtent = ARPlaneExtent(width: extent.x, height: extent.z, rotationOnYAxis: 0)
+        self._classification = classification
+        self._isTracked = isTracked
+        super.init(identifier: identifier, name: nil, sessionIdentifier: sessionIdentifier, transform: transform)
+    }
 
     public required init(anchor: ARAnchor) {
         if let plane = anchor as? ARPlaneAnchor {
@@ -103,6 +152,7 @@ open class ARPlaneAnchor: ARAnchor, ARTrackable {
             self._geometry = plane._geometry
             self._planeExtent = plane._planeExtent
             self._classification = plane._classification
+            self._isTracked = plane._isTracked
         } else {
             self._alignment = .horizontal
             self._center = simd_float3(repeating: 0)
@@ -110,13 +160,20 @@ open class ARPlaneAnchor: ARAnchor, ARTrackable {
             self._geometry = ARPlaneGeometry()
             self._planeExtent = ARPlaneExtent()
             self._classification = .none(.notAvailable)
+            self._isTracked = false
         }
         super.init(anchor: anchor)
     }
 
     public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
+        self._alignment = .horizontal
+        self._center = simd_float3(repeating: 0)
+        self._extent = simd_float3(repeating: 0)
+        self._geometry = ARPlaneGeometry()
+        self._planeExtent = ARPlaneExtent()
+        self._classification = .none(.notAvailable)
+        self._isTracked = false
+        super.init(coder: coder)
     }
 }
 
@@ -139,12 +196,16 @@ open class ARPlaneExtent: NSObject, NSSecureCoding {
     }
 
     public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
+        self._width = coder.decodeFloat(forKey: "width")
+        self._height = coder.decodeFloat(forKey: "height")
+        self._rotationOnYAxis = coder.decodeFloat(forKey: "rotation")
+        super.init()
     }
 
     public func encode(with coder: NSCoder) {
-        _ = coder
+        coder.encode(width, forKey: "width")
+        coder.encode(height, forKey: "height")
+        coder.encode(rotationOnYAxis, forKey: "rotation")
     }
 }
 
@@ -299,6 +360,7 @@ open class ARBodyAnchor: ARAnchor, ARTrackable {
 
 open class AREnvironmentProbeAnchor: ARAnchor {
     public var extent: simd_float3 { _extent }
+    public var environmentTexture: (any MTLTexture)? { nil }
     private let _extent: simd_float3
 
     public init(transform: simd_float4x4, extent: simd_float3) {
@@ -386,15 +448,46 @@ open class ARGeoAnchor: ARAnchor, ARTrackable {
         case userDefined = 3
     }
 
-    public var altitudeSource: AltitudeSource { .unknown }
+    public var altitudeSource: AltitudeSource { _altitudeSource }
     public var isTracked: Bool { false }
+    public var coordinate: CLLocationCoordinate2D { _coordinate }
+    public var altitude: CLLocationDistance? { _altitude }
+
+    private let _coordinate: CLLocationCoordinate2D
+    private let _altitude: CLLocationDistance?
+    private let _altitudeSource: AltitudeSource
+
+    public init(coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance? = nil) {
+        self._coordinate = coordinate
+        self._altitude = altitude
+        self._altitudeSource = altitude == nil ? .unknown : .userDefined
+        super.init(transform: .identity)
+    }
+
+    public init(name: String, coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance? = nil) {
+        self._coordinate = coordinate
+        self._altitude = altitude
+        self._altitudeSource = altitude == nil ? .unknown : .userDefined
+        super.init(name: name, transform: .identity)
+    }
 
     public required init(anchor: ARAnchor) {
+        if let geo = anchor as? ARGeoAnchor {
+            self._coordinate = geo._coordinate
+            self._altitude = geo._altitude
+            self._altitudeSource = geo._altitudeSource
+        } else {
+            self._coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            self._altitude = nil
+            self._altitudeSource = .unknown
+        }
         super.init(anchor: anchor)
     }
 
     public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
+        self._coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        self._altitude = nil
+        self._altitudeSource = .unknown
+        super.init(coder: coder)
     }
 }
