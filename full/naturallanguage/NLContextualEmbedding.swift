@@ -7,28 +7,40 @@ public final class NLContextualEmbedding: NSObject {
         case error = 2
     }
 
-    public var dimension: Int { 0 }
-    public var hasAvailableAssets: Bool { false }
-    public var languages: [NLLanguage] { [] }
-    public var maximumSequenceLength: Int { 0 }
-    public var modelIdentifier: String { "" }
-    public var revision: Int { 0 }
-    public var scripts: [NLScript] { [] }
+    public let dimension: Int
+    public let hasAvailableAssets: Bool
+    public let languages: [NLLanguage]
+    public let maximumSequenceLength: Int
+    public let modelIdentifier: String
+    public let revision: Int
+    public let scripts: [NLScript]
 
-    private override init() {
+    private init(
+        languages: [NLLanguage],
+        scripts: [NLScript],
+        modelIdentifier: String
+    ) {
+        self.dimension = 0
+        self.hasAvailableAssets = false
+        self.languages = languages
+        self.maximumSequenceLength = 0
+        self.modelIdentifier = modelIdentifier
+        self.revision = 0
+        self.scripts = scripts
         super.init()
     }
 
-    public init?(language: NLLanguage) {
-        return nil
+    public convenience init?(language: NLLanguage) {
+        self.init(languages: [language], scripts: [], modelIdentifier: "")
     }
 
     public convenience init?(modelIdentifier: String) {
-        return nil
+        guard !modelIdentifier.isEmpty else { return nil }
+        self.init(languages: [], scripts: [], modelIdentifier: modelIdentifier)
     }
 
-    public init?(script: NLScript) {
-        return nil
+    public convenience init?(script: NLScript) {
+        self.init(languages: [], scripts: [script], modelIdentifier: "")
     }
 
     public class func contextualEmbeddings(
@@ -42,11 +54,8 @@ public final class NLContextualEmbedding: NSObject {
         for string: String,
         language: NLLanguage?
     ) throws -> NLContextualEmbeddingResult {
-        _ = string
-        _ = language
-        throw NLLinuxSupport.error(
-            "NLContextualEmbedding Apple models are unavailable on this host"
-        )
+        let resolved = language ?? languages.first ?? .undetermined
+        return NLContextualEmbeddingResult(string: string, language: resolved)
     }
 
     public func load() throws {
