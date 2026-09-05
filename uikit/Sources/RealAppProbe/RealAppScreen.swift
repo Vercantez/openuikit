@@ -156,11 +156,6 @@ public enum RealAppScreen {
         Screen(name: "realapp_settings_light_ipad", variant: .settings,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: true, idiom: .pad),
-        // Firefox Focus Settings. Captured on the iPhone 16 @3x
-        // (scripts/realapp_probe_sim.sh); the eight Pocket Casts rows stay.
-        Screen(name: "realapp_focus_settings_light", variant: .focusSettings,
-               theme: .light, style: .light, contentSizeCategory: .large,
-               presentsSheet: false),
         // Same History picker (Listening History "...") on the iPad (A16).
         Screen(name: "realapp_history_light_ipad", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,
@@ -171,7 +166,24 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ]
+    ] + focusScreens
+
+    /// Firefox Focus's screen joins the table only where its stub modules
+    /// (Onboarding, Glean, Licenses, DesignSystem, Intents) exist — the
+    /// SwiftPM routes on macOS and Linux corelibs. The Linux-hosted guest
+    /// builder (full/scripts/build_full.sh) compiles this harness from the
+    /// top-level files against the port's own Foundation and has no
+    /// SwiftUI, Combine or stub modules yet, so there the table stops at the
+    /// Pocket Casts screens and Focus/ is not compiled. Both authorities
+    /// went red on f6912fa1 ("no such module 'Onboarding'") when the screen
+    /// sat in this file. See Focus/FocusScreens.swift.
+    static var focusScreens: [Screen] {
+        #if canImport(Onboarding)
+        return focusScreenTable
+        #else
+        return []
+        #endif
+    }
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
@@ -243,21 +255,6 @@ public enum RealAppScreen {
         return nav
     }
 
-    /// Focus presents Settings inside a UINavigationController
-    /// (BrowserViewController.showSettings). The capture is that nav+table
-    /// as the window root so viewDidLoad's `navigationController!` holds.
-    static func makeFocusSettingsScreen() -> UIViewController {
-        let settings = SettingsViewController(
-            searchEngineManager: SearchEngineManager(),
-            authenticationManager: AuthenticationManager(),
-            onboardingEventsHandler: HarnessOnboardingEventsHandler(),
-            themeManager: ThemeManager(),
-            dismissScreenCompletion: {},
-            shouldScrollToSiri: false
-        )
-        return UINavigationController(rootViewController: settings)
-    }
-
     public static func makeRoot(variant: Variant,
                                 theme: Theme.ThemeType) -> UIViewController {
         registerNibClasses()
@@ -266,7 +263,12 @@ public enum RealAppScreen {
         case .listeningHistory: picker = makeListeningHistoryPicker(theme: theme)
         case .settings:         picker = makeSettingsPicker(theme: theme)
         case .storage:          return makeStorageScreen(theme: theme)
-        case .focusSettings:    return makeFocusSettingsScreen()
+        case .focusSettings:
+            #if canImport(Onboarding)
+            return makeFocusSettingsScreen()
+            #else
+            fatalError("realapp_focus_settings_light is not in this build (no Focus stub modules)")
+            #endif
         }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker
