@@ -24,7 +24,14 @@ public final class NLModel: NSObject {
     }
 
     public convenience init(contentsOfURL url: URL) throws {
-        let payload = try Data(contentsOf: url)
+        let payload: Data
+        do {
+            payload = try Data(contentsOf: url)
+        } catch {
+            throw NLLinuxSupport.error(
+                "NLModel Apple Create ML packages are unavailable on this host"
+            )
+        }
         let decoded = try NLModel.decode(payload)
         self.init(configuration: decoded.configuration, labels: decoded.labels)
     }
