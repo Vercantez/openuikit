@@ -801,7 +801,9 @@ public struct _OpenToolbarItem<Content: _OpenView>: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        content._makeOpenUIKitNode()
+        _OpenViewNode(
+            .modified(content._makeOpenUIKitNode(), .toolbarItem(placement))
+        )
     }
 }
 
@@ -823,7 +825,12 @@ public struct _OpenToolbarSpacer: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.spacer(minLength: sizing == .flexible ? nil : 0))
+        _OpenViewNode(
+            .modified(
+                _OpenViewNode(.spacer(minLength: sizing == .flexible ? nil : 0)),
+                .toolbarItem(placement)
+            )
+        )
     }
 }
 
@@ -844,10 +851,12 @@ public struct _OpenDefaultToolbarItem: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let inner: _OpenViewNode
         switch kind {
         case .search:
-            return _OpenImage(systemName: "magnifyingglass")._makeOpenUIKitNode()
+            inner = _OpenImage(systemName: "magnifyingglass")._makeOpenUIKitNode()
         }
+        return _OpenViewNode(.modified(inner, .toolbarItem(placement)))
     }
 }
 

@@ -102,4 +102,26 @@ final class GlassMaterialTests: XCTestCase {
         v.applyColors()
         XCTAssertTrue(v.platter._usesIOSGlass)
     }
+
+    func testIsolatedImageItemsDoNotShareAPlatter() {
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x: settings
+        // `[277, 0, 44, 44]` and search `[333, 0, 44, 44]` (gap 12, not the
+        // grouped 8) — two platters.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let img = UIImage(bitmap: Bitmap(width: 66, height: 66), scale: 3)
+        let aItem = UIBarButtonItem(image: img)
+        let bItem = UIBarButtonItem(image: img)
+        aItem._isolatesPlatter = true
+        bItem._isolatesPlatter = true
+        let a = _UIBarButtonItemView(item: aItem)
+        let b = _UIBarButtonItemView(item: bItem)
+        a.frame = CGRect(x: 277, y: 0, width: 44, height: 44)
+        b.frame = CGRect(x: 333, y: 0, width: 44, height: 44)
+        XCTAssertEqual(_UIBarItemLayout.gapBefore([a, b], 1), 12)
+        XCTAssertEqual(_UIBarItemLayout.sharedPlatterFrames([a, b]), [])
+        XCTAssertFalse(a._platterHiddenByGroup)
+        XCTAssertFalse(b._platterHiddenByGroup)
+    }
 }
