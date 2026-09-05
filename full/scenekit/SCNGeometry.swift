@@ -489,19 +489,14 @@ open class SCNBox: SCNGeometry {
     public required init?(coder: NSCoder) { return nil }
 
     private func _refreshPrimitiveBox() {
-        let hx = Float(width) * 0.5
-        let hy = Float(height) * 0.5
-        let hz = Float(length) * 0.5
-        _linuxBoundingBox = (SCNVector3(x: -hx, y: -hy, z: -hz), SCNVector3(x: hx, y: hy, z: hz))
-        sources = [
-            SCNGeometrySource(vertices: [
-                SCNVector3(-hx, -hy, -hz), SCNVector3(hx, -hy, -hz),
-                SCNVector3(hx, hy, -hz), SCNVector3(-hx, hy, -hz),
-                SCNVector3(-hx, -hy, hz), SCNVector3(hx, -hy, hz),
-                SCNVector3(hx, hy, hz), SCNVector3(-hx, hy, hz)
-            ])
-        ]
-        elements = [SCNGeometryElement(indices: [UInt16]([0, 1, 2, 0, 2, 3]), primitiveType: .triangles)]
+        _scnAssignMesh(self, _scnBoxMesh(
+            width: Float(width),
+            height: Float(height),
+            length: Float(length),
+            wSeg: widthSegmentCount,
+            hSeg: heightSegmentCount,
+            lSeg: lengthSegmentCount
+        ))
     }
 }
 
@@ -527,12 +522,7 @@ open class SCNSphere: SCNGeometry {
     public required init?(coder: NSCoder) { return nil }
 
     private func _refresh() {
-        let r = Float(radius)
-        _linuxBoundingBox = (SCNVector3(x: -r, y: -r, z: -r), SCNVector3(x: r, y: r, z: r))
-        sources = [SCNGeometrySource(vertices: [
-            SCNVector3(0, r, 0), SCNVector3(0, -r, 0), SCNVector3(r, 0, 0), SCNVector3(-r, 0, 0)
-        ])]
-        elements = [SCNGeometryElement(indices: [UInt16]([0, 2, 3]), primitiveType: .triangles)]
+        _scnAssignMesh(self, _scnSphereMesh(radius: Float(radius), segments: segmentCount, geodesic: isGeodesic))
     }
 }
 
@@ -565,14 +555,7 @@ open class SCNPlane: SCNGeometry {
     public required init?(coder: NSCoder) { return nil }
 
     private func _refresh() {
-        let hx = Float(width) * 0.5
-        let hy = Float(height) * 0.5
-        _linuxBoundingBox = (SCNVector3(x: -hx, y: -hy, z: 0), SCNVector3(x: hx, y: hy, z: 0))
-        sources = [SCNGeometrySource(vertices: [
-            SCNVector3(-hx, -hy, 0), SCNVector3(hx, -hy, 0),
-            SCNVector3(hx, hy, 0), SCNVector3(-hx, hy, 0)
-        ])]
-        elements = [SCNGeometryElement(indices: [UInt16]([0, 1, 2, 0, 2, 3]), primitiveType: .triangles)]
+        _scnAssignMesh(self, _scnPlaneMesh(width: Float(width), height: Float(height), wSeg: widthSegmentCount, hSeg: heightSegmentCount))
     }
 }
 
@@ -590,14 +573,24 @@ open class SCNCapsule: SCNGeometry {
         heightSegmentCount = 1
         capSegmentCount = 24
         super.init()
-        _extentBox(x: Float(capRadius), y: Float(height) * 0.5, z: Float(capRadius))
+        _refresh()
     }
 
     public convenience init(capRadius: CGFloat, height: CGFloat) {
         self.init()
         self.capRadius = capRadius
         self.height = height
-        _extentBox(x: Float(capRadius), y: Float(height) * 0.5, z: Float(capRadius))
+        _refresh()
+    }
+
+    private func _refresh() {
+        _scnAssignMesh(self, _scnCapsuleMesh(
+            capRadius: Float(capRadius),
+            height: Float(height),
+            radial: radialSegmentCount,
+            heightSeg: heightSegmentCount,
+            capSeg: capSegmentCount
+        ))
     }
 
     public required init?(coder: NSCoder) { return nil }
@@ -617,8 +610,7 @@ open class SCNCone: SCNGeometry {
         radialSegmentCount = 24
         heightSegmentCount = 1
         super.init()
-        let r = Float(max(topRadius, bottomRadius))
-        _extentBox(x: r, y: Float(height) * 0.5, z: r)
+        _refresh()
     }
 
     public convenience init(topRadius: CGFloat, bottomRadius: CGFloat, height: CGFloat) {
@@ -626,8 +618,17 @@ open class SCNCone: SCNGeometry {
         self.topRadius = topRadius
         self.bottomRadius = bottomRadius
         self.height = height
-        let r = Float(max(topRadius, bottomRadius))
-        _extentBox(x: r, y: Float(height) * 0.5, z: r)
+        _refresh()
+    }
+
+    private func _refresh() {
+        _scnAssignMesh(self, _scnConeMesh(
+            topRadius: Float(topRadius),
+            bottomRadius: Float(bottomRadius),
+            height: Float(height),
+            radial: radialSegmentCount,
+            heightSeg: heightSegmentCount
+        ))
     }
 
     public required init?(coder: NSCoder) { return nil }
@@ -645,14 +646,25 @@ open class SCNCylinder: SCNGeometry {
         radialSegmentCount = 24
         heightSegmentCount = 1
         super.init()
-        _extentBox(x: Float(radius), y: Float(height) * 0.5, z: Float(radius))
+        _refresh()
     }
 
     public convenience init(radius: CGFloat, height: CGFloat) {
         self.init()
         self.radius = radius
         self.height = height
-        _extentBox(x: Float(radius), y: Float(height) * 0.5, z: Float(radius))
+        _refresh()
+    }
+
+    private func _refresh() {
+        _scnAssignMesh(self, _scnCylinderMesh(
+            radius: Float(radius),
+            height: Float(height),
+            radial: radialSegmentCount,
+            heightSeg: heightSegmentCount,
+            top: true,
+            bottom: true
+        ))
     }
 
     public required init?(coder: NSCoder) { return nil }
@@ -674,7 +686,7 @@ open class SCNPyramid: SCNGeometry {
         heightSegmentCount = 1
         lengthSegmentCount = 1
         super.init()
-        _extentBox(x: Float(width) * 0.5, y: Float(height) * 0.5, z: Float(length) * 0.5)
+        _refresh()
     }
 
     public convenience init(width: CGFloat, height: CGFloat, length: CGFloat) {
@@ -682,7 +694,11 @@ open class SCNPyramid: SCNGeometry {
         self.width = width
         self.height = height
         self.length = length
-        _extentBox(x: Float(width) * 0.5, y: Float(height) * 0.5, z: Float(length) * 0.5)
+        _refresh()
+    }
+
+    private func _refresh() {
+        _scnAssignMesh(self, _scnPyramidMesh(width: Float(width), height: Float(height), length: Float(length)))
     }
 
     public required init?(coder: NSCoder) { return nil }
@@ -700,16 +716,23 @@ open class SCNTorus: SCNGeometry {
         ringSegmentCount = 24
         pipeSegmentCount = 24
         super.init()
-        let e = Float(ringRadius + pipeRadius)
-        _extentBox(x: e, y: Float(pipeRadius), z: e)
+        _refresh()
     }
 
     public convenience init(ringRadius: CGFloat, pipeRadius: CGFloat) {
         self.init()
         self.ringRadius = ringRadius
         self.pipeRadius = pipeRadius
-        let e = Float(ringRadius + pipeRadius)
-        _extentBox(x: e, y: Float(pipeRadius), z: e)
+        _refresh()
+    }
+
+    private func _refresh() {
+        _scnAssignMesh(self, _scnTorusMesh(
+            ringRadius: Float(ringRadius),
+            pipeRadius: Float(pipeRadius),
+            ringSeg: ringSegmentCount,
+            pipeSeg: pipeSegmentCount
+        ))
     }
 
     public required init?(coder: NSCoder) { return nil }
@@ -729,7 +752,7 @@ open class SCNTube: SCNGeometry {
         radialSegmentCount = 24
         heightSegmentCount = 1
         super.init()
-        _extentBox(x: Float(outerRadius), y: Float(height) * 0.5, z: Float(outerRadius))
+        _refresh()
     }
 
     public convenience init(innerRadius: CGFloat, outerRadius: CGFloat, height: CGFloat) {
@@ -737,7 +760,17 @@ open class SCNTube: SCNGeometry {
         self.innerRadius = innerRadius
         self.outerRadius = outerRadius
         self.height = height
-        _extentBox(x: Float(outerRadius), y: Float(height) * 0.5, z: Float(outerRadius))
+        _refresh()
+    }
+
+    private func _refresh() {
+        _scnAssignMesh(self, _scnTubeMesh(
+            inner: Float(innerRadius),
+            outer: Float(outerRadius),
+            height: Float(height),
+            radial: radialSegmentCount,
+            heightSeg: heightSegmentCount
+        ))
     }
 
     public required init?(coder: NSCoder) { return nil }
@@ -754,6 +787,7 @@ open class SCNFloor: SCNGeometry {
 
     public override init() {
         super.init()
+        _scnAssignMesh(self, _scnPlaneMesh(width: 100, height: 100, wSeg: 1, hSeg: 1))
         _linuxBoundingBox = (SCNVector3(x: -50, y: 0, z: -50), SCNVector3(x: 50, y: 0, z: 50))
     }
 

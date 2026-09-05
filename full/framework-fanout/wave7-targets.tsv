@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+PencilKit	pencilkit	leaf-full	100	ui,drawing,fail-closed	Foundation,UIKit
+SpriteKit	spritekit	large-partitioned	100	graphics,realtime,fail-closed	CoreGraphics,Foundation,QuartzCore,UIKit
+GameKit	gamekit	medium-full	100	network,os-service,ui,fail-closed	Foundation,UIKit
+HomeKit	homekit	large-partitioned	100	os-service,network,fail-closed	Foundation
+MusicKit	musickit	medium-full	100	network,os-service,fail-closed	Foundation
+CoreLocationUI	corelocationui	leaf-full	100	ui,fail-closed	CoreLocation,Foundation,UIKit
+ShazamKit	shazamkit	leaf-full	100	audio,network,fail-closed	Foundation
+SoundAnalysis	soundanalysis	leaf-full	100	audio,ml,fail-closed	AVFAudio,Foundation
+NearbyInteraction	nearbyinteraction	leaf-full	100	hardware,fail-closed	Foundation
+SensorKit	sensorkit	medium-full	100	hardware,privacy,fail-closed	Foundation
+ExtensionKit	extensionkit	leaf-full	100	os-service,fail-closed	Foundation
+BackgroundAssets	backgroundassets	leaf-full	100	os-service,network,fail-closed	Foundation
+Symbols	symbols	leaf-full	100	ui,fail-closed	Foundation
+TabularData	tabulardata	medium-full	100	data,fail-closed	Foundation
+GroupActivities	groupactivities	medium-full	100	network,os-service,fail-closed	Foundation
+WeatherKit	weatherkit	medium-full	100	network,fail-closed	CoreLocation,Foundation

@@ -1,0 +1,199 @@
+precise	kind	title	path	declaration
+c:@BADownloaderPriorityDefault	swift.type.property	default	BADownload.Priority.default	static let `default`: BADownload.Priority
+c:@BADownloaderPriorityMax	swift.type.property	max	BADownload.Priority.max	static let max: BADownload.Priority
+c:@BADownloaderPriorityMin	swift.type.property	min	BADownload.Priority.min	static let min: BADownload.Priority
+c:@BAErrorDomain	swift.var	BAErrorDomain	BAErrorDomain	let BAErrorDomain: String
+c:@E@BAContentRequest	swift.enum	BAContentRequest	BAContentRequest	enum BAContentRequest
+c:@E@BAContentRequest@BAContentRequestInstall	swift.enum.case	BAContentRequest.install	BAContentRequest.install	case install
+c:@E@BAContentRequest@BAContentRequestPeriodic	swift.enum.case	BAContentRequest.periodic	BAContentRequest.periodic	case periodic
+c:@E@BAContentRequest@BAContentRequestUpdate	swift.enum.case	BAContentRequest.update	BAContentRequest.update	case update
+c:@E@BADownloadState	swift.enum	BADownload.State	BADownload.State	enum State
+c:@E@BADownloadState@BADownloadStateCreated	swift.enum.case	BADownload.State.created	BADownload.State.created	case created
+c:@E@BADownloadState@BADownloadStateDownloading	swift.enum.case	BADownload.State.downloading	BADownload.State.downloading	case downloading
+c:@E@BADownloadState@BADownloadStateFailed	swift.enum.case	BADownload.State.failed	BADownload.State.failed	case failed
+c:@E@BADownloadState@BADownloadStateFinished	swift.enum.case	BADownload.State.finished	BADownload.State.finished	case finished
+c:@E@BADownloadState@BADownloadStateWaiting	swift.enum.case	BADownload.State.waiting	BADownload.State.waiting	case waiting
+c:@E@BAErrorCode	swift.enum	BAErrorCode	BAErrorCode	enum BAErrorCode
+c:@E@BAErrorCode@BAErrorCodeCallFromExtensionNotAllowed	swift.enum.case	BAErrorCode.callFromExtensionNotAllowed	BAErrorCode.callFromExtensionNotAllowed	case callFromExtensionNotAllowed
+c:@E@BAErrorCode@BAErrorCodeCallFromInactiveProcessNotAllowed	swift.enum.case	BAErrorCode.callFromInactiveProcessNotAllowed	BAErrorCode.callFromInactiveProcessNotAllowed	case callFromInactiveProcessNotAllowed
+c:@E@BAErrorCode@BAErrorCodeCallerConnectionInvalid	swift.enum.case	BAErrorCode.callerConnectionInvalid	BAErrorCode.callerConnectionInvalid	case callerConnectionInvalid
+c:@E@BAErrorCode@BAErrorCodeCallerConnectionNotAccepted	swift.enum.case	BAErrorCode.callerConnectionNotAccepted	BAErrorCode.callerConnectionNotAccepted	case callerConnectionNotAccepted
+c:@E@BAErrorCode@BAErrorCodeDownloadAlreadyFailed	swift.enum.case	BAErrorCode.downloadAlreadyFailed	BAErrorCode.downloadAlreadyFailed	case downloadAlreadyFailed
+c:@E@BAErrorCode@BAErrorCodeDownloadAlreadyScheduled	swift.enum.case	BAErrorCode.downloadAlreadyScheduled	BAErrorCode.downloadAlreadyScheduled	case downloadAlreadyScheduled
+c:@E@BAErrorCode@BAErrorCodeDownloadBackgroundActivityProhibited	swift.enum.case	BAErrorCode.downloadBackgroundActivityProhibited	BAErrorCode.downloadBackgroundActivityProhibited	case downloadBackgroundActivityProhibited
+c:@E@BAErrorCode@BAErrorCodeDownloadDoesNotExist	swift.enum.case	BAErrorCode.downloadDoesNotExist	BAErrorCode.downloadDoesNotExist	case downloadDoesNotExist
+c:@E@BAErrorCode@BAErrorCodeDownloadEssentialDownloadNotPermitted	swift.enum.case	BAErrorCode.downloadEssentialDownloadNotPermitted	BAErrorCode.downloadEssentialDownloadNotPermitted	case downloadEssentialDownloadNotPermitted
+c:@E@BAErrorCode@BAErrorCodeDownloadFailedToStart	swift.enum.case	BAErrorCode.downloadFailedToStart	BAErrorCode.downloadFailedToStart	case downloadFailedToStart
+c:@E@BAErrorCode@BAErrorCodeDownloadInvalid	swift.enum.case	BAErrorCode.downloadInvalid	BAErrorCode.downloadInvalid	case downloadInvalid
+c:@E@BAErrorCode@BAErrorCodeDownloadNotScheduled	swift.enum.case	BAErrorCode.downloadNotScheduled	BAErrorCode.downloadNotScheduled	case downloadNotScheduled
+c:@E@BAErrorCode@BAErrorCodeDownloadWouldExceedAllowance	swift.enum.case	BAErrorCode.downloadWouldExceedAllowance	BAErrorCode.downloadWouldExceedAllowance	case downloadWouldExceedAllowance
+c:@E@BAErrorCode@BAErrorCodeSessionDownloadAllowanceExceeded	swift.enum.case	BAErrorCode.sessionDownloadAllowanceExceeded	BAErrorCode.sessionDownloadAllowanceExceeded	case sessionDownloadAllowanceExceeded
+c:@E@BAErrorCode@BAErrorCodeSessionDownloadDisallowedByAllowance	swift.enum.case	BAErrorCode.sessionDownloadDisallowedByAllowance	BAErrorCode.sessionDownloadDisallowedByAllowance	case sessionDownloadDisallowedByAllowance
+c:@E@BAErrorCode@BAErrorCodeSessionDownloadDisallowedByDomain	swift.enum.case	BAErrorCode.sessionDownloadDisallowedByDomain	BAErrorCode.sessionDownloadDisallowedByDomain	case sessionDownloadDisallowedByDomain
+c:@E@BAErrorCode@BAErrorCodeSessionDownloadNotPermittedBeforeAppLaunch	swift.enum.case	BAErrorCode.sessionDownloadNotPermittedBeforeAppLaunch	BAErrorCode.sessionDownloadNotPermittedBeforeAppLaunch	case sessionDownloadNotPermittedBeforeAppLaunch
+c:@T@BADownloaderPriority	swift.struct	BADownload.Priority	BADownload.Priority	struct Priority
+c:objc(cs)BAAppExtensionInfo	swift.class	BAAppExtensionInfo	BAAppExtensionInfo	class BAAppExtensionInfo
+c:objc(cs)BADownload	swift.class	BADownload	BADownload	class BADownload
+c:objc(cs)BADownload(im)copyAsNonEssential	swift.method	removingEssential()	BADownload.removingEssential()	func removingEssential() -> Self
+c:objc(cs)BADownload(py)identifier	swift.property	identifier	BADownload.identifier	var identifier: String { get }
+c:objc(cs)BADownload(py)isEssential	swift.property	isEssential	BADownload.isEssential	var isEssential: Bool { get }
+c:objc(cs)BADownload(py)priority	swift.property	priority	BADownload.priority	var priority: BADownload.Priority { get }
+c:objc(cs)BADownload(py)state	swift.property	state	BADownload.state	var state: BADownload.State { get }
+c:objc(cs)BADownload(py)uniqueIdentifier	swift.property	uniqueIdentifier	BADownload.uniqueIdentifier	var uniqueIdentifier: String { get }
+c:objc(cs)BADownloadManager	swift.class	BADownloadManager	BADownloadManager	class BADownloadManager
+c:objc(cs)BADownloadManager(cpy)sharedManager	swift.type.property	shared	BADownloadManager.shared	class var shared: BADownloadManager { get }
+c:objc(cs)BADownloadManager(im)cancelDownload:error:	swift.method	cancel(_:)	BADownloadManager.cancel(_:)	func cancel(_ download: BADownload) throws
+c:objc(cs)BADownloadManager(im)fetchCurrentDownloads:	swift.method	fetchCurrentDownloads()	BADownloadManager.fetchCurrentDownloads()	func fetchCurrentDownloads() throws -> [BADownload]
+c:objc(cs)BADownloadManager(im)fetchCurrentDownloadsWithCompletionHandler:	swift.method	fetchCurrentDownloads(completionHandler:)	BADownloadManager.fetchCurrentDownloads(completionHandler:)	func fetchCurrentDownloads(completionHandler: @escaping ([BADownload], (any Error)?) -> Void)
+c:objc(cs)BADownloadManager(im)performWithExclusiveControl:	swift.method	withExclusiveControl(_:)	BADownloadManager.withExclusiveControl(_:)	func withExclusiveControl(_ performHandler: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)BADownloadManager(im)performWithExclusiveControlBeforeDate:performHandler:	swift.method	withExclusiveControl(beforeDate:perform:)	BADownloadManager.withExclusiveControl(beforeDate:perform:)	func withExclusiveControl(beforeDate date: Date, perform performHandler: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)BADownloadManager(im)scheduleDownload:error:	swift.method	scheduleDownload(_:)	BADownloadManager.scheduleDownload(_:)	func scheduleDownload(_ download: BADownload) throws
+c:objc(cs)BADownloadManager(im)startForegroundDownload:error:	swift.method	startForegroundDownload(_:)	BADownloadManager.startForegroundDownload(_:)	func startForegroundDownload(_ download: BADownload) throws
+c:objc(cs)BADownloadManager(py)delegate	swift.property	delegate	BADownloadManager.delegate	weak var delegate: (any BADownloadManagerDelegate)? { get set }
+c:objc(cs)BAURLDownload	swift.class	BAURLDownload	BAURLDownload	class BAURLDownload
+c:objc(cs)BAURLDownload(im)initWithIdentifier:request:applicationGroupIdentifier:	swift.init	init(identifier:request:applicationGroupIdentifier:)	BAURLDownload.init(identifier:request:applicationGroupIdentifier:)	convenience init(identifier: String, request: URLRequest, applicationGroupIdentifier: String)
+c:objc(cs)BAURLDownload(im)initWithIdentifier:request:applicationGroupIdentifier:priority:	swift.init	init(identifier:request:applicationGroupIdentifier:priority:)	BAURLDownload.init(identifier:request:applicationGroupIdentifier:priority:)	convenience init(identifier: String, request: URLRequest, applicationGroupIdentifier: String, priority: BADownload.Priority)
+c:objc(cs)BAURLDownload(im)initWithIdentifier:request:essential:fileSize:applicationGroupIdentifier:priority:	swift.init	init(identifier:request:essential:fileSize:applicationGroupIdentifier:priority:)	BAURLDownload.init(identifier:request:essential:fileSize:applicationGroupIdentifier:priority:)	init(identifier: String, request: URLRequest, essential: Bool, fileSize: Int, applicationGroupIdentifier: String, priority: BADownload.Priority)
+c:objc(cs)BAURLDownload(im)initWithIdentifier:request:fileSize:applicationGroupIdentifier:	swift.init	init(identifier:request:fileSize:applicationGroupIdentifier:)	BAURLDownload.init(identifier:request:fileSize:applicationGroupIdentifier:)	convenience init(identifier: String, request: URLRequest, fileSize: Int, applicationGroupIdentifier: String)
+c:objc(pl)BADownloadManagerDelegate	swift.protocol	BADownloadManagerDelegate	BADownloadManagerDelegate	protocol BADownloadManagerDelegate : NSObjectProtocol
+c:objc(pl)BADownloadManagerDelegate(im)download:didReceiveChallenge:completionHandler:	swift.method	download(_:didReceive:)	BADownloadManagerDelegate.download(_:didReceive:)	optional func download(_ download: BADownload, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?)
+c:objc(pl)BADownloadManagerDelegate(im)download:didWriteBytes:totalBytesWritten:totalBytesExpectedToWrite:	swift.method	download(_:didWriteBytes:totalBytesWritten:totalBytesExpectedToWrite:)	BADownloadManagerDelegate.download(_:didWriteBytes:totalBytesWritten:totalBytesExpectedToWrite:)	optional func download(_ download: BADownload, didWriteBytes bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite totalExpectedBytes: Int64)
+c:objc(pl)BADownloadManagerDelegate(im)download:failedWithError:	swift.method	download(_:failedWithError:)	BADownloadManagerDelegate.download(_:failedWithError:)	optional func download(_ download: BADownload, failedWithError error: any Error)
+c:objc(pl)BADownloadManagerDelegate(im)download:finishedWithFileURL:	swift.method	download(_:finishedWithFileURL:)	BADownloadManagerDelegate.download(_:finishedWithFileURL:)	optional func download(_ download: BADownload, finishedWithFileURL fileURL: URL)
+c:objc(pl)BADownloadManagerDelegate(im)downloadDidBegin:	swift.method	downloadDidBegin(_:)	BADownloadManagerDelegate.downloadDidBegin(_:)	optional func downloadDidBegin(_ download: BADownload)
+c:objc(pl)BADownloadManagerDelegate(im)downloadDidPause:	swift.method	downloadDidPause(_:)	BADownloadManagerDelegate.downloadDidPause(_:)	optional func downloadDidPause(_ download: BADownload)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)BAAppExtensionInfo	swift.init	init(coder:)	BAAppExtensionInfo.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)BADownload	swift.init	init(coder:)	BADownload.init(coder:)	init?(coder: NSCoder)
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:16BackgroundAssets07ManagedaB5ErrorO	swift.property	helpAnchor	ManagedBackgroundAssetsError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:16BackgroundAssets07ManagedaB5ErrorO	swift.property	failureReason	ManagedBackgroundAssetsError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:16BackgroundAssets07ManagedaB5ErrorO	swift.property	recoverySuggestion	ManagedBackgroundAssetsError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:16BackgroundAssets07ManagedaB5ErrorO	swift.enum	ManagedBackgroundAssetsError	ManagedBackgroundAssetsError	enum ManagedBackgroundAssetsError
+s:16BackgroundAssets07ManagedaB5ErrorO11descriptionSSvp	swift.property	description	ManagedBackgroundAssetsError.description	var description: String { get }
+s:16BackgroundAssets07ManagedaB5ErrorO12fileNotFoundyAC6System8FilePathV_tcACmF	swift.enum.case	ManagedBackgroundAssetsError.fileNotFound(at:)	ManagedBackgroundAssetsError.fileNotFound(at:)	case fileNotFound(at: FilePath)
+s:16BackgroundAssets07ManagedaB5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	ManagedBackgroundAssetsError.errorDescription	var errorDescription: String? { get }
+s:16BackgroundAssets07ManagedaB5ErrorO17assetPackNotFoundyACSS_tcACmF	swift.enum.case	ManagedBackgroundAssetsError.assetPackNotFound(withID:)	ManagedBackgroundAssetsError.assetPackNotFound(withID:)	case assetPackNotFound(withID: String)
+s:16BackgroundAssets16AssetPackManagerC	swift.class	AssetPackManager	AssetPackManager	actor AssetPackManager
+s:16BackgroundAssets16AssetPackManagerC03allC5PacksShyAA0cD0VGvp	swift.property	allAssetPacks	AssetPackManager.allAssetPacks	var allAssetPacks: Set<AssetPack> { get async throws }
+s:16BackgroundAssets16AssetPackManagerC05assetD06withIDAA0cD0VSS_tYaKF	swift.method	assetPack(withID:)	AssetPackManager.assetPack(withID:)	func assetPack(withID assetPackID: String) async throws -> AssetPack
+s:16BackgroundAssets16AssetPackManagerC10descriptor3for011searchingIncD6WithID6System14FileDescriptorVAG0M4PathV_SSSgtKF	swift.method	descriptor(for:searchingInAssetPackWithID:)	AssetPackManager.descriptor(for:searchingInAssetPackWithID:)	nonisolated func descriptor(for path: FilePath, searchingInAssetPackWithID assetPackID: String? = nil) throws -> FileDescriptor
+s:16BackgroundAssets16AssetPackManagerC13statusUpdates03forcD6WithIDQrSS_tF	swift.method	statusUpdates(forAssetPackWithID:)	AssetPackManager.statusUpdates(forAssetPackWithID:)	nonisolated func statusUpdates(forAssetPackWithID assetPackID: String) -> some Sendable & AsyncSequence<AssetPackManager.DownloadStatusUpdate, Never>\n
+s:16BackgroundAssets16AssetPackManagerC13statusUpdatesQrvp	swift.property	statusUpdates	AssetPackManager.statusUpdates	final let statusUpdates: some Sendable & AsyncSequence<AssetPackManager.DownloadStatusUpdate, Never>
+s:16BackgroundAssets16AssetPackManagerC15checkForUpdatesShySSG11updatingIDs_AE07removedJ0tyYaKF	swift.method	checkForUpdates()	AssetPackManager.checkForUpdates()	@discardableResult func checkForUpdates() async throws -> (updatingIDs: Set<String>, removedIDs: Set<String>)
+s:16BackgroundAssets16AssetPackManagerC15unownedExecutorScevp	swift.property	unownedExecutor	AssetPackManager.unownedExecutor	nonisolated final var unownedExecutor: UnownedSerialExecutor { get }
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO	swift.enum	AssetPackManager.DownloadStatusUpdate	AssetPackManager.DownloadStatusUpdate	enum DownloadStatusUpdate
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11descriptionSSvp	swift.property	description	AssetPackManager.DownloadStatusUpdate.description	var description: String { get }
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11downloadingyAeA0cD0V_So10NSProgressCtcAEmF	swift.enum.case	AssetPackManager.DownloadStatusUpdate.downloading(_:_:)	AssetPackManager.DownloadStatusUpdate.downloading(_:_:)	case downloading(AssetPack, Progress)
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO5beganyAeA0cD0VcAEmF	swift.enum.case	AssetPackManager.DownloadStatusUpdate.began(_:)	AssetPackManager.DownloadStatusUpdate.began(_:)	case began(AssetPack)
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO6failedyAeA0cD0V_s5Error_ptcAEmF	swift.enum.case	AssetPackManager.DownloadStatusUpdate.failed(_:_:)	AssetPackManager.DownloadStatusUpdate.failed(_:_:)	case failed(AssetPack, any Error)
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO6pausedyAeA0cD0VcAEmF	swift.enum.case	AssetPackManager.DownloadStatusUpdate.paused(_:)	AssetPackManager.DownloadStatusUpdate.paused(_:)	case paused(AssetPack)
+s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO8finishedyAeA0cD0VcAEmF	swift.enum.case	AssetPackManager.DownloadStatusUpdate.finished(_:)	AssetPackManager.DownloadStatusUpdate.finished(_:)	case finished(AssetPack)
+s:16BackgroundAssets16AssetPackManagerC23ensureLocalAvailability2ofyAA0cD0V_tYaKF	swift.method	ensureLocalAvailability(of:)	AssetPackManager.ensureLocalAvailability(of:)	func ensureLocalAvailability(of assetPack: AssetPack) async throws
+s:16BackgroundAssets16AssetPackManagerC3url3for10Foundation3URLV6System8FilePathV_tKF	swift.method	url(for:)	AssetPackManager.url(for:)	nonisolated func url(for path: FilePath) throws -> URL
+s:16BackgroundAssets16AssetPackManagerC6remove05assetD6WithIDySS_tYaKF	swift.method	remove(assetPackWithID:)	AssetPackManager.remove(assetPackWithID:)	func remove(assetPackWithID assetPackID: String) async throws
+s:16BackgroundAssets16AssetPackManagerC6sharedACvpZ	swift.type.property	shared	AssetPackManager.shared	static let shared: AssetPackManager
+s:16BackgroundAssets16AssetPackManagerC6status02ofcD6WithIDAA0cD0V6StatusVSS_tYaKF	swift.method	status(ofAssetPackWithID:)	AssetPackManager.status(ofAssetPackWithID:)	func status(ofAssetPackWithID assetPackID: String) async throws -> AssetPack.Status
+s:16BackgroundAssets16AssetPackManagerC8contents2at011searchingIncD6WithID7options10Foundation4DataV6System8FilePathV_SSSgSo20NSDataReadingOptionsVtKF	swift.method	contents(at:searchingInAssetPackWithID:options:)	AssetPackManager.contents(at:searchingInAssetPackWithID:options:)	nonisolated func contents(at path: FilePath, searchingInAssetPackWithID assetPackID: String? = nil, options: Data.ReadingOptions = .mappedIfSafe) throws -> Data
+s:16BackgroundAssets17AssetPackManifestV	swift.struct	AssetPackManifest	AssetPackManifest	struct AssetPackManifest
+s:16BackgroundAssets17AssetPackManifestV10assetPacksShyAA0cD0VGvp	swift.property	assetPacks	AssetPackManifest.assetPacks	let assetPacks: Set<AssetPack>
+s:16BackgroundAssets17AssetPackManifestV10contentsOf10appGroupIDAC10Foundation3URLV_SStKcfc	swift.init	init(contentsOf:appGroupID:)	AssetPackManifest.init(contentsOf:appGroupID:)	init(contentsOf url: URL, appGroupID: String) throws
+s:16BackgroundAssets17AssetPackManifestV11descriptionSSvp	swift.property	description	AssetPackManifest.description	var description: String { get }
+s:16BackgroundAssets17AssetPackManifestV12allDownloads3forShySo10BADownloadCGSo16BAContentRequestVSg_tF	swift.method	allDownloads(for:)	AssetPackManifest.allDownloads(for:)	func allDownloads(for contentRequest: BAContentRequest?) -> Set<BADownload>
+s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV	swift.struct	AssetPackManifest.DecodingConfiguration	AssetPackManifest.DecodingConfiguration	struct DecodingConfiguration
+s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV11descriptionSSvp	swift.property	description	AssetPackManifest.DecodingConfiguration.description	var description: String { get }
+s:16BackgroundAssets17AssetPackManifestV4from10appGroupIDAC10Foundation4DataV_SStKcfc	swift.init	init(from:appGroupID:)	AssetPackManifest.init(from:appGroupID:)	init(from data: Data, appGroupID: String) throws
+s:16BackgroundAssets17AssetPackManifestV4from13configurationACs7Decoder_p_AC21DecodingConfigurationVtKcfc	swift.init	init(from:configuration:)	AssetPackManifest.init(from:configuration:)	init(from decoder: any Decoder, configuration: AssetPackManifest.DecodingConfiguration) throws
+s:16BackgroundAssets17AssetPackManifestV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AssetPackManifest.encode(to:)	func encode(to encoder: any Encoder) throws
+s:16BackgroundAssets21BADownloaderExtensionP	swift.protocol	BADownloaderExtension	BADownloaderExtension	protocol BADownloaderExtension : AppExtension
+s:16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationK0CtYaF	swift.method	backgroundDownload(_:didReceive:)	BADownloaderExtension.backgroundDownload(_:didReceive:)	func backgroundDownload(_ download: BADownload, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?)
+s:16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_15failedWithErrorySo10BADownloadC_s0I0_ptF	swift.method	backgroundDownload(_:failedWithError:)	BADownloaderExtension.backgroundDownload(_:failedWithError:)	func backgroundDownload(_ failedDownload: BADownload, failedWithError error: any Error)
+s:16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0J0VtF	swift.method	backgroundDownload(_:finishedWithFileURL:)	BADownloaderExtension.backgroundDownload(_:finishedWithFileURL:)	func backgroundDownload(_ finishedDownload: BADownload, finishedWithFileURL fileURL: URL)
+s:16BackgroundAssets21BADownloaderExtensionP22extensionWillTerminateyyF	swift.method	extensionWillTerminate()	BADownloaderExtension.extensionWillTerminate()	func extensionWillTerminate()
+s:16BackgroundAssets21BADownloaderExtensionP9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0H0VSo05BAAppdJ0CtF	swift.method	downloads(for:manifestURL:extensionInfo:)	BADownloaderExtension.downloads(for:manifestURL:extensionInfo:)	func downloads(for request: BAContentRequest, manifestURL: URL, extensionInfo: BAAppExtensionInfo) -> Set<BADownload>
+s:16BackgroundAssets21BADownloaderExtensionPAAE13configurationQrvp	swift.property	configuration	BADownloaderExtension.configuration	var configuration: some BADownloaderExtensionConfiguration { get }
+s:16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationK0CtYaF	swift.method	backgroundDownload(_:didReceive:)	BADownloaderExtension.backgroundDownload(_:didReceive:)	func backgroundDownload(_ download: BADownload, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?)
+s:16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_15failedWithErrorySo10BADownloadC_s0I0_ptF	swift.method	backgroundDownload(_:failedWithError:)	BADownloaderExtension.backgroundDownload(_:failedWithError:)	func backgroundDownload(_ failedDownload: BADownload, failedWithError error: any Error)
+s:16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0J0VtF	swift.method	backgroundDownload(_:finishedWithFileURL:)	BADownloaderExtension.backgroundDownload(_:finishedWithFileURL:)	func backgroundDownload(_ finishedDownload: BADownload, finishedWithFileURL fileURL: URL)
+s:16BackgroundAssets21BADownloaderExtensionPAAE22extensionWillTerminateyyF	swift.method	extensionWillTerminate()	BADownloaderExtension.extensionWillTerminate()	func extensionWillTerminate()
+s:16BackgroundAssets21BADownloaderExtensionPAAE9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0H0VSo05BAAppdJ0CtF	swift.method	downloads(for:manifestURL:extensionInfo:)	BADownloaderExtension.downloads(for:manifestURL:extensionInfo:)	func downloads(for request: BAContentRequest, manifestURL: URL, extensionInfo: BAAppExtensionInfo) -> Set<BADownload>
+s:16BackgroundAssets26ManagedDownloaderExtensionP	swift.protocol	ManagedDownloaderExtension	ManagedDownloaderExtension	protocol ManagedDownloaderExtension : BADownloaderExtension where Self.Configuration : ManagedDownloaderExtensionConfiguration
+s:16BackgroundAssets26ManagedDownloaderExtensionP14shouldDownloadySbAA9AssetPackVF	swift.method	shouldDownload(_:)	ManagedDownloaderExtension.shouldDownload(_:)	func shouldDownload(_ assetPack: AssetPack) -> Bool
+s:16BackgroundAssets26ManagedDownloaderExtensionPAAE13configurationQrvp	swift.property	configuration	ManagedDownloaderExtension.configuration	var configuration: some ManagedDownloaderExtensionConfiguration { get }
+s:16BackgroundAssets26ManagedDownloaderExtensionPAAE14shouldDownloadySbAA9AssetPackVF	swift.method	shouldDownload(_:)	ManagedDownloaderExtension.shouldDownload(_:)	func shouldDownload(_ assetPack: AssetPack) -> Bool
+s:16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationL0CtYaF	swift.method	backgroundDownload(_:didReceive:)	ManagedDownloaderExtension.backgroundDownload(_:didReceive:)	func backgroundDownload(_ download: BADownload, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?)
+s:16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_15failedWithErrorySo10BADownloadC_s0J0_ptF	swift.method	backgroundDownload(_:failedWithError:)	ManagedDownloaderExtension.backgroundDownload(_:failedWithError:)	func backgroundDownload(_ failedDownload: BADownload, failedWithError error: any Error)
+s:16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0K0VtF	swift.method	backgroundDownload(_:finishedWithFileURL:)	ManagedDownloaderExtension.backgroundDownload(_:finishedWithFileURL:)	func backgroundDownload(_ finishedDownload: BADownload, finishedWithFileURL fileURL: URL)
+s:16BackgroundAssets26ManagedDownloaderExtensionPAAE9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0I0VSo05BAAppeK0CtF	swift.method	downloads(for:manifestURL:extensionInfo:)	ManagedDownloaderExtension.downloads(for:manifestURL:extensionInfo:)	func downloads(for request: BAContentRequest, manifestURL: URL, extensionInfo: BAAppExtensionInfo) -> Set<BADownload>
+s:16BackgroundAssets34BADownloaderExtensionConfigurationP	swift.protocol	BADownloaderExtensionConfiguration	BADownloaderExtensionConfiguration	@MainActor @preconcurrency protocol BADownloaderExtensionConfiguration : AppExtensionConfiguration
+s:16BackgroundAssets9AssetPackV	swift.struct	AssetPack	AssetPack	struct AssetPack
+s:16BackgroundAssets9AssetPackV11descriptionSSvp	swift.property	description	AssetPack.description	var description: String { get }
+s:16BackgroundAssets9AssetPackV12downloadSizeSivp	swift.property	downloadSize	AssetPack.downloadSize	let downloadSize: Int
+s:16BackgroundAssets9AssetPackV21DecodingConfigurationa	swift.typealias	AssetPack.DecodingConfiguration	AssetPack.DecodingConfiguration	typealias DecodingConfiguration = AssetPackManifest.DecodingConfiguration
+s:16BackgroundAssets9AssetPackV2IDa	swift.typealias	AssetPack.ID	AssetPack.ID	typealias ID = String
+s:16BackgroundAssets9AssetPackV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AssetPack.==(_:_:)	static func == (lhs: AssetPack, rhs: AssetPack) -> Bool
+s:16BackgroundAssets9AssetPackV2idSSvp	swift.property	id	AssetPack.id	let id: String
+s:16BackgroundAssets9AssetPackV4from13configurationACs7Decoder_p_AA0cD8ManifestV21DecodingConfigurationVtKcfc	swift.init	init(from:configuration:)	AssetPack.init(from:configuration:)	init(from decoder: any Decoder, configuration: AssetPack.DecodingConfiguration) throws
+s:16BackgroundAssets9AssetPackV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AssetPack.hash(into:)	func hash(into hasher: inout Hasher)
+s:16BackgroundAssets9AssetPackV6StatusV	swift.struct	AssetPack.Status	AssetPack.Status	struct Status
+s:16BackgroundAssets9AssetPackV6StatusV10downloadedAEvpZ	swift.type.property	downloaded	AssetPack.Status.downloaded	static let downloaded: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV11downloadingAEvpZ	swift.type.property	downloading	AssetPack.Status.downloading	static let downloading: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV15updateAvailableAEvpZ	swift.type.property	updateAvailable	AssetPack.Status.updateAvailable	static let updateAvailable: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV17downloadAvailableAEvpZ	swift.type.property	downloadAvailable	AssetPack.Status.downloadAvailable	static let downloadAvailable: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV19ArrayLiteralElementa	swift.typealias	AssetPack.Status.ArrayLiteralElement	AssetPack.Status.ArrayLiteralElement	typealias ArrayLiteralElement = AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV7Elementa	swift.typealias	AssetPack.Status.Element	AssetPack.Status.Element	typealias Element = AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV8RawValuea	swift.typealias	AssetPack.Status.RawValue	AssetPack.Status.RawValue	typealias RawValue = Int
+s:16BackgroundAssets9AssetPackV6StatusV8obsoleteAEvpZ	swift.type.property	obsolete	AssetPack.Status.obsolete	static let obsolete: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV8rawValueAESi_tcfc	swift.init	init(rawValue:)	AssetPack.Status.init(rawValue:)	init(rawValue: Int)
+s:16BackgroundAssets9AssetPackV6StatusV8rawValueSivp	swift.property	rawValue	AssetPack.Status.rawValue	let rawValue: Int
+s:16BackgroundAssets9AssetPackV6StatusV8upToDateAEvpZ	swift.type.property	upToDate	AssetPack.Status.upToDate	static let upToDate: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6StatusV9outOfDateAEvpZ	swift.type.property	outOfDate	AssetPack.Status.outOfDate	static let outOfDate: AssetPack.Status
+s:16BackgroundAssets9AssetPackV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AssetPack.encode(to:)	func encode(to encoder: any Encoder) throws
+s:16BackgroundAssets9AssetPackV7versionSivp	swift.property	version	AssetPack.version	let version: Int
+s:16BackgroundAssets9AssetPackV8download3forSo10BADownloadCSo16BAContentRequestVSg_tF	swift.method	download(for:)	AssetPack.download(for:)	func download(for contentRequest: BAContentRequest?) -> BADownload
+s:16BackgroundAssets9AssetPackV8userInfo10Foundation4DataVSgvp	swift.property	userInfo	AssetPack.userInfo	let userInfo: Data?
+s:16BackgroundAssets9AssetPackV9hashValueSivp	swift.property	hashValue	AssetPack.hashValue	var hashValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BAContentRequest	swift.func.op	!=(_:_:)	BAContentRequest.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BADownloadState	swift.func.op	!=(_:_:)	BADownload.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BAErrorCode	swift.func.op	!=(_:_:)	BAErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@BADownloaderPriority	swift.func.op	!=(_:_:)	BADownload.Priority.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16BackgroundAssets9AssetPackV	swift.func.op	!=(_:_:)	AssetPack.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.func.op	!=(_:_:)	AssetPack.Status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BAContentRequest	swift.property	hashValue	BAContentRequest.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BADownloadState	swift.property	hashValue	BADownload.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BAErrorCode	swift.property	hashValue	BAErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BAContentRequest	swift.method	hash(into:)	BAContentRequest.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BADownloadState	swift.method	hash(into:)	BADownload.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BAErrorCode	swift.method	hash(into:)	BAErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:ScA12_ConcurrencyE14assertIsolated_4file4lineySSyXK_s12StaticStringVSutF::SYNTHESIZED::s:16BackgroundAssets16AssetPackManagerC	swift.method	assertIsolated(_:file:line:)	AssetPackManager.assertIsolated(_:file:line:)	@backDeployed(before: macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0)\nnonisolated func assertIsolated(_ message: @autoclosure () -> String = String(), file: StaticString = #fileID, line: UInt = #line)
+s:ScA12_ConcurrencyE14assumeIsolated_4file4lineqd__qd__xYiKXE_s12StaticStringVSutKs8SendableRd__lF::SYNTHESIZED::s:16BackgroundAssets16AssetPackManagerC	swift.method	assumeIsolated(_:file:line:)	AssetPackManager.assumeIsolated(_:file:line:)	nonisolated func assumeIsolated<T>(_ operation: (isolated Self) throws -> T, file: StaticString = #fileID, line: UInt = #line) rethrows -> T where T : Sendable
+s:ScA12_ConcurrencyE20preconditionIsolated_4file4lineySSyXK_s12StaticStringVSutF::SYNTHESIZED::s:16BackgroundAssets16AssetPackManagerC	swift.method	preconditionIsolated(_:file:line:)	AssetPackManager.preconditionIsolated(_:file:line:)	@backDeployed(before: macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0)\nnonisolated func preconditionIsolated(_ message: @autoclosure () -> String = String(), file: StaticString = #fileID, line: UInt = #line)
+s:So11BAErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BAErrorCode.init(rawValue:)	init?(rawValue: Int)
+s:So15BADownloadStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BADownload.State.init(rawValue:)	init?(rawValue: Int)
+s:So16BAContentRequestV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BAContentRequest.init(rawValue:)	init?(rawValue: Int)
+s:So18BAAppExtensionInfoC16BackgroundAssetsE31restrictedDownloadSizeRemainingSiSgvp	swift.property	restrictedDownloadSizeRemaining	BAAppExtensionInfo.restrictedDownloadSizeRemaining	var restrictedDownloadSizeRemaining: Int? { get }
+s:So18BAAppExtensionInfoC16BackgroundAssetsE40restrictedEssentialDownloadSizeRemainingSiSgvp	swift.property	restrictedEssentialDownloadSizeRemaining	BAAppExtensionInfo.restrictedEssentialDownloadSizeRemaining	var restrictedEssentialDownloadSizeRemaining: Int? { get }
+s:So20BADownloaderPrioritya8rawValueABSi_tcfc	swift.init	init(rawValue:)	BADownload.Priority.init(rawValue:)	init(rawValue: Int)
+s:So20BADownloaderPriorityayABSicfc	swift.init	init(_:)	BADownload.Priority.init(_:)	init(_ rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.init	init(arrayLiteral:)	AssetPack.Status.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	isDisjoint(with:)	AssetPack.Status.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	isSuperset(of:)	AssetPack.Status.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	subtracting(_:)	AssetPack.Status.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	isStrictSubset(of:)	AssetPack.Status.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	isStrictSuperset(of:)	AssetPack.Status.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.property	isEmpty	AssetPack.Status.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	isSubset(of:)	AssetPack.Status.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	subtract(_:)	AssetPack.Status.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.init	init(_:)	AssetPack.Status.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@BADownloaderPriority	swift.property	hashValue	BADownload.Priority.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@BADownloaderPriority	swift.method	hash(into:)	BADownload.Priority.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:16BackgroundAssets07ManagedaB5ErrorO	swift.property	localizedDescription	ManagedBackgroundAssetsError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	insert(_:)	AssetPack.Status.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	remove(_:)	AssetPack.Status.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	update(with:)	AssetPack.Status.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	contains(_:)	AssetPack.Status.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	intersection(_:)	AssetPack.Status.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	symmetricDifference(_:)	AssetPack.Status.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	union(_:)	AssetPack.Status.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	formIntersection(_:)	AssetPack.Status.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	formSymmetricDifference(_:)	AssetPack.Status.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.method	formUnion(_:)	AssetPack.Status.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:16BackgroundAssets9AssetPackV6StatusV	swift.init	init()	AssetPack.Status.init()	init()

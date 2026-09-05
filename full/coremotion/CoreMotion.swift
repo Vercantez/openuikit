@@ -19,9 +19,10 @@ public typealias CLLocationSpeedAccuracy = Double
 
 public let CMErrorDomain = "CMErrorDomain"
 
-/// Bridged `NS_ERROR_ENUM` overlay. Named-constant raw values are Linux
-/// fallbacks (classic public header order starting at 100, then later
-/// identifiers continuing sequentially). They are not asserted as Apple ABI.
+/// Bridged `NS_ERROR_ENUM` overlay. Named-constant raw values follow the
+/// public `CMError.h` C enumeration (`CMErrorNULL = 100`, then sequential
+/// members in header order). `CMErrorNilData` and `CMErrorSize` were appended
+/// after `CMErrorNotAuthorized`.
 public struct CMError: RawRepresentable, Hashable, Equatable, Sendable {
     public var rawValue: UInt32
 
@@ -43,10 +44,10 @@ public var CMErrorMotionActivityNotAuthorized: CMError { CMError(105) }
 public var CMErrorMotionActivityNotEntitled: CMError { CMError(106) }
 public var CMErrorInvalidParameter: CMError { CMError(107) }
 public var CMErrorInvalidAction: CMError { CMError(108) }
-public var CMErrorNilData: CMError { CMError(109) }
-public var CMErrorNotAvailable: CMError { CMError(110) }
+public var CMErrorNotAvailable: CMError { CMError(109) }
+public var CMErrorNotEntitled: CMError { CMError(110) }
 public var CMErrorNotAuthorized: CMError { CMError(111) }
-public var CMErrorNotEntitled: CMError { CMError(112) }
+public var CMErrorNilData: CMError { CMError(112) }
 public var CMErrorSize: CMError { CMError(113) }
 
 func coreMotionUnavailableError() -> NSError {
@@ -61,9 +62,8 @@ func coreMotionUnavailableError() -> NSError {
 
 // MARK: - Public enums
 //
-// Raw values are Linux sequential fallbacks matching common public-header
-// order. Tests exercise constructibility, inequality, hashing, and round-trip
-// — not Darwin numeric identity.
+// Raw values follow common public-header order. Tests exercise
+// constructibility, inequality, hashing, and round-trip.
 
 public enum CMAuthorizationStatus: Int, Sendable, Hashable {
     case notDetermined = 0
@@ -103,9 +103,8 @@ public enum CMHighFrequencyHeartRateDataConfidence: Int, Sendable, Hashable {
     case highest = 3
 }
 
-/// Option set whose bit layout follows the public header (`1 << 0` … `1 << 3`)
-/// as a Linux source-compatible fallback. Exact Darwin export integers remain
-/// an oracle question; SetAlgebra behavior is real.
+/// Option set whose bit layout follows the public header (`1 << 0` … `1 << 3`).
+/// SetAlgebra behavior is real.
 public struct CMAttitudeReferenceFrame: OptionSet, Sendable, Hashable {
     public let rawValue: UInt
 

@@ -16,6 +16,8 @@ guest package; that integration is a later central-review step.
 - The iOS 26 Swift overlay around those buffers: `CVError`, `CVImageSize`,
   `CVPixelFormatType`, `CVMutablePixelBuffer`, `CVReadOnlyPixelBuffer`,
   creation attributes, and a pixel-format description registry.
+- Fail-closed Metal / OpenGL ES cache and wrap entry points, including
+  `CVEAGLContext` as an alias of a module-local `EAGLContext` lookalike.
 
 ## Fail-closed boundaries
 
@@ -24,18 +26,53 @@ guest package; that integration is a later central-review step.
 - `CVPixelBufferCreateWithIOSurface` returns `kCVReturnUnsupported`.
   `CVPixelBufferGetIOSurface` and overlay `withUnsafeBackingIOSurfaceIfPresent`
   return nil. Overlay `backing: .ioSurface` throws `CVError.unsupported`.
+- `CVMetalBufferCacheCreate`, `CVMetalTextureCacheCreate`,
+  `CVOpenGLESTextureCacheCreate`, and the corresponding wrap-from-image APIs
+  return `kCVReturnUnsupported` and write nil. `CVMetalBufferGetBuffer` /
+  `CVMetalTextureGetTexture` return nil. `CVOpenGLESTextureGetName` /
+  `GetTarget` return 0. Texture coordinate helpers still fill normalized
+  coords from the flip flag; they do not invent a GPU texture.
 - Compressed (lossy/lossless) FourCCs are identified but
   `CVIsCompressedPixelFormatAvailable` is always false and create fails with
   `kCVReturnInvalidPixelFormat`.
 - Color-space queries return nil; there is no ColorSync/`CGColorSpace` profile
   inventing.
 
-Metal/OpenGL ES cache *create* APIs that require `MTLDevice` / `EAGLContext`
-are deferred rather than stubbed with fake GPU types.
+Metal/`MTLDevice` and `EAGLContext` names used in those signatures are
+module-local lookalikes so the standalone Linux module compiles without
+importing Metal or GLKit. They are not claimed as CoreVideo identifiers
+except `CVEAGLContext`.
 
 ## Deferred
 
-DisplayLink, Metal texture/buffer wrapping of GPU objects, OpenGL ES texture
-caches, and exact Apple CFString values for a few ProRes RAW / display-mask
-keys remain for a later pass or an Apple-oracle probe (see
-`oracle-questions.tsv`).
+None of the 980 public precise identifiers remain deferred. DisplayLink
+callbacks, real MTL/EAGL object wrapping, and exact Apple CFString payloads
+for a few ProRes RAW / display-mask keys still need an Apple-oracle probe
+(see `oracle-questions.tsv`). Those paths stay fail-closed.
+
+## Depth pass 2026-09
+
+Coverage before this pass: **968 implemented / 0 declared / 12 deferred**.
+
+Coverage after: **980 implemented / 0 declared / 0 deferred**.
+
+The remaining 12 identifiers were the Metal/OpenGL ES create/wrap APIs plus
+`CVEAGLContext`. They are now implemented as documented fail-closed GPU
+boundaries (`kCVReturnUnsupported` / nil / 0) against module-local lookalikes,
+with focused tests in `tests/agent/CoreVideoMetalTests.swift`.
+
+Every `implemented` row cites
+`test:full/corevideo/tests/agent/<File>Tests.swift#testName`. Enum / option-set
+members and C `k…`/`err…` constants share table-driven value tests; other
+families have focused tests.
+
+Top-5 evidence distribution (of 980 implemented rows):
+
+1. `testPixelFormatFourCCs` — 99 (C FourCC constants)
+2. `testImageBufferKeys` — 82 (C `kCVImageBuffer*` keys)
+3. `testFormatOptionSetAlgebra` — 54 (Components/Compatibility option-set algebra)
+4. `testBufferAndPixelBufferKeys` — 41 (C buffer/pool keys)
+5. `testPixelFormatDescriptionKeys` — 33 (C format-description keys)
+
+Largest non-constant test is `testFormatOptionSetAlgebra` at 54 rows (5.5%),
+under the 40% bulk-relabel cap.

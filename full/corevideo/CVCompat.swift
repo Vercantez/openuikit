@@ -42,6 +42,30 @@ public typealias CVFillExtendedPixelsCallBack = (
 /// (return nil / throw `CVError.unsupported`) and never fabricate a surface.
 open class IOSurface: NSObject, @unchecked Sendable {}
 
+/// Module-local Metal lookalikes so the public CoreVideo Metal entry points
+/// compile without importing the Metal module. They are not CoreVideo
+/// identifiers. GPU create/wrap APIs fail closed and never invent a device.
+public protocol MTLDevice: AnyObject {}
+public protocol MTLBuffer: AnyObject {}
+public protocol MTLTexture: AnyObject {}
+
+public struct MTLPixelFormat: RawRepresentable, Hashable, Sendable {
+    public typealias RawValue = UInt
+    public var rawValue: UInt
+    public init(rawValue: UInt) { self.rawValue = rawValue }
+}
+
+/// Module-local EAGL/OpenGL ES lookalikes. `CVEAGLContext` is the CoreVideo
+/// alias; `EAGLContext` itself is not a CoreVideo precise identifier.
+open class EAGLContext: NSObject, @unchecked Sendable {}
+public typealias CVEAGLContext = EAGLContext
+
+public typealias GLenum = UInt32
+public typealias GLuint = UInt32
+public typealias GLint = Int32
+public typealias GLsizei = Int32
+public typealias GLfloat = Float
+
 /// Linux has no ColorSync/`CGColorSpace`. Image-buffer color-space queries
 /// return nil rather than inventing a profile.
 open class CGColorSpace: NSObject, @unchecked Sendable {}

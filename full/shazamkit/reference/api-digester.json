@@ -1,0 +1,4331 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHCatalog",
+        "printedName": "ShazamKit.SHCatalog"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHCustomCatalog",
+        "printedName": "ShazamKit.SHCustomCatalog"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHDefines",
+        "printedName": "ShazamKit.SHDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHError",
+        "printedName": "ShazamKit.SHError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHMatch",
+        "printedName": "ShazamKit.SHMatch"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHMatchedMediaItem",
+        "printedName": "ShazamKit.SHMatchedMediaItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHMediaItem",
+        "printedName": "ShazamKit.SHMediaItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHRange",
+        "printedName": "ShazamKit.SHRange"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHSession",
+        "printedName": "ShazamKit.SHSession"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHSignature",
+        "printedName": "ShazamKit.SHSignature"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHSignatureGenerator",
+        "printedName": "ShazamKit.SHSignatureGenerator"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.SHMediaLibrary",
+        "printedName": "ShazamKit.SHMediaLibrary"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit.UTType_SHShazamAdditions",
+        "printedName": "ShazamKit.UTType_SHShazamAdditions"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11SHErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11SHErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "ShazamKit",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11SHErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHError",
+                "printedName": "ShazamKit.SHError",
+                "usr": "c:@E@SHErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11SHErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "ShazamKit",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11SHErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11SHErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "ShazamKit",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11SHErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ShazamKit.SHError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11SHErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "ShazamKit",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11SHErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11SHErrorCodeV8rawValueSivg",
+                    "moduleName": "ShazamKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11SHErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11SHErrorCodeV8rawValueSivp",
+                "moduleName": "ShazamKit",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11SHErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11SHErrorCodeV8RawValuea",
+                "moduleName": "ShazamKit",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11SHErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHError",
+                    "printedName": "ShazamKit.SHError",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "ShazamKit",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@SHErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "invalidAudioFormat",
+                "printedName": "invalidAudioFormat",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeInvalidAudioFormat"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "audioDiscontinuity",
+                "printedName": "audioDiscontinuity",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeAudioDiscontinuity"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "signatureInvalid",
+                "printedName": "signatureInvalid",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeSignatureInvalid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "signatureDurationInvalid",
+                "printedName": "signatureDurationInvalid",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeSignatureDurationInvalid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "matchAttemptFailed",
+                "printedName": "matchAttemptFailed",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeMatchAttemptFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "customCatalogInvalid",
+                "printedName": "customCatalogInvalid",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "customCatalogInvalidURL",
+                "printedName": "customCatalogInvalidURL",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalidURL"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "mediaLibrarySyncFailed",
+                "printedName": "mediaLibrarySyncFailed",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeMediaLibrarySyncFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16.0",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "internalError",
+                "printedName": "internalError",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeInternalError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ShazamKit.SHError.Code",
+                        "usr": "c:@E@SHErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ShazamKit.SHError.Code",
+                            "usr": "c:@E@SHErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHError.Code.Type) -> ShazamKit.SHError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "moduleName": "ShazamKit",
+                "name": "mediaItemFetchFailed",
+                "printedName": "mediaItemFetchFailed",
+                "usr": "c:@E@SHErrorCode@SHErrorCodeMediaItemFetchFailed"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "ShazamKit.SHError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "15.0",
+            "kind": "TypeDecl",
+            "moduleName": "ShazamKit",
+            "name": "Code",
+            "objc_name": "SHErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@SHErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV18invalidAudioFormatSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV18invalidAudioFormatSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "invalidAudioFormat",
+            "printedName": "invalidAudioFormat",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeInvalidAudioFormat"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV18audioDiscontinuitySoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV18audioDiscontinuitySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "audioDiscontinuity",
+            "printedName": "audioDiscontinuity",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeAudioDiscontinuity"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV16signatureInvalidSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV16signatureInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "signatureInvalid",
+            "printedName": "signatureInvalid",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeSignatureInvalid"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV24signatureDurationInvalidSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV24signatureDurationInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "signatureDurationInvalid",
+            "printedName": "signatureDurationInvalid",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeSignatureDurationInvalid"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV18matchAttemptFailedSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV18matchAttemptFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "matchAttemptFailed",
+            "printedName": "matchAttemptFailed",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeMatchAttemptFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV20customCatalogInvalidSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV20customCatalogInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "customCatalogInvalid",
+            "printedName": "customCatalogInvalid",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalid"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV23customCatalogInvalidURLSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV23customCatalogInvalidURLSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "customCatalogInvalidURL",
+            "printedName": "customCatalogInvalidURL",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalidURL"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV22mediaLibrarySyncFailedSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV22mediaLibrarySyncFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "mediaLibrarySyncFailed",
+            "printedName": "mediaLibrarySyncFailed",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeMediaLibrarySyncFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV13internalErrorSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV13internalErrorSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16.0",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "internalError",
+            "printedName": "internalError",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeInternalError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ShazamKit.SHError.Code",
+                    "usr": "c:@E@SHErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SHErrorCodeLeV20mediaItemFetchFailedSoAAVvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SHErrorCodeLeV20mediaItemFetchFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ShazamKit.SHError.Code",
+                "usr": "c:@E@SHErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "moduleName": "ShazamKit",
+            "name": "mediaItemFetchFailed",
+            "printedName": "mediaItemFetchFailed",
+            "static": true,
+            "usr": "c:@E@SHErrorCode@SHErrorCodeMediaItemFetchFailed"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "moduleName": "ShazamKit",
+        "name": "SHError",
+        "printedName": "SHError",
+        "usr": "c:@E@SHErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "MusicKit",
+        "printedName": "MusicKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "Observation",
+        "printedName": "Observation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "ShazamKit",
+        "printedName": "ShazamKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ShazamKit",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "ShazamKit.SHManagedSession.State",
+                    "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5stateAC5StateOvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:9ShazamKit16SHManagedSessionC5stateAC5StateOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "State",
+                "printedName": "ShazamKit.SHManagedSession.State",
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC5stateAC5StateOvp",
+            "moduleName": "ShazamKit",
+            "name": "state",
+            "printedName": "state",
+            "usr": "s:9ShazamKit16SHManagedSessionC5stateAC5StateOvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHManagedSession",
+                "printedName": "ShazamKit.SHManagedSession",
+                "usr": "s:9ShazamKit16SHManagedSessionC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s9ShazamKit16SHManagedSessionCACycfc",
+            "moduleName": "ShazamKit",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:9ShazamKit16SHManagedSessionCACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHManagedSession",
+                "printedName": "ShazamKit.SHManagedSession",
+                "usr": "s:9ShazamKit16SHManagedSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "SHCatalog",
+                "printedName": "ShazamKit.SHCatalog",
+                "usr": "c:objc(cs)SHCatalog"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC7catalogACSo9SHCatalogC_tcfc",
+            "moduleName": "ShazamKit",
+            "name": "init",
+            "printedName": "init(catalog:)",
+            "usr": "s:9ShazamKit16SHManagedSessionC7catalogACSo9SHCatalogC_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC7prepareyyYaF",
+            "moduleName": "ShazamKit",
+            "name": "prepare",
+            "printedName": "prepare()",
+            "usr": "s:9ShazamKit16SHManagedSessionC7prepareyyYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC6cancelyyF",
+            "moduleName": "ShazamKit",
+            "name": "cancel",
+            "printedName": "cancel()",
+            "usr": "s:9ShazamKit16SHManagedSessionC6cancelyyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Result",
+                "printedName": "ShazamKit.SHSession.Result",
+                "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC6resultSo9SHSessionCAAE6ResultOyYaF",
+            "moduleName": "ShazamKit",
+            "name": "result",
+            "printedName": "result()",
+            "usr": "s:9ShazamKit16SHManagedSessionC6resultSo9SHSessionCAAE6ResultOyYaF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Results",
+                    "printedName": "ShazamKit.SHSession.Results",
+                    "usr": "s:So9SHSessionC9ShazamKitE7ResultsV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC7resultsSo9SHSessionCAAE7ResultsVvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:9ShazamKit16SHManagedSessionC7resultsSo9SHSessionCAAE7ResultsVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Results",
+                "printedName": "ShazamKit.SHSession.Results",
+                "usr": "s:So9SHSessionC9ShazamKitE7ResultsV"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC7resultsSo9SHSessionCAAE7ResultsVvp",
+            "moduleName": "ShazamKit",
+            "name": "results",
+            "printedName": "results",
+            "usr": "s:9ShazamKit16SHManagedSessionC7resultsSo9SHSessionCAAE7ResultsVvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "ShazamKit.SHManagedSession.State",
+                        "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "ShazamKit.SHManagedSession.State",
+                            "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHManagedSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHManagedSession.State.Type) -> ShazamKit.SHManagedSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO4idleyA2EmF",
+                "moduleName": "ShazamKit",
+                "name": "idle",
+                "printedName": "idle",
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO4idleyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "ShazamKit.SHManagedSession.State",
+                        "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "ShazamKit.SHManagedSession.State",
+                            "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHManagedSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHManagedSession.State.Type) -> ShazamKit.SHManagedSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO12prerecordingyA2EmF",
+                "moduleName": "ShazamKit",
+                "name": "prerecording",
+                "printedName": "prerecording",
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO12prerecordingyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "ShazamKit.SHManagedSession.State",
+                        "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "ShazamKit.SHManagedSession.State",
+                            "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHManagedSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHManagedSession.State.Type) -> ShazamKit.SHManagedSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO8matchingyA2EmF",
+                "moduleName": "ShazamKit",
+                "name": "matching",
+                "printedName": "matching",
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO8matchingyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "ShazamKit.SHManagedSession.State",
+                    "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "ShazamKit.SHManagedSession.State",
+                    "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO2eeoiySbAE_AEtFZ",
+                "moduleName": "ShazamKit",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO4hash4intoys6HasherVz_tF",
+                "moduleName": "ShazamKit",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO9hashValueSivg",
+                    "moduleName": "ShazamKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:9ShazamKit16SHManagedSessionC5StateO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO9hashValueSivp",
+                "moduleName": "ShazamKit",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:9ShazamKit16SHManagedSessionC5StateO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss15BitwiseCopyableP",
+                "name": "BitwiseCopyable",
+                "printedName": "BitwiseCopyable",
+                "usr": "s:s15BitwiseCopyableP"
+              }
+            ],
+            "declAttributes": [
+              "Frozen"
+            ],
+            "declKind": "Enum",
+            "isEnumExhaustive": true,
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s9ShazamKit16SHManagedSessionC5StateO",
+            "moduleName": "ShazamKit",
+            "name": "State",
+            "printedName": "State",
+            "usr": "s:9ShazamKit16SHManagedSessionC5StateO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s11Observation10ObservableP",
+            "name": "Observable",
+            "printedName": "Observable",
+            "usr": "s:11Observation10ObservableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "14.0",
+        "intro_iOS": "17.0",
+        "intro_tvOS": "17.0",
+        "intro_watchOS": "10.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s9ShazamKit16SHManagedSessionC",
+        "moduleName": "ShazamKit",
+        "name": "SHManagedSession",
+        "printedName": "SHManagedSession",
+        "usr": "s:9ShazamKit16SHManagedSessionC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHLibrary",
+                    "printedName": "ShazamKit.SHLibrary",
+                    "usr": "s:9ShazamKit9SHLibraryC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s9ShazamKit9SHLibraryC7defaultACvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:9ShazamKit9SHLibraryC7defaultACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHLibrary",
+                "printedName": "ShazamKit.SHLibrary",
+                "usr": "s:9ShazamKit9SHLibraryC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s9ShazamKit9SHLibraryC7defaultACvpZ",
+            "moduleName": "ShazamKit",
+            "name": "default",
+            "printedName": "default",
+            "static": true,
+            "usr": "s:9ShazamKit9SHLibraryC7defaultACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SHMediaItem",
+                        "printedName": "ShazamKit.SHMediaItem",
+                        "usr": "c:objc(cs)SHMediaItem"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[ShazamKit.SHMediaItem]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s9ShazamKit9SHLibraryC5itemsSaySo11SHMediaItemCGvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:9ShazamKit9SHLibraryC5itemsSaySo11SHMediaItemCGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHMediaItem",
+                    "printedName": "ShazamKit.SHMediaItem",
+                    "usr": "c:objc(cs)SHMediaItem"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[ShazamKit.SHMediaItem]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s9ShazamKit9SHLibraryC5itemsSaySo11SHMediaItemCGvp",
+            "moduleName": "ShazamKit",
+            "name": "items",
+            "printedName": "items",
+            "usr": "s:9ShazamKit9SHLibraryC5itemsSaySo11SHMediaItemCGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHMediaItem",
+                    "printedName": "ShazamKit.SHMediaItem",
+                    "usr": "c:objc(cs)SHMediaItem"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[ShazamKit.SHMediaItem]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s9ShazamKit9SHLibraryC8addItemsyySaySo11SHMediaItemCGYaKF",
+            "moduleName": "ShazamKit",
+            "name": "addItems",
+            "printedName": "addItems(_:)",
+            "throwing": true,
+            "usr": "s:9ShazamKit9SHLibraryC8addItemsyySaySo11SHMediaItemCGYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHMediaItem",
+                    "printedName": "ShazamKit.SHMediaItem",
+                    "usr": "c:objc(cs)SHMediaItem"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[ShazamKit.SHMediaItem]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s9ShazamKit9SHLibraryC11removeItemsyySaySo11SHMediaItemCGYaKF",
+            "moduleName": "ShazamKit",
+            "name": "removeItems",
+            "printedName": "removeItems(_:)",
+            "throwing": true,
+            "usr": "s:9ShazamKit9SHLibraryC11removeItemsyySaySo11SHMediaItemCGYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s11Observation10ObservableP",
+            "name": "Observable",
+            "printedName": "Observable",
+            "usr": "s:11Observation10ObservableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "14.0",
+        "intro_iOS": "17.0",
+        "intro_tvOS": "17.0",
+        "intro_watchOS": "10.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s9ShazamKit9SHLibraryC",
+        "moduleName": "ShazamKit",
+        "name": "SHLibrary",
+        "printedName": "SHLibrary",
+        "usr": "s:9ShazamKit9SHLibraryC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHMediaItemProperty",
+                    "printedName": "ShazamKit.SHMediaItemProperty",
+                    "usr": "c:@T@SHMediaItemProperty"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo19SHMediaItemPropertya9ShazamKitE10timeRangesABvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:So19SHMediaItemPropertya9ShazamKitE10timeRangesABvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHMediaItemProperty",
+                "printedName": "ShazamKit.SHMediaItemProperty",
+                "usr": "c:@T@SHMediaItemProperty"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isFromExtension": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSo19SHMediaItemPropertya9ShazamKitE10timeRangesABvpZ",
+            "moduleName": "ShazamKit",
+            "name": "timeRanges",
+            "printedName": "timeRanges",
+            "static": true,
+            "usr": "s:So19SHMediaItemPropertya9ShazamKitE10timeRangesABvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHMediaItemProperty",
+                    "printedName": "ShazamKit.SHMediaItemProperty",
+                    "usr": "c:@T@SHMediaItemProperty"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo19SHMediaItemPropertya9ShazamKitE19frequencySkewRangesABvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:So19SHMediaItemPropertya9ShazamKitE19frequencySkewRangesABvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHMediaItemProperty",
+                "printedName": "ShazamKit.SHMediaItemProperty",
+                "usr": "c:@T@SHMediaItemProperty"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isFromExtension": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSo19SHMediaItemPropertya9ShazamKitE19frequencySkewRangesABvpZ",
+            "moduleName": "ShazamKit",
+            "name": "frequencySkewRanges",
+            "printedName": "frequencySkewRanges",
+            "static": true,
+            "usr": "s:So19SHMediaItemPropertya9ShazamKitE19frequencySkewRangesABvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "ShazamKit.SHMediaItemProperty.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "SynthesizedProtocol",
+          "Sendable"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "moduleName": "ShazamKit",
+        "name": "SHMediaItemProperty",
+        "printedName": "SHMediaItemProperty",
+        "usr": "c:@T@SHMediaItemProperty"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Song",
+                        "printedName": "MusicKit.Song",
+                        "usr": "s:8MusicKit4SongV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[MusicKit.Song]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11SHMediaItemC9ShazamKitE5songsSay05MusicD04SongVGvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11SHMediaItemC9ShazamKitE5songsSay05MusicD04SongVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Song",
+                    "printedName": "MusicKit.Song",
+                    "usr": "s:8MusicKit4SongV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[MusicKit.Song]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11SHMediaItemC9ShazamKitE5songsSay05MusicD04SongVGvp",
+            "moduleName": "ShazamKit",
+            "name": "songs",
+            "printedName": "songs",
+            "usr": "s:So11SHMediaItemC9ShazamKitE5songsSay05MusicD04SongVGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SHMediaItem",
+                "printedName": "ShazamKit.SHMediaItem",
+                "usr": "c:objc(cs)SHMediaItem"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHMediaItemProperty",
+                    "printedName": "ShazamKit.SHMediaItemProperty",
+                    "usr": "c:@T@SHMediaItemProperty"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[ShazamKit.SHMediaItemProperty : Any]",
+                "usr": "s:SD"
+              }
+            ],
+            "declAttributes": [
+              "AlwaysEmitIntoClient"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo11SHMediaItemC9ShazamKitE10propertiesABSDySo0aB8PropertyaypG_tcfc",
+            "moduleName": "ShazamKit",
+            "name": "init",
+            "printedName": "init(properties:)",
+            "usr": "s:So11SHMediaItemC9ShazamKitE10propertiesABSDySo0aB8PropertyaypG_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Float",
+                            "printedName": "Swift.Float",
+                            "usr": "s:Sf"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.Float>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Range<Swift.Float>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11SHMediaItemC9ShazamKitE19frequencySkewRangesSaySnySfGGvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11SHMediaItemC9ShazamKitE19frequencySkewRangesSaySnySfGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Swift.Float>",
+                    "usr": "s:Sn"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Range<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11SHMediaItemC9ShazamKitE19frequencySkewRangesSaySnySfGGvp",
+            "moduleName": "ShazamKit",
+            "name": "frequencySkewRanges",
+            "printedName": "frequencySkewRanges",
+            "usr": "s:So11SHMediaItemC9ShazamKitE19frequencySkewRangesSaySnySfGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Double",
+                                "printedName": "Swift.Double",
+                                "usr": "s:Sd"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "TimeInterval",
+                            "printedName": "Foundation.TimeInterval"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Foundation.TimeInterval>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Range<Foundation.TimeInterval>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11SHMediaItemC9ShazamKitE10timeRangesSaySnySdGGvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11SHMediaItemC9ShazamKitE10timeRangesSaySnySdGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "TimeInterval",
+                        "printedName": "Foundation.TimeInterval"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Range",
+                    "printedName": "Swift.Range<Foundation.TimeInterval>",
+                    "usr": "s:Sn"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Range<Foundation.TimeInterval>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11SHMediaItemC9ShazamKitE10timeRangesSaySnySdGGvp",
+            "moduleName": "ShazamKit",
+            "name": "timeRanges",
+            "printedName": "timeRanges",
+            "usr": "s:So11SHMediaItemC9ShazamKitE10timeRangesSaySnySdGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UUID",
+                    "printedName": "Foundation.UUID",
+                    "usr": "s:10Foundation4UUIDV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11SHMediaItemC9ShazamKitE2id10Foundation4UUIDVvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11SHMediaItemC9ShazamKitE2id10Foundation4UUIDVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11SHMediaItemC9ShazamKitE2id10Foundation4UUIDVvp",
+            "moduleName": "ShazamKit",
+            "name": "id",
+            "printedName": "id",
+            "usr": "s:So11SHMediaItemC9ShazamKitE2id10Foundation4UUIDVvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "intro_tvOS": "17.0",
+            "intro_watchOS": "10.0",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo11SHMediaItemC9ShazamKitE2IDa",
+            "moduleName": "ShazamKit",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:So11SHMediaItemC9ShazamKitE2IDa"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UUID",
+                        "printedName": "Foundation.UUID",
+                        "usr": "s:10Foundation4UUIDV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "ShazamKit.SHMediaItem.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "NonSendable",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ShazamKit",
+        "name": "SHMediaItem",
+        "objc_name": "SHMediaItem",
+        "printedName": "SHMediaItem",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SHMediaItem"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UTType",
+                    "printedName": "UniformTypeIdentifiers.UTType",
+                    "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s22UniformTypeIdentifiers6UTTypeV9ShazamKitE15shazamSignatureACvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE15shazamSignatureACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UTType",
+                "printedName": "UniformTypeIdentifiers.UTType",
+                "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s22UniformTypeIdentifiers6UTTypeV9ShazamKitE15shazamSignatureACvpZ",
+            "moduleName": "ShazamKit",
+            "name": "shazamSignature",
+            "printedName": "shazamSignature",
+            "static": true,
+            "usr": "s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE15shazamSignatureACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UTType",
+                    "printedName": "UniformTypeIdentifiers.UTType",
+                    "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s22UniformTypeIdentifiers6UTTypeV9ShazamKitE19shazamCustomCatalogACvgZ",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE19shazamCustomCatalogACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UTType",
+                "printedName": "UniformTypeIdentifiers.UTType",
+                "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s22UniformTypeIdentifiers6UTTypeV9ShazamKitE19shazamCustomCatalogACvpZ",
+            "moduleName": "ShazamKit",
+            "name": "shazamCustomCatalog",
+            "printedName": "shazamCustomCatalog",
+            "static": true,
+            "usr": "s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE19shazamCustomCatalogACvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UTTypeReference",
+                        "printedName": "UniformTypeIdentifiers.UTTypeReference",
+                        "usr": "c:objc(cs)UTType"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ReferenceType",
+                    "printedName": "UniformTypeIdentifiers.UTType.ReferenceType"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ReferenceType",
+                "printedName": "ReferenceType"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation20ReferenceConvertibleP",
+            "name": "ReferenceConvertible",
+            "printedName": "ReferenceConvertible",
+            "usr": "s:10Foundation20ReferenceConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "11.0",
+        "intro_iOS": "14.0",
+        "intro_tvOS": "14.0",
+        "intro_watchOS": "7.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s22UniformTypeIdentifiers6UTTypeV",
+        "moduleName": "UniformTypeIdentifiers",
+        "name": "UTType",
+        "printedName": "UTType",
+        "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SHMatch",
+                            "printedName": "ShazamKit.SHMatch",
+                            "usr": "c:objc(cs)SHMatch"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(ShazamKit.SHMatch) -> ShazamKit.SHSession.Result"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHSession.Result.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHSession.Result.Type) -> (ShazamKit.SHMatch) -> ShazamKit.SHSession.Result"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE6ResultO5matchyAESo7SHMatchCcAEmF",
+                "moduleName": "ShazamKit",
+                "name": "match",
+                "printedName": "match",
+                "usr": "s:So9SHSessionC9ShazamKitE6ResultO5matchyAESo7SHMatchCcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SHSignature",
+                            "printedName": "ShazamKit.SHSignature",
+                            "usr": "c:objc(cs)SHSignature"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(ShazamKit.SHSignature) -> ShazamKit.SHSession.Result"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHSession.Result.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHSession.Result.Type) -> (ShazamKit.SHSignature) -> ShazamKit.SHSession.Result"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE6ResultO7noMatchyAESo11SHSignatureCcAEmF",
+                "moduleName": "ShazamKit",
+                "name": "noMatch",
+                "printedName": "noMatch",
+                "usr": "s:So9SHSessionC9ShazamKitE6ResultO7noMatchyAESo11SHSignatureCcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "SHSignature",
+                                "printedName": "ShazamKit.SHSignature",
+                                "usr": "c:objc(cs)SHSignature"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(any Swift.Error, ShazamKit.SHSignature)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(any Swift.Error, ShazamKit.SHSignature) -> ShazamKit.SHSession.Result"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ShazamKit.SHSession.Result.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ShazamKit.SHSession.Result.Type) -> (any Swift.Error, ShazamKit.SHSignature) -> ShazamKit.SHSession.Result"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE6ResultO5erroryAEs5Error_p_So11SHSignatureCtcAEmF",
+                "moduleName": "ShazamKit",
+                "name": "error",
+                "printedName": "error",
+                "usr": "s:So9SHSessionC9ShazamKitE6ResultO5erroryAEs5Error_p_So11SHSignatureCtcAEmF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Frozen"
+            ],
+            "declKind": "Enum",
+            "isEnumExhaustive": true,
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo9SHSessionC9ShazamKitE6ResultO",
+            "moduleName": "ShazamKit",
+            "name": "Result",
+            "printedName": "Result",
+            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "ShazamKit.SHSession.Result",
+                    "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV7Elementa",
+                "moduleName": "ShazamKit",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So9SHSessionC9ShazamKitE7ResultsV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "ShazamKit.SHSession.Results.Iterator",
+                    "usr": "s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV17makeAsyncIteratorAE0G0VyF",
+                "moduleName": "ShazamKit",
+                "name": "makeAsyncIterator",
+                "printedName": "makeAsyncIterator()",
+                "usr": "s:So9SHSessionC9ShazamKitE7ResultsV17makeAsyncIteratorAE0G0VyF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Result",
+                                "printedName": "ShazamKit.SHSession.Result",
+                                "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ShazamKit.SHSession.Results.Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "ShazamKit.SHSession.Results.Element?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "Mutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV8IteratorV4nextAbCE6ResultOSgyYaF",
+                    "moduleName": "ShazamKit",
+                    "name": "next",
+                    "printedName": "next()",
+                    "usr": "s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV4nextAbCE6ResultOSgyYaF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "ShazamKit.SHSession.Results.Element"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "13.0",
+                    "intro_iOS": "16.0",
+                    "intro_tvOS": "16.0",
+                    "intro_watchOS": "9.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV8IteratorV7Elementa",
+                    "moduleName": "ShazamKit",
+                    "name": "Element",
+                    "printedName": "Element",
+                    "usr": "s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV7Elementa"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Result",
+                                    "printedName": "ShazamKit.SHSession.Result",
+                                    "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                                  }
+                                ],
+                                "kind": "TypeNameAlias",
+                                "name": "Element",
+                                "printedName": "ShazamKit.SHSession.Results.Element"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ShazamKit.SHSession.Results.Iterator.Element"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Element",
+                        "printedName": "Element"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Never",
+                                "printedName": "Swift.Never",
+                                "usr": "s:s5NeverO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "__AsyncIteratorProtocol_Failure",
+                            "printedName": "ShazamKit.SHSession.Results.Iterator.__AsyncIteratorProtocol_Failure"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Failure",
+                        "printedName": "Failure"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$sScI",
+                    "name": "AsyncIteratorProtocol",
+                    "printedName": "AsyncIteratorProtocol",
+                    "usr": "s:ScI"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV8IteratorV",
+                "moduleName": "ShazamKit",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "usr": "s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "ShazamKit.SHSession.Results.Iterator",
+                    "usr": "s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "13.0",
+                "intro_iOS": "16.0",
+                "intro_tvOS": "16.0",
+                "intro_watchOS": "9.0",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV13AsyncIteratora",
+                "moduleName": "ShazamKit",
+                "name": "AsyncIterator",
+                "printedName": "AsyncIterator",
+                "usr": "s:So9SHSessionC9ShazamKitE7ResultsV13AsyncIteratora"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Iterator",
+                            "printedName": "ShazamKit.SHSession.Results.Iterator",
+                            "usr": "s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AsyncIterator",
+                        "printedName": "ShazamKit.SHSession.Results.AsyncIterator"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AsyncIterator",
+                    "printedName": "AsyncIterator"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Result",
+                            "printedName": "ShazamKit.SHSession.Result",
+                            "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "ShazamKit.SHSession.Results.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Never",
+                            "printedName": "Swift.Never",
+                            "usr": "s:s5NeverO"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__AsyncSequence_Failure",
+                        "printedName": "ShazamKit.SHSession.Results.__AsyncSequence_Failure"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Failure",
+                    "printedName": "Failure"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSci",
+                "name": "AsyncSequence",
+                "printedName": "AsyncSequence",
+                "usr": "s:Sci"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo9SHSessionC9ShazamKitE7ResultsV",
+            "moduleName": "ShazamKit",
+            "name": "Results",
+            "printedName": "Results",
+            "usr": "s:So9SHSessionC9ShazamKitE7ResultsV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Results",
+                    "printedName": "ShazamKit.SHSession.Results",
+                    "usr": "s:So9SHSessionC9ShazamKitE7ResultsV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo9SHSessionC9ShazamKitE7resultsAbCE7ResultsVvg",
+                "moduleName": "ShazamKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So9SHSessionC9ShazamKitE7resultsAbCE7ResultsVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Results",
+                "printedName": "ShazamKit.SHSession.Results",
+                "usr": "s:So9SHSessionC9ShazamKitE7ResultsV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo9SHSessionC9ShazamKitE7resultsAbCE7ResultsVvp",
+            "moduleName": "ShazamKit",
+            "name": "results",
+            "printedName": "results",
+            "usr": "s:So9SHSessionC9ShazamKitE7resultsAbCE7ResultsVvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Result",
+                "printedName": "ShazamKit.SHSession.Result",
+                "usr": "s:So9SHSessionC9ShazamKitE6ResultO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "SHSignature",
+                "printedName": "ShazamKit.SHSignature",
+                "usr": "c:objc(cs)SHSignature"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo9SHSessionC9ShazamKitE6result4fromAbCE6ResultOSo11SHSignatureC_tYaF",
+            "moduleName": "ShazamKit",
+            "name": "result",
+            "printedName": "result(from:)",
+            "usr": "s:So9SHSessionC9ShazamKitE6result4fromAbCE6ResultOSo11SHSignatureC_tYaF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "NonSendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ShazamKit",
+        "name": "SHSession",
+        "objc_name": "SHSession",
+        "printedName": "SHSession",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SHSession"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SHSignature",
+                    "printedName": "ShazamKit.SHSignature",
+                    "usr": "c:objc(cs)SHSignature"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV7Elementa",
+                "moduleName": "ShazamKit",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "ShazamKit.SHSignature.Slices.Iterator",
+                    "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV17makeAsyncIteratorAE0G0VyF",
+                "moduleName": "ShazamKit",
+                "name": "makeAsyncIterator",
+                "printedName": "makeAsyncIterator()",
+                "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV17makeAsyncIteratorAE0G0VyF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "SHSignature",
+                                "printedName": "ShazamKit.SHSignature",
+                                "usr": "c:objc(cs)SHSignature"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ShazamKit.SHSignature.Slices.Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "ShazamKit.SHSignature.Slices.Element?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "Mutating",
+                    "kind": "Function",
+                    "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV8IteratorV4nextABSgyYaKF",
+                    "moduleName": "ShazamKit",
+                    "name": "next",
+                    "printedName": "next()",
+                    "throwing": true,
+                    "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV4nextABSgyYaKF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SHSignature",
+                            "printedName": "ShazamKit.SHSignature",
+                            "usr": "c:objc(cs)SHSignature"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "ShazamKit.SHSignature.Slices.Element"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available",
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_Macosx": "15.0",
+                    "intro_iOS": "18.0",
+                    "intro_tvOS": "18.0",
+                    "intro_watchOS": "11.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV8IteratorV7Elementa",
+                    "moduleName": "ShazamKit",
+                    "name": "Element",
+                    "printedName": "Element",
+                    "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV7Elementa"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "SHSignature",
+                                    "printedName": "ShazamKit.SHSignature",
+                                    "usr": "c:objc(cs)SHSignature"
+                                  }
+                                ],
+                                "kind": "TypeNameAlias",
+                                "name": "Element",
+                                "printedName": "ShazamKit.SHSignature.Slices.Element"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ShazamKit.SHSignature.Slices.Iterator.Element"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Element",
+                        "printedName": "Element"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "__AsyncIteratorProtocol_Failure",
+                            "printedName": "ShazamKit.SHSignature.Slices.Iterator.__AsyncIteratorProtocol_Failure"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Failure",
+                        "printedName": "Failure"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$sScI",
+                    "name": "AsyncIteratorProtocol",
+                    "printedName": "AsyncIteratorProtocol",
+                    "usr": "s:ScI"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV8IteratorV",
+                "moduleName": "ShazamKit",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "ShazamKit.SHSignature.Slices.Iterator",
+                    "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "15.0",
+                "intro_iOS": "18.0",
+                "intro_tvOS": "18.0",
+                "intro_watchOS": "11.0",
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV13AsyncIteratora",
+                "moduleName": "ShazamKit",
+                "name": "AsyncIterator",
+                "printedName": "AsyncIterator",
+                "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV13AsyncIteratora"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Iterator",
+                            "printedName": "ShazamKit.SHSignature.Slices.Iterator",
+                            "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AsyncIterator",
+                        "printedName": "ShazamKit.SHSignature.Slices.AsyncIterator"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AsyncIterator",
+                    "printedName": "AsyncIterator"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SHSignature",
+                            "printedName": "ShazamKit.SHSignature",
+                            "usr": "c:objc(cs)SHSignature"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "ShazamKit.SHSignature.Slices.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__AsyncSequence_Failure",
+                        "printedName": "ShazamKit.SHSignature.Slices.__AsyncSequence_Failure"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Failure",
+                    "printedName": "Failure"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSci",
+                "name": "AsyncSequence",
+                "printedName": "AsyncSequence",
+                "usr": "s:Sci"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo11SHSignatureC9ShazamKitE6SlicesV",
+            "moduleName": "ShazamKit",
+            "name": "Slices",
+            "printedName": "Slices",
+            "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Slices",
+                "printedName": "ShazamKit.SHSignature.Slices",
+                "usr": "s:So11SHSignatureC9ShazamKitE6SlicesV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.TimeInterval?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11SHSignatureC9ShazamKitE6slices4from8duration6strideAbCE6SlicesVSd_S2dSgtKF",
+            "moduleName": "ShazamKit",
+            "name": "slices",
+            "printedName": "slices(from:duration:stride:)",
+            "throwing": true,
+            "usr": "s:So11SHSignatureC9ShazamKitE6slices4from8duration6strideAbCE6SlicesVSd_S2dSgtKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "NonSendable",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ShazamKit",
+        "name": "SHSignature",
+        "objc_name": "SHSignature",
+        "printedName": "SHSignature",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SHSignature"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ShazamKit",
+    "printedName": "ShazamKit"
+  }
+}

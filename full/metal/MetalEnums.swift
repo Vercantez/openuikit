@@ -364,6 +364,213 @@ public enum MTLBindingAccess: UInt, Equatable, Hashable, Sendable {
     case writeOnly = 2
 }
 
+public enum MTLArgumentType: UInt, Equatable, Hashable, Sendable {
+    case buffer = 0
+    case threadgroupMemory = 1
+    case texture = 2
+    case sampler = 3
+    case imageblockData = 16
+    case imageblock = 17
+    case visibleFunctionTable = 24
+    case primitiveAccelerationStructure = 25
+    case instanceAccelerationStructure = 26
+    case intersectionFunctionTable = 27
+}
+
+public enum MTLBindingType: UInt, Equatable, Hashable, Sendable {
+    case buffer = 0
+    case threadgroupMemory = 1
+    case texture = 2
+    case sampler = 3
+    case imageblockData = 4
+    case imageblock = 5
+    case visibleFunctionTable = 6
+    case primitiveAccelerationStructure = 7
+    case instanceAccelerationStructure = 8
+    case intersectionFunctionTable = 9
+    case objectPayload = 10
+    case tensor = 11
+}
+
+public enum MTLVisibilityResultMode: UInt, Equatable, Hashable, Sendable {
+    case disabled = 0
+    case boolean = 1
+    case counting = 2
+}
+
+public enum MTLShaderValidation: Int, Equatable, Hashable, Sendable {
+    case `default` = 0
+    case enabled = 1
+    case disabled = 2
+}
+
+public enum MTLPatchType: UInt, Equatable, Hashable, Sendable {
+    case none = 0
+    case triangle = 1
+    case quad = 2
+}
+
+/// Raw values match `Metal/MTLArgument.h` for the classic table. Newer
+/// cases (`bfloat*`, `tensor`, `depthStencilState`) follow the public
+/// sequential extension used by iPhoneOS 18+ headers and are recorded in
+/// `oracle-questions.tsv` until an Apple-oracle probe confirms them.
+public enum MTLDataType: UInt, Equatable, Hashable, Sendable {
+    case none = 0
+    case `struct` = 1
+    case array = 2
+    case float = 3
+    case float2 = 4
+    case float3 = 5
+    case float4 = 6
+    case float2x2 = 7
+    case float2x3 = 8
+    case float2x4 = 9
+    case float3x2 = 10
+    case float3x3 = 11
+    case float3x4 = 12
+    case float4x2 = 13
+    case float4x3 = 14
+    case float4x4 = 15
+    case half = 16
+    case half2 = 17
+    case half3 = 18
+    case half4 = 19
+    case half2x2 = 20
+    case half2x3 = 21
+    case half2x4 = 22
+    case half3x2 = 23
+    case half3x3 = 24
+    case half3x4 = 25
+    case half4x2 = 26
+    case half4x3 = 27
+    case half4x4 = 28
+    case int = 29
+    case int2 = 30
+    case int3 = 31
+    case int4 = 32
+    case uint = 33
+    case uint2 = 34
+    case uint3 = 35
+    case uint4 = 36
+    case short = 37
+    case short2 = 38
+    case short3 = 39
+    case short4 = 40
+    case ushort = 41
+    case ushort2 = 42
+    case ushort3 = 43
+    case ushort4 = 44
+    case char = 45
+    case char2 = 46
+    case char3 = 47
+    case char4 = 48
+    case uchar = 49
+    case uchar2 = 50
+    case uchar3 = 51
+    case uchar4 = 52
+    case bool = 53
+    case bool2 = 54
+    case bool3 = 55
+    case bool4 = 56
+    case texture = 58
+    case sampler = 59
+    case pointer = 60
+    case r8Unorm = 62
+    case r8Snorm = 63
+    case r16Unorm = 64
+    case r16Snorm = 65
+    case rg8Unorm = 66
+    case rg8Snorm = 67
+    case rg16Unorm = 68
+    case rg16Snorm = 69
+    case rgba8Unorm = 70
+    case rgba8Unorm_srgb = 71
+    case rgba8Snorm = 72
+    case rgba16Unorm = 73
+    case rgba16Snorm = 74
+    case rgb10a2Unorm = 75
+    case rg11b10Float = 76
+    case rgb9e5Float = 77
+    case renderPipeline = 78
+    case computePipeline = 79
+    case indirectCommandBuffer = 80
+    case long = 81
+    case long2 = 82
+    case long3 = 83
+    case long4 = 84
+    case ulong = 85
+    case ulong2 = 86
+    case ulong3 = 87
+    case ulong4 = 88
+    case visibleFunctionTable = 115
+    case intersectionFunctionTable = 116
+    case primitiveAccelerationStructure = 117
+    case instanceAccelerationStructure = 118
+    case depthStencilState = 119
+    case bfloat = 121
+    case bfloat2 = 122
+    case bfloat3 = 123
+    case bfloat4 = 124
+    case tensor = 125
+}
+
+public enum MTLAttributeFormat: UInt, Equatable, Hashable, Sendable {
+    case invalid = 0
+    case uchar2 = 1
+    case uchar3 = 2
+    case uchar4 = 3
+    case char2 = 4
+    case char3 = 5
+    case char4 = 6
+    case uchar2Normalized = 7
+    case uchar3Normalized = 8
+    case uchar4Normalized = 9
+    case char2Normalized = 10
+    case char3Normalized = 11
+    case char4Normalized = 12
+    case ushort2 = 13
+    case ushort3 = 14
+    case ushort4 = 15
+    case short2 = 16
+    case short3 = 17
+    case short4 = 18
+    case ushort2Normalized = 19
+    case ushort3Normalized = 20
+    case ushort4Normalized = 21
+    case short2Normalized = 22
+    case short3Normalized = 23
+    case short4Normalized = 24
+    case half2 = 25
+    case half3 = 26
+    case half4 = 27
+    case float = 28
+    case float2 = 29
+    case float3 = 30
+    case float4 = 31
+    case int = 32
+    case int2 = 33
+    case int3 = 34
+    case int4 = 35
+    case uint = 36
+    case uint2 = 37
+    case uint3 = 38
+    case uint4 = 39
+    case int1010102Normalized = 40
+    case uint1010102Normalized = 41
+    case uchar4Normalized_bgra = 42
+    case uchar = 45
+    case char = 46
+    case ucharNormalized = 47
+    case charNormalized = 48
+    case ushort = 49
+    case short = 50
+    case ushortNormalized = 51
+    case shortNormalized = 52
+    case half = 53
+    case floatRG11B10 = 54
+    case floatRGB9E5 = 55
+}
+
 public enum MTLVertexFormat: UInt, Equatable, Hashable, Sendable {
     case invalid = 0
     case uchar2 = 1

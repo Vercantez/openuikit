@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 9,
+  "duplicateOccurrenceCount": 9,
+  "duplicateRelationshipOccurrenceCount": 9,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SpriteKit.symbols.json",
+      "relationshipCount": 1749,
+      "sha256": "036012a5df0dee549d9e57e185b715d0f3abf0a9249824c62f17026aac7d311f",
+      "symbolCount": 1047
+    },
+    {
+      "path": "reference/symbol-graphs/SpriteKit@UIKit.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "3a8c8c6a19502518cdc307869257ab6d022483b36b09b3161cbbaed1408270c5",
+      "symbolCount": 2
+    },
+    {
+      "path": "reference/symbol-graphs/_SpriteKit_SwiftUI@SpriteKit.symbols.json",
+      "relationshipCount": 859,
+      "sha256": "0c1f7cb4d32283fd1381555a3c678a379f583bfaea892cfbe28a3b5d809e8a9a",
+      "symbolCount": 843
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SpriteKit",
+  "relationshipCount": 2610,
+  "relationshipMultisetSHA256": "e099b3fdf8158588e3124f9d2f793f6d922c240d584a16520aa10239ddea2679",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1883,
+  "symbolMultisetSHA256": "494594fb27e41000d75faf4652473372d9ead644ae422b3e8e11882d687e2e73",
+  "target": "arm64-apple-ios26.0"
+}

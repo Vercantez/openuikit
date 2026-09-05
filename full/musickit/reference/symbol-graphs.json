@@ -1,0 +1,42 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 317,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MusicKit.symbols.json",
+      "relationshipCount": 2683,
+      "sha256": "4f89dcf082159db276efa9cc3961243dc2dbc8e24913b3530c6b9ad908780b1b",
+      "symbolCount": 1719
+    },
+    {
+      "path": "reference/symbol-graphs/MusicKit@Swift.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "c1653c5db17f3fe48e64c4ec595fe1717036e21838ae2a10af7440e0df2062a9",
+      "symbolCount": 0
+    },
+    {
+      "path": "reference/symbol-graphs/_MusicKit_SwiftUI@MusicKit.symbols.json",
+      "relationshipCount": 838,
+      "sha256": "75b32df5762cbb919601c1772801bd4107e946d7c02034f7df1f6848206a064d",
+      "symbolCount": 814
+    },
+    {
+      "path": "reference/symbol-graphs/_MusicKit_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "18db0277fea26053e5935adcef47cafe2194a0d8726f2dee8be9f34d874538de",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MusicKit",
+  "relationshipCount": 3526,
+  "relationshipMultisetSHA256": "0af9e80061f24ff044312a8b26d64e60b2e871ae96c98ed272995f17c89820c7",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 2534,
+  "symbolMultisetSHA256": "cc370de2d4b5d0cf62d552c9af57967269a85bb4094e908ce4958237042b045f",
+  "target": "arm64-apple-ios26.0"
+}

@@ -264,8 +264,10 @@ public enum NEHotspotHelperConfidence: Int, Sendable, Hashable {
 public enum NEHotspotHelperResult: Int, Sendable, Hashable {
     case success = 0
     case failure = 1
+    case uiRequired = 2
     case commandNotRecognized = 3
     case authenticationRequired = 4
+    case unsupportedNetwork = 5
     case temporaryFailure = 6
 }
 

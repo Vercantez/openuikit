@@ -1,0 +1,920 @@
+precise	kind	title	path	declaration
+c:@CM@GameKit@@objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivity:handler:	swift.method	trigger(gameActivity:handler:)	GKAccessPoint.trigger(gameActivity:handler:)	@objc(triggerAccessPointWithGameActivity:handler:) dynamic func trigger(gameActivity: GKGameActivity, handler: (() -> Void)? = nil)
+c:@CM@GameKit@@objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivityDefinitionID:handler:	swift.method	trigger(gameActivityDefinitionID:handler:)	GKAccessPoint.trigger(gameActivityDefinitionID:handler:)	@objc(triggerAccessPointWithGameActivityDefinitionID:handler:) dynamic func trigger(gameActivityDefinitionID: String, handler: (() -> Void)? = nil)
+c:@E@GKAccessPointLocation	swift.enum	GKAccessPoint.Location	GKAccessPoint.Location	enum Location
+c:@E@GKAccessPointLocation@GKAccessPointLocationBottomLeading	swift.enum.case	GKAccessPoint.Location.bottomLeading	GKAccessPoint.Location.bottomLeading	case bottomLeading
+c:@E@GKAccessPointLocation@GKAccessPointLocationBottomTrailing	swift.enum.case	GKAccessPoint.Location.bottomTrailing	GKAccessPoint.Location.bottomTrailing	case bottomTrailing
+c:@E@GKAccessPointLocation@GKAccessPointLocationTopLeading	swift.enum.case	GKAccessPoint.Location.topLeading	GKAccessPoint.Location.topLeading	case topLeading
+c:@E@GKAccessPointLocation@GKAccessPointLocationTopTrailing	swift.enum.case	GKAccessPoint.Location.topTrailing	GKAccessPoint.Location.topTrailing	case topTrailing
+c:@E@GKChallengeState	swift.enum	GKChallengeState	GKChallengeState	enum GKChallengeState
+c:@E@GKChallengeState@GKChallengeStateCompleted	swift.enum.case	GKChallengeState.completed	GKChallengeState.completed	case completed
+c:@E@GKChallengeState@GKChallengeStateDeclined	swift.enum.case	GKChallengeState.declined	GKChallengeState.declined	case declined
+c:@E@GKChallengeState@GKChallengeStateInvalid	swift.enum.case	GKChallengeState.invalid	GKChallengeState.invalid	case invalid
+c:@E@GKChallengeState@GKChallengeStatePending	swift.enum.case	GKChallengeState.pending	GKChallengeState.pending	case pending
+c:@E@GKConnectionState	swift.enum	GKConnectionState	GKConnectionState	enum GKConnectionState
+c:@E@GKConnectionState@GKConnectionStateConnected	swift.enum.case	GKConnectionState.connected	GKConnectionState.connected	case connected
+c:@E@GKConnectionState@GKConnectionStateNotConnected	swift.enum.case	GKConnectionState.notConnected	GKConnectionState.notConnected	case notConnected
+c:@E@GKErrorCode	swift.enum	GKError.Code	GKError.Code	enum Code
+c:@E@GKErrorCode@GKErrorAPINotAvailable	swift.enum.case	GKError.Code.apiNotAvailable	GKError.Code.apiNotAvailable	case apiNotAvailable
+c:@E@GKErrorCode@GKErrorAPIObsolete	swift.enum.case	GKError.Code.apiObsolete	GKError.Code.apiObsolete	case apiObsolete
+c:@E@GKErrorCode@GKErrorAppUnlisted	swift.enum.case	GKError.Code.appUnlisted	GKError.Code.appUnlisted	case appUnlisted
+c:@E@GKErrorCode@GKErrorAuthenticationInProgress	swift.enum.case	GKError.Code.authenticationInProgress	GKError.Code.authenticationInProgress	case authenticationInProgress
+c:@E@GKErrorCode@GKErrorCancelled	swift.enum.case	GKError.Code.cancelled	GKError.Code.cancelled	case cancelled
+c:@E@GKErrorCode@GKErrorChallengeInvalid	swift.enum.case	GKError.Code.challengeInvalid	GKError.Code.challengeInvalid	case challengeInvalid
+c:@E@GKErrorCode@GKErrorCommunicationsFailure	swift.enum.case	GKError.Code.communicationsFailure	GKError.Code.communicationsFailure	case communicationsFailure
+c:@E@GKErrorCode@GKErrorConnectionTimeout	swift.enum.case	GKError.Code.connectionTimeout	GKError.Code.connectionTimeout	case connectionTimeout
+c:@E@GKErrorCode@GKErrorDebugMode	swift.enum.case	GKError.Code.debugMode	GKError.Code.debugMode	case debugMode
+c:@E@GKErrorCode@GKErrorFriendListDenied	swift.enum.case	GKError.Code.friendListDenied	GKError.Code.friendListDenied	case friendListDenied
+c:@E@GKErrorCode@GKErrorFriendListDescriptionMissing	swift.enum.case	GKError.Code.friendListDescriptionMissing	GKError.Code.friendListDescriptionMissing	case friendListDescriptionMissing
+c:@E@GKErrorCode@GKErrorFriendListRestricted	swift.enum.case	GKError.Code.friendListRestricted	GKError.Code.friendListRestricted	case friendListRestricted
+c:@E@GKErrorCode@GKErrorFriendRequestNotAvailable	swift.enum.case	GKError.Code.friendRequestNotAvailable	GKError.Code.friendRequestNotAvailable	case friendRequestNotAvailable
+c:@E@GKErrorCode@GKErrorGameSessionRequestInvalid	swift.enum.case	GKError.Code.gameSessionRequestInvalid	GKError.Code.gameSessionRequestInvalid	case gameSessionRequestInvalid
+c:@E@GKErrorCode@GKErrorGameUnrecognized	swift.enum.case	GKError.Code.gameUnrecognized	GKError.Code.gameUnrecognized	case gameUnrecognized
+c:@E@GKErrorCode@GKErrorICloudUnavailable	swift.enum.case	GKError.Code.iCloudUnavailable	GKError.Code.iCloudUnavailable	case iCloudUnavailable
+c:@E@GKErrorCode@GKErrorInvalidCredentials	swift.enum.case	GKError.Code.invalidCredentials	GKError.Code.invalidCredentials	case invalidCredentials
+c:@E@GKErrorCode@GKErrorInvalidParameter	swift.enum.case	GKError.Code.invalidParameter	GKError.Code.invalidParameter	case invalidParameter
+c:@E@GKErrorCode@GKErrorInvalidPlayer	swift.enum.case	GKError.Code.invalidPlayer	GKError.Code.invalidPlayer	case invalidPlayer
+c:@E@GKErrorCode@GKErrorInvitationsDisabled	swift.enum.case	GKError.Code.invitationsDisabled	GKError.Code.invitationsDisabled	case invitationsDisabled
+c:@E@GKErrorCode@GKErrorLockdownMode	swift.enum.case	GKError.Code.lockdownMode	GKError.Code.lockdownMode	case lockdownMode
+c:@E@GKErrorCode@GKErrorMatchNotConnected	swift.enum.case	GKError.Code.matchNotConnected	GKError.Code.matchNotConnected	case matchNotConnected
+c:@E@GKErrorCode@GKErrorMatchRequestInvalid	swift.enum.case	GKError.Code.matchRequestInvalid	GKError.Code.matchRequestInvalid	case matchRequestInvalid
+c:@E@GKErrorCode@GKErrorNotAuthenticated	swift.enum.case	GKError.Code.notAuthenticated	GKError.Code.notAuthenticated	case notAuthenticated
+c:@E@GKErrorCode@GKErrorNotAuthorized	swift.enum.case	GKError.Code.notAuthorized	GKError.Code.notAuthorized	case notAuthorized
+c:@E@GKErrorCode@GKErrorNotSupported	swift.enum.case	GKError.Code.notSupported	GKError.Code.notSupported	case notSupported
+c:@E@GKErrorCode@GKErrorParentalControlsBlocked	swift.enum.case	GKError.Code.parentalControlsBlocked	GKError.Code.parentalControlsBlocked	case parentalControlsBlocked
+c:@E@GKErrorCode@GKErrorPlayerPhotoFailure	swift.enum.case	GKError.Code.playerPhotoFailure	GKError.Code.playerPhotoFailure	case playerPhotoFailure
+c:@E@GKErrorCode@GKErrorPlayerStatusExceedsMaximumLength	swift.enum.case	GKError.Code.playerStatusExceedsMaximumLength	GKError.Code.playerStatusExceedsMaximumLength	case playerStatusExceedsMaximumLength
+c:@E@GKErrorCode@GKErrorPlayerStatusInvalid	swift.enum.case	GKError.Code.playerStatusInvalid	GKError.Code.playerStatusInvalid	case playerStatusInvalid
+c:@E@GKErrorCode@GKErrorRestrictedToAutomatch	swift.enum.case	GKError.Code.restrictedToAutomatch	GKError.Code.restrictedToAutomatch	case restrictedToAutomatch
+c:@E@GKErrorCode@GKErrorScoreNotSet	swift.enum.case	GKError.Code.scoreNotSet	GKError.Code.scoreNotSet	case scoreNotSet
+c:@E@GKErrorCode@GKErrorTurnBasedInvalidParticipant	swift.enum.case	GKError.Code.turnBasedInvalidParticipant	GKError.Code.turnBasedInvalidParticipant	case turnBasedInvalidParticipant
+c:@E@GKErrorCode@GKErrorTurnBasedInvalidState	swift.enum.case	GKError.Code.turnBasedInvalidState	GKError.Code.turnBasedInvalidState	case turnBasedInvalidState
+c:@E@GKErrorCode@GKErrorTurnBasedInvalidTurn	swift.enum.case	GKError.Code.turnBasedInvalidTurn	GKError.Code.turnBasedInvalidTurn	case turnBasedInvalidTurn
+c:@E@GKErrorCode@GKErrorTurnBasedMatchDataTooLarge	swift.enum.case	GKError.Code.turnBasedMatchDataTooLarge	GKError.Code.turnBasedMatchDataTooLarge	case turnBasedMatchDataTooLarge
+c:@E@GKErrorCode@GKErrorTurnBasedTooManySessions	swift.enum.case	GKError.Code.turnBasedTooManySessions	GKError.Code.turnBasedTooManySessions	case turnBasedTooManySessions
+c:@E@GKErrorCode@GKErrorUbiquityContainerUnavailable	swift.enum.case	GKError.Code.ubiquityContainerUnavailable	GKError.Code.ubiquityContainerUnavailable	case ubiquityContainerUnavailable
+c:@E@GKErrorCode@GKErrorUnderage	swift.enum.case	GKError.Code.underage	GKError.Code.underage	case underage
+c:@E@GKErrorCode@GKErrorUnexpectedConnection	swift.enum.case	GKError.Code.unexpectedConnection	GKError.Code.unexpectedConnection	case unexpectedConnection
+c:@E@GKErrorCode@GKErrorUnknown	swift.enum.case	GKError.Code.unknown	GKError.Code.unknown	case unknown
+c:@E@GKErrorCode@GKErrorUserDenied	swift.enum.case	GKError.Code.userDenied	GKError.Code.userDenied	case userDenied
+c:@E@GKFriendsAuthorizationStatus	swift.enum	GKFriendsAuthorizationStatus	GKFriendsAuthorizationStatus	enum GKFriendsAuthorizationStatus
+c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusAuthorized	swift.enum.case	GKFriendsAuthorizationStatus.authorized	GKFriendsAuthorizationStatus.authorized	case authorized
+c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusDenied	swift.enum.case	GKFriendsAuthorizationStatus.denied	GKFriendsAuthorizationStatus.denied	case denied
+c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusNotDetermined	swift.enum.case	GKFriendsAuthorizationStatus.notDetermined	GKFriendsAuthorizationStatus.notDetermined	case notDetermined
+c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusRestricted	swift.enum.case	GKFriendsAuthorizationStatus.restricted	GKFriendsAuthorizationStatus.restricted	case restricted
+c:@E@GKGameActivityPlayStyle	swift.enum	GKGameActivityPlayStyle	GKGameActivityPlayStyle	enum GKGameActivityPlayStyle
+c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleAsynchronous	swift.enum.case	GKGameActivityPlayStyle.asynchronous	GKGameActivityPlayStyle.asynchronous	case asynchronous
+c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleSynchronous	swift.enum.case	GKGameActivityPlayStyle.synchronous	GKGameActivityPlayStyle.synchronous	case synchronous
+c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleUnspecified	swift.enum.case	GKGameActivityPlayStyle.unspecified	GKGameActivityPlayStyle.unspecified	case unspecified
+c:@E@GKGameActivityState	swift.enum	GKGameActivity.State	GKGameActivity.State	enum State
+c:@E@GKGameActivityState@GKGameActivityStateActive	swift.enum.case	GKGameActivity.State.active	GKGameActivity.State.active	case active
+c:@E@GKGameActivityState@GKGameActivityStateEnded	swift.enum.case	GKGameActivity.State.ended	GKGameActivity.State.ended	case ended
+c:@E@GKGameActivityState@GKGameActivityStateInitialized	swift.enum.case	GKGameActivity.State.initialized	GKGameActivity.State.initialized	case initialized
+c:@E@GKGameActivityState@GKGameActivityStatePaused	swift.enum.case	GKGameActivity.State.paused	GKGameActivity.State.paused	case paused
+c:@E@GKGameCenterViewControllerState	swift.enum	GKGameCenterViewControllerState	GKGameCenterViewControllerState	enum GKGameCenterViewControllerState
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateAchievements	swift.enum.case	GKGameCenterViewControllerState.achievements	GKGameCenterViewControllerState.achievements	case achievements
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateChallenges	swift.enum.case	GKGameCenterViewControllerState.challenges	GKGameCenterViewControllerState.challenges	case challenges
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateDashboard	swift.enum.case	GKGameCenterViewControllerState.dashboard	GKGameCenterViewControllerState.dashboard	case dashboard
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateDefault	swift.enum.case	GKGameCenterViewControllerState.default	GKGameCenterViewControllerState.default	case `default`
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateLeaderboards	swift.enum.case	GKGameCenterViewControllerState.leaderboards	GKGameCenterViewControllerState.leaderboards	case leaderboards
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateLocalPlayerFriendsList	swift.enum.case	GKGameCenterViewControllerState.localPlayerFriendsList	GKGameCenterViewControllerState.localPlayerFriendsList	case localPlayerFriendsList
+c:@E@GKGameCenterViewControllerState@GKGameCenterViewControllerStateLocalPlayerProfile	swift.enum.case	GKGameCenterViewControllerState.localPlayerProfile	GKGameCenterViewControllerState.localPlayerProfile	case localPlayerProfile
+c:@E@GKGameSessionErrorCode	swift.enum	GKGameSessionError.Code	GKGameSessionError.Code	enum Code
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorBadContainer	swift.enum.case	GKGameSessionError.Code.badContainer	GKGameSessionError.Code.badContainer	case badContainer
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorCloudDriveDisabled	swift.enum.case	GKGameSessionError.Code.cloudDriveDisabled	GKGameSessionError.Code.cloudDriveDisabled	case cloudDriveDisabled
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorCloudQuotaExceeded	swift.enum.case	GKGameSessionError.Code.cloudQuotaExceeded	GKGameSessionError.Code.cloudQuotaExceeded	case cloudQuotaExceeded
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorConnectionCancelledByUser	swift.enum.case	GKGameSessionError.Code.connectionCancelledByUser	GKGameSessionError.Code.connectionCancelledByUser	case connectionCancelledByUser
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorConnectionFailed	swift.enum.case	GKGameSessionError.Code.connectionFailed	GKGameSessionError.Code.connectionFailed	case connectionFailed
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorInvalidSession	swift.enum.case	GKGameSessionError.Code.invalidSession	GKGameSessionError.Code.invalidSession	case invalidSession
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorNetworkFailure	swift.enum.case	GKGameSessionError.Code.networkFailure	GKGameSessionError.Code.networkFailure	case networkFailure
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorNotAuthenticated	swift.enum.case	GKGameSessionError.Code.notAuthenticated	GKGameSessionError.Code.notAuthenticated	case notAuthenticated
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSendDataNoRecipients	swift.enum.case	GKGameSessionError.Code.sendDataNoRecipients	GKGameSessionError.Code.sendDataNoRecipients	case sendDataNoRecipients
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSendDataNotConnected	swift.enum.case	GKGameSessionError.Code.sendDataNotConnected	GKGameSessionError.Code.sendDataNotConnected	case sendDataNotConnected
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSendDataNotReachable	swift.enum.case	GKGameSessionError.Code.sendDataNotReachable	GKGameSessionError.Code.sendDataNotReachable	case sendDataNotReachable
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSendRateLimitReached	swift.enum.case	GKGameSessionError.Code.sendRateLimitReached	GKGameSessionError.Code.sendRateLimitReached	case sendRateLimitReached
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSessionConflict	swift.enum.case	GKGameSessionError.Code.sessionConflict	GKGameSessionError.Code.sessionConflict	case sessionConflict
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSessionHasMaxConnectedPlayers	swift.enum.case	GKGameSessionError.Code.sessionHasMaxConnectedPlayers	GKGameSessionError.Code.sessionHasMaxConnectedPlayers	case sessionHasMaxConnectedPlayers
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorSessionNotShared	swift.enum.case	GKGameSessionError.Code.sessionNotShared	GKGameSessionError.Code.sessionNotShared	case sessionNotShared
+c:@E@GKGameSessionErrorCode@GKGameSessionErrorUnknown	swift.enum.case	GKGameSessionError.Code.unknown	GKGameSessionError.Code.unknown	case unknown
+c:@E@GKInviteRecipientResponse	swift.enum	GKInviteRecipientResponse	GKInviteRecipientResponse	enum GKInviteRecipientResponse
+c:@E@GKInviteRecipientResponse@GKInviteRecipientResponseAccepted	swift.enum.case	GKInviteRecipientResponse.accepted	GKInviteRecipientResponse.accepted	case accepted
+c:@E@GKInviteRecipientResponse@GKInviteRecipientResponseDeclined	swift.enum.case	GKInviteRecipientResponse.declined	GKInviteRecipientResponse.declined	case declined
+c:@E@GKInviteRecipientResponse@GKInviteRecipientResponseFailed	swift.enum.case	GKInviteRecipientResponse.failed	GKInviteRecipientResponse.failed	case failed
+c:@E@GKInviteRecipientResponse@GKInviteRecipientResponseIncompatible	swift.enum.case	GKInviteRecipientResponse.incompatible	GKInviteRecipientResponse.incompatible	case incompatible
+c:@E@GKInviteRecipientResponse@GKInviteRecipientResponseNoAnswer	swift.enum.case	GKInviteRecipientResponse.noAnswer	GKInviteRecipientResponse.noAnswer	case noAnswer
+c:@E@GKInviteRecipientResponse@GKInviteRecipientResponseUnableToConnect	swift.enum.case	GKInviteRecipientResponse.unableToConnect	GKInviteRecipientResponse.unableToConnect	case unableToConnect
+c:@E@GKInviteRecipientResponse@GKInviteeResponseAccepted	swift.type.property	inviteeResponseAccepted	GKInviteRecipientResponse.inviteeResponseAccepted	static var inviteeResponseAccepted: GKInviteRecipientResponse { get }
+c:@E@GKInviteRecipientResponse@GKInviteeResponseDeclined	swift.type.property	inviteeResponseDeclined	GKInviteRecipientResponse.inviteeResponseDeclined	static var inviteeResponseDeclined: GKInviteRecipientResponse { get }
+c:@E@GKInviteRecipientResponse@GKInviteeResponseFailed	swift.type.property	inviteeResponseFailed	GKInviteRecipientResponse.inviteeResponseFailed	static var inviteeResponseFailed: GKInviteRecipientResponse { get }
+c:@E@GKInviteRecipientResponse@GKInviteeResponseIncompatible	swift.type.property	inviteeResponseIncompatible	GKInviteRecipientResponse.inviteeResponseIncompatible	static var inviteeResponseIncompatible: GKInviteRecipientResponse { get }
+c:@E@GKInviteRecipientResponse@GKInviteeResponseNoAnswer	swift.type.property	inviteeResponseNoAnswer	GKInviteRecipientResponse.inviteeResponseNoAnswer	static var inviteeResponseNoAnswer: GKInviteRecipientResponse { get }
+c:@E@GKInviteRecipientResponse@GKInviteeResponseUnableToConnect	swift.type.property	inviteeResponseUnableToConnect	GKInviteRecipientResponse.inviteeResponseUnableToConnect	static var inviteeResponseUnableToConnect: GKInviteRecipientResponse { get }
+c:@E@GKLeaderboardPlayerScope	swift.enum	GKLeaderboard.PlayerScope	GKLeaderboard.PlayerScope	enum PlayerScope
+c:@E@GKLeaderboardPlayerScope@GKLeaderboardPlayerScopeFriendsOnly	swift.enum.case	GKLeaderboard.PlayerScope.friendsOnly	GKLeaderboard.PlayerScope.friendsOnly	case friendsOnly
+c:@E@GKLeaderboardPlayerScope@GKLeaderboardPlayerScopeGlobal	swift.enum.case	GKLeaderboard.PlayerScope.global	GKLeaderboard.PlayerScope.global	case global
+c:@E@GKLeaderboardTimeScope	swift.enum	GKLeaderboard.TimeScope	GKLeaderboard.TimeScope	enum TimeScope
+c:@E@GKLeaderboardTimeScope@GKLeaderboardTimeScopeAllTime	swift.enum.case	GKLeaderboard.TimeScope.allTime	GKLeaderboard.TimeScope.allTime	case allTime
+c:@E@GKLeaderboardTimeScope@GKLeaderboardTimeScopeToday	swift.enum.case	GKLeaderboard.TimeScope.today	GKLeaderboard.TimeScope.today	case today
+c:@E@GKLeaderboardTimeScope@GKLeaderboardTimeScopeWeek	swift.enum.case	GKLeaderboard.TimeScope.week	GKLeaderboard.TimeScope.week	case week
+c:@E@GKLeaderboardType	swift.enum	GKLeaderboard.LeaderboardType	GKLeaderboard.LeaderboardType	enum LeaderboardType
+c:@E@GKLeaderboardType@GKLeaderboardTypeClassic	swift.enum.case	GKLeaderboard.LeaderboardType.classic	GKLeaderboard.LeaderboardType.classic	case classic
+c:@E@GKLeaderboardType@GKLeaderboardTypeRecurring	swift.enum.case	GKLeaderboard.LeaderboardType.recurring	GKLeaderboard.LeaderboardType.recurring	case recurring
+c:@E@GKMatchSendDataMode	swift.enum	GKMatch.SendDataMode	GKMatch.SendDataMode	enum SendDataMode
+c:@E@GKMatchSendDataMode@GKMatchSendDataReliable	swift.enum.case	GKMatch.SendDataMode.reliable	GKMatch.SendDataMode.reliable	case reliable
+c:@E@GKMatchSendDataMode@GKMatchSendDataUnreliable	swift.enum.case	GKMatch.SendDataMode.unreliable	GKMatch.SendDataMode.unreliable	case unreliable
+c:@E@GKMatchType	swift.enum	GKMatchType	GKMatchType	enum GKMatchType
+c:@E@GKMatchType@GKMatchTypeHosted	swift.enum.case	GKMatchType.hosted	GKMatchType.hosted	case hosted
+c:@E@GKMatchType@GKMatchTypePeerToPeer	swift.enum.case	GKMatchType.peerToPeer	GKMatchType.peerToPeer	case peerToPeer
+c:@E@GKMatchType@GKMatchTypeTurnBased	swift.enum.case	GKMatchType.turnBased	GKMatchType.turnBased	case turnBased
+c:@E@GKMatchmakingMode	swift.enum	GKMatchmakingMode	GKMatchmakingMode	enum GKMatchmakingMode
+c:@E@GKMatchmakingMode@GKMatchmakingModeAutomatchOnly	swift.enum.case	GKMatchmakingMode.automatchOnly	GKMatchmakingMode.automatchOnly	case automatchOnly
+c:@E@GKMatchmakingMode@GKMatchmakingModeDefault	swift.enum.case	GKMatchmakingMode.default	GKMatchmakingMode.default	case `default`
+c:@E@GKMatchmakingMode@GKMatchmakingModeInviteOnly	swift.enum.case	GKMatchmakingMode.inviteOnly	GKMatchmakingMode.inviteOnly	case inviteOnly
+c:@E@GKMatchmakingMode@GKMatchmakingModeNearbyOnly	swift.enum.case	GKMatchmakingMode.nearbyOnly	GKMatchmakingMode.nearbyOnly	case nearbyOnly
+c:@E@GKPhotoSize	swift.enum	GKPlayer.PhotoSize	GKPlayer.PhotoSize	enum PhotoSize
+c:@E@GKPhotoSize@GKPhotoSizeNormal	swift.enum.case	GKPlayer.PhotoSize.normal	GKPlayer.PhotoSize.normal	case normal
+c:@E@GKPhotoSize@GKPhotoSizeSmall	swift.enum.case	GKPlayer.PhotoSize.small	GKPlayer.PhotoSize.small	case small
+c:@E@GKPlayerConnectionState	swift.enum	GKPlayerConnectionState	GKPlayerConnectionState	enum GKPlayerConnectionState
+c:@E@GKPlayerConnectionState@GKPlayerStateConnected	swift.enum.case	GKPlayerConnectionState.connected	GKPlayerConnectionState.connected	case connected
+c:@E@GKPlayerConnectionState@GKPlayerStateDisconnected	swift.enum.case	GKPlayerConnectionState.disconnected	GKPlayerConnectionState.disconnected	case disconnected
+c:@E@GKPlayerConnectionState@GKPlayerStateUnknown	swift.enum.case	GKPlayerConnectionState.unknown	GKPlayerConnectionState.unknown	case unknown
+c:@E@GKReleaseState	swift.struct	GKReleaseState	GKReleaseState	struct GKReleaseState
+c:@E@GKReleaseState@GKReleaseStatePrereleased	swift.type.property	prereleased	GKReleaseState.prereleased	static var prereleased: GKReleaseState { get }
+c:@E@GKReleaseState@GKReleaseStateReleased	swift.type.property	released	GKReleaseState.released	static var released: GKReleaseState { get }
+c:@E@GKTransportType	swift.enum	GKTransportType	GKTransportType	enum GKTransportType
+c:@E@GKTransportType@GKTransportTypeReliable	swift.enum.case	GKTransportType.reliable	GKTransportType.reliable	case reliable
+c:@E@GKTransportType@GKTransportTypeUnreliable	swift.enum.case	GKTransportType.unreliable	GKTransportType.unreliable	case unreliable
+c:@E@GKTurnBasedExchangeStatus	swift.enum	GKTurnBasedExchangeStatus	GKTurnBasedExchangeStatus	enum GKTurnBasedExchangeStatus
+c:@E@GKTurnBasedExchangeStatus@GKTurnBasedExchangeStatusActive	swift.enum.case	GKTurnBasedExchangeStatus.active	GKTurnBasedExchangeStatus.active	case active
+c:@E@GKTurnBasedExchangeStatus@GKTurnBasedExchangeStatusCanceled	swift.enum.case	GKTurnBasedExchangeStatus.canceled	GKTurnBasedExchangeStatus.canceled	case canceled
+c:@E@GKTurnBasedExchangeStatus@GKTurnBasedExchangeStatusComplete	swift.enum.case	GKTurnBasedExchangeStatus.complete	GKTurnBasedExchangeStatus.complete	case complete
+c:@E@GKTurnBasedExchangeStatus@GKTurnBasedExchangeStatusResolved	swift.enum.case	GKTurnBasedExchangeStatus.resolved	GKTurnBasedExchangeStatus.resolved	case resolved
+c:@E@GKTurnBasedExchangeStatus@GKTurnBasedExchangeStatusUnknown	swift.enum.case	GKTurnBasedExchangeStatus.unknown	GKTurnBasedExchangeStatus.unknown	case unknown
+c:@E@GKTurnBasedMatchOutcome	swift.enum	GKTurnBasedMatch.Outcome	GKTurnBasedMatch.Outcome	enum Outcome
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeCustomRange	swift.enum.case	GKTurnBasedMatch.Outcome.customRange	GKTurnBasedMatch.Outcome.customRange	case customRange
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeFirst	swift.enum.case	GKTurnBasedMatch.Outcome.first	GKTurnBasedMatch.Outcome.first	case first
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeFourth	swift.enum.case	GKTurnBasedMatch.Outcome.fourth	GKTurnBasedMatch.Outcome.fourth	case fourth
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeLost	swift.enum.case	GKTurnBasedMatch.Outcome.lost	GKTurnBasedMatch.Outcome.lost	case lost
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeNone	swift.enum.case	GKTurnBasedMatch.Outcome.none	GKTurnBasedMatch.Outcome.none	case none
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeQuit	swift.enum.case	GKTurnBasedMatch.Outcome.quit	GKTurnBasedMatch.Outcome.quit	case quit
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeSecond	swift.enum.case	GKTurnBasedMatch.Outcome.second	GKTurnBasedMatch.Outcome.second	case second
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeThird	swift.enum.case	GKTurnBasedMatch.Outcome.third	GKTurnBasedMatch.Outcome.third	case third
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeTied	swift.enum.case	GKTurnBasedMatch.Outcome.tied	GKTurnBasedMatch.Outcome.tied	case tied
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeTimeExpired	swift.enum.case	GKTurnBasedMatch.Outcome.timeExpired	GKTurnBasedMatch.Outcome.timeExpired	case timeExpired
+c:@E@GKTurnBasedMatchOutcome@GKTurnBasedMatchOutcomeWon	swift.enum.case	GKTurnBasedMatch.Outcome.won	GKTurnBasedMatch.Outcome.won	case won
+c:@E@GKTurnBasedMatchStatus	swift.enum	GKTurnBasedMatch.Status	GKTurnBasedMatch.Status	enum Status
+c:@E@GKTurnBasedMatchStatus@GKTurnBasedMatchStatusEnded	swift.enum.case	GKTurnBasedMatch.Status.ended	GKTurnBasedMatch.Status.ended	case ended
+c:@E@GKTurnBasedMatchStatus@GKTurnBasedMatchStatusMatching	swift.enum.case	GKTurnBasedMatch.Status.matching	GKTurnBasedMatch.Status.matching	case matching
+c:@E@GKTurnBasedMatchStatus@GKTurnBasedMatchStatusOpen	swift.enum.case	GKTurnBasedMatch.Status.open	GKTurnBasedMatch.Status.open	case open
+c:@E@GKTurnBasedMatchStatus@GKTurnBasedMatchStatusUnknown	swift.enum.case	GKTurnBasedMatch.Status.unknown	GKTurnBasedMatch.Status.unknown	case unknown
+c:@E@GKTurnBasedParticipantStatus	swift.enum	GKTurnBasedParticipant.Status	GKTurnBasedParticipant.Status	enum Status
+c:@E@GKTurnBasedParticipantStatus@GKTurnBasedParticipantStatusActive	swift.enum.case	GKTurnBasedParticipant.Status.active	GKTurnBasedParticipant.Status.active	case active
+c:@E@GKTurnBasedParticipantStatus@GKTurnBasedParticipantStatusDeclined	swift.enum.case	GKTurnBasedParticipant.Status.declined	GKTurnBasedParticipant.Status.declined	case declined
+c:@E@GKTurnBasedParticipantStatus@GKTurnBasedParticipantStatusDone	swift.enum.case	GKTurnBasedParticipant.Status.done	GKTurnBasedParticipant.Status.done	case done
+c:@E@GKTurnBasedParticipantStatus@GKTurnBasedParticipantStatusInvited	swift.enum.case	GKTurnBasedParticipant.Status.invited	GKTurnBasedParticipant.Status.invited	case invited
+c:@E@GKTurnBasedParticipantStatus@GKTurnBasedParticipantStatusMatching	swift.enum.case	GKTurnBasedParticipant.Status.matching	GKTurnBasedParticipant.Status.matching	case matching
+c:@E@GKTurnBasedParticipantStatus@GKTurnBasedParticipantStatusUnknown	swift.enum.case	GKTurnBasedParticipant.Status.unknown	GKTurnBasedParticipant.Status.unknown	case unknown
+c:@E@GKVoiceChatPlayerState	swift.enum	GKVoiceChat.PlayerState	GKVoiceChat.PlayerState	enum PlayerState
+c:@E@GKVoiceChatPlayerState@GKVoiceChatPlayerConnected	swift.enum.case	GKVoiceChat.PlayerState.connected	GKVoiceChat.PlayerState.connected	case connected
+c:@E@GKVoiceChatPlayerState@GKVoiceChatPlayerConnecting	swift.enum.case	GKVoiceChat.PlayerState.connecting	GKVoiceChat.PlayerState.connecting	case connecting
+c:@E@GKVoiceChatPlayerState@GKVoiceChatPlayerDisconnected	swift.enum.case	GKVoiceChat.PlayerState.disconnected	GKVoiceChat.PlayerState.disconnected	case disconnected
+c:@E@GKVoiceChatPlayerState@GKVoiceChatPlayerSilent	swift.enum.case	GKVoiceChat.PlayerState.silent	GKVoiceChat.PlayerState.silent	case silent
+c:@E@GKVoiceChatPlayerState@GKVoiceChatPlayerSpeaking	swift.enum.case	GKVoiceChat.PlayerState.speaking	GKVoiceChat.PlayerState.speaking	case speaking
+c:@GKErrorDomain	swift.var	GKErrorDomain	GKErrorDomain	let GKErrorDomain: String
+c:@GKExchangeTimeoutDefault	swift.var	GKExchangeTimeoutDefault	GKExchangeTimeoutDefault	var GKExchangeTimeoutDefault: TimeInterval
+c:@GKExchangeTimeoutNone	swift.var	GKExchangeTimeoutNone	GKExchangeTimeoutNone	var GKExchangeTimeoutNone: TimeInterval
+c:@GKGameSessionErrorDomain	swift.var	GKGameSessionErrorDomain	GKGameSessionErrorDomain	let GKGameSessionErrorDomain: String
+c:@GKPlayerAuthenticationDidChangeNotificationName	swift.type.property	GKPlayerAuthenticationDidChangeNotificationName	NSNotification.Name.GKPlayerAuthenticationDidChangeNotificationName	static let GKPlayerAuthenticationDidChangeNotificationName: NSNotification.Name
+c:@GKPlayerDidChangeNotificationName	swift.type.property	GKPlayerDidChangeNotificationName	NSNotification.Name.GKPlayerDidChangeNotificationName	static let GKPlayerDidChangeNotificationName: NSNotification.Name
+c:@GKPlayerIDNoLongerAvailable	swift.var	GKPlayerIDNoLongerAvailable	GKPlayerIDNoLongerAvailable	let GKPlayerIDNoLongerAvailable: String
+c:@GKSessionErrorDomain	swift.var	GKSessionErrorDomain	GKSessionErrorDomain	let GKSessionErrorDomain: String
+c:@GKTurnTimeoutDefault	swift.var	GKTurnTimeoutDefault	GKTurnTimeoutDefault	var GKTurnTimeoutDefault: TimeInterval
+c:@GKTurnTimeoutNone	swift.var	GKTurnTimeoutNone	GKTurnTimeoutNone	var GKTurnTimeoutNone: TimeInterval
+c:@GKVoiceChatServiceErrorDomain	swift.var	GKVoiceChatServiceErrorDomain	GKVoiceChatServiceErrorDomain	let GKVoiceChatServiceErrorDomain: String
+c:@T@GKChallengeComposeCompletionBlock	swift.typealias	GKChallengeComposeCompletionBlock	GKChallengeComposeCompletionBlock	typealias GKChallengeComposeCompletionBlock = (UIViewController, Bool, [String]?) -> Void
+c:@T@GKChallengeComposeHandler	swift.typealias	GKChallengeComposeHandler	GKChallengeComposeHandler	typealias GKChallengeComposeHandler = (UIViewController, Bool, [GKPlayer]?) -> Void
+c:@T@GKInviteeResponse	swift.typealias	GKInviteeResponse	GKInviteeResponse	typealias GKInviteeResponse = GKInviteRecipientResponse
+c:objc(cs)GKAccessPoint	swift.class	GKAccessPoint	GKAccessPoint	class GKAccessPoint
+c:objc(cs)GKAccessPoint(cpy)shared	swift.type.property	shared	GKAccessPoint.shared	class var shared: GKAccessPoint { get }
+c:objc(cs)GKAccessPoint(im)triggerAccessPointForChallengesWithHandler:	swift.method	triggerForChallenges(handler:)	GKAccessPoint.triggerForChallenges(handler:)	func triggerForChallenges(handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointForFriendingWithHandler:	swift.method	triggerForFriending(handler:)	GKAccessPoint.triggerForFriending(handler:)	func triggerForFriending(handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointForPlayTogetherWithHandler:	swift.method	triggerForPlayTogether(handler:)	GKAccessPoint.triggerForPlayTogether(handler:)	func triggerForPlayTogether(handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithAchievementID:handler:	swift.method	trigger(achievementID:handler:)	GKAccessPoint.trigger(achievementID:handler:)	func trigger(achievementID: String, handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithChallengeDefinitionID:handler:	swift.method	trigger(challengeDefinitionID:)	GKAccessPoint.trigger(challengeDefinitionID:)	func trigger(challengeDefinitionID: String) async
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivity:handler:	swift.method	trigger(gameActivity:)	GKAccessPoint.trigger(gameActivity:)	func trigger(gameActivity: GKGameActivity) async
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivityDefinitionID:handler:	swift.method	trigger(gameActivityDefinitionID:)	GKAccessPoint.trigger(gameActivityDefinitionID:)	func trigger(gameActivityDefinitionID: String) async
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithHandler:	swift.method	trigger(handler:)	GKAccessPoint.trigger(handler:)	func trigger(handler: @escaping () -> Void)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler:	swift.method	trigger(leaderboardID:playerScope:timeScope:handler:)	GKAccessPoint.trigger(leaderboardID:playerScope:timeScope:handler:)	func trigger(leaderboardID: String, playerScope: GKLeaderboard.PlayerScope, timeScope: GKLeaderboard.TimeScope, handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithLeaderboardSetID:handler:	swift.method	trigger(leaderboardSetID:handler:)	GKAccessPoint.trigger(leaderboardSetID:handler:)	func trigger(leaderboardSetID: String, handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithPlayer:handler:	swift.method	trigger(player:handler:)	GKAccessPoint.trigger(player:handler:)	func trigger(player: GKPlayer, handler: (() -> Void)? = nil)
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithState:handler:	swift.method	trigger(state:handler:)	GKAccessPoint.trigger(state:handler:)	func trigger(state: GKGameCenterViewControllerState, handler: @escaping () -> Void)
+c:objc(cs)GKAccessPoint(py)active	swift.property	isActive	GKAccessPoint.isActive	var isActive: Bool { get set }
+c:objc(cs)GKAccessPoint(py)frameInScreenCoordinates	swift.property	frameInScreenCoordinates	GKAccessPoint.frameInScreenCoordinates	var frameInScreenCoordinates: CGRect { get }
+c:objc(cs)GKAccessPoint(py)isPresentingGameCenter	swift.property	isPresentingGameCenter	GKAccessPoint.isPresentingGameCenter	var isPresentingGameCenter: Bool { get }
+c:objc(cs)GKAccessPoint(py)location	swift.property	location	GKAccessPoint.location	var location: GKAccessPoint.Location { get set }
+c:objc(cs)GKAccessPoint(py)parentWindow	swift.property	parentWindow	GKAccessPoint.parentWindow	weak var parentWindow: UIWindow? { get set }
+c:objc(cs)GKAccessPoint(py)showHighlights	swift.property	showHighlights	GKAccessPoint.showHighlights	var showHighlights: Bool { get set }
+c:objc(cs)GKAccessPoint(py)visible	swift.property	isVisible	GKAccessPoint.isVisible	var isVisible: Bool { get }
+c:objc(cs)GKAchievement	swift.class	GKAchievement	GKAchievement	class GKAchievement
+c:objc(cs)GKAchievement(cm)loadAchievementsWithCompletionHandler:	swift.type.method	loadAchievements(completionHandler:)	GKAchievement.loadAchievements(completionHandler:)	class func loadAchievements(completionHandler: (([GKAchievement]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKAchievement(cm)reportAchievements:withCompletionHandler:	swift.type.method	report(_:)	GKAchievement.report(_:)	class func report(_ achievements: [GKAchievement]) async throws
+c:objc(cs)GKAchievement(cm)reportAchievements:withEligibleChallenges:withCompletionHandler:	swift.type.method	report(_:withEligibleChallenges:)	GKAchievement.report(_:withEligibleChallenges:)	class func report(_ achievements: [GKAchievement], withEligibleChallenges challenges: [GKChallenge]) async throws
+c:objc(cs)GKAchievement(cm)resetAchievementsWithCompletionHandler:	swift.type.method	resetAchievements(completionHandler:)	GKAchievement.resetAchievements(completionHandler:)	class func resetAchievements(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)GKAchievement(im)challengeComposeControllerWithMessage:players:completion:	swift.method	challengeComposeController(withMessage:players:completion:)	GKAchievement.challengeComposeController(withMessage:players:completion:)	func challengeComposeController(withMessage message: String?, players: [GKPlayer], completion completionHandler: GKChallengeComposeHandler? = nil) -> UIViewController
+c:objc(cs)GKAchievement(im)challengeComposeControllerWithMessage:players:completionHandler:	swift.method	challengeComposeController(withMessage:players:completionHandler:)	GKAchievement.challengeComposeController(withMessage:players:completionHandler:)	func challengeComposeController(withMessage message: String?, players: [GKPlayer], completionHandler: GKChallengeComposeCompletionBlock? = nil) -> UIViewController
+c:objc(cs)GKAchievement(im)challengeComposeControllerWithPlayers:message:completionHandler:	swift.method	challengeComposeController(withPlayers:message:completionHandler:)	GKAchievement.challengeComposeController(withPlayers:message:completionHandler:)	func challengeComposeController(withPlayers playerIDs: [String]?, message: String?, completionHandler: GKChallengeComposeCompletionBlock? = nil) -> UIViewController?
+c:objc(cs)GKAchievement(im)initWithIdentifier:	swift.init	init(identifier:)	GKAchievement.init(identifier:)	init(identifier: String)
+c:objc(cs)GKAchievement(im)initWithIdentifier:forPlayer:	swift.init	init(identifier:forPlayer:)	GKAchievement.init(identifier:forPlayer:)	init?(identifier: String?, forPlayer playerID: String)
+c:objc(cs)GKAchievement(im)initWithIdentifier:player:	swift.init	init(identifier:player:)	GKAchievement.init(identifier:player:)	init(identifier: String, player: GKPlayer)
+c:objc(cs)GKAchievement(im)selectChallengeablePlayerIDs:withCompletionHandler:	swift.method	selectChallengeablePlayerIDs(_:withCompletionHandler:)	GKAchievement.selectChallengeablePlayerIDs(_:withCompletionHandler:)	func selectChallengeablePlayerIDs(_ playerIDs: [String]?, withCompletionHandler completionHandler: (([String]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKAchievement(im)selectChallengeablePlayers:withCompletionHandler:	swift.method	selectChallengeablePlayers(_:)	GKAchievement.selectChallengeablePlayers(_:)	func selectChallengeablePlayers(_ players: [GKPlayer]) async throws -> [GKPlayer]
+c:objc(cs)GKAchievement(py)completed	swift.property	isCompleted	GKAchievement.isCompleted	var isCompleted: Bool { get }
+c:objc(cs)GKAchievement(py)identifier	swift.property	identifier	GKAchievement.identifier	var identifier: String { get set }
+c:objc(cs)GKAchievement(py)lastReportedDate	swift.property	lastReportedDate	GKAchievement.lastReportedDate	var lastReportedDate: Date { get }
+c:objc(cs)GKAchievement(py)percentComplete	swift.property	percentComplete	GKAchievement.percentComplete	var percentComplete: Double { get set }
+c:objc(cs)GKAchievement(py)player	swift.property	player	GKAchievement.player	var player: GKPlayer { get }
+c:objc(cs)GKAchievement(py)playerID	swift.property	playerID	GKAchievement.playerID	var playerID: String? { get }
+c:objc(cs)GKAchievement(py)showsCompletionBanner	swift.property	showsCompletionBanner	GKAchievement.showsCompletionBanner	var showsCompletionBanner: Bool { get set }
+c:objc(cs)GKAchievementChallenge	swift.class	GKAchievementChallenge	GKAchievementChallenge	class GKAchievementChallenge
+c:objc(cs)GKAchievementChallenge(py)achievement	swift.property	achievement	GKAchievementChallenge.achievement	var achievement: GKAchievement? { get }
+c:objc(cs)GKAchievementDescription	swift.class	GKAchievementDescription	GKAchievementDescription	class GKAchievementDescription
+c:objc(cs)GKAchievementDescription(cm)incompleteAchievementImage	swift.type.method	incompleteAchievementImage()	GKAchievementDescription.incompleteAchievementImage()	class func incompleteAchievementImage() -> UIImage
+c:objc(cs)GKAchievementDescription(cm)loadAchievementDescriptionsWithCompletionHandler:	swift.type.method	loadAchievementDescriptions(completionHandler:)	GKAchievementDescription.loadAchievementDescriptions(completionHandler:)	class func loadAchievementDescriptions(completionHandler: (([GKAchievementDescription]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKAchievementDescription(cm)placeholderCompletedAchievementImage	swift.type.method	placeholderCompletedAchievementImage()	GKAchievementDescription.placeholderCompletedAchievementImage()	class func placeholderCompletedAchievementImage() -> UIImage
+c:objc(cs)GKAchievementDescription(im)loadImageWithCompletionHandler:	swift.method	loadImage(completionHandler:)	GKAchievementDescription.loadImage(completionHandler:)	func loadImage(completionHandler: ((UIImage?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKAchievementDescription(py)achievedDescription	swift.property	achievedDescription	GKAchievementDescription.achievedDescription	var achievedDescription: String { get }
+c:objc(cs)GKAchievementDescription(py)activityIdentifier	swift.property	activityIdentifier	GKAchievementDescription.activityIdentifier	var activityIdentifier: String { get }
+c:objc(cs)GKAchievementDescription(py)activityProperties	swift.property	activityProperties	GKAchievementDescription.activityProperties	var activityProperties: [String : String] { get }
+c:objc(cs)GKAchievementDescription(py)groupIdentifier	swift.property	groupIdentifier	GKAchievementDescription.groupIdentifier	var groupIdentifier: String? { get }
+c:objc(cs)GKAchievementDescription(py)hidden	swift.property	isHidden	GKAchievementDescription.isHidden	var isHidden: Bool { get }
+c:objc(cs)GKAchievementDescription(py)identifier	swift.property	identifier	GKAchievementDescription.identifier	var identifier: String { get }
+c:objc(cs)GKAchievementDescription(py)maximumPoints	swift.property	maximumPoints	GKAchievementDescription.maximumPoints	var maximumPoints: Int { get }
+c:objc(cs)GKAchievementDescription(py)releaseState	swift.property	releaseState	GKAchievementDescription.releaseState	var releaseState: GKReleaseState { get }
+c:objc(cs)GKAchievementDescription(py)replayable	swift.property	isReplayable	GKAchievementDescription.isReplayable	var isReplayable: Bool { get }
+c:objc(cs)GKAchievementDescription(py)title	swift.property	title	GKAchievementDescription.title	var title: String { get }
+c:objc(cs)GKAchievementDescription(py)unachievedDescription	swift.property	unachievedDescription	GKAchievementDescription.unachievedDescription	var unachievedDescription: String { get }
+c:objc(cs)GKBasePlayer	swift.class	GKBasePlayer	GKBasePlayer	class GKBasePlayer
+c:objc(cs)GKBasePlayer(py)displayName	swift.property	displayName	GKBasePlayer.displayName	var displayName: String? { get }
+c:objc(cs)GKBasePlayer(py)playerID	swift.property	playerID	GKBasePlayer.playerID	var playerID: String? { get }
+c:objc(cs)GKChallenge	swift.class	GKChallenge	GKChallenge	class GKChallenge
+c:objc(cs)GKChallenge(cm)loadReceivedChallengesWithCompletionHandler:	swift.type.method	loadReceivedChallenges(completionHandler:)	GKChallenge.loadReceivedChallenges(completionHandler:)	class func loadReceivedChallenges(completionHandler: (([GKChallenge]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKChallenge(im)decline	swift.method	decline()	GKChallenge.decline()	func decline()
+c:objc(cs)GKChallenge(py)completionDate	swift.property	completionDate	GKChallenge.completionDate	var completionDate: Date? { get }
+c:objc(cs)GKChallenge(py)issueDate	swift.property	issueDate	GKChallenge.issueDate	var issueDate: Date { get }
+c:objc(cs)GKChallenge(py)issuingPlayer	swift.property	issuingPlayer	GKChallenge.issuingPlayer	@NSCopying var issuingPlayer: GKPlayer? { get }
+c:objc(cs)GKChallenge(py)issuingPlayerID	swift.property	issuingPlayerID	GKChallenge.issuingPlayerID	var issuingPlayerID: String? { get }
+c:objc(cs)GKChallenge(py)message	swift.property	message	GKChallenge.message	var message: String? { get }
+c:objc(cs)GKChallenge(py)receivingPlayer	swift.property	receivingPlayer	GKChallenge.receivingPlayer	@NSCopying var receivingPlayer: GKPlayer? { get }
+c:objc(cs)GKChallenge(py)receivingPlayerID	swift.property	receivingPlayerID	GKChallenge.receivingPlayerID	var receivingPlayerID: String? { get }
+c:objc(cs)GKChallenge(py)state	swift.property	state	GKChallenge.state	var state: GKChallengeState { get }
+c:objc(cs)GKChallengeDefinition	swift.class	GKChallengeDefinition	GKChallengeDefinition	class GKChallengeDefinition
+c:objc(cs)GKChallengeDefinition(cm)loadChallengeDefinitionsWithCompletionHandler:	swift.type.method	loadChallengeDefinitions(completionHandler:)	GKChallengeDefinition.loadChallengeDefinitions(completionHandler:)	class func loadChallengeDefinitions(completionHandler: @escaping ([GKChallengeDefinition]?, (any Error)?) -> Void)
+c:objc(cs)GKChallengeDefinition(im)hasActiveChallengesWithCompletionHandler:	swift.method	hasActiveChallenges(completionHandler:)	GKChallengeDefinition.hasActiveChallenges(completionHandler:)	func hasActiveChallenges(completionHandler: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)GKChallengeDefinition(im)loadImageWithCompletionHandler:	swift.method	loadImage(completionHandler:)	GKChallengeDefinition.loadImage(completionHandler:)	func loadImage(completionHandler: @escaping (UIImage?, (any Error)?) -> Void)
+c:objc(cs)GKChallengeDefinition(py)details	swift.property	details	GKChallengeDefinition.details	var details: String? { get }
+c:objc(cs)GKChallengeDefinition(py)durationOptions	swift.property	durationOptions	GKChallengeDefinition.durationOptions	var durationOptions: [DateComponents] { get }
+c:objc(cs)GKChallengeDefinition(py)groupIdentifier	swift.property	groupIdentifier	GKChallengeDefinition.groupIdentifier	var groupIdentifier: String? { get }
+c:objc(cs)GKChallengeDefinition(py)identifier	swift.property	identifier	GKChallengeDefinition.identifier	var identifier: String { get }
+c:objc(cs)GKChallengeDefinition(py)isRepeatable	swift.property	isRepeatable	GKChallengeDefinition.isRepeatable	var isRepeatable: Bool { get }
+c:objc(cs)GKChallengeDefinition(py)leaderboard	swift.property	leaderboard	GKChallengeDefinition.leaderboard	var leaderboard: GKLeaderboard? { get }
+c:objc(cs)GKChallengeDefinition(py)releaseState	swift.property	releaseState	GKChallengeDefinition.releaseState	var releaseState: GKReleaseState { get }
+c:objc(cs)GKChallengeDefinition(py)title	swift.property	title	GKChallengeDefinition.title	var title: String { get }
+c:objc(cs)GKCloudPlayer	swift.class	GKCloudPlayer	GKCloudPlayer	class GKCloudPlayer
+c:objc(cs)GKCloudPlayer(cm)getCurrentSignedInPlayerForContainer:completionHandler:	swift.type.method	currentSignedInPlayer(forContainer:)	GKCloudPlayer.currentSignedInPlayer(forContainer:)	class func currentSignedInPlayer(forContainer containerName: String?) async throws -> GKCloudPlayer
+c:objc(cs)GKFriendRequestComposeViewController	swift.class	GKFriendRequestComposeViewController	GKFriendRequestComposeViewController	@MainActor class GKFriendRequestComposeViewController
+c:objc(cs)GKFriendRequestComposeViewController(cm)maxNumberOfRecipients	swift.type.method	maxNumberOfRecipients()	GKFriendRequestComposeViewController.maxNumberOfRecipients()	@MainActor class func maxNumberOfRecipients() -> Int
+c:objc(cs)GKFriendRequestComposeViewController(im)addRecipientPlayers:	swift.method	addRecipientPlayers(_:)	GKFriendRequestComposeViewController.addRecipientPlayers(_:)	@MainActor func addRecipientPlayers(_ players: [GKPlayer])
+c:objc(cs)GKFriendRequestComposeViewController(im)addRecipientsWithEmailAddresses:	swift.method	addRecipients(withEmailAddresses:)	GKFriendRequestComposeViewController.addRecipients(withEmailAddresses:)	@MainActor func addRecipients(withEmailAddresses emailAddresses: [String])
+c:objc(cs)GKFriendRequestComposeViewController(im)addRecipientsWithPlayerIDs:	swift.method	addRecipients(withPlayerIDs:)	GKFriendRequestComposeViewController.addRecipients(withPlayerIDs:)	@MainActor func addRecipients(withPlayerIDs playerIDs: [String])
+c:objc(cs)GKFriendRequestComposeViewController(im)setMessage:	swift.method	setMessage(_:)	GKFriendRequestComposeViewController.setMessage(_:)	@MainActor func setMessage(_ message: String?)
+c:objc(cs)GKFriendRequestComposeViewController(py)composeViewDelegate	swift.property	composeViewDelegate	GKFriendRequestComposeViewController.composeViewDelegate	@MainActor weak var composeViewDelegate: (any GKFriendRequestComposeViewControllerDelegate)? { get set }
+c:objc(cs)GKGameActivity	swift.class	GKGameActivity	GKGameActivity	class GKGameActivity
+c:objc(cs)GKGameActivity(cm)checkPendingGameActivityExistenceWithCompletionHandler:	swift.type.method	checkPendingGameActivityExistence(completionHandler:)	GKGameActivity.checkPendingGameActivityExistence(completionHandler:)	class func checkPendingGameActivityExistence(completionHandler: @escaping (Bool) -> Void)
+c:objc(cs)GKGameActivity(cm)isValidPartyCode:	swift.type.method	isValidPartyCode(_:)	GKGameActivity.isValidPartyCode(_:)	class func isValidPartyCode(_ partyCode: String) -> Bool
+c:objc(cs)GKGameActivity(cm)startWithDefinition:error:	swift.type.method	start(definition:)	GKGameActivity.start(definition:)	class func start(definition activityDefinition: GKGameActivityDefinition) throws -> GKGameActivity
+c:objc(cs)GKGameActivity(cm)startWithDefinition:partyCode:error:	swift.type.method	start(definition:partyCode:)	GKGameActivity.start(definition:partyCode:)	class func start(definition activityDefinition: GKGameActivityDefinition, partyCode: String) throws -> GKGameActivity
+c:objc(cs)GKGameActivity(cpy)validPartyCodeAlphabet	swift.type.property	validPartyCodeAlphabet	GKGameActivity.validPartyCodeAlphabet	class var validPartyCodeAlphabet: [String] { get }
+c:objc(cs)GKGameActivity(im)end	swift.method	end()	GKGameActivity.end()	func end()
+c:objc(cs)GKGameActivity(im)findMatchWithCompletionHandler:	swift.method	findMatch(completionHandler:)	GKGameActivity.findMatch(completionHandler:)	func findMatch(completionHandler: @escaping (GKMatch?, (any Error)?) -> Void)
+c:objc(cs)GKGameActivity(im)findPlayersForHostedMatchWithCompletionHandler:	swift.method	findPlayersForHostedMatch(completionHandler:)	GKGameActivity.findPlayersForHostedMatch(completionHandler:)	func findPlayersForHostedMatch(completionHandler: @escaping ([GKPlayer]?, (any Error)?) -> Void)
+c:objc(cs)GKGameActivity(im)getProgressOnAchievement:	swift.method	progress(on:)	GKGameActivity.progress(on:)	func progress(on achievement: GKAchievement) -> Double
+c:objc(cs)GKGameActivity(im)getScoreOnLeaderboard:	swift.method	score(on:)	GKGameActivity.score(on:)	func score(on leaderboard: GKLeaderboard) -> GKLeaderboardScore?
+c:objc(cs)GKGameActivity(im)initWithDefinition:	swift.init	init(definition:)	GKGameActivity.init(definition:)	init(definition activityDefinition: GKGameActivityDefinition)
+c:objc(cs)GKGameActivity(im)makeMatchRequest	swift.method	makeMatchRequest()	GKGameActivity.makeMatchRequest()	func makeMatchRequest() -> GKMatchRequest?
+c:objc(cs)GKGameActivity(im)pause	swift.method	pause()	GKGameActivity.pause()	func pause()
+c:objc(cs)GKGameActivity(im)removeAchievements:	swift.method	removeAchievements(_:)	GKGameActivity.removeAchievements(_:)	func removeAchievements(_ achievements: [GKAchievement])
+c:objc(cs)GKGameActivity(im)removeScoresFromLeaderboards:	swift.method	removeScores(from:)	GKGameActivity.removeScores(from:)	func removeScores(from leaderboards: [GKLeaderboard])
+c:objc(cs)GKGameActivity(im)resume	swift.method	resume()	GKGameActivity.resume()	func resume()
+c:objc(cs)GKGameActivity(im)setAchievementCompleted:	swift.method	setAchievementCompleted(_:)	GKGameActivity.setAchievementCompleted(_:)	func setAchievementCompleted(_ achievement: GKAchievement)
+c:objc(cs)GKGameActivity(im)setProgressOnAchievement:toPercentComplete:	swift.method	setProgress(on:to:)	GKGameActivity.setProgress(on:to:)	func setProgress(on achievement: GKAchievement, to percentComplete: Double)
+c:objc(cs)GKGameActivity(im)setScoreOnLeaderboard:toScore:	swift.method	setScore(on:to:)	GKGameActivity.setScore(on:to:)	func setScore(on leaderboard: GKLeaderboard, to score: Int)
+c:objc(cs)GKGameActivity(im)setScoreOnLeaderboard:toScore:context:	swift.method	setScore(on:to:context:)	GKGameActivity.setScore(on:to:context:)	func setScore(on leaderboard: GKLeaderboard, to score: Int, context: Int)
+c:objc(cs)GKGameActivity(im)start	swift.method	start()	GKGameActivity.start()	func start()
+c:objc(cs)GKGameActivity(py)achievements	swift.property	achievements	GKGameActivity.achievements	var achievements: Set<GKAchievement> { get }
+c:objc(cs)GKGameActivity(py)activityDefinition	swift.property	activityDefinition	GKGameActivity.activityDefinition	var activityDefinition: GKGameActivityDefinition { get }
+c:objc(cs)GKGameActivity(py)creationDate	swift.property	creationDate	GKGameActivity.creationDate	var creationDate: Date { get }
+c:objc(cs)GKGameActivity(py)duration	swift.property	duration	GKGameActivity.duration	var duration: TimeInterval { get }
+c:objc(cs)GKGameActivity(py)endDate	swift.property	endDate	GKGameActivity.endDate	var endDate: Date? { get }
+c:objc(cs)GKGameActivity(py)identifier	swift.property	identifier	GKGameActivity.identifier	var identifier: String { get }
+c:objc(cs)GKGameActivity(py)lastResumeDate	swift.property	lastResumeDate	GKGameActivity.lastResumeDate	var lastResumeDate: Date? { get }
+c:objc(cs)GKGameActivity(py)leaderboardScores	swift.property	leaderboardScores	GKGameActivity.leaderboardScores	var leaderboardScores: Set<GKLeaderboardScore> { get }
+c:objc(cs)GKGameActivity(py)partyCode	swift.property	partyCode	GKGameActivity.partyCode	var partyCode: String? { get }
+c:objc(cs)GKGameActivity(py)partyURL	swift.property	partyURL	GKGameActivity.partyURL	var partyURL: URL? { get }
+c:objc(cs)GKGameActivity(py)properties	swift.property	properties	GKGameActivity.properties	var properties: [String : String] { get set }
+c:objc(cs)GKGameActivity(py)startDate	swift.property	startDate	GKGameActivity.startDate	var startDate: Date? { get }
+c:objc(cs)GKGameActivity(py)state	swift.property	state	GKGameActivity.state	var state: GKGameActivity.State { get }
+c:objc(cs)GKGameActivityDefinition	swift.class	GKGameActivityDefinition	GKGameActivityDefinition	class GKGameActivityDefinition
+c:objc(cs)GKGameActivityDefinition(cm)loadGameActivityDefinitionsWithCompletionHandler:	swift.type.method	loadGameActivityDefinitions(completionHandler:)	GKGameActivityDefinition.loadGameActivityDefinitions(completionHandler:)	class func loadGameActivityDefinitions(completionHandler: @escaping ([GKGameActivityDefinition]?, (any Error)?) -> Void)
+c:objc(cs)GKGameActivityDefinition(cm)loadGameActivityDefinitionsWithIDs:completionHandler:	swift.type.method	loadGameActivityDefinitions(IDs:)	GKGameActivityDefinition.loadGameActivityDefinitions(IDs:)	class func loadGameActivityDefinitions(IDs activityDefinitionIDs: [String]?) async throws -> [GKGameActivityDefinition]
+c:objc(cs)GKGameActivityDefinition(im)loadAchievementDescriptionsWithCompletionHandler:	swift.method	loadAchievementDescriptions(completionHandler:)	GKGameActivityDefinition.loadAchievementDescriptions(completionHandler:)	func loadAchievementDescriptions(completionHandler: @escaping ([GKAchievementDescription]?, (any Error)?) -> Void)
+c:objc(cs)GKGameActivityDefinition(im)loadImageWithCompletionHandler:	swift.method	loadImage(completionHandler:)	GKGameActivityDefinition.loadImage(completionHandler:)	func loadImage(completionHandler: @escaping (UIImage?, (any Error)?) -> Void)
+c:objc(cs)GKGameActivityDefinition(im)loadLeaderboardsWithCompletionHandler:	swift.method	loadLeaderboards(completionHandler:)	GKGameActivityDefinition.loadLeaderboards(completionHandler:)	func loadLeaderboards(completionHandler: @escaping ([GKLeaderboard]?, (any Error)?) -> Void)
+c:objc(cs)GKGameActivityDefinition(py)defaultProperties	swift.property	defaultProperties	GKGameActivityDefinition.defaultProperties	var defaultProperties: [String : String] { get }
+c:objc(cs)GKGameActivityDefinition(py)details	swift.property	details	GKGameActivityDefinition.details	var details: String? { get }
+c:objc(cs)GKGameActivityDefinition(py)fallbackURL	swift.property	fallbackURL	GKGameActivityDefinition.fallbackURL	var fallbackURL: URL? { get }
+c:objc(cs)GKGameActivityDefinition(py)groupIdentifier	swift.property	groupIdentifier	GKGameActivityDefinition.groupIdentifier	var groupIdentifier: String? { get }
+c:objc(cs)GKGameActivityDefinition(py)identifier	swift.property	identifier	GKGameActivityDefinition.identifier	var identifier: String { get }
+c:objc(cs)GKGameActivityDefinition(py)playStyle	swift.property	playStyle	GKGameActivityDefinition.playStyle	var playStyle: GKGameActivityPlayStyle { get }
+c:objc(cs)GKGameActivityDefinition(py)releaseState	swift.property	releaseState	GKGameActivityDefinition.releaseState	var releaseState: GKReleaseState { get }
+c:objc(cs)GKGameActivityDefinition(py)supportsPartyCode	swift.property	supportsPartyCode	GKGameActivityDefinition.supportsPartyCode	var supportsPartyCode: Bool { get }
+c:objc(cs)GKGameActivityDefinition(py)supportsUnlimitedPlayers	swift.property	supportsUnlimitedPlayers	GKGameActivityDefinition.supportsUnlimitedPlayers	var supportsUnlimitedPlayers: Bool { get }
+c:objc(cs)GKGameActivityDefinition(py)title	swift.property	title	GKGameActivityDefinition.title	var title: String { get }
+c:objc(cs)GKGameCenterViewController	swift.class	GKGameCenterViewController	GKGameCenterViewController	@MainActor class GKGameCenterViewController
+c:objc(cs)GKGameCenterViewController(im)initWithAchievementID:	swift.init	init(achievementID:)	GKGameCenterViewController.init(achievementID:)	@MainActor init(achievementID: String)
+c:objc(cs)GKGameCenterViewController(im)initWithLeaderboard:playerScope:	swift.init	init(leaderboard:playerScope:)	GKGameCenterViewController.init(leaderboard:playerScope:)	@MainActor init(leaderboard: GKLeaderboard, playerScope: GKLeaderboard.PlayerScope)
+c:objc(cs)GKGameCenterViewController(im)initWithLeaderboardID:playerScope:timeScope:	swift.init	init(leaderboardID:playerScope:timeScope:)	GKGameCenterViewController.init(leaderboardID:playerScope:timeScope:)	@MainActor init(leaderboardID: String, playerScope: GKLeaderboard.PlayerScope, timeScope: GKLeaderboard.TimeScope)
+c:objc(cs)GKGameCenterViewController(im)initWithLeaderboardSetID:	swift.init	init(leaderboardSetID:)	GKGameCenterViewController.init(leaderboardSetID:)	@MainActor init(leaderboardSetID: String)
+c:objc(cs)GKGameCenterViewController(im)initWithPlayer:	swift.init	init(player:)	GKGameCenterViewController.init(player:)	@MainActor init(player: GKPlayer)
+c:objc(cs)GKGameCenterViewController(im)initWithState:	swift.init	init(state:)	GKGameCenterViewController.init(state:)	@MainActor init(state: GKGameCenterViewControllerState)
+c:objc(cs)GKGameCenterViewController(py)gameCenterDelegate	swift.property	gameCenterDelegate	GKGameCenterViewController.gameCenterDelegate	@MainActor weak var gameCenterDelegate: (any GKGameCenterControllerDelegate)? { get set }
+c:objc(cs)GKGameCenterViewController(py)leaderboardIdentifier	swift.property	leaderboardIdentifier	GKGameCenterViewController.leaderboardIdentifier	@MainActor var leaderboardIdentifier: String? { get set }
+c:objc(cs)GKGameCenterViewController(py)leaderboardTimeScope	swift.property	leaderboardTimeScope	GKGameCenterViewController.leaderboardTimeScope	@MainActor var leaderboardTimeScope: GKLeaderboard.TimeScope { get set }
+c:objc(cs)GKGameCenterViewController(py)viewState	swift.property	viewState	GKGameCenterViewController.viewState	@MainActor var viewState: GKGameCenterViewControllerState { get set }
+c:objc(cs)GKGameSession	swift.class	GKGameSession	GKGameSession	class GKGameSession
+c:objc(cs)GKGameSession(cm)addEventListener:	swift.type.method	add(listener:)	GKGameSession.add(listener:)	class func add(listener: any GKGameSessionEventListener)
+c:objc(cs)GKGameSession(cm)createSessionInContainer:withTitle:maxConnectedPlayers:completionHandler:	swift.type.method	createSession(inContainer:withTitle:maxConnectedPlayers:)	GKGameSession.createSession(inContainer:withTitle:maxConnectedPlayers:)	class func createSession(inContainer containerName: String?, withTitle title: String, maxConnectedPlayers maxPlayers: Int) async throws -> GKGameSession
+c:objc(cs)GKGameSession(cm)loadSessionWithIdentifier:completionHandler:	swift.type.method	load(withIdentifier:)	GKGameSession.load(withIdentifier:)	class func load(withIdentifier identifier: String) async throws -> GKGameSession
+c:objc(cs)GKGameSession(cm)loadSessionsInContainer:completionHandler:	swift.type.method	loadSessions(inContainer:)	GKGameSession.loadSessions(inContainer:)	class func loadSessions(inContainer containerName: String?) async throws -> [GKGameSession]
+c:objc(cs)GKGameSession(cm)removeEventListener:	swift.type.method	remove(listener:)	GKGameSession.remove(listener:)	class func remove(listener: any GKGameSessionEventListener)
+c:objc(cs)GKGameSession(cm)removeSessionWithIdentifier:completionHandler:	swift.type.method	remove(withIdentifier:)	GKGameSession.remove(withIdentifier:)	class func remove(withIdentifier identifier: String) async throws
+c:objc(cs)GKGameSession(im)clearBadgeForPlayers:completionHandler:	swift.method	clearBadge(for:)	GKGameSession.clearBadge(for:)	func clearBadge(for players: [GKCloudPlayer]) async throws
+c:objc(cs)GKGameSession(im)getShareURLWithCompletionHandler:	swift.method	getShareURL(completionHandler:)	GKGameSession.getShareURL(completionHandler:)	func getShareURL(completionHandler: @escaping (URL?, (any Error)?) -> Void)
+c:objc(cs)GKGameSession(im)loadDataWithCompletionHandler:	swift.method	loadData(completionHandler:)	GKGameSession.loadData(completionHandler:)	func loadData(completionHandler: @escaping (Data?, (any Error)?) -> Void)
+c:objc(cs)GKGameSession(im)playersWithConnectionState:	swift.method	players(with:)	GKGameSession.players(with:)	func players(with state: GKConnectionState) -> [GKCloudPlayer]
+c:objc(cs)GKGameSession(im)saveData:completionHandler:	swift.method	save(_:completionHandler:)	GKGameSession.save(_:completionHandler:)	func save(_ data: Data, completionHandler: @escaping (Data?, (any Error)?) -> Void)
+c:objc(cs)GKGameSession(im)sendData:withTransportType:completionHandler:	swift.method	send(_:with:)	GKGameSession.send(_:with:)	func send(_ data: Data, with transport: GKTransportType) async throws
+c:objc(cs)GKGameSession(im)sendMessageWithLocalizedFormatKey:arguments:data:toPlayers:badgePlayers:completionHandler:	swift.method	sendMessage(withLocalizedFormatKey:arguments:data:to:badgePlayers:)	GKGameSession.sendMessage(withLocalizedFormatKey:arguments:data:to:badgePlayers:)	func sendMessage(withLocalizedFormatKey key: String, arguments: [String], data: Data?, to players: [GKCloudPlayer], badgePlayers: Bool) async throws
+c:objc(cs)GKGameSession(im)setConnectionState:completionHandler:	swift.method	setConnectionState(_:)	GKGameSession.setConnectionState(_:)	func setConnectionState(_ state: GKConnectionState) async throws
+c:objc(cs)GKGameSession(py)badgedPlayers	swift.property	badgedPlayers	GKGameSession.badgedPlayers	var badgedPlayers: [GKCloudPlayer] { get }
+c:objc(cs)GKGameSession(py)identifier	swift.property	identifier	GKGameSession.identifier	var identifier: String { get }
+c:objc(cs)GKGameSession(py)lastModifiedDate	swift.property	lastModifiedDate	GKGameSession.lastModifiedDate	var lastModifiedDate: Date { get }
+c:objc(cs)GKGameSession(py)lastModifiedPlayer	swift.property	lastModifiedPlayer	GKGameSession.lastModifiedPlayer	var lastModifiedPlayer: GKCloudPlayer { get }
+c:objc(cs)GKGameSession(py)maxNumberOfConnectedPlayers	swift.property	maxNumberOfConnectedPlayers	GKGameSession.maxNumberOfConnectedPlayers	var maxNumberOfConnectedPlayers: Int { get }
+c:objc(cs)GKGameSession(py)owner	swift.property	owner	GKGameSession.owner	var owner: GKCloudPlayer { get }
+c:objc(cs)GKGameSession(py)players	swift.property	players	GKGameSession.players	var players: [GKCloudPlayer] { get }
+c:objc(cs)GKGameSession(py)title	swift.property	title	GKGameSession.title	var title: String { get }
+c:objc(cs)GKInvite	swift.class	GKInvite	GKInvite	class GKInvite
+c:objc(cs)GKInvite(py)hosted	swift.property	isHosted	GKInvite.isHosted	var isHosted: Bool { get }
+c:objc(cs)GKInvite(py)inviter	swift.property	inviter	GKInvite.inviter	var inviter: String { get }
+c:objc(cs)GKInvite(py)playerAttributes	swift.property	playerAttributes	GKInvite.playerAttributes	var playerAttributes: UInt32 { get }
+c:objc(cs)GKInvite(py)playerGroup	swift.property	playerGroup	GKInvite.playerGroup	var playerGroup: Int { get }
+c:objc(cs)GKInvite(py)sender	swift.property	sender	GKInvite.sender	var sender: GKPlayer { get }
+c:objc(cs)GKLeaderboard	swift.class	GKLeaderboard	GKLeaderboard	class GKLeaderboard
+c:objc(cs)GKLeaderboard(cm)loadLeaderboardsWithCompletionHandler:	swift.type.method	loadLeaderboards(completionHandler:)	GKLeaderboard.loadLeaderboards(completionHandler:)	class func loadLeaderboards(completionHandler: (([GKLeaderboard]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLeaderboard(cm)loadLeaderboardsWithIDs:completionHandler:	swift.type.method	loadLeaderboards(IDs:)	GKLeaderboard.loadLeaderboards(IDs:)	class func loadLeaderboards(IDs leaderboardIDs: [String]?) async throws -> [GKLeaderboard]
+c:objc(cs)GKLeaderboard(cm)submitScore:context:player:leaderboardIDs:completionHandler:	swift.type.method	submitScore(_:context:player:leaderboardIDs:)	GKLeaderboard.submitScore(_:context:player:leaderboardIDs:)	class func submitScore(_ score: Int, context: Int, player: GKPlayer, leaderboardIDs: [String]) async throws
+c:objc(cs)GKLeaderboard(im)initWithPlayerIDs:	swift.init	init(playerIDs:)	GKLeaderboard.init(playerIDs:)	init?(playerIDs: [String]?)
+c:objc(cs)GKLeaderboard(im)initWithPlayers:	swift.init	init(players:)	GKLeaderboard.init(players:)	init(players: [GKPlayer])
+c:objc(cs)GKLeaderboard(im)loadEntriesForPlayerScope:timeScope:range:completionHandler:	swift.method	loadEntries(for:timeScope:range:)	GKLeaderboard.loadEntries(for:timeScope:range:)	func loadEntries(for playerScope: GKLeaderboard.PlayerScope, timeScope: GKLeaderboard.TimeScope, range: NSRange) async throws -> (GKLeaderboard.Entry?, [GKLeaderboard.Entry], Int)
+c:objc(cs)GKLeaderboard(im)loadEntriesForPlayers:timeScope:completionHandler:	swift.method	loadEntries(for:timeScope:)	GKLeaderboard.loadEntries(for:timeScope:)	func loadEntries(for players: [GKPlayer], timeScope: GKLeaderboard.TimeScope) async throws -> (GKLeaderboard.Entry?, [GKLeaderboard.Entry])
+c:objc(cs)GKLeaderboard(im)loadImageWithCompletionHandler:	swift.method	loadImage(completionHandler:)	GKLeaderboard.loadImage(completionHandler:)	func loadImage(completionHandler: ((UIImage?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLeaderboard(im)loadPreviousOccurrenceWithCompletionHandler:	swift.method	loadPreviousOccurrence(completionHandler:)	GKLeaderboard.loadPreviousOccurrence(completionHandler:)	func loadPreviousOccurrence(completionHandler: @escaping (GKLeaderboard?, (any Error)?) -> Void)
+c:objc(cs)GKLeaderboard(im)loadScoresWithCompletionHandler:	swift.method	loadScores(completionHandler:)	GKLeaderboard.loadScores(completionHandler:)	func loadScores(completionHandler: (([GKScore]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLeaderboard(im)submitScore:context:player:completionHandler:	swift.method	submitScore(_:context:player:)	GKLeaderboard.submitScore(_:context:player:)	func submitScore(_ score: Int, context: Int, player: GKPlayer) async throws
+c:objc(cs)GKLeaderboard(py)activityIdentifier	swift.property	activityIdentifier	GKLeaderboard.activityIdentifier	var activityIdentifier: String { get }
+c:objc(cs)GKLeaderboard(py)activityProperties	swift.property	activityProperties	GKLeaderboard.activityProperties	var activityProperties: [String : String] { get }
+c:objc(cs)GKLeaderboard(py)baseLeaderboardID	swift.property	baseLeaderboardID	GKLeaderboard.baseLeaderboardID	var baseLeaderboardID: String { get }
+c:objc(cs)GKLeaderboard(py)duration	swift.property	duration	GKLeaderboard.duration	var duration: TimeInterval { get }
+c:objc(cs)GKLeaderboard(py)groupIdentifier	swift.property	groupIdentifier	GKLeaderboard.groupIdentifier	var groupIdentifier: String? { get }
+c:objc(cs)GKLeaderboard(py)identifier	swift.property	identifier	GKLeaderboard.identifier	var identifier: String? { get set }
+c:objc(cs)GKLeaderboard(py)isHidden	swift.property	isHidden	GKLeaderboard.isHidden	var isHidden: Bool { get }
+c:objc(cs)GKLeaderboard(py)leaderboardDescription	swift.property	leaderboardDescription	GKLeaderboard.leaderboardDescription	var leaderboardDescription: String { get }
+c:objc(cs)GKLeaderboard(py)loading	swift.property	isLoading	GKLeaderboard.isLoading	var isLoading: Bool { get }
+c:objc(cs)GKLeaderboard(py)localPlayerScore	swift.property	localPlayerScore	GKLeaderboard.localPlayerScore	var localPlayerScore: GKScore? { get }
+c:objc(cs)GKLeaderboard(py)maxRange	swift.property	maxRange	GKLeaderboard.maxRange	var maxRange: Int { get }
+c:objc(cs)GKLeaderboard(py)nextStartDate	swift.property	nextStartDate	GKLeaderboard.nextStartDate	var nextStartDate: Date? { get }
+c:objc(cs)GKLeaderboard(py)playerScope	swift.property	playerScope	GKLeaderboard.playerScope	var playerScope: GKLeaderboard.PlayerScope { get set }
+c:objc(cs)GKLeaderboard(py)range	swift.property	range	GKLeaderboard.range	var range: NSRange { get set }
+c:objc(cs)GKLeaderboard(py)releaseState	swift.property	releaseState	GKLeaderboard.releaseState	var releaseState: GKReleaseState { get }
+c:objc(cs)GKLeaderboard(py)scores	swift.property	scores	GKLeaderboard.scores	var scores: [GKScore]? { get }
+c:objc(cs)GKLeaderboard(py)startDate	swift.property	startDate	GKLeaderboard.startDate	var startDate: Date? { get }
+c:objc(cs)GKLeaderboard(py)timeScope	swift.property	timeScope	GKLeaderboard.timeScope	var timeScope: GKLeaderboard.TimeScope { get set }
+c:objc(cs)GKLeaderboard(py)title	swift.property	title	GKLeaderboard.title	var title: String? { get }
+c:objc(cs)GKLeaderboard(py)type	swift.property	type	GKLeaderboard.type	var type: GKLeaderboard.LeaderboardType { get }
+c:objc(cs)GKLeaderboardEntry	swift.class	GKLeaderboard.Entry	GKLeaderboard.Entry	class Entry
+c:objc(cs)GKLeaderboardEntry(im)challengeComposeControllerWithMessage:players:completion:	swift.method	challengeComposeController(withMessage:players:completion:)	GKLeaderboard.Entry.challengeComposeController(withMessage:players:completion:)	func challengeComposeController(withMessage message: String?, players: [GKPlayer]?, completion completionHandler: GKChallengeComposeHandler? = nil) -> UIViewController
+c:objc(cs)GKLeaderboardEntry(im)challengeComposeControllerWithMessage:players:completionHandler:	swift.method	challengeComposeController(withMessage:players:completionHandler:)	GKLeaderboard.Entry.challengeComposeController(withMessage:players:completionHandler:)	func challengeComposeController(withMessage message: String?, players: [GKPlayer]?, completionHandler: GKChallengeComposeCompletionBlock? = nil) -> UIViewController
+c:objc(cs)GKLeaderboardEntry(py)context	swift.property	context	GKLeaderboard.Entry.context	var context: Int { get }
+c:objc(cs)GKLeaderboardEntry(py)date	swift.property	date	GKLeaderboard.Entry.date	var date: Date { get }
+c:objc(cs)GKLeaderboardEntry(py)formattedScore	swift.property	formattedScore	GKLeaderboard.Entry.formattedScore	var formattedScore: String { get }
+c:objc(cs)GKLeaderboardEntry(py)player	swift.property	player	GKLeaderboard.Entry.player	var player: GKPlayer { get }
+c:objc(cs)GKLeaderboardEntry(py)rank	swift.property	rank	GKLeaderboard.Entry.rank	var rank: Int { get }
+c:objc(cs)GKLeaderboardEntry(py)score	swift.property	score	GKLeaderboard.Entry.score	var score: Int { get }
+c:objc(cs)GKLeaderboardScore	swift.class	GKLeaderboardScore	GKLeaderboardScore	class GKLeaderboardScore
+c:objc(cs)GKLeaderboardScore(py)context	swift.property	context	GKLeaderboardScore.context	var context: Int { get set }
+c:objc(cs)GKLeaderboardScore(py)leaderboardID	swift.property	leaderboardID	GKLeaderboardScore.leaderboardID	var leaderboardID: String { get set }
+c:objc(cs)GKLeaderboardScore(py)player	swift.property	player	GKLeaderboardScore.player	var player: GKPlayer { get set }
+c:objc(cs)GKLeaderboardScore(py)value	swift.property	value	GKLeaderboardScore.value	var value: Int { get set }
+c:objc(cs)GKLeaderboardSet	swift.class	GKLeaderboardSet	GKLeaderboardSet	class GKLeaderboardSet
+c:objc(cs)GKLeaderboardSet(cm)loadLeaderboardSetsWithCompletionHandler:	swift.type.method	loadLeaderboardSets(completionHandler:)	GKLeaderboardSet.loadLeaderboardSets(completionHandler:)	class func loadLeaderboardSets(completionHandler: (([GKLeaderboardSet]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLeaderboardSet(im)loadImageWithCompletionHandler:	swift.method	loadImage(completionHandler:)	GKLeaderboardSet.loadImage(completionHandler:)	func loadImage(completionHandler: ((UIImage?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLeaderboardSet(im)loadLeaderboardsWithCompletionHandler:	swift.method	loadLeaderboards(completionHandler:)	GKLeaderboardSet.loadLeaderboards(completionHandler:)	func loadLeaderboards(completionHandler: (([GKLeaderboard]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLeaderboardSet(im)loadLeaderboardsWithHandler:	swift.method	loadLeaderboards(handler:)	GKLeaderboardSet.loadLeaderboards(handler:)	func loadLeaderboards(handler: @escaping ([GKLeaderboard]?, (any Error)?) -> Void)
+c:objc(cs)GKLeaderboardSet(py)groupIdentifier	swift.property	groupIdentifier	GKLeaderboardSet.groupIdentifier	var groupIdentifier: String? { get }
+c:objc(cs)GKLeaderboardSet(py)identifier	swift.property	identifier	GKLeaderboardSet.identifier	var identifier: String? { get set }
+c:objc(cs)GKLeaderboardSet(py)title	swift.property	title	GKLeaderboardSet.title	var title: String { get }
+c:objc(cs)GKLocalPlayer	swift.class	GKLocalPlayer	GKLocalPlayer	class GKLocalPlayer
+c:objc(cs)GKLocalPlayer(cpy)localPlayer	swift.type.property	local	GKLocalPlayer.local	class var local: GKLocalPlayer { get }
+c:objc(cs)GKLocalPlayer(im)deleteSavedGamesWithName:completionHandler:	swift.method	deleteSavedGames(withName:)	GKLocalPlayer.deleteSavedGames(withName:)	func deleteSavedGames(withName name: String) async throws
+c:objc(cs)GKLocalPlayer(im)fetchItemsForIdentityVerificationSignature:	swift.method	fetchItems(forIdentityVerificationSignature:)	GKLocalPlayer.fetchItems(forIdentityVerificationSignature:)	func fetchItems(forIdentityVerificationSignature completionHandler: ((URL?, Data?, Data?, UInt64, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)fetchSavedGamesWithCompletionHandler:	swift.method	fetchSavedGames(completionHandler:)	GKLocalPlayer.fetchSavedGames(completionHandler:)	func fetchSavedGames(completionHandler handler: (([GKSavedGame]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)generateIdentityVerificationSignatureWithCompletionHandler:	swift.method	generateIdentityVerificationSignature(completionHandler:)	GKLocalPlayer.generateIdentityVerificationSignature(completionHandler:)	func generateIdentityVerificationSignature(completionHandler: ((URL?, Data?, Data?, UInt64, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)loadChallengableFriendsWithCompletionHandler:	swift.method	loadChallengableFriends(completionHandler:)	GKLocalPlayer.loadChallengableFriends(completionHandler:)	func loadChallengableFriends(completionHandler: (([GKPlayer]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)loadDefaultLeaderboardIdentifierWithCompletionHandler:	swift.method	loadDefaultLeaderboardIdentifier(completionHandler:)	GKLocalPlayer.loadDefaultLeaderboardIdentifier(completionHandler:)	func loadDefaultLeaderboardIdentifier(completionHandler: ((String?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)loadFriendPlayersWithCompletionHandler:	swift.method	loadFriendPlayers(completionHandler:)	GKLocalPlayer.loadFriendPlayers(completionHandler:)	func loadFriendPlayers(completionHandler: (([GKPlayer]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)loadFriends:	swift.method	loadFriends(_:)	GKLocalPlayer.loadFriends(_:)	func loadFriends(_ completionHandler: @escaping ([GKPlayer]?, (any Error)?) -> Void)
+c:objc(cs)GKLocalPlayer(im)loadFriendsAuthorizationStatus:	swift.method	loadFriendsAuthorizationStatus(_:)	GKLocalPlayer.loadFriendsAuthorizationStatus(_:)	func loadFriendsAuthorizationStatus(_ completionHandler: @escaping (GKFriendsAuthorizationStatus, (any Error)?) -> Void)
+c:objc(cs)GKLocalPlayer(im)loadFriendsWithCompletionHandler:	swift.method	loadFriendsObsoleted(completionHandler:)	GKLocalPlayer.loadFriendsObsoleted(completionHandler:)	func loadFriendsObsoleted(completionHandler: (([String]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)loadFriendsWithIdentifiers:completionHandler:	swift.method	loadFriends(identifiedBy:)	GKLocalPlayer.loadFriends(identifiedBy:)	func loadFriends(identifiedBy identifiers: [String]) async throws -> [GKPlayer]
+c:objc(cs)GKLocalPlayer(im)loadRecentPlayersWithCompletionHandler:	swift.method	loadRecentPlayers(completionHandler:)	GKLocalPlayer.loadRecentPlayers(completionHandler:)	func loadRecentPlayers(completionHandler: (([GKPlayer]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKLocalPlayer(im)presentFriendRequestCreatorFromViewController:error:	swift.method	presentFriendRequestCreator(from:)	GKLocalPlayer.presentFriendRequestCreator(from:)	func presentFriendRequestCreator(from viewController: UIViewController) throws
+c:objc(cs)GKLocalPlayer(im)registerListener:	swift.method	register(_:)	GKLocalPlayer.register(_:)	func register(_ listener: any GKLocalPlayerListener)
+c:objc(cs)GKLocalPlayer(im)resolveConflictingSavedGames:withData:completionHandler:	swift.method	resolveConflictingSavedGames(_:with:)	GKLocalPlayer.resolveConflictingSavedGames(_:with:)	func resolveConflictingSavedGames(_ conflictingSavedGames: [GKSavedGame], with data: Data) async throws -> [GKSavedGame]
+c:objc(cs)GKLocalPlayer(im)saveGameData:withName:completionHandler:	swift.method	saveGameData(_:withName:)	GKLocalPlayer.saveGameData(_:withName:)	func saveGameData(_ data: Data, withName name: String) async throws -> GKSavedGame
+c:objc(cs)GKLocalPlayer(im)setDefaultLeaderboardIdentifier:completionHandler:	swift.method	setDefaultLeaderboardIdentifier(_:)	GKLocalPlayer.setDefaultLeaderboardIdentifier(_:)	func setDefaultLeaderboardIdentifier(_ leaderboardIdentifier: String) async throws
+c:objc(cs)GKLocalPlayer(im)unregisterAllListeners	swift.method	unregisterAllListeners()	GKLocalPlayer.unregisterAllListeners()	func unregisterAllListeners()
+c:objc(cs)GKLocalPlayer(im)unregisterListener:	swift.method	unregisterListener(_:)	GKLocalPlayer.unregisterListener(_:)	func unregisterListener(_ listener: any GKLocalPlayerListener)
+c:objc(cs)GKLocalPlayer(py)authenticateHandler	swift.property	authenticateHandler	GKLocalPlayer.authenticateHandler	var authenticateHandler: ((UIViewController?, (any Error)?) -> Void)? { get set }
+c:objc(cs)GKLocalPlayer(py)authenticated	swift.property	isAuthenticated	GKLocalPlayer.isAuthenticated	var isAuthenticated: Bool { get }
+c:objc(cs)GKLocalPlayer(py)friends	swift.property	friends	GKLocalPlayer.friends	var friends: [String]? { get }
+c:objc(cs)GKLocalPlayer(py)isPresentingFriendRequestViewController	swift.property	isPresentingFriendRequestViewController	GKLocalPlayer.isPresentingFriendRequestViewController	var isPresentingFriendRequestViewController: Bool { get }
+c:objc(cs)GKLocalPlayer(py)multiplayerGamingRestricted	swift.property	isMultiplayerGamingRestricted	GKLocalPlayer.isMultiplayerGamingRestricted	var isMultiplayerGamingRestricted: Bool { get }
+c:objc(cs)GKLocalPlayer(py)personalizedCommunicationRestricted	swift.property	isPersonalizedCommunicationRestricted	GKLocalPlayer.isPersonalizedCommunicationRestricted	var isPersonalizedCommunicationRestricted: Bool { get }
+c:objc(cs)GKLocalPlayer(py)underage	swift.property	isUnderage	GKLocalPlayer.isUnderage	var isUnderage: Bool { get }
+c:objc(cs)GKMatch	swift.class	GKMatch	GKMatch	class GKMatch
+c:objc(cs)GKMatch(im)chooseBestHostPlayerWithCompletionHandler:	swift.method	chooseBestHostPlayer(completionHandler:)	GKMatch.chooseBestHostPlayer(completionHandler:)	func chooseBestHostPlayer(completionHandler: @escaping (String?) -> Void)
+c:objc(cs)GKMatch(im)chooseBestHostingPlayerWithCompletionHandler:	swift.method	chooseBestHostingPlayer(completionHandler:)	GKMatch.chooseBestHostingPlayer(completionHandler:)	func chooseBestHostingPlayer(completionHandler: @escaping (GKPlayer?) -> Void)
+c:objc(cs)GKMatch(im)disconnect	swift.method	disconnect()	GKMatch.disconnect()	func disconnect()
+c:objc(cs)GKMatch(im)rematchWithCompletionHandler:	swift.method	rematch(completionHandler:)	GKMatch.rematch(completionHandler:)	func rematch(completionHandler: ((GKMatch?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKMatch(im)sendData:toPlayers:dataMode:error:	swift.method	send(_:to:dataMode:)	GKMatch.send(_:to:dataMode:)	func send(_ data: Data, to players: [GKPlayer], dataMode mode: GKMatch.SendDataMode) throws
+c:objc(cs)GKMatch(im)sendData:toPlayers:withDataMode:error:	swift.method	send(_:toPlayers:with:)	GKMatch.send(_:toPlayers:with:)	func send(_ data: Data, toPlayers playerIDs: [String], with mode: GKMatch.SendDataMode) throws
+c:objc(cs)GKMatch(im)sendDataToAllPlayers:withDataMode:error:	swift.method	sendData(toAllPlayers:with:)	GKMatch.sendData(toAllPlayers:with:)	func sendData(toAllPlayers data: Data, with mode: GKMatch.SendDataMode) throws
+c:objc(cs)GKMatch(im)voiceChatWithName:	swift.method	voiceChat(withName:)	GKMatch.voiceChat(withName:)	func voiceChat(withName name: String) -> GKVoiceChat?
+c:objc(cs)GKMatch(py)delegate	swift.property	delegate	GKMatch.delegate	weak var delegate: (any GKMatchDelegate)? { get set }
+c:objc(cs)GKMatch(py)expectedPlayerCount	swift.property	expectedPlayerCount	GKMatch.expectedPlayerCount	var expectedPlayerCount: Int { get }
+c:objc(cs)GKMatch(py)playerIDs	swift.property	playerIDs	GKMatch.playerIDs	var playerIDs: [String]? { get }
+c:objc(cs)GKMatch(py)playerProperties	swift.property	playerProperties	GKMatch.playerProperties	var playerProperties: [GKPlayer : [String : Any]]? { get }
+c:objc(cs)GKMatch(py)players	swift.property	players	GKMatch.players	var players: [GKPlayer] { get }
+c:objc(cs)GKMatch(py)properties	swift.property	properties	GKMatch.properties	var properties: [String : Any]? { get }
+c:objc(cs)GKMatchRequest	swift.class	GKMatchRequest	GKMatchRequest	class GKMatchRequest
+c:objc(cs)GKMatchRequest(cm)maxPlayersAllowedForMatchOfType:	swift.type.method	maxPlayersAllowedForMatch(of:)	GKMatchRequest.maxPlayersAllowedForMatch(of:)	class func maxPlayersAllowedForMatch(of matchType: GKMatchType) -> Int
+c:objc(cs)GKMatchRequest(py)defaultNumberOfPlayers	swift.property	defaultNumberOfPlayers	GKMatchRequest.defaultNumberOfPlayers	var defaultNumberOfPlayers: Int { get set }
+c:objc(cs)GKMatchRequest(py)inviteMessage	swift.property	inviteMessage	GKMatchRequest.inviteMessage	var inviteMessage: String? { get set }
+c:objc(cs)GKMatchRequest(py)inviteeResponseHandler	swift.property	inviteeResponseHandler	GKMatchRequest.inviteeResponseHandler	var inviteeResponseHandler: ((String, GKInviteeResponse) -> Void)? { get set }
+c:objc(cs)GKMatchRequest(py)maxPlayers	swift.property	maxPlayers	GKMatchRequest.maxPlayers	var maxPlayers: Int { get set }
+c:objc(cs)GKMatchRequest(py)minPlayers	swift.property	minPlayers	GKMatchRequest.minPlayers	var minPlayers: Int { get set }
+c:objc(cs)GKMatchRequest(py)playerAttributes	swift.property	playerAttributes	GKMatchRequest.playerAttributes	var playerAttributes: UInt32 { get set }
+c:objc(cs)GKMatchRequest(py)playerGroup	swift.property	playerGroup	GKMatchRequest.playerGroup	var playerGroup: Int { get set }
+c:objc(cs)GKMatchRequest(py)playersToInvite	swift.property	playersToInvite	GKMatchRequest.playersToInvite	var playersToInvite: [String]? { get set }
+c:objc(cs)GKMatchRequest(py)properties	swift.property	properties	GKMatchRequest.properties	var properties: [String : Any]? { get set }
+c:objc(cs)GKMatchRequest(py)queueName	swift.property	queueName	GKMatchRequest.queueName	var queueName: String? { get set }
+c:objc(cs)GKMatchRequest(py)recipientProperties	swift.property	recipientProperties	GKMatchRequest.recipientProperties	var recipientProperties: [GKPlayer : [String : Any]]? { get set }
+c:objc(cs)GKMatchRequest(py)recipientResponseHandler	swift.property	recipientResponseHandler	GKMatchRequest.recipientResponseHandler	var recipientResponseHandler: ((GKPlayer, GKInviteRecipientResponse) -> Void)? { get set }
+c:objc(cs)GKMatchRequest(py)recipients	swift.property	recipients	GKMatchRequest.recipients	var recipients: [GKPlayer]? { get set }
+c:objc(cs)GKMatchRequest(py)restrictToAutomatch	swift.property	restrictToAutomatch	GKMatchRequest.restrictToAutomatch	var restrictToAutomatch: Bool { get set }
+c:objc(cs)GKMatchedPlayers	swift.class	GKMatchedPlayers	GKMatchedPlayers	class GKMatchedPlayers
+c:objc(cs)GKMatchedPlayers(py)playerProperties	swift.property	playerProperties	GKMatchedPlayers.playerProperties	var playerProperties: [GKPlayer : [String : Any]]? { get }
+c:objc(cs)GKMatchedPlayers(py)players	swift.property	players	GKMatchedPlayers.players	var players: [GKPlayer] { get }
+c:objc(cs)GKMatchedPlayers(py)properties	swift.property	properties	GKMatchedPlayers.properties	var properties: [String : Any]? { get }
+c:objc(cs)GKMatchmaker	swift.class	GKMatchmaker	GKMatchmaker	class GKMatchmaker
+c:objc(cs)GKMatchmaker(cm)sharedMatchmaker	swift.type.method	shared()	GKMatchmaker.shared()	class func shared() -> GKMatchmaker
+c:objc(cs)GKMatchmaker(im)addPlayersToMatch:matchRequest:completionHandler:	swift.method	addPlayers(to:matchRequest:)	GKMatchmaker.addPlayers(to:matchRequest:)	func addPlayers(to match: GKMatch, matchRequest: GKMatchRequest) async throws
+c:objc(cs)GKMatchmaker(im)cancel	swift.method	cancel()	GKMatchmaker.cancel()	func cancel()
+c:objc(cs)GKMatchmaker(im)cancelInviteToPlayer:	swift.method	cancelInvite(toPlayer:)	GKMatchmaker.cancelInvite(toPlayer:)	func cancelInvite(toPlayer playerID: String)
+c:objc(cs)GKMatchmaker(im)cancelPendingInviteToPlayer:	swift.method	cancelPendingInvite(to:)	GKMatchmaker.cancelPendingInvite(to:)	func cancelPendingInvite(to player: GKPlayer)
+c:objc(cs)GKMatchmaker(im)findMatchForRequest:withCompletionHandler:	swift.method	findMatch(for:)	GKMatchmaker.findMatch(for:)	func findMatch(for request: GKMatchRequest) async throws -> GKMatch
+c:objc(cs)GKMatchmaker(im)findMatchedPlayers:withCompletionHandler:	swift.method	findMatchedPlayers(_:)	GKMatchmaker.findMatchedPlayers(_:)	func findMatchedPlayers(_ request: GKMatchRequest) async throws -> GKMatchedPlayers
+c:objc(cs)GKMatchmaker(im)findPlayersForHostedMatchRequest:withCompletionHandler:	swift.method	findPlayers(forHostedMatchRequest:withCompletionHandler:)	GKMatchmaker.findPlayers(forHostedMatchRequest:withCompletionHandler:)	func findPlayers(forHostedMatchRequest request: GKMatchRequest, withCompletionHandler completionHandler: (([String]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKMatchmaker(im)findPlayersForHostedRequest:withCompletionHandler:	swift.method	findPlayers(forHostedRequest:)	GKMatchmaker.findPlayers(forHostedRequest:)	func findPlayers(forHostedRequest request: GKMatchRequest) async throws -> [GKPlayer]
+c:objc(cs)GKMatchmaker(im)finishMatchmakingForMatch:	swift.method	finishMatchmaking(for:)	GKMatchmaker.finishMatchmaking(for:)	func finishMatchmaking(for match: GKMatch)
+c:objc(cs)GKMatchmaker(im)matchForInvite:completionHandler:	swift.method	match(for:)	GKMatchmaker.match(for:)	func match(for invite: GKInvite) async throws -> GKMatch
+c:objc(cs)GKMatchmaker(im)queryActivityWithCompletionHandler:	swift.method	queryActivity(completionHandler:)	GKMatchmaker.queryActivity(completionHandler:)	func queryActivity(completionHandler: ((Int, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKMatchmaker(im)queryPlayerGroupActivity:withCompletionHandler:	swift.method	queryPlayerGroupActivity(_:)	GKMatchmaker.queryPlayerGroupActivity(_:)	func queryPlayerGroupActivity(_ playerGroup: Int) async throws -> Int
+c:objc(cs)GKMatchmaker(im)queryQueueActivity:withCompletionHandler:	swift.method	queryQueueActivity(_:)	GKMatchmaker.queryQueueActivity(_:)	func queryQueueActivity(_ queueName: String) async throws -> Int
+c:objc(cs)GKMatchmaker(im)startBrowsingForNearbyPlayersWithHandler:	swift.method	startBrowsingForNearbyPlayers(handler:)	GKMatchmaker.startBrowsingForNearbyPlayers(handler:)	func startBrowsingForNearbyPlayers(handler reachableHandler: ((GKPlayer, Bool) -> Void)? = nil)
+c:objc(cs)GKMatchmaker(im)startBrowsingForNearbyPlayersWithReachableHandler:	swift.method	startBrowsingForNearbyPlayers(reachableHandler:)	GKMatchmaker.startBrowsingForNearbyPlayers(reachableHandler:)	func startBrowsingForNearbyPlayers(reachableHandler: ((String, Bool) -> Void)? = nil)
+c:objc(cs)GKMatchmaker(im)startGroupActivityWithPlayerHandler:	swift.method	startGroupActivity(playerHandler:)	GKMatchmaker.startGroupActivity(playerHandler:)	func startGroupActivity(playerHandler handler: @escaping (GKPlayer) -> Void)
+c:objc(cs)GKMatchmaker(im)stopBrowsingForNearbyPlayers	swift.method	stopBrowsingForNearbyPlayers()	GKMatchmaker.stopBrowsingForNearbyPlayers()	func stopBrowsingForNearbyPlayers()
+c:objc(cs)GKMatchmaker(im)stopGroupActivity	swift.method	stopGroupActivity()	GKMatchmaker.stopGroupActivity()	func stopGroupActivity()
+c:objc(cs)GKMatchmakerViewController	swift.class	GKMatchmakerViewController	GKMatchmakerViewController	@MainActor class GKMatchmakerViewController
+c:objc(cs)GKMatchmakerViewController(im)addPlayersToMatch:	swift.method	addPlayers(to:)	GKMatchmakerViewController.addPlayers(to:)	@MainActor func addPlayers(to match: GKMatch)
+c:objc(cs)GKMatchmakerViewController(im)initWithInvite:	swift.init	init(invite:)	GKMatchmakerViewController.init(invite:)	@MainActor init?(invite: GKInvite)
+c:objc(cs)GKMatchmakerViewController(im)initWithMatchRequest:	swift.init	init(matchRequest:)	GKMatchmakerViewController.init(matchRequest:)	@MainActor init?(matchRequest request: GKMatchRequest)
+c:objc(cs)GKMatchmakerViewController(im)setHostedPlayer:connected:	swift.method	setHostedPlayer(_:connected:)	GKMatchmakerViewController.setHostedPlayer(_:connected:)	@MainActor func setHostedPlayer(_ playerID: String, connected: Bool)
+c:objc(cs)GKMatchmakerViewController(im)setHostedPlayer:didConnect:	swift.method	setHostedPlayer(_:didConnect:)	GKMatchmakerViewController.setHostedPlayer(_:didConnect:)	@MainActor func setHostedPlayer(_ player: GKPlayer, didConnect connected: Bool)
+c:objc(cs)GKMatchmakerViewController(py)canStartWithMinimumPlayers	swift.property	canStartWithMinimumPlayers	GKMatchmakerViewController.canStartWithMinimumPlayers	@MainActor var canStartWithMinimumPlayers: Bool { get set }
+c:objc(cs)GKMatchmakerViewController(py)hosted	swift.property	isHosted	GKMatchmakerViewController.isHosted	@MainActor var isHosted: Bool { get set }
+c:objc(cs)GKMatchmakerViewController(py)matchRequest	swift.property	matchRequest	GKMatchmakerViewController.matchRequest	@MainActor var matchRequest: GKMatchRequest { get }
+c:objc(cs)GKMatchmakerViewController(py)matchmakerDelegate	swift.property	matchmakerDelegate	GKMatchmakerViewController.matchmakerDelegate	@MainActor weak var matchmakerDelegate: (any GKMatchmakerViewControllerDelegate)? { get set }
+c:objc(cs)GKMatchmakerViewController(py)matchmakingMode	swift.property	matchmakingMode	GKMatchmakerViewController.matchmakingMode	@MainActor var matchmakingMode: GKMatchmakingMode { get set }
+c:objc(cs)GKNotificationBanner	swift.class	GKNotificationBanner	GKNotificationBanner	class GKNotificationBanner
+c:objc(cs)GKNotificationBanner(cm)showBannerWithTitle:message:completionHandler:	swift.type.method	show(withTitle:message:)	GKNotificationBanner.show(withTitle:message:)	class func show(withTitle title: String?, message: String?) async
+c:objc(cs)GKNotificationBanner(cm)showBannerWithTitle:message:duration:completionHandler:	swift.type.method	show(withTitle:message:duration:)	GKNotificationBanner.show(withTitle:message:duration:)	class func show(withTitle title: String?, message: String?, duration: TimeInterval) async
+c:objc(cs)GKPlayer	swift.class	GKPlayer	GKPlayer	class GKPlayer
+c:objc(cs)GKPlayer(cm)anonymousGuestPlayerWithIdentifier:	swift.type.method	anonymousGuestPlayer(withIdentifier:)	GKPlayer.anonymousGuestPlayer(withIdentifier:)	class func anonymousGuestPlayer(withIdentifier guestIdentifier: String) -> Self
+c:objc(cs)GKPlayer(cm)loadPlayersForIdentifiers:withCompletionHandler:	swift.type.method	loadPlayers(forIdentifiers:withCompletionHandler:)	GKPlayer.loadPlayers(forIdentifiers:withCompletionHandler:)	class func loadPlayers(forIdentifiers identifiers: [String], withCompletionHandler completionHandler: (([GKPlayer]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKPlayer(im)loadPhotoForSize:withCompletionHandler:	swift.method	loadPhoto(for:)	GKPlayer.loadPhoto(for:)	func loadPhoto(for size: GKPlayer.PhotoSize) async throws -> UIImage
+c:objc(cs)GKPlayer(im)scopedIDsArePersistent	swift.method	scopedIDsArePersistent()	GKPlayer.scopedIDsArePersistent()	func scopedIDsArePersistent() -> Bool
+c:objc(cs)GKPlayer(py)alias	swift.property	alias	GKPlayer.alias	var alias: String { get }
+c:objc(cs)GKPlayer(py)displayName	swift.property	displayName	GKPlayer.displayName	var displayName: String { get }
+c:objc(cs)GKPlayer(py)gamePlayerID	swift.property	gamePlayerID	GKPlayer.gamePlayerID	var gamePlayerID: String { get }
+c:objc(cs)GKPlayer(py)guestIdentifier	swift.property	guestIdentifier	GKPlayer.guestIdentifier	var guestIdentifier: String? { get }
+c:objc(cs)GKPlayer(py)isFriend	swift.property	isFriend	GKPlayer.isFriend	var isFriend: Bool { get }
+c:objc(cs)GKPlayer(py)isInvitable	swift.property	isInvitable	GKPlayer.isInvitable	var isInvitable: Bool { get }
+c:objc(cs)GKPlayer(py)playerID	swift.property	playerID	GKPlayer.playerID	var playerID: String { get }
+c:objc(cs)GKPlayer(py)teamPlayerID	swift.property	teamPlayerID	GKPlayer.teamPlayerID	var teamPlayerID: String { get }
+c:objc(cs)GKSavedGame	swift.class	GKSavedGame	GKSavedGame	class GKSavedGame
+c:objc(cs)GKSavedGame(im)loadDataWithCompletionHandler:	swift.method	loadData(completionHandler:)	GKSavedGame.loadData(completionHandler:)	func loadData(completionHandler handler: ((Data?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKSavedGame(py)deviceName	swift.property	deviceName	GKSavedGame.deviceName	var deviceName: String? { get }
+c:objc(cs)GKSavedGame(py)modificationDate	swift.property	modificationDate	GKSavedGame.modificationDate	var modificationDate: Date? { get }
+c:objc(cs)GKSavedGame(py)name	swift.property	name	GKSavedGame.name	var name: String? { get }
+c:objc(cs)GKScore	swift.class	GKScore	GKScore	class GKScore
+c:objc(cs)GKScore(cm)reportLeaderboardScores:withEligibleChallenges:withCompletionHandler:	swift.type.method	report(_:withEligibleChallenges:)	GKScore.report(_:withEligibleChallenges:)	class func report(_ scores: [GKLeaderboardScore], withEligibleChallenges challenges: [GKChallenge]) async throws
+c:objc(cs)GKScore(cm)reportScores:withCompletionHandler:	swift.type.method	report(_:)	GKScore.report(_:)	class func report(_ scores: [GKScore]) async throws
+c:objc(cs)GKScore(cm)reportScores:withEligibleChallenges:withCompletionHandler:	swift.type.method	report(_:withEligibleChallenges:)	GKScore.report(_:withEligibleChallenges:)	class func report(_ scores: [GKScore], withEligibleChallenges challenges: [GKChallenge]) async throws
+c:objc(cs)GKScore(im)challengeComposeControllerWithMessage:players:completion:	swift.method	challengeComposeController(withMessage:players:completion:)	GKScore.challengeComposeController(withMessage:players:completion:)	func challengeComposeController(withMessage message: String?, players: [GKPlayer]?, completion completionHandler: GKChallengeComposeHandler? = nil) -> UIViewController
+c:objc(cs)GKScore(im)challengeComposeControllerWithMessage:players:completionHandler:	swift.method	challengeComposeController(withMessage:players:completionHandler:)	GKScore.challengeComposeController(withMessage:players:completionHandler:)	func challengeComposeController(withMessage message: String?, players: [GKPlayer]?, completionHandler: GKChallengeComposeCompletionBlock? = nil) -> UIViewController
+c:objc(cs)GKScore(im)challengeComposeControllerWithPlayers:message:completionHandler:	swift.method	challengeComposeController(withPlayers:message:completionHandler:)	GKScore.challengeComposeController(withPlayers:message:completionHandler:)	func challengeComposeController(withPlayers playerIDs: [String]?, message: String?, completionHandler: GKChallengeComposeCompletionBlock? = nil) -> UIViewController?
+c:objc(cs)GKScore(im)initWithLeaderboardIdentifier:	swift.init	init(leaderboardIdentifier:)	GKScore.init(leaderboardIdentifier:)	init(leaderboardIdentifier identifier: String)
+c:objc(cs)GKScore(im)initWithLeaderboardIdentifier:forPlayer:	swift.init	init(leaderboardIdentifier:forPlayer:)	GKScore.init(leaderboardIdentifier:forPlayer:)	init?(leaderboardIdentifier identifier: String, forPlayer playerID: String)
+c:objc(cs)GKScore(im)initWithLeaderboardIdentifier:player:	swift.init	init(leaderboardIdentifier:player:)	GKScore.init(leaderboardIdentifier:player:)	init(leaderboardIdentifier identifier: String, player: GKPlayer)
+c:objc(cs)GKScore(py)context	swift.property	context	GKScore.context	var context: UInt64 { get set }
+c:objc(cs)GKScore(py)date	swift.property	date	GKScore.date	var date: Date { get }
+c:objc(cs)GKScore(py)formattedValue	swift.property	formattedValue	GKScore.formattedValue	var formattedValue: String? { get }
+c:objc(cs)GKScore(py)leaderboardIdentifier	swift.property	leaderboardIdentifier	GKScore.leaderboardIdentifier	var leaderboardIdentifier: String { get set }
+c:objc(cs)GKScore(py)player	swift.property	player	GKScore.player	var player: GKPlayer { get }
+c:objc(cs)GKScore(py)playerID	swift.property	playerID	GKScore.playerID	var playerID: String? { get }
+c:objc(cs)GKScore(py)rank	swift.property	rank	GKScore.rank	var rank: Int { get }
+c:objc(cs)GKScore(py)shouldSetDefaultLeaderboard	swift.property	shouldSetDefaultLeaderboard	GKScore.shouldSetDefaultLeaderboard	var shouldSetDefaultLeaderboard: Bool { get set }
+c:objc(cs)GKScore(py)value	swift.property	value	GKScore.value	var value: Int64 { get set }
+c:objc(cs)GKScoreChallenge	swift.class	GKScoreChallenge	GKScoreChallenge	class GKScoreChallenge
+c:objc(cs)GKScoreChallenge(py)leaderboardEntry	swift.property	leaderboardEntry	GKScoreChallenge.leaderboardEntry	var leaderboardEntry: GKLeaderboard.Entry? { get }
+c:objc(cs)GKScoreChallenge(py)score	swift.property	score	GKScoreChallenge.score	var score: GKScore? { get }
+c:objc(cs)GKTurnBasedExchange	swift.class	GKTurnBasedExchange	GKTurnBasedExchange	class GKTurnBasedExchange
+c:objc(cs)GKTurnBasedExchange(im)cancelWithLocalizableMessageKey:arguments:completionHandler:	swift.method	cancel(withLocalizableMessageKey:arguments:)	GKTurnBasedExchange.cancel(withLocalizableMessageKey:arguments:)	func cancel(withLocalizableMessageKey key: String, arguments: [String]) async throws
+c:objc(cs)GKTurnBasedExchange(im)replyWithLocalizableMessageKey:arguments:data:completionHandler:	swift.method	reply(withLocalizableMessageKey:arguments:data:)	GKTurnBasedExchange.reply(withLocalizableMessageKey:arguments:data:)	func reply(withLocalizableMessageKey key: String, arguments: [String], data: Data) async throws
+c:objc(cs)GKTurnBasedExchange(py)completionDate	swift.property	completionDate	GKTurnBasedExchange.completionDate	var completionDate: Date? { get }
+c:objc(cs)GKTurnBasedExchange(py)data	swift.property	data	GKTurnBasedExchange.data	var data: Data? { get }
+c:objc(cs)GKTurnBasedExchange(py)exchangeID	swift.property	exchangeID	GKTurnBasedExchange.exchangeID	var exchangeID: String { get }
+c:objc(cs)GKTurnBasedExchange(py)message	swift.property	message	GKTurnBasedExchange.message	var message: String? { get }
+c:objc(cs)GKTurnBasedExchange(py)recipients	swift.property	recipients	GKTurnBasedExchange.recipients	var recipients: [GKTurnBasedParticipant] { get }
+c:objc(cs)GKTurnBasedExchange(py)replies	swift.property	replies	GKTurnBasedExchange.replies	var replies: [GKTurnBasedExchangeReply]? { get }
+c:objc(cs)GKTurnBasedExchange(py)sendDate	swift.property	sendDate	GKTurnBasedExchange.sendDate	var sendDate: Date { get }
+c:objc(cs)GKTurnBasedExchange(py)sender	swift.property	sender	GKTurnBasedExchange.sender	var sender: GKTurnBasedParticipant { get }
+c:objc(cs)GKTurnBasedExchange(py)status	swift.property	status	GKTurnBasedExchange.status	var status: GKTurnBasedExchangeStatus { get }
+c:objc(cs)GKTurnBasedExchange(py)timeoutDate	swift.property	timeoutDate	GKTurnBasedExchange.timeoutDate	var timeoutDate: Date? { get }
+c:objc(cs)GKTurnBasedExchangeReply	swift.class	GKTurnBasedExchangeReply	GKTurnBasedExchangeReply	class GKTurnBasedExchangeReply
+c:objc(cs)GKTurnBasedExchangeReply(py)data	swift.property	data	GKTurnBasedExchangeReply.data	var data: Data? { get }
+c:objc(cs)GKTurnBasedExchangeReply(py)message	swift.property	message	GKTurnBasedExchangeReply.message	var message: String? { get }
+c:objc(cs)GKTurnBasedExchangeReply(py)recipient	swift.property	recipient	GKTurnBasedExchangeReply.recipient	var recipient: GKTurnBasedParticipant { get }
+c:objc(cs)GKTurnBasedExchangeReply(py)replyDate	swift.property	replyDate	GKTurnBasedExchangeReply.replyDate	var replyDate: Date { get }
+c:objc(cs)GKTurnBasedMatch	swift.class	GKTurnBasedMatch	GKTurnBasedMatch	class GKTurnBasedMatch
+c:objc(cs)GKTurnBasedMatch(cm)findMatchForRequest:withCompletionHandler:	swift.type.method	find(for:)	GKTurnBasedMatch.find(for:)	class func find(for request: GKMatchRequest) async throws -> GKTurnBasedMatch
+c:objc(cs)GKTurnBasedMatch(cm)loadMatchWithID:withCompletionHandler:	swift.type.method	load(withID:)	GKTurnBasedMatch.load(withID:)	class func load(withID matchID: String) async throws -> GKTurnBasedMatch
+c:objc(cs)GKTurnBasedMatch(cm)loadMatchesWithCompletionHandler:	swift.type.method	loadMatches(completionHandler:)	GKTurnBasedMatch.loadMatches(completionHandler:)	class func loadMatches(completionHandler: (([GKTurnBasedMatch]?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKTurnBasedMatch(im)acceptInviteWithCompletionHandler:	swift.method	acceptInvite(completionHandler:)	GKTurnBasedMatch.acceptInvite(completionHandler:)	func acceptInvite(completionHandler: ((GKTurnBasedMatch?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKTurnBasedMatch(im)declineInviteWithCompletionHandler:	swift.method	declineInvite(completionHandler:)	GKTurnBasedMatch.declineInvite(completionHandler:)	func declineInvite(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:completionHandler:	swift.method	endMatchInTurn(withMatch:)	GKTurnBasedMatch.endMatchInTurn(withMatch:)	func endMatchInTurn(withMatch matchData: Data) async throws
+c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:leaderboardScores:achievements:completionHandler:	swift.method	endMatchInTurn(withMatch:leaderboardScores:achievements:)	GKTurnBasedMatch.endMatchInTurn(withMatch:leaderboardScores:achievements:)	func endMatchInTurn(withMatch matchData: Data, leaderboardScores scores: [GKLeaderboardScore], achievements: [Any]) async throws
+c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:scores:achievements:completionHandler:	swift.method	endMatchInTurn(withMatch:scores:achievements:)	GKTurnBasedMatch.endMatchInTurn(withMatch:scores:achievements:)	func endMatchInTurn(withMatch matchData: Data, scores: [GKScore]?, achievements: [GKAchievement]?) async throws
+c:objc(cs)GKTurnBasedMatch(im)endTurnWithNextParticipants:turnTimeout:matchData:completionHandler:	swift.method	endTurn(withNextParticipants:turnTimeout:match:)	GKTurnBasedMatch.endTurn(withNextParticipants:turnTimeout:match:)	func endTurn(withNextParticipants nextParticipants: [GKTurnBasedParticipant], turnTimeout timeout: TimeInterval, match matchData: Data) async throws
+c:objc(cs)GKTurnBasedMatch(im)loadMatchDataWithCompletionHandler:	swift.method	loadMatchData(completionHandler:)	GKTurnBasedMatch.loadMatchData(completionHandler:)	func loadMatchData(completionHandler: ((Data?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKTurnBasedMatch(im)participantQuitInTurnWithOutcome:nextParticipants:turnTimeout:matchData:completionHandler:	swift.method	participantQuitInTurn(with:nextParticipants:turnTimeout:match:)	GKTurnBasedMatch.participantQuitInTurn(with:nextParticipants:turnTimeout:match:)	func participantQuitInTurn(with matchOutcome: GKTurnBasedMatch.Outcome, nextParticipants: [GKTurnBasedParticipant], turnTimeout timeout: TimeInterval, match matchData: Data) async throws
+c:objc(cs)GKTurnBasedMatch(im)participantQuitOutOfTurnWithOutcome:withCompletionHandler:	swift.method	participantQuitOutOfTurn(with:)	GKTurnBasedMatch.participantQuitOutOfTurn(with:)	func participantQuitOutOfTurn(with matchOutcome: GKTurnBasedMatch.Outcome) async throws
+c:objc(cs)GKTurnBasedMatch(im)rematchWithCompletionHandler:	swift.method	rematch(completionHandler:)	GKTurnBasedMatch.rematch(completionHandler:)	func rematch(completionHandler: ((GKTurnBasedMatch?, (any Error)?) -> Void)? = nil)
+c:objc(cs)GKTurnBasedMatch(im)removeWithCompletionHandler:	swift.method	remove(completionHandler:)	GKTurnBasedMatch.remove(completionHandler:)	func remove(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)GKTurnBasedMatch(im)saveCurrentTurnWithMatchData:completionHandler:	swift.method	saveCurrentTurn(withMatch:)	GKTurnBasedMatch.saveCurrentTurn(withMatch:)	func saveCurrentTurn(withMatch matchData: Data) async throws
+c:objc(cs)GKTurnBasedMatch(im)saveMergedMatchData:withResolvedExchanges:completionHandler:	swift.method	saveMergedMatch(_:withResolvedExchanges:)	GKTurnBasedMatch.saveMergedMatch(_:withResolvedExchanges:)	func saveMergedMatch(_ matchData: Data, withResolvedExchanges exchanges: [GKTurnBasedExchange]) async throws
+c:objc(cs)GKTurnBasedMatch(im)sendExchangeToParticipants:data:localizableMessageKey:arguments:timeout:completionHandler:	swift.method	sendExchange(to:data:localizableMessageKey:arguments:timeout:)	GKTurnBasedMatch.sendExchange(to:data:localizableMessageKey:arguments:timeout:)	func sendExchange(to participants: [GKTurnBasedParticipant], data: Data, localizableMessageKey key: String, arguments: [String], timeout: TimeInterval) async throws -> GKTurnBasedExchange
+c:objc(cs)GKTurnBasedMatch(im)sendReminderToParticipants:localizableMessageKey:arguments:completionHandler:	swift.method	sendReminder(to:localizableMessageKey:arguments:)	GKTurnBasedMatch.sendReminder(to:localizableMessageKey:arguments:)	func sendReminder(to participants: [GKTurnBasedParticipant], localizableMessageKey key: String, arguments: [String]) async throws
+c:objc(cs)GKTurnBasedMatch(im)setLocalizableMessageWithKey:arguments:	swift.method	setLocalizableMessageWithKey(_:arguments:)	GKTurnBasedMatch.setLocalizableMessageWithKey(_:arguments:)	func setLocalizableMessageWithKey(_ key: String, arguments: [String]?)
+c:objc(cs)GKTurnBasedMatch(py)activeExchanges	swift.property	activeExchanges	GKTurnBasedMatch.activeExchanges	var activeExchanges: [GKTurnBasedExchange]? { get }
+c:objc(cs)GKTurnBasedMatch(py)completedExchanges	swift.property	completedExchanges	GKTurnBasedMatch.completedExchanges	var completedExchanges: [GKTurnBasedExchange]? { get }
+c:objc(cs)GKTurnBasedMatch(py)creationDate	swift.property	creationDate	GKTurnBasedMatch.creationDate	var creationDate: Date { get }
+c:objc(cs)GKTurnBasedMatch(py)currentParticipant	swift.property	currentParticipant	GKTurnBasedMatch.currentParticipant	var currentParticipant: GKTurnBasedParticipant? { get }
+c:objc(cs)GKTurnBasedMatch(py)exchangeDataMaximumSize	swift.property	exchangeDataMaximumSize	GKTurnBasedMatch.exchangeDataMaximumSize	var exchangeDataMaximumSize: Int { get }
+c:objc(cs)GKTurnBasedMatch(py)exchangeMaxInitiatedExchangesPerPlayer	swift.property	exchangeMaxInitiatedExchangesPerPlayer	GKTurnBasedMatch.exchangeMaxInitiatedExchangesPerPlayer	var exchangeMaxInitiatedExchangesPerPlayer: Int { get }
+c:objc(cs)GKTurnBasedMatch(py)exchanges	swift.property	exchanges	GKTurnBasedMatch.exchanges	var exchanges: [GKTurnBasedExchange]? { get }
+c:objc(cs)GKTurnBasedMatch(py)matchData	swift.property	matchData	GKTurnBasedMatch.matchData	var matchData: Data? { get }
+c:objc(cs)GKTurnBasedMatch(py)matchDataMaximumSize	swift.property	matchDataMaximumSize	GKTurnBasedMatch.matchDataMaximumSize	var matchDataMaximumSize: Int { get }
+c:objc(cs)GKTurnBasedMatch(py)matchID	swift.property	matchID	GKTurnBasedMatch.matchID	var matchID: String { get }
+c:objc(cs)GKTurnBasedMatch(py)message	swift.property	message	GKTurnBasedMatch.message	var message: String? { get set }
+c:objc(cs)GKTurnBasedMatch(py)participants	swift.property	participants	GKTurnBasedMatch.participants	var participants: [GKTurnBasedParticipant] { get }
+c:objc(cs)GKTurnBasedMatch(py)status	swift.property	status	GKTurnBasedMatch.status	var status: GKTurnBasedMatch.Status { get }
+c:objc(cs)GKTurnBasedMatchmakerViewController	swift.class	GKTurnBasedMatchmakerViewController	GKTurnBasedMatchmakerViewController	@MainActor class GKTurnBasedMatchmakerViewController
+c:objc(cs)GKTurnBasedMatchmakerViewController(im)initWithMatchRequest:	swift.init	init(matchRequest:)	GKTurnBasedMatchmakerViewController.init(matchRequest:)	@MainActor init(matchRequest request: GKMatchRequest)
+c:objc(cs)GKTurnBasedMatchmakerViewController(py)matchmakingMode	swift.property	matchmakingMode	GKTurnBasedMatchmakerViewController.matchmakingMode	@MainActor var matchmakingMode: GKMatchmakingMode { get set }
+c:objc(cs)GKTurnBasedMatchmakerViewController(py)showExistingMatches	swift.property	showExistingMatches	GKTurnBasedMatchmakerViewController.showExistingMatches	@MainActor var showExistingMatches: Bool { get set }
+c:objc(cs)GKTurnBasedMatchmakerViewController(py)turnBasedMatchmakerDelegate	swift.property	turnBasedMatchmakerDelegate	GKTurnBasedMatchmakerViewController.turnBasedMatchmakerDelegate	@MainActor weak var turnBasedMatchmakerDelegate: (any GKTurnBasedMatchmakerViewControllerDelegate)? { get set }
+c:objc(cs)GKTurnBasedParticipant	swift.class	GKTurnBasedParticipant	GKTurnBasedParticipant	class GKTurnBasedParticipant
+c:objc(cs)GKTurnBasedParticipant(py)lastTurnDate	swift.property	lastTurnDate	GKTurnBasedParticipant.lastTurnDate	var lastTurnDate: Date? { get }
+c:objc(cs)GKTurnBasedParticipant(py)matchOutcome	swift.property	matchOutcome	GKTurnBasedParticipant.matchOutcome	var matchOutcome: GKTurnBasedMatch.Outcome { get set }
+c:objc(cs)GKTurnBasedParticipant(py)player	swift.property	player	GKTurnBasedParticipant.player	var player: GKPlayer? { get }
+c:objc(cs)GKTurnBasedParticipant(py)playerID	swift.property	playerID	GKTurnBasedParticipant.playerID	var playerID: String? { get }
+c:objc(cs)GKTurnBasedParticipant(py)status	swift.property	status	GKTurnBasedParticipant.status	var status: GKTurnBasedParticipant.Status { get }
+c:objc(cs)GKTurnBasedParticipant(py)timeoutDate	swift.property	timeoutDate	GKTurnBasedParticipant.timeoutDate	var timeoutDate: Date? { get }
+c:objc(cs)GKVoiceChat	swift.class	GKVoiceChat	GKVoiceChat	class GKVoiceChat
+c:objc(cs)GKVoiceChat(cm)isVoIPAllowed	swift.type.method	isVoIPAllowed()	GKVoiceChat.isVoIPAllowed()	class func isVoIPAllowed() -> Bool
+c:objc(cs)GKVoiceChat(im)setMute:forPlayer:	swift.method	setMute(_:forPlayer:)	GKVoiceChat.setMute(_:forPlayer:)	func setMute(_ isMuted: Bool, forPlayer playerID: String)
+c:objc(cs)GKVoiceChat(im)setPlayer:muted:	swift.method	setPlayer(_:muted:)	GKVoiceChat.setPlayer(_:muted:)	func setPlayer(_ player: GKPlayer, muted isMuted: Bool)
+c:objc(cs)GKVoiceChat(im)start	swift.method	start()	GKVoiceChat.start()	func start()
+c:objc(cs)GKVoiceChat(im)stop	swift.method	stop()	GKVoiceChat.stop()	func stop()
+c:objc(cs)GKVoiceChat(py)active	swift.property	isActive	GKVoiceChat.isActive	var isActive: Bool { get set }
+c:objc(cs)GKVoiceChat(py)name	swift.property	name	GKVoiceChat.name	var name: String { get }
+c:objc(cs)GKVoiceChat(py)playerIDs	swift.property	playerIDs	GKVoiceChat.playerIDs	var playerIDs: [String]? { get }
+c:objc(cs)GKVoiceChat(py)playerStateUpdateHandler	swift.property	playerStateUpdateHandler	GKVoiceChat.playerStateUpdateHandler	var playerStateUpdateHandler: (String, GKVoiceChat.PlayerState) -> Void { get set }
+c:objc(cs)GKVoiceChat(py)playerVoiceChatStateDidChangeHandler	swift.property	playerVoiceChatStateDidChangeHandler	GKVoiceChat.playerVoiceChatStateDidChangeHandler	var playerVoiceChatStateDidChangeHandler: (GKPlayer, GKVoiceChat.PlayerState) -> Void { get set }
+c:objc(cs)GKVoiceChat(py)players	swift.property	players	GKVoiceChat.players	var players: [GKPlayer] { get }
+c:objc(cs)GKVoiceChat(py)volume	swift.property	volume	GKVoiceChat.volume	var volume: Float { get set }
+c:objc(pl)GKChallengeListener	swift.protocol	GKChallengeListener	GKChallengeListener	protocol GKChallengeListener : NSObjectProtocol
+c:objc(pl)GKChallengeListener(im)player:didCompleteChallenge:issuedByFriend:	swift.method	player(_:didComplete:issuedByFriend:)	GKChallengeListener.player(_:didComplete:issuedByFriend:)	optional func player(_ player: GKPlayer, didComplete challenge: GKChallenge, issuedByFriend friendPlayer: GKPlayer)
+c:objc(pl)GKChallengeListener(im)player:didReceiveChallenge:	swift.method	player(_:didReceive:)	GKChallengeListener.player(_:didReceive:)	optional func player(_ player: GKPlayer, didReceive challenge: GKChallenge)
+c:objc(pl)GKChallengeListener(im)player:issuedChallengeWasCompleted:byFriend:	swift.method	player(_:issuedChallengeWasCompleted:byFriend:)	GKChallengeListener.player(_:issuedChallengeWasCompleted:byFriend:)	optional func player(_ player: GKPlayer, issuedChallengeWasCompleted challenge: GKChallenge, byFriend friendPlayer: GKPlayer)
+c:objc(pl)GKChallengeListener(im)player:wantsToPlayChallenge:	swift.method	player(_:wantsToPlay:)	GKChallengeListener.player(_:wantsToPlay:)	optional func player(_ player: GKPlayer, wantsToPlay challenge: GKChallenge)
+c:objc(pl)GKFriendRequestComposeViewControllerDelegate	swift.protocol	GKFriendRequestComposeViewControllerDelegate	GKFriendRequestComposeViewControllerDelegate	protocol GKFriendRequestComposeViewControllerDelegate
+c:objc(pl)GKFriendRequestComposeViewControllerDelegate(im)friendRequestComposeViewControllerDidFinish:	swift.method	friendRequestComposeViewControllerDidFinish(_:)	GKFriendRequestComposeViewControllerDelegate.friendRequestComposeViewControllerDidFinish(_:)	func friendRequestComposeViewControllerDidFinish(_ viewController: GKFriendRequestComposeViewController)
+c:objc(pl)GKGameActivityListener	swift.protocol	GKGameActivityListener	GKGameActivityListener	protocol GKGameActivityListener
+c:objc(pl)GKGameActivityListener(im)player:wantsToPlayGameActivity:completionHandler:	swift.method	player(_:wantsToPlay:)	GKGameActivityListener.player(_:wantsToPlay:)	optional func player(_ player: GKPlayer, wantsToPlay activity: GKGameActivity) async -> Bool
+c:objc(pl)GKGameCenterControllerDelegate	swift.protocol	GKGameCenterControllerDelegate	GKGameCenterControllerDelegate	protocol GKGameCenterControllerDelegate : NSObjectProtocol
+c:objc(pl)GKGameCenterControllerDelegate(im)gameCenterViewControllerDidFinish:	swift.method	gameCenterViewControllerDidFinish(_:)	GKGameCenterControllerDelegate.gameCenterViewControllerDidFinish(_:)	func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController)
+c:objc(pl)GKGameSessionEventListener	swift.protocol	GKGameSessionEventListener	GKGameSessionEventListener	protocol GKGameSessionEventListener : NSObjectProtocol
+c:objc(pl)GKGameSessionEventListener(im)session:didAddPlayer:	swift.method	session(_:didAdd:)	GKGameSessionEventListener.session(_:didAdd:)	optional func session(_ session: GKGameSession, didAdd player: GKCloudPlayer)
+c:objc(pl)GKGameSessionEventListener(im)session:didReceiveData:fromPlayer:	swift.method	session(_:didReceive:from:)	GKGameSessionEventListener.session(_:didReceive:from:)	optional func session(_ session: GKGameSession, didReceive data: Data, from player: GKCloudPlayer)
+c:objc(pl)GKGameSessionEventListener(im)session:didReceiveMessage:withData:fromPlayer:	swift.method	session(_:didReceiveMessage:with:from:)	GKGameSessionEventListener.session(_:didReceiveMessage:with:from:)	optional func session(_ session: GKGameSession, didReceiveMessage message: String, with data: Data, from player: GKCloudPlayer)
+c:objc(pl)GKGameSessionEventListener(im)session:didRemovePlayer:	swift.method	session(_:didRemove:)	GKGameSessionEventListener.session(_:didRemove:)	optional func session(_ session: GKGameSession, didRemove player: GKCloudPlayer)
+c:objc(pl)GKGameSessionEventListener(im)session:player:didChangeConnectionState:	swift.method	session(_:player:didChange:)	GKGameSessionEventListener.session(_:player:didChange:)	optional func session(_ session: GKGameSession, player: GKCloudPlayer, didChange newState: GKConnectionState)
+c:objc(pl)GKGameSessionEventListener(im)session:player:didSaveData:	swift.method	session(_:player:didSave:)	GKGameSessionEventListener.session(_:player:didSave:)	optional func session(_ session: GKGameSession, player: GKCloudPlayer, didSave data: Data)
+c:objc(pl)GKInviteEventListener	swift.protocol	GKInviteEventListener	GKInviteEventListener	protocol GKInviteEventListener
+c:objc(pl)GKInviteEventListener(im)player:didAcceptInvite:	swift.method	player(_:didAccept:)	GKInviteEventListener.player(_:didAccept:)	optional func player(_ player: GKPlayer, didAccept invite: GKInvite)
+c:objc(pl)GKInviteEventListener(im)player:didRequestMatchWithPlayers:	swift.method	player(_:didRequestMatchWithPlayers:)	GKInviteEventListener.player(_:didRequestMatchWithPlayers:)	optional func player(_ player: GKPlayer, didRequestMatchWithPlayers playerIDsToInvite: [String])
+c:objc(pl)GKInviteEventListener(im)player:didRequestMatchWithRecipients:	swift.method	player(_:didRequestMatchWithRecipients:)	GKInviteEventListener.player(_:didRequestMatchWithRecipients:)	optional func player(_ player: GKPlayer, didRequestMatchWithRecipients recipientPlayers: [GKPlayer])
+c:objc(pl)GKLocalPlayerListener	swift.protocol	GKLocalPlayerListener	GKLocalPlayerListener	protocol GKLocalPlayerListener : GKChallengeListener, GKGameActivityListener, GKInviteEventListener, GKSavedGameListener, GKTurnBasedEventListener
+c:objc(pl)GKMatchDelegate	swift.protocol	GKMatchDelegate	GKMatchDelegate	protocol GKMatchDelegate : NSObjectProtocol
+c:objc(pl)GKMatchDelegate(im)match:didFailWithError:	swift.method	match(_:didFailWithError:)	GKMatchDelegate.match(_:didFailWithError:)	optional func match(_ match: GKMatch, didFailWithError error: (any Error)?)
+c:objc(pl)GKMatchDelegate(im)match:didReceiveData:forRecipient:fromRemotePlayer:	swift.method	match(_:didReceive:forRecipient:fromRemotePlayer:)	GKMatchDelegate.match(_:didReceive:forRecipient:fromRemotePlayer:)	optional func match(_ match: GKMatch, didReceive data: Data, forRecipient recipient: GKPlayer, fromRemotePlayer player: GKPlayer)
+c:objc(pl)GKMatchDelegate(im)match:didReceiveData:fromPlayer:	swift.method	match(_:didReceive:fromPlayer:)	GKMatchDelegate.match(_:didReceive:fromPlayer:)	optional func match(_ match: GKMatch, didReceive data: Data, fromPlayer playerID: String)
+c:objc(pl)GKMatchDelegate(im)match:didReceiveData:fromRemotePlayer:	swift.method	match(_:didReceive:fromRemotePlayer:)	GKMatchDelegate.match(_:didReceive:fromRemotePlayer:)	optional func match(_ match: GKMatch, didReceive data: Data, fromRemotePlayer player: GKPlayer)
+c:objc(pl)GKMatchDelegate(im)match:player:didChangeConnectionState:	swift.method	match(_:player:didChange:)	GKMatchDelegate.match(_:player:didChange:)	optional func match(_ match: GKMatch, player: GKPlayer, didChange state: GKPlayerConnectionState)
+c:objc(pl)GKMatchDelegate(im)match:player:didChangeState:	swift.method	match(_:player:didChange:)	GKMatchDelegate.match(_:player:didChange:)	optional func match(_ match: GKMatch, player playerID: String, didChange state: GKPlayerConnectionState)
+c:objc(pl)GKMatchDelegate(im)match:shouldReinviteDisconnectedPlayer:	swift.method	match(_:shouldReinviteDisconnectedPlayer:)	GKMatchDelegate.match(_:shouldReinviteDisconnectedPlayer:)	optional func match(_ match: GKMatch, shouldReinviteDisconnectedPlayer player: GKPlayer) -> Bool
+c:objc(pl)GKMatchDelegate(im)match:shouldReinvitePlayer:	swift.method	match(_:shouldReinvitePlayer:)	GKMatchDelegate.match(_:shouldReinvitePlayer:)	optional func match(_ match: GKMatch, shouldReinvitePlayer playerID: String) -> Bool
+c:objc(pl)GKMatchmakerViewControllerDelegate	swift.protocol	GKMatchmakerViewControllerDelegate	GKMatchmakerViewControllerDelegate	protocol GKMatchmakerViewControllerDelegate : NSObjectProtocol
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFailWithError:	swift.method	matchmakerViewController(_:didFailWithError:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:didFailWithError:)	func matchmakerViewController(_ viewController: GKMatchmakerViewController, didFailWithError error: any Error)
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFindHostedPlayers:	swift.method	matchmakerViewController(_:didFindHostedPlayers:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:didFindHostedPlayers:)	optional func matchmakerViewController(_ viewController: GKMatchmakerViewController, didFindHostedPlayers players: [GKPlayer])
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFindMatch:	swift.method	matchmakerViewController(_:didFind:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:didFind:)	optional func matchmakerViewController(_ viewController: GKMatchmakerViewController, didFind match: GKMatch)
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFindPlayers:	swift.method	matchmakerViewController(_:didFindPlayers:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:didFindPlayers:)	optional func matchmakerViewController(_ viewController: GKMatchmakerViewController, didFindPlayers playerIDs: [String])
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didReceiveAcceptFromHostedPlayer:	swift.method	matchmakerViewController(_:didReceiveAcceptFromHostedPlayer:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:didReceiveAcceptFromHostedPlayer:)	optional func matchmakerViewController(_ viewController: GKMatchmakerViewController, didReceiveAcceptFromHostedPlayer playerID: String)
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:	swift.method	matchmakerViewController(_:getMatchPropertiesForRecipient:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:getMatchPropertiesForRecipient:)	optional func matchmakerViewController(_ viewController: GKMatchmakerViewController, getMatchPropertiesForRecipient recipient: GKPlayer) async -> [String : Any]
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:hostedPlayerDidAccept:	swift.method	matchmakerViewController(_:hostedPlayerDidAccept:)	GKMatchmakerViewControllerDelegate.matchmakerViewController(_:hostedPlayerDidAccept:)	optional func matchmakerViewController(_ viewController: GKMatchmakerViewController, hostedPlayerDidAccept player: GKPlayer)
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewControllerWasCancelled:	swift.method	matchmakerViewControllerWasCancelled(_:)	GKMatchmakerViewControllerDelegate.matchmakerViewControllerWasCancelled(_:)	func matchmakerViewControllerWasCancelled(_ viewController: GKMatchmakerViewController)
+c:objc(pl)GKSavedGameListener	swift.protocol	GKSavedGameListener	GKSavedGameListener	protocol GKSavedGameListener : NSObjectProtocol
+c:objc(pl)GKSavedGameListener(im)player:didModifySavedGame:	swift.method	player(_:didModifySavedGame:)	GKSavedGameListener.player(_:didModifySavedGame:)	optional func player(_ player: GKPlayer, didModifySavedGame savedGame: GKSavedGame)
+c:objc(pl)GKSavedGameListener(im)player:hasConflictingSavedGames:	swift.method	player(_:hasConflictingSavedGames:)	GKSavedGameListener.player(_:hasConflictingSavedGames:)	optional func player(_ player: GKPlayer, hasConflictingSavedGames savedGames: [GKSavedGame])
+c:objc(pl)GKTurnBasedEventListener	swift.protocol	GKTurnBasedEventListener	GKTurnBasedEventListener	protocol GKTurnBasedEventListener
+c:objc(pl)GKTurnBasedEventListener(im)player:didRequestMatchWithOtherPlayers:	swift.method	player(_:didRequestMatchWithOtherPlayers:)	GKTurnBasedEventListener.player(_:didRequestMatchWithOtherPlayers:)	optional func player(_ player: GKPlayer, didRequestMatchWithOtherPlayers playersToInvite: [GKPlayer])
+c:objc(pl)GKTurnBasedEventListener(im)player:didRequestMatchWithPlayers:	swift.method	player(_:didRequestMatchWithPlayers:)	GKTurnBasedEventListener.player(_:didRequestMatchWithPlayers:)	optional func player(_ player: GKPlayer, didRequestMatchWithPlayers playerIDsToInvite: [String])
+c:objc(pl)GKTurnBasedEventListener(im)player:matchEnded:	swift.method	player(_:matchEnded:)	GKTurnBasedEventListener.player(_:matchEnded:)	optional func player(_ player: GKPlayer, matchEnded match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedEventListener(im)player:receivedExchangeCancellation:forMatch:	swift.method	player(_:receivedExchangeCancellation:for:)	GKTurnBasedEventListener.player(_:receivedExchangeCancellation:for:)	optional func player(_ player: GKPlayer, receivedExchangeCancellation exchange: GKTurnBasedExchange, for match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedEventListener(im)player:receivedExchangeReplies:forCompletedExchange:forMatch:	swift.method	player(_:receivedExchangeReplies:forCompletedExchange:for:)	GKTurnBasedEventListener.player(_:receivedExchangeReplies:forCompletedExchange:for:)	optional func player(_ player: GKPlayer, receivedExchangeReplies replies: [GKTurnBasedExchangeReply], forCompletedExchange exchange: GKTurnBasedExchange, for match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedEventListener(im)player:receivedExchangeRequest:forMatch:	swift.method	player(_:receivedExchangeRequest:for:)	GKTurnBasedEventListener.player(_:receivedExchangeRequest:for:)	optional func player(_ player: GKPlayer, receivedExchangeRequest exchange: GKTurnBasedExchange, for match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedEventListener(im)player:receivedTurnEventForMatch:didBecomeActive:	swift.method	player(_:receivedTurnEventFor:didBecomeActive:)	GKTurnBasedEventListener.player(_:receivedTurnEventFor:didBecomeActive:)	optional func player(_ player: GKPlayer, receivedTurnEventFor match: GKTurnBasedMatch, didBecomeActive: Bool)
+c:objc(pl)GKTurnBasedEventListener(im)player:wantsToQuitMatch:	swift.method	player(_:wantsToQuitMatch:)	GKTurnBasedEventListener.player(_:wantsToQuitMatch:)	optional func player(_ player: GKPlayer, wantsToQuitMatch match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedMatchmakerViewControllerDelegate	swift.protocol	GKTurnBasedMatchmakerViewControllerDelegate	GKTurnBasedMatchmakerViewControllerDelegate	protocol GKTurnBasedMatchmakerViewControllerDelegate : NSObjectProtocol
+c:objc(pl)GKTurnBasedMatchmakerViewControllerDelegate(im)turnBasedMatchmakerViewController:didFailWithError:	swift.method	turnBasedMatchmakerViewController(_:didFailWithError:)	GKTurnBasedMatchmakerViewControllerDelegate.turnBasedMatchmakerViewController(_:didFailWithError:)	func turnBasedMatchmakerViewController(_ viewController: GKTurnBasedMatchmakerViewController, didFailWithError error: any Error)
+c:objc(pl)GKTurnBasedMatchmakerViewControllerDelegate(im)turnBasedMatchmakerViewController:didFindMatch:	swift.method	turnBasedMatchmakerViewController(_:didFind:)	GKTurnBasedMatchmakerViewControllerDelegate.turnBasedMatchmakerViewController(_:didFind:)	optional func turnBasedMatchmakerViewController(_ viewController: GKTurnBasedMatchmakerViewController, didFind match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedMatchmakerViewControllerDelegate(im)turnBasedMatchmakerViewController:playerQuitForMatch:	swift.method	turnBasedMatchmakerViewController(_:playerQuitFor:)	GKTurnBasedMatchmakerViewControllerDelegate.turnBasedMatchmakerViewController(_:playerQuitFor:)	optional func turnBasedMatchmakerViewController(_ viewController: GKTurnBasedMatchmakerViewController, playerQuitFor match: GKTurnBasedMatch)
+c:objc(pl)GKTurnBasedMatchmakerViewControllerDelegate(im)turnBasedMatchmakerViewControllerWasCancelled:	swift.method	turnBasedMatchmakerViewControllerWasCancelled(_:)	GKTurnBasedMatchmakerViewControllerDelegate.turnBasedMatchmakerViewControllerWasCancelled(_:)	func turnBasedMatchmakerViewControllerWasCancelled(_ viewController: GKTurnBasedMatchmakerViewController)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKAchievement	swift.init	init(coder:)	GKAchievement.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKAchievementDescription	swift.init	init(coder:)	GKAchievementDescription.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKChallenge	swift.init	init(coder:)	GKChallenge.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKLeaderboardSet	swift.init	init(coder:)	GKLeaderboardSet.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKScore	swift.init	init(coder:)	GKScore.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GKErrorCode	swift.type.property	errorDomain	GKError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.type.property	errorDomain	GKGameSessionError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	errorUserInfo	GKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	errorUserInfo	GKGameSessionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	errorCode	GKError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	errorCode	GKGameSessionError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GKErrorCode	swift.func.op	~=(_:_:)	GKError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.func.op	~=(_:_:)	GKGameSessionError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	errorUserInfo	GKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	errorUserInfo	GKGameSessionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GKErrorCode	swift.func.op	==(_:_:)	GKError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.func.op	==(_:_:)	GKGameSessionError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	code	GKError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	code	GKGameSessionError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKErrorCode	swift.method	hash(into:)	GKError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.method	hash(into:)	GKGameSessionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	userInfo	GKError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	userInfo	GKGameSessionError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	errorCode	GKError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	errorCode	GKGameSessionError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	hashValue	GKError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	hashValue	GKGameSessionError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GKErrorCode	swift.init	init(_:userInfo:)	GKError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.init	init(_:userInfo:)	GKGameSessionError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11GKErrorCodeLeV	swift.struct	GKError	GKError	struct GKError
+s:SC11GKErrorCodeLeV10userDeniedSoAAVvpZ	swift.type.property	userDenied	GKError.userDenied	static var userDenied: GKError.Code { get }
+s:SC11GKErrorCodeLeV11apiObsoleteSoAAVvpZ	swift.type.property	apiObsolete	GKError.apiObsolete	static var apiObsolete: GKError.Code { get }
+s:SC11GKErrorCodeLeV11appUnlistedSoAAVvpZ	swift.type.property	appUnlisted	GKError.appUnlisted	static var appUnlisted: GKError.Code { get }
+s:SC11GKErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	GKError.errorDomain	static var errorDomain: String { get }
+s:SC11GKErrorCodeLeV11scoreNotSetSoAAVvpZ	swift.type.property	scoreNotSet	GKError.scoreNotSet	static var scoreNotSet: GKError.Code { get }
+s:SC11GKErrorCodeLeV12lockdownModeSoAAVvpZ	swift.type.property	lockdownMode	GKError.lockdownMode	static var lockdownMode: GKError.Code { get }
+s:SC11GKErrorCodeLeV12notSupportedSoAAVvpZ	swift.type.property	notSupported	GKError.notSupported	static var notSupported: GKError.Code { get }
+s:SC11GKErrorCodeLeV13invalidPlayerSoAAVvpZ	swift.type.property	invalidPlayer	GKError.invalidPlayer	static var invalidPlayer: GKError.Code { get }
+s:SC11GKErrorCodeLeV13notAuthorizedSoAAVvpZ	swift.type.property	notAuthorized	GKError.notAuthorized	static var notAuthorized: GKError.Code { get }
+s:SC11GKErrorCodeLeV15apiNotAvailableSoAAVvpZ	swift.type.property	apiNotAvailable	GKError.apiNotAvailable	static var apiNotAvailable: GKError.Code { get }
+s:SC11GKErrorCodeLeV16challengeInvalidSoAAVvpZ	swift.type.property	challengeInvalid	GKError.challengeInvalid	static var challengeInvalid: GKError.Code { get }
+s:SC11GKErrorCodeLeV16friendListDeniedSoAAVvpZ	swift.type.property	friendListDenied	GKError.friendListDenied	static var friendListDenied: GKError.Code { get }
+s:SC11GKErrorCodeLeV16gameUnrecognizedSoAAVvpZ	swift.type.property	gameUnrecognized	GKError.gameUnrecognized	static var gameUnrecognized: GKError.Code { get }
+s:SC11GKErrorCodeLeV16invalidParameterSoAAVvpZ	swift.type.property	invalidParameter	GKError.invalidParameter	static var invalidParameter: GKError.Code { get }
+s:SC11GKErrorCodeLeV16notAuthenticatedSoAAVvpZ	swift.type.property	notAuthenticated	GKError.notAuthenticated	static var notAuthenticated: GKError.Code { get }
+s:SC11GKErrorCodeLeV17connectionTimeoutSoAAVvpZ	swift.type.property	connectionTimeout	GKError.connectionTimeout	static var connectionTimeout: GKError.Code { get }
+s:SC11GKErrorCodeLeV17iCloudUnavailableSoAAVvpZ	swift.type.property	iCloudUnavailable	GKError.iCloudUnavailable	static var iCloudUnavailable: GKError.Code { get }
+s:SC11GKErrorCodeLeV17matchNotConnectedSoAAVvpZ	swift.type.property	matchNotConnected	GKError.matchNotConnected	static var matchNotConnected: GKError.Code { get }
+s:SC11GKErrorCodeLeV18invalidCredentialsSoAAVvpZ	swift.type.property	invalidCredentials	GKError.invalidCredentials	static var invalidCredentials: GKError.Code { get }
+s:SC11GKErrorCodeLeV18playerPhotoFailureSoAAVvpZ	swift.type.property	playerPhotoFailure	GKError.playerPhotoFailure	static var playerPhotoFailure: GKError.Code { get }
+s:SC11GKErrorCodeLeV19invitationsDisabledSoAAVvpZ	swift.type.property	invitationsDisabled	GKError.invitationsDisabled	static var invitationsDisabled: GKError.Code { get }
+s:SC11GKErrorCodeLeV19matchRequestInvalidSoAAVvpZ	swift.type.property	matchRequestInvalid	GKError.matchRequestInvalid	static var matchRequestInvalid: GKError.Code { get }
+s:SC11GKErrorCodeLeV19playerStatusInvalidSoAAVvpZ	swift.type.property	playerStatusInvalid	GKError.playerStatusInvalid	static var playerStatusInvalid: GKError.Code { get }
+s:SC11GKErrorCodeLeV20friendListRestrictedSoAAVvpZ	swift.type.property	friendListRestricted	GKError.friendListRestricted	static var friendListRestricted: GKError.Code { get }
+s:SC11GKErrorCodeLeV20turnBasedInvalidTurnSoAAVvpZ	swift.type.property	turnBasedInvalidTurn	GKError.turnBasedInvalidTurn	static var turnBasedInvalidTurn: GKError.Code { get }
+s:SC11GKErrorCodeLeV20unexpectedConnectionSoAAVvpZ	swift.type.property	unexpectedConnection	GKError.unexpectedConnection	static var unexpectedConnection: GKError.Code { get }
+s:SC11GKErrorCodeLeV21communicationsFailureSoAAVvpZ	swift.type.property	communicationsFailure	GKError.communicationsFailure	static var communicationsFailure: GKError.Code { get }
+s:SC11GKErrorCodeLeV21restrictedToAutomatchSoAAVvpZ	swift.type.property	restrictedToAutomatch	GKError.restrictedToAutomatch	static var restrictedToAutomatch: GKError.Code { get }
+s:SC11GKErrorCodeLeV21turnBasedInvalidStateSoAAVvpZ	swift.type.property	turnBasedInvalidState	GKError.turnBasedInvalidState	static var turnBasedInvalidState: GKError.Code { get }
+s:SC11GKErrorCodeLeV23parentalControlsBlockedSoAAVvpZ	swift.type.property	parentalControlsBlocked	GKError.parentalControlsBlocked	static var parentalControlsBlocked: GKError.Code { get }
+s:SC11GKErrorCodeLeV24authenticationInProgressSoAAVvpZ	swift.type.property	authenticationInProgress	GKError.authenticationInProgress	static var authenticationInProgress: GKError.Code { get }
+s:SC11GKErrorCodeLeV24turnBasedTooManySessionsSoAAVvpZ	swift.type.property	turnBasedTooManySessions	GKError.turnBasedTooManySessions	static var turnBasedTooManySessions: GKError.Code { get }
+s:SC11GKErrorCodeLeV25friendRequestNotAvailableSoAAVvpZ	swift.type.property	friendRequestNotAvailable	GKError.friendRequestNotAvailable	static var friendRequestNotAvailable: GKError.Code { get }
+s:SC11GKErrorCodeLeV25gameSessionRequestInvalidSoAAVvpZ	swift.type.property	gameSessionRequestInvalid	GKError.gameSessionRequestInvalid	static var gameSessionRequestInvalid: GKError.Code { get }
+s:SC11GKErrorCodeLeV26turnBasedMatchDataTooLargeSoAAVvpZ	swift.type.property	turnBasedMatchDataTooLarge	GKError.turnBasedMatchDataTooLarge	static var turnBasedMatchDataTooLarge: GKError.Code { get }
+s:SC11GKErrorCodeLeV27turnBasedInvalidParticipantSoAAVvpZ	swift.type.property	turnBasedInvalidParticipant	GKError.turnBasedInvalidParticipant	static var turnBasedInvalidParticipant: GKError.Code { get }
+s:SC11GKErrorCodeLeV28friendListDescriptionMissingSoAAVvpZ	swift.type.property	friendListDescriptionMissing	GKError.friendListDescriptionMissing	static var friendListDescriptionMissing: GKError.Code { get }
+s:SC11GKErrorCodeLeV28ubiquityContainerUnavailableSoAAVvpZ	swift.type.property	ubiquityContainerUnavailable	GKError.ubiquityContainerUnavailable	static var ubiquityContainerUnavailable: GKError.Code { get }
+s:SC11GKErrorCodeLeV32playerStatusExceedsMaximumLengthSoAAVvpZ	swift.type.property	playerStatusExceedsMaximumLength	GKError.playerStatusExceedsMaximumLength	static var playerStatusExceedsMaximumLength: GKError.Code { get }
+s:SC11GKErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	GKError.unknown	static var unknown: GKError.Code { get }
+s:SC11GKErrorCodeLeV8underageSoAAVvpZ	swift.type.property	underage	GKError.underage	static var underage: GKError.Code { get }
+s:SC11GKErrorCodeLeV9cancelledSoAAVvpZ	swift.type.property	cancelled	GKError.cancelled	static var cancelled: GKError.Code { get }
+s:SC11GKErrorCodeLeV9debugModeSoAAVvpZ	swift.type.property	debugMode	GKError.debugMode	static var debugMode: GKError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV	swift.struct	GKGameSessionError	GKGameSessionError	struct GKGameSessionError
+s:SC22GKGameSessionErrorCodeLeV07invalidB0SoAAVvpZ	swift.type.property	invalidSession	GKGameSessionError.invalidSession	static var invalidSession: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	GKGameSessionError.errorDomain	static var errorDomain: String { get }
+s:SC22GKGameSessionErrorCodeLeV12badContainerSoAAVvpZ	swift.type.property	badContainer	GKGameSessionError.badContainer	static var badContainer: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV14networkFailureSoAAVvpZ	swift.type.property	networkFailure	GKGameSessionError.networkFailure	static var networkFailure: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV15sessionConflictSoAAVvpZ	swift.type.property	sessionConflict	GKGameSessionError.sessionConflict	static var sessionConflict: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV16connectionFailedSoAAVvpZ	swift.type.property	connectionFailed	GKGameSessionError.connectionFailed	static var connectionFailed: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV16notAuthenticatedSoAAVvpZ	swift.type.property	notAuthenticated	GKGameSessionError.notAuthenticated	static var notAuthenticated: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV16sessionNotSharedSoAAVvpZ	swift.type.property	sessionNotShared	GKGameSessionError.sessionNotShared	static var sessionNotShared: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV18cloudDriveDisabledSoAAVvpZ	swift.type.property	cloudDriveDisabled	GKGameSessionError.cloudDriveDisabled	static var cloudDriveDisabled: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV18cloudQuotaExceededSoAAVvpZ	swift.type.property	cloudQuotaExceeded	GKGameSessionError.cloudQuotaExceeded	static var cloudQuotaExceeded: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV20sendDataNoRecipientsSoAAVvpZ	swift.type.property	sendDataNoRecipients	GKGameSessionError.sendDataNoRecipients	static var sendDataNoRecipients: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV20sendDataNotConnectedSoAAVvpZ	swift.type.property	sendDataNotConnected	GKGameSessionError.sendDataNotConnected	static var sendDataNotConnected: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV20sendDataNotReachableSoAAVvpZ	swift.type.property	sendDataNotReachable	GKGameSessionError.sendDataNotReachable	static var sendDataNotReachable: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV20sendRateLimitReachedSoAAVvpZ	swift.type.property	sendRateLimitReached	GKGameSessionError.sendRateLimitReached	static var sendRateLimitReached: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV25connectionCancelledByUserSoAAVvpZ	swift.type.property	connectionCancelledByUser	GKGameSessionError.connectionCancelledByUser	static var connectionCancelledByUser: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV29sessionHasMaxConnectedPlayersSoAAVvpZ	swift.type.property	sessionHasMaxConnectedPlayers	GKGameSessionError.sessionHasMaxConnectedPlayers	static var sessionHasMaxConnectedPlayers: GKGameSessionError.Code { get }
+s:SC22GKGameSessionErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	GKGameSessionError.unknown	static var unknown: GKGameSessionError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKAccessPointLocation	swift.func.op	!=(_:_:)	GKAccessPoint.Location.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKChallengeState	swift.func.op	!=(_:_:)	GKChallengeState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKConnectionState	swift.func.op	!=(_:_:)	GKConnectionState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKErrorCode	swift.func.op	!=(_:_:)	GKError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKFriendsAuthorizationStatus	swift.func.op	!=(_:_:)	GKFriendsAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameActivityPlayStyle	swift.func.op	!=(_:_:)	GKGameActivityPlayStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameActivityState	swift.func.op	!=(_:_:)	GKGameActivity.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameCenterViewControllerState	swift.func.op	!=(_:_:)	GKGameCenterViewControllerState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.func.op	!=(_:_:)	GKGameSessionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKInviteRecipientResponse	swift.func.op	!=(_:_:)	GKInviteRecipientResponse.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKLeaderboardPlayerScope	swift.func.op	!=(_:_:)	GKLeaderboard.PlayerScope.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKLeaderboardTimeScope	swift.func.op	!=(_:_:)	GKLeaderboard.TimeScope.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKLeaderboardType	swift.func.op	!=(_:_:)	GKLeaderboard.LeaderboardType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKMatchSendDataMode	swift.func.op	!=(_:_:)	GKMatch.SendDataMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKMatchType	swift.func.op	!=(_:_:)	GKMatchType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKMatchmakingMode	swift.func.op	!=(_:_:)	GKMatchmakingMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKPhotoSize	swift.func.op	!=(_:_:)	GKPlayer.PhotoSize.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKPlayerConnectionState	swift.func.op	!=(_:_:)	GKPlayerConnectionState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKReleaseState	swift.func.op	!=(_:_:)	GKReleaseState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKTransportType	swift.func.op	!=(_:_:)	GKTransportType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKTurnBasedExchangeStatus	swift.func.op	!=(_:_:)	GKTurnBasedExchangeStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKTurnBasedMatchOutcome	swift.func.op	!=(_:_:)	GKTurnBasedMatch.Outcome.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKTurnBasedMatchStatus	swift.func.op	!=(_:_:)	GKTurnBasedMatch.Status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKTurnBasedParticipantStatus	swift.func.op	!=(_:_:)	GKTurnBasedParticipant.Status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKVoiceChatPlayerState	swift.func.op	!=(_:_:)	GKVoiceChat.PlayerState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKAccessPointLocation	swift.property	hashValue	GKAccessPoint.Location.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKChallengeState	swift.property	hashValue	GKChallengeState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKConnectionState	swift.property	hashValue	GKConnectionState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	hashValue	GKError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKFriendsAuthorizationStatus	swift.property	hashValue	GKFriendsAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKGameActivityPlayStyle	swift.property	hashValue	GKGameActivityPlayStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKGameActivityState	swift.property	hashValue	GKGameActivity.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKGameCenterViewControllerState	swift.property	hashValue	GKGameCenterViewControllerState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	hashValue	GKGameSessionError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKInviteRecipientResponse	swift.property	hashValue	GKInviteRecipientResponse.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKLeaderboardPlayerScope	swift.property	hashValue	GKLeaderboard.PlayerScope.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKLeaderboardTimeScope	swift.property	hashValue	GKLeaderboard.TimeScope.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKLeaderboardType	swift.property	hashValue	GKLeaderboard.LeaderboardType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKMatchSendDataMode	swift.property	hashValue	GKMatch.SendDataMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKMatchType	swift.property	hashValue	GKMatchType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKMatchmakingMode	swift.property	hashValue	GKMatchmakingMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKPhotoSize	swift.property	hashValue	GKPlayer.PhotoSize.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKPlayerConnectionState	swift.property	hashValue	GKPlayerConnectionState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKTransportType	swift.property	hashValue	GKTransportType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKTurnBasedExchangeStatus	swift.property	hashValue	GKTurnBasedExchangeStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKTurnBasedMatchOutcome	swift.property	hashValue	GKTurnBasedMatch.Outcome.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKTurnBasedMatchStatus	swift.property	hashValue	GKTurnBasedMatch.Status.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKTurnBasedParticipantStatus	swift.property	hashValue	GKTurnBasedParticipant.Status.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKVoiceChatPlayerState	swift.property	hashValue	GKVoiceChat.PlayerState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKAccessPointLocation	swift.method	hash(into:)	GKAccessPoint.Location.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKChallengeState	swift.method	hash(into:)	GKChallengeState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKConnectionState	swift.method	hash(into:)	GKConnectionState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKErrorCode	swift.method	hash(into:)	GKError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKFriendsAuthorizationStatus	swift.method	hash(into:)	GKFriendsAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKGameActivityPlayStyle	swift.method	hash(into:)	GKGameActivityPlayStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKGameActivityState	swift.method	hash(into:)	GKGameActivity.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKGameCenterViewControllerState	swift.method	hash(into:)	GKGameCenterViewControllerState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.method	hash(into:)	GKGameSessionError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKInviteRecipientResponse	swift.method	hash(into:)	GKInviteRecipientResponse.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKLeaderboardPlayerScope	swift.method	hash(into:)	GKLeaderboard.PlayerScope.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKLeaderboardTimeScope	swift.method	hash(into:)	GKLeaderboard.TimeScope.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKLeaderboardType	swift.method	hash(into:)	GKLeaderboard.LeaderboardType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKMatchSendDataMode	swift.method	hash(into:)	GKMatch.SendDataMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKMatchType	swift.method	hash(into:)	GKMatchType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKMatchmakingMode	swift.method	hash(into:)	GKMatchmakingMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKPhotoSize	swift.method	hash(into:)	GKPlayer.PhotoSize.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKPlayerConnectionState	swift.method	hash(into:)	GKPlayerConnectionState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKTransportType	swift.method	hash(into:)	GKTransportType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKTurnBasedExchangeStatus	swift.method	hash(into:)	GKTurnBasedExchangeStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKTurnBasedMatchOutcome	swift.method	hash(into:)	GKTurnBasedMatch.Outcome.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKTurnBasedMatchStatus	swift.method	hash(into:)	GKTurnBasedMatch.Status.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKTurnBasedParticipantStatus	swift.method	hash(into:)	GKTurnBasedParticipant.Status.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKVoiceChatPlayerState	swift.method	hash(into:)	GKVoiceChat.PlayerState.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11GKErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So11GKMatchTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	GKMatchType.init(rawValue:)	init?(rawValue: UInt)
+s:So11GKPhotoSizeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKPlayer.PhotoSize.init(rawValue:)	init?(rawValue: Int)
+s:So14GKReleaseStateV8rawValueABSu_tcfc	swift.init	init(rawValue:)	GKReleaseState.init(rawValue:)	init(rawValue: UInt)
+s:So15GKTransportTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKTransportType.init(rawValue:)	init?(rawValue: Int)
+s:So16GKChallengeStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKChallengeState.init(rawValue:)	init?(rawValue: Int)
+s:So17GKConnectionStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKConnectionState.init(rawValue:)	init?(rawValue: Int)
+s:So17GKLeaderboardTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKLeaderboard.LeaderboardType.init(rawValue:)	init?(rawValue: Int)
+s:So17GKMatchmakingModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKMatchmakingMode.init(rawValue:)	init?(rawValue: Int)
+s:So19GKGameActivityStateV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	GKGameActivity.State.init(rawValue:)	init?(rawValue: UInt)
+s:So19GKMatchSendDataModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKMatch.SendDataMode.init(rawValue:)	init?(rawValue: Int)
+s:So21GKAccessPointLocationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKAccessPoint.Location.init(rawValue:)	init?(rawValue: Int)
+s:So22GKGameSessionErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKGameSessionError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So22GKLeaderboardTimeScopeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKLeaderboard.TimeScope.init(rawValue:)	init?(rawValue: Int)
+s:So22GKTurnBasedMatchStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKTurnBasedMatch.Status.init(rawValue:)	init?(rawValue: Int)
+s:So22GKVoiceChatPlayerStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKVoiceChat.PlayerState.init(rawValue:)	init?(rawValue: Int)
+s:So23GKGameActivityPlayStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKGameActivityPlayStyle.init(rawValue:)	init?(rawValue: Int)
+s:So23GKPlayerConnectionStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKPlayerConnectionState.init(rawValue:)	init?(rawValue: Int)
+s:So23GKTurnBasedMatchOutcomeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKTurnBasedMatch.Outcome.init(rawValue:)	init?(rawValue: Int)
+s:So24GKAchievementDescriptionC7GameKitE13rarityPercentSdSgvp	swift.property	rarityPercent	GKAchievementDescription.rarityPercent	var rarityPercent: Double? { get }
+s:So24GKGameActivityDefinitionC7GameKitE11playerRangeSX_pSgvp	swift.property	playerRange	GKGameActivityDefinition.playerRange	final var playerRange: (any RangeExpression)? { get }
+s:So24GKLeaderboardPlayerScopeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKLeaderboard.PlayerScope.init(rawValue:)	init?(rawValue: Int)
+s:So25GKInviteRecipientResponseV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKInviteRecipientResponse.init(rawValue:)	init?(rawValue: Int)
+s:So25GKTurnBasedExchangeStatusV8rawValueABSgs4Int8V_tcfc	swift.init	init(rawValue:)	GKTurnBasedExchangeStatus.init(rawValue:)	init?(rawValue: Int8)
+s:So28GKFriendsAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKFriendsAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So28GKTurnBasedParticipantStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKTurnBasedParticipant.Status.init(rawValue:)	init?(rawValue: Int)
+s:So31GKGameCenterViewControllerStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKGameCenterViewControllerState.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@GKReleaseState	swift.init	init(arrayLiteral:)	GKReleaseState.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	isDisjoint(with:)	GKReleaseState.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	isSuperset(of:)	GKReleaseState.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	subtracting(_:)	GKReleaseState.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	isStrictSubset(of:)	GKReleaseState.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	isStrictSuperset(of:)	GKReleaseState.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GKReleaseState	swift.property	isEmpty	GKReleaseState.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	isSubset(of:)	GKReleaseState.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	subtract(_:)	GKReleaseState.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GKReleaseState	swift.init	init(_:)	GKReleaseState.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GKErrorCode	swift.property	localizedDescription	GKError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	swift.property	localizedDescription	GKGameSessionError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	insert(_:)	GKReleaseState.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	remove(_:)	GKReleaseState.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	update(with:)	GKReleaseState.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	contains(_:)	GKReleaseState.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	intersection(_:)	GKReleaseState.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	symmetricDifference(_:)	GKReleaseState.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	union(_:)	GKReleaseState.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	formIntersection(_:)	GKReleaseState.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	formSymmetricDifference(_:)	GKReleaseState.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@GKReleaseState	swift.method	formUnion(_:)	GKReleaseState.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@GKReleaseState	swift.init	init()	GKReleaseState.init()	init()
