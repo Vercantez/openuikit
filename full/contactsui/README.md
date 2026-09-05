@@ -118,7 +118,6 @@ The schema-v1 host gate compiles only `tests/agent/ContactsUIRuntime.swift`,
 which inlines those same functions and prints `CONTACTSUI_AGENT_RUNTIME_OK`.
 
 ```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_REFERENCE_OK
 CONTACTSUI_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=ContactsUI dylib=libContactsUI.dylib
