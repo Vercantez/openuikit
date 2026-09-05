@@ -53,17 +53,32 @@ final class UITableViewCellContentView: UIView {
     var cell: UITableViewCell? { superview as? UITableViewCell }
 
     /// The content view takes the cell's margins, except on a trailing edge
-    /// an accessory view already ate — there it keeps `UIView`'s 8 pt.
+    /// an accessory already ate — there it keeps `UIView`'s 8 pt.
     ///
     /// MEASURED (realapp_storage_light, both oracle devices): the content
     /// view of the accessory-less DisclosureCell reports the cell's own
     /// [15, 20, 15, 20], while SwitchCell's — 310 wide, with the switch as
     /// its accessory view — reports [15, 20, 15, 8] on the iPhone 16 and
     /// [15, 16, 15, 8] on the SE.
+    ///
+    /// MEASURED notesheaderprobe + Notes t200, iPhone SE 2x / iOS 26.1:
+    /// `accessoryType = .disclosureIndicator` is the same eat — cell
+    /// `layoutMargins` `[15, 16, 15, 16]`, content view
+    /// `[15, 16, 15, 8]` LTR / directional trailing 8 RTL. Custom
+    /// `layoutMarginsGuide` title is then 292.5 = 316.5 − 16 − 8
+    /// (Notes t200.rtl title abs.x 50.5 = content 42.5 + 8).
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         guard let cell else { return super._defaultBaseLayoutMargins }
         var m = cell.layoutMargins
-        if cell.accessoryView != nil { m.right = super._defaultBaseLayoutMargins.right }
+        let accessoryAte = cell.accessoryView != nil || cell.accessoryType != .none
+        if accessoryAte {
+            let eight = super._defaultBaseLayoutMargins.right
+            if cell._layoutIsRTL {
+                m.left = eight
+            } else {
+                m.right = eight
+            }
+        }
         return m
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -546,6 +561,7 @@ open class UITableViewCell: UIView, ReusableView {
         didSet {
             if accessoryType != oldValue {
                 _accessoryGlyphView.accessoryType = accessoryType
+                contentView._notifyLayoutMarginsChanged()
                 setNeedsLayout()
             }
         }
@@ -561,6 +577,7 @@ open class UITableViewCell: UIView, ReusableView {
             if let accessoryView {
                 addSubview(accessoryView)
             }
+            contentView._notifyLayoutMarginsChanged()
             setNeedsLayout()
         }
     }

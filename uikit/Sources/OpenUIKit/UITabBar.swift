@@ -446,14 +446,21 @@ public final class UITabBar: UIView {
         platter.frame = CGRect(x: x, y: 0, width: width,
                                height: UITabBar.platterHeight)
         let pitch = (width - 2 * UITabBar.platterSidePadding) / n
+        // MEASURED Notes t200.rtl, iPhone SE 2x / iOS 26.1: first item
+        // (Notes) label abs.x 216, Settings 124 — items pack
+        // leading-to-trailing inside the same centered platter (LTR
+        // Notes is x≈130). Same reverse as UISegmentedControl.
+        let count = itemViews.count
         for (i, v) in itemViews.enumerated() {
-            v.frame = CGRect(x: UITabBar.platterSidePadding + CGFloat(i) * pitch,
+            let visual = _layoutIsRTL ? count - 1 - i : i
+            v.frame = CGRect(x: UITabBar.platterSidePadding + CGFloat(visual) * pitch,
                              y: 0, width: pitch, height: UITabBar.platterHeight)
         }
         if let sel = selectedItem,
            let idx = itemViews.firstIndex(where: { $0.item === sel }) {
             capsule.isHidden = false
-            let center = UITabBar.platterSidePadding + (CGFloat(idx) + 0.5) * pitch
+            let visual = _layoutIsRTL ? count - 1 - idx : idx
+            let center = UITabBar.platterSidePadding + (CGFloat(visual) + 0.5) * pitch
             let cw = pitch + 2 * UITabBar.capsuleOverhang
             capsule.frame = CGRect(x: center - cw / 2,
                                    y: (UITabBar.platterHeight - UITabBar.capsuleHeight) / 2,

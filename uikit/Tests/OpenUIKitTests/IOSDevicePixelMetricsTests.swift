@@ -210,6 +210,74 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 225.5, accuracy: 1e-9)
     }
 
+    /// MEASURED notesheaderprobe + Notes t200 / t5000 / t7000, iPhone SE 2x
+    /// / iOS 26.1: first inset-grouped header is compact 38 when the table
+    /// hosts a `UISearchController` inside a `UITabBarController` AND the
+    /// full-header content would scroll; 1-row (t5000) and no-search
+    /// settings stay 55.5.
+    func testTabHostedSearchCompactsFirstGroupedHeaderWhenScrollable() {
+        device(375, 667, scale: 2)
+
+        let list = NotesLikeListController(style: .insetGrouped)
+        let listNav = UINavigationController(rootViewController: list)
+        listNav.tabBarItem = UITabBarItem(title: "Notes", image: nil, tag: 0)
+        let settings = NotesLikeSettingsController(style: .insetGrouped)
+        let settingsNav = UINavigationController(rootViewController: settings)
+        settingsNav.tabBarItem = UITabBarItem(title: "Settings", image: nil, tag: 1)
+        let tab = UITabBarController()
+        tab.viewControllers = [listNav, settingsNav]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(list.tableView.safeAreaInsets.bottom, 83, accuracy: 1e-9)
+        XCTAssertEqual(list.tableView.metrics[0].headerHeight, 38, accuracy: 1e-9)
+        XCTAssertTrue(list.tableView.metrics[0].compactHeader)
+        XCTAssertEqual(list.tableView.rectForRow(at: IndexPath(row: 0, section: 0)).minY,
+                       38, accuracy: 1e-9)
+
+        tab.selectedIndex = 1
+        window.layoutIfNeeded()
+        XCTAssertEqual(settings.tableView.metrics[0].headerHeight, 55.5, accuracy: 1e-9)
+        XCTAssertFalse(settings.tableView.metrics[0].compactHeader)
+    }
+
+    /// MEASURED Notes t200.rtl, iPhone SE 2x / iOS 26.1: Notes (item 0)
+    /// sits on the trailing (right) side of the platter — label abs.x
+    /// 216 vs Settings 124. LTR Notes is the left slot.
+    func testPhoneTabBarItemsPackLeadingToTrailingInRTL() {
+        device(375, 667, scale: 2)
+        let a = UIViewController(); a.tabBarItem = UITabBarItem(title: "Notes", image: nil, tag: 0)
+        let b = UIViewController(); b.tabBarItem = UITabBarItem(title: "Settings", image: nil, tag: 1)
+        let tab = UITabBarController()
+        tab.viewControllers = [a, b]
+        tab.tabBar.semanticContentAttribute = .forceRightToLeft
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+        XCTAssertGreaterThan(tab.tabBar.itemViews[0].frame.minX,
+                             tab.tabBar.itemViews[1].frame.minX)
+        tab.tabBar.semanticContentAttribute = .forceLeftToRight
+        window.layoutIfNeeded()
+        XCTAssertLessThan(tab.tabBar.itemViews[0].frame.minX,
+                          tab.tabBar.itemViews[1].frame.minX)
+    }
+
+    /// MEASURED notesheaderprobe + Notes t200, iPhone SE 2x / iOS 26.1:
+    /// disclosure `accessoryType` eats the content view's trailing margin
+    /// (8, not the cell's 16). RTL eats physical left.
+    func testDisclosureAccessoryEatsContentViewTrailingMargin() {
+        device(375, 667, scale: 2)
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.frame = CGRect(x: 0, y: 0, width: 343, height: 92)
+        cell.accessoryType = .disclosureIndicator
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell.layoutMargins.left, 16, accuracy: 1e-9)
+        XCTAssertEqual(cell.layoutMargins.right, 16, accuracy: 1e-9)
+        XCTAssertEqual(cell.contentView.layoutMargins.left, 16, accuracy: 1e-9)
+        XCTAssertEqual(cell.contentView.layoutMargins.right, 8, accuracy: 1e-9)
+    }
+
     // MARK: Compact pageSheet top inset (probe_sheet_inset / NavFlow t1200)
 
     /// MEASURED 2026-09-04, probe_sheet_inset on the iPhone SE 2x / iOS 26.1:
@@ -559,4 +627,29 @@ private final class UntitledGroupedSource: UITableViewDataSource, UITableViewDel
         UITableViewCell(style: .value1, reuseIdentifier: nil)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 44 }
+}
+
+@MainActor
+private final class NotesLikeListController: UITableViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let search = UISearchController(searchResultsController: nil)
+        navigationItem.searchController = search
+    }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 8 }
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { "All Notes" }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 92 }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        UITableViewCell(style: .default, reuseIdentifier: nil)
+    }
+}
+
+@MainActor
+private final class NotesLikeSettingsController: UITableViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 2 }
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { "Preferences" }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 44 }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        UITableViewCell(style: .default, reuseIdentifier: nil)
+    }
 }

@@ -698,12 +698,31 @@ open class UITableView: UIScrollView {
                     // noNav first 55.5 / later 38; navLarge first 38 / later
                     // 38; navLargeWithFooters later 45.5 (previous footer
                     // has text, so not compact).
+                    //
+                    // Plus: first header of a scrollable inset-grouped /
+                    // grouped table that hosts a UISearchController inside
+                    // a UITabBarController. MEASURED notesheaderprobe +
+                    // Notes t200, iPhone SE 2x / iOS 26.1:
+                    //   inset_tab_8_search  header 38 / contentSize 771.5
+                    //     (search bar height 0, SA.bottom 83)
+                    //   inset_nav_8_search  header 55.5 (no tab; search
+                    //     stays 60 pt visible)
+                    //   inset_tab_8_nosearch header 55.5
+                    //   Notes t5000 (1 filtered row, cs 185 < visible)
+                    //     header 55.5 — not compact when the table cannot
+                    //     scroll. The would-scroll test uses the FULL
+                    //     first header so the fixed point is unique.
                     let underlapsLargeTitle = UITableView.isIOSChrome
                         && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset
                     let afterUntitledFooter = s > 0 && !metrics[s - 1].footerHasView
                         && metrics[s - 1].footerHeight > 0
+                    let tabSearchCompact = s == 0
+                        && firstHeaderCompactsForHostedSearch(dataSource: ds,
+                                                              section: s)
                     let compact = UITableView.isIOSChrome && style != .plain
-                        && ((s == 0 && underlapsLargeTitle) || afterUntitledFooter)
+                        && ((s == 0 && underlapsLargeTitle)
+                            || afterUntitledFooter
+                            || tabSearchCompact)
                     m.compactHeader = compact
                     headerH = m.headerTitle != nil
                         ? UITableView.headerHeight(style: style, firstSection: s == 0,
@@ -770,6 +789,40 @@ open class UITableView: UIScrollView {
             metrics.append(m)
         }
         contentSize = CGSize(width: bounds.width, height: y + footerHeight)
+    }
+
+    /// First VC on the responder chain (the table's managing controller
+    /// when this is a `UITableViewController.view`).
+    private func hostingViewController() -> UIViewController? {
+        var r: UIResponder? = self
+        while let cur = r {
+            if let vc = cur as? UIViewController { return vc }
+            r = cur.next
+        }
+        return nil
+    }
+
+    /// Compact 38 pt first header when a search controller lives on a
+    /// tab-hosted table that can scroll. See `rebuildMetrics`.
+    private func firstHeaderCompactsForHostedSearch(dataSource ds: UITableViewDataSource,
+                                                    section s: Int) -> Bool {
+        guard UITableView.isIOSChrome, style != .plain else { return false }
+        guard let vc = hostingViewController(),
+              vc.navigationItem.searchController != nil,
+              vc.tabBarController != nil else { return false }
+        let rows = ds.tableView(self, numberOfRowsInSection: s)
+        var rowsH: CGFloat = 0
+        var r = 0
+        while r < rows {
+            let path = IndexPath(row: r, section: s)
+            rowsH += resolveRowHeight(path)
+            r += 1
+        }
+        let fullH = UITableView.headerHeight(style: style, firstSection: true,
+                                             compact: false)
+        let footerH = UITableView.untitledGroupedFooterHeight
+        let visible = bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
+        return (fullH + rowsH + footerH) > visible
     }
 
     // MARK: Public geometry / lookup API

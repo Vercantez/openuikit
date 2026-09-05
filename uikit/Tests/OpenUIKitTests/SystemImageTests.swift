@@ -164,6 +164,14 @@ final class SystemImageTests: XCTestCase {
         XCTAssertNotNil(UIImage(systemName: "magnifyingglass"))
         XCTAssertNotNil(UIImage(systemName: "gearshape"))
         XCTAssertNotNil(UIImage(systemName: "chevron.right"))
+        XCTAssertNotNil(UIImage(systemName: "note.text",
+                                withConfiguration: configuration))
+        let note = try XCTUnwrap(UIImage(systemName: "note.text",
+                                         withConfiguration: configuration))
+        // MEASURED /tmp/note-text-harvest 2x, SE 2x / iOS 26.1: 18/medium/large
+        // alignment 58×50 (29×25 pt), same box as calendar; Notes t200 golden
+        // tab icon [131, 595.5, 29, 25].
+        XCTAssertEqual(note.size, CGSize(width: 29, height: 25))
         OpenUIKitRuntime.systemFontCut = .macOS
         XCTAssertNil(UIImage(systemName: "house",
                              withConfiguration: configuration))
@@ -173,7 +181,7 @@ final class SystemImageTests: XCTestCase {
 
     /// MEASURED symbolinkprobe, iPhone SE 2x / iOS 26.1: unconfigured
     /// UIImage(systemName:) is byte-identical to 17 pt regular unspecified
-    /// (73/73 names). magnifyingglass default alignment 41×37 (20.5×18.5);
+    /// (74/74 names). magnifyingglass default alignment 41×37 (20.5×18.5);
     /// bar-button 17 medium large plus is 46×44 (23×22 pt).
     func testHarvestedDefaultAndBarButtonSymbolInk() throws {
         let savedCut = OpenUIKitRuntime.systemFontCut

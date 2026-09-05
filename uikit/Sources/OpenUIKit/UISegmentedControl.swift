@@ -59,6 +59,13 @@ open class UISegmentedControl: UIControl {
     static let titleFontSize: CGFloat = 13
     static let pillInset: CGFloat = 2
     static let disabledAlpha: CGFloat = 0.5
+    /// MEASURED notesheaderprobe + Notes t7000, iPhone SE 2x / iOS 26.1:
+    /// a height constraint of 33 (NotesSettingsViewController) still
+    /// lays out **34**; unconstrained is also 34 (origin kept, so the
+    /// Notes sort row is `[32, 169, 311, 34]` in the 44 pt cell).
+    /// Catalyst keeps whatever Auto Layout solved (fixture 32).
+    static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+    static let iOSMinimumHeight: CGFloat = 34
     /// Measured background fill (tertiarySystemFill).
     static let backgroundFill = UIColor.tertiarySystemFill
     /// Selected pill fill: white in light mode; in dark mode the golden
@@ -178,6 +185,15 @@ open class UISegmentedControl: UIControl {
     }
 
     open override func layoutSubviews() {
+        // Auto Layout only: fixture scenes pin an explicit 32 pt frame.
+        if UISegmentedControl.isIOS,
+           !translatesAutoresizingMaskIntoConstraints,
+           bounds.height > 0,
+           bounds.height < UISegmentedControl.iOSMinimumHeight {
+            var b = bounds
+            b.size.height = UISegmentedControl.iOSMinimumHeight
+            bounds = b
+        }
         super.layoutSubviews()
         updateLabels()
         let scale = traitCollection.displayScale
