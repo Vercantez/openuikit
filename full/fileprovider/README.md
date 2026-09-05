@@ -109,8 +109,21 @@ isolated host gate. A later clean EC2 run must:
 5. Run with `LD_LIBRARY_PATH` and confirm `libFileProvider.dylib` loaded
    after `FILEPROVIDER_DEPENDENCY_IDENTITY_OK`.
 
-Isolated gate:
+Isolated gate (Linux host, no docker):
 
 ```sh
 bash full/fileprovider/tests/acceptance/test_host.sh
 ```
+
+Exact marker output from this depth pass:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FILEPROVIDER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=FileProvider dylib=libFileProvider.dylib
+```
+
+`.cursor/verify-cloud-environment.sh` still fails on a missing
+`scratch/ladder-corpus/focus-ios` checkout; the sealed FileProvider gate
+prints the Swift environment marker from the runtime probe instead.
