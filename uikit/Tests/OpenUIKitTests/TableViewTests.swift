@@ -1155,6 +1155,15 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         XCTAssertEqual(reorder.frame.origin.x, 332, accuracy: 0.001)
         XCTAssertEqual(reorder.frame.width, 27, accuracy: 0.001)
         XCTAssertEqual(reorder.frame.height, 62, accuracy: 0.001)
+
+        // MEASURED editredprobe, iPhone SE 2x / iOS 26.1: disc fill is the
+        // captured sRGB of UIColor.systemRed, (255, 56, 60), not the
+        // pre-sRGB-reencode (235, 75, 70).
+        let fill = UITableViewCellEditControl.fill.resolvedCGColor(
+            with: UITraitCollection(userInterfaceStyle: .light))
+        XCTAssertEqual(fill.red, 255.0 / 255.0, accuracy: 1e-9)
+        XCTAssertEqual(fill.green, 56.0 / 255.0, accuracy: 1e-9)
+        XCTAssertEqual(fill.blue, 60.0 / 255.0, accuracy: 1e-9)
     }
 }
 

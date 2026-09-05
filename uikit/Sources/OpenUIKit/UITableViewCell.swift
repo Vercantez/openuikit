@@ -162,13 +162,29 @@ final class UITableCellAccessoryView: UIView {
 // MARK: - Edit / reorder controls (iOS 26.1, MEASURED TableEditor t900, SE 2x)
 
 /// Red minus disc. Golden class name matches real UIKit's so the dump is
-/// comparable. Fill (235, 75, 70) and 22 pt disc / 10.5 × 1.5 pt white
-/// minus read off TableEditor t900, Alpha's control at [15, 133, 26, 26]
-/// @2x (crop 52×52, solid fill rows, minus rows 27–29 = 1.5 pt).
+/// comparable. 22 pt disc / 10.5 × 1.5 pt white minus read off TableEditor
+/// t900, Alpha's control at [15, 133, 26, 26] @2x (crop 52×52, minus rows
+/// 27–29 = 1.5 pt). Fill under the iOS cut is the captured sRGB of
+/// `UIColor.systemRed` — see `fill`.
 @preconcurrency @MainActor
 final class UITableViewCellEditControl: UIView {
-    static let fill = UIColor(red: 235.0 / 255.0, green: 75.0 / 255.0,
-                              blue: 70.0 / 255.0, alpha: 1)
+    /// MEASURED editredprobe + TableEditor t900, iPhone SE 2x / iOS 26.1,
+    /// confprobe/simscene extended-range → untagged sRGB: disc interior is
+    /// **(255, 56, 60)** over white, 50 % gray, black and blue (opaque, 1400
+    /// solid px each). A 40 pt UIView filled with `UIColor.systemRed` in the
+    /// same capture is byte-identical; painting colorprobe's getRed() of
+    /// systemRed (255, 66, 69) is 10/9 counts high. The previous (235, 75, 70)
+    /// was the Display-P3-raw reading from before confprobe re-encoded
+    /// through sRGB (Feed card: P3-raw 78,121,211 vs sRGB 64,122,217).
+    /// Catalyst keeps (235, 75, 70).
+    static var fill: UIColor {
+        if UITableView.isIOSChrome {
+            return UIColor(red: 255.0 / 255.0, green: 56.0 / 255.0,
+                           blue: 60.0 / 255.0, alpha: 1)
+        }
+        return UIColor(red: 235.0 / 255.0, green: 75.0 / 255.0,
+                       blue: 70.0 / 255.0, alpha: 1)
+    }
     /// 2 pt inset → 22 pt disc in the 26 pt box (red cols 4–47 of 52).
     static let discInset: CGFloat = 2
     static let minusWidth: CGFloat = 10.5
