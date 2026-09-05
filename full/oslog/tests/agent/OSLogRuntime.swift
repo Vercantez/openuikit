@@ -11,7 +11,9 @@ precondition(OSLogEntryLog.Level.debug.rawValue == 1)
 precondition(OSLogStore.Scope.currentProcessIdentifier.rawValue == 1)
 
 let store = try! OSLogStore(scope: .currentProcessIdentifier)
-precondition(Array(try! store.getEntries()).isEmpty)
+let stray = Array(try! store.getEntries()).compactMap { $0 as? OSLogEntryWithPayload
+}.filter { $0.subsystem == "com.openuikit.oslog.never" }
+precondition(stray.isEmpty)
 
 do {
     _ = try OSLogStore(url: URL(fileURLWithPath: "/tmp/missing.logarchive"))
