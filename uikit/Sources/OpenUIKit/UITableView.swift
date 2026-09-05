@@ -546,7 +546,7 @@ open class UITableView: UIScrollView {
         // and grouped/insetGrouped keep `defaultRowHeight` so those
         // fixtures stay on the content-config number.
         if UITableView.isIOSChrome, style == .plain {
-            return UITableViewCell.plainClassicRowHeight
+            return UITableViewCell.plainClassicRowHeight(compatibleWith: traitCollection)
         }
         return UITableViewCell.defaultRowHeight
     }
@@ -699,7 +699,8 @@ open class UITableView: UIScrollView {
                     // 38; navLargeWithFooters later 45.5 (previous footer
                     // has text, so not compact).
                     let underlapsLargeTitle = UITableView.isIOSChrome
-                        && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset
+                        && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset(
+                            compatibleWith: traitCollection)
                     let afterUntitledFooter = s > 0 && !metrics[s - 1].footerHasView
                         && metrics[s - 1].footerHeight > 0
                     let compact = UITableView.isIOSChrome && style != .plain
