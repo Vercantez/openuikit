@@ -73,6 +73,11 @@ public enum RealAppScreen {
         /// a whole settings SCREEN rather than a sheet, and the first variant
         /// whose views come out of a compiled xib.
         case storage
+        /// mozilla-mobile/focus-ios Blockzilla/Settings/Controller/
+        /// SettingsViewController.swift at a2832521 — Firefox Focus Settings,
+        /// wrapped in a UINavigationController as BrowserViewController
+        /// `showSettings` does.
+        case focusSettings
     }
 
     /// One headless configuration: which app screen, which theme, and which
@@ -151,6 +156,11 @@ public enum RealAppScreen {
         Screen(name: "realapp_settings_light_ipad", variant: .settings,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: true, idiom: .pad),
+        // Firefox Focus Settings. Captured on the iPhone 16 @3x
+        // (scripts/realapp_probe_sim.sh); the eight Pocket Casts rows stay.
+        Screen(name: "realapp_focus_settings_light", variant: .focusSettings,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: false),
     ]
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
@@ -215,6 +225,21 @@ public enum RealAppScreen {
         return StorageAndDataUseViewController()
     }
 
+    /// Focus presents Settings inside a UINavigationController
+    /// (BrowserViewController.showSettings). The capture is that nav+table
+    /// as the window root so viewDidLoad's `navigationController!` holds.
+    static func makeFocusSettingsScreen() -> UIViewController {
+        let settings = SettingsViewController(
+            searchEngineManager: SearchEngineManager(),
+            authenticationManager: AuthenticationManager(),
+            onboardingEventsHandler: HarnessOnboardingEventsHandler(),
+            themeManager: ThemeManager(),
+            dismissScreenCompletion: {},
+            shouldScrollToSiri: false
+        )
+        return UINavigationController(rootViewController: settings)
+    }
+
     public static func makeRoot(variant: Variant,
                                 theme: Theme.ThemeType) -> UIViewController {
         registerNibClasses()
@@ -223,6 +248,7 @@ public enum RealAppScreen {
         case .listeningHistory: picker = makeListeningHistoryPicker(theme: theme)
         case .settings:         picker = makeSettingsPicker(theme: theme)
         case .storage:          return makeStorageScreen(theme: theme)
+        case .focusSettings:    return makeFocusSettingsScreen()
         }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker

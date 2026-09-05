@@ -231,7 +231,31 @@ let package = Package(
         // app's source is what let the last `@MainActor` come off the vendored
         // files. Verified accepted by both toolchains in the gate (Apple
         // 6.2.1 and Linux 6.2.4).
-        .target(name: "RealAppProbe", dependencies: ["OpenUIKit", "UIKit"],
+        // Focus Settings real-app screen: stub modules so
+        // SettingsViewController.swift keeps its `import Glean` / `import
+        // Intents` / … lines unmodified. Colours, strings and app types live
+        // in FocusShims.swift (same module as the cells). Exclude the stub
+        // sources from RealAppProbe so they are not compiled twice.
+        .target(name: "Glean", path: "Sources/RealAppProbe/FocusModules/Glean"),
+        .target(name: "Intents", path: "Sources/RealAppProbe/FocusModules/Intents"),
+        .target(name: "IntentsUI",
+                dependencies: ["Intents", "OpenUIKit"],
+                path: "Sources/RealAppProbe/FocusModules/IntentsUI"),
+        .target(name: "Onboarding", path: "Sources/RealAppProbe/FocusModules/Onboarding"),
+        .target(name: "Licenses",
+                dependencies: ["SwiftUI"],
+                path: "Sources/RealAppProbe/FocusModules/Licenses"),
+        .target(name: "DesignSystem",
+                path: "Sources/RealAppProbe/FocusModules/DesignSystem"),
+        .target(name: "RealAppProbe",
+                dependencies: [
+                    "OpenUIKit", "UIKit",
+                    "Glean", "Intents", "IntentsUI",
+                    "Onboarding", "Licenses", "DesignSystem",
+                    "SwiftUI",
+                    .target(name: "Combine", condition: .when(platforms: [.linux])),
+                ],
+                exclude: ["FocusModules"],
                 swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
         // CONFORMANCE APPS (docs/HILLCLIMB.md): small UIKit apps written the
         // way real apps are, whose source is compiled BOTH against OpenUIKit

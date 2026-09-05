@@ -255,6 +255,12 @@ private enum _OpenApplicationDelegateAdaptorRegistry {
 /// UIApplicationDelegate lifecycle. The delegate is created during App
 /// initialization, registered before body evaluation, and retained by both
 /// the wrapper and UIApplication after launch.
+///
+/// Linux Swift 6.2.4: Foundation's `NSObject.init()` is not `required`, so a
+/// generic class metatype cannot call `DelegateType.init()`. The adaptor is
+/// Darwin-only; Focus Settings only needs SwiftUI views / `UIHostingController`
+/// on the Linux openrender path.
+#if !os(Linux)
 @MainActor
 @propertyWrapper
 public struct _OpenUIApplicationDelegateAdaptor<DelegateType>: _OpenDynamicProperty
@@ -270,6 +276,7 @@ public struct _OpenUIApplicationDelegateAdaptor<DelegateType>: _OpenDynamicPrope
 
     public var wrappedValue: DelegateType { delegate }
 }
+#endif
 
 @MainActor
 private final class _OpenDefaultApplicationDelegate: UIResponder, UIApplicationDelegate {}
@@ -561,6 +568,8 @@ public typealias App = _OpenApp
 public typealias Scene = _OpenScene
 public typealias SceneBuilder = _OpenSceneBuilder
 public typealias WindowGroup<Content> = _OpenWindowGroup<Content> where Content: _OpenView
+#if !os(Linux)
 public typealias UIApplicationDelegateAdaptor<DelegateType> =
     _OpenUIApplicationDelegateAdaptor<DelegateType>
     where DelegateType: NSObject, DelegateType: UIApplicationDelegate
+#endif

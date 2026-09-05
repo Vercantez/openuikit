@@ -148,6 +148,7 @@ open class UIStackView: UIView {
         if let w = view._explicitSizeConstraint(.width) { s.width = Swift.max(s.width, w) }
         if let h = view._explicitSizeConstraint(.height) { s.height = Swift.max(s.height, h) }
         applyIOSConstrainedSubviewFloor(to: &s, of: view)
+        wrapIOSMultilineLabel(view, wrapWidth: bounds.width, size: &s)
         return s
     }
 
@@ -225,7 +226,26 @@ open class UIStackView: UIView {
         if let w = view._explicitSizeConstraint(.width) { s.width = max(s.width, w) }
         if let h = view._explicitSizeConstraint(.height) { s.height = max(s.height, h) }
         applyIOSConstrainedSubviewFloor(to: &s, of: view)
+        wrapIOSMultilineLabel(view, wrapWidth: bounds.width, size: &s)
         return s
+    }
+
+    /// MEASURED realapp_focus_settings_light, iPhone 16 / iOS 26.1: a
+    /// `numberOfLines = 0` footnote in a vertical stack pinned leading /
+    /// trailing wraps to the stack's width (label h 28.667 = two 14.333
+    /// lines; ActionFooterView 71.667). Intrinsic is one line (14.333) and
+    /// the port's previous footer was 42.333. Catalyst keeps the one-line
+    /// intrinsic (tie-break / stack goldens).
+    private func wrapIOSMultilineLabel(_ view: UIView, wrapWidth: CGFloat,
+                                       size s: inout CGSize) {
+        guard OpenUIKitRuntime.systemFontCut == .iOS, axis == .vertical,
+              wrapWidth > 0, let label = view as? UILabel,
+              label.numberOfLines != 1 else { return }
+        let fitted = label.sizeThatFits(
+            CGSize(width: wrapWidth,
+                   height: CGFloat.greatestFiniteMagnitude))
+        s.width = min(fitted.width, wrapWidth)
+        s.height = fitted.height
     }
 
     /// UIKit's stack reports a content size derived from its arranged views,
@@ -253,8 +273,14 @@ open class UIStackView: UIView {
         var axisSum: CGFloat = 0
         var axisMax: CGFloat = 0
         var crossMax: CGFloat = 0
+        let wrapWidth: CGFloat = {
+            guard OpenUIKitRuntime.systemFontCut == .iOS, axis == .vertical else { return 0 }
+            if size.width > 0 { return size.width }
+            return bounds.width
+        }()
         for view in visible {
-            let natural = naturalFittingSize(of: view)
+            var natural = naturalFittingSize(of: view)
+            wrapIOSMultilineLabel(view, wrapWidth: wrapWidth, size: &natural)
             axisSum += axisLength(natural)
             axisMax = max(axisMax, axisLength(natural))
             crossMax = max(crossMax, crossLength(natural))

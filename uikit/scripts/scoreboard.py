@@ -39,6 +39,9 @@ REALAPP_FLOOR = {
     # iPad (A16) 820×1180 @2x portrait of Settings. MEASURED 2026-09-04
     # after the pad formSheet card rule: 99.511.
     "realapp_settings_light_ipad": 99.4,   # 99.511
+    # Firefox Focus Settings (iPhone 16 / iOS 26.1). MEASURED 80.345 after
+    # the opaque-bar inset, nil container fill, and inset-grouped footer wrap.
+    "realapp_focus_settings_light": 80.2,   # 80.345
 }
 
 def parse_compare(path):

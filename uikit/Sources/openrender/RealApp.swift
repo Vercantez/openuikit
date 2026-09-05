@@ -138,6 +138,19 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
         UINib.unhandledKeys = []
     }
     let bmp = UIRenderer.render(window, scale: scale)
+    // MEASURED realapp_focus_settings_light / realappprobe, iPhone 16 /
+    // iOS 26.1: `UIGraphicsImageRendererFormat.opaque = true`, so unpainted
+    // window pixels (nil UILayoutContainerView behind a `UIImage()` nav bar)
+    // land as (0,0,0,255). The port's Bitmap starts transparent-zero;
+    // compare composites that over white. Fill zero-alpha here to match
+    // the probe; fully painted screens (Pocket Casts) are unchanged.
+    var i = 0
+    while i < bmp.pixels.count {
+        if bmp.pixels[i + 3] == 0 {
+            bmp.pixels[i + 3] = 255
+        }
+        i += 4
+    }
     OpenUIKitRuntime.animationTime = 0
     UIDevice.current.userInterfaceIdiom = savedIdiom
     OpenUIKitRuntime.assetCatalogIdiom = savedAssetIdiom

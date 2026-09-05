@@ -206,7 +206,13 @@ open class UINavigationController: UIViewController {
     open override func loadView() {
         let v = UILayoutContainerView(frame: CGRect(x: 0, y: 0,
                                                     width: 390, height: 844))
-        v.backgroundColor = .systemBackground
+        // MEASURED realapp_focus_settings_light, iPhone 16 / iOS 26.1:
+        // dump `bg` of UILayoutContainerView is absent (nil). Combined with
+        // `isTranslucent = false` + `setBackgroundImage(UIImage(), for:
+        // .default)` the 113 pt strip above the inset table is unpainted
+        // and the probe's opaque renderer records (0,0,0). Catalyst keeps
+        // systemBackground so the opaque-bar navbar goldens stay exact.
+        v.backgroundColor = UINavigationBar.isIOS ? nil : .systemBackground
         view = v
 
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -254,9 +260,10 @@ open class UINavigationController: UIViewController {
     // MARK: Large-title container mode (M10)
 
     /// Frame the bar + content area for the current bar mode. Classic mode
-    /// (Catalyst): opaque bar above a clipped content area. Large-title mode
-    /// and the iOS cut (iOS 26.1): content fills the WHOLE view and underlaps
-    /// the bar; the child's `safeAreaInsets.top` is the bar's bottom edge.
+    /// (Catalyst): opaque bar above a clipped content area. The iOS cut
+    /// (iOS 26.1) underlaps a translucent bar (Forms / NavFlow); an opaque
+    /// bar (`isTranslucent == false`) insets the child below it, matching
+    /// realapp_focus_settings_light.
     func updateContainerLayout() {
         guard isViewLoaded else { return }
         let v = view!
@@ -281,8 +288,21 @@ open class UINavigationController: UIViewController {
             let barH = navigationBar.prefersLargeTitles
                 ? navigationBar.largeTitleOverlayHeight
                 : UINavigationBar.iOSBarContentHeight
-            contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)
             navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
+            if navigationBar.isTranslucent {
+                contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)
+            } else {
+                // MEASURED realapp_focus_settings_light, iPhone 16 / iOS 26.1:
+                // SettingsViewController sets `navigationBar.isTranslucent =
+                // false`; the child view is `[0, 113, 393, 739]` — below the
+                // bar at y 59 h 54 (59+54=113) — and the table's
+                // adjustedContentInset is `[0,0,34,0]` (bottom home-indicator
+                // only). Default iOS 26 glass bars stay translucent and
+                // still underlap (Forms / NavFlow).
+                let top = pad + barH
+                contentView.frame = CGRect(x: 0, y: top, width: w,
+                                           height: h - top - toolbarHeight)
+            }
         } else if navigationBar.prefersLargeTitles {
             contentView.frame = v.bounds
             navigationBar.frame = CGRect(
@@ -318,6 +338,18 @@ open class UINavigationController: UIViewController {
         guard isViewLoaded else { return }
         let v = view!
         let inherited = v.safeAreaInsets
+        if UINavigationBar.isIOS, !isNavigationBarHidden,
+           !navigationBar.isTranslucent {
+            // Opaque iOS bar (realapp_focus_settings_light): contentView
+            // already starts at the bar's bottom, so the child must not
+            // inherit the window's 59 pt top inset on top of that.
+            contentView._setSafeAreaInsets(UIEdgeInsets(
+                top: 0,
+                left: inherited.left,
+                bottom: inherited.bottom,
+                right: inherited.right))
+            return
+        }
         let barBottom = isNavigationBarHidden
             ? 0 : navigationBar.frame.maxY - contentView.frame.minY
         let barTop = v.bounds.maxY - toolbarHeight
