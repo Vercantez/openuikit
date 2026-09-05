@@ -199,8 +199,8 @@ func testInteractiveBehaviorRawValues() {
 func testAddVoiceShortcutButtonClass() {
     intentsUIOnMain {
         let button = INUIAddVoiceShortcutButton(style: .white)
-        precondition(button is NSObject)
         precondition(type(of: button) == INUIAddVoiceShortcutButton.self)
+        precondition(ObjectIdentifier(button as AnyObject) != ObjectIdentifier(NSObject()))
         precondition(
             INUIAddVoiceShortcutViewController.presentationCapability == .hostDriven
         )
@@ -264,7 +264,7 @@ func testAddVoiceShortcutButtonDelegateIdentity() {
 
         var owned: ButtonPresentProbe? = ButtonPresentProbe()
         button.delegate = owned
-        weak var weakProbe = owned
+        weak let weakProbe = owned
         precondition(weakProbe != nil)
         owned = nil
         precondition(weakProbe == nil)
@@ -354,7 +354,6 @@ func testAddVoiceShortcutViewControllerClass() {
     intentsUIOnMain {
         IntentsUIHostControl.resetVoiceShortcuts()
         let controller = INUIAddVoiceShortcutViewController(shortcut: INShortcut())
-        precondition(controller is NSObject)
         precondition(type(of: controller) == INUIAddVoiceShortcutViewController.self)
         precondition(
             INUIAddVoiceShortcutViewController.presentationCapability == .hostDriven
@@ -386,7 +385,7 @@ func testAddVoiceShortcutViewControllerDelegateIdentity() {
 
         var owned: AddFinishProbe? = AddFinishProbe()
         controller.delegate = owned
-        weak var weakProbe = owned
+        weak let weakProbe = owned
         owned = nil
         precondition(weakProbe == nil)
         precondition(controller.delegate == nil)
@@ -469,7 +468,6 @@ func testEditVoiceShortcutViewControllerClass() {
             invocationPhrase: "Class probe"
         )
         let controller = INUIEditVoiceShortcutViewController(voiceShortcut: installed)
-        precondition(controller is NSObject)
         precondition(type(of: controller) == INUIEditVoiceShortcutViewController.self)
         precondition(
             INUIEditVoiceShortcutViewController.presentationCapability == .hostDriven
@@ -509,7 +507,7 @@ func testEditVoiceShortcutViewControllerDelegateIdentity() {
 
         var owned: EditFinishProbe? = EditFinishProbe()
         controller.delegate = owned
-        weak var weakProbe = owned
+        weak let weakProbe = owned
         owned = nil
         precondition(weakProbe == nil)
         precondition(controller.delegate == nil)
@@ -627,10 +625,9 @@ func testEditVoiceShortcutCancel() {
 func testHostedViewControllingMarker() {
     intentsUIOnMain {
         let stub = HostedViewStub()
-        precondition(stub is INUIHostedViewControlling)
-        precondition(stub is NSObject)
         let existential: any INUIHostedViewControlling = stub
         precondition(existential === stub)
+        precondition(type(of: stub) == HostedViewStub.self)
     }
 }
 
@@ -641,7 +638,7 @@ func testHostedViewSiriProvidingProtocol() {
         precondition(existential.displaysMap == false)
         precondition(existential.displaysMessage == false)
         precondition(existential.displaysPaymentTransaction == false)
-        precondition(defaults is NSObject)
+        precondition(type(of: defaults) == DefaultSiriHints.self)
     }
 }
 

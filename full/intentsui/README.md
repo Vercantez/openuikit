@@ -22,12 +22,10 @@ that Apple's Siri account or sheet is available.
 - `INUIAddVoiceShortcutButton` stores style (get via `style`, mutate via
   `setStyle`), optional `shortcut`, `cornerRadius`, and a weak delegate.
   Isolated Linux subclasses `NSObject` because `UIButton` is UIKit-owned.
-  When UIKit is imported, the class subclasses `UIButton`.
 - `INUIAddVoiceShortcutViewController.init(shortcut:)` and
   `INUIEditVoiceShortcutViewController.init(voiceShortcut:)` retain the
   caller-provided identity and the weak delegate. Isolated Linux subclasses
-  `NSObject`; with UIKit they subclass `UIViewController` so corpus
-  `present(_:animated:)` call sites type-check.
+  `NSObject` because `UIViewController` is UIKit-owned.
 - Host `finish` installs or updates a process-local voice shortcut when the
   phrase contains a non-whitespace character. Empty or whitespace-only phrases
   report `emptyInvocationPhrase` and do not mutate the table. `delete` removes
@@ -92,8 +90,8 @@ and pocket-casts-ios sample paths. pocket-casts-ios
 This pass split non-enum coverage onto per-identifier tests, made
 `INUIVoiceShortcutError` `Equatable`/`Hashable`, proved weak delegates,
 empty-phrase fail-closed (no table mutation), second-delete `shortcutNotFound`,
-and cancel-does-not-uninstall. Superclasses become `UIViewController` /
-`UIButton` only when UIKit is imported.
+and cancel-does-not-uninstall. Isolated Linux still subclasses `NSObject`
+because UIKit is not a declared seed dependency.
 
 Top-5 evidence distribution (implemented rows citing each test):
 
