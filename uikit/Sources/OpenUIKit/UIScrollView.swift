@@ -363,7 +363,17 @@ open class UIScrollView: UIView {
 
     /// iPhone SE (3rd gen) default keyboard + suggestion bar, measured as
     /// the delta in `adjustedContentInset.bottom` (Forms t1200 vs t200).
-    static let iOSKeyboardOverlap: CGFloat = 260
+    /// Pad: Forms-ipad t1200, iPad (A16) 820×1180 @2x / iOS 26.1: table
+    /// `adjustedContentInset.bottom` rest **25** (window SA) → focused
+    /// **337**. Overlap = 337 − 25 = **312**. Phone stays 260.
+    static var iOSKeyboardOverlap: CGFloat {
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           (UITraitCollection.current.userInterfaceIdiom == .pad
+            || UIDevice.current.userInterfaceIdiom == .pad) {
+            return 312
+        }
+        return 260
+    }
 
     var iOSKeyboardAvoidanceBottom: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
