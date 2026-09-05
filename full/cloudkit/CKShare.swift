@@ -153,6 +153,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
         return nil
     }
 
+    @objc(CKShareAccessRequester)
     open class AccessRequester: NSObject, NSSecureCoding, @unchecked Sendable {
         open private(set) var participantLookupInfo: CKUserIdentity.LookupInfo
         open private(set) var userIdentity: CKUserIdentity
@@ -175,6 +176,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
         }
     }
 
+    @objc(CKShareBlockedIdentity)
     open class BlockedIdentity: NSObject, NSSecureCoding, @unchecked Sendable {
         open private(set) var userIdentity: CKUserIdentity
 
@@ -195,6 +197,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
         }
     }
 
+    @objc(CKShareMetadata)
     open class Metadata: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         open private(set) var containerIdentifier: String
         open private(set) var hierarchicalRootRecordID: CKRecord.ID?
@@ -222,6 +225,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
         }
     }
 
+    @objc(CKShareParticipant)
     open class Participant: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         public typealias Permission = CKShare.ParticipantPermission
         public typealias AcceptanceStatus = CKShare.ParticipantAcceptanceStatus
@@ -283,5 +287,29 @@ open class CKShare: CKRecord, @unchecked Sendable {
                 acceptanceStatus: .unknown
             )
         }
+    }
+
+    func ck_copyShare() -> CKShare {
+        let dummy = CKRecord(
+            recordType: "CKShareCopyRoot",
+            recordID: CKRecord.ID(recordName: "ck-share-root", zoneID: recordID.zoneID)
+        )
+        let copied = CKShare(rootRecord: dummy, shareID: recordID)
+        copied.allowsAccessRequests = allowsAccessRequests
+        copied.publicPermission = publicPermission
+        copied.ck_replaceParticipants(participants)
+        copied.ck_setShareURL(url)
+        return copied
+    }
+
+    func ck_replaceParticipants(_ participants: [CKShare.Participant]) {
+        self.participants = participants
+        if let first = participants.first {
+            owner = first
+        }
+    }
+
+    func ck_setShareURL(_ url: URL?) {
+        self.url = url
     }
 }

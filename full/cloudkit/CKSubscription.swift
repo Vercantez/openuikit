@@ -9,6 +9,7 @@ open class CKSubscription: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
         case database = 3
     }
 
+    @objc(CKNotificationInfo)
     open class NotificationInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         open var alertActionLocalizationKey: String?
         open var alertBody: String?
@@ -131,7 +132,34 @@ open class CKSubscription: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
-        self
+        ck_copySubscription()
+    }
+
+    func ck_copySubscription() -> CKSubscription {
+        if let query = self as? CKQuerySubscription {
+            let copied = CKQuerySubscription(
+                recordType: query.recordType ?? "",
+                predicate: query.predicate,
+                subscriptionID: query.subscriptionID,
+                options: query.querySubscriptionOptions
+            )
+            copied.zoneID = query.zoneID
+            copied.notificationInfo = query.notificationInfo?.copy() as? CKSubscription.NotificationInfo
+            return copied
+        }
+        if let zone = self as? CKRecordZoneSubscription {
+            let copied = CKRecordZoneSubscription(zoneID: zone.zoneID, subscriptionID: zone.subscriptionID)
+            copied.recordType = zone.recordType
+            copied.notificationInfo = zone.notificationInfo?.copy() as? CKSubscription.NotificationInfo
+            return copied
+        }
+        if let database = self as? CKDatabaseSubscription {
+            let copied = CKDatabaseSubscription(subscriptionID: database.subscriptionID)
+            copied.recordType = database.recordType
+            copied.notificationInfo = database.notificationInfo?.copy() as? CKSubscription.NotificationInfo
+            return copied
+        }
+        return self
     }
 }
 

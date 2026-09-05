@@ -43,16 +43,40 @@ open class CKOperation: Operation, @unchecked Sendable {
     }
 
     open override func main() {
+        if isCancelled {
+            finishCancelled()
+            return
+        }
+        runSimulated()
+    }
+
+    func runSimulated() {
+        finishFailClosed()
+    }
+
+    func finishCancelled() {
         finishFailClosed()
     }
 
     func finishFailClosed() {
-        // Subclasses fire typed completion blocks. The base class is inert.
+        // Subclasses fire typed completion blocks. Sharing/identity stay fail-closed.
     }
 }
 
 open class CKDatabaseOperation: CKOperation, @unchecked Sendable {
     open var database: CKDatabase?
+
+    func runWithStore(_ body: (CKSimulatedDatabaseState) throws -> Void) {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            try database.withStore(body)
+        } catch {
+            finishFailClosed()
+        }
+    }
 }
 
 open class CKOperationGroup: NSObject, NSSecureCoding, @unchecked Sendable {
@@ -124,6 +148,52 @@ open class CKModifyRecordsOperation: CKDatabaseOperation, @unchecked Sendable {
         self.recordIDsToDelete = recordIDsToDelete
     }
 
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            let outcome = try database.withStore {
+                $0.modifyRecords(
+                    saving: recordsToSave ?? [],
+                    deleting: recordIDsToDelete ?? [],
+                    policy: savePolicy,
+                    atomically: isAtomic
+                )
+            }
+            // Documented order: per-record progress/completion, then modify
+            // completion, then result block (CloudKitRuntime modify-order probe).
+            for record in recordsToSave ?? [] {
+                perRecordProgressBlock?(record, 1.0)
+                if let result = outcome.saveResults[record.recordID] {
+                    switch result {
+                    case .success(let saved):
+                        perRecordCompletionBlock?(saved, nil)
+                        perRecordSaveBlock?(record.recordID, .success(saved))
+                    case .failure(let error):
+                        perRecordCompletionBlock?(record, error)
+                        perRecordSaveBlock?(record.recordID, .failure(error))
+                    }
+                }
+            }
+            for recordID in recordIDsToDelete ?? [] {
+                if let result = outcome.deleteResults[recordID] {
+                    perRecordDeleteBlock?(recordID, result)
+                }
+            }
+            if let error = outcome.error {
+                modifyRecordsCompletionBlock?(nil, nil, error)
+                modifyRecordsResultBlock?(.failure(error))
+            } else {
+                modifyRecordsCompletionBlock?(outcome.saved, outcome.deleted, nil)
+                modifyRecordsResultBlock?(.success(()))
+            }
+        } catch {
+            finishFailClosed()
+        }
+    }
+
     override func finishFailClosed() {
         let error = CloudKitHost.unsupportedError()
         recordsToSave?.forEach { record in
@@ -141,24 +211,63 @@ open class CKModifyRecordsOperation: CKDatabaseOperation, @unchecked Sendable {
 open class CKQueryOperation: CKDatabaseOperation, @unchecked Sendable {
     public static let maximumResults: Int = 0
 
+    @objc(CKQueryCursor)
     open class Cursor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         public static var supportsSecureCoding: Bool { true }
 
+        var ck_recordType: CKRecord.RecordType = ""
+        var ck_predicate: NSPredicate = NSPredicate(value: true)
+        var ck_zoneID: CKRecordZone.ID?
+        var ck_sortDescriptors: [NSSortDescriptor]?
+        var ck_desiredKeys: [CKRecord.FieldKey]?
+        var ck_offset: Int = 0
+
         public required init?(coder: NSCoder) {
-            _ = coder
-            return nil
+            ck_recordType = coder.decodeObject(of: NSString.self, forKey: "ck.cursor.recordType") as String? ?? ""
+            ck_predicate = coder.decodeObject(of: NSPredicate.self, forKey: "ck.cursor.predicate") ?? NSPredicate(value: true)
+            ck_zoneID = coder.decodeObject(of: CKRecordZone.ID.self, forKey: "ck.cursor.zoneID")
+            ck_offset = coder.decodeInteger(forKey: "ck.cursor.offset")
+            super.init()
         }
 
         public override init() {
             super.init()
         }
 
+        static func ck_make(
+            recordType: CKRecord.RecordType,
+            predicate: NSPredicate,
+            zoneID: CKRecordZone.ID?,
+            sortDescriptors: [NSSortDescriptor]?,
+            desiredKeys: [CKRecord.FieldKey]?,
+            offset: Int
+        ) -> CKQueryOperation.Cursor {
+            let cursor = CKQueryOperation.Cursor()
+            cursor.ck_recordType = recordType
+            cursor.ck_predicate = predicate
+            cursor.ck_zoneID = zoneID
+            cursor.ck_sortDescriptors = sortDescriptors
+            cursor.ck_desiredKeys = desiredKeys
+            cursor.ck_offset = offset
+            return cursor
+        }
+
         open func encode(with coder: NSCoder) {
-            _ = coder
+            coder.encode(ck_recordType as NSString, forKey: "ck.cursor.recordType")
+            coder.encode(ck_predicate, forKey: "ck.cursor.predicate")
+            coder.encode(ck_zoneID, forKey: "ck.cursor.zoneID")
+            coder.encode(ck_offset, forKey: "ck.cursor.offset")
         }
 
         open func copy(with zone: NSZone? = nil) -> Any {
-            CKQueryOperation.Cursor()
+            CKQueryOperation.Cursor.ck_make(
+                recordType: ck_recordType,
+                predicate: ck_predicate,
+                zoneID: ck_zoneID,
+                sortDescriptors: ck_sortDescriptors,
+                desiredKeys: ck_desiredKeys,
+                offset: ck_offset
+            )
         }
     }
 
@@ -186,6 +295,53 @@ open class CKQueryOperation: CKDatabaseOperation, @unchecked Sendable {
         self.query = query
     }
 
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            let page = try database.withStore { state -> (matches: [CKRecord], cursor: CKQueryOperation.Cursor?) in
+                if let cursor {
+                    return state.queryRecords(
+                        type: cursor.ck_recordType,
+                        predicate: cursor.ck_predicate,
+                        zoneID: cursor.ck_zoneID ?? zoneID,
+                        sortDescriptors: cursor.ck_sortDescriptors,
+                        desiredKeys: desiredKeys ?? cursor.ck_desiredKeys,
+                        offset: cursor.ck_offset,
+                        limit: resultsLimit
+                    )
+                }
+                guard let query else {
+                    throw CKSimulatedStore.error(.invalidArguments)
+                }
+                if let zoneID, state.zone(for: zoneID) == nil {
+                    throw CKSimulatedStore.error(.zoneNotFound)
+                }
+                return state.queryRecords(
+                    type: query.recordType,
+                    predicate: query.predicate,
+                    zoneID: zoneID,
+                    sortDescriptors: query.sortDescriptors,
+                    desiredKeys: desiredKeys,
+                    offset: 0,
+                    limit: resultsLimit
+                )
+            }
+            for record in page.matches {
+                recordFetchedBlock?(record)
+                recordMatchedBlock?(record.recordID, .success(record))
+            }
+            queryCompletionBlock?(page.cursor, nil)
+            queryResultBlock?(.success(page.cursor))
+        } catch {
+            let ckError = (error as? CKError) ?? CKSimulatedStore.error(.internalError)
+            queryCompletionBlock?(nil, ckError)
+            queryResultBlock?(.failure(ckError))
+        }
+    }
+
     override func finishFailClosed() {
         let error = CloudKitHost.unsupportedError()
         queryCompletionBlock?(nil, error)
@@ -198,6 +354,9 @@ open class CKFetchRecordsOperation: CKDatabaseOperation, @unchecked Sendable {
     open var perRecordCompletionBlock: ((CKRecord?, CKRecord.ID?, (any Error)?) -> Void)?
     open var perRecordProgressBlock: ((CKRecord.ID, Double) -> Void)?
     open var recordIDs: [CKRecord.ID]?
+    open var desiredKeys: [CKRecord.FieldKey]?
+    open var fetchRecordsResultBlock: ((Result<Void, any Error>) -> Void)?
+    open var perRecordResultBlock: ((CKRecord.ID, Result<CKRecord, any Error>) -> Void)?
 
     public override required init() {
         super.init()
@@ -212,18 +371,69 @@ open class CKFetchRecordsOperation: CKDatabaseOperation, @unchecked Sendable {
         Self.init()
     }
 
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        var fetched: [CKRecord.ID: CKRecord] = [:]
+        var failed = false
+        let ids: [CKRecord.ID]
+        if let recordIDs {
+            ids = recordIDs
+        } else {
+            ids = []
+        }
+        do {
+            try database.withStore { state in
+                for recordID in ids {
+                    perRecordProgressBlock?(recordID, 1.0)
+                    let result = state.fetchRecord(recordID, desiredKeys: desiredKeys)
+                    switch result {
+                    case .success(let record):
+                        fetched[recordID] = record
+                        perRecordCompletionBlock?(record, recordID, nil)
+                        perRecordResultBlock?(recordID, .success(record))
+                    case .failure(let error):
+                        failed = true
+                        perRecordCompletionBlock?(nil, recordID, error)
+                        perRecordResultBlock?(recordID, .failure(error))
+                    }
+                }
+            }
+            if failed {
+                var partial: [AnyHashable: any Error] = [:]
+                for recordID in ids where fetched[recordID] == nil {
+                    partial[recordID] = CKSimulatedStore.error(.unknownItem)
+                }
+                let error = CKSimulatedStore.partialFailure(partial)
+                fetchRecordsCompletionBlock?(fetched.isEmpty ? nil : fetched, error)
+                fetchRecordsResultBlock?(.failure(error))
+            } else {
+                fetchRecordsCompletionBlock?(fetched, nil)
+                fetchRecordsResultBlock?(.success(()))
+            }
+        } catch {
+            finishFailClosed()
+        }
+    }
+
     override func finishFailClosed() {
         let error = CloudKitHost.unsupportedError()
         recordIDs?.forEach { recordID in
             perRecordCompletionBlock?(nil, recordID, error)
+            perRecordResultBlock?(recordID, .failure(error))
         }
         fetchRecordsCompletionBlock?(nil, error)
+        fetchRecordsResultBlock?(.failure(error))
     }
 }
 
 open class CKFetchRecordZonesOperation: CKDatabaseOperation, @unchecked Sendable {
     open var fetchRecordZonesCompletionBlock: (([CKRecordZone.ID: CKRecordZone]?, (any Error)?) -> Void)?
     open var recordZoneIDs: [CKRecordZone.ID]?
+    open var perRecordZoneResultBlock: ((CKRecordZone.ID, Result<CKRecordZone, any Error>) -> Void)?
+    open var fetchRecordZonesResultBlock: ((Result<Void, any Error>) -> Void)?
 
     public override required init() {
         super.init()
@@ -238,8 +448,37 @@ open class CKFetchRecordZonesOperation: CKDatabaseOperation, @unchecked Sendable
         Self.init()
     }
 
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            var fetched: [CKRecordZone.ID: CKRecordZone] = [:]
+            try database.withStore { state in
+                let ids = recordZoneIDs ?? Array(state.zones.values.map { $0.zoneID })
+                for zoneID in ids {
+                    if let zone = state.zone(for: zoneID) {
+                        let copy = zone.ck_copyZone()
+                        fetched[zoneID] = copy
+                        perRecordZoneResultBlock?(zoneID, .success(copy))
+                    } else {
+                        let error = CKSimulatedStore.error(.zoneNotFound)
+                        perRecordZoneResultBlock?(zoneID, .failure(error))
+                    }
+                }
+            }
+            fetchRecordZonesCompletionBlock?(fetched, nil)
+            fetchRecordZonesResultBlock?(.success(()))
+        } catch {
+            finishFailClosed()
+        }
+    }
+
     override func finishFailClosed() {
-        fetchRecordZonesCompletionBlock?(nil, CloudKitHost.unsupportedError())
+        let error = CloudKitHost.unsupportedError()
+        fetchRecordZonesCompletionBlock?(nil, error)
+        fetchRecordZonesResultBlock?(.failure(error))
     }
 }
 
@@ -262,6 +501,53 @@ open class CKModifyRecordZonesOperation: CKDatabaseOperation, @unchecked Sendabl
         self.init()
         self.recordZonesToSave = recordZonesToSave
         self.recordZoneIDsToDelete = recordZoneIDsToDelete
+    }
+
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            var saved: [CKRecordZone] = []
+            var deleted: [CKRecordZone.ID] = []
+            var failed = false
+            var partial: [AnyHashable: any Error] = [:]
+            try database.withStore { state in
+                for zone in recordZonesToSave ?? [] {
+                    switch state.saveZone(zone) {
+                    case .success(let stored):
+                        saved.append(stored)
+                        perRecordZoneSaveBlock?(zone.zoneID, .success(stored))
+                    case .failure(let error):
+                        failed = true
+                        partial[zone.zoneID] = error
+                        perRecordZoneSaveBlock?(zone.zoneID, .failure(error))
+                    }
+                }
+                for zoneID in recordZoneIDsToDelete ?? [] {
+                    switch state.deleteZone(zoneID) {
+                    case .success(let deletedID):
+                        deleted.append(deletedID)
+                        perRecordZoneDeleteBlock?(zoneID, .success(()))
+                    case .failure(let error):
+                        failed = true
+                        partial[zoneID] = error
+                        perRecordZoneDeleteBlock?(zoneID, .failure(error))
+                    }
+                }
+            }
+            if failed {
+                let error = CKSimulatedStore.partialFailure(partial)
+                modifyRecordZonesCompletionBlock?(nil, nil, error)
+                modifyRecordZonesResultBlock?(.failure(error))
+            } else {
+                modifyRecordZonesCompletionBlock?(saved, deleted, nil)
+                modifyRecordZonesResultBlock?(.success(()))
+            }
+        } catch {
+            finishFailClosed()
+        }
     }
 
     override func finishFailClosed() {
@@ -296,6 +582,53 @@ open class CKModifySubscriptionsOperation: CKDatabaseOperation, @unchecked Senda
         self.init()
         self.subscriptionsToSave = subscriptionsToSave
         self.subscriptionIDsToDelete = subscriptionIDsToDelete
+    }
+
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            var saved: [CKSubscription] = []
+            var deleted: [CKSubscription.ID] = []
+            var failed = false
+            var partial: [AnyHashable: any Error] = [:]
+            try database.withStore { state in
+                for subscription in subscriptionsToSave ?? [] {
+                    switch state.saveSubscription(subscription) {
+                    case .success(let stored):
+                        saved.append(stored)
+                        perSubscriptionSaveBlock?(subscription.subscriptionID, .success(stored))
+                    case .failure(let error):
+                        failed = true
+                        partial[subscription.subscriptionID] = error
+                        perSubscriptionSaveBlock?(subscription.subscriptionID, .failure(error))
+                    }
+                }
+                for subscriptionID in subscriptionIDsToDelete ?? [] {
+                    switch state.deleteSubscription(subscriptionID) {
+                    case .success:
+                        deleted.append(subscriptionID)
+                        perSubscriptionDeleteBlock?(subscriptionID, .success(()))
+                    case .failure(let error):
+                        failed = true
+                        partial[subscriptionID] = error
+                        perSubscriptionDeleteBlock?(subscriptionID, .failure(error))
+                    }
+                }
+            }
+            if failed {
+                let error = CKSimulatedStore.partialFailure(partial)
+                modifySubscriptionsCompletionBlock?(nil, nil, error)
+                modifySubscriptionsResultBlock?(.failure(error))
+            } else {
+                modifySubscriptionsCompletionBlock?(saved, deleted, nil)
+                modifySubscriptionsResultBlock?(.success(()))
+            }
+        } catch {
+            finishFailClosed()
+        }
     }
 
     override func finishFailClosed() {

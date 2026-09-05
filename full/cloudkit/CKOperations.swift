@@ -20,6 +20,35 @@ open class CKFetchDatabaseChangesOperation: CKDatabaseOperation, @unchecked Send
         self.previousServerChangeToken = previousServerChangeToken
     }
 
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            let page = try database.withStore {
+                $0.databaseChanges(since: previousServerChangeToken, limit: resultsLimit > 0 ? resultsLimit : nil)
+            }
+            for modification in page.modifications {
+                recordZoneWithIDChangedBlock?(modification.zoneID)
+            }
+            for deletion in page.deletions {
+                switch deletion.reason {
+                case .deleted:
+                    recordZoneWithIDWasDeletedBlock?(deletion.zoneID)
+                case .purged:
+                    recordZoneWithIDWasPurgedBlock?(deletion.zoneID)
+                case .encryptedDataReset:
+                    recordZoneWithIDWasDeletedDueToUserEncryptedDataResetBlock?(deletion.zoneID)
+                }
+            }
+            changeTokenUpdatedBlock?(page.token)
+            fetchDatabaseChangesCompletionBlock?(page.token, page.moreComing, nil)
+        } catch {
+            finishFailClosed()
+        }
+    }
+
     override func finishFailClosed() {
         fetchDatabaseChangesCompletionBlock?(nil, false, CloudKitHost.unsupportedError())
     }
@@ -48,6 +77,35 @@ open class CKFetchRecordChangesOperation: CKDatabaseOperation, @unchecked Sendab
         self.previousServerChangeToken = previousServerChangeToken
     }
 
+    override func runSimulated() {
+        guard let database, let recordZoneID else {
+            finishFailClosed()
+            return
+        }
+        do {
+            let page = try database.withStore {
+                try $0.zoneChanges(
+                    in: recordZoneID,
+                    since: previousServerChangeToken,
+                    desiredKeys: desiredKeys,
+                    limit: resultsLimit > 0 ? resultsLimit : nil
+                ).get()
+            }
+            moreComing = page.moreComing
+            for (_, result) in page.modifications {
+                if case .success(let modification) = result {
+                    recordChangedBlock?(modification.record)
+                }
+            }
+            for deletion in page.deletions {
+                recordWithIDWasDeletedBlock?(deletion.recordID)
+            }
+            fetchRecordChangesCompletionBlock?(page.token, nil, nil)
+        } catch {
+            finishFailClosed()
+        }
+    }
+
     override func finishFailClosed() {
         fetchRecordChangesCompletionBlock?(nil, nil, CloudKitHost.unsupportedError())
     }
@@ -61,6 +119,19 @@ open class CKFetchRecordZoneChangesOperation: CKDatabaseOperation, @unchecked Se
 
         public override init() {
             super.init()
+        }
+
+        public convenience init(
+            previousServerChangeToken: CKServerChangeToken? = nil,
+            resultsLimit: Int? = nil,
+            desiredKeys: [CKRecord.FieldKey]? = nil
+        ) {
+            self.init()
+            self.previousServerChangeToken = previousServerChangeToken
+            if let resultsLimit {
+                self.resultsLimit = resultsLimit
+            }
+            self.desiredKeys = desiredKeys
         }
     }
 
@@ -79,6 +150,8 @@ open class CKFetchRecordZoneChangesOperation: CKDatabaseOperation, @unchecked Se
     open var fetchRecordZoneChangesCompletionBlock: (((any Error)?) -> Void)?
     open var optionsByRecordZoneID: [CKRecordZone.ID: ZoneOptions]?
     open var recordChangedBlock: ((CKRecord) -> Void)?
+    open var recordWasChangedBlock: ((CKRecord.ID, Result<CKRecord, any Error>) -> Void)?
+    open var recordWithIDWasDeletedBlock: ((CKRecord.ID, CKRecord.RecordType) -> Void)?
     open var recordZoneChangeTokensUpdatedBlock: ((CKRecordZone.ID, CKServerChangeToken?, Data?) -> Void)?
     open var recordZoneFetchCompletionBlock: ((CKRecordZone.ID, CKServerChangeToken?, Data?, Bool, (any Error)?) -> Void)?
     open var recordZoneIDs: [CKRecordZone.ID]?
@@ -94,6 +167,58 @@ open class CKFetchRecordZoneChangesOperation: CKDatabaseOperation, @unchecked Se
         self.init()
         self.recordZoneIDs = recordZoneIDs
         self.optionsByRecordZoneID = optionsByRecordZoneID
+    }
+
+    public convenience init(
+        recordZoneIDs: [CKRecordZone.ID]? = nil,
+        configurationsByRecordZoneID: [CKRecordZone.ID: ZoneConfiguration]? = nil
+    ) {
+        self.init()
+        self.recordZoneIDs = recordZoneIDs
+        self.configurationsByRecordZoneID = configurationsByRecordZoneID
+    }
+
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        let zoneIDs = recordZoneIDs ?? []
+        do {
+            try database.withStore { state in
+                for zoneID in zoneIDs {
+                    let configuration = configurationsByRecordZoneID?[zoneID]
+                    let options = optionsByRecordZoneID?[zoneID]
+                    let token = configuration?.previousServerChangeToken ?? options?.previousServerChangeToken
+                    let desired = configuration?.desiredKeys ?? options?.desiredKeys
+                    let limitValue = configuration?.resultsLimit ?? options?.resultsLimit ?? 0
+                    switch state.zoneChanges(
+                        in: zoneID,
+                        since: token,
+                        desiredKeys: desired,
+                        limit: limitValue > 0 ? limitValue : nil
+                    ) {
+                    case .success(let page):
+                        for (_, result) in page.modifications {
+                            if case .success(let modification) = result {
+                                recordChangedBlock?(modification.record)
+                                recordWasChangedBlock?(modification.record.recordID, .success(modification.record))
+                            }
+                        }
+                        for deletion in page.deletions {
+                            recordWithIDWasDeletedBlock?(deletion.recordID, deletion.recordType)
+                        }
+                        recordZoneChangeTokensUpdatedBlock?(zoneID, page.token, nil)
+                        recordZoneFetchCompletionBlock?(zoneID, page.token, nil, page.moreComing, nil)
+                    case .failure(let error):
+                        recordZoneFetchCompletionBlock?(zoneID, nil, nil, false, error)
+                    }
+                }
+            }
+            fetchRecordZoneChangesCompletionBlock?(nil)
+        } catch {
+            finishFailClosed()
+        }
     }
 
     override func finishFailClosed() {
@@ -122,6 +247,32 @@ open class CKFetchSubscriptionsOperation: CKDatabaseOperation, @unchecked Sendab
 
     open class func fetchAllSubscriptionsOperation() -> Self {
         Self.init()
+    }
+
+    override func runSimulated() {
+        guard let database else {
+            finishFailClosed()
+            return
+        }
+        do {
+            var fetched: [CKSubscription.ID: CKSubscription] = [:]
+            try database.withStore { state in
+                let ids = subscriptionIDs ?? Array(state.subscriptions.keys)
+                for subscriptionID in ids {
+                    switch state.fetchSubscription(subscriptionID) {
+                    case .success(let subscription):
+                        fetched[subscriptionID] = subscription
+                        perSubscriptionResultBlock?(subscriptionID, .success(subscription))
+                    case .failure(let error):
+                        perSubscriptionResultBlock?(subscriptionID, .failure(error))
+                    }
+                }
+            }
+            fetchSubscriptionCompletionBlock?(fetched, nil)
+            fetchSubscriptionsResultBlock?(.success(()))
+        } catch {
+            finishFailClosed()
+        }
     }
 
     override func finishFailClosed() {

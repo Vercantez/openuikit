@@ -48,14 +48,14 @@ public typealias CKContainer_Application_PermissionStatus = CKContainer.Applicat
 
 enum CloudKitHost {
     static let unsupportedDescription =
-        "CloudKit Apple identity, network, and database services are unavailable on this Linux host."
+        "CloudKit Apple identity and sharing services are unavailable on this Linux host."
 
-    /// Real Foundation queue used to run fail-closed `CKOperation` instances.
-    /// This is not Apple's CloudKit daemon queue and does not invent QoS or
-    /// callback-thread pairing observed on an Apple host.
-    static let failClosedQueue: OperationQueue = {
+    /// Real Foundation queue used to run simulated `CKOperation` instances.
+    /// Completions are not invoked inline on the caller stack (CloudKitRuntime
+    /// add-operation probe).
+    static let operationQueue: OperationQueue = {
         let queue = OperationQueue()
-        queue.name = "CloudKit.LinuxFailClosed"
+        queue.name = "CloudKit.SimulatedContainer"
         queue.maxConcurrentOperationCount = 4
         queue.qualityOfService = .utility
         return queue
@@ -73,13 +73,17 @@ enum CloudKitHost {
     static func completeUnsupported<Value>(
         _ completion: @escaping (Value?, (any Error)?) -> Void
     ) {
-        completion(nil, unsupportedError())
+        schedule {
+            completion(nil, unsupportedError())
+        }
     }
 
     static func completeUnsupportedPair<A, B>(
         _ completion: @escaping (A?, B?, (any Error)?) -> Void
     ) {
-        completion(nil, nil, unsupportedError())
+        schedule {
+            completion(nil, nil, unsupportedError())
+        }
     }
 
     static func fail<T>() throws -> T {
@@ -87,6 +91,10 @@ enum CloudKitHost {
     }
 
     static func schedule(_ operation: Operation) {
-        failClosedQueue.addOperation(operation)
+        operationQueue.addOperation(operation)
+    }
+
+    static func schedule(_ work: @escaping () -> Void) {
+        operationQueue.addOperation(work)
     }
 }
