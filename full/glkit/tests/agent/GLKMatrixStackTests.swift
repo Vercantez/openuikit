@@ -1,0 +1,102 @@
+import CoreFoundation
+import Foundation
+import GLKit
+
+func testGLKMatrixStackCreatePushPop() {
+    glkCheck(GLKMatrixStackGetTypeID() == 0x474C4B53, "GLKMatrixStackGetTypeID")
+    let created = GLKMatrixStackCreate(nil)!.takeRetainedValue()
+    glkCheck(GLKMatrixStackSize(created) == 1, "Create size")
+    let stack = GLKMatrixStack()
+    glkCheck(GLKMatrixStackSize(stack) == 1, "init size")
+    GLKMatrixStackPush(stack)
+    glkCheck(GLKMatrixStackSize(stack) == 2, "Push")
+    GLKMatrixStackPop(stack)
+    glkCheck(GLKMatrixStackSize(stack) == 1, "Pop")
+    GLKMatrixStackPop(stack)
+    glkCheck(GLKMatrixStackSize(stack) == 1, "Pop does not go empty")
+    let other = GLKMatrixStack()
+    glkCheck(stack != other, "NSObject !=")
+    glkCheck(stack == stack, "NSObject ==")
+    var hasher = Hasher()
+    stack.hash(into: &hasher)
+    _ = stack.hashValue
+    _ = other.hashValue
+}
+
+func testGLKMatrixStackTransforms() {
+    let stack = GLKMatrixStack()
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackTranslate(stack, 2, 0, 0)
+    GLKMatrixStackPush(stack)
+    GLKMatrixStackScale(stack, 3, 1, 1)
+    let stacked = GLKMatrix4MultiplyVector3WithTranslation(
+        GLKMatrixStackGetMatrix4(stack),
+        GLKVector3Make(1, 0, 0)
+    )
+    glkCheck(stacked.x == 5, "Translate then Scale")
+    GLKMatrixStackPop(stack)
+    glkCheck(GLKMatrixStackSize(stack) == 1, "pop after transform")
+    GLKMatrixStackScaleWithVector3(stack, GLKVector3Make(1, 2, 1))
+    glkCheck(GLKMatrixStackGetMatrix4(stack).m11 == 2, "ScaleWithVector3")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackScaleWithVector4(stack, GLKVector4Make(2, 1, 1, 1))
+    glkCheck(GLKMatrixStackGetMatrix4(stack).m00 == 2, "ScaleWithVector4")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackTranslateWithVector3(stack, GLKVector3Make(0, 4, 0))
+    glkCheck(GLKMatrixStackGetMatrix4(stack).m31 == 4, "TranslateWithVector3")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackTranslateWithVector4(stack, GLKVector4Make(0, 0, 5, 1))
+    glkCheck(GLKMatrixStackGetMatrix4(stack).m32 == 5, "TranslateWithVector4")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackRotate(stack, GLKMathDegreesToRadians(90), 0, 0, 1)
+    let rotated = GLKMatrix4MultiplyVector3(GLKMatrixStackGetMatrix4(stack), GLKVector3Make(1, 0, 0))
+    glkCheck(glkNear(rotated.x, 0) && glkNear(rotated.y, 1), "Rotate")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackRotateWithVector3(stack, GLKMathDegreesToRadians(90), GLKVector3Make(0, 0, 1))
+    glkCheck(glkNear(GLKMatrix4MultiplyVector3(GLKMatrixStackGetMatrix4(stack), GLKVector3Make(1, 0, 0)).y, 1), "RotateWithVector3")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackRotateWithVector4(stack, GLKMathDegreesToRadians(90), GLKVector4Make(0, 0, 1, 0))
+    glkCheck(glkNear(GLKMatrix4MultiplyVector3(GLKMatrixStackGetMatrix4(stack), GLKVector3Make(1, 0, 0)).y, 1), "RotateWithVector4")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackRotateX(stack, GLKMathDegreesToRadians(90))
+    glkCheck(glkNear(GLKMatrix4MultiplyVector3(GLKMatrixStackGetMatrix4(stack), GLKVector3Make(0, 1, 0)).z, 1), "RotateX")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackRotateY(stack, GLKMathDegreesToRadians(90))
+    glkCheck(glkNear(GLKMatrix4MultiplyVector3(GLKMatrixStackGetMatrix4(stack), GLKVector3Make(0, 0, 1)).x, 1), "RotateY")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackRotateZ(stack, GLKMathDegreesToRadians(90))
+    glkCheck(glkNear(GLKMatrix4MultiplyVector3(GLKMatrixStackGetMatrix4(stack), GLKVector3Make(1, 0, 0)).y, 1), "RotateZ")
+    let left = GLKMatrixStack()
+    let right = GLKMatrixStack()
+    GLKMatrixStackLoadMatrix4(right, GLKMatrix4MakeScale(2, 1, 1))
+    GLKMatrixStackMultiplyMatrixStack(left, right)
+    glkCheck(GLKMatrixStackGetMatrix4(left).m00 == 2, "MultiplyMatrixStack")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4Identity)
+    GLKMatrixStackMultiplyMatrix4(stack, GLKMatrix4MakeScale(3, 1, 1))
+    glkCheck(GLKMatrixStackGetMatrix4(stack).m00 == 3, "MultiplyMatrix4")
+}
+
+func testGLKMatrixStackInverses() {
+    let stack = GLKMatrixStack()
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4MakeScale(2, 1, 1))
+    let m2 = GLKMatrixStackGetMatrix2(stack)
+    glkCheck(m2.m00 == 2 && m2.m11 == 1, "GetMatrix2")
+    let m3 = GLKMatrixStackGetMatrix3(stack)
+    glkCheck(m3.m00 == 2, "GetMatrix3")
+    let inv4 = GLKMatrixStackGetMatrix4Inverse(stack)
+    glkCheck(glkNear(inv4.m00, 0.5), "GetMatrix4Inverse")
+    let inv4T = GLKMatrixStackGetMatrix4InverseTranspose(stack)
+    glkCheck(glkNear(inv4T.m00, 0.5), "GetMatrix4InverseTranspose")
+    let inv3 = GLKMatrixStackGetMatrix3Inverse(stack)
+    glkCheck(glkNear(inv3.m00, 0.5), "GetMatrix3Inverse")
+    let inv3T = GLKMatrixStackGetMatrix3InverseTranspose(stack)
+    glkCheck(glkNear(inv3T.m00, 0.5), "GetMatrix3InverseTranspose")
+}
+
+func testGLKMatrixStackIdentity() {
+    let stack = GLKMatrixStack()
+    let top = GLKMatrixStackGetMatrix4(stack)
+    glkCheck(top.m00 == 1 && top.m33 == 1, "initial identity")
+    GLKMatrixStackLoadMatrix4(stack, GLKMatrix4MakeTranslation(4, 0, 0))
+    glkCheck(GLKMatrixStackGetMatrix4(stack).m30 == 4, "LoadMatrix4")
+}
