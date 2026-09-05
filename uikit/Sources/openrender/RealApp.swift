@@ -85,7 +85,15 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
         preferredContentSizeCategory: variant.contentSizeCategory,
         userInterfaceIdiom: variant.idiom)
     RealAppScreen.configureAssets(directory: assets)
-    RealAppScreen.configureNibs(directory: RealAppScreen.defaultNibsDirectory)
+    // Assets argv is absolute (`…/fixtures/realapp/assets`). Nibs live in
+    // the sibling `nibs/` directory. Relative defaultNibsDirectory only
+    // works when cwd is uikit/; machorun runs render_full from build/full
+    // (attempt 11, fe3b61e8: 3 PNGs then UINib fatalError on storage).
+    var nibs = RealAppScreen.defaultNibsDirectory
+    if assets.hasSuffix("/assets") {
+        nibs = String(assets.dropLast(7)) + "/nibs"
+    }
+    RealAppScreen.configureNibs(directory: nibs)
     OpenUIKitRuntime.imageScreenScale = scale
     UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
 

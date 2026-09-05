@@ -160,3 +160,11 @@ Attempt 10: `c8faae90b56fc179c44aa7876c4565f41a301714`.
 `libOpenDispatch.dylib`. Staged `scratch/mrroot_full/host` helper is older
 than `OpenDispatchBridge.c`. Rebuild via `build_host_bridge.sh` into
 `$OUT/host` (widget-guest recipe); do not overwrite ROOTDIR/host.
+
+Attempt 11: `fe3b61e80dcc0b294eed3e49a4f95ded34a44c27`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+Host SO = `build/full/host`. `GUEST_REALAPP_RC=133` `GUEST_REALAPP_SCREENS=3`.
+Swift `_assertionFailure` in render_full. Screen 4 is storage, first
+nib-loaded variant; `configureNibs` used cwd-relative `fixtures/realapp/nibs`
+while machorun cwd is `build/full`. `UINib` `fatalError`s when the archive
+is missing. Derive nibs as the sibling of the absolute assets argv.
