@@ -20,6 +20,7 @@ cd "$(dirname "$0")/../.."          # monorepo root
 # One merge at a time: several waiters once launched merges into main together.
 MERGE_LOCK=/tmp/agent_merge.lock
 until mkdir "$MERGE_LOCK" 2>/dev/null; do sleep 30; done
+echo $$ > "$MERGE_LOCK/pid"   # the holder; a monitor removes the lock only when this pid is dead
 trap 'rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
 ROOT=$(pwd)
 NAME=${1:?usage: agent_merge.sh <branch>}
@@ -156,7 +157,7 @@ frames_complete() { # <dir> <skip> <flow args...>
   done
   SKIP_CAPTURE=$skip bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app $skip $app || exit 9
+  frames_complete /tmp/agent_merge_conf-$app "$skip" $app || exit 9
   if [ -d /tmp/hc-conformance-$app-ipad/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad /tmp/agent_merge_conf-$app-ipad
     skip_ipad=1
@@ -168,7 +169,7 @@ frames_complete() { # <dir> <skip> <flow args...>
     done
     SKIP_CAPTURE=$skip_ipad bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see /tmp/agent_merge_conf-$app-ipad.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-ipad $skip_ipad $app --ipad || exit 9
+  frames_complete /tmp/agent_merge_conf-$app-ipad "$skip_ipad" $app --ipad || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-dark/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
@@ -181,7 +182,7 @@ frames_complete() { # <dir> <skip> <flow args...>
     done
     SKIP_CAPTURE=$skipd bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-dark $skipd $app --dark || exit 9
+  frames_complete /tmp/agent_merge_conf-$app-dark "$skipd" $app --dark || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-rtl/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-rtl; cp -r /tmp/hc-conformance-$app-rtl /tmp/agent_merge_conf-$app-rtl
@@ -194,7 +195,7 @@ frames_complete() { # <dir> <skip> <flow args...>
     done
     SKIP_CAPTURE=$skipr bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-rtl $app --rtl > /tmp/agent_merge_conf-$app-rtl.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see /tmp/agent_merge_conf-$app-rtl.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-rtl $skipr $app --rtl || exit 9
+  frames_complete /tmp/agent_merge_conf-$app-rtl "$skipr" $app --rtl || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-ax1/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-ax1; cp -r /tmp/hc-conformance-$app-ax1 /tmp/agent_merge_conf-$app-ax1
@@ -207,7 +208,7 @@ frames_complete() { # <dir> <skip> <flow args...>
     done
     SKIP_CAPTURE=$skipax bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ax1 $app --ax1 > /tmp/agent_merge_conf-$app-ax1.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --ax1 (see /tmp/agent_merge_conf-$app-ax1.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-ax1 $skipax $app --ax1 || exit 9
+  frames_complete /tmp/agent_merge_conf-$app-ax1 "$skipax" $app --ax1 || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-xxxl/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-xxxl; cp -r /tmp/hc-conformance-$app-xxxl /tmp/agent_merge_conf-$app-xxxl
@@ -220,7 +221,7 @@ frames_complete() { # <dir> <skip> <flow args...>
     done
     SKIP_CAPTURE=$skipxx bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-xxxl $app --xxxl > /tmp/agent_merge_conf-$app-xxxl.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see /tmp/agent_merge_conf-$app-xxxl.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-xxxl $skipxx $app --xxxl || exit 9
+  frames_complete /tmp/agent_merge_conf-$app-xxxl "$skipxx" $app --xxxl || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-landscape/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-landscape; cp -r /tmp/hc-conformance-$app-landscape /tmp/agent_merge_conf-$app-landscape
@@ -233,7 +234,7 @@ frames_complete() { # <dir> <skip> <flow args...>
     done
     SKIP_CAPTURE=$skipl bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-landscape $app --landscape > /tmp/agent_merge_conf-$app-landscape.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --landscape (see /tmp/agent_merge_conf-$app-landscape.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-landscape $skipl $app --landscape || exit 9
+  frames_complete /tmp/agent_merge_conf-$app-landscape "$skipl" $app --landscape || exit 9
   fi
 done
 python3 - <<'PY' || exit 9
