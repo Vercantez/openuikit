@@ -380,11 +380,86 @@ public struct Transaction: Identifiable, Hashable, Sendable, CustomDebugStringCo
         return Locale.Currency(currencyCode)
     }
     public var debugDescription: String { "Transaction(\(id) \(productID))" }
+    public var jws: StoreKitJWS? {
+        try? StoreKitJWSCodec.parse(jwsRepresentation)
+    }
     public var subscriptionStatus: Product.SubscriptionInfo.Status? {
         get async {
             guard let group = subscriptionGroupID else { return nil }
             return try? await Product.SubscriptionInfo.status(for: group).first
         }
+    }
+
+    func revoked(at date: Date, reason: RevocationReason) -> Transaction {
+        Transaction(
+            id: id,
+            productID: productID,
+            purchaseDate: purchaseDate,
+            expirationDate: expirationDate,
+            revocationDate: date,
+            originalID: originalID,
+            originalPurchaseDate: originalPurchaseDate,
+            webOrderLineItemID: webOrderLineItemID,
+            subscriptionGroupID: subscriptionGroupID,
+            productType: productType,
+            appBundleID: appBundleID,
+            appAccountToken: appAccountToken,
+            purchasedQuantity: purchasedQuantity,
+            storefront: storefront,
+            reason: reason == .developerIssue ? .purchase : self.reason,
+            ownershipType: ownershipType,
+            environment: environment,
+            signedDate: signedDate,
+            deviceVerification: deviceVerification,
+            deviceVerificationNonce: deviceVerificationNonce,
+            jsonRepresentation: jsonRepresentation,
+            jwsHeaderData: jwsHeaderData,
+            jwsPayloadData: jwsPayloadData,
+            jwsSignatureData: jwsSignatureData,
+            jwsRepresentation: jwsRepresentation,
+            price: price,
+            currencyCode: currencyCode,
+            offer: offer,
+            revocationReason: reason,
+            isUpgraded: isUpgraded,
+            advancedCommerceInfo: advancedCommerceInfo
+        )
+    }
+
+    func expired(at date: Date) -> Transaction {
+        Transaction(
+            id: id,
+            productID: productID,
+            purchaseDate: purchaseDate,
+            expirationDate: date,
+            revocationDate: revocationDate,
+            originalID: originalID,
+            originalPurchaseDate: originalPurchaseDate,
+            webOrderLineItemID: webOrderLineItemID,
+            subscriptionGroupID: subscriptionGroupID,
+            productType: productType,
+            appBundleID: appBundleID,
+            appAccountToken: appAccountToken,
+            purchasedQuantity: purchasedQuantity,
+            storefront: storefront,
+            reason: reason,
+            ownershipType: ownershipType,
+            environment: environment,
+            signedDate: signedDate,
+            deviceVerification: deviceVerification,
+            deviceVerificationNonce: deviceVerificationNonce,
+            jsonRepresentation: jsonRepresentation,
+            jwsHeaderData: jwsHeaderData,
+            jwsPayloadData: jwsPayloadData,
+            jwsSignatureData: jwsSignatureData,
+            jwsRepresentation: jwsRepresentation,
+            price: price,
+            currencyCode: currencyCode,
+            offer: offer,
+            revocationReason: revocationReason,
+            isUpgraded: isUpgraded,
+            advancedCommerceInfo: advancedCommerceInfo
+        )
     }
 
     public init(

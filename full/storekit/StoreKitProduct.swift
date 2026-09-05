@@ -544,12 +544,15 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         }
 
         public var isEligibleForIntroOffer: Bool {
-            get async { true }
+            get async { Self.isEligibleForIntroOfferNow(for: subscriptionGroupID) }
         }
 
         public static func isEligibleForIntroOffer(for groupID: String) async -> Bool {
-            _ = groupID
-            return LocalTestingStore.shared.isLoaded
+            isEligibleForIntroOfferNow(for: groupID)
+        }
+
+        static func isEligibleForIntroOfferNow(for groupID: String) -> Bool {
+            LocalTestingStore.shared.isEligibleForIntroOffer(groupID: groupID)
         }
 
         public var status: [Status] {
@@ -559,40 +562,58 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         }
 
         public static func status(for groupID: String) async throws -> [Status] {
+            try statusNow(for: groupID)
+        }
+
+        static func statusNow(for groupID: String) throws -> [Status] {
             guard LocalTestingStore.shared.isLoaded else {
                 throw StoreKitError.notAvailableInStorefront
             }
-            let entitlements = LocalTestingStore.shared.snapshotEntitlements()
-            var result: [Status] = []
-            for wrapped in entitlements {
+            let all = LocalTestingStore.shared.snapshotAll()
+            var latest: [String: VerificationResult<Transaction>] = [:]
+            for wrapped in all {
                 let transaction = wrapped.unsafePayloadValue
                 if transaction.subscriptionGroupID == groupID {
-                    let info = RenewalInfo(
-                        willAutoRenew: true,
-                        currentProductID: transaction.productID,
-                        originalTransactionID: transaction.originalID,
-                        signedDate: transaction.signedDate,
-                        environment: transaction.environment,
-                        renewalDate: transaction.expirationDate
-                    )
-                    let renewal: VerificationResult<RenewalInfo>
-                    switch wrapped {
-                    case .verified:
-                        renewal = .verified(info)
-                    case .unverified(_, let error):
-                        let mapped: VerificationResult<RenewalInfo>.VerificationError
-                        switch error {
-                        case .invalidCertificateChain: mapped = .invalidCertificateChain
-                        case .invalidEncoding: mapped = .invalidEncoding
-                        case .invalidSignature: mapped = .invalidSignature
-                        case .missingRequiredProperties: mapped = .missingRequiredProperties
-                        case .revokedCertificate: mapped = .revokedCertificate
-                        case .invalidDeviceVerification: mapped = .invalidDeviceVerification
-                        }
-                        renewal = .unverified(info, mapped)
-                    }
-                    result.append(Status(state: .subscribed, transaction: wrapped, renewalInfo: renewal))
+                    latest[transaction.productID] = wrapped
                 }
+            }
+            var result: [Status] = []
+            for wrapped in latest.values {
+                let transaction = wrapped.unsafePayloadValue
+                let state: RenewalState
+                if transaction.revocationDate != nil {
+                    state = .revoked
+                } else if let expiration = transaction.expirationDate, expiration < Date() {
+                    state = .expired
+                } else {
+                    state = .subscribed
+                }
+                let info = RenewalInfo(
+                    willAutoRenew: state == .subscribed,
+                    currentProductID: transaction.productID,
+                    originalTransactionID: transaction.originalID,
+                    signedDate: transaction.signedDate,
+                    environment: transaction.environment,
+                    expirationReason: state == .expired ? .autoRenewDisabled : nil,
+                    renewalDate: transaction.expirationDate
+                )
+                let renewal: VerificationResult<RenewalInfo>
+                switch wrapped {
+                case .verified:
+                    renewal = .verified(info)
+                case .unverified(_, let error):
+                    let mapped: VerificationResult<RenewalInfo>.VerificationError
+                    switch error {
+                    case .invalidCertificateChain: mapped = .invalidCertificateChain
+                    case .invalidEncoding: mapped = .invalidEncoding
+                    case .invalidSignature: mapped = .invalidSignature
+                    case .missingRequiredProperties: mapped = .missingRequiredProperties
+                    case .revokedCertificate: mapped = .revokedCertificate
+                    case .invalidDeviceVerification: mapped = .invalidDeviceVerification
+                    }
+                    renewal = .unverified(info, mapped)
+                }
+                result.append(Status(state: state, transaction: wrapped, renewalInfo: renewal))
             }
             return result
         }
@@ -766,16 +787,13 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
     public static func products<Identifiers>(
         for identifiers: Identifiers
     ) async throws -> [Product] where Identifiers: Collection, Identifiers.Element == String {
-        guard LocalTestingStore.shared.isLoaded else {
-            throw StoreKitError.notAvailableInStorefront
-        }
-        return LocalTestingStore.shared.products(for: Array(identifiers))
+        try StoreKitTesting.products(for: Array(identifiers))
     }
 
     public func purchase(
         options: Set<PurchaseOption> = []
     ) async throws -> PurchaseResult {
-        try await performPurchase(options: options)
+        try StoreKitTesting.purchase(self, options: options)
     }
 
     public func purchase(
@@ -783,7 +801,7 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         options: Set<PurchaseOption> = []
     ) async throws -> PurchaseResult {
         _ = viewController
-        return try await performPurchase(options: options)
+        return try StoreKitTesting.purchase(self, options: options)
     }
 
     public func purchase(
@@ -791,7 +809,7 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         options: Set<PurchaseOption> = []
     ) async throws -> PurchaseResult {
         _ = scene
-        return try await performPurchase(options: options)
+        return try StoreKitTesting.purchase(self, options: options)
     }
 
     #if canImport(AppKit)
@@ -801,27 +819,9 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         options: Set<PurchaseOption> = []
     ) async throws -> PurchaseResult {
         _ = window
-        return try await performPurchase(options: options)
+        return try StoreKitTesting.purchase(self, options: options)
     }
     #endif
-
-    private func performPurchase(options: Set<PurchaseOption>) async throws -> PurchaseResult {
-        guard LocalTestingStore.shared.isLoaded else {
-            throw StoreKitError.notAvailableInStorefront
-        }
-        var quantity = 1
-        var token: UUID?
-        for option in options {
-            if let value = option.quantityValue { quantity = value }
-            if let value = option.appAccountTokenValue { token = value }
-        }
-        let result = try LocalTestingStore.shared.purchase(
-            product: self,
-            quantity: quantity,
-            appAccountToken: token
-        )
-        return .success(result)
-    }
 }
 
 public typealias SubscriptionInfo = Product.SubscriptionInfo
