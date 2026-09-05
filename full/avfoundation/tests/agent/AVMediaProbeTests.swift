@@ -260,7 +260,7 @@ func testAVMutableCompositionInsertsLocalTracks() {
     let added = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
     precondition(added != nil)
     precondition(composition.tracks.count == 2)
-    composition.removeTrack(added as! AVCompositionTrack)
+    composition.removeTrack(added!)
     precondition(composition.tracks.count == 1)
 }
 
