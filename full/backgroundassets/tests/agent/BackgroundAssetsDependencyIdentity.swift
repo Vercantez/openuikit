@@ -1,4 +1,4 @@
-@_spi(OpenUIKitHost) import BackgroundAssets
+import BackgroundAssets
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -27,9 +27,9 @@ func backgroundAssetsDependencyIdentityProbe() {
     }
     precondition(invoked)
 
-    let payload = Data([0x01, 0x02])
-    let pack = AssetPack(id: "identity-pack", downloadSize: 4, version: 1, userInfo: payload)
-    precondition(pack.userInfo == payload)
+    let json = Data("{\"assetPacks\":[{\"id\":\"identity-pack\",\"downloadSize\":4,\"version\":1}]}".utf8)
+    let manifest = try! AssetPackManifest(from: json, appGroupID: "group.identity")
+    precondition(manifest.assetPacks.first?.id == "identity-pack")
     let nsError = BAErrorCode.downloadInvalid as NSError
     precondition(nsError.domain == BAErrorDomain)
 }
