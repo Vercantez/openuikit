@@ -3,5 +3,6 @@ full/gamecontroller/GCElements.swift
 full/gamecontroller/GCKeys.swift
 full/gamecontroller/GCPhysicalInput.swift
 full/gamecontroller/GCProfiles.swift
+full/gamecontroller/GCSimulatedInput.swift
 full/gamecontroller/GCSnapshots.swift
 full/gamecontroller/GameController.swift
