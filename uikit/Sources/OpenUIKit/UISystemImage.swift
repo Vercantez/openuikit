@@ -331,7 +331,6 @@ private enum _UISystemImageRenderer {
 
     static func render(name: String,
                        configuration: UIImage.Configuration?) -> UIImage? {
-        guard let symbolMetrics = metrics[name] else { return nil }
         let scale = OpenUIKitRuntime.imageScreenScale
         guard scale.isFinite, scale > 0, scale <= maximumScale else { return nil }
 
@@ -347,6 +346,21 @@ private enum _UISystemImageRenderer {
         } else {
             symbolConfiguration = nil
         }
+
+        // MEASURED symbolinkprobe, SE 2x / iPhone 16 3x / iOS 26.1:
+        // tab-bar UIImageView.preferredSymbolConfiguration is 18 pt
+        // medium large; the harvested label-opaque coverage (Resources/
+        // symbol_ink_ios.json / _3x) is the glyph the bar actually
+        // stamps. Procedural paths missed that ink (Tabs t1000 calendar
+        // blob 59 at [91.5, 597.5, 22.5, 21]; t2000 clock.fill 246 at
+        // [264, 598.5, 19, 19]). Catalyst keeps the vectors below.
+        if let stamped = SymbolInkTable.stampTemplate(
+            name: name, configuration: symbolConfiguration, scale: scale
+        ) {
+            return stamped
+        }
+
+        guard let symbolMetrics = metrics[name] else { return nil }
 
         let logicalSize = configuredSize(
             for: name,
