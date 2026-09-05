@@ -1,7 +1,7 @@
 import Foundation
 
 extension Tips {
-    public struct Action: Identifiable {
+    public struct Action: Identifiable, @unchecked Sendable {
         public typealias ID = String
 
         public let id: String

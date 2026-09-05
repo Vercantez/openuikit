@@ -129,6 +129,44 @@ func testQLThumbnailErrorEqualityAndHash() {
     precondition(hasherA.finalize() == hasherB.finalize())
 }
 
+func testQLThumbnailErrorUserInfoAndInit() {
+    let empty = QLThumbnailError(.noCachedThumbnail)
+    precondition(empty.userInfo.isEmpty)
+    precondition(empty.errorUserInfo.isEmpty)
+
+    let populated = QLThumbnailError(
+        .noCachedThumbnail,
+        userInfo: ["qlt-key": 7, "qlt-note": "cached"]
+    )
+    precondition(populated.userInfo["qlt-key"] as? Int == 7)
+    precondition(populated.errorUserInfo["qlt-note"] as? String == "cached")
+    precondition(populated._nsError.userInfo["qlt-key"] as? Int == 7)
+}
+
+func testQLThumbnailErrorEqualityAndInequality() {
+    let left = QLThumbnailError(.requestInvalid)
+    let right = QLThumbnailError(.requestInvalid)
+    precondition(left == right)
+    precondition(!(left != right))
+    let otherCode = QLThumbnailError(.requestCancelled)
+    precondition(left != otherCode)
+    precondition(!(left == otherCode))
+    let otherInfo = QLThumbnailError(.requestInvalid, userInfo: ["k": "v"])
+    precondition(left != otherInfo)
+}
+
+func testQLThumbnailErrorCodeProperties() {
+    let error = QLThumbnailError(.savingToURLFailed)
+    precondition(error.code == .savingToURLFailed)
+    precondition(error.errorCode == QLThumbnailError.Code.savingToURLFailed.rawValue)
+    precondition(error.errorCode == 1)
+}
+
+func testQLThumbnailErrorLocalizedDescription() {
+    let error = QLThumbnailError(.generationFailed)
+    precondition(!error.localizedDescription.isEmpty)
+}
+
 func testQLThumbnailErrorPatternMatch() {
     let error: any Error = QLThumbnailError(.requestCancelled)
     precondition(QLThumbnailError.Code.requestCancelled ~= error)
@@ -637,6 +675,22 @@ func testFileThumbnailRequestPublicInitPlaceholders() {
     _ = request.fileURL
 }
 
+func testFileThumbnailRequestFileURLPlaceholder() {
+    let request = QLFileThumbnailRequest()
+    precondition(request.fileURL.isFileURL)
+    let expected = URL(fileURLWithPath: "")
+    precondition(request.fileURL == expected)
+}
+
+func testFileThumbnailRequestGeometryPlaceholders() {
+    let request = QLFileThumbnailRequest()
+    precondition(request.maximumSize.width == 0)
+    precondition(request.maximumSize.height == 0)
+    precondition(request.minimumSize.width == 0)
+    precondition(request.minimumSize.height == 0)
+    precondition(request.scale == 0)
+}
+
 func testRepresentationPublicInitTypeIconContentRectZero() {
     let representation = QLThumbnailRepresentation()
     precondition(representation.type == .icon)
@@ -684,4 +738,76 @@ func testDependencyIdentityHostGeometry() {
     let representation = QLThumbnailRepresentation()
     let contentRect: CGRect = representation.contentRect
     precondition(contentRect == .zero)
+}
+
+func testRequestMinimumDimensionDefaultAndMutation() {
+    let request = qltSampleRequest(path: "/tmp/qlt-min-dimension")
+    precondition(request.minimumDimension == 0)
+    request.minimumDimension = 24
+    precondition(request.minimumDimension == 24)
+    let copied = request.copy() as! QLThumbnailGenerator.Request
+    precondition(copied.minimumDimension == 24)
+    copied.minimumDimension = 8
+    precondition(request.minimumDimension == 24)
+    precondition(copied.minimumDimension == 8)
+}
+
+func testRequestScaleStoredValue() {
+    let request = QLThumbnailGenerator.Request(
+        fileAt: URL(fileURLWithPath: "/tmp/qlt-scale"),
+        size: CGSize(width: 10, height: 10),
+        scale: 2.5,
+        representationTypes: .icon
+    )
+    precondition(request.scale == 2.5)
+}
+
+func testGenerateRepresentationsReportsHighestRequestedType() {
+    let cases: [(QLThumbnailGenerator.Request.RepresentationTypes, QLThumbnailRepresentation.RepresentationType)] = [
+        (.icon, .icon),
+        (.lowQualityThumbnail, .lowQualityThumbnail),
+        ([.icon, .lowQualityThumbnail], .lowQualityThumbnail),
+        ([.lowQualityThumbnail, .thumbnail], .thumbnail),
+        (.all, .thumbnail),
+    ]
+    for (types, expected) in cases {
+        let request = qltSampleRequest(path: "/tmp/qlt-highest-\(expected.rawValue)", types: types)
+        let seenType = QLTLocked<QLThumbnailRepresentation.RepresentationType?>(nil)
+        let seenError = QLTLocked<(any Error)?>(nil)
+        let semaphore = DispatchSemaphore(value: 0)
+        QLThumbnailGenerator.shared.generateRepresentations(for: request) { _, type, error in
+            seenType.store(type)
+            seenError.store(error)
+            semaphore.signal()
+        }
+        semaphore.wait()
+        precondition(seenType.load() == expected)
+        precondition((seenError.load() as? QLThumbnailError)?.code == .generationFailed)
+    }
+}
+
+/// WordPress-iOS `ZendeskAttachmentsSection` constructs
+/// `Request(fileAt:size:scale:representationTypes: .all)` and awaits
+/// `QLThumbnailGenerator().generateBestRepresentation(for:)`. Linux has no
+/// Quick Look backend, so this path fail-closes with `generationFailed`.
+func testCorpusWordPressGenerateBestRepresentationFailsClosed() {
+    let thumbnailSize = CGSize(width: 120, height: 120)
+    let request = QLThumbnailGenerator.Request(
+        fileAt: URL(fileURLWithPath: "/tmp/qlt-wordpress-corpus.png"),
+        size: thumbnailSize,
+        scale: 1,
+        representationTypes: .all
+    )
+    precondition(request.representationTypes == .all)
+    precondition(request.scale == 1)
+    precondition(request.size.width == 120)
+    precondition(request.size.height == 120)
+
+    let result = qltAwait {
+        try await QLThumbnailGenerator().generateBestRepresentation(for: request)
+    }
+    guard case .failure(let error as QLThumbnailError) = result else {
+        preconditionFailure("corpus generateBestRepresentation must fail closed")
+    }
+    precondition(error.code == .generationFailed)
 }

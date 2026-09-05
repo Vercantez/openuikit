@@ -5,8 +5,11 @@ import Foundation
 // types are not Apple GPU objects and must be replaced with `import Metal`
 // during central integration.
 
+public typealias vector_float2 = SIMD2<Float>
+public typealias vector_float3 = SIMD3<Float>
 public typealias vector_float4 = SIMD4<Float>
 public typealias vector_ushort4 = SIMD4<UInt16>
+public typealias vector_uchar16 = SIMD16<UInt8>
 
 public protocol MTLResource: AnyObject {
     var label: String? { get set }

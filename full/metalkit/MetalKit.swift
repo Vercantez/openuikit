@@ -2,9 +2,8 @@
 //
 // Isolated host compilation uses toolchain Foundation only. Metal, UIKit,
 // CoreGraphics, QuartzCore, and ModelIO types that appear in public
-// signatures are module-local lookalikes in MetalKitLinuxSupport.swift.
-// The later integration build wires the real modules. ModelIO mesh
-// conversion stays deferred. Texture decode is fail-closed.
+// signatures are module-local lookalikes. Texture decode is fail-closed.
+// Mesh conversion copies ModelIO buffers into software MTLBuffers.
 
 import Foundation
 

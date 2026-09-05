@@ -1,492 +1,492 @@
 precise	status	evidence	notes
-c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeCenters	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeEdgeMidpoints	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeVertices	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKRTreeSplitStrategy	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyHalve	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyLinear	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyQuadratic	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyReduceOverlap	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@GKGameModelMaxScore	implemented	full/gameplaykit/GameplayKit.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@GKGameModelMinScore	implemented	full/gameplaykit/GameplayKit.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKBox	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKBox@FI@boxMax	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKBox@FI@boxMin	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKQuad	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKQuad@FI@quadMax	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKQuad@FI@quadMin	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKTriangle	implemented	full/gameplaykit/GameplayKit.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@S@GKTriangle@FI@points	implemented	full/gameplaykit/GameplayKit.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:@macro@GK_VERSION	deferred		Macro payload is absent from the pinned graphs; fabricated GK_VERSION removed
-c:objc(cs)GKARC4RandomSource	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKARC4RandomSource(im)dropValuesWithCount:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKARC4RandomSource(im)init	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKARC4RandomSource(im)initWithSeed:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKARC4RandomSource(py)seed	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)behavior	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)delegate	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)mass	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)maxAcceleration	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)maxSpeed	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)radius	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent(py)speed	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent2D	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent2D(im)updateWithDeltaTime:	declared	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKAgent2D(py)position	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent2D(py)rotation	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent2D(py)velocity	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent3D	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent3D(im)updateWithDeltaTime:	declared	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKAgent3D(py)position	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent3D(py)rightHanded	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKAgent3D(py)rotation	deferred	tests/agent/GameplayKitDependencyIdentity.swift	matrix_float3x3 comes from simd; property enabled only when simd is imported
-c:objc(cs)GKAgent3D(py)velocity	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(cm)behaviorWithGoal:weight:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(cm)behaviorWithGoals:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(cm)behaviorWithGoals:andWeights:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(cm)behaviorWithWeightedGoals:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(im)objectAtIndexedSubscript:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(im)objectForKeyedSubscript:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(im)removeAllGoals	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(im)removeGoal:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(im)setWeight:forGoal:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(im)weightForGoal:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBehavior(py)goalCount	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBillowNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBillowNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKBillowNoiseSource(py)persistence	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCheckerboardNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCheckerboardNoiseSource(cm)checkerboardNoiseWithSquareSize:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCheckerboardNoiseSource(im)initWithSquareSize:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCheckerboardNoiseSource(py)squareSize	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCircleObstacle	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCircleObstacle(im)initWithRadius:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCircleObstacle(py)position	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCircleObstacle(py)radius	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCoherentNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCoherentNoiseSource(py)frequency	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCoherentNoiseSource(py)lacunarity	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCoherentNoiseSource(py)octaveCount	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCoherentNoiseSource(py)seed	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponent	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponent(im)didAddToEntity	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponent(im)updateWithDeltaTime:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponent(im)willRemoveFromEntity	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponent(py)entity	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)addComponent:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)addComponentWithEntity:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)classForGenericArgumentAtIndex:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)initWithComponentClass:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)objectAtIndexedSubscript:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)removeComponent:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)removeComponentWithEntity:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(im)updateWithDeltaTime:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(py)componentClass	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKComponentSystem(py)components	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(cm)behaviorWithBehaviors:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(cm)behaviorWithBehaviors:andWeights:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(im)objectAtIndexedSubscript:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(im)objectForKeyedSubscript:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(im)removeAllBehaviors	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(im)removeBehavior:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(im)setWeight:forBehavior:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(im)weightForBehavior:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCompositeBehavior(py)behaviorCount	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKConstantNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKConstantNoiseSource(cm)constantNoiseWithValue:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKConstantNoiseSource(im)initWithValue:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKConstantNoiseSource(py)value	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCylindersNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCylindersNoiseSource(cm)cylindersNoiseWithFrequency:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCylindersNoiseSource(im)initWithFrequency:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKCylindersNoiseSource(py)frequency	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionNode	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionNode(im)createBranchWithPredicate:attribute:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionNode(im)createBranchWithValue:attribute:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionNode(im)createBranchWithWeight:attribute:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionTree	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionTree(im)exportToURL:error:	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKDecisionTree(im)findActionForAnswers:	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKDecisionTree(im)initWithAttribute:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionTree(im)initWithExamples:actions:attributes:	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKDecisionTree(im)initWithURL:error:	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKDecisionTree(im)initWithURL:error:::SYNTHESIZED::c:objc(cs)GKDecisionTree	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKDecisionTree(py)randomSource	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKDecisionTree(py)rootNode	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKEntity	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKEntity(im)addComponent:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKEntity(im)init	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKEntity(im)updateWithDeltaTime:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKEntity(py)components	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGaussianDistribution	implemented	full/gameplaykit/GKRandom.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGaussianDistribution(im)initWithRandomSource:lowestValue:highestValue:	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKGaussianDistribution(im)initWithRandomSource:mean:deviation:	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKGaussianDistribution(py)deviation	implemented	full/gameplaykit/GKRandom.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGaussianDistribution(py)mean	implemented	full/gameplaykit/GKRandom.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToAlignWithAgents:maxDistance:maxAngle:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToAlignWithAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToAvoidAgents:maxPredictionTime:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToAvoidAgents:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToAvoidObstacles:maxPredictionTime:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToAvoidObstacles:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToCohereWithAgents:maxDistance:maxAngle:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToCohereWithAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToFleeAgent:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToFollowPath:maxPredictionTime:forward:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToFollowPath:maxPredictionTime:forward:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToInterceptAgent:maxPredictionTime:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToReachTargetSpeed:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToSeekAgent:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToSeparateFromAgents:maxDistance:maxAngle:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToSeparateFromAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToStayOnPath:maxPredictionTime:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToStayOnPath:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGoal(cm)goalToWander:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKGridGraph	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKMeshGraph	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKObstacleGraph	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(im)addNodes:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(im)connectNodeToLowestCostNode:bidirectional:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(im)findPathFromNode:toNode:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(im)initWithNodes:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(im)initWithNodes:::SYNTHESIZED::c:objc(cs)GKGraph	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(im)removeNodes:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraph(py)nodes	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(im)addConnectionsToNodes:bidirectional:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(im)costToNode:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(im)estimatedCostToNode:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(im)findPathFromNode:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(im)findPathToNode:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(im)removeConnectionsToNodes:bidirectional:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode(py)connectedNodes	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode2D	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode2D(cm)nodeWithPoint:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode2D(im)initWithPoint:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode2D(py)position	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode3D	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode3D(cm)nodeWithPoint:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode3D(im)initWithPoint:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGraphNode3D(py)position	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(im)classForGenericArgumentAtIndex:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(im)connectNodeToAdjacentNodes:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(im)initFromGridStartingAt:width:height:diagonalsAllowed:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(im)initFromGridStartingAt:width:height:diagonalsAllowed:nodeClass:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(im)nodeAtGridPosition:	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(py)diagonalsAllowed	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(py)gridHeight	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(py)gridOrigin	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraph(py)gridWidth	implemented	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraphNode	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraphNode(im)initWithGridPosition:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKGridGraphNode(py)gridPosition	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKLinearCongruentialRandomSource	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKLinearCongruentialRandomSource(im)init	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKLinearCongruentialRandomSource(im)initWithSeed:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKLinearCongruentialRandomSource(py)seed	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMersenneTwisterRandomSource	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMersenneTwisterRandomSource(im)init	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMersenneTwisterRandomSource(im)initWithSeed:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMersenneTwisterRandomSource(py)seed	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(im)addObstacles:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(im)classForGenericArgumentAtIndex:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(im)connectNodeUsingObstacles:	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKMeshGraph(im)initWithBufferRadius:minCoordinate:maxCoordinate:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(im)initWithBufferRadius:minCoordinate:maxCoordinate:nodeClass:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(im)removeObstacles:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(im)triangleAtIndex:	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKMeshGraph(im)triangulate	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKMeshGraph(py)bufferRadius	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(py)obstacles	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(py)triangleCount	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMeshGraph(py)triangulationMode	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMinmaxStrategist	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMinmaxStrategist(im)bestMoveForPlayer:	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKMinmaxStrategist(im)randomMoveForPlayer:fromNumberOfBestMoves:	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKMinmaxStrategist(py)maxLookAheadDepth	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMonteCarloStrategist	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMonteCarloStrategist(py)budget	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKMonteCarloStrategist(py)explorationParameter	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNSPredicateRule	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNSPredicateRule(im)evaluatePredicateWithSystem:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNSPredicateRule(im)initWithPredicate:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNSPredicateRule(py)predicate	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(cm)noiseWithComponentNoises:selectionNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(cm)noiseWithComponentNoises:selectionNoise:componentBoundaries:boundaryBlendDistances:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)addWithNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)applyAbsoluteValue	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)applyTurbulenceWithFrequency:power:roughness:seed:	declared	full/gameplaykit/GKNoise.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKNoise(im)clampWithLowerBound:upperBound:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)displaceXWithNoise:yWithNoise:zWithNoise:	declared	full/gameplaykit/GKNoise.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKNoise(im)init	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)initWithNoiseSource:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)initWithNoiseSource:::SYNTHESIZED::c:objc(cs)GKNoise	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)initWithNoiseSource:gradientColors:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKNoise(im)initWithNoiseSource:gradientColors:::SYNTHESIZED::c:objc(cs)GKNoise	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKNoise(im)invert	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)maximumWithNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)minimumWithNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)moveBy:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)multiplyWithNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)raiseToPower:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)raiseToPowerWithNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)remapValuesToCurveWithControlPoints:	declared	full/gameplaykit/GKNoise.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKNoise(im)remapValuesToTerracesWithPeaks:terracesInverted:	declared	full/gameplaykit/GKNoise.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKNoise(im)rotateBy:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)scaleBy:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoise(im)valueAtPosition:	declared	full/gameplaykit/GKNoise.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKNoise(py)gradientColors	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKNoiseMap	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)init	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)initWithNoise:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)initWithNoise:::SYNTHESIZED::c:objc(cs)GKNoiseMap	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)initWithNoise:size:origin:sampleCount:seamless:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)initWithNoise:size:origin:sampleCount:seamless:::SYNTHESIZED::c:objc(cs)GKNoiseMap	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)interpolatedValueAtPosition:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)setValue:atPosition:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(im)valueAtPosition:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(py)origin	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(py)sampleCount	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(py)seamless	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseMap(py)size	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacle	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)addObstacles:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)classForGenericArgumentAtIndex:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:ignoringBufferRadiusOfObstacles:	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:ignoringObstacles:	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKObstacleGraph(im)initWithObstacles:bufferRadius:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)initWithObstacles:bufferRadius:nodeClass:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)isConnectionLockedFromNode:toNode:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)lockConnectionFromNode:toNode:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)nodesForObstacle:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)removeAllObstacles	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)removeObstacles:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(im)unlockConnectionFromNode:toNode:	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(py)bufferRadius	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKObstacleGraph(py)obstacles	implemented	full/gameplaykit/GKPathfinding.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)addElement:withBox:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)addElement:withPoint:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)elementsAtPoint:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)elementsInBox:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)initWithBoundingBox:minimumCellSize:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)removeElement:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctree(im)removeElement:withNode:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctreeNode	implemented	full/gameplaykit/GKSpatial.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKOctreeNode(py)box	implemented	full/gameplaykit/GKSpatial.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(im)float2AtIndex:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(im)float3AtIndex:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(im)initWithGraphNodes:radius:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(im)pointAtIndex:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(py)cyclical	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(py)numPoints	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPath(py)radius	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPerlinNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPerlinNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPerlinNoiseSource(py)persistence	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPolygonObstacle	implemented	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPolygonObstacle(im)vertexAtIndex:	implemented	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKPolygonObstacle(py)vertexCount	implemented	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)addElement:withPoint:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)addElement:withQuad:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)elementsAtPoint:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)elementsInQuad:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)initWithBoundingQuad:minimumCellSize:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)removeElement:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtree(im)removeElement:withNode:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtreeNode	implemented	full/gameplaykit/GKSpatial.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKQuadtreeNode(py)quad	implemented	full/gameplaykit/GKSpatial.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRTree	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRTree(im)addElement:boundingRectMin:boundingRectMax:splitStrategy:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRTree(im)elementsInBoundingRectMin:rectMax:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRTree(im)initWithMaxNumberOfChildren:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRTree(im)removeElement:boundingRectMin:boundingRectMax:	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRTree(py)queryReserve	implemented	full/gameplaykit/GKSpatial.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(cm)d20	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(cm)d6	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(cm)distributionForDieWithSideCount:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(cm)distributionWithLowestValue:highestValue:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(im)initWithRandomSource:lowestValue:highestValue:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(im)nextBool	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKRandomDistribution(im)nextInt	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKRandomDistribution(im)nextIntWithUpperBound:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(im)nextUniform	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(cs)GKRandomDistribution(py)highestValue	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(py)lowestValue	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomDistribution(py)numberOfPossibleOutcomes	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomSource	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomSource(cm)sharedRandom	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomSource(im)arrayByShufflingObjectsInArray:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomSource(im)init	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRandomSource(im)initWithCoder:	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(cs)GKRidgedNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRidgedNoiseSource(im)initWithFrequency:octaveCount:lacunarity:seed:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule(cm)ruleWithBlockPredicate:action:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule(cm)ruleWithPredicate:assertingFact:grade:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule(cm)ruleWithPredicate:retractingFact:grade:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule(im)evaluatePredicateWithSystem:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule(im)performActionWithSystem:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRule(py)salience	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)addRule:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)addRulesFromArray:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)assertFact:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)assertFact:grade:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)evaluate	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)gradeForFact:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)init	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)maximumGradeForFacts:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)minimumGradeForFacts:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)removeAllRules	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)reset	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)retractFact:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(im)retractFact:grade:	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(py)agenda	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(py)executed	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(py)facts	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(py)rules	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKRuleSystem(py)state	implemented	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSCNNodeComponent	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKSCNNodeComponent(im)initWithNode:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKSCNNodeComponent(py)node	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKSKNodeComponent	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKSKNodeComponent(im)initWithNode:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKSKNodeComponent(py)node	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)GKScene	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(cm)sceneWithFileNamed:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(cm)sceneWithFileNamed:rootNode:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(im)addEntity:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(im)addGraph:name:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(im)removeEntity:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(im)removeGraph:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(py)entities	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(py)graphs	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKScene(py)rootNode	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKShuffledDistribution	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSphereObstacle	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSphereObstacle(im)initWithRadius:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSphereObstacle(py)position	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSphereObstacle(py)radius	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSpheresNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSpheresNoiseSource(cm)spheresNoiseWithFrequency:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSpheresNoiseSource(im)initWithFrequency:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKSpheresNoiseSource(py)frequency	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState(im)didEnterWithPreviousState:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState(im)init	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState(im)isValidNextState:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState(im)updateWithDeltaTime:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState(im)willExitWithNextState:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKState(py)stateMachine	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKStateMachine	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKStateMachine(im)canEnterState:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKStateMachine(im)enterState:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKStateMachine(im)initWithStates:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKStateMachine(im)updateWithDeltaTime:	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKStateMachine(py)currentState	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource(cm)voronoiNoiseWithFrequency:displacement:distanceEnabled:seed:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource(im)initWithFrequency:displacement:distanceEnabled:seed:	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource(py)displacement	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource(py)distanceEnabled	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource(py)frequency	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)GKVoronoiNoiseSource(py)seed	implemented	full/gameplaykit/GKNoise.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)NSArray(im)shuffledArray	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)NSArray(im)shuffledArrayWithRandomSource:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(cs)SCNNode(py)entity	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)SKNode(cm)obstaclesFromNodeBounds:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)SKNode(cm)obstaclesFromNodePhysicsBodies:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)SKNode(cm)obstaclesFromSpriteTextures:accuracy:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)SKNode(py)entity	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)SKTexture(cm)textureWithNoiseMap:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(cs)SKTileMapNode(cm)tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:	deferred		Unavailable in this isolated compile (missing simd/SceneKit/SpriteKit/UIKit) or fabricated constant removed
-c:objc(pl)GKAgentDelegate	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKAgentDelegate(im)agentDidUpdate:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKAgentDelegate(im)agentWillUpdate:	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)applyGameModelUpdate:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)gameModelUpdatesForPlayer:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)isLossForPlayer:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)isWinForPlayer:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)scoreForPlayer:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)setGameModel:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(im)unapplyGameModelUpdate:	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(py)activePlayer	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModel(py)players	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModelPlayer	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModelPlayer(py)playerId	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModelUpdate	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKGameModelUpdate(py)value	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKRandom	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKRandom(im)nextBool	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(pl)GKRandom(im)nextInt	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(pl)GKRandom(im)nextIntWithUpperBound:	implemented	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKRandom(im)nextUniform	declared	full/gameplaykit/GKRandom.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(pl)GKSceneRootNodeType	implemented	full/gameplaykit/GKEntityComponent.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKStrategist	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKStrategist(im)bestMoveForActivePlayer	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Compiles; Apple-exact semantics unobserved or fail-closed without round-trip
-c:objc(pl)GKStrategist(py)gameModel	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)GKStrategist(py)randomSource	implemented	full/gameplaykit/GKRulesAndAI.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKComponent	declared	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKDecisionTree	declared	full/gameplaykit/GKRulesAndAI.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKEntity	declared	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKGraph	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKGraphNode	declared	full/gameplaykit/GKPathfinding.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKPolygonObstacle	declared	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKScene	declared	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Linux-keyed NSSecureCoding round-trip is exercised; Apple archive layout remains unobserved
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So10GKTriangleV6pointsABs5SIMD3VySfG_A2Ft_tcfc	implemented	full/gameplaykit/GameplayKit.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So10GKTriangleVABycfc	implemented	full/gameplaykit/GameplayKit.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So14GKStateMachineC11GameplayKitE5state8forClassxSgxm_tSo0A0CRbzlF	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So17GKPolygonObstacleC11GameplayKitE6pointsABSays5SIMD2VySfGG_tcfc	implemented	full/gameplaykit/GKAgents.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So20GKRTreeSplitStrategyV8rawValueABSgSi_tcfc	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So28GKMeshGraphTriangulationModeV8rawValueABSu_tcfc	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So5GKBoxV6boxMin0B3MaxABs5SIMD3VySfG_AGtcfc	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So5GKBoxVABycfc	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So6GKPathC11GameplayKitE6points6radius8cyclicalABSays5SIMD2VySfGG_SfSbtcfc	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So6GKPathC11GameplayKitE6points6radius8cyclicalABSays5SIMD3VySfGG_SfSbtcfc	implemented	full/gameplaykit/GKAgents.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So6GKQuadV7quadMin0B3MaxABs5SIMD2VySfG_AGtcfc	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So6GKQuadVABycfc	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So8GKEntityC11GameplayKitE15removeComponent6ofTypeyxm_tSo11GKComponentCRbzlF	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:So8GKEntityC11GameplayKitE9component6ofTypexSgxm_tSo11GKComponentCRbzlF	implemented	full/gameplaykit/GKEntityComponent.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	full/gameplaykit/GameplayKit.swift;tests/agent/GameplayKitRuntime.swift	Focused Linux runtime evidence; not claimed Apple-bit-identical
+c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeCenters	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeEdgeMidpoints	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeVertices	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKRTreeSplitStrategy	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyHalve	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyLinear	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyQuadratic	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyReduceOverlap	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@GKGameModelMaxScore	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@GKGameModelMinScore	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values / option-set algebra
+c:@S@GKBox	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKBox@FI@boxMax	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKBox@FI@boxMin	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKQuad	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKQuad@FI@quadMax	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKQuad@FI@quadMin	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKTriangle	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@S@GKTriangle@FI@points	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+c:@macro@GK_VERSION	deferred		Macro payload is absent from the pinned graphs
+c:objc(cs)GKARC4RandomSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testARC4SeedDeterminismAndCopy	Linux ARC4 seed/copy/bounds
+c:objc(cs)GKARC4RandomSource(im)dropValuesWithCount:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testARC4SeedDeterminismAndCopy	Linux ARC4 seed/copy/bounds
+c:objc(cs)GKARC4RandomSource(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testARC4SeedDeterminismAndCopy	Linux ARC4 seed/copy/bounds
+c:objc(cs)GKARC4RandomSource(im)initWithSeed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testARC4SeedDeterminismAndCopy	Linux ARC4 seed/copy/bounds
+c:objc(cs)GKARC4RandomSource(py)seed	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testARC4SeedDeterminismAndCopy	Linux ARC4 seed/copy/bounds
+c:objc(cs)GKAgent	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)behavior	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)delegate	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)mass	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)maxAcceleration	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)maxSpeed	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)radius	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent(py)speed	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent2D	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent2D(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent2D(py)position	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent2D(py)rotation	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent2D(py)velocity	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent3D	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent3D(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent3D(py)position	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent3D(py)rightHanded	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKAgent3D(py)rotation	deferred		matrix_float3x3 comes from simd; compiled only when simd is imported
+c:objc(cs)GKAgent3D(py)velocity	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(cs)GKBehavior	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(cm)behaviorWithGoal:weight:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(cm)behaviorWithGoals:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(cm)behaviorWithGoals:andWeights:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(cm)behaviorWithWeightedGoals:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(im)objectAtIndexedSubscript:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(im)objectForKeyedSubscript:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(im)removeAllGoals	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(im)removeGoal:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(im)setWeight:forGoal:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(im)weightForGoal:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBehavior(py)goalCount	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Behavior goal weights
+c:objc(cs)GKBillowNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKBillowNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKBillowNoiseSource(py)persistence	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCheckerboardNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCheckerboardNoiseSource(cm)checkerboardNoiseWithSquareSize:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCheckerboardNoiseSource(im)initWithSquareSize:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCheckerboardNoiseSource(py)squareSize	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCircleObstacle	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKCircleObstacle(im)initWithRadius:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKCircleObstacle(py)position	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKCircleObstacle(py)radius	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKCoherentNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCoherentNoiseSource(py)frequency	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCoherentNoiseSource(py)lacunarity	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCoherentNoiseSource(py)octaveCount	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCoherentNoiseSource(py)seed	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKComponent	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKComponent(im)didAddToEntity	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKComponent(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Entity/component update
+c:objc(cs)GKComponent(im)willRemoveFromEntity	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKComponent(py)entity	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKComponentSystem	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)addComponent:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)addComponentWithEntity:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)classForGenericArgumentAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)initWithComponentClass:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)objectAtIndexedSubscript:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)removeComponent:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)removeComponentWithEntity:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(py)componentClass	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKComponentSystem(py)components	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Component system ownership and update
+c:objc(cs)GKCompositeBehavior	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(cm)behaviorWithBehaviors:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(cm)behaviorWithBehaviors:andWeights:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(im)objectAtIndexedSubscript:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(im)objectForKeyedSubscript:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(im)removeAllBehaviors	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(im)removeBehavior:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(im)setWeight:forBehavior:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(im)weightForBehavior:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKCompositeBehavior(py)behaviorCount	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testBehaviorWeightsAndComposite	Composite behavior weights
+c:objc(cs)GKConstantNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKConstantNoiseSource(cm)constantNoiseWithValue:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKConstantNoiseSource(im)initWithValue:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKConstantNoiseSource(py)value	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCylindersNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCylindersNoiseSource(cm)cylindersNoiseWithFrequency:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCylindersNoiseSource(im)initWithFrequency:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKCylindersNoiseSource(py)frequency	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKDecisionNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionNode(im)createBranchWithPredicate:attribute:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionNode(im)createBranchWithValue:attribute:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionNode(im)createBranchWithWeight:attribute:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionTree	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionTree(im)exportToURL:error:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFailClosedImportExport	Fail-closed URL import/export
+c:objc(cs)GKDecisionTree(im)findActionForAnswers:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionTree(im)initWithAttribute:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionTree(im)initWithExamples:actions:attributes:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionTree(im)initWithURL:error:	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFailClosedImportExport	Fail-closed URL import/export
+c:objc(cs)GKDecisionTree(im)initWithURL:error:::SYNTHESIZED::c:objc(cs)GKDecisionTree	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFailClosedImportExport	Fail-closed URL import/export
+c:objc(cs)GKDecisionTree(py)randomSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKDecisionTree(py)rootNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitDecisionTests.swift#testDecisionTreeFindActionAndBranches	Value-branch findAction
+c:objc(cs)GKEntity	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKEntity(im)addComponent:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKEntity(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKEntity(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentSystemAndEntityUpdate	Entity/component update
+c:objc(cs)GKEntity(py)components	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+c:objc(cs)GKGaussianDistribution	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKGaussianDistribution(im)initWithRandomSource:lowestValue:highestValue:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKGaussianDistribution(im)initWithRandomSource:mean:deviation:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKGaussianDistribution(py)deviation	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKGaussianDistribution(py)mean	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToAlignWithAgents:maxDistance:maxAngle:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToAlignWithAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToAvoidAgents:maxPredictionTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToAvoidAgents:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToAvoidObstacles:maxPredictionTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToAvoidObstacles:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToCohereWithAgents:maxDistance:maxAngle:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToCohereWithAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToFleeAgent:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToFollowPath:maxPredictionTime:forward:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToFollowPath:maxPredictionTime:forward:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToInterceptAgent:maxPredictionTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToReachTargetSpeed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToSeekAgent:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToSeparateFromAgents:maxDistance:maxAngle:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToSeparateFromAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToStayOnPath:maxPredictionTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToStayOnPath:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGoal(cm)goalToWander:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKGridGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKMeshGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKObstacleGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKGraph(im)addNodes:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(im)connectNodeToLowestCostNode:bidirectional:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(im)findPathFromNode:toNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(im)initWithNodes:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(im)initWithNodes:::SYNTHESIZED::c:objc(cs)GKGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(im)removeNodes:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraph(py)nodes	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(im)addConnectionsToNodes:bidirectional:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(im)costToNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(im)estimatedCostToNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(im)findPathFromNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(im)findPathToNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(im)removeConnectionsToNodes:bidirectional:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode(py)connectedNodes	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode2D	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode2D(cm)nodeWithPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode2D(im)initWithPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode2D(py)position	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphAStarAndEdges	A* on explicit connections
+c:objc(cs)GKGraphNode3D	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphNode3DAndCopyIndependence	3D node storage and copy independence
+c:objc(cs)GKGraphNode3D(cm)nodeWithPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphNode3DAndCopyIndependence	3D node storage and copy independence
+c:objc(cs)GKGraphNode3D(im)initWithPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphNode3DAndCopyIndependence	3D node storage and copy independence
+c:objc(cs)GKGraphNode3D(py)position	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGraphNode3DAndCopyIndependence	3D node storage and copy independence
+c:objc(cs)GKGridGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(im)classForGenericArgumentAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(im)connectNodeToAdjacentNodes:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(im)initFromGridStartingAt:width:height:diagonalsAllowed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(im)initFromGridStartingAt:width:height:diagonalsAllowed:nodeClass:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(im)nodeAtGridPosition:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(py)diagonalsAllowed	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(py)gridHeight	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(py)gridOrigin	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraph(py)gridWidth	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraphNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraphNode(im)initWithGridPosition:	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKGridGraphNode(py)gridPosition	implemented	test:full/gameplaykit/tests/agent/GameplayKitPathfindingTests.swift#testGridGraphLookupAndPath	Grid lookup and 4-neighbour path
+c:objc(cs)GKLinearCongruentialRandomSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKLinearCongruentialRandomSource(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKLinearCongruentialRandomSource(im)initWithSeed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKLinearCongruentialRandomSource(py)seed	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKMersenneTwisterRandomSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKMersenneTwisterRandomSource(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKMersenneTwisterRandomSource(im)initWithSeed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKMersenneTwisterRandomSource(py)seed	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testLCGAndMersenneDeterminism	Linux seed replay
+c:objc(cs)GKMeshGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)addObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)classForGenericArgumentAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)connectNodeUsingObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)initWithBufferRadius:minCoordinate:maxCoordinate:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)initWithBufferRadius:minCoordinate:maxCoordinate:nodeClass:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)removeObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)triangleAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(im)triangulate	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(py)bufferRadius	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(py)obstacles	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(py)triangleCount	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMeshGraph(py)triangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Linux triangulation / obstacle connect
+c:objc(cs)GKMinmaxStrategist	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(cs)GKMinmaxStrategist(im)bestMoveForPlayer:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(cs)GKMinmaxStrategist(im)randomMoveForPlayer:fromNumberOfBestMoves:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(cs)GKMinmaxStrategist(py)maxLookAheadDepth	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(cs)GKMonteCarloStrategist	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux Monte Carlo budgeted search
+c:objc(cs)GKMonteCarloStrategist(py)budget	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux Monte Carlo budgeted search
+c:objc(cs)GKMonteCarloStrategist(py)explorationParameter	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux Monte Carlo budgeted search
+c:objc(cs)GKNSPredicateRule	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testNSPredicateRuleAndPredicateFactories	NSPredicate(value:) rule evaluate/action
+c:objc(cs)GKNSPredicateRule(im)evaluatePredicateWithSystem:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testNSPredicateRuleAndPredicateFactories	NSPredicate(value:) rule evaluate/action
+c:objc(cs)GKNSPredicateRule(im)initWithPredicate:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testNSPredicateRuleAndPredicateFactories	NSPredicate(value:) rule evaluate/action
+c:objc(cs)GKNSPredicateRule(py)predicate	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testNSPredicateRuleAndPredicateFactories	NSPredicate(value:) rule evaluate/action
+c:objc(cs)GKNoise	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKNoise(cm)noiseWithComponentNoises:selectionNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKNoise(cm)noiseWithComponentNoises:selectionNoise:componentBoundaries:boundaryBlendDistances:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKNoise(im)addWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)applyAbsoluteValue	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)applyTurbulenceWithFrequency:power:roughness:seed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)clampWithLowerBound:upperBound:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)displaceXWithNoise:yWithNoise:zWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKNoise(im)initWithNoiseSource:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKNoise(im)initWithNoiseSource:::SYNTHESIZED::c:objc(cs)GKNoise	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKNoise(im)initWithNoiseSource:gradientColors:	deferred		UIColor gradient APIs are not available in this isolated compile
+c:objc(cs)GKNoise(im)initWithNoiseSource:gradientColors:::SYNTHESIZED::c:objc(cs)GKNoise	deferred		UIColor gradient APIs are not available in this isolated compile
+c:objc(cs)GKNoise(im)invert	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)maximumWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)minimumWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)moveBy:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)multiplyWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)raiseToPower:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)raiseToPowerWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)remapValuesToCurveWithControlPoints:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)remapValuesToTerracesWithPeaks:terracesInverted:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)rotateBy:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)scaleBy:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(im)valueAtPosition:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Linux noise operators
+c:objc(cs)GKNoise(py)gradientColors	deferred		UIColor gradient APIs are not available in this isolated compile
+c:objc(cs)GKNoiseMap	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)initWithNoise:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)initWithNoise:::SYNTHESIZED::c:objc(cs)GKNoiseMap	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)initWithNoise:size:origin:sampleCount:seamless:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)initWithNoise:size:origin:sampleCount:seamless:::SYNTHESIZED::c:objc(cs)GKNoiseMap	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)interpolatedValueAtPosition:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)setValue:atPosition:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(im)valueAtPosition:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(py)origin	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(py)sampleCount	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(py)seamless	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseMap(py)size	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseOperationsAndMaps	Noise map sample/set/interpolate
+c:objc(cs)GKNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKObstacle	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKObstacleGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)addObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)classForGenericArgumentAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:ignoringBufferRadiusOfObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:ignoringObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)initWithObstacles:bufferRadius:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)initWithObstacles:bufferRadius:nodeClass:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)isConnectionLockedFromNode:toNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)lockConnectionFromNode:toNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)nodesForObstacle:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)removeAllObstacles	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)removeObstacles:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(im)unlockConnectionFromNode:toNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(py)bufferRadius	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKObstacleGraph(py)obstacles	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testObstacleGraphConnectionsAndLocks	Linux visibility connect/lock
+c:objc(cs)GKOctree	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)addElement:withBox:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)addElement:withPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)elementsAtPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)elementsInBox:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)initWithBoundingBox:minimumCellSize:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)removeElement:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctree(im)removeElement:withNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctreeNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKOctreeNode(py)box	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testOctreeQueries	Octree insert/query/remove
+c:objc(cs)GKPath	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(im)float2AtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(im)float3AtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(im)initWithGraphNodes:radius:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(im)pointAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(py)cyclical	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(py)numPoints	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPath(py)radius	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKPerlinNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKPerlinNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKPerlinNoiseSource(py)persistence	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKPolygonObstacle	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Polygon vertices
+c:objc(cs)GKPolygonObstacle(im)vertexAtIndex:	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Polygon vertices
+c:objc(cs)GKPolygonObstacle(py)vertexCount	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Polygon vertices
+c:objc(cs)GKQuadtree	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)addElement:withPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)addElement:withQuad:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)elementsAtPoint:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)elementsInQuad:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)initWithBoundingQuad:minimumCellSize:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)removeElement:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtree(im)removeElement:withNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtreeNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKQuadtreeNode(py)quad	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testQuadtreeQueries	Quadtree insert/query/remove
+c:objc(cs)GKRTree	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testRTreeQueries	R-tree insert/query/remove
+c:objc(cs)GKRTree(im)addElement:boundingRectMin:boundingRectMax:splitStrategy:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testRTreeQueries	R-tree insert/query/remove
+c:objc(cs)GKRTree(im)elementsInBoundingRectMin:rectMax:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testRTreeQueries	R-tree insert/query/remove
+c:objc(cs)GKRTree(im)initWithMaxNumberOfChildren:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testRTreeQueries	R-tree insert/query/remove
+c:objc(cs)GKRTree(im)removeElement:boundingRectMin:boundingRectMax:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testRTreeQueries	R-tree insert/query/remove
+c:objc(cs)GKRTree(py)queryReserve	implemented	test:full/gameplaykit/tests/agent/GameplayKitSpatialTests.swift#testRTreeQueries	R-tree insert/query/remove
+c:objc(cs)GKRandomDistribution	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(cm)d20	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(cm)d6	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(cm)distributionForDieWithSideCount:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(cm)distributionWithLowestValue:highestValue:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(im)initWithRandomSource:lowestValue:highestValue:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(im)nextBool	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(im)nextInt	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(im)nextIntWithUpperBound:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(im)nextUniform	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(py)highestValue	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(py)lowestValue	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomDistribution(py)numberOfPossibleOutcomes	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(cs)GKRandomSource(cm)sharedRandom	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomSource(im)arrayByShufflingObjectsInArray:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKRandomSource(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(cs)GKRandomSource(im)initWithCoder:	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed NSSecureCoding round-trip
+c:objc(cs)GKRidgedNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKRidgedNoiseSource(im)initWithFrequency:octaveCount:lacunarity:seed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKRule	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRule(cm)ruleWithBlockPredicate:action:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRule(cm)ruleWithPredicate:assertingFact:grade:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testNSPredicateRuleAndPredicateFactories	NSPredicate(value:) rule evaluate/action
+c:objc(cs)GKRule(cm)ruleWithPredicate:retractingFact:grade:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testNSPredicateRuleAndPredicateFactories	NSPredicate(value:) rule evaluate/action
+c:objc(cs)GKRule(im)evaluatePredicateWithSystem:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRule(im)performActionWithSystem:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRule(py)salience	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)addRule:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)addRulesFromArray:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)assertFact:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)assertFact:grade:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)evaluate	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)gradeForFact:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)maximumGradeForFacts:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)minimumGradeForFacts:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)removeAllRules	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)reset	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)retractFact:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(im)retractFact:grade:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(py)agenda	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(py)executed	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(py)facts	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(py)rules	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKRuleSystem(py)state	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testRuleSystemFactsAndAgenda	Fact assert/grade/evaluate
+c:objc(cs)GKSCNNodeComponent	deferred		SceneKit overlay compiled only when SceneKit is imported
+c:objc(cs)GKSCNNodeComponent(im)initWithNode:	deferred		SceneKit overlay compiled only when SceneKit is imported
+c:objc(cs)GKSCNNodeComponent(py)node	deferred		SceneKit overlay compiled only when SceneKit is imported
+c:objc(cs)GKSKNodeComponent	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)GKSKNodeComponent(im)initWithNode:	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)GKSKNodeComponent(py)node	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)GKScene	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(cm)sceneWithFileNamed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneFileNamedFailClosed	sceneWithFileNamed: returns nil
+c:objc(cs)GKScene(cm)sceneWithFileNamed:rootNode:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneFileNamedFailClosed	sceneWithFileNamed: returns nil
+c:objc(cs)GKScene(im)addEntity:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(im)addGraph:name:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(im)removeEntity:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(im)removeGraph:	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(py)entities	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(py)graphs	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKScene(py)rootNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(cs)GKShuffledDistribution	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)GKSphereObstacle	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKSphereObstacle(im)initWithRadius:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKSphereObstacle(py)position	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKSphereObstacle(py)radius	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+c:objc(cs)GKSpheresNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKSpheresNoiseSource(cm)spheresNoiseWithFrequency:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKSpheresNoiseSource(im)initWithFrequency:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKSpheresNoiseSource(py)frequency	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKState	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKState(im)didEnterWithPreviousState:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKState(im)init	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKState(im)isValidNextState:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKState(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineReentrantEnterAndUpdate	Mastodon-shaped state machine lookup/update
+c:objc(cs)GKState(im)willExitWithNextState:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKState(py)stateMachine	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKStateMachine	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKStateMachine(im)canEnterState:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKStateMachine(im)enterState:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKStateMachine(im)initWithStates:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKStateMachine(im)updateWithDeltaTime:	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineReentrantEnterAndUpdate	Mastodon-shaped state machine lookup/update
+c:objc(cs)GKStateMachine(py)currentState	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineTransitions	Mastodon-shaped GKStateMachine transitions
+c:objc(cs)GKVoronoiNoiseSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKVoronoiNoiseSource(cm)voronoiNoiseWithFrequency:displacement:distanceEnabled:seed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKVoronoiNoiseSource(im)initWithFrequency:displacement:distanceEnabled:seed:	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKVoronoiNoiseSource(py)displacement	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKVoronoiNoiseSource(py)distanceEnabled	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKVoronoiNoiseSource(py)frequency	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)GKVoronoiNoiseSource(py)seed	implemented	test:full/gameplaykit/tests/agent/GameplayKitNoiseTests.swift#testNoiseSourcesDeterminism	Linux noise source construction/sample
+c:objc(cs)NSArray(im)shuffledArray	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)NSArray(im)shuffledArrayWithRandomSource:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testDistributionsAndShuffle	Linux range/deck/shuffle behaviour
+c:objc(cs)SCNNode(py)entity	deferred		SceneKit overlay compiled only when SceneKit is imported
+c:objc(cs)SKNode(cm)obstaclesFromNodeBounds:	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)SKNode(cm)obstaclesFromNodePhysicsBodies:	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)SKNode(cm)obstaclesFromSpriteTextures:accuracy:	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)SKNode(py)entity	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)SKTexture(cm)textureWithNoiseMap:	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(cs)SKTileMapNode(cm)tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:	deferred		SpriteKit overlay compiled only when SpriteKit is imported
+c:objc(pl)GKAgentDelegate	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(pl)GKAgentDelegate(im)agentDidUpdate:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(pl)GKAgentDelegate(im)agentWillUpdate:	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testAgentSeekAndProperties	Linux steering seek + delegate
+c:objc(pl)GKGameModel	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)applyGameModelUpdate:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)gameModelUpdatesForPlayer:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)isLossForPlayer:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)isWinForPlayer:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)scoreForPlayer:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)setGameModel:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(im)unapplyGameModelUpdate:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(py)activePlayer	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModel(py)players	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModelPlayer	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModelPlayer(py)playerId	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModelUpdate	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKGameModelUpdate(py)value	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKRandom	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(pl)GKRandom(im)nextBool	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(pl)GKRandom(im)nextInt	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(pl)GKRandom(im)nextIntWithUpperBound:	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(pl)GKRandom(im)nextUniform	implemented	test:full/gameplaykit/tests/agent/GameplayKitRandomTests.swift#testRandomProtocolNextValues	Linux nextInt/nextUniform/nextBool
+c:objc(pl)GKSceneRootNodeType	implemented	test:full/gameplaykit/tests/agent/GameplayKitSceneTests.swift#testSceneBookkeeping	In-memory entity/graph bookkeeping
+c:objc(pl)GKStrategist	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKStrategist(im)bestMoveForActivePlayer	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKStrategist(py)gameModel	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)GKStrategist(py)randomSource	implemented	test:full/gameplaykit/tests/agent/GameplayKitRulesTests.swift#testMinmaxAndMonteCarloStrategists	Linux minimax + game-model protocol
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKComponent	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testMalformedArchiveRejected	Malformed archives rejected
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKDecisionTree	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed decision-tree archive
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKEntity	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed NSSecureCoding round-trip
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKGraph	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed NSSecureCoding round-trip
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKGraphNode	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed NSSecureCoding round-trip
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKPolygonObstacle	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed polygon archive
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKScene	implemented	test:full/gameplaykit/tests/agent/GameplayKitCodingTests.swift#testLinuxArchiveRoundTrip	Linux-keyed scene archive
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:So10GKTriangleV6pointsABs5SIMD3VySfG_A2Ft_tcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+s:So10GKTriangleVABycfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+s:So14GKStateMachineC11GameplayKitE5state8forClassxSgxm_tSo0A0CRbzlF	implemented	test:full/gameplaykit/tests/agent/GameplayKitStateMachineTests.swift#testStateMachineReentrantEnterAndUpdate	Mastodon-shaped state machine lookup/update
+s:So17GKPolygonObstacleC11GameplayKitE6pointsABSays5SIMD2VySfGG_tcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitMeshTests.swift#testMeshTriangulation	Polygon vertices
+s:So20GKRTreeSplitStrategyV8rawValueABSgSi_tcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values
+s:So28GKMeshGraphTriangulationModeV8rawValueABSu_tcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Documented raw values
+s:So5GKBoxV6boxMin0B3MaxABs5SIMD3VySfG_AGtcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+s:So5GKBoxVABycfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+s:So6GKPathC11GameplayKitE6points6radius8cyclicalABSays5SIMD2VySfGG_SfSbtcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+s:So6GKPathC11GameplayKitE6points6radius8cyclicalABSays5SIMD3VySfGG_SfSbtcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitAgentTests.swift#testGoalsPathAndObstacles	Goal factories, path, obstacles
+s:So6GKQuadV7quadMin0B3MaxABs5SIMD2VySfG_AGtcfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+s:So6GKQuadVABycfc	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testGeometryValueTypes	Linux value-type storage
+s:So8GKEntityC11GameplayKitE15removeComponent6ofTypeyxm_tSo11GKComponentCRbzlF	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+s:So8GKEntityC11GameplayKitE9component6ofTypexSgxm_tSo11GKComponentCRbzlF	implemented	test:full/gameplaykit/tests/agent/GameplayKitEntityTests.swift#testComponentOwnership	Attach/transfer/replace/remove ownership
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	implemented	test:full/gameplaykit/tests/agent/GameplayKitEnumTests.swift#testEnumAndOptionSetValues	Synthesized enum/option-set members

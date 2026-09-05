@@ -27,10 +27,12 @@ that Apple's Siri account or sheet is available.
   caller-provided identity and the weak delegate. Isolated Linux subclasses
   `NSObject` because `UIViewController` is UIKit-owned.
 - Host `finish` installs or updates a process-local voice shortcut when the
-  phrase contains a non-whitespace character. `delete` removes by UUID or
-  reports `shortcutNotFound`. `cancel` only notifies the delegate.
+  phrase contains a non-whitespace character. Empty or whitespace-only phrases
+  report `emptyInvocationPhrase` and do not mutate the table. `delete` removes
+  by UUID or reports `shortcutNotFound`. `cancel` only notifies the delegate.
 - `INUIHostedViewSiriProviding` defaults `displaysMap`, `displaysMessage`, and
-  `displaysPaymentTransaction` to `false`.
+  `displaysPaymentTransaction` to `false`. Overrides are visible through an
+  existential.
 - The current presentation capability is `.hostDriven`.
 
 ## Fail-closed / deferred
@@ -63,3 +65,42 @@ clean EC2 run that builds guest Foundation first.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+## Depth pass 2026-09
+
+Implemented before: 55. Implemented after: 55. Declared: 0. Deferred: 9.
+Unavailable: 0. Not-applicable: 0.
+
+The remaining nine identifiers cannot become `implemented` without public
+lookalikes for Intents-owned `INImage` / `INParameter` / `INInteraction`,
+UIKit-owned `UIImage`, CoreGraphics `CGImage`, or Foundation-owned
+`NSExtensionContext`. Those rows stay deferred and fail-closed.
+
+focus-ios (pinned ladder corpus) exercises the add/edit voice-shortcut
+controllers and all six delegate methods from
+`Blockzilla/Siri/SiriShortcuts.swift`,
+`Blockzilla/Siri/SiriFavoriteViewController.swift`, and
+`Blockzilla/Settings/Controller/SettingsViewController.swift`. It does not
+reference `INUIAddVoiceShortcutButton`. That button remains implemented
+because `reference/corpus-summary.json` also names firefox-ios, Signal-iOS,
+and pocket-casts-ios sample paths. pocket-casts-ios
+`PodcastsIntentsUI/IntentViewController.swift` is the hosted-view family;
+`configure*` stays deferred.
+
+This pass split non-enum coverage onto per-identifier tests, made
+`INUIVoiceShortcutError` `Equatable`/`Hashable`, proved weak delegates,
+empty-phrase fail-closed (no table mutation), second-delete `shortcutNotFound`,
+and cancel-does-not-uninstall. Isolated Linux still subclasses `NSObject`
+because UIKit is not a declared seed dependency.
+
+Top-5 evidence distribution (implemented rows citing each test):
+
+1. `testAddVoiceShortcutButtonStyleRawValues` — 11 (enum family; members and synthesized `!=` / `hashValue` / `hash(into:)` / `init(rawValue:)` share one table-driven test)
+2. `testInteractiveBehaviorRawValues` — 9 (enum family)
+3. `testHostedViewContextRawValues` — 7 (enum family)
+4. `testAddVoiceShortcutButtonClass` — 1
+5. `testAddVoiceShortcutButtonInitStyle` — 1
+
+Every other implemented row cites its own focused `test*` function. Each of
+the 28 remaining implemented rows cites a distinct test (max share 1/28 =
+3.6%, under the 40% bulk-relabel ceiling).
