@@ -480,6 +480,9 @@ func testParagraphStyleTabRubyAndGlyphInfo() {
     let cid = CTGlyphInfoCreateWithCharacterIdentifier(7, .adobeJapan1, ctCFString("漢"))
     precondition(CTGlyphInfoGetCharacterIdentifier(cid!) == 7)
     precondition(CTGlyphInfoGetTypeID() == 0x4354_4749)
+    let otherInfo = CTGlyphInfoCreateWithGlyphName(ctCFString("B"), font, ctCFString("B"))
+    precondition(info! != otherInfo!)
+    _ = info!.hashValue
 }
 
 func testRunDelegateAndStringKeys() {
@@ -497,6 +500,8 @@ func testRunDelegateAndStringKeys() {
         getWidth: { _ in 10 }
     )
     let unmanaged = Unmanaged.passRetained(box)
+    let box2 = Box()
+    let unmanaged2 = Unmanaged.passRetained(box2)
     do {
         let delegate = withUnsafePointer(to: callbacks) { pointer in
             CTRunDelegateCreate(pointer, unmanaged.toOpaque())
@@ -504,8 +509,15 @@ func testRunDelegateAndStringKeys() {
         precondition(delegate != nil)
         precondition(CTRunDelegateGetRefCon(delegate!) == unmanaged.toOpaque())
         precondition(CTRunDelegateGetTypeID() == 0x4354_5244)
+        let other = withUnsafePointer(to: callbacks) { pointer in
+            CTRunDelegateCreate(pointer, unmanaged2.toOpaque())
+        }
+        precondition(delegate! != other!)
+        _ = delegate!.hashValue
+        _ = other!.hashValue
     }
     precondition(box.deallocated)
+    precondition(box2.deallocated)
 
     precondition(ctString(kCTFontAttributeName) == "NSFont")
     precondition(ctString(kCTForegroundColorAttributeName) == "CTForegroundColor")
@@ -580,6 +592,14 @@ func testClassHashableAndInequality() {
     _ = typesetterA.hashValue
     _ = framesetterA.hashValue
     _ = styleA.hashValue
+    let lineA = CTLineCreateWithAttributedString(string)
+    let lineB = CTLineCreateWithAttributedString(string)
+    precondition(lineA != lineB)
+    _ = lineA.hashValue
+    let glyphA = CTGlyphInfoCreateWithCharacterIdentifier(1, .identityMapping, ctCFString("A"))!
+    let glyphB = CTGlyphInfoCreateWithCharacterIdentifier(2, .identityMapping, ctCFString("B"))!
+    precondition(glyphA != glyphB)
+    _ = glyphA.hashValue
     precondition(CTFontFormat.unrecognized != .trueType)
     precondition(CTFontManagerError.fileNotFound != .notRegistered)
     precondition(CTParagraphStyleSpecifier.alignment != .count)
