@@ -14,11 +14,12 @@
     "coreimage": {
       "agentId": "bc-ca683c2d-007f-5785-9f1b-0eb55c54a85c",
       "agentName": "Port CoreImage to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-ca683c2d-007f-5785-9f1b-0eb55c54a85c",
       "branches": [
         {
           "branch": "cursor/port-coreimage-to-linux-ea3f",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/110",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -27,10 +28,13 @@
       "launchStatus": "CREATED",
       "module": "CoreImage",
       "priority": 100,
-      "runCreatedAt": "2026-09-05T20:23:03.684Z",
-      "runId": "run-9f9f61aa-0e7e-4277-b6b8-498565e8d981",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T20:23:04.417Z"
+      "resultBytes": 160,
+      "resultSha256": "6ed7c36a8f15ae85ba254341305e0471ee841b02e7e2ef037bd3263711f98a69",
+      "runCreatedAt": "2026-09-05T20:42:11.851Z",
+      "runDurationMs": 14980,
+      "runId": "run-ef4fb001-7405-4175-9049-75ea9313f87b",
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T20:42:57.529Z"
     }
   },
   "model": {
@@ -43,5 +47,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T20:23:05Z"
+  "updatedAt": "2026-09-05T20:53:17Z"
 }

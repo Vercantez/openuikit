@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+CoreAudio	coreaudio	large-partitioned	100	audio,c-abi,realtime,hardware	CoreAudioTypes,Foundation
+CoreNFC	corenfc	large-partitioned	100	nfc,entitlement,privacy,fail-closed	Foundation
+GLKit	glkit	legacy-adapter	100	deprecated,gpu,compatibility	CoreFoundation,CoreGraphics,Foundation,ModelIO,OpenGLES,UIKit
+MetalPerformanceShaders	metalperformanceshaders	large-partitioned	100	gpu,numerics,hardware,metal	Foundation,Metal
+TipKit	tipkit	large-partitioned	100	persistence,swiftui,macros	Foundation,SwiftUI
+AdAttributionKit	adattributionkit	leaf-full	100	attribution,privacy,fail-closed	Foundation
+CoreTelephony	coretelephony	leaf-full	100	telephony,privacy,fail-closed	Foundation
+MetalKit	metalkit	medium-full	100	ui,gpu,central-metal	CoreGraphics,Foundation,Metal,ModelIO,QuartzCore,UIKit
+IntentsUI	intentsui	medium-full	100	ui,fail-closed	Foundation
+QuickLookThumbnailing	quicklookthumbnailing	medium-full	100	filesystem,graphics,os-service,async,cancellation,fail-closed	CoreGraphics,CoreTransferable,ExtensionFoundation,Foundation,UIKit,UniformTypeIdentifiers
+ImagePlayground	imageplayground	medium-full	100	generative-service,ui,fail-closed	CoreGraphics,Foundation,ImageIO,PencilKit,SwiftUI,UIKit
+MatterSupport	mattersupport	leaf-full	100	smart-home,commissioning,ui,fail-closed	Foundation,Matter
+Translation	translation	leaf-full	100	language,ml-service,fail-closed	Foundation
+WiFiAware	wifiaware	medium-full	100	network,privacy,hardware,host-driven	Foundation,Network,OSLog
+AlarmKit	alarmkit	medium-full	100	entitlement,scheduling,swiftui	ActivityKit,AppIntents,Foundation,SwiftUI
+GameplayKit	gameplaykit	medium-full	100	algorithms,randomness,pathfinding	Foundation,SceneKit,SpriteKit
