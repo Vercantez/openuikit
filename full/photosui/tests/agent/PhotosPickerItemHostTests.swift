@@ -44,3 +44,18 @@ func testPhotosPickerItemHostProviderMissing() {
     precondition(box.document == nil)
     precondition(item.supportedContentTypes.isEmpty)
 }
+
+func testPhotosPickerItemLoadTransferableThrows() {
+    let payload = HostDocument(bytes: Data("inline".utf8))
+    let item = PhotosPickerItem(
+        itemIdentifier: "inline-item",
+        supportedContentTypes: [.jpeg]
+    )
+    item._installTransferable(payload)
+    let loaded = try? item.loadTransferable(type: HostDocument.self)
+    precondition(loaded == payload)
+
+    let missing = PhotosPickerItem(itemIdentifier: "missing")
+    let empty = try? missing.loadTransferable(type: HostDocument.self)
+    precondition(empty == nil)
+}

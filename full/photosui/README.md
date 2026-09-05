@@ -20,37 +20,60 @@ stay in the tree and remain green.
 
 Coverage this round:
 
-| Status | Before (first pass) | After |
-| --- | ---: | ---: |
-| implemented | 257 | 238 |
-| declared | 780 | 655 |
-| deferred | 0 | 0 |
-| unavailable | 0 | 0 |
-| not-applicable | 0 | 144 |
-| **total** | **1037** | **1037** |
+| Status | Before (first pass) | After (bookkeeping) | After (depth) |
+| --- | ---: | ---: | ---: |
+| implemented | 257 | 238 | 259 |
+| declared | 780 | 655 | 634 |
+| deferred | 0 | 0 | 0 |
+| unavailable | 0 | 0 | 0 |
+| not-applicable | 0 | 144 | 144 |
+| **total** | **1037** | **1037** | **1037** |
 
-238 + 655 = 893 nondeferred (floor 519). 144 SwiftUI overlay re-exports
-(`s:7SwiftUI4ViewP07_Photos…` View modifiers plus synthesized
-`accessibility*` witnesses on `PhotosPicker`) are `not-applicable` with
-the note `SwiftUI cross-import overlay; owned by the SwiftUI lane`.
-Remaining generic `s:7SwiftUI4ViewPAAE*` identity modifiers stay
-`declared` so the sealed 50% floor still holds; they are never
-`implemented`. The async `PhotosPickerItem.loadTransferable(type:)`
-overload is `declared` (the sealed runner cannot await it).
+259 + 634 = 893 nondeferred (floor 519). Implemented gain vs first pass:
++2 (257 → 259). The bookkeeping pass relabeled 144 SwiftUI overlay
+re-exports (`s:7SwiftUI4ViewP07_Photos…` View modifiers plus synthesized
+`accessibility*` witnesses on `PhotosPicker`) to `not-applicable` with
+the note `SwiftUI cross-import overlay; owned by the SwiftUI lane`; those
+stay `not-applicable` and are never `implemented`. Remaining generic
+`s:7SwiftUI4ViewPAAE*` identity modifiers stay `declared`.
 
-Top-5 implemented evidence (of 238 rows; 40% cap = 95):
+This depth pass adds per-identifier synchronous tests and host storage:
+
+- `PHPickerConfiguration` properties (selectionLimit, filter, mode,
+  preferredAssetRepresentationMode, selection, preselectedAssetIdentifiers,
+  disabledCapabilities, edgesWithoutContentMargins) and `Update`.
+- `PHPickerFilter` catalog members and `any`/`all`/`not` against
+  `PHPickerHostAsset` attributes.
+- `PhotosPicker` inits store maxSelectionCount / filter / encoding /
+  library; `photosPickerStyle` / accessory / disabledCapabilities
+  copy-and-set; `photosPicker(isPresented:)` overlays store presentation
+  config. `PhotosPickerItem.loadTransferable(type:)` is **throws/inline**
+  on the isolated host (Apple's USR is `async throws`; sealed runner
+  cannot await).
+- `PHLivePhoto` Transferable overlay methods throw
+  `PhotosUIUnavailable.linuxHost` synchronously.
+- `PHContentEditingController` host stub: `canHandle` by format,
+  start/finish/cancel.
+- `PHLivePhotoView` records last playback style without invoking the
+  delegate.
+
+Top-5 implemented evidence (of 259 rows; 40% cap = 103):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 29 | 12.2% | `PhotosUITests.swift#testPickerCapabilitiesOptionSet` (table-driven OptionSet) |
-| 26 | 10.9% | `PhotosUITests.swift#testLivePhotoBadgeOptions` (table-driven OptionSet) |
-| 17 | 7.1% | `PhotosUITests.swift#testPickerConfigurationObjCEnums` (table-driven enum) |
-| 17 | 7.1% | `PhotosUITests.swift#testPhotosPickerStyleAndBehavior` (table-driven values) |
-| 17 | 7.1% | `PhotosUITests.swift#testPickerConfigurationNestedEnums` (table-driven enum) |
+| 29 | 11.2% | `PhotosUITests.swift#testPickerCapabilitiesOptionSet` (table-driven OptionSet) |
+| 26 | 10.0% | `PhotosUITests.swift#testLivePhotoBadgeOptions` (table-driven OptionSet) |
+| 17 | 6.6% | `PhotosUITests.swift#testPickerConfigurationObjCEnums` (table-driven enum) |
+| 17 | 6.6% | `PhotosUITests.swift#testPhotosPickerStyleAndBehavior` (table-driven values) |
+| 17 | 6.6% | `PhotosUITests.swift#testPickerConfigurationNestedEnums` (table-driven enum) |
 
-No non-enum/OptionSet test exceeds 40% of implemented rows. Filter catalog
-members share `PHPickerFilterTests.swift#testPickerFilterAssetCatalog`,
-which evaluates each filter against Photos-lane asset attributes.
+No non-enum/OptionSet test exceeds 40% of implemented rows. Catalog
+filters each cite a dedicated `PHPickerFilterTests.swift#testPickerFilter*`
+asset-attribute test.
+
+Sealed gate: `bash full/photosui/tests/acceptance/test_host.sh` ended
+`FRAMEWORK_FANOUT_HOST_OK` on this revision. `tests/test_photosui_host.sh`
+is Darwin/IceCubes-only (`mktemp /private/tmp/...` fails on Linux).
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -117,10 +140,20 @@ absent on this VM. The sealed gate compiles with a clean product tree
   Docs: https://developer.apple.com/documentation/photosui/phcontenteditingcontroller
 - `PhotosPickerItem` stores an identifier and optional typed
   transferables installed through `@_spi(OpenUIKitHost)`. Completion
-  `loadTransferable` finishes synchronously; the `async` overload is not
-  invoked by the sealed host runner.
-- `PhotosPicker`, `PhotosPickerStyle`, and
-  `PhotosPickerSelectionBehavior` construct without presenting UI.
+  `loadTransferable` finishes synchronously. The typed
+  `loadTransferable(type:)` overload is **throws** on the isolated host
+  so a sealed-runner test can call it; Apple's method is `async throws`
+  (oracle-questions.tsv). Darwin `PhotosUISwiftUI.swift` still declares
+  the async overlay and is not in the isolated guest manifest.
+- `PhotosPicker` stores maxSelectionCount, selectionBehavior, filter,
+  encoding, library flag, style, accessory visibility/edges, and
+  disabledCapabilities. `photosPickerStyle` /
+  `photosPickerAccessoryVisibility` /
+  `photosPickerDisabledCapabilities` copy-and-set those fields.
+  `photosPicker(isPresented:)` overlays on `PhotosPicker` record the
+  presentation filter/limit/library rather than returning identity.
+  `PhotosPickerStyle` and `PhotosPickerSelectionBehavior` are value
+  types. There is no picker chrome.
 
 ## Fail-closed boundaries
 
@@ -128,26 +161,29 @@ absent on this VM. The sealed gate compiles with a clean product tree
   `scroll` / `zoom` mutate host-selection state only. `updatePicker(using:)`
   stores the `Update` and applies limit/edges on Linux; Apple's live
   chrome is absent.
-- `PHLivePhotoView.startPlayback` / `stopPlayback` are no-ops and do not
-  invoke `PHLivePhotoViewDelegate`. `livePhotoBadgeImage` returns an empty
-  `UIImage` lookalike, not Apple badge artwork.
+- `PHLivePhotoView.startPlayback` / `stopPlayback` record the requested
+  style for host observation and do not invoke `PHLivePhotoViewDelegate`.
+  `livePhotoBadgeImage` returns an empty `UIImage` lookalike, not Apple
+  badge artwork.
   Docs: https://developer.apple.com/documentation/photosui/phlivephotoview
 - **Listed gap:** `PHPhotoLibrary.presentLimitedLibraryPicker` does not
   present UI on Linux and reports an empty identifier list immediately.
 - `postToPhotosSharedAlbumSheet` dismisses immediately with
   `PhotosUIUnavailable.linuxHost`.
-- `View.photosPicker` modifiers are identity functions on Linux. The
-  Darwin overlay in `PhotosUISwiftUI.swift` still hosts the original
-  IceCubes presentation SPI; it is not part of the isolated guest
-  manifest.
+- `View.photosPicker` modifiers on arbitrary `View` values are identity
+  functions on Linux. The same-named overlays on `PhotosPicker` store
+  presentation config. The Darwin overlay in `PhotosUISwiftUI.swift`
+  still hosts the original IceCubes presentation SPI; it is not part of
+  the isolated guest manifest.
 - SwiftUI.View members synthesized onto `PhotosPicker` are identity
   no-ops in `PhotosUIViewSurface.swift`. They compile and return `Self`;
   they do not implement Apple layout, accessibility, or navigation.
   Generic `s:7SwiftUI4ViewPAAE*` rows stay `declared`. The 144 overlay
   re-exports called out in the wave-8 depth pass are `not-applicable`.
-- `PHLivePhoto` Transferable overlay methods stay **declared**: they
-  throw `PhotosUIUnavailable.linuxHost` and there is no Apple export
-  session to observe.
+- `PHLivePhoto` Transferable overlay methods throw
+  `PhotosUIUnavailable.linuxHost` inline (Linux has no export session).
+  Apple's Transferable API is async; the isolated host uses `throws`
+  so tests stay synchronous.
 
 ## Lookalikes
 
