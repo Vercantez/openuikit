@@ -10,6 +10,7 @@ full/avfoundation/AVFileSurface.swift
 full/avfoundation/AVFoundation.swift
 full/avfoundation/AVGeometry.swift
 full/avfoundation/AVHostLookalikes.swift
+full/avfoundation/AVMediaProbe.swift
 full/avfoundation/AVMediaSurface.swift
 full/avfoundation/AVMetadataSurface.swift
 full/avfoundation/AVMetricsSurface.swift

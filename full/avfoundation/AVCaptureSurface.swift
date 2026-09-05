@@ -663,7 +663,11 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
 
 open class AVCaptureDeviceInput: AVCaptureInput, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(device: AVCaptureDevice) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public convenience init(device: AVCaptureDevice) throws {
+    self.init()
+    _ = device
+    throw AVError(.applicationIsNotAuthorizedToUseDevice)
+  }
   public var device: AVCaptureDevice { AVCaptureDevice() }
   public var unifiedAutoExposureDefaultsEnabled: Bool {
       get { false }

@@ -196,3 +196,5 @@ extension AVError: Hashable {
   public static func == (lhs: AVError, rhs: AVError) -> Bool { lhs.code == rhs.code }
   public func hash(into hasher: inout Hasher) { hasher.combine(code) }
 }
+
+extension AVError: CustomNSError {}
