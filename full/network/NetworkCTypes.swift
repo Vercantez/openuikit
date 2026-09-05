@@ -12,9 +12,27 @@ public typealias CFError = NSError
 public typealias dispatch_queue_t = DispatchQueue
 public typealias dispatch_data_t = DispatchData
 
-public final class sec_protocol_options: NSObject, Sendable {}
+/// Opaque Security `sec_protocol_options` stand-in. Linux stores option
+/// bytes locally; it does not perform a TLS handshake.
+public final class sec_protocol_options: NSObject, @unchecked Sendable {
+    public var encodedData: Data
+    public override init() {
+        encodedData = Data()
+        super.init()
+    }
+    public init(data: Data) {
+        encodedData = data
+        super.init()
+    }
+}
 public typealias sec_protocol_options_t = sec_protocol_options
-public final class sec_protocol_metadata: NSObject, Sendable {}
+public final class sec_protocol_metadata: NSObject, @unchecked Sendable {
+    public var encodedData: Data
+    public override init() {
+        encodedData = Data()
+        super.init()
+    }
+}
 public typealias sec_protocol_metadata_t = sec_protocol_metadata
 
 public let kNWErrorDomainPOSIX: CFString = "kNWErrorDomainPOSIX" as NSString

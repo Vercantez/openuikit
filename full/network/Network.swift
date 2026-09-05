@@ -676,12 +676,19 @@ public class NWProtocolTLS: NWProtocol {
     public static let definition = NWProtocolDefinition(identifier: "tls")
 
     public class Options: NWProtocolOptions {
-        public var securityProtocolOptions: sec_protocol_options_t { sec_protocol_options() }
-        public override init() { super.init() }
+        public let securityProtocolOptions: sec_protocol_options_t
+        public override init() {
+            self.securityProtocolOptions = sec_protocol_options()
+            super.init()
+        }
     }
 
     public class Metadata: NWProtocolMetadata {
-        public var securityProtocolMetadata: sec_protocol_metadata_t { sec_protocol_metadata() }
+        public let securityProtocolMetadata: sec_protocol_metadata_t
+        public override init() {
+            self.securityProtocolMetadata = sec_protocol_metadata()
+            super.init()
+        }
     }
 }
 
@@ -1013,6 +1020,8 @@ public final class NWConnection: @unchecked Sendable {
     private var isUDP = false
     private var preconnected = false
     private var pendingDatagram: Data?
+    private var lastContentContext: ContentContext = .defaultMessage
+    private var lastSendComplete = true
 
     deinit { closeSocket() }
 
@@ -1042,6 +1051,14 @@ public final class NWConnection: @unchecked Sendable {
             // No TLS stack on Linux. Fail closed with SecureTransport errSSLProtocol.
             emit(.failed(.tls(NWPOSIX.tlsUnsupportedStatus)))
             viabilityUpdateHandler?(false)
+            betterPathUpdateHandler?(false)
+            return
+        }
+        if NWPOSIX.wantsQUIC(parameters) {
+            // No QUIC stack on Linux. Fail closed; Options remain a data model.
+            emit(.failed(.posix(.EOPNOTSUPP)))
+            viabilityUpdateHandler?(false)
+            betterPathUpdateHandler?(false)
             return
         }
         if preconnected {
@@ -1153,6 +1170,7 @@ public final class NWConnection: @unchecked Sendable {
         }
         emit(.ready)
         viabilityUpdateHandler?(true)
+        betterPathUpdateHandler?(false)
     }
 
     private func failPOSIX() {
@@ -1191,9 +1209,9 @@ public final class NWConnection: @unchecked Sendable {
         isComplete: Bool = true,
         completion: SendCompletion
     ) {
-        _ = contentContext
-        _ = isComplete
         lock.lock()
+        lastContentContext = contentContext
+        lastSendComplete = isComplete
         let socket = fd
         let current = state
         lock.unlock()
@@ -1315,8 +1333,11 @@ public final class NWConnection: @unchecked Sendable {
         error: NWError?,
         completion: @escaping (Data?, ContentContext?, Bool, NWError?) -> Void
     ) {
+        lock.lock()
+        let context = lastContentContext
+        lock.unlock()
         let finish = {
-            completion(data, .defaultMessage, complete, error)
+            completion(data, context, complete, error)
         }
         if let queue {
             NWPOSIX.run(queue, finish)
@@ -1433,6 +1454,11 @@ public final class NWListener {
         lock.unlock()
         if NWPOSIX.wantsTLS(parameters) {
             emit(.failed(.tls(NWPOSIX.tlsUnsupportedStatus)))
+            return
+        }
+        if service != nil {
+            // No mDNS responder: service advertisement is fail-closed.
+            emit(.failed(.posix(.EOPNOTSUPP)))
             return
         }
         isUDP = NWPOSIX.isUDP(parameters)

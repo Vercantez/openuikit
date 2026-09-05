@@ -25,8 +25,14 @@ integration is a later central-review step.
 - C-imported `nw_*_t` enum structs use raw values corroborated by the pinned
   `dotnet/macios` bindings (for example `nw_connection_state_ready == 3` and
   `nw_error_domain_posix == 1`).
-- `NWTXTRecord` dictionary get/set and Collection iteration are in-process
-  only; they do not query mDNS.
+- `NWTXTRecord` dictionary get/set, Collection iteration, and RFC 6763
+  length-prefixed `data` encode/decode are in-process only; they do not
+  query mDNS.
+- `NWProtocolWebSocket.Frame` encodes and decodes RFC 6455 frames (masking,
+  opcodes, fragmentation, 16/64-bit lengths, close codes) against the
+  §5.7 vectors. No HTTP/TLS handshake is performed.
+- `NWProtocolFramer.Instance.parseInput` / `writeOutput` / `handleInput` run
+  through `NWProtocolFramerHostDriver` with a length-prefixed host framer.
 
 ## Fail-closed boundaries
 
@@ -34,6 +40,11 @@ Linux has no Network.framework daemon, Apple TLS/QUIC stack, or mDNS responder.
 
 - TLS parameters (`NWParameters.tls`, any `NWProtocolTLS.Options` on the stack)
   fail with `NWError.tls(-9800)` (`errSSLProtocol`). No handshake is attempted.
+  `sec_protocol_options.encodedData` is stored locally only.
+- QUIC connections (`NWParameters.quic` / `.quicDatagram`) fail with
+  `NWError.posix(.EOPNOTSUPP)`. `NWProtocolQUIC.Options` remains a data model.
+- `NWListener` with a Bonjour/application `Service` fails start with
+  `EOPNOTSUPP` (no mDNS advertisement). Port-only listeners still bind.
 - `NWBrowser.start` fails with `NWError.posix(.EOPNOTSUPP)` and never fabricates
   Bonjour peers.
 - `NWConnectionGroup.start` and `NWMulticastGroup` init fail closed the same
@@ -53,3 +64,40 @@ Linux has no Network.framework daemon, Apple TLS/QUIC stack, or mDNS responder.
   Linux tags the supplied queue and invokes start-time handlers via `sync`
   (or inline when already on that queue) so a host test can observe the first
   snapshot before `start` returns.
+
+## Depth pass 2026-09 (wave 8)
+
+Second pass over the existing first-pass tree (3047 precise IDs). Coverage
+before this pass: **1182 implemented / 872 declared / 333 deferred / 0
+unavailable / 660 not-applicable**.
+
+This pass keeps the POSIX TCP/UDP loopback transport and extends it with RFC
+6455 WebSocket framing, RFC 6763 TXT encode/decode, a framer host driver,
+QUIC/TLS/mDNS fail-closed paths, viability/betterPath updates, and documented
+TCP/UDP/IP option defaults. New evidence lives in focused
+`tests/agent/*Tests.swift` files. First-pass tests remain.
+
+Coverage after this pass: **1215 implemented / 862 declared / 310 deferred /
+0 unavailable / 660 not-applicable** (2077 nondeferred).
+
+Top-5 `implemented` evidence distribution (of 1215):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 rows (15.7%)
+   (C `nw_*` / `k…` enum constants; table-driven raw values)
+2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 110 (9.1%)
+3. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 94 (7.7%)
+4. `NetworkTests.swift#testCAPITypealiasesAndSmoke` — 92 (7.6%)
+5. `NetworkTests.swift#testTCPLoopbackRoundTrip` — 72 (5.9%)
+
+No non-exempt test is cited by more than 40% of implemented rows (largest
+remaining family test: `testBrowserDescriptorsFailClosedWithPOSIXError` at
+54/1215 = 4.4%).
+
+Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`). Active Cursor Build observed on this run was
+`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
+`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.

@@ -22,6 +22,12 @@ public final class NWBrowser: @unchecked Sendable, CustomDebugStringConvertible 
         public let interfaces: [NWInterface]
         public let metadata: Metadata
 
+        public init(endpoint: NWEndpoint, interfaces: [NWInterface], metadata: Metadata) {
+            self.endpoint = endpoint
+            self.interfaces = interfaces
+            self.metadata = metadata
+        }
+
         public enum Metadata: Hashable, Sendable, CustomDebugStringConvertible {
             case none
             case bonjour(NWTXTRecord)
