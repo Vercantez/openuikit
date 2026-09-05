@@ -119,3 +119,17 @@ name the test that exercises each row.
 precise ID): `class`, `async`/`await`, `yield`, regexp literals, arrow
 functions, template literals, and `import`/`export` all throw
 `SyntaxError` instead of succeeding as undefined.
+
+Sealed host gate on this Linux host (Swift 6.2.4, `x86_64-unknown-linux-gnu`):
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+JAVASCRIPTCORE_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=JavaScriptCore dylib=libJavaScriptCore.dylib
+```
+
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+because the scratch corpus pin `scratch/ladder-corpus/focus-ios` is
+missing. `swiftc --version` is Swift 6.2.4 targeting linux. The sealed
+schema-v1 `test_host.sh` does not print that environment marker.

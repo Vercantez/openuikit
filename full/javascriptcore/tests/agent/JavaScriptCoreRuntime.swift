@@ -701,7 +701,7 @@ func testJSValueInvokeMethod() throws {
     let ctor = context.evaluateScript("function Box(v){ this.v = v } Box")!
     let instance = ctor.construct(withArguments: [9])!
     try expect(instance.invokeMethod("toString", withArguments: []).toString() != nil, "invoke toString")
-    context.evaluateScript("var o = { n: 3, add: function(x){ return this.n + x } }")
+    _ = context.evaluateScript("var o = { n: 3, add: function(x){ return this.n + x } }")
     let object = context.evaluateScript("o")!
     try expectEqual(object.invokeMethod("add", withArguments: [4]).toInt32(), 7, "invokeMethod this")
 }
