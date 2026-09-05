@@ -1,0 +1,3635 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "CoreServices",
+        "printedName": "CoreServices"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "ManagedSettings",
+        "printedName": "ManagedSettings"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FamilyControls",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO10restrictedyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "restricted",
+            "printedName": "restricted",
+            "usr": "s:14FamilyControls0aB5ErrorO10restrictedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO11unavailableyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "unavailable",
+            "printedName": "unavailable",
+            "usr": "s:14FamilyControls0aB5ErrorO11unavailableyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO18invalidAccountTypeyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "invalidAccountType",
+            "printedName": "invalidAccountType",
+            "usr": "s:14FamilyControls0aB5ErrorO18invalidAccountTypeyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO15invalidArgumentyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "invalidArgument",
+            "printedName": "invalidArgument",
+            "usr": "s:14FamilyControls0aB5ErrorO15invalidArgumentyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO21authorizationConflictyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "authorizationConflict",
+            "printedName": "authorizationConflict",
+            "usr": "s:14FamilyControls0aB5ErrorO21authorizationConflictyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO21authorizationCanceledyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "authorizationCanceled",
+            "printedName": "authorizationCanceled",
+            "usr": "s:14FamilyControls0aB5ErrorO21authorizationCanceledyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO07networkC0yA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "networkError",
+            "printedName": "networkError",
+            "usr": "s:14FamilyControls0aB5ErrorO07networkC0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsError",
+                        "printedName": "FamilyControls.FamilyControlsError",
+                        "usr": "s:14FamilyControls0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsError.Type) -> FamilyControls.FamilyControlsError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "EnumElement",
+            "intro_iOS": "16.0",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO31authenticationMethodUnavailableyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "authenticationMethodUnavailable",
+            "printedName": "authenticationMethodUnavailable",
+            "usr": "s:14FamilyControls0aB5ErrorO31authenticationMethodUnavailableyA2CmF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0aB5ErrorO16errorDescriptionSSSgvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0aB5ErrorO16errorDescriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO16errorDescriptionSSSgvp",
+            "moduleName": "FamilyControls",
+            "name": "errorDescription",
+            "printedName": "errorDescription",
+            "usr": "s:14FamilyControls0aB5ErrorO16errorDescriptionSSSgvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsError",
+                    "printedName": "FamilyControls.FamilyControlsError",
+                    "usr": "s:14FamilyControls0aB5ErrorO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "FamilyControls.FamilyControlsError?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0aB5ErrorO8rawValueACSgSi_tcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:14FamilyControls0aB5ErrorO8rawValueACSgSi_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0aB5ErrorO8rawValueSivg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0aB5ErrorO8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO8rawValueSivp",
+            "moduleName": "FamilyControls",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:14FamilyControls0aB5ErrorO8rawValueSivp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0aB5ErrorO13errorUserInfoSDySSypGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0aB5ErrorO13errorUserInfoSDySSypGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB5ErrorO13errorUserInfoSDySSypGvp",
+            "moduleName": "FamilyControls",
+            "name": "errorUserInfo",
+            "printedName": "errorUserInfo",
+            "usr": "s:14FamilyControls0aB5ErrorO13errorUserInfoSDySSypGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.4",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls0aB5ErrorO8RawValuea",
+            "moduleName": "FamilyControls",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:14FamilyControls0aB5ErrorO8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "FamilyControls.FamilyControlsError.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls0aB5ErrorO",
+        "moduleName": "FamilyControls",
+        "name": "FamilyControlsError",
+        "printedName": "FamilyControlsError",
+        "usr": "s:14FamilyControls0aB5ErrorO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthorizationStatus",
+                    "printedName": "FamilyControls.AuthorizationStatus",
+                    "usr": "s:14FamilyControls19AuthorizationStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AuthorizationStatus",
+                        "printedName": "FamilyControls.AuthorizationStatus",
+                        "usr": "s:14FamilyControls19AuthorizationStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.AuthorizationStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.AuthorizationStatus.Type) -> FamilyControls.AuthorizationStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO13notDeterminedyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "notDetermined",
+            "printedName": "notDetermined",
+            "usr": "s:14FamilyControls19AuthorizationStatusO13notDeterminedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthorizationStatus",
+                    "printedName": "FamilyControls.AuthorizationStatus",
+                    "usr": "s:14FamilyControls19AuthorizationStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AuthorizationStatus",
+                        "printedName": "FamilyControls.AuthorizationStatus",
+                        "usr": "s:14FamilyControls19AuthorizationStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.AuthorizationStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.AuthorizationStatus.Type) -> FamilyControls.AuthorizationStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO6deniedyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "denied",
+            "printedName": "denied",
+            "usr": "s:14FamilyControls19AuthorizationStatusO6deniedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthorizationStatus",
+                    "printedName": "FamilyControls.AuthorizationStatus",
+                    "usr": "s:14FamilyControls19AuthorizationStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AuthorizationStatus",
+                        "printedName": "FamilyControls.AuthorizationStatus",
+                        "usr": "s:14FamilyControls19AuthorizationStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.AuthorizationStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.AuthorizationStatus.Type) -> FamilyControls.AuthorizationStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO8approvedyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "approved",
+            "printedName": "approved",
+            "usr": "s:14FamilyControls19AuthorizationStatusO8approvedyA2CmF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls19AuthorizationStatusO11descriptionSSvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls19AuthorizationStatusO11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO11descriptionSSvp",
+            "moduleName": "FamilyControls",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:14FamilyControls19AuthorizationStatusO11descriptionSSvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthorizationStatus",
+                    "printedName": "FamilyControls.AuthorizationStatus",
+                    "usr": "s:14FamilyControls19AuthorizationStatusO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "FamilyControls.AuthorizationStatus?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO8rawValueACSgSi_tcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:14FamilyControls19AuthorizationStatusO8rawValueACSgSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "15.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO8RawValuea",
+            "moduleName": "FamilyControls",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:14FamilyControls19AuthorizationStatusO8RawValuea"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls19AuthorizationStatusO8rawValueSivg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls19AuthorizationStatusO8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationStatusO8rawValueSivp",
+            "moduleName": "FamilyControls",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:14FamilyControls19AuthorizationStatusO8rawValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "FamilyControls.AuthorizationStatus.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "enumRawTypeName": "Int",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls19AuthorizationStatusO",
+        "moduleName": "FamilyControls",
+        "name": "AuthorizationStatus",
+        "printedName": "AuthorizationStatus",
+        "usr": "s:14FamilyControls19AuthorizationStatusO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivityTitleViewV4bodyQrvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivityTitleViewV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivityTitleViewV4bodyQrvp",
+            "moduleName": "FamilyControls",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:14FamilyControls0A17ActivityTitleViewV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "15.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls0A17ActivityTitleViewV4Bodya",
+            "moduleName": "FamilyControls",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:14FamilyControls0A17ActivityTitleViewV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "View",
+                            "printedName": "SwiftUI.View",
+                            "usr": "s:7SwiftUI4ViewP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some SwiftUI.View"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "FamilyControls.FamilyActivityTitleView.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls0A17ActivityTitleViewV",
+        "moduleName": "FamilyControls",
+        "name": "FamilyActivityTitleView",
+        "printedName": "FamilyActivityTitleView",
+        "usr": "s:14FamilyControls0A17ActivityTitleViewV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A16ActivityIconViewV4bodyQrvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A16ActivityIconViewV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A16ActivityIconViewV4bodyQrvp",
+            "moduleName": "FamilyControls",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:14FamilyControls0A16ActivityIconViewV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "15.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls0A16ActivityIconViewV4Bodya",
+            "moduleName": "FamilyControls",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:14FamilyControls0A16ActivityIconViewV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "View",
+                            "printedName": "SwiftUI.View",
+                            "usr": "s:7SwiftUI4ViewP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some SwiftUI.View"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "FamilyControls.FamilyActivityIconView.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls0A16ActivityIconViewV",
+        "moduleName": "FamilyControls",
+        "name": "FamilyActivityIconView",
+        "printedName": "FamilyActivityIconView",
+        "usr": "s:14FamilyControls0A16ActivityIconViewV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV21includeEntireCategorySbvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV21includeEntireCategorySbvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "15.2",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV21includeEntireCategorySbvp",
+            "moduleName": "FamilyControls",
+            "name": "includeEntireCategory",
+            "printedName": "includeEntireCategory",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV21includeEntireCategorySbvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Application",
+                                "printedName": "ManagedSettings.Application",
+                                "usr": "s:15ManagedSettings11ApplicationV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Token",
+                            "printedName": "ManagedSettings.Token<ManagedSettings.Application>",
+                            "usr": "s:15ManagedSettings5TokenV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ApplicationToken",
+                        "printedName": "ManagedSettings.ApplicationToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.ApplicationToken>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV17applicationTokensShy15ManagedSettings5TokenVyAE11ApplicationVGGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV17applicationTokensShy15ManagedSettings5TokenVyAE11ApplicationVGGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Application",
+                                "printedName": "ManagedSettings.Application",
+                                "usr": "s:15ManagedSettings11ApplicationV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Token",
+                            "printedName": "ManagedSettings.Token<ManagedSettings.Application>",
+                            "usr": "s:15ManagedSettings5TokenV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ApplicationToken",
+                        "printedName": "ManagedSettings.ApplicationToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.ApplicationToken>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV17applicationTokensShy15ManagedSettings5TokenVyAE11ApplicationVGGvs",
+                "moduleName": "FamilyControls",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV17applicationTokensShy15ManagedSettings5TokenVyAE11ApplicationVGGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Application",
+                            "printedName": "ManagedSettings.Application",
+                            "usr": "s:15ManagedSettings11ApplicationV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Token",
+                        "printedName": "ManagedSettings.Token<ManagedSettings.Application>",
+                        "usr": "s:15ManagedSettings5TokenV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ApplicationToken",
+                    "printedName": "ManagedSettings.ApplicationToken"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<ManagedSettings.ApplicationToken>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV17applicationTokensShy15ManagedSettings5TokenVyAE11ApplicationVGGvp",
+            "moduleName": "FamilyControls",
+            "name": "applicationTokens",
+            "printedName": "applicationTokens",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV17applicationTokensShy15ManagedSettings5TokenVyAE11ApplicationVGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ActivityCategory",
+                                "printedName": "ManagedSettings.ActivityCategory",
+                                "usr": "s:15ManagedSettings16ActivityCategoryV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Token",
+                            "printedName": "ManagedSettings.Token<ManagedSettings.ActivityCategory>",
+                            "usr": "s:15ManagedSettings5TokenV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ActivityCategoryToken",
+                        "printedName": "ManagedSettings.ActivityCategoryToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.ActivityCategoryToken>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV14categoryTokensShy15ManagedSettings5TokenVyAE0C8CategoryVGGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV14categoryTokensShy15ManagedSettings5TokenVyAE0C8CategoryVGGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ActivityCategory",
+                                "printedName": "ManagedSettings.ActivityCategory",
+                                "usr": "s:15ManagedSettings16ActivityCategoryV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Token",
+                            "printedName": "ManagedSettings.Token<ManagedSettings.ActivityCategory>",
+                            "usr": "s:15ManagedSettings5TokenV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ActivityCategoryToken",
+                        "printedName": "ManagedSettings.ActivityCategoryToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.ActivityCategoryToken>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV14categoryTokensShy15ManagedSettings5TokenVyAE0C8CategoryVGGvs",
+                "moduleName": "FamilyControls",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV14categoryTokensShy15ManagedSettings5TokenVyAE0C8CategoryVGGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ActivityCategory",
+                            "printedName": "ManagedSettings.ActivityCategory",
+                            "usr": "s:15ManagedSettings16ActivityCategoryV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Token",
+                        "printedName": "ManagedSettings.Token<ManagedSettings.ActivityCategory>",
+                        "usr": "s:15ManagedSettings5TokenV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ActivityCategoryToken",
+                    "printedName": "ManagedSettings.ActivityCategoryToken"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<ManagedSettings.ActivityCategoryToken>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV14categoryTokensShy15ManagedSettings5TokenVyAE0C8CategoryVGGvp",
+            "moduleName": "FamilyControls",
+            "name": "categoryTokens",
+            "printedName": "categoryTokens",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV14categoryTokensShy15ManagedSettings5TokenVyAE0C8CategoryVGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "WebDomain",
+                                "printedName": "ManagedSettings.WebDomain",
+                                "usr": "s:15ManagedSettings9WebDomainV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Token",
+                            "printedName": "ManagedSettings.Token<ManagedSettings.WebDomain>",
+                            "usr": "s:15ManagedSettings5TokenV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "WebDomainToken",
+                        "printedName": "ManagedSettings.WebDomainToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.WebDomainToken>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV15webDomainTokensShy15ManagedSettings5TokenVyAE03WebF0VGGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV15webDomainTokensShy15ManagedSettings5TokenVyAE03WebF0VGGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "WebDomain",
+                                "printedName": "ManagedSettings.WebDomain",
+                                "usr": "s:15ManagedSettings9WebDomainV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Token",
+                            "printedName": "ManagedSettings.Token<ManagedSettings.WebDomain>",
+                            "usr": "s:15ManagedSettings5TokenV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "WebDomainToken",
+                        "printedName": "ManagedSettings.WebDomainToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.WebDomainToken>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV15webDomainTokensShy15ManagedSettings5TokenVyAE03WebF0VGGvs",
+                "moduleName": "FamilyControls",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV15webDomainTokensShy15ManagedSettings5TokenVyAE03WebF0VGGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "WebDomain",
+                            "printedName": "ManagedSettings.WebDomain",
+                            "usr": "s:15ManagedSettings9WebDomainV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Token",
+                        "printedName": "ManagedSettings.Token<ManagedSettings.WebDomain>",
+                        "usr": "s:15ManagedSettings5TokenV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "WebDomainToken",
+                    "printedName": "ManagedSettings.WebDomainToken"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<ManagedSettings.WebDomainToken>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV15webDomainTokensShy15ManagedSettings5TokenVyAE03WebF0VGGvp",
+            "moduleName": "FamilyControls",
+            "name": "webDomainTokens",
+            "printedName": "webDomainTokens",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV15webDomainTokensShy15ManagedSettings5TokenVyAE03WebF0VGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Application",
+                        "printedName": "ManagedSettings.Application",
+                        "usr": "s:15ManagedSettings11ApplicationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.Application>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV12applicationsShy15ManagedSettings11ApplicationVGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV12applicationsShy15ManagedSettings11ApplicationVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Application",
+                    "printedName": "ManagedSettings.Application",
+                    "usr": "s:15ManagedSettings11ApplicationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<ManagedSettings.Application>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV12applicationsShy15ManagedSettings11ApplicationVGvp",
+            "moduleName": "FamilyControls",
+            "name": "applications",
+            "printedName": "applications",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV12applicationsShy15ManagedSettings11ApplicationVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ActivityCategory",
+                        "printedName": "ManagedSettings.ActivityCategory",
+                        "usr": "s:15ManagedSettings16ActivityCategoryV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.ActivityCategory>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV10categoriesShy15ManagedSettings0C8CategoryVGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV10categoriesShy15ManagedSettings0C8CategoryVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ActivityCategory",
+                    "printedName": "ManagedSettings.ActivityCategory",
+                    "usr": "s:15ManagedSettings16ActivityCategoryV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<ManagedSettings.ActivityCategory>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV10categoriesShy15ManagedSettings0C8CategoryVGvp",
+            "moduleName": "FamilyControls",
+            "name": "categories",
+            "printedName": "categories",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV10categoriesShy15ManagedSettings0C8CategoryVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "WebDomain",
+                        "printedName": "ManagedSettings.WebDomain",
+                        "usr": "s:15ManagedSettings9WebDomainV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<ManagedSettings.WebDomain>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A17ActivitySelectionV10webDomainsShy15ManagedSettings9WebDomainVGvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV10webDomainsShy15ManagedSettings9WebDomainVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "WebDomain",
+                    "printedName": "ManagedSettings.WebDomain",
+                    "usr": "s:15ManagedSettings9WebDomainV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<ManagedSettings.WebDomain>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV10webDomainsShy15ManagedSettings9WebDomainVGvp",
+            "moduleName": "FamilyControls",
+            "name": "webDomains",
+            "printedName": "webDomains",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV10webDomainsShy15ManagedSettings9WebDomainVGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivitySelection",
+                "printedName": "FamilyControls.FamilyActivitySelection",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV21includeEntireCategoryACSb_tcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(includeEntireCategory:)",
+            "usr": "s:14FamilyControls0A17ActivitySelectionV21includeEntireCategoryACSb_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivitySelection",
+                "printedName": "FamilyControls.FamilyActivitySelection",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionVACycfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:14FamilyControls0A17ActivitySelectionVACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivitySelection",
+                "printedName": "FamilyControls.FamilyActivitySelection",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivitySelection",
+                "printedName": "FamilyControls.FamilyActivitySelection",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV2eeoiySbAC_ACtFZ",
+            "moduleName": "FamilyControls",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:14FamilyControls0A17ActivitySelectionV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV6encode2toys7Encoder_p_tKF",
+            "moduleName": "FamilyControls",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:14FamilyControls0A17ActivitySelectionV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivitySelection",
+                "printedName": "FamilyControls.FamilyActivitySelection",
+                "usr": "s:14FamilyControls0A17ActivitySelectionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0A17ActivitySelectionV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:14FamilyControls0A17ActivitySelectionV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls0A17ActivitySelectionV",
+        "moduleName": "FamilyControls",
+        "name": "FamilyActivitySelection",
+        "printedName": "FamilyActivitySelection",
+        "usr": "s:14FamilyControls0A17ActivitySelectionV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivityPicker",
+                "printedName": "FamilyControls.FamilyActivityPicker",
+                "usr": "s:14FamilyControls0A14ActivityPickerV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyActivitySelection",
+                    "printedName": "FamilyControls.FamilyActivitySelection",
+                    "usr": "s:14FamilyControls0A17ActivitySelectionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<FamilyControls.FamilyActivitySelection>",
+                "usr": "s:7SwiftUI7BindingV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0A14ActivityPickerV9selectionAC7SwiftUI7BindingVyAA0aC9SelectionVG_tcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(selection:)",
+            "usr": "s:14FamilyControls0A14ActivityPickerV9selectionAC7SwiftUI7BindingVyAA0aC9SelectionVG_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyActivityPicker",
+                "printedName": "FamilyControls.FamilyActivityPicker",
+                "usr": "s:14FamilyControls0A14ActivityPickerV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyActivitySelection",
+                    "printedName": "FamilyControls.FamilyActivitySelection",
+                    "usr": "s:14FamilyControls0A17ActivitySelectionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<FamilyControls.FamilyActivitySelection>",
+                "usr": "s:7SwiftUI7BindingV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "intro_iOS": "16.0",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0A14ActivityPickerV10headerText06footerF09selectionACSSSg_AG7SwiftUI7BindingVyAA0aC9SelectionVGtcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(headerText:footerText:selection:)",
+            "usr": "s:14FamilyControls0A14ActivityPickerV10headerText06footerF09selectionACSSSg_AG7SwiftUI7BindingVyAA0aC9SelectionVGtcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0A14ActivityPickerV4bodyQrvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0A14ActivityPickerV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0A14ActivityPickerV4bodyQrvp",
+            "moduleName": "FamilyControls",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:14FamilyControls0A14ActivityPickerV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "15.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls0A14ActivityPickerV4Bodya",
+            "moduleName": "FamilyControls",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:14FamilyControls0A14ActivityPickerV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "View",
+                            "printedName": "SwiftUI.View",
+                            "usr": "s:7SwiftUI4ViewP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some SwiftUI.View"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "FamilyControls.FamilyActivityPicker.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls0A14ActivityPickerV",
+        "moduleName": "FamilyControls",
+        "name": "FamilyActivityPicker",
+        "printedName": "FamilyActivityPicker",
+        "usr": "s:14FamilyControls0A14ActivityPickerV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsMember",
+                    "printedName": "FamilyControls.FamilyControlsMember",
+                    "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsMember",
+                        "printedName": "FamilyControls.FamilyControlsMember",
+                        "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsMember.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsMember.Type) -> FamilyControls.FamilyControlsMember"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB6MemberO5childyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "child",
+            "printedName": "child",
+            "usr": "c:@M@FamilyControls@E@FamilyControlsMember@FamilyControlsMemberChild"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsMember",
+                    "printedName": "FamilyControls.FamilyControlsMember",
+                    "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FamilyControlsMember",
+                        "printedName": "FamilyControls.FamilyControlsMember",
+                        "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "FamilyControls.FamilyControlsMember.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FamilyControls.FamilyControlsMember.Type) -> FamilyControls.FamilyControlsMember"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB6MemberO10individualyA2CmF",
+            "moduleName": "FamilyControls",
+            "name": "individual",
+            "printedName": "individual",
+            "usr": "c:@M@FamilyControls@E@FamilyControlsMember@FamilyControlsMemberIndividual"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0aB6MemberO11descriptionSSvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0aB6MemberO11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB6MemberO11descriptionSSvp",
+            "moduleName": "FamilyControls",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:14FamilyControls0aB6MemberO11descriptionSSvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyControlsMember",
+                    "printedName": "FamilyControls.FamilyControlsMember",
+                    "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "FamilyControls.FamilyControlsMember?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14FamilyControls0aB6MemberO8rawValueACSgSi_tcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:14FamilyControls0aB6MemberO8rawValueACSgSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "16.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls0aB6MemberO8RawValuea",
+            "moduleName": "FamilyControls",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:14FamilyControls0aB6MemberO8RawValuea"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls0aB6MemberO8rawValueSivg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls0aB6MemberO8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls0aB6MemberO8rawValueSivp",
+            "moduleName": "FamilyControls",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:14FamilyControls0aB6MemberO8rawValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "FamilyControls.FamilyControlsMember.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "enumRawTypeName": "Int",
+        "intro_iOS": "16.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls0aB6MemberO",
+        "moduleName": "FamilyControls",
+        "name": "FamilyControlsMember",
+        "printedName": "FamilyControlsMember",
+        "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthorizationCenter",
+                    "printedName": "FamilyControls.AuthorizationCenter",
+                    "usr": "s:14FamilyControls19AuthorizationCenterC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls19AuthorizationCenterC6sharedACvgZ",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:14FamilyControls19AuthorizationCenterC6sharedACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AuthorizationCenter",
+                "printedName": "FamilyControls.AuthorizationCenter",
+                "usr": "s:14FamilyControls19AuthorizationCenterC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC6sharedACvpZ",
+            "moduleName": "FamilyControls",
+            "name": "shared",
+            "printedName": "shared",
+            "static": true,
+            "usr": "s:14FamilyControls19AuthorizationCenterC6sharedACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthorizationStatus",
+                    "printedName": "FamilyControls.AuthorizationStatus",
+                    "usr": "s:14FamilyControls19AuthorizationStatusO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls19AuthorizationCenterC19authorizationStatusAA0cF0Ovg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls19AuthorizationCenterC19authorizationStatusAA0cF0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AuthorizationStatus",
+                "printedName": "FamilyControls.AuthorizationStatus",
+                "usr": "s:14FamilyControls19AuthorizationStatusO"
+              }
+            ],
+            "declAttributes": [
+              "ProjectedValueProperty",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC19authorizationStatusAA0cF0Ovp",
+            "moduleName": "FamilyControls",
+            "name": "authorizationStatus",
+            "printedName": "authorizationStatus",
+            "usr": "s:14FamilyControls19AuthorizationCenterC19authorizationStatusAA0cF0Ovp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Publisher",
+                    "printedName": "Combine.Published<FamilyControls.AuthorizationStatus>.Publisher",
+                    "usr": "s:7Combine9PublishedV9PublisherV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14FamilyControls19AuthorizationCenterC20$authorizationStatus7Combine9PublishedV9PublisherVyAA0cF0O_Gvg",
+                "moduleName": "FamilyControls",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14FamilyControls19AuthorizationCenterC20$authorizationStatus7Combine9PublishedV9PublisherVyAA0cF0O_Gvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Publisher",
+                "printedName": "Combine.Published<FamilyControls.AuthorizationStatus>.Publisher",
+                "usr": "s:7Combine9PublishedV9PublisherV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC20$authorizationStatus7Combine9PublishedV9PublisherVyAA0cF0O_Gvp",
+            "moduleName": "FamilyControls",
+            "name": "$authorizationStatus",
+            "printedName": "$authorizationStatus",
+            "usr": "s:14FamilyControls19AuthorizationCenterC20$authorizationStatus7Combine9PublishedV9PublisherVyAA0cF0O_Gvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Void",
+                            "printedName": "()"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Void",
+                        "printedName": "Swift.Void"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<Swift.Void, any Swift.Error>",
+                    "usr": "s:s6ResultO"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "deprecated": true,
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC07requestC017completionHandleryys6ResultOyyts5Error_pGc_tF",
+            "moduleName": "FamilyControls",
+            "name": "requestAuthorization",
+            "printedName": "requestAuthorization(completionHandler:)",
+            "usr": "s:14FamilyControls19AuthorizationCenterC07requestC017completionHandleryys6ResultOyyts5Error_pGc_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FamilyControlsMember",
+                "printedName": "FamilyControls.FamilyControlsMember",
+                "usr": "c:@M@FamilyControls@E@FamilyControlsMember"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "16.0",
+            "kind": "Function",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC07requestC03foryAA0aB6MemberO_tYaKF",
+            "moduleName": "FamilyControls",
+            "name": "requestAuthorization",
+            "printedName": "requestAuthorization(for:)",
+            "throwing": true,
+            "usr": "s:14FamilyControls19AuthorizationCenterC07requestC03foryAA0aB6MemberO_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Void",
+                            "printedName": "()"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Void",
+                        "printedName": "Swift.Void"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<Swift.Void, any Swift.Error>",
+                    "usr": "s:s6ResultO"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC06revokeC017completionHandleryys6ResultOyyts5Error_pGc_tF",
+            "moduleName": "FamilyControls",
+            "name": "revokeAuthorization",
+            "printedName": "revokeAuthorization(completionHandler:)",
+            "usr": "s:14FamilyControls19AuthorizationCenterC06revokeC017completionHandleryys6ResultOyyts5Error_pGc_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ObservableObjectPublisher",
+                "printedName": "Combine.ObservableObjectPublisher",
+                "usr": "s:7Combine25ObservableObjectPublisherC"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "15.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s14FamilyControls19AuthorizationCenterC25ObjectWillChangePublishera",
+            "moduleName": "FamilyControls",
+            "name": "ObjectWillChangePublisher",
+            "printedName": "ObjectWillChangePublisher",
+            "usr": "s:14FamilyControls19AuthorizationCenterC25ObjectWillChangePublishera"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ObservableObjectPublisher",
+                        "printedName": "Combine.ObservableObjectPublisher",
+                        "usr": "s:7Combine25ObservableObjectPublisherC"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ObjectWillChangePublisher",
+                    "printedName": "FamilyControls.AuthorizationCenter.ObjectWillChangePublisher"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ObjectWillChangePublisher",
+                "printedName": "ObjectWillChangePublisher"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7Combine16ObservableObjectP",
+            "name": "ObservableObject",
+            "printedName": "ObservableObject",
+            "usr": "s:7Combine16ObservableObjectP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14FamilyControls19AuthorizationCenterC",
+        "moduleName": "FamilyControls",
+        "name": "AuthorizationCenter",
+        "printedName": "AuthorizationCenter",
+        "usr": "s:14FamilyControls19AuthorizationCenterC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Title"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Icon"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Label",
+                "printedName": "SwiftUI.Label<Title, Icon>",
+                "usr": "s:7SwiftUI5LabelV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Application",
+                        "printedName": "ManagedSettings.Application",
+                        "usr": "s:15ManagedSettings11ApplicationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Token",
+                    "printedName": "ManagedSettings.Token<ManagedSettings.Application>",
+                    "usr": "s:15ManagedSettings5TokenV"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "ApplicationToken",
+                "printedName": "ManagedSettings.ApplicationToken"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Title, Icon where Title == FamilyControls.FamilyActivityTitleView, Icon == FamilyControls.FamilyActivityIconView>",
+            "init_kind": "Designated",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s7SwiftUI5LabelV14FamilyControlsAD0D17ActivityTitleViewVRszAD0df4IconH0VRs_rlEyACyAfHG15ManagedSettings5TokenVyAJ11ApplicationVGcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:7SwiftUI5LabelV14FamilyControlsAD0D17ActivityTitleViewVRszAD0df4IconH0VRs_rlEyACyAfHG15ManagedSettings5TokenVyAJ11ApplicationVGcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Title"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Icon"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Label",
+                "printedName": "SwiftUI.Label<Title, Icon>",
+                "usr": "s:7SwiftUI5LabelV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ActivityCategory",
+                        "printedName": "ManagedSettings.ActivityCategory",
+                        "usr": "s:15ManagedSettings16ActivityCategoryV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Token",
+                    "printedName": "ManagedSettings.Token<ManagedSettings.ActivityCategory>",
+                    "usr": "s:15ManagedSettings5TokenV"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "ActivityCategoryToken",
+                "printedName": "ManagedSettings.ActivityCategoryToken"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Title, Icon where Title == FamilyControls.FamilyActivityTitleView, Icon == FamilyControls.FamilyActivityIconView>",
+            "init_kind": "Designated",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s7SwiftUI5LabelV14FamilyControlsAD0D17ActivityTitleViewVRszAD0df4IconH0VRs_rlEyACyAfHG15ManagedSettings5TokenVyAJ0F8CategoryVGcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:7SwiftUI5LabelV14FamilyControlsAD0D17ActivityTitleViewVRszAD0df4IconH0VRs_rlEyACyAfHG15ManagedSettings5TokenVyAJ0F8CategoryVGcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Title"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Icon"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Label",
+                "printedName": "SwiftUI.Label<Title, Icon>",
+                "usr": "s:7SwiftUI5LabelV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "WebDomain",
+                        "printedName": "ManagedSettings.WebDomain",
+                        "usr": "s:15ManagedSettings9WebDomainV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Token",
+                    "printedName": "ManagedSettings.Token<ManagedSettings.WebDomain>",
+                    "usr": "s:15ManagedSettings5TokenV"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "WebDomainToken",
+                "printedName": "ManagedSettings.WebDomainToken"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Title, Icon where Title == FamilyControls.FamilyActivityTitleView, Icon == FamilyControls.FamilyActivityIconView>",
+            "init_kind": "Designated",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s7SwiftUI5LabelV14FamilyControlsAD0D17ActivityTitleViewVRszAD0df4IconH0VRs_rlEyACyAfHG15ManagedSettings5TokenVyAJ9WebDomainVGcfc",
+            "moduleName": "FamilyControls",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:7SwiftUI5LabelV14FamilyControlsAD0D17ActivityTitleViewVRszAD0df4IconH0VRs_rlEyACyAfHG15ManagedSettings5TokenVyAJ9WebDomainVGcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "View",
+                            "printedName": "SwiftUI.View",
+                            "usr": "s:7SwiftUI4ViewP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some SwiftUI.View"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "SwiftUI.Label<Title, Icon>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Title, Icon where Title : SwiftUI.View, Icon : SwiftUI.View>",
+        "intro_Macosx": "11.0",
+        "intro_iOS": "14.0",
+        "intro_tvOS": "14.0",
+        "intro_watchOS": "7.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s7SwiftUI5LabelV",
+        "moduleName": "SwiftUI",
+        "name": "Label",
+        "printedName": "Label",
+        "usr": "s:7SwiftUI5LabelV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<Swift.Bool>",
+                "usr": "s:7SwiftUI7BindingV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyActivitySelection",
+                    "printedName": "FamilyControls.FamilyActivitySelection",
+                    "usr": "s:14FamilyControls0A17ActivitySelectionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<FamilyControls.FamilyActivitySelection>",
+                "usr": "s:7SwiftUI7BindingV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : SwiftUI.View>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s7SwiftUI4ViewP14FamilyControlsE20familyActivityPicker11isPresented9selectionQrAA7BindingVySbG_AIyAD0dG9SelectionVGtF",
+            "moduleName": "FamilyControls",
+            "name": "familyActivityPicker",
+            "printedName": "familyActivityPicker(isPresented:selection:)",
+            "usr": "s:7SwiftUI4ViewP14FamilyControlsE20familyActivityPicker11isPresented9selectionQrAA7BindingVySbG_AIyAD0dG9SelectionVGtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<Swift.Bool>",
+                "usr": "s:7SwiftUI7BindingV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FamilyActivitySelection",
+                    "printedName": "FamilyControls.FamilyActivitySelection",
+                    "usr": "s:14FamilyControls0A17ActivitySelectionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<FamilyControls.FamilyActivitySelection>",
+                "usr": "s:7SwiftUI7BindingV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : SwiftUI.View>",
+            "intro_iOS": "16.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s7SwiftUI4ViewP14FamilyControlsE20familyActivityPicker10headerText06footerJ011isPresented9selectionQrSSSg_AjA7BindingVySbGALyAD0dG9SelectionVGtF",
+            "moduleName": "FamilyControls",
+            "name": "familyActivityPicker",
+            "printedName": "familyActivityPicker(headerText:footerText:isPresented:selection:)",
+            "usr": "s:7SwiftUI4ViewP14FamilyControlsE20familyActivityPicker10headerText06footerJ011isPresented9selectionQrSSSg_AjA7BindingVySbGALyAD0dG9SelectionVGtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "TypeEraser",
+          "TypeEraser",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self.Body : SwiftUI.View>",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13.0",
+        "intro_tvOS": "13.0",
+        "intro_watchOS": "6.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s7SwiftUI4ViewP",
+        "moduleName": "SwiftUICore",
+        "name": "View",
+        "printedName": "View",
+        "usr": "s:7SwiftUI4ViewP"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "FamilyControls",
+    "printedName": "FamilyControls"
+  }
+}

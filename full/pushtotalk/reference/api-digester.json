@@ -1,0 +1,2273 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTBase",
+        "printedName": "PushToTalk.PTBase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTParticipant",
+        "printedName": "PushToTalk.PTParticipant"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTPushResult",
+        "printedName": "PushToTalk.PTPushResult"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTChannelDescriptor",
+        "printedName": "PushToTalk.PTChannelDescriptor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTChannelManagerDelegate",
+        "printedName": "PushToTalk.PTChannelManagerDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTChannelRestorationDelegate",
+        "printedName": "PushToTalk.PTChannelRestorationDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTChannelManager",
+        "printedName": "PushToTalk.PTChannelManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PushToTalk",
+        "name": "PushToTalk.PTErrors",
+        "printedName": "PushToTalk.PTErrors"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC14PTChannelErrorLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC14PTChannelErrorLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "PushToTalk",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC14PTChannelErrorLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PTChannelError",
+                "printedName": "PushToTalk.PTChannelError",
+                "usr": "c:@E@PTChannelError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC14PTChannelErrorLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "PushToTalk",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC14PTChannelErrorLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV11errorDomainSSvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC14PTChannelErrorLeV11errorDomainSSvpZ",
+            "moduleName": "PushToTalk",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC14PTChannelErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PushToTalk.PTChannelError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo14PTChannelErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "PushToTalk",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So14PTChannelErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo14PTChannelErrorV8rawValueSivg",
+                    "moduleName": "PushToTalk",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So14PTChannelErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo14PTChannelErrorV8rawValueSivp",
+                "moduleName": "PushToTalk",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So14PTChannelErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo14PTChannelErrorV8RawValuea",
+                "moduleName": "PushToTalk",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So14PTChannelErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PTChannelError",
+                    "printedName": "PushToTalk.PTChannelError",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "PushToTalk",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@PTChannelError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@PTChannelError@PTChannelErrorUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "channelNotFound",
+                "printedName": "channelNotFound",
+                "usr": "c:@E@PTChannelError@PTChannelErrorChannelNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "channelLimitReached",
+                "printedName": "channelLimitReached",
+                "usr": "c:@E@PTChannelError@PTChannelErrorChannelLimitReached"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "callActive",
+                "printedName": "callActive",
+                "usr": "c:@E@PTChannelError@PTChannelErrorCallActive"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "transmissionInProgress",
+                "printedName": "transmissionInProgress",
+                "usr": "c:@E@PTChannelError@PTChannelErrorTransmissionInProgress"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "transmissionNotFound",
+                "printedName": "transmissionNotFound",
+                "usr": "c:@E@PTChannelError@PTChannelErrorTransmissionNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "appNotForeground",
+                "printedName": "appNotForeground",
+                "usr": "c:@E@PTChannelError@PTChannelErrorAppNotForeground"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "deviceManagementRestriction",
+                "printedName": "deviceManagementRestriction",
+                "usr": "c:@E@PTChannelError@PTChannelErrorDeviceManagementRestriction"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "screenTimeRestriction",
+                "printedName": "screenTimeRestriction",
+                "usr": "c:@E@PTChannelError@PTChannelErrorScreenTimeRestriction"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTChannelError.Code",
+                        "usr": "c:@E@PTChannelError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTChannelError.Code",
+                            "usr": "c:@E@PTChannelError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTChannelError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTChannelError.Code.Type) -> PushToTalk.PTChannelError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "transmissionNotAllowed",
+                "printedName": "transmissionNotAllowed",
+                "usr": "c:@E@PTChannelError@PTChannelErrorTransmissionNotAllowed"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "PushToTalk.PTChannelError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "16.0",
+            "kind": "TypeDecl",
+            "moduleName": "PushToTalk",
+            "name": "Code",
+            "objc_name": "PTChannelError",
+            "printedName": "Code",
+            "usr": "c:@E@PTChannelError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV7unknownSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV15channelNotFoundSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV15channelNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "channelNotFound",
+            "printedName": "channelNotFound",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorChannelNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV19channelLimitReachedSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV19channelLimitReachedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "channelLimitReached",
+            "printedName": "channelLimitReached",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorChannelLimitReached"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV10callActiveSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV10callActiveSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "callActive",
+            "printedName": "callActive",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorCallActive"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV22transmissionInProgressSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV22transmissionInProgressSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "transmissionInProgress",
+            "printedName": "transmissionInProgress",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorTransmissionInProgress"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV20transmissionNotFoundSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV20transmissionNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "transmissionNotFound",
+            "printedName": "transmissionNotFound",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorTransmissionNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV16appNotForegroundSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV16appNotForegroundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "appNotForeground",
+            "printedName": "appNotForeground",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorAppNotForeground"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV27deviceManagementRestrictionSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV27deviceManagementRestrictionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "deviceManagementRestriction",
+            "printedName": "deviceManagementRestriction",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorDeviceManagementRestriction"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV21screenTimeRestrictionSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV21screenTimeRestrictionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "screenTimeRestriction",
+            "printedName": "screenTimeRestriction",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorScreenTimeRestriction"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTChannelError.Code",
+                    "usr": "c:@E@PTChannelError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC14PTChannelErrorLeV22transmissionNotAllowedSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC14PTChannelErrorLeV22transmissionNotAllowedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTChannelError.Code",
+                "usr": "c:@E@PTChannelError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "transmissionNotAllowed",
+            "printedName": "transmissionNotAllowed",
+            "static": true,
+            "usr": "c:@E@PTChannelError@PTChannelErrorTransmissionNotAllowed"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "16.0",
+        "kind": "TypeDecl",
+        "moduleName": "PushToTalk",
+        "name": "PTChannelError",
+        "printedName": "PTChannelError",
+        "usr": "c:@E@PTChannelError"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC20PTInstantiationErrorLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC20PTInstantiationErrorLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "PushToTalk",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC20PTInstantiationErrorLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PTInstantiationError",
+                "printedName": "PushToTalk.PTInstantiationError",
+                "usr": "c:@E@PTInstantiationError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC20PTInstantiationErrorLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "PushToTalk",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC20PTInstantiationErrorLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV11errorDomainSSvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC20PTInstantiationErrorLeV11errorDomainSSvpZ",
+            "moduleName": "PushToTalk",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC20PTInstantiationErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PushToTalk.PTInstantiationError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo20PTInstantiationErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "PushToTalk",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So20PTInstantiationErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20PTInstantiationErrorV8rawValueSivg",
+                    "moduleName": "PushToTalk",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20PTInstantiationErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo20PTInstantiationErrorV8rawValueSivp",
+                "moduleName": "PushToTalk",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So20PTInstantiationErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo20PTInstantiationErrorV8RawValuea",
+                "moduleName": "PushToTalk",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So20PTInstantiationErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PTInstantiationError",
+                    "printedName": "PushToTalk.PTInstantiationError",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "PushToTalk",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@PTInstantiationError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTInstantiationError.Code",
+                            "usr": "c:@E@PTInstantiationError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTInstantiationError.Code.Type) -> PushToTalk.PTInstantiationError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@PTInstantiationError@PTInstantiationErrorUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTInstantiationError.Code",
+                            "usr": "c:@E@PTInstantiationError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTInstantiationError.Code.Type) -> PushToTalk.PTInstantiationError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "invalidPlatform",
+                "printedName": "invalidPlatform",
+                "usr": "c:@E@PTInstantiationError@PTInstantiationErrorInvalidPlatform"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTInstantiationError.Code",
+                            "usr": "c:@E@PTInstantiationError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTInstantiationError.Code.Type) -> PushToTalk.PTInstantiationError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "missingBackgroundMode",
+                "printedName": "missingBackgroundMode",
+                "usr": "c:@E@PTInstantiationError@PTInstantiationErrorMissingBackgroundMode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTInstantiationError.Code",
+                            "usr": "c:@E@PTInstantiationError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTInstantiationError.Code.Type) -> PushToTalk.PTInstantiationError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "missingPushServerEnvironment",
+                "printedName": "missingPushServerEnvironment",
+                "usr": "c:@E@PTInstantiationError@PTInstantiationErrorMissingPushServerEnvironment"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTInstantiationError.Code",
+                            "usr": "c:@E@PTInstantiationError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTInstantiationError.Code.Type) -> PushToTalk.PTInstantiationError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "missingEntitlement",
+                "printedName": "missingEntitlement",
+                "usr": "c:@E@PTInstantiationError@PTInstantiationErrorMissingEntitlement"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PushToTalk.PTInstantiationError.Code",
+                        "usr": "c:@E@PTInstantiationError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PushToTalk.PTInstantiationError.Code",
+                            "usr": "c:@E@PTInstantiationError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PushToTalk.PTInstantiationError.Code.Type) -> PushToTalk.PTInstantiationError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PushToTalk",
+                "name": "instantiationAlreadyInProgress",
+                "printedName": "instantiationAlreadyInProgress",
+                "usr": "c:@E@PTInstantiationError@PTInstantiationErrorInstantiationAlreadyInProgress"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "PushToTalk.PTInstantiationError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "16.0",
+            "kind": "TypeDecl",
+            "moduleName": "PushToTalk",
+            "name": "Code",
+            "objc_name": "PTInstantiationError",
+            "printedName": "Code",
+            "usr": "c:@E@PTInstantiationError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTInstantiationError.Code",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV7unknownSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTInstantiationError.Code",
+                "usr": "c:@E@PTInstantiationError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@PTInstantiationError@PTInstantiationErrorUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTInstantiationError.Code",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV15invalidPlatformSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV15invalidPlatformSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTInstantiationError.Code",
+                "usr": "c:@E@PTInstantiationError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "invalidPlatform",
+            "printedName": "invalidPlatform",
+            "static": true,
+            "usr": "c:@E@PTInstantiationError@PTInstantiationErrorInvalidPlatform"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTInstantiationError.Code",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV21missingBackgroundModeSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV21missingBackgroundModeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTInstantiationError.Code",
+                "usr": "c:@E@PTInstantiationError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "missingBackgroundMode",
+            "printedName": "missingBackgroundMode",
+            "static": true,
+            "usr": "c:@E@PTInstantiationError@PTInstantiationErrorMissingBackgroundMode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTInstantiationError.Code",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV28missingPushServerEnvironmentSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV28missingPushServerEnvironmentSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTInstantiationError.Code",
+                "usr": "c:@E@PTInstantiationError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "missingPushServerEnvironment",
+            "printedName": "missingPushServerEnvironment",
+            "static": true,
+            "usr": "c:@E@PTInstantiationError@PTInstantiationErrorMissingPushServerEnvironment"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTInstantiationError.Code",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV18missingEntitlementSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV18missingEntitlementSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTInstantiationError.Code",
+                "usr": "c:@E@PTInstantiationError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "missingEntitlement",
+            "printedName": "missingEntitlement",
+            "static": true,
+            "usr": "c:@E@PTInstantiationError@PTInstantiationErrorMissingEntitlement"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PushToTalk.PTInstantiationError.Code",
+                    "usr": "c:@E@PTInstantiationError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PTInstantiationErrorLeV30instantiationAlreadyInProgressSoAAVvgZ",
+                "moduleName": "PushToTalk",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PTInstantiationErrorLeV30instantiationAlreadyInProgressSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PushToTalk.PTInstantiationError.Code",
+                "usr": "c:@E@PTInstantiationError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PushToTalk",
+            "name": "instantiationAlreadyInProgress",
+            "printedName": "instantiationAlreadyInProgress",
+            "static": true,
+            "usr": "c:@E@PTInstantiationError@PTInstantiationErrorInstantiationAlreadyInProgress"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "16.0",
+        "kind": "TypeDecl",
+        "moduleName": "PushToTalk",
+        "name": "PTInstantiationError",
+        "printedName": "PTInstantiationError",
+        "usr": "c:@E@PTInstantiationError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "PushToTalk",
+    "printedName": "PushToTalk"
+  }
+}

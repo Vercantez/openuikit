@@ -1,0 +1,280 @@
+precise	kind	title	path	declaration
+s:10WorkoutKit010SingleGoalA0V	swift.struct	SingleGoalWorkout	SingleGoalWorkout	struct SingleGoalWorkout
+s:10WorkoutKit010SingleGoalA0V08supportsD0_8activity8locationSbAA0aD0O_So21HKWorkoutActivityTypeVSo0h15SessionLocationJ0VtFZ	swift.type.method	supportsGoal(_:activity:location:)	SingleGoalWorkout.supportsGoal(_:activity:location:)	static func supportsGoal(_ goal: WorkoutGoal, activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType = .unknown) -> Bool
+s:10WorkoutKit010SingleGoalA0V16supportsActivityySbSo09HKWorkoutF4TypeVFZ	swift.type.method	supportsActivity(_:)	SingleGoalWorkout.supportsActivity(_:)	static func supportsActivity(_ activity: HKWorkoutActivityType) -> Bool
+s:10WorkoutKit010SingleGoalA0V16swimmingLocationSo017HKWorkoutSwimmingF4TypeVvp	swift.property	swimmingLocation	SingleGoalWorkout.swimmingLocation	var swimmingLocation: HKWorkoutSwimmingLocationType
+s:10WorkoutKit010SingleGoalA0V2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	SingleGoalWorkout.==(_:_:)	static func == (a: SingleGoalWorkout, b: SingleGoalWorkout) -> Bool
+s:10WorkoutKit010SingleGoalA0V4goalAA0aD0Ovp	swift.property	goal	SingleGoalWorkout.goal	var goal: WorkoutGoal { get set }
+s:10WorkoutKit010SingleGoalA0V4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SingleGoalWorkout.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit010SingleGoalA0V8activity8location16swimmingLocation4goalACSo21HKWorkoutActivityTypeV_So0j7SessionhL0VSo0j8SwimminghL0VAA0aD0Otcfc	swift.init	init(activity:location:swimmingLocation:goal:)	SingleGoalWorkout.init(activity:location:swimmingLocation:goal:)	init(activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType = .unknown, swimmingLocation: HKWorkoutSwimmingLocationType = .unknown, goal: WorkoutGoal = .open)
+s:10WorkoutKit010SingleGoalA0V8activitySo21HKWorkoutActivityTypeVvp	swift.property	activity	SingleGoalWorkout.activity	var activity: HKWorkoutActivityType { get set }
+s:10WorkoutKit010SingleGoalA0V8locationSo28HKWorkoutSessionLocationTypeVvp	swift.property	location	SingleGoalWorkout.location	var location: HKWorkoutSessionLocationType
+s:10WorkoutKit010SingleGoalA0V9hashValueSivp	swift.property	hashValue	SingleGoalWorkout.hashValue	var hashValue: Int { get }
+s:10WorkoutKit011SwimBikeRunA0V	swift.struct	SwimBikeRunWorkout	SwimBikeRunWorkout	struct SwimBikeRunWorkout
+s:10WorkoutKit011SwimBikeRunA0V10activities11displayNameACSayAC8ActivityOG_SSSgtcfc	swift.init	init(activities:displayName:)	SwimBikeRunWorkout.init(activities:displayName:)	init(activities: [SwimBikeRunWorkout.Activity], displayName: String? = nil)
+s:10WorkoutKit011SwimBikeRunA0V10activitiesSayAC8ActivityOGvp	swift.property	activities	SwimBikeRunWorkout.activities	var activities: [SwimBikeRunWorkout.Activity] { get set }
+s:10WorkoutKit011SwimBikeRunA0V11displayNameSSSgvp	swift.property	displayName	SwimBikeRunWorkout.displayName	var displayName: String?
+s:10WorkoutKit011SwimBikeRunA0V24supportsActivityOrderingySbSayAC0G0OGFZ	swift.type.method	supportsActivityOrdering(_:)	SwimBikeRunWorkout.supportsActivityOrdering(_:)	static func supportsActivityOrdering(_ activities: [SwimBikeRunWorkout.Activity]) -> Bool
+s:10WorkoutKit011SwimBikeRunA0V2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	SwimBikeRunWorkout.==(_:_:)	static func == (a: SwimBikeRunWorkout, b: SwimBikeRunWorkout) -> Bool
+s:10WorkoutKit011SwimBikeRunA0V4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SwimBikeRunWorkout.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO	swift.enum	SwimBikeRunWorkout.Activity	SwimBikeRunWorkout.Activity	enum Activity
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	SwimBikeRunWorkout.Activity.==(_:_:)	static func == (a: SwimBikeRunWorkout.Activity, b: SwimBikeRunWorkout.Activity) -> Bool
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SwimBikeRunWorkout.Activity.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO7cyclingyAESo28HKWorkoutSessionLocationTypeVcAEmF	swift.enum.case	SwimBikeRunWorkout.Activity.cycling(_:)	SwimBikeRunWorkout.Activity.cycling(_:)	case cycling(HKWorkoutSessionLocationType)
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO7runningyAESo28HKWorkoutSessionLocationTypeVcAEmF	swift.enum.case	SwimBikeRunWorkout.Activity.running(_:)	SwimBikeRunWorkout.Activity.running(_:)	case running(HKWorkoutSessionLocationType)
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO8swimmingyAESo29HKWorkoutSwimmingLocationTypeVcAEmF	swift.enum.case	SwimBikeRunWorkout.Activity.swimming(_:)	SwimBikeRunWorkout.Activity.swimming(_:)	case swimming(HKWorkoutSwimmingLocationType)
+s:10WorkoutKit011SwimBikeRunA0V8ActivityO9hashValueSivp	swift.property	hashValue	SwimBikeRunWorkout.Activity.hashValue	var hashValue: Int { get }
+s:10WorkoutKit011SwimBikeRunA0V9hashValueSivp	swift.property	hashValue	SwimBikeRunWorkout.hashValue	var hashValue: Int { get }
+s:10WorkoutKit05PacerA0V	swift.struct	PacerWorkout	PacerWorkout	struct PacerWorkout
+s:10WorkoutKit05PacerA0V16supportsActivityySbSo09HKWorkoutE4TypeVFZ	swift.type.method	supportsActivity(_:)	PacerWorkout.supportsActivity(_:)	static func supportsActivity(_ activity: HKWorkoutActivityType) -> Bool
+s:10WorkoutKit05PacerA0V2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PacerWorkout.==(_:_:)	static func == (a: PacerWorkout, b: PacerWorkout) -> Bool
+s:10WorkoutKit05PacerA0V4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PacerWorkout.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit05PacerA0V4time10Foundation11MeasurementVySo14NSUnitDurationCGvp	swift.property	time	PacerWorkout.time	var time: Measurement<UnitDuration> { get set }
+s:10WorkoutKit05PacerA0V8activity8location8distance4timeACSo21HKWorkoutActivityTypeV_So0h15SessionLocationJ0V10Foundation11MeasurementVySo12NSUnitLengthCGANySo0O8DurationCGtcfc	swift.init	init(activity:location:distance:time:)	PacerWorkout.init(activity:location:distance:time:)	init(activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType = .unknown, distance: Measurement<UnitLength>, time: Measurement<UnitDuration>)
+s:10WorkoutKit05PacerA0V8activitySo21HKWorkoutActivityTypeVvp	swift.property	activity	PacerWorkout.activity	var activity: HKWorkoutActivityType { get set }
+s:10WorkoutKit05PacerA0V8distance10Foundation11MeasurementVySo12NSUnitLengthCGvp	swift.property	distance	PacerWorkout.distance	var distance: Measurement<UnitLength> { get set }
+s:10WorkoutKit05PacerA0V8locationSo28HKWorkoutSessionLocationTypeVvp	swift.property	location	PacerWorkout.location	var location: HKWorkoutSessionLocationType
+s:10WorkoutKit05PacerA0V9hashValueSivp	swift.property	hashValue	PacerWorkout.hashValue	var hashValue: Int { get }
+s:10WorkoutKit06CustomA0V	swift.struct	CustomWorkout	CustomWorkout	struct CustomWorkout
+s:10WorkoutKit06CustomA0V11displayNameSSSgvp	swift.property	displayName	CustomWorkout.displayName	var displayName: String?
+s:10WorkoutKit06CustomA0V12supportsGoal_8activity8locationSbAA0aE0O_So21HKWorkoutActivityTypeVSo0h15SessionLocationJ0VtFZ	swift.type.method	supportsGoal(_:activity:location:)	CustomWorkout.supportsGoal(_:activity:location:)	static func supportsGoal(_ goal: WorkoutGoal, activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType = .unknown) -> Bool
+s:10WorkoutKit06CustomA0V13supportsAlert_8activity8locationSbAA0aE0_p_So21HKWorkoutActivityTypeVSo0h15SessionLocationJ0VtFZ	swift.type.method	supportsAlert(_:activity:location:)	CustomWorkout.supportsAlert(_:activity:location:)	static func supportsAlert(_ alert: any WorkoutAlert, activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType = .unknown) -> Bool
+s:10WorkoutKit06CustomA0V16supportsActivityySbSo09HKWorkoutE4TypeVFZ	swift.type.method	supportsActivity(_:)	CustomWorkout.supportsActivity(_:)	static func supportsActivity(_ activity: HKWorkoutActivityType) -> Bool
+s:10WorkoutKit06CustomA0V2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CustomWorkout.==(_:_:)	static func == (a: CustomWorkout, b: CustomWorkout) -> Bool
+s:10WorkoutKit06CustomA0V4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CustomWorkout.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit06CustomA0V6blocksSayAA13IntervalBlockVGvp	swift.property	blocks	CustomWorkout.blocks	var blocks: [IntervalBlock] { get set }
+s:10WorkoutKit06CustomA0V6warmupAA0A4StepVSgvp	swift.property	warmup	CustomWorkout.warmup	var warmup: WorkoutStep? { get set }
+s:10WorkoutKit06CustomA0V8activity8location11displayName6warmup6blocks8cooldownACSo21HKWorkoutActivityTypeV_So0k15SessionLocationM0VSSSgAA0A4StepVSgSayAA13IntervalBlockVGAQtcfc	swift.init	init(activity:location:displayName:warmup:blocks:cooldown:)	CustomWorkout.init(activity:location:displayName:warmup:blocks:cooldown:)	init(activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType = .unknown, displayName: String? = nil, warmup: WorkoutStep? = nil, blocks: [IntervalBlock] = [], cooldown: WorkoutStep? = nil)
+s:10WorkoutKit06CustomA0V8activitySo21HKWorkoutActivityTypeVvp	swift.property	activity	CustomWorkout.activity	var activity: HKWorkoutActivityType { get set }
+s:10WorkoutKit06CustomA0V8cooldownAA0A4StepVSgvp	swift.property	cooldown	CustomWorkout.cooldown	var cooldown: WorkoutStep? { get set }
+s:10WorkoutKit06CustomA0V8locationSo28HKWorkoutSessionLocationTypeVvp	swift.property	location	CustomWorkout.location	var location: HKWorkoutSessionLocationType { get set }
+s:10WorkoutKit06CustomA0V9hashValueSivp	swift.property	hashValue	CustomWorkout.hashValue	var hashValue: Int { get }
+s:10WorkoutKit09ScheduledA4PlanV	swift.struct	ScheduledWorkoutPlan	ScheduledWorkoutPlan	struct ScheduledWorkoutPlan
+s:10WorkoutKit09ScheduledA4PlanV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ScheduledWorkoutPlan.==(_:_:)	static func == (a: ScheduledWorkoutPlan, b: ScheduledWorkoutPlan) -> Bool
+s:10WorkoutKit09ScheduledA4PlanV4date10Foundation14DateComponentsVvp	swift.property	date	ScheduledWorkoutPlan.date	var date: DateComponents { get set }
+s:10WorkoutKit09ScheduledA4PlanV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ScheduledWorkoutPlan.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit09ScheduledA4PlanV4planAA0aD0Vvp	swift.property	plan	ScheduledWorkoutPlan.plan	var plan: WorkoutPlan
+s:10WorkoutKit09ScheduledA4PlanV8completeSbvp	swift.property	complete	ScheduledWorkoutPlan.complete	var complete: Bool { get set }
+s:10WorkoutKit09ScheduledA4PlanV9hashValueSivp	swift.property	hashValue	ScheduledWorkoutPlan.hashValue	var hashValue: Int { get }
+s:10WorkoutKit09ScheduledA4PlanV_4dateAcA0aD0V_10Foundation14DateComponentsVtcfc	swift.init	init(_:date:)	ScheduledWorkoutPlan.init(_:date:)	init(_ plan: WorkoutPlan, date: DateComponents)
+s:10WorkoutKit0A11AlertMetricO	swift.enum	WorkoutAlertMetric	WorkoutAlertMetric	enum WorkoutAlertMetric
+s:10WorkoutKit0A11AlertMetricO14countPerMinuteSo15NSUnitFrequencyCvpZ	swift.type.property	countPerMinute	WorkoutAlertMetric.countPerMinute	static var countPerMinute: UnitFrequency { get }
+s:10WorkoutKit0A11AlertMetricO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WorkoutAlertMetric.==(_:_:)	static func == (a: WorkoutAlertMetric, b: WorkoutAlertMetric) -> Bool
+s:10WorkoutKit0A11AlertMetricO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WorkoutAlertMetric.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit0A11AlertMetricO7averageyA2CmF	swift.enum.case	WorkoutAlertMetric.average	WorkoutAlertMetric.average	case average
+s:10WorkoutKit0A11AlertMetricO7currentyA2CmF	swift.enum.case	WorkoutAlertMetric.current	WorkoutAlertMetric.current	case current
+s:10WorkoutKit0A11AlertMetricO9hashValueSivp	swift.property	hashValue	WorkoutAlertMetric.hashValue	var hashValue: Int { get }
+s:10WorkoutKit0A4GoalO	swift.enum	WorkoutGoal	WorkoutGoal	enum WorkoutGoal
+s:10WorkoutKit0A4GoalO24poolSwimDistanceWithTimeyAC10Foundation11MeasurementVySo12NSUnitLengthCG_AGySo0K8DurationCGtcACmF	swift.enum.case	WorkoutGoal.poolSwimDistanceWithTime(_:_:)	WorkoutGoal.poolSwimDistanceWithTime(_:_:)	case poolSwimDistanceWithTime(Measurement<UnitLength>, Measurement<UnitDuration>)
+s:10WorkoutKit0A4GoalO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WorkoutGoal.==(_:_:)	static func == (lhs: WorkoutGoal, rhs: WorkoutGoal) -> Bool
+s:10WorkoutKit0A4GoalO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WorkoutGoal.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit0A4GoalO4openyA2CmF	swift.enum.case	WorkoutGoal.open	WorkoutGoal.open	case open
+s:10WorkoutKit0A4GoalO4timeyACSd_So14NSUnitDurationCtcACmF	swift.enum.case	WorkoutGoal.time(_:_:)	WorkoutGoal.time(_:_:)	case time(Double, UnitDuration)
+s:10WorkoutKit0A4GoalO6energyyACSd_So12NSUnitEnergyCtcACmF	swift.enum.case	WorkoutGoal.energy(_:_:)	WorkoutGoal.energy(_:_:)	case energy(Double, UnitEnergy)
+s:10WorkoutKit0A4GoalO8distanceyACSd_So12NSUnitLengthCtcACmF	swift.enum.case	WorkoutGoal.distance(_:_:)	WorkoutGoal.distance(_:_:)	case distance(Double, UnitLength)
+s:10WorkoutKit0A4GoalO9hashValueSivp	swift.property	hashValue	WorkoutGoal.hashValue	var hashValue: Int { get }
+s:10WorkoutKit0A4PlanV	swift.struct	WorkoutPlan	WorkoutPlan	struct WorkoutPlan
+s:10WorkoutKit0A4PlanV0A0O	swift.enum	WorkoutPlan.Workout	WorkoutPlan.Workout	enum Workout
+s:10WorkoutKit0A4PlanV0A0O11swimBikeRunyAeA04SwimefA0VcAEmF	swift.enum.case	WorkoutPlan.Workout.swimBikeRun(_:)	WorkoutPlan.Workout.swimBikeRun(_:)	case swimBikeRun(SwimBikeRunWorkout)
+s:10WorkoutKit0A4PlanV0A0O2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	WorkoutPlan.Workout.==(_:_:)	static func == (a: WorkoutPlan.Workout, b: WorkoutPlan.Workout) -> Bool
+s:10WorkoutKit0A4PlanV0A0O4goalyAeA010SingleGoalA0VcAEmF	swift.enum.case	WorkoutPlan.Workout.goal(_:)	WorkoutPlan.Workout.goal(_:)	case goal(SingleGoalWorkout)
+s:10WorkoutKit0A4PlanV0A0O4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WorkoutPlan.Workout.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit0A4PlanV0A0O5paceryAeA05PacerA0VcAEmF	swift.enum.case	WorkoutPlan.Workout.pacer(_:)	WorkoutPlan.Workout.pacer(_:)	case pacer(PacerWorkout)
+s:10WorkoutKit0A4PlanV0A0O6customyAeA06CustomA0VcAEmF	swift.enum.case	WorkoutPlan.Workout.custom(_:)	WorkoutPlan.Workout.custom(_:)	case custom(CustomWorkout)
+s:10WorkoutKit0A4PlanV0A0O8activitySo21HKWorkoutActivityTypeVvp	swift.property	activity	WorkoutPlan.Workout.activity	var activity: HKWorkoutActivityType { get }
+s:10WorkoutKit0A4PlanV0A0O9hashValueSivp	swift.property	hashValue	WorkoutPlan.Workout.hashValue	var hashValue: Int { get }
+s:10WorkoutKit0A4PlanV18dataRepresentation10Foundation4DataVvp	swift.property	dataRepresentation	WorkoutPlan.dataRepresentation	var dataRepresentation: Data { get throws }
+s:10WorkoutKit0A4PlanV2IDa	swift.typealias	WorkoutPlan.ID	WorkoutPlan.ID	typealias ID = UUID
+s:10WorkoutKit0A4PlanV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WorkoutPlan.==(_:_:)	static func == (a: WorkoutPlan, b: WorkoutPlan) -> Bool
+s:10WorkoutKit0A4PlanV2id10Foundation4UUIDVvp	swift.property	id	WorkoutPlan.id	var id: UUID
+s:10WorkoutKit0A4PlanV4fromAC10Foundation4DataV_tKcfc	swift.init	init(from:)	WorkoutPlan.init(from:)	init(from data: Data) throws
+s:10WorkoutKit0A4PlanV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WorkoutPlan.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit0A4PlanV7workoutAC0A0Ovp	swift.property	workout	WorkoutPlan.workout	var workout: WorkoutPlan.Workout
+s:10WorkoutKit0A4PlanV9hashValueSivp	swift.property	hashValue	WorkoutPlan.hashValue	var hashValue: Int { get }
+s:10WorkoutKit0A4PlanV_2idA2C0A0O_10Foundation4UUIDVtcfc	swift.init	init(_:id:)	WorkoutPlan.init(_:id:)	init(_ workout: WorkoutPlan.Workout, id: UUID = UUID())
+s:10WorkoutKit0A4StepV	swift.struct	WorkoutStep	WorkoutStep	struct WorkoutStep
+s:10WorkoutKit0A4StepV11displayNameSSSgvp	swift.property	displayName	WorkoutStep.displayName	var displayName: String?
+s:10WorkoutKit0A4StepV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WorkoutStep.==(_:_:)	static func == (lhs: WorkoutStep, rhs: WorkoutStep) -> Bool
+s:10WorkoutKit0A4StepV4goal5alert11displayNameAcA0A4GoalO_AA0A5Alert_pSgSSSgtcfc	swift.init	init(goal:alert:displayName:)	WorkoutStep.init(goal:alert:displayName:)	init(goal: WorkoutGoal = .open, alert: (any WorkoutAlert)? = nil, displayName: String? = nil)
+s:10WorkoutKit0A4StepV4goal5alertAcA0A4GoalO_AA0A5Alert_pSgtcfc	swift.init	init(goal:alert:)	WorkoutStep.init(goal:alert:)	init(goal: WorkoutGoal = .open, alert: (any WorkoutAlert)? = nil)
+s:10WorkoutKit0A4StepV4goalAA0A4GoalOvp	swift.property	goal	WorkoutStep.goal	var goal: WorkoutGoal
+s:10WorkoutKit0A4StepV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WorkoutStep.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit0A4StepV5alertAA0A5Alert_pSgvp	swift.property	alert	WorkoutStep.alert	var alert: (any WorkoutAlert)?
+s:10WorkoutKit0A4StepV9hashValueSivp	swift.property	hashValue	WorkoutStep.hashValue	var hashValue: Int { get }
+s:10WorkoutKit0A5AlertP	swift.protocol	WorkoutAlert	WorkoutAlert	protocol WorkoutAlert : Hashable, Sendable
+s:10WorkoutKit0A5AlertP6metricAA0aC6MetricOvp	swift.property	metric	WorkoutAlert.metric	var metric: WorkoutAlertMetric { get }
+s:10WorkoutKit0A5AlertP8supports8activity8locationSbSo21HKWorkoutActivityTypeV_So0g15SessionLocationI0VtF	swift.method	supports(activity:location:)	WorkoutAlert.supports(activity:location:)	func supports(activity: HKWorkoutActivityType, location: HKWorkoutSessionLocationType) -> Bool
+s:10WorkoutKit0A5AlertPA2A010PowerRangeC0VRszrlE5power_4unit6metricAESNySdG_So06NSUnitD0CAA0aC6MetricOtFZ	swift.type.method	power(_:unit:metric:)	WorkoutAlert.power(_:unit:metric:)	static func power(_ range: ClosedRange<Double>, unit: UnitPower, metric: WorkoutAlertMetric) -> Self
+s:10WorkoutKit0A5AlertPA2A010PowerRangeC0VRszrlE5power_4unit6metricAESNySdG_So06NSUnitD0CAA0aC6MetricOtFZ::SYNTHESIZED::s:10WorkoutKit15PowerRangeAlertV	swift.type.method	power(_:unit:metric:)	PowerRangeAlert.power(_:unit:metric:)	static func power(_ range: ClosedRange<Double>, unit: UnitPower, metric: WorkoutAlertMetric) -> Self
+s:10WorkoutKit0A5AlertPA2A010PowerRangeC0VRszrlE5power_4unitAESNySdG_So06NSUnitD0CtFZ	swift.type.method	power(_:unit:)	WorkoutAlert.power(_:unit:)	static func power(_ range: ClosedRange<Double>, unit: UnitPower) -> Self
+s:10WorkoutKit0A5AlertPA2A010PowerRangeC0VRszrlE5power_4unitAESNySdG_So06NSUnitD0CtFZ::SYNTHESIZED::s:10WorkoutKit15PowerRangeAlertV	swift.type.method	power(_:unit:)	PowerRangeAlert.power(_:unit:)	static func power(_ range: ClosedRange<Double>, unit: UnitPower) -> Self
+s:10WorkoutKit0A5AlertPA2A010SpeedRangeC0VRszrlE5speed_4unit6metricAESNySdG_So06NSUnitD0CAA0aC6MetricOtFZ	swift.type.method	speed(_:unit:metric:)	WorkoutAlert.speed(_:unit:metric:)	static func speed(_ range: ClosedRange<Double>, unit: UnitSpeed, metric: WorkoutAlertMetric = .current) -> Self
+s:10WorkoutKit0A5AlertPA2A010SpeedRangeC0VRszrlE5speed_4unit6metricAESNySdG_So06NSUnitD0CAA0aC6MetricOtFZ::SYNTHESIZED::s:10WorkoutKit15SpeedRangeAlertV	swift.type.method	speed(_:unit:metric:)	SpeedRangeAlert.speed(_:unit:metric:)	static func speed(_ range: ClosedRange<Double>, unit: UnitSpeed, metric: WorkoutAlertMetric = .current) -> Self
+s:10WorkoutKit0A5AlertPA2A012CadenceRangeC0VRszrlE7cadence_4unitAESNySdG_So15NSUnitFrequencyCtFZ	swift.type.method	cadence(_:unit:)	WorkoutAlert.cadence(_:unit:)	static func cadence(_ range: ClosedRange<Double>, unit: UnitFrequency = WorkoutAlertMetric.countPerMinute) -> Self
+s:10WorkoutKit0A5AlertPA2A012CadenceRangeC0VRszrlE7cadence_4unitAESNySdG_So15NSUnitFrequencyCtFZ::SYNTHESIZED::s:10WorkoutKit17CadenceRangeAlertV	swift.type.method	cadence(_:unit:)	CadenceRangeAlert.cadence(_:unit:)	static func cadence(_ range: ClosedRange<Double>, unit: UnitFrequency = WorkoutAlertMetric.countPerMinute) -> Self
+s:10WorkoutKit0A5AlertPA2A013HeartRateZoneC0VRszrlE05heartE04zoneAESi_tFZ	swift.type.method	heartRate(zone:)	WorkoutAlert.heartRate(zone:)	static func heartRate(zone: Int) -> Self
+s:10WorkoutKit0A5AlertPA2A013HeartRateZoneC0VRszrlE05heartE04zoneAESi_tFZ::SYNTHESIZED::s:10WorkoutKit18HeartRateZoneAlertV	swift.type.method	heartRate(zone:)	HeartRateZoneAlert.heartRate(zone:)	static func heartRate(zone: Int) -> Self
+s:10WorkoutKit0A5AlertPA2A014HeartRateRangeC0VRszrlE05heartE0_4unitAESNySdG_So15NSUnitFrequencyCtFZ	swift.type.method	heartRate(_:unit:)	WorkoutAlert.heartRate(_:unit:)	static func heartRate(_ range: ClosedRange<Double>, unit: UnitFrequency = WorkoutAlertMetric.countPerMinute) -> Self
+s:10WorkoutKit0A5AlertPA2A014HeartRateRangeC0VRszrlE05heartE0_4unitAESNySdG_So15NSUnitFrequencyCtFZ::SYNTHESIZED::s:10WorkoutKit19HeartRateRangeAlertV	swift.type.method	heartRate(_:unit:)	HeartRateRangeAlert.heartRate(_:unit:)	static func heartRate(_ range: ClosedRange<Double>, unit: UnitFrequency = WorkoutAlertMetric.countPerMinute) -> Self
+s:10WorkoutKit0A5AlertPA2A014PowerThresholdC0VRszrlE5power_4unit6metricAESd_So06NSUnitD0CAA0aC6MetricOtFZ	swift.type.method	power(_:unit:metric:)	WorkoutAlert.power(_:unit:metric:)	static func power(_ value: Double, unit: UnitPower, metric: WorkoutAlertMetric) -> Self
+s:10WorkoutKit0A5AlertPA2A014PowerThresholdC0VRszrlE5power_4unit6metricAESd_So06NSUnitD0CAA0aC6MetricOtFZ::SYNTHESIZED::s:10WorkoutKit19PowerThresholdAlertV	swift.type.method	power(_:unit:metric:)	PowerThresholdAlert.power(_:unit:metric:)	static func power(_ value: Double, unit: UnitPower, metric: WorkoutAlertMetric) -> Self
+s:10WorkoutKit0A5AlertPA2A014PowerThresholdC0VRszrlE5power_4unitAESd_So06NSUnitD0CtFZ	swift.type.method	power(_:unit:)	WorkoutAlert.power(_:unit:)	static func power(_ value: Double, unit: UnitPower) -> Self
+s:10WorkoutKit0A5AlertPA2A014PowerThresholdC0VRszrlE5power_4unitAESd_So06NSUnitD0CtFZ::SYNTHESIZED::s:10WorkoutKit19PowerThresholdAlertV	swift.type.method	power(_:unit:)	PowerThresholdAlert.power(_:unit:)	static func power(_ value: Double, unit: UnitPower) -> Self
+s:10WorkoutKit0A5AlertPA2A014SpeedThresholdC0VRszrlE5speed_4unit6metricAESd_So06NSUnitD0CAA0aC6MetricOtFZ	swift.type.method	speed(_:unit:metric:)	WorkoutAlert.speed(_:unit:metric:)	static func speed(_ value: Double, unit: UnitSpeed, metric: WorkoutAlertMetric = .current) -> Self
+s:10WorkoutKit0A5AlertPA2A014SpeedThresholdC0VRszrlE5speed_4unit6metricAESd_So06NSUnitD0CAA0aC6MetricOtFZ::SYNTHESIZED::s:10WorkoutKit19SpeedThresholdAlertV	swift.type.method	speed(_:unit:metric:)	SpeedThresholdAlert.speed(_:unit:metric:)	static func speed(_ value: Double, unit: UnitSpeed, metric: WorkoutAlertMetric = .current) -> Self
+s:10WorkoutKit0A5AlertPA2A016CadenceThresholdC0VRszrlE7cadence_4unitAESd_So15NSUnitFrequencyCtFZ	swift.type.method	cadence(_:unit:)	WorkoutAlert.cadence(_:unit:)	static func cadence(_ value: Double, unit: UnitFrequency = WorkoutAlertMetric.countPerMinute) -> Self
+s:10WorkoutKit0A5AlertPA2A016CadenceThresholdC0VRszrlE7cadence_4unitAESd_So15NSUnitFrequencyCtFZ::SYNTHESIZED::s:10WorkoutKit21CadenceThresholdAlertV	swift.type.method	cadence(_:unit:)	CadenceThresholdAlert.cadence(_:unit:)	static func cadence(_ value: Double, unit: UnitFrequency = WorkoutAlertMetric.countPerMinute) -> Self
+s:10WorkoutKit0A5AlertPA2A09PowerZoneC0VRszrlE5power4zoneAESi_tFZ	swift.type.method	power(zone:)	WorkoutAlert.power(zone:)	static func power(zone: Int) -> Self
+s:10WorkoutKit0A5AlertPA2A09PowerZoneC0VRszrlE5power4zoneAESi_tFZ::SYNTHESIZED::s:10WorkoutKit14PowerZoneAlertV	swift.type.method	power(zone:)	PowerZoneAlert.power(zone:)	static func power(zone: Int) -> Self
+s:10WorkoutKit0A9SchedulerC	swift.class	WorkoutScheduler	WorkoutScheduler	final class WorkoutScheduler
+s:10WorkoutKit0A9SchedulerC019maxAllowedScheduledA5CountSivpZ	swift.type.property	maxAllowedScheduledWorkoutCount	WorkoutScheduler.maxAllowedScheduledWorkoutCount	static let maxAllowedScheduledWorkoutCount: Int
+s:10WorkoutKit0A9SchedulerC11isSupportedSbvpZ	swift.type.property	isSupported	WorkoutScheduler.isSupported	static var isSupported: Bool { get }
+s:10WorkoutKit0A9SchedulerC12markComplete_2atyAA0A4PlanV_10Foundation14DateComponentsVtYaF	swift.method	markComplete(_:at:)	WorkoutScheduler.markComplete(_:at:)	final func markComplete(_ workout: WorkoutPlan, at: DateComponents) async
+s:10WorkoutKit0A9SchedulerC17removeAllWorkoutsyyYaF	swift.method	removeAllWorkouts()	WorkoutScheduler.removeAllWorkouts()	final func removeAllWorkouts() async
+s:10WorkoutKit0A9SchedulerC17scheduledWorkoutsSayAA09ScheduledA4PlanVGvp	swift.property	scheduledWorkouts	WorkoutScheduler.scheduledWorkouts	final var scheduledWorkouts: [ScheduledWorkoutPlan] { get async }
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO	swift.enum	WorkoutScheduler.AuthorizationState	WorkoutScheduler.AuthorizationState	enum AuthorizationState
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO10authorizedyA2EmF	swift.enum.case	WorkoutScheduler.AuthorizationState.authorized	WorkoutScheduler.AuthorizationState.authorized	case authorized
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO10restrictedyA2EmF	swift.enum.case	WorkoutScheduler.AuthorizationState.restricted	WorkoutScheduler.AuthorizationState.restricted	case restricted
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO13notDeterminedyA2EmF	swift.enum.case	WorkoutScheduler.AuthorizationState.notDetermined	WorkoutScheduler.AuthorizationState.notDetermined	case notDetermined
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO6deniedyA2EmF	swift.enum.case	WorkoutScheduler.AuthorizationState.denied	WorkoutScheduler.AuthorizationState.denied	case denied
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO8RawValuea	swift.typealias	WorkoutScheduler.AuthorizationState.RawValue	WorkoutScheduler.AuthorizationState.RawValue	typealias RawValue = Int
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO8rawValueAESgSi_tcfc	swift.init	init(rawValue:)	WorkoutScheduler.AuthorizationState.init(rawValue:)	init?(rawValue: Int)
+s:10WorkoutKit0A9SchedulerC18AuthorizationStateO8rawValueSivp	swift.property	rawValue	WorkoutScheduler.AuthorizationState.rawValue	var rawValue: Int { get }
+s:10WorkoutKit0A9SchedulerC18authorizationStateAC013AuthorizationE0Ovp	swift.property	authorizationState	WorkoutScheduler.authorizationState	final var authorizationState: WorkoutScheduler.AuthorizationState { get async }
+s:10WorkoutKit0A9SchedulerC20requestAuthorizationAC0E5StateOyYaF	swift.method	requestAuthorization()	WorkoutScheduler.requestAuthorization()	final func requestAuthorization() async -> WorkoutScheduler.AuthorizationState
+s:10WorkoutKit0A9SchedulerC6remove_2atyAA0A4PlanV_10Foundation14DateComponentsVtYaF	swift.method	remove(_:at:)	WorkoutScheduler.remove(_:at:)	final func remove(_ workout: WorkoutPlan, at: DateComponents) async
+s:10WorkoutKit0A9SchedulerC6sharedACvpZ	swift.type.property	shared	WorkoutScheduler.shared	static let shared: WorkoutScheduler
+s:10WorkoutKit0A9SchedulerC8schedule_2atyAA0A4PlanV_10Foundation14DateComponentsVtYaF	swift.method	schedule(_:at:)	WorkoutScheduler.schedule(_:at:)	final func schedule(_ workout: WorkoutPlan, at: DateComponents) async
+s:10WorkoutKit10StateErrorO	swift.enum	StateError	StateError	enum StateError
+s:10WorkoutKit10StateErrorO14watchNotPairedyA2CmF	swift.enum.case	StateError.watchNotPaired	StateError.watchNotPaired	case watchNotPaired
+s:10WorkoutKit10StateErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	StateError.==(_:_:)	static func == (a: StateError, b: StateError) -> Bool
+s:10WorkoutKit10StateErrorO30workoutApplicationNotInstalledyA2CmF	swift.enum.case	StateError.workoutApplicationNotInstalled	StateError.workoutApplicationNotInstalled	case workoutApplicationNotInstalled
+s:10WorkoutKit10StateErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	StateError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit10StateErrorO9hashValueSivp	swift.property	hashValue	StateError.hashValue	var hashValue: Int { get }
+s:10WorkoutKit12IntervalStepV	swift.struct	IntervalStep	IntervalStep	struct IntervalStep
+s:10WorkoutKit12IntervalStepV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	IntervalStep.==(_:_:)	static func == (lhs: IntervalStep, rhs: IntervalStep) -> Bool
+s:10WorkoutKit12IntervalStepV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	IntervalStep.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit12IntervalStepV4stepAA0aD0Vvp	swift.property	step	IntervalStep.step	var step: WorkoutStep
+s:10WorkoutKit12IntervalStepV7PurposeO	swift.enum	IntervalStep.Purpose	IntervalStep.Purpose	enum Purpose
+s:10WorkoutKit12IntervalStepV7PurposeO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	IntervalStep.Purpose.==(_:_:)	static func == (a: IntervalStep.Purpose, b: IntervalStep.Purpose) -> Bool
+s:10WorkoutKit12IntervalStepV7PurposeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	IntervalStep.Purpose.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit12IntervalStepV7PurposeO4workyA2EmF	swift.enum.case	IntervalStep.Purpose.work	IntervalStep.Purpose.work	case work
+s:10WorkoutKit12IntervalStepV7PurposeO8recoveryyA2EmF	swift.enum.case	IntervalStep.Purpose.recovery	IntervalStep.Purpose.recovery	case recovery
+s:10WorkoutKit12IntervalStepV7PurposeO9hashValueSivp	swift.property	hashValue	IntervalStep.Purpose.hashValue	var hashValue: Int { get }
+s:10WorkoutKit12IntervalStepV7purposeAC7PurposeOvp	swift.property	purpose	IntervalStep.purpose	var purpose: IntervalStep.Purpose
+s:10WorkoutKit12IntervalStepV9hashValueSivp	swift.property	hashValue	IntervalStep.hashValue	var hashValue: Int { get }
+s:10WorkoutKit12IntervalStepV_4goal5alertA2C7PurposeO_AA0A4GoalOAA0A5Alert_pSgtcfc	swift.init	init(_:goal:alert:)	IntervalStep.init(_:goal:alert:)	init(_ purpose: IntervalStep.Purpose, goal: WorkoutGoal = .open, alert: (any WorkoutAlert)? = nil)
+s:10WorkoutKit12IntervalStepV_4stepA2C7PurposeO_AA0aD0Vtcfc	swift.init	init(_:step:)	IntervalStep.init(_:step:)	init(_ purpose: IntervalStep.Purpose, step: WorkoutStep)
+s:10WorkoutKit13IntervalBlockV	swift.struct	IntervalBlock	IntervalBlock	struct IntervalBlock
+s:10WorkoutKit13IntervalBlockV10iterationsSivp	swift.property	iterations	IntervalBlock.iterations	var iterations: Int { get set }
+s:10WorkoutKit13IntervalBlockV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	IntervalBlock.==(_:_:)	static func == (a: IntervalBlock, b: IntervalBlock) -> Bool
+s:10WorkoutKit13IntervalBlockV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	IntervalBlock.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit13IntervalBlockV5steps10iterationsACSayAA0C4StepVG_Sitcfc	swift.init	init(steps:iterations:)	IntervalBlock.init(steps:iterations:)	init(steps: [IntervalStep] = [], iterations: Int = 1)
+s:10WorkoutKit13IntervalBlockV5stepsSayAA0C4StepVGvp	swift.property	steps	IntervalBlock.steps	var steps: [IntervalStep]
+s:10WorkoutKit13IntervalBlockV9hashValueSivp	swift.property	hashValue	IntervalBlock.hashValue	var hashValue: Int { get }
+s:10WorkoutKit14PowerZoneAlertV	swift.struct	PowerZoneAlert	PowerZoneAlert	struct PowerZoneAlert
+s:10WorkoutKit14PowerZoneAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PowerZoneAlert.==(_:_:)	static func == (a: PowerZoneAlert, b: PowerZoneAlert) -> Bool
+s:10WorkoutKit14PowerZoneAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PowerZoneAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit14PowerZoneAlertV4zoneACSi_tcfc	swift.init	init(zone:)	PowerZoneAlert.init(zone:)	init(zone: Int)
+s:10WorkoutKit14PowerZoneAlertV4zoneSivp	swift.property	zone	PowerZoneAlert.zone	var zone: Int
+s:10WorkoutKit14PowerZoneAlertV6metricAA0aE6MetricOvp	swift.property	metric	PowerZoneAlert.metric	var metric: WorkoutAlertMetric { get }
+s:10WorkoutKit14PowerZoneAlertV9hashValueSivp	swift.property	hashValue	PowerZoneAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit15PowerRangeAlertV	swift.struct	PowerRangeAlert	PowerRangeAlert	struct PowerRangeAlert
+s:10WorkoutKit15PowerRangeAlertV24targetQuantityLowerBoundSo10HKQuantityCvp	swift.property	targetQuantityLowerBound	PowerRangeAlert.targetQuantityLowerBound	var targetQuantityLowerBound: HKQuantity { get }
+s:10WorkoutKit15PowerRangeAlertV24targetQuantityUpperBoundSo10HKQuantityCvp	swift.property	targetQuantityUpperBound	PowerRangeAlert.targetQuantityUpperBound	var targetQuantityUpperBound: HKQuantity { get }
+s:10WorkoutKit15PowerRangeAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PowerRangeAlert.==(_:_:)	static func == (a: PowerRangeAlert, b: PowerRangeAlert) -> Bool
+s:10WorkoutKit15PowerRangeAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PowerRangeAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit15PowerRangeAlertV6metricAA0aE6MetricOvp	swift.property	metric	PowerRangeAlert.metric	var metric: WorkoutAlertMetric { get set }
+s:10WorkoutKit15PowerRangeAlertV6target6metricACSNy10Foundation11MeasurementVySo06NSUnitC0CGG_AA0aE6MetricOtcfc	swift.init	init(target:metric:)	PowerRangeAlert.init(target:metric:)	init(target: ClosedRange<Measurement<UnitPower>>, metric: WorkoutAlertMetric)
+s:10WorkoutKit15PowerRangeAlertV6targetACSNy10Foundation11MeasurementVySo06NSUnitC0CGG_tcfc	swift.init	init(target:)	PowerRangeAlert.init(target:)	init(target: ClosedRange<Measurement<UnitPower>>)
+s:10WorkoutKit15PowerRangeAlertV6targetSNy10Foundation11MeasurementVySo06NSUnitC0CGGvp	swift.property	target	PowerRangeAlert.target	var target: ClosedRange<Measurement<UnitPower>>
+s:10WorkoutKit15PowerRangeAlertV9hashValueSivp	swift.property	hashValue	PowerRangeAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit15SpeedRangeAlertV	swift.struct	SpeedRangeAlert	SpeedRangeAlert	struct SpeedRangeAlert
+s:10WorkoutKit15SpeedRangeAlertV24targetQuantityLowerBoundSo10HKQuantityCvp	swift.property	targetQuantityLowerBound	SpeedRangeAlert.targetQuantityLowerBound	var targetQuantityLowerBound: HKQuantity { get }
+s:10WorkoutKit15SpeedRangeAlertV24targetQuantityUpperBoundSo10HKQuantityCvp	swift.property	targetQuantityUpperBound	SpeedRangeAlert.targetQuantityUpperBound	var targetQuantityUpperBound: HKQuantity { get }
+s:10WorkoutKit15SpeedRangeAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	SpeedRangeAlert.==(_:_:)	static func == (a: SpeedRangeAlert, b: SpeedRangeAlert) -> Bool
+s:10WorkoutKit15SpeedRangeAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SpeedRangeAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit15SpeedRangeAlertV6metricAA0aE6MetricOvp	swift.property	metric	SpeedRangeAlert.metric	var metric: WorkoutAlertMetric
+s:10WorkoutKit15SpeedRangeAlertV6target6metricACSNy10Foundation11MeasurementVySo06NSUnitC0CGG_AA0aE6MetricOtcfc	swift.init	init(target:metric:)	SpeedRangeAlert.init(target:metric:)	init(target: ClosedRange<Measurement<UnitSpeed>>, metric: WorkoutAlertMetric)
+s:10WorkoutKit15SpeedRangeAlertV6targetSNy10Foundation11MeasurementVySo06NSUnitC0CGGvp	swift.property	target	SpeedRangeAlert.target	var target: ClosedRange<Measurement<UnitSpeed>>
+s:10WorkoutKit15SpeedRangeAlertV9hashValueSivp	swift.property	hashValue	SpeedRangeAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit17CadenceRangeAlertV	swift.struct	CadenceRangeAlert	CadenceRangeAlert	struct CadenceRangeAlert
+s:10WorkoutKit17CadenceRangeAlertV24targetQuantityLowerBoundSo10HKQuantityCvp	swift.property	targetQuantityLowerBound	CadenceRangeAlert.targetQuantityLowerBound	var targetQuantityLowerBound: HKQuantity { get }
+s:10WorkoutKit17CadenceRangeAlertV24targetQuantityUpperBoundSo10HKQuantityCvp	swift.property	targetQuantityUpperBound	CadenceRangeAlert.targetQuantityUpperBound	var targetQuantityUpperBound: HKQuantity { get }
+s:10WorkoutKit17CadenceRangeAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CadenceRangeAlert.==(_:_:)	static func == (a: CadenceRangeAlert, b: CadenceRangeAlert) -> Bool
+s:10WorkoutKit17CadenceRangeAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CadenceRangeAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit17CadenceRangeAlertV6metricAA0aE6MetricOvp	swift.property	metric	CadenceRangeAlert.metric	var metric: WorkoutAlertMetric { get }
+s:10WorkoutKit17CadenceRangeAlertV6targetACSNy10Foundation11MeasurementVySo15NSUnitFrequencyCGG_tcfc	swift.init	init(target:)	CadenceRangeAlert.init(target:)	init(target: ClosedRange<Measurement<UnitFrequency>>)
+s:10WorkoutKit17CadenceRangeAlertV6targetSNy10Foundation11MeasurementVySo15NSUnitFrequencyCGGvp	swift.property	target	CadenceRangeAlert.target	var target: ClosedRange<Measurement<UnitFrequency>>
+s:10WorkoutKit17CadenceRangeAlertV9hashValueSivp	swift.property	hashValue	CadenceRangeAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit18HeartRateZoneAlertV	swift.struct	HeartRateZoneAlert	HeartRateZoneAlert	struct HeartRateZoneAlert
+s:10WorkoutKit18HeartRateZoneAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	HeartRateZoneAlert.==(_:_:)	static func == (a: HeartRateZoneAlert, b: HeartRateZoneAlert) -> Bool
+s:10WorkoutKit18HeartRateZoneAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	HeartRateZoneAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit18HeartRateZoneAlertV4zoneACSi_tcfc	swift.init	init(zone:)	HeartRateZoneAlert.init(zone:)	init(zone: Int)
+s:10WorkoutKit18HeartRateZoneAlertV4zoneSivp	swift.property	zone	HeartRateZoneAlert.zone	var zone: Int
+s:10WorkoutKit18HeartRateZoneAlertV6metricAA0aF6MetricOvp	swift.property	metric	HeartRateZoneAlert.metric	var metric: WorkoutAlertMetric { get }
+s:10WorkoutKit18HeartRateZoneAlertV9hashValueSivp	swift.property	hashValue	HeartRateZoneAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit19HeartRateRangeAlertV	swift.struct	HeartRateRangeAlert	HeartRateRangeAlert	struct HeartRateRangeAlert
+s:10WorkoutKit19HeartRateRangeAlertV24targetQuantityLowerBoundSo10HKQuantityCvp	swift.property	targetQuantityLowerBound	HeartRateRangeAlert.targetQuantityLowerBound	var targetQuantityLowerBound: HKQuantity { get }
+s:10WorkoutKit19HeartRateRangeAlertV24targetQuantityUpperBoundSo10HKQuantityCvp	swift.property	targetQuantityUpperBound	HeartRateRangeAlert.targetQuantityUpperBound	var targetQuantityUpperBound: HKQuantity { get }
+s:10WorkoutKit19HeartRateRangeAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	HeartRateRangeAlert.==(_:_:)	static func == (a: HeartRateRangeAlert, b: HeartRateRangeAlert) -> Bool
+s:10WorkoutKit19HeartRateRangeAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	HeartRateRangeAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit19HeartRateRangeAlertV6metricAA0aF6MetricOvp	swift.property	metric	HeartRateRangeAlert.metric	var metric: WorkoutAlertMetric { get }
+s:10WorkoutKit19HeartRateRangeAlertV6targetACSNy10Foundation11MeasurementVySo15NSUnitFrequencyCGG_tcfc	swift.init	init(target:)	HeartRateRangeAlert.init(target:)	init(target: ClosedRange<Measurement<UnitFrequency>>)
+s:10WorkoutKit19HeartRateRangeAlertV6targetSNy10Foundation11MeasurementVySo15NSUnitFrequencyCGGvp	swift.property	target	HeartRateRangeAlert.target	var target: ClosedRange<Measurement<UnitFrequency>>
+s:10WorkoutKit19HeartRateRangeAlertV9hashValueSivp	swift.property	hashValue	HeartRateRangeAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit19PowerThresholdAlertV	swift.struct	PowerThresholdAlert	PowerThresholdAlert	struct PowerThresholdAlert
+s:10WorkoutKit19PowerThresholdAlertV14targetQuantitySo10HKQuantityCvp	swift.property	targetQuantity	PowerThresholdAlert.targetQuantity	var targetQuantity: HKQuantity { get }
+s:10WorkoutKit19PowerThresholdAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PowerThresholdAlert.==(_:_:)	static func == (a: PowerThresholdAlert, b: PowerThresholdAlert) -> Bool
+s:10WorkoutKit19PowerThresholdAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PowerThresholdAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit19PowerThresholdAlertV6metricAA0aE6MetricOvp	swift.property	metric	PowerThresholdAlert.metric	var metric: WorkoutAlertMetric { get set }
+s:10WorkoutKit19PowerThresholdAlertV6target10Foundation11MeasurementVySo06NSUnitC0CGvp	swift.property	target	PowerThresholdAlert.target	var target: Measurement<UnitPower>
+s:10WorkoutKit19PowerThresholdAlertV6target6metricAC10Foundation11MeasurementVySo06NSUnitC0CG_AA0aE6MetricOtcfc	swift.init	init(target:metric:)	PowerThresholdAlert.init(target:metric:)	init(target: Measurement<UnitPower>, metric: WorkoutAlertMetric)
+s:10WorkoutKit19PowerThresholdAlertV6targetAC10Foundation11MeasurementVySo06NSUnitC0CG_tcfc	swift.init	init(target:)	PowerThresholdAlert.init(target:)	init(target: Measurement<UnitPower>)
+s:10WorkoutKit19PowerThresholdAlertV9hashValueSivp	swift.property	hashValue	PowerThresholdAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit19SpeedThresholdAlertV	swift.struct	SpeedThresholdAlert	SpeedThresholdAlert	struct SpeedThresholdAlert
+s:10WorkoutKit19SpeedThresholdAlertV14targetQuantitySo10HKQuantityCvp	swift.property	targetQuantity	SpeedThresholdAlert.targetQuantity	var targetQuantity: HKQuantity { get }
+s:10WorkoutKit19SpeedThresholdAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	SpeedThresholdAlert.==(_:_:)	static func == (a: SpeedThresholdAlert, b: SpeedThresholdAlert) -> Bool
+s:10WorkoutKit19SpeedThresholdAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SpeedThresholdAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit19SpeedThresholdAlertV6metricAA0aE6MetricOvp	swift.property	metric	SpeedThresholdAlert.metric	var metric: WorkoutAlertMetric
+s:10WorkoutKit19SpeedThresholdAlertV6target10Foundation11MeasurementVySo06NSUnitC0CGvp	swift.property	target	SpeedThresholdAlert.target	var target: Measurement<UnitSpeed>
+s:10WorkoutKit19SpeedThresholdAlertV6target6metricAC10Foundation11MeasurementVySo06NSUnitC0CG_AA0aE6MetricOtcfc	swift.init	init(target:metric:)	SpeedThresholdAlert.init(target:metric:)	init(target: Measurement<UnitSpeed>, metric: WorkoutAlertMetric)
+s:10WorkoutKit19SpeedThresholdAlertV9hashValueSivp	swift.property	hashValue	SpeedThresholdAlert.hashValue	var hashValue: Int { get }
+s:10WorkoutKit21CadenceThresholdAlertV	swift.struct	CadenceThresholdAlert	CadenceThresholdAlert	struct CadenceThresholdAlert
+s:10WorkoutKit21CadenceThresholdAlertV14targetQuantitySo10HKQuantityCvp	swift.property	targetQuantity	CadenceThresholdAlert.targetQuantity	var targetQuantity: HKQuantity { get }
+s:10WorkoutKit21CadenceThresholdAlertV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CadenceThresholdAlert.==(_:_:)	static func == (a: CadenceThresholdAlert, b: CadenceThresholdAlert) -> Bool
+s:10WorkoutKit21CadenceThresholdAlertV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CadenceThresholdAlert.hash(into:)	func hash(into hasher: inout Hasher)
+s:10WorkoutKit21CadenceThresholdAlertV6metricAA0aE6MetricOvp	swift.property	metric	CadenceThresholdAlert.metric	var metric: WorkoutAlertMetric { get }
+s:10WorkoutKit21CadenceThresholdAlertV6target10Foundation11MeasurementVySo15NSUnitFrequencyCGvp	swift.property	target	CadenceThresholdAlert.target	var target: Measurement<UnitFrequency>
+s:10WorkoutKit21CadenceThresholdAlertV6targetAC10Foundation11MeasurementVySo15NSUnitFrequencyCG_tcfc	swift.init	init(target:)	CadenceThresholdAlert.init(target:)	init(target: Measurement<UnitFrequency>)
+s:10WorkoutKit21CadenceThresholdAlertV9hashValueSivp	swift.property	hashValue	CadenceThresholdAlert.hashValue	var hashValue: Int { get }
+s:7SwiftUI4ViewP012_WorkoutKit_aB0E14workoutPreview_11isPresentedQr0dE00D4PlanV_AA7BindingVySbGtF	swift.method	workoutPreview(_:isPresented:)	View.workoutPreview(_:isPresented:)	nonisolated func workoutPreview(_ workout: WorkoutPlan, isPresented: Binding<Bool>) -> some View\n
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit010SingleGoalA0V	swift.func.op	!=(_:_:)	SingleGoalWorkout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit011SwimBikeRunA0V	swift.func.op	!=(_:_:)	SwimBikeRunWorkout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit011SwimBikeRunA0V8ActivityO	swift.func.op	!=(_:_:)	SwimBikeRunWorkout.Activity.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit05PacerA0V	swift.func.op	!=(_:_:)	PacerWorkout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit06CustomA0V	swift.func.op	!=(_:_:)	CustomWorkout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit09ScheduledA4PlanV	swift.func.op	!=(_:_:)	ScheduledWorkoutPlan.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit0A11AlertMetricO	swift.func.op	!=(_:_:)	WorkoutAlertMetric.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit0A4GoalO	swift.func.op	!=(_:_:)	WorkoutGoal.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit0A4PlanV	swift.func.op	!=(_:_:)	WorkoutPlan.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit0A4PlanV0A0O	swift.func.op	!=(_:_:)	WorkoutPlan.Workout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit0A4StepV	swift.func.op	!=(_:_:)	WorkoutStep.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit0A9SchedulerC18AuthorizationStateO	swift.func.op	!=(_:_:)	WorkoutScheduler.AuthorizationState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit10StateErrorO	swift.func.op	!=(_:_:)	StateError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit12IntervalStepV	swift.func.op	!=(_:_:)	IntervalStep.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit12IntervalStepV7PurposeO	swift.func.op	!=(_:_:)	IntervalStep.Purpose.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit13IntervalBlockV	swift.func.op	!=(_:_:)	IntervalBlock.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit14PowerZoneAlertV	swift.func.op	!=(_:_:)	PowerZoneAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit15PowerRangeAlertV	swift.func.op	!=(_:_:)	PowerRangeAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit15SpeedRangeAlertV	swift.func.op	!=(_:_:)	SpeedRangeAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit17CadenceRangeAlertV	swift.func.op	!=(_:_:)	CadenceRangeAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit18HeartRateZoneAlertV	swift.func.op	!=(_:_:)	HeartRateZoneAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit19HeartRateRangeAlertV	swift.func.op	!=(_:_:)	HeartRateRangeAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit19PowerThresholdAlertV	swift.func.op	!=(_:_:)	PowerThresholdAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit19SpeedThresholdAlertV	swift.func.op	!=(_:_:)	SpeedThresholdAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10WorkoutKit21CadenceThresholdAlertV	swift.func.op	!=(_:_:)	CadenceThresholdAlert.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:10WorkoutKit0A9SchedulerC18AuthorizationStateO	swift.property	hashValue	WorkoutScheduler.AuthorizationState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:10WorkoutKit0A9SchedulerC18AuthorizationStateO	swift.method	hash(into:)	WorkoutScheduler.AuthorizationState.hash(into:)	func hash(into hasher: inout Hasher)
+s:So9HKWorkoutC10WorkoutKitE11workoutPlanAC0bE0VSgvp	swift.property	workoutPlan	HKWorkout.workoutPlan	var workoutPlan: WorkoutPlan? { get async throws }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10WorkoutKit10StateErrorO	swift.property	localizedDescription	StateError.localizedDescription	var localizedDescription: String { get }

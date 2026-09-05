@@ -1,0 +1,148 @@
+precise	kind	title	path	declaration
+c:objc(cs)DDMatch	swift.class	DDMatch	DDMatch	class DDMatch
+c:objc(cs)DDMatch(py)matchedString	swift.property	matchedString	DDMatch.matchedString	var matchedString: String { get }
+c:objc(cs)DDMatchCalendarEvent	swift.class	DDMatchCalendarEvent	DDMatchCalendarEvent	class DDMatchCalendarEvent
+c:objc(cs)DDMatchCalendarEvent(py)allDay	swift.property	isAllDay	DDMatchCalendarEvent.isAllDay	var isAllDay: Bool { get }
+c:objc(cs)DDMatchCalendarEvent(py)endDate	swift.property	endDate	DDMatchCalendarEvent.endDate	var endDate: Date? { get }
+c:objc(cs)DDMatchCalendarEvent(py)endTimeZone	swift.property	endTimeZone	DDMatchCalendarEvent.endTimeZone	var endTimeZone: TimeZone? { get }
+c:objc(cs)DDMatchCalendarEvent(py)startDate	swift.property	startDate	DDMatchCalendarEvent.startDate	var startDate: Date? { get }
+c:objc(cs)DDMatchCalendarEvent(py)startTimeZone	swift.property	startTimeZone	DDMatchCalendarEvent.startTimeZone	var startTimeZone: TimeZone? { get }
+c:objc(cs)DDMatchEmailAddress	swift.class	DDMatchEmailAddress	DDMatchEmailAddress	class DDMatchEmailAddress
+c:objc(cs)DDMatchEmailAddress(py)emailAddress	swift.property	emailAddress	DDMatchEmailAddress.emailAddress	var emailAddress: String { get }
+c:objc(cs)DDMatchEmailAddress(py)label	swift.property	label	DDMatchEmailAddress.label	var label: String? { get }
+c:objc(cs)DDMatchFlightNumber	swift.class	DDMatchFlightNumber	DDMatchFlightNumber	class DDMatchFlightNumber
+c:objc(cs)DDMatchFlightNumber(py)airline	swift.property	airline	DDMatchFlightNumber.airline	var airline: String { get }
+c:objc(cs)DDMatchFlightNumber(py)flightNumber	swift.property	flightNumber	DDMatchFlightNumber.flightNumber	var flightNumber: String { get }
+c:objc(cs)DDMatchLink	swift.class	DDMatchLink	DDMatchLink	class DDMatchLink
+c:objc(cs)DDMatchLink(py)URL	swift.property	url	DDMatchLink.url	var url: URL { get }
+c:objc(cs)DDMatchMoneyAmount	swift.class	DDMatchMoneyAmount	DDMatchMoneyAmount	class DDMatchMoneyAmount
+c:objc(cs)DDMatchMoneyAmount(py)amount	swift.property	amount	DDMatchMoneyAmount.amount	var amount: Double { get }
+c:objc(cs)DDMatchMoneyAmount(py)currency	swift.property	currency	DDMatchMoneyAmount.currency	var currency: String { get }
+c:objc(cs)DDMatchPhoneNumber	swift.class	DDMatchPhoneNumber	DDMatchPhoneNumber	class DDMatchPhoneNumber
+c:objc(cs)DDMatchPhoneNumber(py)label	swift.property	label	DDMatchPhoneNumber.label	var label: String? { get }
+c:objc(cs)DDMatchPhoneNumber(py)phoneNumber	swift.property	phoneNumber	DDMatchPhoneNumber.phoneNumber	var phoneNumber: String { get }
+c:objc(cs)DDMatchPostalAddress	swift.class	DDMatchPostalAddress	DDMatchPostalAddress	class DDMatchPostalAddress
+c:objc(cs)DDMatchPostalAddress(py)city	swift.property	city	DDMatchPostalAddress.city	var city: String? { get }
+c:objc(cs)DDMatchPostalAddress(py)country	swift.property	country	DDMatchPostalAddress.country	var country: String? { get }
+c:objc(cs)DDMatchPostalAddress(py)postalCode	swift.property	postalCode	DDMatchPostalAddress.postalCode	var postalCode: String? { get }
+c:objc(cs)DDMatchPostalAddress(py)state	swift.property	state	DDMatchPostalAddress.state	var state: String? { get }
+c:objc(cs)DDMatchPostalAddress(py)street	swift.property	street	DDMatchPostalAddress.street	var street: String? { get }
+c:objc(cs)DDMatchShipmentTrackingNumber	swift.class	DDMatchShipmentTrackingNumber	DDMatchShipmentTrackingNumber	class DDMatchShipmentTrackingNumber
+c:objc(cs)DDMatchShipmentTrackingNumber(py)carrier	swift.property	carrier	DDMatchShipmentTrackingNumber.carrier	var carrier: String { get }
+c:objc(cs)DDMatchShipmentTrackingNumber(py)trackingNumber	swift.property	trackingNumber	DDMatchShipmentTrackingNumber.trackingNumber	var trackingNumber: String { get }
+s:13DataDetection0A8DetectorO	swift.enum	DataDetector	DataDetector	enum DataDetector
+s:13DataDetection0A8DetectorO5MatchV	swift.struct	DataDetector.Match	DataDetector.Match	struct Match
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO	swift.enum	DataDetector.Match.HighlightStyle	DataDetector.Match.HighlightStyle	enum HighlightStyle
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	DataDetector.Match.HighlightStyle.==(_:_:)	static func == (a: DataDetector.Match.HighlightStyle, b: DataDetector.Match.HighlightStyle) -> Bool
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO3urlyA2GmF	swift.enum.case	DataDetector.Match.HighlightStyle.url	DataDetector.Match.HighlightStyle.url	case url
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	DataDetector.Match.HighlightStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO6hiddenyA2GmF	swift.enum.case	DataDetector.Match.HighlightStyle.hidden	DataDetector.Match.HighlightStyle.hidden	case hidden
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO7regularyA2GmF	swift.enum.case	DataDetector.Match.HighlightStyle.regular	DataDetector.Match.HighlightStyle.regular	case regular
+s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO9hashValueSivp	swift.property	hashValue	DataDetector.Match.HighlightStyle.hashValue	var hashValue: Int { get }
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO	swift.enum	DataDetector.Match.SemanticDetails	DataDetector.Match.SemanticDetails	enum SemanticDetails
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MeasurementV	swift.struct	DataDetector.Match.SemanticDetails.Measurement	DataDetector.Match.SemanticDetails.Measurement	struct Measurement
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MeasurementV11measurement2in10FoundationAHVyxGx_tSo11NSDimensionCRbzlF	swift.method	measurement(in:)	DataDetector.Match.SemanticDetails.Measurement.measurement(in:)	func measurement<D>(in dimension: D) -> Measurement<D> where D : Dimension
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MeasurementV18possibleDimensionsSaySo11NSDimensionCGvp	swift.property	possibleDimensions	DataDetector.Match.SemanticDetails.Measurement.possibleDimensions	let possibleDimensions: [Dimension]
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MeasurementV5valueSdvp	swift.property	value	DataDetector.Match.SemanticDetails.Measurement.value	let value: Double
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MoneyAmountV	swift.struct	DataDetector.Match.SemanticDetails.MoneyAmount	DataDetector.Match.SemanticDetails.MoneyAmount	struct MoneyAmount
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MoneyAmountV6amountSo9NSDecimalavp	swift.property	amount	DataDetector.Match.SemanticDetails.MoneyAmount.amount	let amount: Decimal
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11MoneyAmountV8currency10Foundation6LocaleV8CurrencyVvp	swift.property	currency	DataDetector.Match.SemanticDetails.MoneyAmount.currency	let currency: Locale.Currency
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11PhoneNumberV	swift.struct	DataDetector.Match.SemanticDetails.PhoneNumber	DataDetector.Match.SemanticDetails.PhoneNumber	struct PhoneNumber
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11PhoneNumberV05phoneH0SSvp	swift.property	phoneNumber	DataDetector.Match.SemanticDetails.PhoneNumber.phoneNumber	let phoneNumber: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11PhoneNumberV5labelSSSgvp	swift.property	label	DataDetector.Match.SemanticDetails.PhoneNumber.label	let label: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11measurementyA2G11MeasurementVcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.measurement(_:)	DataDetector.Match.SemanticDetails.measurement(_:)	case measurement(DataDetector.Match.SemanticDetails.Measurement)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11moneyAmountyA2G05MoneyH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.moneyAmount(_:)	DataDetector.Match.SemanticDetails.moneyAmount(_:)	case moneyAmount(DataDetector.Match.SemanticDetails.MoneyAmount)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO11phoneNumberyA2G05PhoneH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.phoneNumber(_:)	DataDetector.Match.SemanticDetails.phoneNumber(_:)	case phoneNumber(DataDetector.Match.SemanticDetails.PhoneNumber)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12EmailAddressV	swift.struct	DataDetector.Match.SemanticDetails.EmailAddress	DataDetector.Match.SemanticDetails.EmailAddress	struct EmailAddress
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12EmailAddressV05emailH0SSvp	swift.property	emailAddress	DataDetector.Match.SemanticDetails.EmailAddress.emailAddress	let emailAddress: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12EmailAddressV5labelSSSgvp	swift.property	label	DataDetector.Match.SemanticDetails.EmailAddress.label	let label: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12FlightNumberV	swift.struct	DataDetector.Match.SemanticDetails.FlightNumber	DataDetector.Match.SemanticDetails.FlightNumber	struct FlightNumber
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12FlightNumberV06flightH0Sivp	swift.property	flightNumber	DataDetector.Match.SemanticDetails.FlightNumber.flightNumber	let flightNumber: Int
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12FlightNumberV11airlineCodeSSvp	swift.property	airlineCode	DataDetector.Match.SemanticDetails.FlightNumber.airlineCode	let airlineCode: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12emailAddressyA2G05EmailH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.emailAddress(_:)	DataDetector.Match.SemanticDetails.emailAddress(_:)	case emailAddress(DataDetector.Match.SemanticDetails.EmailAddress)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO12flightNumberyA2G06FlightH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.flightNumber(_:)	DataDetector.Match.SemanticDetails.flightNumber(_:)	case flightNumber(DataDetector.Match.SemanticDetails.FlightNumber)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13CalendarEventV	swift.struct	DataDetector.Match.SemanticDetails.CalendarEvent	DataDetector.Match.SemanticDetails.CalendarEvent	struct CalendarEvent
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13CalendarEventV11endTimeZone10Foundation0jK0VSgvp	swift.property	endTimeZone	DataDetector.Match.SemanticDetails.CalendarEvent.endTimeZone	let endTimeZone: TimeZone?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13CalendarEventV13startTimeZone10Foundation0jK0VSgvp	swift.property	startTimeZone	DataDetector.Match.SemanticDetails.CalendarEvent.startTimeZone	let startTimeZone: TimeZone?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13CalendarEventV6allDaySbvp	swift.property	allDay	DataDetector.Match.SemanticDetails.CalendarEvent.allDay	let allDay: Bool
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13CalendarEventV7endDate10Foundation0J0VSgvp	swift.property	endDate	DataDetector.Match.SemanticDetails.CalendarEvent.endDate	let endDate: Date?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13CalendarEventV9startDate10Foundation0J0VSgvp	swift.property	startDate	DataDetector.Match.SemanticDetails.CalendarEvent.startDate	let startDate: Date?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV	swift.struct	DataDetector.Match.SemanticDetails.PostalAddress	DataDetector.Match.SemanticDetails.PostalAddress	struct PostalAddress
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV04fullH0SSvp	swift.property	fullAddress	DataDetector.Match.SemanticDetails.PostalAddress.fullAddress	let fullAddress: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV10postalCodeSSSgvp	swift.property	postalCode	DataDetector.Match.SemanticDetails.PostalAddress.postalCode	let postalCode: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV10regionCode10Foundation6LocaleV6RegionVSgvp	swift.property	regionCode	DataDetector.Match.SemanticDetails.PostalAddress.regionCode	let regionCode: Locale.Region?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV4citySSSgvp	swift.property	city	DataDetector.Match.SemanticDetails.PostalAddress.city	let city: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV5labelSSSgvp	swift.property	label	DataDetector.Match.SemanticDetails.PostalAddress.label	let label: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV5stateSSSgvp	swift.property	state	DataDetector.Match.SemanticDetails.PostalAddress.state	let state: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV6regionSSSgvp	swift.property	region	DataDetector.Match.SemanticDetails.PostalAddress.region	let region: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13PostalAddressV6streetSSSgvp	swift.property	street	DataDetector.Match.SemanticDetails.PostalAddress.street	let street: String?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13calendarEventyA2G08CalendarH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.calendarEvent(_:)	DataDetector.Match.SemanticDetails.calendarEvent(_:)	case calendarEvent(DataDetector.Match.SemanticDetails.CalendarEvent)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO13postalAddressyA2G06PostalH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.postalAddress(_:)	DataDetector.Match.SemanticDetails.postalAddress(_:)	case postalAddress(DataDetector.Match.SemanticDetails.PostalAddress)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV	swift.struct	DataDetector.Match.SemanticDetails.PaymentIdentifier	DataDetector.Match.SemanticDetails.PaymentIdentifier	struct PaymentIdentifier
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV0G6SystemO	swift.enum	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem	enum PaymentSystem
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV0G6SystemO24unifiedPaymentsInterfaceyA2KmF	swift.enum.case	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem.unifiedPaymentsInterface	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem.unifiedPaymentsInterface	case unifiedPaymentsInterface
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV0G6SystemO2eeoiySbAK_AKtFZ	swift.func.op	==(_:_:)	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem.==(_:_:)	static func == (a: DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem, b: DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem) -> Bool
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV0G6SystemO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem.hash(into:)	func hash(into hasher: inout Hasher)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV0G6SystemO9hashValueSivp	swift.property	hashValue	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem.hashValue	var hashValue: Int { get }
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV10identifierSSvp	swift.property	identifier	DataDetector.Match.SemanticDetails.PaymentIdentifier.identifier	let identifier: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV4typeAI0G6SystemOvp	swift.property	type	DataDetector.Match.SemanticDetails.PaymentIdentifier.type	let type: DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17paymentIdentifieryA2G07PaymentH0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.paymentIdentifier(_:)	DataDetector.Match.SemanticDetails.paymentIdentifier(_:)	case paymentIdentifier(DataDetector.Match.SemanticDetails.PaymentIdentifier)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO22ShipmentTrackingNumberV	swift.struct	DataDetector.Match.SemanticDetails.ShipmentTrackingNumber	DataDetector.Match.SemanticDetails.ShipmentTrackingNumber	struct ShipmentTrackingNumber
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO22ShipmentTrackingNumberV08trackingI0SSvp	swift.property	trackingNumber	DataDetector.Match.SemanticDetails.ShipmentTrackingNumber.trackingNumber	let trackingNumber: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO22ShipmentTrackingNumberV11trackingURL10Foundation0K0VSgvp	swift.property	trackingURL	DataDetector.Match.SemanticDetails.ShipmentTrackingNumber.trackingURL	let trackingURL: URL?
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO22ShipmentTrackingNumberV7carrierSSvp	swift.property	carrier	DataDetector.Match.SemanticDetails.ShipmentTrackingNumber.carrier	let carrier: String
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO22shipmentTrackingNumberyA2G08ShipmenthI0VcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.shipmentTrackingNumber(_:)	DataDetector.Match.SemanticDetails.shipmentTrackingNumber(_:)	case shipmentTrackingNumber(DataDetector.Match.SemanticDetails.ShipmentTrackingNumber)
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO4LinkV	swift.struct	DataDetector.Match.SemanticDetails.Link	DataDetector.Match.SemanticDetails.Link	struct Link
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO4LinkV3url10Foundation3URLVvp	swift.property	url	DataDetector.Match.SemanticDetails.Link.url	let url: URL
+s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO4linkyA2G4LinkVcAGmF	swift.enum.case	DataDetector.Match.SemanticDetails.link(_:)	DataDetector.Match.SemanticDetails.link(_:)	case link(DataDetector.Match.SemanticDetails.Link)
+s:13DataDetection0A8DetectorO5MatchV23preferredHighlightStyleAE0fG0Ovp	swift.property	preferredHighlightStyle	DataDetector.Match.preferredHighlightStyle	let preferredHighlightStyle: DataDetector.Match.HighlightStyle
+s:13DataDetection0A8DetectorO5MatchV5rangeSnySS5IndexVGSgvp	swift.property	range	DataDetector.Match.range	let range: Range<String.Index>?
+s:13DataDetection0A8DetectorO5MatchV7detailsAE15SemanticDetailsOvp	swift.property	details	DataDetector.Match.details	let details: DataDetector.Match.SemanticDetails
+s:13DataDetection0A8DetectorO7OptionsV	swift.struct	DataDetector.Options	DataDetector.Options	struct Options
+s:13DataDetection0A8DetectorO7OptionsV12documentDate10Foundation0F0VSgvp	swift.property	documentDate	DataDetector.Options.documentDate	var documentDate: Date?
+s:13DataDetection0A8DetectorO7OptionsV14documentRegion10Foundation6LocaleV0F0VSgvp	swift.property	documentRegion	DataDetector.Options.documentRegion	var documentRegion: Locale.Region?
+s:13DataDetection0A8DetectorO7OptionsV16documentTimeZone10Foundation0fG0VSgvp	swift.property	documentTimeZone	DataDetector.Options.documentTimeZone	var documentTimeZone: TimeZone?
+s:13DataDetection0A8DetectorO7OptionsV20documentLanguageCode10Foundation6LocaleV0fG0VSgvp	swift.property	documentLanguageCode	DataDetector.Options.documentLanguageCode	var documentLanguageCode: Locale.LanguageCode?
+s:13DataDetection0A8DetectorO7OptionsVAEycfc	swift.init	init()	DataDetector.Options.init()	init()
+s:13DataDetection0A8DetectorO9MatchTypeV	swift.struct	DataDetector.MatchType	DataDetector.MatchType	struct MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV11measurementAEvpZ	swift.type.property	measurement	DataDetector.MatchType.measurement	static let measurement: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV11moneyAmountAEvpZ	swift.type.property	moneyAmount	DataDetector.MatchType.moneyAmount	static let moneyAmount: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV11phoneNumberAEvpZ	swift.type.property	phoneNumber	DataDetector.MatchType.phoneNumber	static let phoneNumber: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV12emailAddressAEvpZ	swift.type.property	emailAddress	DataDetector.MatchType.emailAddress	static let emailAddress: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV12flightNumberAEvpZ	swift.type.property	flightNumber	DataDetector.MatchType.flightNumber	static let flightNumber: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV13calendarEventAEvpZ	swift.type.property	calendarEvent	DataDetector.MatchType.calendarEvent	static let calendarEvent: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV13postalAddressAEvpZ	swift.type.property	postalAddress	DataDetector.MatchType.postalAddress	static let postalAddress: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV17paymentIdentifierAEvpZ	swift.type.property	paymentIdentifier	DataDetector.MatchType.paymentIdentifier	static let paymentIdentifier: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV19ArrayLiteralElementa	swift.typealias	DataDetector.MatchType.ArrayLiteralElement	DataDetector.MatchType.ArrayLiteralElement	typealias ArrayLiteralElement = DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV22shipmentTrackingNumberAEvpZ	swift.type.property	shipmentTrackingNumber	DataDetector.MatchType.shipmentTrackingNumber	static let shipmentTrackingNumber: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV3allAEvpZ	swift.type.property	all	DataDetector.MatchType.all	static let all: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV4linkAEvpZ	swift.type.property	link	DataDetector.MatchType.link	static let link: DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV7Elementa	swift.typealias	DataDetector.MatchType.Element	DataDetector.MatchType.Element	typealias Element = DataDetector.MatchType
+s:13DataDetection0A8DetectorO9MatchTypeV8RawValuea	swift.typealias	DataDetector.MatchType.RawValue	DataDetector.MatchType.RawValue	typealias RawValue = UInt64
+s:13DataDetection0A8DetectorO9MatchTypeV8rawValueAEs6UInt64V_tcfc	swift.init	init(rawValue:)	DataDetector.MatchType.init(rawValue:)	init(rawValue: UInt64)
+s:13DataDetection0A8DetectorO9MatchTypeV8rawValues6UInt64Vvp	swift.property	rawValue	DataDetector.MatchType.rawValue	let rawValue: UInt64
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:13DataDetection0A8DetectorO5MatchV14HighlightStyleO	swift.func.op	!=(_:_:)	DataDetector.Match.HighlightStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:13DataDetection0A8DetectorO5MatchV15SemanticDetailsO17PaymentIdentifierV0G6SystemO	swift.func.op	!=(_:_:)	DataDetector.Match.SemanticDetails.PaymentIdentifier.PaymentSystem.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.func.op	!=(_:_:)	DataDetector.MatchType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:Sy13DataDetectionE19dataDetectorMatches_7optionsQrAA0aD0O9MatchTypeV_AE7OptionsVtF	swift.method	dataDetectorMatches(_:options:)	StringProtocol.dataDetectorMatches(_:options:)	func dataDetectorMatches(_ types: DataDetector.MatchType = .all, options: DataDetector.Options = DataDetector.Options()) -> some AsyncSequence<DataDetector.Match, Never>\n
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.init	init(arrayLiteral:)	DataDetector.MatchType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	isDisjoint(with:)	DataDetector.MatchType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	isSuperset(of:)	DataDetector.MatchType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	subtracting(_:)	DataDetector.MatchType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	isStrictSubset(of:)	DataDetector.MatchType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	isStrictSuperset(of:)	DataDetector.MatchType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.property	isEmpty	DataDetector.MatchType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	isSubset(of:)	DataDetector.MatchType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	subtract(_:)	DataDetector.MatchType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.init	init(_:)	DataDetector.MatchType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	insert(_:)	DataDetector.MatchType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	remove(_:)	DataDetector.MatchType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	update(with:)	DataDetector.MatchType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	contains(_:)	DataDetector.MatchType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	intersection(_:)	DataDetector.MatchType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	symmetricDifference(_:)	DataDetector.MatchType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	union(_:)	DataDetector.MatchType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	formIntersection(_:)	DataDetector.MatchType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	formSymmetricDifference(_:)	DataDetector.MatchType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.method	formUnion(_:)	DataDetector.MatchType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:13DataDetection0A8DetectorO9MatchTypeV	swift.init	init()	DataDetector.MatchType.init()	init()

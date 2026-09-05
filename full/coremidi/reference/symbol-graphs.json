@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 4,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreMIDI.symbols.json",
+      "relationshipCount": 1847,
+      "sha256": "0606af7145791e846b4da3bf3eea456e05af405c2e0c2b2eaa7100f48b1d3916",
+      "symbolCount": 1767
+    },
+    {
+      "path": "reference/symbol-graphs/CoreMIDI@Swift.symbols.json",
+      "relationshipCount": 6,
+      "sha256": "c05c44cd017502bd951b409df2c74f34c8f4e3e9b5d386e44e518ce1ff7fd8ca",
+      "symbolCount": 6
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreMIDI",
+  "relationshipCount": 1853,
+  "relationshipMultisetSHA256": "e97adb136deacfeccd346b4d187d2e6b3461afe9c389480a2a7f2c446e1b1ddf",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1773,
+  "symbolMultisetSHA256": "036bc5d0c253435a6befd2f0cc85215a9d962fcee2f6eaa273cf983d6db66dc9",
+  "target": "arm64-apple-ios26.0"
+}

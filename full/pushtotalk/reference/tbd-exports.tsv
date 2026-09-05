@@ -1,0 +1,12 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/PushToTalk.framework/PushToTalk (for architecture arm64):	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_CLASS_$_PTChannelDescriptor	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_CLASS_$_PTChannelManager	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_CLASS_$_PTParticipant	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_CLASS_$_PTPushResult	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_METACLASS_$_PTChannelDescriptor	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_METACLASS_$_PTChannelManager	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_METACLASS_$_PTParticipant	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_OBJC_METACLASS_$_PTPushResult	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_PTChannelErrorDomain	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd
+_PTInstantiationErrorDomain	System/Library/Frameworks/PushToTalk.framework/PushToTalk.tbd

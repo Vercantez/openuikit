@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AddressBook.symbols.json",
+      "relationshipCount": 25,
+      "sha256": "2538ea0586debba3568c38da003687d41e86ccdd75b2772b1532064fd5afde0b",
+      "symbolCount": 225
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AddressBook",
+  "relationshipCount": 25,
+  "relationshipMultisetSHA256": "1eff52f3f2eda8755238b811deecf736d1aee6ee361df7ff2970f506fd58f306",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 225,
+  "symbolMultisetSHA256": "f13c6464edeb6e73c0dccb8c66250be28f85d1060efb8e476d5c8f2bc96e3bcf",
+  "target": "arm64-apple-ios26.0"
+}

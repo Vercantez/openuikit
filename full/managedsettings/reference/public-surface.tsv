@@ -1,0 +1,201 @@
+precise	kind	title	path	declaration
+c:@M@ManagedSettings@objc(cs)ShieldActionDelegate	swift.class	ShieldActionDelegate	ShieldActionDelegate	@objc class ShieldActionDelegate
+c:@M@ManagedSettings@objc(cs)ShieldActionDelegate(im)init	swift.init	init()	ShieldActionDelegate.init()	override dynamic init()
+s:15ManagedSettings010GameCenterB0V	swift.struct	GameCenterSettings	GameCenterSettings	struct GameCenterSettings
+s:15ManagedSettings010GameCenterB0V17denyAddingFriendsAA15SettingMetadataVySbGvpZ	swift.type.property	denyAddingFriends	GameCenterSettings.denyAddingFriends	static let denyAddingFriends: SettingMetadata<Bool>
+s:15ManagedSettings010GameCenterB0V17denyAddingFriendsSbSgvp	swift.property	denyAddingFriends	GameCenterSettings.denyAddingFriends	var denyAddingFriends: Bool? { get set }
+s:15ManagedSettings010GameCenterB0V21denyMultiplayerGamingAA15SettingMetadataVySbGvpZ	swift.type.property	denyMultiplayerGaming	GameCenterSettings.denyMultiplayerGaming	static let denyMultiplayerGaming: SettingMetadata<Bool>
+s:15ManagedSettings010GameCenterB0V21denyMultiplayerGamingSbSgvp	swift.property	denyMultiplayerGaming	GameCenterSettings.denyMultiplayerGaming	var denyMultiplayerGaming: Bool? { get set }
+s:15ManagedSettings010WebContentB0V	swift.struct	WebContentSettings	WebContentSettings	struct WebContentSettings
+s:15ManagedSettings010WebContentB0V12FilterPolicyO	swift.enum	WebContentSettings.FilterPolicy	WebContentSettings.FilterPolicy	enum FilterPolicy
+s:15ManagedSettings010WebContentB0V12FilterPolicyO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	WebContentSettings.FilterPolicy.==(_:_:)	static func == (lhs: WebContentSettings.FilterPolicy, rhs: WebContentSettings.FilterPolicy) -> Bool
+s:15ManagedSettings010WebContentB0V12FilterPolicyO3allyAEShyAA0C6DomainVG_tcAEmF	swift.enum.case	WebContentSettings.FilterPolicy.all(except:)	WebContentSettings.FilterPolicy.all(except:)	case all(except: Set<WebDomain> = [])
+s:15ManagedSettings010WebContentB0V12FilterPolicyO4autoyAEShyAA0C6DomainVG_AItcAEmF	swift.enum.case	WebContentSettings.FilterPolicy.auto(_:except:)	WebContentSettings.FilterPolicy.auto(_:except:)	case auto(Set<WebDomain> = [], except: Set<WebDomain> = [])
+s:15ManagedSettings010WebContentB0V12FilterPolicyO4noneyA2EmF	swift.enum.case	WebContentSettings.FilterPolicy.none	WebContentSettings.FilterPolicy.none	case none
+s:15ManagedSettings010WebContentB0V12FilterPolicyO8specificyAEShyAA0C6DomainVGcAEmF	swift.enum.case	WebContentSettings.FilterPolicy.specific(_:)	WebContentSettings.FilterPolicy.specific(_:)	case specific(Set<WebDomain>)
+s:15ManagedSettings010WebContentB0V15blockedByFilterAA15SettingMetadataVyAC0G6PolicyOGvpZ	swift.type.property	blockedByFilter	WebContentSettings.blockedByFilter	static let blockedByFilter: SettingMetadata<WebContentSettings.FilterPolicy>
+s:15ManagedSettings010WebContentB0V15blockedByFilterAC0G6PolicyOSgvp	swift.property	blockedByFilter	WebContentSettings.blockedByFilter	var blockedByFilter: WebContentSettings.FilterPolicy? { get set }
+s:15ManagedSettings011ApplicationB0V	swift.struct	ApplicationSettings	ApplicationSettings	struct ApplicationSettings
+s:15ManagedSettings011ApplicationB0V14denyAppRemovalAA15SettingMetadataVySbGvpZ	swift.type.property	denyAppRemoval	ApplicationSettings.denyAppRemoval	static let denyAppRemoval: SettingMetadata<Bool>
+s:15ManagedSettings011ApplicationB0V14denyAppRemovalSbSgvp	swift.property	denyAppRemoval	ApplicationSettings.denyAppRemoval	var denyAppRemoval: Bool? { get set }
+s:15ManagedSettings011ApplicationB0V19blockedApplicationsAA15SettingMetadataVyShyAA0C0VGGvpZ	swift.type.property	blockedApplications	ApplicationSettings.blockedApplications	static let blockedApplications: SettingMetadata<Set<Application>>
+s:15ManagedSettings011ApplicationB0V19blockedApplicationsShyAA0C0VGSgvp	swift.property	blockedApplications	ApplicationSettings.blockedApplications	var blockedApplications: Set<Application>? { get set }
+s:15ManagedSettings011ApplicationB0V19denyAppInstallationAA15SettingMetadataVySbGvpZ	swift.type.property	denyAppInstallation	ApplicationSettings.denyAppInstallation	static let denyAppInstallation: SettingMetadata<Bool>
+s:15ManagedSettings011ApplicationB0V19denyAppInstallationSbSgvp	swift.property	denyAppInstallation	ApplicationSettings.denyAppInstallation	var denyAppInstallation: Bool? { get set }
+s:15ManagedSettings011DateAndTimeB0V	swift.struct	DateAndTimeSettings	DateAndTimeSettings	struct DateAndTimeSettings
+s:15ManagedSettings011DateAndTimeB0V016requireAutomaticcdE0AA15SettingMetadataVySbGvpZ	swift.type.property	requireAutomaticDateAndTime	DateAndTimeSettings.requireAutomaticDateAndTime	static let requireAutomaticDateAndTime: SettingMetadata<Bool>
+s:15ManagedSettings011DateAndTimeB0V016requireAutomaticcdE0SbSgvp	swift.property	requireAutomaticDateAndTime	DateAndTimeSettings.requireAutomaticDateAndTime	var requireAutomaticDateAndTime: Bool? { get set }
+s:15ManagedSettings04SiriB0V	swift.struct	SiriSettings	SiriSettings	struct SiriSettings
+s:15ManagedSettings04SiriB0V04denyC0AA15SettingMetadataVySbGvpZ	swift.type.property	denySiri	SiriSettings.denySiri	static let denySiri: SettingMetadata<Bool>
+s:15ManagedSettings04SiriB0V04denyC0SbSgvp	swift.property	denySiri	SiriSettings.denySiri	var denySiri: Bool? { get set }
+s:15ManagedSettings05MediaB0V	swift.struct	MediaSettings	MediaSettings	struct MediaSettings
+s:15ManagedSettings05MediaB0V16denyMusicServiceAA15SettingMetadataVySbGvpZ	swift.type.property	denyMusicService	MediaSettings.denyMusicService	static let denyMusicService: SettingMetadata<Bool>
+s:15ManagedSettings05MediaB0V16denyMusicServiceSbSgvp	swift.property	denyMusicService	MediaSettings.denyMusicService	var denyMusicService: Bool? { get set }
+s:15ManagedSettings05MediaB0V18maximumMovieRatingAA22BoundedSettingMetadataVySiGvpZ	swift.type.property	maximumMovieRating	MediaSettings.maximumMovieRating	static let maximumMovieRating: BoundedSettingMetadata<Int>
+s:15ManagedSettings05MediaB0V18maximumMovieRatingSiSgvp	swift.property	maximumMovieRating	MediaSettings.maximumMovieRating	var maximumMovieRating: Int? { get set }
+s:15ManagedSettings05MediaB0V19denyExplicitContentAA15SettingMetadataVySbGvpZ	swift.type.property	denyExplicitContent	MediaSettings.denyExplicitContent	static let denyExplicitContent: SettingMetadata<Bool>
+s:15ManagedSettings05MediaB0V19denyExplicitContentSbSgvp	swift.property	denyExplicitContent	MediaSettings.denyExplicitContent	var denyExplicitContent: Bool? { get set }
+s:15ManagedSettings05MediaB0V19maximumTVShowRatingAA22BoundedSettingMetadataVySiGvpZ	swift.type.property	maximumTVShowRating	MediaSettings.maximumTVShowRating	static let maximumTVShowRating: BoundedSettingMetadata<Int>
+s:15ManagedSettings05MediaB0V19maximumTVShowRatingSiSgvp	swift.property	maximumTVShowRating	MediaSettings.maximumTVShowRating	var maximumTVShowRating: Int? { get set }
+s:15ManagedSettings05MediaB0V20denyBookstoreEroticaAA15SettingMetadataVySbGvpZ	swift.type.property	denyBookstoreErotica	MediaSettings.denyBookstoreErotica	static let denyBookstoreErotica: SettingMetadata<Bool>
+s:15ManagedSettings05MediaB0V20denyBookstoreEroticaSbSgvp	swift.property	denyBookstoreErotica	MediaSettings.denyBookstoreErotica	var denyBookstoreErotica: Bool? { get set }
+s:15ManagedSettings06SafariB0V	swift.struct	SafariSettings	SafariSettings	struct SafariSettings
+s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.enum	SafariSettings.CookiePolicy	SafariSettings.CookiePolicy	enum CookiePolicy
+s:15ManagedSettings06SafariB0V12CookiePolicyO11descriptionSSvp	swift.property	description	SafariSettings.CookiePolicy.description	var description: String { get }
+s:15ManagedSettings06SafariB0V12CookiePolicyO14currentWebsiteyA2EmF	swift.enum.case	SafariSettings.CookiePolicy.currentWebsite	SafariSettings.CookiePolicy.currentWebsite	case currentWebsite
+s:15ManagedSettings06SafariB0V12CookiePolicyO15visitedWebsitesyA2EmF	swift.enum.case	SafariSettings.CookiePolicy.visitedWebsites	SafariSettings.CookiePolicy.visitedWebsites	case visitedWebsites
+s:15ManagedSettings06SafariB0V12CookiePolicyO1loiySbAE_AEtFZ	swift.func.op	<(_:_:)	SafariSettings.CookiePolicy.<(_:_:)	static func < (lhs: SafariSettings.CookiePolicy, rhs: SafariSettings.CookiePolicy) -> Bool
+s:15ManagedSettings06SafariB0V12CookiePolicyO5neveryA2EmF	swift.enum.case	SafariSettings.CookiePolicy.never	SafariSettings.CookiePolicy.never	case never
+s:15ManagedSettings06SafariB0V12CookiePolicyO6alwaysyA2EmF	swift.enum.case	SafariSettings.CookiePolicy.always	SafariSettings.CookiePolicy.always	case always
+s:15ManagedSettings06SafariB0V12CookiePolicyO8RawValuea	swift.typealias	SafariSettings.CookiePolicy.RawValue	SafariSettings.CookiePolicy.RawValue	typealias RawValue = String
+s:15ManagedSettings06SafariB0V12CookiePolicyO8rawValueAESgSS_tcfc	swift.init	init(rawValue:)	SafariSettings.CookiePolicy.init(rawValue:)	init?(rawValue: String)
+s:15ManagedSettings06SafariB0V12CookiePolicyO8rawValueSSvp	swift.property	rawValue	SafariSettings.CookiePolicy.rawValue	var rawValue: String { get }
+s:15ManagedSettings06SafariB0V12cookiePolicyAA15SettingMetadataVyAC06CookieE0OGvpZ	swift.type.property	cookiePolicy	SafariSettings.cookiePolicy	static let cookiePolicy: SettingMetadata<SafariSettings.CookiePolicy>
+s:15ManagedSettings06SafariB0V12cookiePolicyAC06CookieE0OSgvp	swift.property	cookiePolicy	SafariSettings.cookiePolicy	var cookiePolicy: SafariSettings.CookiePolicy? { get set }
+s:15ManagedSettings06SafariB0V12denyAutoFillAA15SettingMetadataVySbGvpZ	swift.type.property	denyAutoFill	SafariSettings.denyAutoFill	static let denyAutoFill: SettingMetadata<Bool>
+s:15ManagedSettings06SafariB0V12denyAutoFillSbSgvp	swift.property	denyAutoFill	SafariSettings.denyAutoFill	var denyAutoFill: Bool? { get set }
+s:15ManagedSettings06ShieldB0V	swift.struct	ShieldSettings	ShieldSettings	struct ShieldSettings
+s:15ManagedSettings06ShieldB0V10webDomainsAA15SettingMetadataVyShyAA5TokenVyAA9WebDomainVGGGvpZ	swift.type.property	webDomains	ShieldSettings.webDomains	static let webDomains: SettingMetadata<Set<WebDomainToken>>
+s:15ManagedSettings06ShieldB0V10webDomainsShyAA5TokenVyAA9WebDomainVGGSgvp	swift.property	webDomains	ShieldSettings.webDomains	var webDomains: Set<WebDomainToken>? { get set }
+s:15ManagedSettings06ShieldB0V12applicationsAA15SettingMetadataVyShyAA5TokenVyAA11ApplicationVGGGvpZ	swift.type.property	applications	ShieldSettings.applications	static let applications: SettingMetadata<Set<ApplicationToken>>
+s:15ManagedSettings06ShieldB0V12applicationsShyAA5TokenVyAA11ApplicationVGGSgvp	swift.property	applications	ShieldSettings.applications	var applications: Set<ApplicationToken>? { get set }
+s:15ManagedSettings06ShieldB0V19webDomainCategoriesAA15SettingMetadataVyAC22ActivityCategoryPolicyOy_AA03WebE0VGGvpZ	swift.type.property	webDomainCategories	ShieldSettings.webDomainCategories	static let webDomainCategories: SettingMetadata<ShieldSettings.ActivityCategoryPolicy<WebDomain>>
+s:15ManagedSettings06ShieldB0V19webDomainCategoriesAC22ActivityCategoryPolicyOy_AA03WebE0VGSgvp	swift.property	webDomainCategories	ShieldSettings.webDomainCategories	var webDomainCategories: ShieldSettings.ActivityCategoryPolicy<WebDomain>? { get set }
+s:15ManagedSettings06ShieldB0V21applicationCategoriesAA15SettingMetadataVyAC22ActivityCategoryPolicyOy_AA11ApplicationVGGvpZ	swift.type.property	applicationCategories	ShieldSettings.applicationCategories	static let applicationCategories: SettingMetadata<ShieldSettings.ActivityCategoryPolicy<Application>>
+s:15ManagedSettings06ShieldB0V21applicationCategoriesAC22ActivityCategoryPolicyOy_AA11ApplicationVGSgvp	swift.property	applicationCategories	ShieldSettings.applicationCategories	var applicationCategories: ShieldSettings.ActivityCategoryPolicy<Application>? { get set }
+s:15ManagedSettings06ShieldB0V22ActivityCategoryPolicyO	swift.enum	ShieldSettings.ActivityCategoryPolicy	ShieldSettings.ActivityCategoryPolicy	enum ActivityCategoryPolicy<Activity>
+s:15ManagedSettings06ShieldB0V22ActivityCategoryPolicyO2eeoiySbAEy_xG_AGtFZ	swift.func.op	==(_:_:)	ShieldSettings.ActivityCategoryPolicy.==(_:_:)	static func == (lhs: ShieldSettings.ActivityCategoryPolicy<Activity>, rhs: ShieldSettings.ActivityCategoryPolicy<Activity>) -> Bool
+s:15ManagedSettings06ShieldB0V22ActivityCategoryPolicyO3allyAEy_xGShyAA5TokenVyxGG_tcAGmlF	swift.enum.case	ShieldSettings.ActivityCategoryPolicy.all(except:)	ShieldSettings.ActivityCategoryPolicy.all(except:)	case all(except: Set<Token<Activity>> = [])
+s:15ManagedSettings06ShieldB0V22ActivityCategoryPolicyO4noneyAEy_xGAGmlF	swift.enum.case	ShieldSettings.ActivityCategoryPolicy.none	ShieldSettings.ActivityCategoryPolicy.none	case none
+s:15ManagedSettings06ShieldB0V22ActivityCategoryPolicyO8specificyAEy_xGShyAA5TokenVyAA0dE0VGG_ShyAIyxGGtcAGmlF	swift.enum.case	ShieldSettings.ActivityCategoryPolicy.specific(_:except:)	ShieldSettings.ActivityCategoryPolicy.specific(_:except:)	case specific(Set<ActivityCategoryToken>, except: Set<Token<Activity>> = [])
+s:15ManagedSettings07AccountB0V	swift.struct	AccountSettings	AccountSettings	struct AccountSettings
+s:15ManagedSettings07AccountB0V12lockAccountsAA15SettingMetadataVySbGvpZ	swift.type.property	lockAccounts	AccountSettings.lockAccounts	static let lockAccounts: SettingMetadata<Bool>
+s:15ManagedSettings07AccountB0V12lockAccountsSbSgvp	swift.property	lockAccounts	AccountSettings.lockAccounts	var lockAccounts: Bool? { get set }
+s:15ManagedSettings08AppStoreB0V	swift.struct	AppStoreSettings	AppStoreSettings	struct AppStoreSettings
+s:15ManagedSettings08AppStoreB0V06denyInC9PurchasesAA15SettingMetadataVySbGvpZ	swift.type.property	denyInAppPurchases	AppStoreSettings.denyInAppPurchases	static let denyInAppPurchases: SettingMetadata<Bool>
+s:15ManagedSettings08AppStoreB0V06denyInC9PurchasesSbSgvp	swift.property	denyInAppPurchases	AppStoreSettings.denyInAppPurchases	var denyInAppPurchases: Bool? { get set }
+s:15ManagedSettings08AppStoreB0V13maximumRatingAA22BoundedSettingMetadataVySiGvpZ	swift.type.property	maximumRating	AppStoreSettings.maximumRating	static let maximumRating: BoundedSettingMetadata<Int>
+s:15ManagedSettings08AppStoreB0V13maximumRatingSiSgvp	swift.property	maximumRating	AppStoreSettings.maximumRating	var maximumRating: Int? { get set }
+s:15ManagedSettings08AppStoreB0V27requirePasswordForPurchasesAA15SettingMetadataVySbGvpZ	swift.type.property	requirePasswordForPurchases	AppStoreSettings.requirePasswordForPurchases	static let requirePasswordForPurchases: SettingMetadata<Bool>
+s:15ManagedSettings08AppStoreB0V27requirePasswordForPurchasesSbSgvp	swift.property	requirePasswordForPurchases	AppStoreSettings.requirePasswordForPurchases	var requirePasswordForPurchases: Bool? { get set }
+s:15ManagedSettings08CellularB0V	swift.struct	CellularSettings	CellularSettings	struct CellularSettings
+s:15ManagedSettings08CellularB0V04lockC4PlanAA15SettingMetadataVySbGvpZ	swift.type.property	lockCellularPlan	CellularSettings.lockCellularPlan	static let lockCellularPlan: SettingMetadata<Bool>
+s:15ManagedSettings08CellularB0V04lockC4PlanSbSgvp	swift.property	lockCellularPlan	CellularSettings.lockCellularPlan	var lockCellularPlan: Bool? { get set }
+s:15ManagedSettings08CellularB0V07lockAppC4DataAA15SettingMetadataVySbGvpZ	swift.type.property	lockAppCellularData	CellularSettings.lockAppCellularData	static let lockAppCellularData: SettingMetadata<Bool>
+s:15ManagedSettings08CellularB0V07lockAppC4DataSbSgvp	swift.property	lockAppCellularData	CellularSettings.lockAppCellularData	var lockAppCellularData: Bool? { get set }
+s:15ManagedSettings08CellularB0V8lockESIMAA15SettingMetadataVySbGvpZ	swift.type.property	lockESIM	CellularSettings.lockESIM	static let lockESIM: SettingMetadata<Bool>
+s:15ManagedSettings08CellularB0V8lockESIMSbSgvp	swift.property	lockESIM	CellularSettings.lockESIM	var lockESIM: Bool? { get set }
+s:15ManagedSettings08PasscodeB0V	swift.struct	PasscodeSettings	PasscodeSettings	struct PasscodeSettings
+s:15ManagedSettings08PasscodeB0V04lockC0AA15SettingMetadataVySbGvpZ	swift.type.property	lockPasscode	PasscodeSettings.lockPasscode	static let lockPasscode: SettingMetadata<Bool>
+s:15ManagedSettings08PasscodeB0V04lockC0SbSgvp	swift.property	lockPasscode	PasscodeSettings.lockPasscode	var lockPasscode: Bool? { get set }
+s:15ManagedSettings0aB5GroupP	swift.protocol	ManagedSettingsGroup	ManagedSettingsGroup	protocol ManagedSettingsGroup
+s:15ManagedSettings0aB5StoreC	swift.class	ManagedSettingsStore	ManagedSettingsStore	class ManagedSettingsStore
+s:15ManagedSettings0aB5StoreC03appC0AA03AppcB0Vvp	swift.property	appStore	ManagedSettingsStore.appStore	var appStore: AppStoreSettings
+s:15ManagedSettings0aB5StoreC08clearAllB0yyF	swift.method	clearAllSettings()	ManagedSettingsStore.clearAllSettings()	func clearAllSettings()
+s:15ManagedSettings0aB5StoreC10gameCenterAA04GameeB0Vvp	swift.property	gameCenter	ManagedSettingsStore.gameCenter	var gameCenter: GameCenterSettings
+s:15ManagedSettings0aB5StoreC10webContentAA03WebeB0Vvp	swift.property	webContent	ManagedSettingsStore.webContent	var webContent: WebContentSettings
+s:15ManagedSettings0aB5StoreC11applicationAA011ApplicationB0Vvp	swift.property	application	ManagedSettingsStore.application	var application: ApplicationSettings
+s:15ManagedSettings0aB5StoreC11dateAndTimeAA04DateefB0Vvp	swift.property	dateAndTime	ManagedSettingsStore.dateAndTime	var dateAndTime: DateAndTimeSettings
+s:15ManagedSettings0aB5StoreC25ObjectWillChangePublishera	swift.typealias	ManagedSettingsStore.ObjectWillChangePublisher	ManagedSettingsStore.ObjectWillChangePublisher	typealias ObjectWillChangePublisher = ObservableObjectPublisher
+s:15ManagedSettings0aB5StoreC27effectiveMaximumMovieRatingSivp	swift.property	effectiveMaximumMovieRating	ManagedSettingsStore.effectiveMaximumMovieRating	@Published var effectiveMaximumMovieRating: Int { get }
+s:15ManagedSettings0aB5StoreC28$effectiveMaximumMovieRating7Combine9PublishedV9PublisherVySi_Gvp	swift.property	$effectiveMaximumMovieRating	ManagedSettingsStore.$effectiveMaximumMovieRating	var $effectiveMaximumMovieRating: Published<Int>.Publisher { get }
+s:15ManagedSettings0aB5StoreC28effectiveDenyExplicitContentSbvp	swift.property	effectiveDenyExplicitContent	ManagedSettingsStore.effectiveDenyExplicitContent	@Published var effectiveDenyExplicitContent: Bool { get }
+s:15ManagedSettings0aB5StoreC28effectiveMaximumTVShowRatingSivp	swift.property	effectiveMaximumTVShowRating	ManagedSettingsStore.effectiveMaximumTVShowRating	@Published var effectiveMaximumTVShowRating: Int { get }
+s:15ManagedSettings0aB5StoreC29$effectiveDenyExplicitContent7Combine9PublishedV9PublisherVySb_Gvp	swift.property	$effectiveDenyExplicitContent	ManagedSettingsStore.$effectiveDenyExplicitContent	var $effectiveDenyExplicitContent: Published<Bool>.Publisher { get }
+s:15ManagedSettings0aB5StoreC29$effectiveMaximumTVShowRating7Combine9PublishedV9PublisherVySi_Gvp	swift.property	$effectiveMaximumTVShowRating	ManagedSettingsStore.$effectiveMaximumTVShowRating	var $effectiveMaximumTVShowRating: Published<Int>.Publisher { get }
+s:15ManagedSettings0aB5StoreC4NameV	swift.struct	ManagedSettingsStore.Name	ManagedSettingsStore.Name	struct Name
+s:15ManagedSettings0aB5StoreC4NameV7defaultAEvpZ	swift.type.property	default	ManagedSettingsStore.Name.default	static let `default`: ManagedSettingsStore.Name
+s:15ManagedSettings0aB5StoreC4NameV8RawValuea	swift.typealias	ManagedSettingsStore.Name.RawValue	ManagedSettingsStore.Name.RawValue	typealias RawValue = String
+s:15ManagedSettings0aB5StoreC4NameV8rawValueAESS_tcfc	swift.init	init(rawValue:)	ManagedSettingsStore.Name.init(rawValue:)	init(rawValue: String)
+s:15ManagedSettings0aB5StoreC4NameV8rawValueSSvp	swift.property	rawValue	ManagedSettingsStore.Name.rawValue	let rawValue: String
+s:15ManagedSettings0aB5StoreC4NameVyAESScfc	swift.init	init(_:)	ManagedSettingsStore.Name.init(_:)	init(_ rawValue: String)
+s:15ManagedSettings0aB5StoreC4siriAA04SiriB0Vvp	swift.property	siri	ManagedSettingsStore.siri	var siri: SiriSettings
+s:15ManagedSettings0aB5StoreC5mediaAA05MediaB0Vvp	swift.property	media	ManagedSettingsStore.media	var media: MediaSettings
+s:15ManagedSettings0aB5StoreC5namedA2C4NameV_tcfc	swift.init	init(named:)	ManagedSettingsStore.init(named:)	convenience init(named name: ManagedSettingsStore.Name)
+s:15ManagedSettings0aB5StoreC6safariAA06SafariB0Vvp	swift.property	safari	ManagedSettingsStore.safari	var safari: SafariSettings
+s:15ManagedSettings0aB5StoreC6shieldAA06ShieldB0Vvp	swift.property	shield	ManagedSettingsStore.shield	var shield: ShieldSettings
+s:15ManagedSettings0aB5StoreC7accountAA07AccountB0Vvp	swift.property	account	ManagedSettingsStore.account	var account: AccountSettings
+s:15ManagedSettings0aB5StoreC8cellularAA08CellularB0Vvp	swift.property	cellular	ManagedSettingsStore.cellular	var cellular: CellularSettings
+s:15ManagedSettings0aB5StoreC8passcodeAA08PasscodeB0Vvp	swift.property	passcode	ManagedSettingsStore.passcode	var passcode: PasscodeSettings
+s:15ManagedSettings0aB5StoreCACycfc	swift.init	init()	ManagedSettingsStore.init()	init()
+s:15ManagedSettings11ApplicationV	swift.struct	Application	Application	struct Application
+s:15ManagedSettings11ApplicationV16bundleIdentifierACSS_tcfc	swift.init	init(bundleIdentifier:)	Application.init(bundleIdentifier:)	init(bundleIdentifier: String)
+s:15ManagedSettings11ApplicationV16bundleIdentifierSSSgvp	swift.property	bundleIdentifier	Application.bundleIdentifier	let bundleIdentifier: String?
+s:15ManagedSettings11ApplicationV20localizedDisplayNameSSSgvp	swift.property	localizedDisplayName	Application.localizedDisplayName	let localizedDisplayName: String?
+s:15ManagedSettings11ApplicationV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	Application.==(_:_:)	static func == (a: Application, b: Application) -> Bool
+s:15ManagedSettings11ApplicationV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	Application.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ManagedSettings11ApplicationV5tokenAA5TokenVyACGSgvp	swift.property	token	Application.token	let token: ApplicationToken?
+s:15ManagedSettings11ApplicationV5tokenAcA5TokenVyACG_tcfc	swift.init	init(token:)	Application.init(token:)	init(token: ApplicationToken)
+s:15ManagedSettings11ApplicationV9hashValueSivp	swift.property	hashValue	Application.hashValue	var hashValue: Int { get }
+s:15ManagedSettings12ShieldActionO	swift.enum	ShieldAction	ShieldAction	enum ShieldAction
+s:15ManagedSettings12ShieldActionO20primaryButtonPressedyA2CmF	swift.enum.case	ShieldAction.primaryButtonPressed	ShieldAction.primaryButtonPressed	case primaryButtonPressed
+s:15ManagedSettings12ShieldActionO22secondaryButtonPressedyA2CmF	swift.enum.case	ShieldAction.secondaryButtonPressed	ShieldAction.secondaryButtonPressed	case secondaryButtonPressed
+s:15ManagedSettings12ShieldActionO8RawValuea	swift.typealias	ShieldAction.RawValue	ShieldAction.RawValue	typealias RawValue = Int
+s:15ManagedSettings12ShieldActionO8rawValueACSgSi_tcfc	swift.init	init(rawValue:)	ShieldAction.init(rawValue:)	init?(rawValue: Int)
+s:15ManagedSettings12ShieldActionO8rawValueSivp	swift.property	rawValue	ShieldAction.rawValue	var rawValue: Int { get }
+s:15ManagedSettings14WebDomainTokena	swift.typealias	WebDomainToken	WebDomainToken	typealias WebDomainToken = Token<WebDomain>
+s:15ManagedSettings15SettingMetadataV	swift.struct	SettingMetadata	SettingMetadata	struct SettingMetadata<Value>
+s:15ManagedSettings15SettingMetadataV12defaultValuexvp	swift.property	defaultValue	SettingMetadata.defaultValue	let defaultValue: Value
+s:15ManagedSettings16ActivityCategoryV	swift.struct	ActivityCategory	ActivityCategory	struct ActivityCategory
+s:15ManagedSettings16ActivityCategoryV20localizedDisplayNameSSSgvp	swift.property	localizedDisplayName	ActivityCategory.localizedDisplayName	let localizedDisplayName: String?
+s:15ManagedSettings16ActivityCategoryV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ActivityCategory.==(_:_:)	static func == (a: ActivityCategory, b: ActivityCategory) -> Bool
+s:15ManagedSettings16ActivityCategoryV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ActivityCategory.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ManagedSettings16ActivityCategoryV5tokenAA5TokenVyACGSgvp	swift.property	token	ActivityCategory.token	let token: ActivityCategoryToken?
+s:15ManagedSettings16ActivityCategoryV5tokenAcA5TokenVyACG_tcfc	swift.init	init(token:)	ActivityCategory.init(token:)	init(token: ActivityCategoryToken)
+s:15ManagedSettings16ActivityCategoryV9hashValueSivp	swift.property	hashValue	ActivityCategory.hashValue	var hashValue: Int { get }
+s:15ManagedSettings16ApplicationTokena	swift.typealias	ApplicationToken	ApplicationToken	typealias ApplicationToken = Token<Application>
+s:15ManagedSettings20ShieldActionDelegateC6handle6action3for17completionHandleryAA0cD0O_AA5TokenVyAA11ApplicationVGyAA0cD8ResponseOctF	swift.method	handle(action:for:completionHandler:)	ShieldActionDelegate.handle(action:for:completionHandler:)	func handle(action: ShieldAction, for application: ApplicationToken, completionHandler: @escaping (ShieldActionResponse) -> Void)
+s:15ManagedSettings20ShieldActionDelegateC6handle6action3for17completionHandleryAA0cD0O_AA5TokenVyAA16ActivityCategoryVGyAA0cD8ResponseOctF	swift.method	handle(action:for:completionHandler:)	ShieldActionDelegate.handle(action:for:completionHandler:)	func handle(action: ShieldAction, for category: ActivityCategoryToken, completionHandler: @escaping (ShieldActionResponse) -> Void)
+s:15ManagedSettings20ShieldActionDelegateC6handle6action3for17completionHandleryAA0cD0O_AA5TokenVyAA9WebDomainVGyAA0cD8ResponseOctF	swift.method	handle(action:for:completionHandler:)	ShieldActionDelegate.handle(action:for:completionHandler:)	func handle(action: ShieldAction, for webDomain: WebDomainToken, completionHandler: @escaping (ShieldActionResponse) -> Void)
+s:15ManagedSettings20ShieldActionResponseO	swift.enum	ShieldActionResponse	ShieldActionResponse	enum ShieldActionResponse
+s:15ManagedSettings20ShieldActionResponseO4noneyA2CmF	swift.enum.case	ShieldActionResponse.none	ShieldActionResponse.none	case none
+s:15ManagedSettings20ShieldActionResponseO5closeyA2CmF	swift.enum.case	ShieldActionResponse.close	ShieldActionResponse.close	case close
+s:15ManagedSettings20ShieldActionResponseO5deferyA2CmF	swift.enum.case	ShieldActionResponse.defer	ShieldActionResponse.defer	case `defer`
+s:15ManagedSettings20ShieldActionResponseO8RawValuea	swift.typealias	ShieldActionResponse.RawValue	ShieldActionResponse.RawValue	typealias RawValue = Int
+s:15ManagedSettings20ShieldActionResponseO8rawValueACSgSi_tcfc	swift.init	init(rawValue:)	ShieldActionResponse.init(rawValue:)	init?(rawValue: Int)
+s:15ManagedSettings20ShieldActionResponseO8rawValueSivp	swift.property	rawValue	ShieldActionResponse.rawValue	var rawValue: Int { get }
+s:15ManagedSettings21ActivityCategoryTokena	swift.typealias	ActivityCategoryToken	ActivityCategoryToken	typealias ActivityCategoryToken = Token<ActivityCategory>
+s:15ManagedSettings22BoundedSettingMetadataV	swift.struct	BoundedSettingMetadata	BoundedSettingMetadata	struct BoundedSettingMetadata<Value> where Value : Comparable
+s:15ManagedSettings22BoundedSettingMetadataV12defaultValuexvp	swift.property	defaultValue	BoundedSettingMetadata.defaultValue	let defaultValue: Value
+s:15ManagedSettings22BoundedSettingMetadataV6boundsSNyxGvp	swift.property	bounds	BoundedSettingMetadata.bounds	let bounds: ClosedRange<Value>
+s:15ManagedSettings5TokenV	swift.struct	Token	Token	struct Token<T>
+s:15ManagedSettings5TokenV2eeoiySbACyxG_AEtFZ	swift.func.op	==(_:_:)	Token.==(_:_:)	static func == (a: Token<T>, b: Token<T>) -> Bool
+s:15ManagedSettings5TokenV4fromACyxGs7Decoder_p_tKcfc	swift.init	init(from:)	Token.init(from:)	init(from decoder: any Decoder) throws
+s:15ManagedSettings5TokenV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	Token.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ManagedSettings5TokenV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	Token.encode(to:)	func encode(to encoder: any Encoder) throws
+s:15ManagedSettings5TokenV9hashValueSivp	swift.property	hashValue	Token.hashValue	var hashValue: Int { get }
+s:15ManagedSettings9WebDomainV	swift.struct	WebDomain	WebDomain	struct WebDomain
+s:15ManagedSettings9WebDomainV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WebDomain.==(_:_:)	static func == (a: WebDomain, b: WebDomain) -> Bool
+s:15ManagedSettings9WebDomainV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WebDomain.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ManagedSettings9WebDomainV5tokenAA5TokenVyACGSgvp	swift.property	token	WebDomain.token	let token: WebDomainToken?
+s:15ManagedSettings9WebDomainV5tokenAcA5TokenVyACG_tcfc	swift.init	init(token:)	WebDomain.init(token:)	init(token: WebDomainToken)
+s:15ManagedSettings9WebDomainV6domainACSS_tcfc	swift.init	init(domain:)	WebDomain.init(domain:)	init(domain: String)
+s:15ManagedSettings9WebDomainV6domainSSSgvp	swift.property	domain	WebDomain.domain	let domain: String?
+s:15ManagedSettings9WebDomainV9hashValueSivp	swift.property	hashValue	WebDomain.hashValue	var hashValue: Int { get }
+s:7Combine16ObservableObjectPA2A0bC9PublisherC0c10WillChangeD0RtzrlE06objecteF0AEvp::SYNTHESIZED::s:15ManagedSettings0aB5StoreC	swift.property	objectWillChange	ManagedSettingsStore.objectWillChange	var objectWillChange: ObservableObjectPublisher { get }
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	>(_:_:)	SafariSettings.CookiePolicy.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	>=(_:_:)	SafariSettings.CookiePolicy.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	<=(_:_:)	SafariSettings.CookiePolicy.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	..<(_:_:)	SafariSettings.CookiePolicy...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	..<(_:)	SafariSettings.CookiePolicy...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	...(_:)	SafariSettings.CookiePolicy....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	...(_:_:)	SafariSettings.CookiePolicy....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	...(_:)	SafariSettings.CookiePolicy....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings010WebContentB0V12FilterPolicyO	swift.func.op	!=(_:_:)	WebContentSettings.FilterPolicy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.func.op	!=(_:_:)	SafariSettings.CookiePolicy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings06ShieldB0V22ActivityCategoryPolicyO	swift.func.op	!=(_:_:)	ShieldSettings.ActivityCategoryPolicy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings0aB5StoreC4NameV	swift.func.op	!=(_:_:)	ManagedSettingsStore.Name.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings11ApplicationV	swift.func.op	!=(_:_:)	Application.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings12ShieldActionO	swift.func.op	!=(_:_:)	ShieldAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings16ActivityCategoryV	swift.func.op	!=(_:_:)	ActivityCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings20ShieldActionResponseO	swift.func.op	!=(_:_:)	ShieldActionResponse.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings5TokenV	swift.func.op	!=(_:_:)	Token.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ManagedSettings9WebDomainV	swift.func.op	!=(_:_:)	WebDomain.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.property	hashValue	SafariSettings.CookiePolicy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:15ManagedSettings0aB5StoreC4NameV	swift.property	hashValue	ManagedSettingsStore.Name.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:15ManagedSettings12ShieldActionO	swift.property	hashValue	ShieldAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:15ManagedSettings20ShieldActionResponseO	swift.property	hashValue	ShieldActionResponse.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:15ManagedSettings06SafariB0V12CookiePolicyO	swift.method	hash(into:)	SafariSettings.CookiePolicy.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:15ManagedSettings0aB5StoreC4NameV	swift.method	hash(into:)	ManagedSettingsStore.Name.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:15ManagedSettings12ShieldActionO	swift.method	hash(into:)	ShieldAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:15ManagedSettings20ShieldActionResponseO	swift.method	hash(into:)	ShieldActionResponse.hash(into:)	func hash(into hasher: inout Hasher)
