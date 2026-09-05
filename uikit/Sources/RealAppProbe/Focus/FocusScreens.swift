@@ -13,10 +13,14 @@ extension RealAppScreen {
         Screen(name: "realapp_focus_settings_light", variant: .focusSettings,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false),
-        // Firefox Focus browser home (HomeViewController as the window
-        // root). Captured on the iPhone 16 @3x; BrowserViewController's
-        // WKWebView / SnapKit URL bar is a listed blocker, so this is the
-        // home overlay the app installs at launch (wordmark + tips).
+    ]
+
+    /// Home is after Hackers in `RealAppScreen.screens` so a guest scale-2
+    /// iOS-cut miss cannot drop the feed. MEASURED arm64 verify 399c3d76:
+    /// `GUEST_REALAPP_SCREENS=12` then
+    /// `OPENUIKIT_IOS_INK_MISS: I|system-semibold|18|light|F0.0|83`
+    /// (`glyph_ink_ios.json` has no system-semibold|18; the 3x table does).
+    static let focusHomeTable: [Screen] = [
         Screen(name: "realapp_focus_home_light", variant: .focusHome,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false),
@@ -42,7 +46,13 @@ extension RealAppScreen {
     /// root is the home controller itself so the wordmark / tips layout is
     /// the first screen without WKWebView.
     public static func makeFocusHomeScreen() -> UIViewController {
-        configureAssets(directory: defaultAssetsDirectory)
+        // RealApp.swift / openhost already pointed imageSearchPaths at the
+        // absolute assets argv. A relative defaultAssetsDirectory only works
+        // when cwd is uikit/; guest machorun cwd is build/full (attempt 11
+        // storage nibs; this home would miss img_focus_wordmark the same way).
+        if OpenUIKitRuntime.imageSearchPaths.isEmpty {
+            configureAssets(directory: defaultAssetsDirectory)
+        }
         let home = HomeViewController(tipManager: TipManager())
         home.onboardingEventsHandler = HarnessOnboardingEventsHandler()
         home.view.backgroundColor = .systemBackground
