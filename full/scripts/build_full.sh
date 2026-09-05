@@ -1226,12 +1226,12 @@ echo "== RealAppProbe stub modules (FocusModules / HackersModules, dependency or
 # Shared and FeedViewModel use @Observable; the Darwin SDK's Observation
 # module names ObservationMacros, which live in the host toolchain plugin
 # (full/frameworks/build_core_guest_package.sh OBSERVATION_MACRO_PLUGIN).
+swiftc_bin=$(command -v swiftc || true)
+swift_usr=
+if [ -n "$swiftc_bin" ]; then
+    swift_usr=$(CDPATH= cd -- "$(dirname -- "$swiftc_bin")/.." && pwd -P)
+fi
 if [ -z "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
-    swiftc_bin=$(command -v swiftc || true)
-    swift_usr=
-    if [ -n "$swiftc_bin" ]; then
-        swift_usr=$(CDPATH= cd -- "$(dirname -- "$swiftc_bin")/.." && pwd -P)
-    fi
     for cand in \
         ${swift_usr:+"$swift_usr/lib/swift/host/plugins/libObservationMacros.so"} \
         ${swift_usr:+"$swift_usr/lib/swift/host/compilerPlugins/libObservationMacros.so"} \
@@ -1253,7 +1253,7 @@ if [ -z "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
 fi
 if [ ! -f "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
     echo "build_full: ObservationMacros not at the known host-plugin paths" >&2
-    echo "   swiftc=$(command -v swiftc || echo missing)" >&2
+    echo "   swiftc=$(command -v swiftc || echo missing) swift_usr=$swift_usr" >&2
     for dir in \
         ${swift_usr:+"$swift_usr/lib/swift/host/plugins"} \
         ${swift_usr:+"$swift_usr/lib/swift/host/compilerPlugins"} \
@@ -1264,8 +1264,28 @@ if [ ! -f "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
     done
     die "ObservationMacros plugin missing (Shared @Observable)"
 fi
-echo "   ObservationMacros=$OBSERVATION_MACRO_PLUGIN"
-OBSERVATION_PLUGIN_FLAGS=(-load-plugin-library "$OBSERVATION_MACRO_PLUGIN")
+# Stage the plugin next to its SwiftSyntax host libs, matching
+# build_core_guest_package.sh. -load-plugin-library of a toolchain plugin can
+# fail when the syntax .so files are not on the loader path (attempt 3 rc=1).
+PLUGIN_STAGE=$OUT/host-tools/swift/host
+mkdir -p "$PLUGIN_STAGE/plugins"
+cp "$OBSERVATION_MACRO_PLUGIN" "$PLUGIN_STAGE/plugins/libObservationMacros.so"
+plugin_host=$(CDPATH= cd -- "$(dirname -- "$OBSERVATION_MACRO_PLUGIN")/.." && pwd -P)
+for lib in libSwiftSyntaxMacros.so libSwiftSyntaxBuilder.so \
+    libSwiftParserDiagnostics.so libSwiftBasicFormat.so libSwiftParser.so \
+    libSwiftDiagnostics.so libSwiftSyntax.so; do
+    if [ -f "$plugin_host/$lib" ]; then
+        cp "$plugin_host/$lib" "$PLUGIN_STAGE/$lib"
+    elif [ -n "$swift_usr" ] && [ -f "$swift_usr/lib/swift/host/$lib" ]; then
+        cp "$swift_usr/lib/swift/host/$lib" "$PLUGIN_STAGE/$lib"
+    fi
+done
+OBSERVATION_MACRO_PLUGIN=$PLUGIN_STAGE/plugins/libObservationMacros.so
+echo "== ObservationMacros $OBSERVATION_MACRO_PLUGIN"
+OBSERVATION_PLUGIN_FLAGS=(
+    -plugin-path "$PLUGIN_STAGE/plugins"
+    -load-plugin-library "$OBSERVATION_MACRO_PLUGIN"
+)
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
     echo "   module $name"

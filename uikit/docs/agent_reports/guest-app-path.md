@@ -109,5 +109,11 @@ Attempt 2: `2c2958924b90ccfea8cdcb3124ff11677e978278`.
 Pin override worked. `GATE_B_FAIL rc=2` (nested build_full same miss).
 `GUEST_REALAPP_SCREENS=0` skipped.
 
-Attempt 3: resolve ObservationMacros from `swiftc`'s toolchain (`host/plugins`
-and `host/compilerPlugins`), dump those directories if still missing.
+Attempt 3: `6080bbc1c7d4c06ee460b645c700cebfbfd79ac6`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1` (not `die`'s 2) after
+FI OK — likely `-load-plugin-library` of a toolchain plugin without its
+SwiftSyntax host libs. Log grep missed the swiftc line (`tail -8` of OK).
+
+Attempt 4: stage ObservationMacros next to SwiftSyntax host libs like the
+core guest package; `-plugin-path` + `-load-plugin-library`; print the last
+40 lines of `build_full.log`.
