@@ -155,6 +155,7 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UINavigationBar.iOSBarContentHeight, 54)
         XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight, 106)
         XCTAssertEqual(UINavigationBar.iOSMinimumBarTop, 10)
+        XCTAssertEqual(UINavigationBar.iOSCompactHeightBarTop, 24)
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
             XCTAssertEqual(UINavigationBar.largeTitleX, 20)
@@ -237,6 +238,38 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         base16.present(sheet16, animated: false)
         XCTAssertEqual(sheet16._presentationSheet!.frame,
                        CGRect(x: 0, y: 59, width: 393, height: 793))
+    }
+
+    /// MEASURED Modal t1200.landscape / t3200.landscape, iPhone SE 2x /
+    /// iOS 26.1: compact height makes both medium and large pageSheets
+    /// `[0, 0, 667, 375]`. Portrait SE (unspecified vertical) stays 30.
+    func testCompactHeightPageSheetFillsTheWindow() {
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .compact)
+        device(667, 375, scale: 2)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+
+        let large = UIViewController()
+        large.modalPresentationStyle = .pageSheet
+        large.sheetPresentationController?.detents = [.large()]
+        large.sheetPresentationController?.selectedDetentIdentifier = .large
+        base.present(large, animated: false)
+        XCTAssertEqual(large.sheetPresentationController!.frameOfPresentedViewInContainerView,
+                       CGRect(x: 0, y: 0, width: 667, height: 375))
+        base.dismiss(animated: false)
+
+        let medium = UIViewController()
+        medium.modalPresentationStyle = .pageSheet
+        medium.sheetPresentationController?.detents = [.medium(), .large()]
+        base.present(medium, animated: false)
+        XCTAssertEqual(medium.sheetPresentationController!.frameOfPresentedViewInContainerView,
+                       CGRect(x: 0, y: 0, width: 667, height: 375))
     }
 
     // MARK: iPad formSheet (ipadprobe / realapp_settings_light_ipad)

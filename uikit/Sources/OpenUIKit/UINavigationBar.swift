@@ -163,6 +163,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// status-bar addend. A 20 pt status bar and a 59 pt notch set y to that
     /// inset; additionalSafeAreaInsets 20/59 on a zero-SA window match.
     public static let iOSMinimumBarTop: CGFloat = 10
+    /// Compact-height bar origin. MEASURED NavFlow t200.landscape,
+    /// iPhone SE 2x / iOS 26.1: window 667×375, vSizeClass compact,
+    /// `UINavigationBar [0, 24, 667, 54]`, table `safeAreaInsets.top` **78**
+    /// (= 24+54). Portrait floor stays 10 (navprobe.barorigin).
+    public static let iOSCompactHeightBarTop: CGFloat = 24
     /// Height of the bar's own frame on the iOS cut (the 54 pt content bar).
     /// MEASURED same probe: inline [0, 10, W, 54]; collapsed large-title
     /// the same; expanded large-title [0, 10, W, 106] = 54 + 52.
@@ -233,6 +238,21 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     static var isPad: Bool {
         isIOS && (UITraitCollection.current.userInterfaceIdiom == .pad
                   || UIDevice.current.userInterfaceIdiom == .pad)
+    }
+    /// iOS cut AND compact vertical size class. MEASURED NavFlow
+    /// t200.landscape dump `screen.verticalSizeClass` = 1 (compact) on
+    /// iPhone SE 2x / iOS 26.1. Unspecified (portrait suite / Catalyst)
+    /// does not count.
+    static var isCompactHeight: Bool {
+        isIOS && UITraitCollection.current.verticalSizeClass == .compact
+    }
+    /// `prefersLargeTitles` is still true in landscape (NavFlow sets it);
+    /// compact height displays the 54 pt inline chrome instead of the
+    /// 106 pt large-title overlay. MEASURED NavFlow t200.landscape: one
+    /// `"Library"` at `[305, 35.5]` (inline), no 41 pt large-title label;
+    /// t3000.landscape bar stays `[0, 24, 667, 54]`.
+    var displaysLargeTitles: Bool {
+        prefersLargeTitles && !UINavigationBar.isCompactHeight
     }
     static let largeTitleFontSize: CGFloat = 34
     static let largeInlineTitleCenterY: CGFloat = 32
@@ -598,7 +618,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         addSubview(titleLabel)
         backButton = makeBackButton(backTitle)
         if let b = backButton { addSubview(b) }
-        if prefersLargeTitles {
+        if displaysLargeTitles {
             largeTitleLabel?.text = title
             largeTitleLabel?.setNeedsDisplay()
         }
@@ -781,7 +801,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             tv.center = CGPoint(x: titleCenterX, y: contentMidY)
         }
         if let b = backButton { place(back: b, alpha: 1) }
-        if prefersLargeTitles { updateFromScroll() }
+        if displaysLargeTitles { updateFromScroll() }
         layoutSearchBar()
     }
 
@@ -964,7 +984,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     private var contentMidY: CGFloat {
         let base: CGFloat
         if UINavigationBar.isIOS {
-            let largeShowing = prefersLargeTitles
+            let largeShowing = displaysLargeTitles
                 && collapseDistance < UINavigationBar.largeTitleZoneHeight
             base = largeShowing
                 ? UINavigationBar.iOSLargeHiddenInlineTitleCenterY
@@ -1041,7 +1061,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             titleLabel.removeFromSuperview()
             oldGroup.addSubview(titleLabel)
             newGroup.addSubview(newTitle)
-            if prefersLargeTitles {
+            if displaysLargeTitles {
                 if let old = largeTitleLabel {
                     old.removeFromSuperview()
                     oldGroup.addSubview(old)
@@ -1231,7 +1251,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     }
 
     func configureLargeTitleAppearance() {
-        if prefersLargeTitles {
+        if displaysLargeTitles {
             backgroundColor = nil            // iOS 26: transparent at rest
             hairline.isHidden = true
             let l = makeLargeTitleLabel(titleLabel.text)
@@ -1265,6 +1285,9 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         guard UINavigationBar.isIOS else {
             return UINavigationBar.largeTitleExpandedInset
         }
+        if UINavigationBar.isCompactHeight {
+            return UINavigationBar.iOSBarContentHeight
+        }
         if collapseDistance >= UINavigationBar.largeTitleZoneHeight {
             return UINavigationBar.iOSCollapsedBarHeight
         }
@@ -1289,7 +1312,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         // still the OUTGOING controller's, so a scroll event arriving during
         // the transition would move the INCOMING title by the outgoing
         // offset. `layoutSubviews` already stands back for the same reason.
-        guard prefersLargeTitles, transition == nil else { return }
+        guard displaysLargeTitles, transition == nil else { return }
         let d = collapseDistance
         let collapsed = d >= UINavigationBar.largeTitleZoneHeight
         if let l = largeTitleLabel {
@@ -1329,7 +1352,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// content — only its interactive elements (back button) take touches;
     /// everything else falls through to the content below.
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        guard prefersLargeTitles else { return super.hitTest(point, with: event) }
+        guard displaysLargeTitles else { return super.hitTest(point, with: event) }
         if let b = backButton, !b.isHidden,
            let hit = b.hitTest(b.convert(point, from: self), with: event) {
             return hit
@@ -1366,7 +1389,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     static let pocketFadeStart: CGFloat = 56
 
     func updatePocket() {
-        guard prefersLargeTitles, let scroll = trackedScrollView,
+        guard displaysLargeTitles, let scroll = trackedScrollView,
               let content = scroll.superview, bounds.width > 0 else {
             pocketView.isHidden = true
             pocketKey = nil

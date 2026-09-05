@@ -356,6 +356,16 @@ public final class UISheetPresentationController: UIPresentationController {
             ?? detents[0]
         if detent.identifier == .medium {
             if OpenUIKitRuntime.systemFontCut == .iOS {
+                // MEASURED Modal t1200.landscape, iPhone SE 2x / iOS 26.1,
+                // window 667×375, vSizeClass compact: medium is the same
+                // full-window `UIDropShadowView [0, 0, 667, 375]` as large
+                // (heading "Medium sheet" at y=28 = view.top+28). The
+                // portrait 425/759 floating card on this height is
+                // `[8, 169.358, 651, 197.642]`. Compact-height returns
+                // nil so the large-frame path (top inset 0) applies.
+                if UITraitCollection.current.verticalSizeClass == .compact {
+                    return nil
+                }
                 // MEASURED detentprobe, iPhone 16 / iOS 26.1: `.medium()`
                 // detent value 425 of `maximumDetentValue` 759 (unscaled
                 // sheet 459 = 425 + 34 bottom SA). MEASURED Modal t1200,
@@ -613,6 +623,15 @@ final class _UIPageSheetView: UIView {
     /// 59 on every taller one (modal_sheet 852). Guarded by the iOS cut.
     static func topInset(in container: UIView) -> CGFloat {
         if OpenUIKitRuntime.systemFontCut == .iOS {
+            // MEASURED Modal t1200.landscape / t3200.landscape / t9200.landscape,
+            // iPhone SE 2x / iOS 26.1, vSizeClass compact: UIDropShadowView
+            // `[0, 0, 667, 375]` — full window, not the portrait SE 30 pt
+            // floor (probe_sheet_inset `[0, 30, 375, 637]`). Heading
+            // labels sit at y=28 because ModalSheetViewController pins
+            // them to view.top+28.
+            if UITraitCollection.current.verticalSizeClass == .compact {
+                return 0
+            }
             let sa = container.safeAreaInsets.top
             if sa > 0 { return max(compactMinimumTopInset, sa) }
             return container.bounds.height <= 667 ? compactMinimumTopInset : topInset
