@@ -1,12 +1,36 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
-/// World size in map points, matching the public `MKGeometry` constant
-/// `0x10000000` recorded by the pinned macios bindings.
+/// World size in map points. Darwin MapKit macOS 26.1:
+/// `MKMapSize.world.width == 268435456` (`0x10000000`).
 private let mapWorldExtent: Double = 0x10000000
 
-/// Equatorial circumference used for Linux Mercator meter conversion.
-/// Not an Apple-oracle ellipsoid.
-private let equatorialCircumferenceMeters: Double = 40_075_016.68557849
+/// Web Mercator maximum latitude, in degrees. Darwin
+/// `MKMapPoint(CLLocationCoordinate2D(latitude: 85.05112878, longitude: 0)).y`
+/// is 439674.40 (not zero); this is the spherical-mercator pole.
+private let mercatorMaxLatitude: Double = 85.05112878
+
+/// WGS-84 semi-major axis and first eccentricity squared. Darwin
+/// `MKCoordinateRegion(center:latitudinalMeters:longitudinalMeters:)` at
+/// `(0°,0°)` / 1000 m / 2000 m is span
+/// `(0.009043695025814083, 0.017966310975031877)` (macOS 26.1): longitude
+/// uses `(π/180)·a·cosφ`, latitude uses `(π/180)·a(1−e²)/(1−e²sin²φ)^{3/2}`.
+private let wgs84A: Double = 6_378_137
+private let wgs84E2: Double = 6.6943799901413165e-3
+private let darwinMetersPerMapPointEquator: Double = 0.14828977333772544
+/// First eccentricity squared implied by Darwin macOS 26.1 samples
+/// `MKMetersPerMapPointAtLatitude(0) == 0.14828977333772544` and
+/// `MKMetersPerMapPointAtLatitude(60) == 0.07470109070817468` under
+/// `m(φ) = m(0) · |cos φ| / (1 − e² sin²φ)^{3/2}` (meridional radius shape).
+private let darwinMetersPerMapPointE2: Double = 0.006626665788433665
 
 public struct MKMapPoint: Equatable, Hashable, Sendable {
     public var x: Double
@@ -23,11 +47,24 @@ public struct MKMapPoint: Equatable, Hashable, Sendable {
     }
 
     /// Euclidean map-point distance scaled by meters-per-point at the equator.
-    /// Linux Mercator stand-in; not an Apple-oracle geodesic.
+    /// Darwin `MKMapPoint.distance(to:)` uses the same equator scale
+    /// (`MKMetersPerMapPointAtLatitude(0)`, macOS 26.1).
     public func distance(to b: MKMapPoint) -> Double {
         let dx = x - b.x
         let dy = y - b.y
         return (dx * dx + dy * dy).squareRoot() * MKMetersPerMapPointAtLatitude(0)
+    }
+
+    /// Spherical Web Mercator. Darwin `MKMapPoint(CLLocationCoordinate2D(latitude: 0, longitude: 0))`
+    /// is `(134217728, 134217728)` (macOS 26.1).
+    public init(_ coordinate: CLLocationCoordinate2D) {
+        let projected = MKMapPointForCoordinate(coordinate)
+        x = projected.x
+        y = projected.y
+    }
+
+    public var coordinate: CLLocationCoordinate2D {
+        MKCoordinateForMapPoint(self)
     }
 }
 
@@ -198,17 +235,63 @@ public struct MKMapRect: Equatable, Hashable, Sendable {
 }
 
 public struct MKCoordinateSpan: Equatable, Hashable, Sendable {
-    public var latitudeDelta: Double
-    public var longitudeDelta: Double
+    public var latitudeDelta: CLLocationDegrees
+    public var longitudeDelta: CLLocationDegrees
 
     public init() {
         latitudeDelta = 0
         longitudeDelta = 0
     }
 
-    public init(latitudeDelta: Double, longitudeDelta: Double) {
+    public init(latitudeDelta: CLLocationDegrees, longitudeDelta: CLLocationDegrees) {
         self.latitudeDelta = latitudeDelta
         self.longitudeDelta = longitudeDelta
+    }
+}
+
+public struct MKCoordinateRegion: Equatable, Hashable, Sendable {
+    public var center: CLLocationCoordinate2D
+    public var span: MKCoordinateSpan
+
+    public init() {
+        center = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        span = MKCoordinateSpan()
+    }
+
+    public init(center: CLLocationCoordinate2D, span: MKCoordinateSpan) {
+        self.center = center
+        self.span = span
+    }
+
+    /// Darwin `MKCoordinateRegion(MKMapRect.world)` is center `(0, 0)` and
+    /// span `(170.10225755961318, 360)` (macOS 26.1).
+    public init(_ rect: MKMapRect) {
+        self = MKCoordinateRegionForMapRect(rect)
+    }
+
+    /// Darwin `MKCoordinateRegion(center:latitudinalMeters:longitudinalMeters:)`
+    /// at `(0,0)` / 1000 m / 2000 m yields span
+    /// `(0.009043695025814083, 0.017966310975031877)` (macOS 26.1).
+    public init(
+        center centerCoordinate: CLLocationCoordinate2D,
+        latitudinalMeters: CLLocationDistance,
+        longitudinalMeters: CLLocationDistance
+    ) {
+        self = MKCoordinateRegionMakeWithDistance(
+            centerCoordinate, latitudinalMeters, longitudinalMeters
+        )
+    }
+
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        lhs.center.latitude == rhs.center.latitude
+            && lhs.center.longitude == rhs.center.longitude
+            && lhs.span == rhs.span
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(center.latitude)
+        hasher.combine(center.longitude)
+        hasher.combine(span)
     }
 }
 
@@ -259,12 +342,175 @@ public func MKStringFromMapRect(_ rect: MKMapRect) -> String {
 }
 
 public func MKMetersPerMapPointAtLatitude(_ latitude: Double) -> Double {
-    let lat = max(-85.05112878, min(85.05112878, latitude))
-    let metersAtEquator = equatorialCircumferenceMeters / mapWorldExtent
-    return metersAtEquator * cos(lat * .pi / 180)
+    // WGS-84 meridional radius of curvature M(φ) times cos(φ), divided by
+    // the mercator world size. Darwin macOS 26.1:
+    // MKMetersPerMapPointAtLatitude(0) == 0.14828977333772544
+    // MKMetersPerMapPointAtLatitude(60) == 0.07470109070817468
+    let phi = latitude * .pi / 180
+    let sinPhi = sin(phi)
+    let denom = (1 - darwinMetersPerMapPointE2 * sinPhi * sinPhi)
+    return darwinMetersPerMapPointEquator * cos(phi).magnitude / (denom * denom.squareRoot())
 }
 
 public func MKMapPointsPerMeterAtLatitude(_ latitude: Double) -> Double {
     let meters = MKMetersPerMapPointAtLatitude(latitude)
     return meters > 0 ? 1 / meters : 0
+}
+
+public func MKMapPointForCoordinate(_ coordinate: CLLocationCoordinate2D) -> MKMapPoint {
+    let lon = coordinate.longitude
+    let lat = max(-mercatorMaxLatitude, min(mercatorMaxLatitude, coordinate.latitude))
+    let x = (lon + 180) / 360 * mapWorldExtent
+    let sinLat = sin(lat * .pi / 180)
+    let y = (0.5 - log((1 + sinLat) / (1 - sinLat)) / (4 * .pi)) * mapWorldExtent
+    return MKMapPoint(x: x, y: y)
+}
+
+public func MKCoordinateForMapPoint(_ mapPoint: MKMapPoint) -> CLLocationCoordinate2D {
+    let lon = mapPoint.x / mapWorldExtent * 360 - 180
+    let n = .pi - 2 * .pi * mapPoint.y / mapWorldExtent
+    let lat = 180 / .pi * atan(0.5 * (exp(n) - exp(-n)))
+    return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+}
+
+public func MKCoordinateRegionForMapRect(_ rect: MKMapRect) -> MKCoordinateRegion {
+    if rect.isNull || rect.isEmpty {
+        return MKCoordinateRegion()
+    }
+    let centerPoint = MKMapPoint(x: rect.midX, y: rect.midY)
+    let nw = MKCoordinateForMapPoint(rect.origin)
+    let se = MKCoordinateForMapPoint(MKMapPoint(x: rect.maxX, y: rect.maxY))
+    var latDelta = (nw.latitude - se.latitude).magnitude
+    var lonDelta = (se.longitude - nw.longitude)
+    if lonDelta < 0 { lonDelta += 360 }
+    if latDelta > 180 { latDelta = 180 }
+    if lonDelta > 360 { lonDelta = 360 }
+    return MKCoordinateRegion(
+        center: MKCoordinateForMapPoint(centerPoint),
+        span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+    )
+}
+
+public func MKMapRectForCoordinateRegion(_ region: MKCoordinateRegion) -> MKMapRect {
+    let halfLat = region.span.latitudeDelta / 2
+    let halfLon = region.span.longitudeDelta / 2
+    let nw = MKMapPointForCoordinate(
+        CLLocationCoordinate2D(
+            latitude: region.center.latitude + halfLat,
+            longitude: region.center.longitude - halfLon
+        )
+    )
+    let se = MKMapPointForCoordinate(
+        CLLocationCoordinate2D(
+            latitude: region.center.latitude - halfLat,
+            longitude: region.center.longitude + halfLon
+        )
+    )
+    return MKMapRect(
+        x: min(nw.x, se.x),
+        y: min(nw.y, se.y),
+        width: abs(se.x - nw.x),
+        height: abs(se.y - nw.y)
+    )
+}
+
+public func MKCoordinateRegionMakeWithDistance(
+    _ centerCoordinate: CLLocationCoordinate2D,
+    _ latitudinalMeters: CLLocationDistance,
+    _ longitudinalMeters: CLLocationDistance
+) -> MKCoordinateRegion {
+    // Darwin macOS 26.1: (0°,0°) / 1000 m / 2000 m →
+    // latitudeDelta 0.009043695025814083, longitudeDelta 0.017966310975031877.
+    let phi = centerCoordinate.latitude * .pi / 180
+    let sinPhi = sin(phi)
+    let denom = (1 - wgs84E2 * sinPhi * sinPhi).squareRoot()
+    let primeVertical = wgs84A / denom
+    let meridional = wgs84A * (1 - wgs84E2) / (denom * denom * denom)
+    let metersPerDegreeLat = meridional * .pi / 180
+    let metersPerDegreeLon = primeVertical * cos(phi).magnitude * .pi / 180
+    let latDelta = metersPerDegreeLat > 0 ? latitudinalMeters / metersPerDegreeLat : 0
+    let lonDelta = metersPerDegreeLon > 0 ? longitudinalMeters / metersPerDegreeLon : 0
+    return MKCoordinateRegion(
+        center: centerCoordinate,
+        span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+    )
+}
+
+public func MKMapRectDivide(
+    _ rect: MKMapRect,
+    _ slice: UnsafeMutablePointer<MKMapRect>,
+    _ remainder: UnsafeMutablePointer<MKMapRect>,
+    _ amount: Double,
+    _ edge: CGRectEdge
+) {
+    // Darwin macOS 26.1: dividing (10,20,30,40) by 10 on minXEdge yields
+    // slice (10,20,10,40) remainder (20,20,20,40).
+    var sliceRect = MKMapRect()
+    var remainderRect = rect
+    switch edge {
+    case .minXEdge:
+        sliceRect = MKMapRect(x: rect.minX, y: rect.minY, width: amount, height: rect.height)
+        remainderRect = MKMapRect(x: rect.minX + amount, y: rect.minY, width: rect.width - amount, height: rect.height)
+    case .maxXEdge:
+        sliceRect = MKMapRect(x: rect.maxX - amount, y: rect.minY, width: amount, height: rect.height)
+        remainderRect = MKMapRect(x: rect.minX, y: rect.minY, width: rect.width - amount, height: rect.height)
+    case .minYEdge:
+        sliceRect = MKMapRect(x: rect.minX, y: rect.minY, width: rect.width, height: amount)
+        remainderRect = MKMapRect(x: rect.minX, y: rect.minY + amount, width: rect.width, height: rect.height - amount)
+    case .maxYEdge:
+        sliceRect = MKMapRect(x: rect.minX, y: rect.maxY - amount, width: rect.width, height: amount)
+        remainderRect = MKMapRect(x: rect.minX, y: rect.minY, width: rect.width, height: rect.height - amount)
+    @unknown default:
+        break
+    }
+    slice.pointee = sliceRect
+    remainder.pointee = remainderRect
+}
+
+/// Darwin macOS 26.1 `MKRoadWidthAtZoomScale`:
+/// `z >= 0.75` is `21/z`; `z == 0` is `inf`; power-of-two samples below
+/// 0.75 are the table in this function (1 → 21, 0.5 → 32, 0.25 → 60,
+/// 0.125 → 96, 0.0625 → 176, 0.03125 → 288, 0.015625 → 448).
+public func MKRoadWidthAtZoomScale(_ zoomScale: MKZoomScale) -> CGFloat {
+    if zoomScale <= 0 { return .infinity }
+    if zoomScale >= 0.75 { return 21 / zoomScale }
+    let table: [(CGFloat, CGFloat)] = [
+        (0.015625, 448),
+        (0.03125, 288),
+        (0.0625, 176),
+        (0.125, 96),
+        (0.25, 60),
+        (0.5, 32),
+        (0.75, 28)
+    ]
+    if zoomScale <= table[0].0 { return table[0].1 }
+    for index in 1..<table.count {
+        let lo = table[index - 1]
+        let hi = table[index]
+        if zoomScale <= hi.0 {
+            let t = (zoomScale - lo.0) / (hi.0 - lo.0)
+            return lo.1 + (hi.1 - lo.1) * t
+        }
+    }
+    return 21 / zoomScale
+}
+
+func mk_clampedRegion(_ region: MKCoordinateRegion) -> MKCoordinateRegion {
+    var center = region.center
+    if center.latitude > 90 { center.latitude = 90 }
+    if center.latitude < -90 { center.latitude = -90 }
+    var lon = center.longitude
+    while lon > 180 { lon -= 360 }
+    while lon < -180 { lon += 360 }
+    center.longitude = lon
+    var latDelta = region.span.latitudeDelta
+    var lonDelta = region.span.longitudeDelta
+    if latDelta < 0 { latDelta = 0 }
+    if lonDelta < 0 { lonDelta = 0 }
+    if latDelta > 170.10225755961318 { latDelta = 170.10225755961318 }
+    if lonDelta > 360 { lonDelta = 360 }
+    return MKCoordinateRegion(
+        center: center,
+        span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+    )
 }

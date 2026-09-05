@@ -1,4 +1,13 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public struct MKDirectionsTransportType: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
@@ -70,7 +79,8 @@ public enum MKLocalSearchRegionPriority: Int, Sendable, Equatable, Hashable {
 }
 
 /// Typed `CGFloat` wrapper. Header constants 1000 / 750 / 250 come from the
-/// pinned macios binding of `MKFeatureDisplayPriority`.
+/// pinned macios binding of `MKFeatureDisplayPriority`. Darwin macOS 26.1
+/// matches those raw values.
 public struct MKFeatureDisplayPriority: RawRepresentable, Hashable, Sendable {
     public var rawValue: CGFloat
 
@@ -83,8 +93,8 @@ public struct MKFeatureDisplayPriority: RawRepresentable, Hashable, Sendable {
     public static let defaultLow = MKFeatureDisplayPriority(rawValue: 250)
 }
 
-/// Typed `CGFloat` wrapper. Linux uses 1000 / 1000 / 500 / 0 pending an
-/// Apple-oracle probe of the four named constants.
+/// Typed `CGFloat` wrapper. Darwin macOS 26.1: max/defaultSelected = 1000,
+/// defaultUnselected = 500, min = 0.
 public struct MKAnnotationViewZPriority: RawRepresentable, Hashable, Sendable {
     public var rawValue: CGFloat
 
@@ -96,119 +106,4 @@ public struct MKAnnotationViewZPriority: RawRepresentable, Hashable, Sendable {
     public static let defaultSelected = MKAnnotationViewZPriority(rawValue: 1000)
     public static let defaultUnselected = MKAnnotationViewZPriority(rawValue: 500)
     public static let min = MKAnnotationViewZPriority(rawValue: 0)
-}
-
-open class MKDirections: NSObject {
-    public enum RoutePreference: Int, Sendable, Equatable, Hashable {
-        case any = 0
-        case avoid = 1
-    }
-
-    public typealias DirectionsHandler = (Response?, (any Error)?) -> Void
-    public typealias ETAHandler = (ETAResponse?, (any Error)?) -> Void
-
-    open class Response: NSObject {}
-    open class ETAResponse: NSObject {}
-}
-
-open class MKLocalSearch: NSObject {
-    public struct ResultType: OptionSet, Hashable, Sendable {
-        public let rawValue: UInt
-
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-
-        public static let address = ResultType(rawValue: 1 << 0)
-        public static let pointOfInterest = ResultType(rawValue: 1 << 1)
-        public static let physicalFeature = ResultType(rawValue: 1 << 2)
-    }
-
-    public typealias CompletionHandler = (Response?, (any Error)?) -> Void
-
-    open class Response: NSObject {}
-}
-
-open class MKLocalSearchCompleter: NSObject {
-    public struct ResultType: OptionSet, Hashable, Sendable {
-        public let rawValue: UInt
-
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-
-        public static let address = ResultType(rawValue: 1 << 0)
-        public static let pointOfInterest = ResultType(rawValue: 1 << 1)
-        public static let query = ResultType(rawValue: 1 << 2)
-        public static let physicalFeature = ResultType(rawValue: 1 << 3)
-    }
-
-    public enum FilterType: Int, Sendable, Equatable, Hashable {
-        case locationsAndQueries = 0
-        case locationsOnly = 1
-    }
-}
-
-open class MKAnnotationView: NSObject {
-    public enum CollisionMode: Int, Sendable, Equatable, Hashable {
-        case rectangle = 0
-        case circle = 1
-        case none = 2
-    }
-
-    public enum DragState: UInt, Sendable, Equatable, Hashable {
-        case none = 0
-        case starting = 1
-        case dragging = 2
-        case canceling = 3
-        case ending = 4
-    }
-}
-
-open class MKMapConfiguration: NSObject {
-    public enum ElevationStyle: Int, Sendable, Equatable, Hashable {
-        case flat = 0
-        case realistic = 1
-    }
-}
-
-open class MKStandardMapConfiguration: MKMapConfiguration {
-    public enum EmphasisStyle: Int, Sendable, Equatable, Hashable {
-        case `default` = 0
-        case muted = 1
-    }
-}
-
-open class MKScaleView: NSObject {
-    public enum Alignment: Int, Sendable, Equatable, Hashable {
-        case leading = 0
-        case trailing = 1
-        case center = 2
-    }
-}
-
-open class MKMapFeatureAnnotation: NSObject {
-    public enum FeatureType: Int, Sendable, Equatable, Hashable {
-        case pointOfInterest = 0
-        case territory = 1
-        case physicalFeature = 2
-    }
-}
-
-open class MKSelectionAccessory: NSObject {
-    public struct MapItemDetailPresentationStyle {
-        public enum CalloutStyle: Int, Sendable, Equatable, Hashable {
-            case automatic = 0
-            case full = 1
-            case compact = 2
-        }
-    }
-}
-
-open class MKAddressRepresentations: NSObject {
-    public enum ContextStyle: Int, Sendable, Equatable, Hashable {
-        case automatic = 0
-        case full = 1
-        case short = 2
-    }
 }
