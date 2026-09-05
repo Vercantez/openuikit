@@ -75,7 +75,11 @@ public enum GlyphInkTable {
     /// SimpleActionView picker rows (`UIFont.font(ofSize: 18, weight:
     /// .semibold, scalingWith: .headline)` — "Select Episodes" S). Harvest
     /// `SIM_DEVICE=2x` `OpenUIKit-2x-guest-trial2` / iOS 26.1, 69/69,
-    /// skipped []. Table 6152 → 6221. Ledger itself dumps 17/13 only.
+    /// skipped []. Table 6152 → 6221. Second harvest of the remaining
+    /// OPENUIKIT_INK_LOG `I|` keys from the 13-screen scale-2 run (372
+    /// asked, 369 masks, 3 skipped U+00A0 "no ink") → **6590**.
+    /// Ledger itself dumps 17/13 only; 13 pt bold R is picker
+    /// `OptionsPickerRootController` "ROW ACTION".
     private static var iosEntries: [String: JSONValue]? = {
         guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
               let e = json["entries"]?.objectValue else { return nil }

@@ -163,7 +163,25 @@ Guest wrote 12 PNGs, so those picker labels were not drawn on the first
    (`SIM_DEVICE=2x` inkprobe, 69/69, skipped []). Table **6152 → 6221**.
    Catalyst still uses `glyph_ink.json`, not this file.
 
-Attempt 4: *(pending this push)*
+Attempt 4 (`a43f92cf`): **`build_full rc=0`**, **`TBD_CHECK_OK`**,
+**`difftest rc=0`**, **`GATE_B_PASS`**, then `GUEST_REALAPP_RC=133`
+**`GUEST_REALAPP_SCREENS=12`** again:
+
+```
+Fatal error: OPENUIKIT_IOS_INK_MISS: I|system-bold|13|light|F0.0|82
+```
+
+Scalar 82 is `'R'`. MEASURED `OptionsPickerRootController` section title
+font `UIFont.font(ofSize: 13, weight: .bold, scalingWith: .footnote)` —
+settings picker **"ROW ACTION"**. Same leftover-picker pattern as attempt
+3, next unharvested cell.
+
+Fix: harvest every remaining `I|` miss from a scale-2 `OPENUIKIT_INK_LOG`
+of the 13 screens (372 keys; 369 masks; 3 skipped `U+00A0` "no ink" —
+de_DE currency NBSP). Table **6221 → 6590**. UILabel / attributed draw
+skip U+00A0 like SPACE (inkprobe: no coverage).
+
+Attempt 5: *(pending this push)*
 
 ## What ran on Apple Foundation (this Mac), still unproven on the guest
 

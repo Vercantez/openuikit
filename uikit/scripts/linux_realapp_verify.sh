@@ -101,7 +101,7 @@ run_suites ink \
 echo "    unit tests passed"
 
 echo "==> no-font iOS cut (2x harvested masks; Linux trial had blank labels)"
-# glyph_ink_ios.json 6221 keys (2026-09-05, +69 18pt semibold picker). "Hello" at 17 pt regular F0.0 is
+# glyph_ink_ios.json 6590 keys (2026-09-05, realapp 2x harvest). "Hello" at 17 pt regular F0.0 is
 # a HIT for H/e/l/o (383 opaque pixels measured). "Q" (U+0051) has metrics
 # but is not in that table — U+2603 sizeToFits to width 0 and never draws.
 # No OPENUIKIT_FONT_DIR on this path.

@@ -281,11 +281,15 @@ final class GlyphInkTableTests: XCTestCase {
                                            scalar: Unicode.Scalar(UInt32(81))!,
                                            scale: 2),
                      "unharvested Q (U+0051) must miss so OPENUIKIT_IOS_INK_MISS can name it")
-        // MEASURED guest-trial2 4284aa2d + inkprobe SE 2x / iOS 26.1:
-        // picker "Select Episodes" is 18 pt semibold S (U+0053).
+        // MEASURED guest-trial2: picker "Select Episodes" 18 pt semibold S;
+        // "ROW ACTION" 13 pt bold R (a43f92cf then I|system-bold|13|…|82).
         XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-semibold", sizeKey: 18,
                                               dark: false, tag: "F0.0",
                                               scalar: Unicode.Scalar(UInt32(83))!,
+                                              scale: 2))
+        XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-bold", sizeKey: 13,
+                                              dark: false, tag: "F0.0",
+                                              scalar: Unicode.Scalar(UInt32(82))!,
                                               scale: 2))
     }
 }
