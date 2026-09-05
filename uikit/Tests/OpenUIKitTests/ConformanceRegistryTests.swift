@@ -5,9 +5,9 @@
 // generator" instead of editing five host files.
 //
 // MEASURED: SKIP_CAPTURE=1 scripts/conformance_flow.sh against
-// /tmp/conformance-<App> for NavFlow, Forms, TableEditor, Feed, Modal —
-// every capture score unchanged to three decimals after openhost and
-// confprobe switched onto this table.
+// /tmp/conformance-<App> for NavFlow, Forms, TableEditor, Feed, Modal,
+// Pager — regenerating Registry.swift changes nothing. Pager mid-flight
+// scores are identical to three decimals across five runs.
 
 import Foundation
 import XCTest
@@ -97,6 +97,15 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.frameIndex(for: 2.35), 141)
         XCTAssertEqual(ConformanceClock.frameIndex(for: 0.40), 24)
         XCTAssertEqual(ConformanceClock.frameIndex(for: 0.60), 36)
+        // Pager page-next frames 0/6/12/18 and fling frames 0/8/16/30.
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 0.50), 30)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 0.70), 42)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 3.00), 180)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 3.133), 188)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 3.267), 196)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 3.50), 210)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 4.50), 270)
+        XCTAssertEqual(ConformanceClock.frameIndex(for: 4.65), 279)
         XCTAssertEqual(ConformanceClock.time(of: 9), 0.15, accuracy: 1e-12)
         XCTAssertEqual(ConformanceClock.time(of: 12), 0.20, accuracy: 1e-12)
         XCTAssertEqual(ConformanceClock.time(of: 81), 1.35, accuracy: 1e-12)

@@ -317,6 +317,7 @@ public enum LayerBridge {
         // Active animations. Placement properties (position / alpha / pure-
         // translation transform) stay live on a composite layer; anything
         // else salts the fingerprint so the subtree reads as "changing".
+        var boundsOriginAnimated = false
         for a in v.animations where a.isActive(at: now) {
             switch a.property {
             case .position, .alpha:
@@ -328,11 +329,27 @@ public enum LayerBridge {
                 } else {
                     h.combine(now.bitPattern)
                 }
+            case .bounds:
+                // contentOffset IS bounds.origin. Model jumps to `to`
+                // immediately; presentation interpolates. Culling against
+                // the model origin ∩ presentation clip is empty — Pager
+                // t400, iPhone SE 2x / iOS 26.1: presentation origin 375
+                // vs model 750, pixels were 0,0,0,0. Not
+                // selfPlacementAnimated: that would still flatten the
+                // model-offset subtree onto a composite layer.
+                if case let (.rect(r0), .rect(r1)) = (a.from, a.to),
+                   r0.origin != r1.origin {
+                    boundsOriginAnimated = true
+                }
+                h.combine(now.bitPattern)
             default:
                 h.combine(now.bitPattern)
             }
         }
         info.subtreePlacementAnimated = info.selfPlacementAnimated
+        if boundsOriginAnimated {
+            info.subtreePlacementAnimated = true
+        }
 
         // Children: identity, placement and subtree fingerprints.
         for sub in v.subviews {
@@ -915,7 +932,14 @@ public enum LayerBridge {
             shadowRadius: v.layer.shadowRadius,
             shadowOffset: v.layer.shadowOffset,
             locations: (v.layer as? CAGradientLayer)?.locations)
-        for animation in v.animations {
+        // CA removes a completed animation from the layer, so the model
+        // wins afterwards. Applying finished records with u=1 pins
+        // presentation at `to` and hides a later model change — Pager
+        // t1200 (iPhone SE 2x / iOS 26.1): after setViewControllers
+        // animated, the dump has Two at abs [0,0,375,254] offset 375 but
+        // pixels were white because the finished bounds animation still
+        // presented origin 750 (empty trailing slot, clipsToBounds).
+        for animation in v.animations where animation.isActive(at: time) {
             let u = animationProgress(animation, at: time)
             switch (animation.property, animation.from, animation.to) {
             case (.position, .point(let a), .point(let b)):
@@ -1017,7 +1041,10 @@ public enum LayerBridge {
                                   traits: UITraitCollection,
                                   at t: Double) -> CGAffineTransform {
         var eff = v.transform
-        for a in v.animations {
+        // Same rule as presentationState: CA removes completed animations,
+        // so a finished record must not overwrite the model (Pager t400 /
+        // t1200, iPhone SE 2x / iOS 26.1).
+        for a in v.animations where a.isActive(at: t) {
             let u = animationProgress(a, at: t)
             switch (a.property, a.from, a.to) {
             case (.position, .point(let p0), .point(let p1)):

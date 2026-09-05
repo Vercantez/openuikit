@@ -223,6 +223,15 @@ open class UIPageViewController: UIViewController {
     private var transitionToken: UInt64 = 0
     private var pageControl: UIPageControl?
 
+    /// MEASURED Pager page-next, iPhone SE 2x / iOS 26.1, named 60 Hz
+    /// frames (confprobe wait): 375 → 750 then queue reset at n=18:
+    /// n=0:375 (t400) n=6:469 (t500) n=12:656.5 (t600) n=18:375 (t700).
+    /// Ease-in-out over 0.3 s, no extra delay. Catalyst keeps 0.32 so the
+    /// 0.31/0.32 completion ticks stay put.
+    static var programmaticScrollDuration: Double {
+        OpenUIKitRuntime.systemFontCut == .iOS ? 0.3 : 0.32
+    }
+
     private struct WeakTransitioningPage {
         weak var page: UIPageViewController?
     }
@@ -416,7 +425,7 @@ open class UIPageViewController: UIViewController {
 
         let destination = offset(for: direction)
         UIView.animate(
-            withDuration: 0.32,
+            withDuration: Self.programmaticScrollDuration,
             delay: 0,
             options: [.curveEaseInOut],
             animations: { self.scrollView.contentOffset = destination },
@@ -638,6 +647,9 @@ open class UIPageViewController: UIViewController {
         currentWrapper = incomingWrapper
         currentSlot.addSubview(incomingWrapper)
         fitWrapper(incomingWrapper, in: currentSlot)
+        // Drop the bounds animation so resetScrollToCenter's model offset
+        // is what we paint (Pager t1200, iPhone SE 2x / iOS 26.1).
+        cancelProgrammaticScrollAnimation()
         resetScrollToCenter()
 
         if viewIfLoaded?.window != nil {
@@ -755,7 +767,7 @@ open class UIPageViewController: UIViewController {
         transitionToken &+= 1
         let token = transitionToken
         UIView.animate(
-            withDuration: 0.32,
+            withDuration: Self.programmaticScrollDuration,
             delay: 0,
             options: [.curveEaseInOut],
             animations: { self.scrollView.contentOffset = self.offset(for: direction) },
