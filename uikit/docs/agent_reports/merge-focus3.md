@@ -83,11 +83,28 @@ The focus-e2e measurements (Blockzilla ingest no_port 21→14, home wordmark
 
 ## Arm64 authority
 
-Run after push, on the merge SHA:
+`queue_box.sh arm64 verify` on **`f75875cc`** (instance `i-00da4d9ca172eb1ff`,
+command `b51daaee-8767-4c3c-bd55-0e4ef9aeb219`):
+
+| line | value |
+|---|---|
+| `BUILD_OK` / `TBD_CHECK_OK` / `difftest rc=0` | yes |
+| **`build_full rc=0`** | **yes** |
+| **`GATE_B_PASS`** | **yes** |
+| `GUEST_REALAPP_RC` | 133 |
+| **`GUEST_REALAPP_SCREENS`** | **13** |
+
+Home is last, so the guest 2x miss cannot drop Ledger or Hackers.
+MEASURED miss on the 14th screen:
 
 ```
-bash /private/tmp/claude-501/-Users-miguelsalinas-uikit/8c75c08f-5c8e-42ec-9353-7334732ef488/scratchpad/queue_box.sh arm64 verify $(git rev-parse HEAD)
+OPENUIKIT_IOS_INK_MISS: I|system-regular|12|light|F0.25|107
 ```
 
-Grade only by the log lines `build_full rc=0`, `GATE_B_PASS`,
-`GUEST_REALAPP_SCREENS=14`. Result filled in after the run.
+Scalar 107 is `'k'`. Guest scale-2 has no SFNS; `glyph_ink_ios.json` has
+12 pt regular light at other phases/scalars but not this F0.25 `k`.
+Mac `openrender realapp` is 3x (`glyph_ink_ios_3x.json`) and emitted all
+14. Same class as focus-e2e.md §6 (then `I|system-semibold|18|light|F0.0|83`
+on home-as-13th; guest-trial2 harvested that 18 pt key, so this merge's
+miss is a new 12 pt cell). Harvesting the 2x `system-regular|12` mask is a
+follow-up, not a merge rule.
