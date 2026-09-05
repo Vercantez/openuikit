@@ -118,6 +118,12 @@ Attempt 4: `d2efe432e962cebabf7d0084c02b0ad13548e6bd`.
 `TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log tail was not in
 `ops_extract_result_lines` (only `^build_full:` / `build_full rc=`).
 
+Attempt 5: `5486bdde3e2fd7361674fbcdbbbab96eb7ddebf2`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log prefix worked.
+ObservationMacros staged. Then `redefinition of module 'CPortableIO'`
+(also CSTBTrueType, CHostClock, CQuartz): `compile_app_module` passed both
+`CINC` and `APPMODS_CINC`. `GATE_B_FAIL rc=1`. `guest_realapp skipped`.
+
 Attempt 6: `c9d5114d9bd46edfe3a36f607de7e4691d9cf65f`.
 `TBD_CHECK_OK`, `difftest rc=0`. Stub modules Glean…DesignSystem compiled.
 `build_full rc=1` at RealAppProbe: `SettingsViewController.swift:221` cannot
@@ -133,3 +139,9 @@ warning only). All stub modules and RealAppProbe compiled. Renderer failed:
 `missing required module 'COpenCombineHelpers'` — renderer still used `CINC`
 (library C maps) and not `APPMODS_CINC`. `build_full rc=1`, `GATE_B_FAIL rc=1`.
 `guest_realapp skipped`.
+
+Attempt 8: `f5074c6c0ad3cd4c9b19459409faa983c44d63b9`.
+`TBD_CHECK_OK`, `difftest rc=0`, **`build_full rc=0`**, **`GATE_B_PASS`**.
+`render_full` 26523184 bytes. `GUEST_REALAPP_SCREENS` was dropped by
+`ops_extract_result_lines`; this commit adds `GUEST_REALAPP` to the
+extractor and prefixes the guest realapp log.
