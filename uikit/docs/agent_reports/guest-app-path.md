@@ -118,11 +118,16 @@ Attempt 4: `d2efe432e962cebabf7d0084c02b0ad13548e6bd`.
 `TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log tail was not in
 `ops_extract_result_lines` (only `^build_full:` / `build_full rc=`).
 
-Attempt 5: `5486bdde3e2fd7361674fbcdbbbab96eb7ddebf2`.
-`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log prefix worked.
-ObservationMacros staged at `$OUT/host-tools/swift/host/plugins`. Then
-`redefinition of module 'CPortableIO'` (also CSTBTrueType, CHostClock,
-CQuartz): `compile_app_module` passed both `CINC` (`$OUT/inc/…`) and
-`APPMODS_CINC` (copies under `appmods/include`). Combine/SwiftUI/Foundation
-use APPMODS_CINC only and compiled. `GATE_B_FAIL rc=1`.
+Attempt 6: `c9d5114d9bd46edfe3a36f607de7e4691d9cf65f`.
+`TBD_CHECK_OK`, `difftest rc=0`. Stub modules Glean…DesignSystem compiled.
+`build_full rc=1` at RealAppProbe: `SettingsViewController.swift:221` cannot
+find `DispatchQueue`; `:564` cannot find `UserDefaults`. File's only
+framework import that would supply those is `import UIKit`; guest UIKit
+was still the Foundation-hidden UIKITINC artifact (`canImport(Foundation)`
+false → FoundationEssentials re-export, no Dispatch). `GATE_B_FAIL rc=1`.
 `guest_realapp skipped`.
+
+Attempt 7: recompile UIKit into APPINC after the Foundation facade
+(`build_focus_package_guest.sh` "final app-facing UIKit after Foundation
+facade"): `@_exported import Foundation`, and FoundationGuest already
+`@_exported import Dispatch`. App compiles search APPINC, not UIKITINC.

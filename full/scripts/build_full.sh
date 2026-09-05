@@ -1215,9 +1215,25 @@ foundation_regex_parser_undefineds=$(awk \
 [ "$foundation_synchronization_undefineds" -eq \
     "$EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS" ] \
     || die "Foundation Synchronization undefined count $foundation_synchronization_undefineds, expected $EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS"
-[ "$foundation_regex_parser_undefineds" -eq \
+    [ "$foundation_regex_parser_undefineds" -eq \
     "$EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS" ] \
     || die "Foundation RegexParser undefined count $foundation_regex_parser_undefineds, expected $EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS"
+
+# Same split as build_focus_package_guest.sh: the UIKITINC artifact stays the
+# Foundation-hidden identity/legacy-renderer probe (first `-module-name UIKit`
+# has no APPINC; test_notification_guest_aliases.py). This second compile is
+# what unchanged app files consume. UIKit.swift then takes
+# `@_exported import Foundation`; FoundationGuest re-exports Dispatch, so
+# `import UIKit` names UserDefaults and DispatchQueue (attempt 6, c9d5114d,
+# SettingsViewController.swift:564 / :221).
+echo "== compile final app-facing UIKit after Foundation facade"
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" \
+    -module-name UIKit -emit-module -emit-module-path "$APPINC/UIKit.swiftmodule" \
+    -emit-object -o "$OUT/uikitshim_app.o" \
+    "$UIKIT/Sources/UIKitShim/UIKit.swift"
+cp "$APPINC/UIKit.swiftmodule" "$APPMODS/"
 
 echo "== RealAppProbe stub modules (FocusModules / HackersModules, dependency order)"
 # Package.swift target graph: Glean, Intents, Onboarding have no deps;
@@ -1295,7 +1311,7 @@ compile_app_module() {
     # $OUT/inc/CPortableIO, likewise CSTBTrueType, CHostClock, CQuartz.
     "${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
         "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
-        -I "$OUT" -I "$UIKITINC" -I "$APPINC" -I "$APPMODS" \
+        -I "$OUT" -I "$APPINC" -I "$APPMODS" \
         -disable-availability-checking \
         "${OBSERVATION_PLUGIN_FLAGS[@]}" \
         -module-name "$name" \
@@ -1334,7 +1350,7 @@ APP_PROBE_SOURCES=(
 )
 "${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
     "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
-    -I "$OUT" -I "$UIKITINC" -I "$APPINC" -I "$APPMODS" \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" \
     -default-isolation MainActor -disable-availability-checking \
     -enable-upcoming-feature IsolatedDefaultValues \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" \
@@ -1347,7 +1363,7 @@ APP_PROBE_SOURCES=(
 echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/main.swift)"
 "${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" \
     "${PREVIEW_SWIFT_FLAGS[@]}" \
-    -I "$OUT" -I "$UIKITINC" -I "$APPINC" -I "$APPMODS" -module-name render_full \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
     "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" \
@@ -1367,7 +1383,7 @@ echo "== link"
 # (rather than via -lSystem) because the SDK .tbd does not advertise
 # pthread_main_np, which the APP path needs and the render path does not.
 COMMON_LINK_OBJECTS=(
-    "$OUT/uikitshim.o" "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
+    "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
     "$OUT/swiftcorepatch.o"
     "${FE_OBJECTS[@]}"
@@ -1375,7 +1391,10 @@ COMMON_LINK_OBJECTS=(
 )
 # Combine/OpenCombine/Dispatch are dylibs (widget/onboarding measured path).
 # Their .o files are inside those dylibs — do not object-link them as well.
+# render_full links the Foundation-visible UIKit object; the IndexPath probe
+# keeps the hidden UIKITINC object it was compiled against.
 APP_LINK_OBJECTS=(
+    "$OUT/uikitshim_app.o"
     "$OUT/symbols.o" "$OUT/swiftui.o" "$OUT/corefoundation.o"
     "$OUT/glean.o" "$OUT/intents_stub.o" "$OUT/onboarding_stub.o"
     "$OUT/domain.o" "$OUT/intentsui_stub.o" "$OUT/licenses.o"
@@ -1406,7 +1425,8 @@ APP_LINK_OBJECTS=(
     -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
     "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
     -o "$OUT/indexpath_identity_probe" \
-    "$OUT/literal_uikit_indexpath_probe.o" "${COMMON_LINK_OBJECTS[@]}"
+    "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
+    "${COMMON_LINK_OBJECTS[@]}"
 
 # ---- bundle fixtures -------------------------------------------------------
 # Built here rather than committed, so they cannot drift from what the test
