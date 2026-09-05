@@ -71,6 +71,10 @@ No non-enum/OptionSet test exceeds 40% of implemented rows. Catalog
 filters each cite a dedicated `PHPickerFilterTests.swift#testPickerFilter*`
 asset-attribute test.
 
+Sealed gate: `bash full/photosui/tests/acceptance/test_host.sh` ended
+`FRAMEWORK_FANOUT_HOST_OK` on this revision. `tests/test_photosui_host.sh`
+is Darwin/IceCubes-only (`mktemp /private/tmp/...` fails on Linux).
+
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
 `CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
