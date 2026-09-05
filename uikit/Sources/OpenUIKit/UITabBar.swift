@@ -8,7 +8,9 @@
 //   - Floating platter: height 62 pt, 10 pt bottom margin, width
 //     n·85.75 + 16.75 for n items (274 pt at n = 3), centered. iOS-cut
 //     light uses `_UIGlassMaterial` (σ=2.25, α=222/255 over the content).
-//     Catalyst and dark iOS keep the measured flats (249 light / 19 dark).
+//     Dark iOS uses the bar mix (σ=2.25, α=190/255, T=19/190; MEASURED
+//     /tmp/glass-dark-out). Catalyst keeps the measured flats (249 light /
+//     19 dark).
 //   - Selected item: #EBEBEC capsule (height 53.5, item pitch + 7.75 wide,
 //     4.25 pt vertical inset in the platter) behind icon + title, both
 //     drawn in the bar's tint (measured default tint (52, 124, 238) — NOT
@@ -22,8 +24,8 @@
 // color (selected tint / unselected near-black), like UIKit's
 // .alwaysTemplate rendering in a tab bar.
 //
-// KNOWN GAP: light-mode platter/capsule constants only (the M10 tab bar
-// goldens are light); dark-mode glass material is not yet measured.
+// KNOWN GAP: dark-mode red chroma of the bar mix is outside the
+// two-unknown gray fit (probe (157, 13, 16) vs pred (84, 33, 34)).
 
 // M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
 // defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
@@ -244,9 +246,11 @@ public final class UITabBar: UIView {
     static var capsuleColor: UIColor {
         UIColor(dynamicProvider: { traits in
             if isIOS, traits.userInterfaceStyle == .dark {
-                // tabbar_dark, SE 2x, 2026-09-04:
-                // selected button background clusters at (53,53,53).
-                return UIColor(red: 53 / 255, green: 53 / 255, blue: 53 / 255, alpha: 1)
+                // MEASURED /tmp/glass-dark-out glass_tabbar_dark_black, SE 2x:
+                // selected 19→53 is white-over-glass 34/236. Opaque 53 is
+                // the same over black and the Catalyst/test fallback when
+                // bar glass does not run.
+                return UIColor(white: 1, alpha: _UIGlassMaterial.darkBarCapsuleOverlayAlpha)
             }
             if isIOS {
                 // Black overlay on `_UIGlassMaterial`. MEASURED
@@ -320,6 +324,7 @@ public final class UITabBar: UIView {
         isOpaque = false
         platter.isOpaque = false
         platter._usesIOSGlass = true
+        platter._usesIOSDarkBarGlass = true
         platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
         platter.layer.cornerRadius = UITabBar.platterHeight / 2
         platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)

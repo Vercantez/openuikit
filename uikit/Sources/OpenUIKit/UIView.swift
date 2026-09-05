@@ -617,10 +617,13 @@ open class UIView: UIResponder, CALayerDelegate {
     /// floating sheet). The Canvas backdrop-filter path applies
     /// `_UIGlassMaterial`; Catalyst ignores the flag.
     var _usesIOSGlass = false
-    /// Dark floating sheet only. Bar platters keep the measured dark flats
-    /// (19 / 25); the sheet's systemBackground fill tracks the dimmed
-    /// backdrop (MEASURED /tmp/sheetfill_dark, SE 2x).
+    /// Dark floating sheet only. Bar platters use `_usesIOSDarkBarGlass`
+    /// (MEASURED /tmp/glass-dark-out, SE 2x: 19 over black, not the
+    /// sheet's 57).
     var _usesIOSDarkGlass = false
+    /// Dark tab-bar / toolbar platters. Distinct from the floating-sheet
+    /// mix; nav-bar platters keep the measured dark flats + refraction.
+    var _usesIOSDarkBarGlass = false
     /// Clip path for `_UIGlassMaterial`. Bar platters are capsules; the
     /// floating sheet overrides with independent top/bottom radii.
     func _iosGlassPath(in bounds: CGRect) -> Path {

@@ -38,8 +38,10 @@
 // Floating systemBackground sheet 245 is the same mix over the 20 % dim
 // (0.1294·204 + 220 = 246.4, residual 1.4).
 //
-// Catalyst keeps the flat fills. Dark iOS chrome is a separate measured
-// flat (19,19,19) / (25,25,25) and is not this material.
+// Catalyst keeps the flat fills. Dark floating-card glass is a second
+// mix (sheet, α=203/255). Dark tab-bar / toolbar platters are a third
+// (MEASURED /tmp/glass-dark-out, SE 2x) — not the sheet mix (57 over
+// black) and not the light mix (220 over black).
 
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
@@ -83,11 +85,39 @@ enum _UIGlassMaterial {
     /// MEASURED medium_black / Modal t1200.dark interior.
     static let darkFloatingFallback: CGFloat = 57.0 / 255.0
 
+    /// Dark tab-bar / toolbar platter glass. MEASURED /tmp/glass-dark-out
+    /// glass_{tabbar,toolbar}_dark_{black,white,gray33,red}, iPhone SE 2x
+    /// / iOS 26.1, glyph-free interiors (tab left of selected; toolbar
+    /// below the title):
+    ///   black  (  0,  0,  0) → (19, 19, 19)
+    ///   gray33 (51, 51, 51) → (32, 32, 32)
+    ///   white  (255,255,255) → (84, 83, 83)
+    ///   red    (255, 56, 60) → (157, 13, 16)  chroma residual, not fitted
+    /// Gray samples fit out = (65/255)·B + 19, i.e. α = 190/255,
+    /// α·T = 19/255, T = 19/190. Same σ as light. Red |res| R=73
+    /// (pred 84 vs 157) reported like the light red residual. Tabs
+    /// t200.dark unselected 25 / selected 58 are this mix over the
+    /// table (not uniform black); probe over black is 19 / 53.
+    static let darkBarMixAlpha: CGFloat = 190.0 / 255.0
+    static let darkBarTintGray: CGFloat = 19.0 / 190.0
+    /// Selected-tab capsule as white-over-bar-glass. MEASURED
+    /// glass_tabbar_dark_black 19→53: 34/236. gray33 pred 64.1 vs 65.
+    /// White residual pred 108.6 vs 115 reported not fitted.
+    static let darkBarCapsuleOverlayAlpha: CGFloat = 34.0 / 236.0
+
     static var configuration: CanvasBackdropFilterConfiguration {
         configuration(dark: false)
     }
 
-    static func configuration(dark: Bool) -> CanvasBackdropFilterConfiguration {
+    static func configuration(dark: Bool, bar: Bool = false) -> CanvasBackdropFilterConfiguration {
+        if dark && bar {
+            return CanvasBackdropFilterConfiguration(
+                blurRadius: blurSigma,
+                saturation: 1,
+                tintColor: CGColor(red: darkBarTintGray, green: darkBarTintGray,
+                                   blue: darkBarTintGray, alpha: darkBarMixAlpha),
+                intensity: 1)
+        }
         if dark {
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
@@ -112,9 +142,9 @@ enum _UIGlassMaterial {
         guard view._usesIOSGlass,
               OpenUIKitRuntime.systemFontCut == .iOS else { return false }
         if view.traitCollection.userInterfaceStyle != .dark { return true }
-        // Bar platters stay the measured dark flats (19/25). Only the
-        // floating systemBackground sheet uses dark glass.
-        return view._usesIOSDarkGlass
+        // Sheet mix (57 over black) and bar mix (19 over black) are
+        // distinct; each flag selects its own configuration.
+        return view._usesIOSDarkGlass || view._usesIOSDarkBarGlass
     }
 
     /// Backdrop blur + gray tint, clipped to `path`, plus the 1 pt inner
@@ -122,10 +152,10 @@ enum _UIGlassMaterial {
     /// (Modal t1200.dark interior is a flat 57 cluster; a white ring would
     /// be a new unmatched edge).
     static func apply(in canvas: Canvas, path: Path, bounds: CGRect,
-                      dark: Bool = false) {
+                      dark: Bool = false, bar: Bool = false) {
         canvas.save()
         canvas.clip(to: path)
-        canvas.applyBackdropFilter(configuration(dark: dark), in: bounds)
+        canvas.applyBackdropFilter(configuration(dark: dark, bar: bar), in: bounds)
         if !dark {
             canvas.stroke(path, color: ringColor, lineWidth: ringWidth * 2)
         }
