@@ -798,6 +798,27 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 22, accuracy: 1e-9)   // bar-local 11.5 + 10.5
     }
 
+    /// MEASURED realapp_focus_settings_light, iPhone 16 / iOS 26.1:
+    /// `navigationBar.isTranslucent = false` insets the child below the bar
+    /// at y 59 h 54 (content `[0, 113, 393, 739]`) with child
+    /// `safeAreaInsets` `[0,0,34,0]` — bottom home-indicator only.
+    func testIOSOpaqueBarInsetsContentBelowTheBar() {
+        let nav = makeNav(largeTitles: false)
+        nav.view.frame = CGRect(x: 0, y: 0, width: 393, height: 852)
+        nav.view._setSafeAreaInsets(UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0))
+        nav.navigationBar.isTranslucent = false
+        nav.view.layoutIfNeeded()
+        XCTAssertNil(nav.view.backgroundColor)
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 59, width: 393, height: 54))
+        XCTAssertEqual(nav.contentView.frame,
+                       CGRect(x: 0, y: 113, width: 393, height: 739))
+        XCTAssertEqual(nav.topViewController!.view.frame,
+                       CGRect(x: 0, y: 0, width: 393, height: 739))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 0)
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.bottom, 34)
+    }
+
     /// Catalyst keeps the M7.5 cross-fade: no groups, and the old title
     /// morphs toward the back-button position.
     func testCatalystKeepsTheCrossFade() {

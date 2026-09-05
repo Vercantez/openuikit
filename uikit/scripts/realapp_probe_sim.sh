@@ -28,10 +28,11 @@ sed -e 's/^import OpenUIKit$/import UIKit/' \
     -e 's/^    public override func viewDidLoad() {$/    required init?(coder: NSCoder) { fatalError() }\n    public override func viewDidLoad() {/' \
     Sources/RealAppProbe/RealAppScreen.swift > "$TMPSRC/RealAppScreen.swift"
 sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Shims.swift > "$TMPSRC/Shims.swift"
+sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/FocusShims.swift > "$TMPSRC/FocusShims.swift"
 # The vendored file's two ADAPTED(objc-runtime) lines are the ledger's own
 # `Selector.named` spelling for native ELF; on Darwin compile the UPSTREAM
 # `#selector` text (pocket-casts-ios podcasts/SimpleActionView.swift:106,137).
-mkdir -p "$TMPSRC/Vendored"
+mkdir -p "$TMPSRC/Vendored" "$TMPSRC/Vendored/Focus"
 # Interface Builder mangles a custom class with the module it was set in, so
 # the compiled xibs name `_TtC8podcasts14ThemeableTable` and friends. The port
 # resolves those through UINibClassRegistry, which keys on the DEMANGLED name;
@@ -67,11 +68,57 @@ for f in Sources/RealAppProbe/Vendored/*.swift; do
       -e "$ALIASES" \
       "$f" > "$TMPSRC/Vendored/$(basename "$f")"
 done
+# Focus Settings is mozilla-mobile/focus-ios a2832521. SettingsViewController
+# carries the same ADAPTED(objc-runtime) Selector.named spelling as Pocket
+# Casts; restore the upstream `#selector` / `@objc` text for the Darwin
+# compile. The cells and footer stay unmodified (import UIKit only).
+# SettingsViewController also imports Glean / Onboarding / Licenses /
+# DesignSystem, which the iOS SDK does not ship. Those four stub modules
+# are compiled beside the probe; Intents / IntentsUI / SwiftUI / Combine
+# come from the simulator SDK.
+for f in Sources/RealAppProbe/Vendored/Focus/*.swift; do
+  if [[ $(basename "$f") == SettingsViewController.swift ]]; then
+    sed -e 's/action: Selector.named("dismissSettings")/action: #selector(dismissSettings)/' \
+        -e 's/action: Selector.named("toggleSwitched:")/action: #selector(toggleSwitched(_:))/' \
+        -e 's/selector: Selector.named("applicationDidBecomeActive")/selector: #selector(applicationDidBecomeActive)/' \
+        -e 's/Selector.named("tappedLearnMoreFooterWithGestureRecognizer:")/#selector(tappedLearnMoreFooter)/' \
+        -e 's/Selector.named("tappedLearnMoreSearchSuggestionsFooterWithGestureRecognizer:")/#selector(tappedLearnMoreSearchSuggestionsFooter)/' \
+        -e 's/Selector.named("tappedLearnMoreStudiesWithGestureRecognizer:")/#selector(tappedLearnMoreStudies)/' \
+        -e 's/^    func applicationDidBecomeActive() {$/    @objc private func applicationDidBecomeActive() {/' \
+        -e 's/^    func tappedLearnMoreFooter(gestureRecognizer: UIGestureRecognizer) {$/    @objc func tappedLearnMoreFooter(gestureRecognizer: UIGestureRecognizer) {/' \
+        -e 's/^    func tappedLearnMoreSearchSuggestionsFooter(gestureRecognizer: UIGestureRecognizer) {$/    @objc func tappedLearnMoreSearchSuggestionsFooter(gestureRecognizer: UIGestureRecognizer) {/' \
+        -e 's/^    func tappedLearnMoreStudies(gestureRecognizer: UIGestureRecognizer) {$/    @objc func tappedLearnMoreStudies(gestureRecognizer: UIGestureRecognizer) {/' \
+        -e 's/^    func dismissSettings() {$/    @objc private func dismissSettings() {/' \
+        -e 's/^    func aboutClicked() {$/    @objc private func aboutClicked() {/' \
+        -e 's/^    func toggleSwitched(_ sender: UISwitch) {$/    @objc private func toggleSwitched(_ sender: UISwitch) {/' \
+        "$f" > "$TMPSRC/Vendored/Focus/$(basename "$f")"
+  else
+    cp "$f" "$TMPSRC/Vendored/Focus/$(basename "$f")"
+  fi
+done
+MODDIR="$TMPSRC/mods"
+mkdir -p "$MODDIR"
+SWIFT_SIM=(swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor
+  -target arm64-apple-ios26.0-simulator -sdk "$SDK")
+compile_stub() {
+  local name=$1 src=$2
+  "${SWIFT_SIM[@]}" -parse-as-library -emit-module \
+    -emit-module-path "$MODDIR/$name.swiftmodule" \
+    -emit-object -o "$TMPSRC/$name.o" \
+    -module-name "$name" -I "$MODDIR" "$src"
+}
+compile_stub Glean Sources/RealAppProbe/FocusModules/Glean/Glean.swift
+compile_stub Onboarding Sources/RealAppProbe/FocusModules/Onboarding/Onboarding.swift
+compile_stub DesignSystem Sources/RealAppProbe/FocusModules/DesignSystem/DesignSystem.swift
+compile_stub Licenses Sources/RealAppProbe/FocusModules/Licenses/Licenses.swift
 swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
   -module-name realappprobe \
+  -I "$MODDIR" \
   Tools/oracle2/realappprobe/main.swift \
-  "$TMPSRC/RealAppScreen.swift" "$TMPSRC/Shims.swift" \
+  "$TMPSRC/RealAppScreen.swift" "$TMPSRC/Shims.swift" "$TMPSRC/FocusShims.swift" \
   "$TMPSRC"/Vendored/*.swift \
+  "$TMPSRC"/Vendored/Focus/*.swift \
+  "$TMPSRC"/Glean.o "$TMPSRC"/Onboarding.o "$TMPSRC"/DesignSystem.o "$TMPSRC"/Licenses.o \
   -o "$APP/realappprobe"
 cp Tools/oracle2/RealAppProbe-Info.plist "$APP/Info.plist"
 cp fixtures/realapp/assets/*.png "$APP/"

@@ -406,6 +406,15 @@ extension UIApplication {
         Notification.Name("UIApplicationSignificantTimeChangeNotification")
 }
 
+extension UIContentSizeCategory {
+    /// UIKit posts this when the user changes Dynamic Type. OpenUIKit never
+    /// posts it (no Settings app); SettingsTableViewCell still registers, so
+    /// the name has to exist. MEASURED focus-ios SettingsViewController cells,
+    /// mozilla-mobile/focus-ios a2832521 SettingsTableViewCell.swift:24.
+    public static let didChangeNotification =
+        Notification.Name("UIContentSizeCategoryDidChangeNotification")
+}
+
 extension UIDevice {
     /// Declared for source compatibility. There is no device to interrogate
     /// (docs/KNOWN_GAPS.md, "App lifecycle"), so nothing posts it.

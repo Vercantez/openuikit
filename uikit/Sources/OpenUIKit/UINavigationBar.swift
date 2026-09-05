@@ -380,7 +380,12 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             applyAppearance()
         }
     }
-    public var isTranslucent: Bool = true
+    public var isTranslucent: Bool = true {
+        didSet {
+            guard isTranslucent != oldValue else { return }
+            _controller?.updateContainerLayout()
+        }
+    }
 
     /// The appearance in force right now and whether it was explicitly
     /// supplied by the app. Per-item objects win over bar objects. An explicit

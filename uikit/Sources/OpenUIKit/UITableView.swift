@@ -607,8 +607,20 @@ open class UITableView: UIScrollView {
     /// installs no constraints and it therefore has no opinion. Used for a
     /// self-sizing row and for a delegate-supplied section header/footer.
     private func constraintFittingHeight(of view: UIView) -> CGFloat? {
-        let width = bounds.width > 0 ? bounds.width : metricsWidth
+        var width = bounds.width > 0 ? bounds.width : metricsWidth
         guard width > 0 else { return nil }
+        if UITableView.isIOSChrome, style == .insetGrouped {
+            // MEASURED realapp_focus_settings_light, iPhone 16 / iOS 26.1:
+            // ActionFooterView is `[20, 87, 353, 71.667]` — the card inset
+            // (20), not the table's 393. Fitting at 393 left the 12 pt
+            // footnote unwrapped (ours 42.333).
+            width = max(1, width - 2 * insetGroupedSideInset)
+        }
+        let saved = view.bounds
+        view.bounds = CGRect(x: 0, y: 0, width: width, height: max(saved.height, 1))
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        defer { view.bounds = saved }
         guard let fitted = view.constraintFittingSize(
             CGSize(width: width, height: 0),
             withHorizontalFittingPriority: .required,
@@ -1690,7 +1702,15 @@ open class UITableView: UIScrollView {
                         ? plainHeaderTextX
                         : groupedHeaderLabelX,
                     style: style, firstSection: s == 0)
-                footer.frame = CGRect(x: 0, y: m.rowsEnd, width: bounds.width,
+                // MEASURED realapp_focus_settings_light, iPhone 16 / iOS 26.1:
+                // a custom inset-grouped footer (`ActionFooterView`) is
+                // `[20, y, 353, h]` — the same card inset as the rows.
+                // Headers stay full-width (`UITableViewHeaderFooterView`
+                // `[0, y, 393, 30]`). Catalyst keeps full-width footers.
+                let footerInset = (UITableView.isIOSChrome && style == .insetGrouped)
+                    ? insetGroupedSideInset : 0
+                footer.frame = CGRect(x: footerInset, y: m.rowsEnd,
+                                      width: bounds.width - 2 * footerInset,
                                       height: m.footerHeight)
             }
         }

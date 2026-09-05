@@ -94,6 +94,8 @@ VARIANTS = {
     # iPad (A16) portrait of the Settings picker. Goldens are native 2x
     # (compare_pixels uses the dump's screen.scale, not --scale).
     "realapp_settings_light_ipad": "UIScrollView",
+    # Firefox Focus Settings: inset-grouped UITableView under a nav bar.
+    "realapp_focus_settings_light": "UITableView",
     "realapp_history_light_ipad": "UIScrollView",
     # Same ThemeableView root as the phone storage screen; the iPad row
     # wraps it in a large-title nav, which sits outside this subtree.
