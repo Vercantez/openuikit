@@ -65,14 +65,6 @@ func withUniqueTempDirectory(_ body: (URL) throws -> Void) throws {
     try body(directory)
 }
 
-func waitUntil(_ timeout: TimeInterval, _ predicate: () -> Bool) -> Bool {
-    let deadline = Date().addingTimeInterval(timeout)
-    while !predicate(), Date() < deadline {
-        RunLoop.current.run(until: Date().addingTimeInterval(0.01))
-    }
-    return predicate()
-}
-
 func cdSortDescriptor(key: String, ascending: Bool) -> NSSortDescriptor {
     _CDAttributeSortDescriptor(attributeKey: key, ascending: ascending)
 }

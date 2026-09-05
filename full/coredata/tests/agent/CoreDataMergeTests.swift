@@ -5,7 +5,7 @@ func testMergePolicies() {
             let container = try makeLoadedContainer(makeNoteModel(), name: "MergePolicies")
             let parent = container.viewContext
             parent.mergePolicy = NSMergePolicy.rollback
-            let child = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            let child = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
             child.parent = parent
             child.automaticallyMergesChangesFromParent = true
             child.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
@@ -49,7 +49,7 @@ func testMergePolicyAndParentMerge() {
             let container = try makeLoadedContainer(makeNoteModel(), name: "Merge")
             let parent = container.viewContext
             parent.mergePolicy = NSMergePolicy.rollback
-            let child = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            let child = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
             child.parent = parent
             child.automaticallyMergesChangesFromParent = true
             child.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump

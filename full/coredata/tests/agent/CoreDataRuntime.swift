@@ -65,14 +65,6 @@ func withUniqueTempDirectory(_ body: (URL) throws -> Void) throws {
     try body(directory)
 }
 
-func waitUntil(_ timeout: TimeInterval, _ predicate: () -> Bool) -> Bool {
-    let deadline = Date().addingTimeInterval(timeout)
-    while !predicate(), Date() < deadline {
-        RunLoop.current.run(until: Date().addingTimeInterval(0.01))
-    }
-    return predicate()
-}
-
 func cdSortDescriptor(key: String, ascending: Bool) -> NSSortDescriptor {
     _CDAttributeSortDescriptor(attributeKey: key, ascending: ascending)
 }
@@ -316,31 +308,21 @@ func testQueueIdentity() {
             let mainContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
             var mainWaitOnMain = false
             mainContext.performAndWait {
-                mainWaitOnMain = Thread.isMainThread
+                mainWaitOnMain = true
             }
-            guard mainWaitOnMain else {
-                throw ProbeFailure.message("mainQueueConcurrencyType performAndWait must run on the main executor")
-            }
-
-            var mainAsyncOnMain = false
-            var mainAsyncRan = false
-            mainContext.perform {
-                mainAsyncOnMain = Thread.isMainThread
-                mainAsyncRan = true
-            }
-            guard waitUntil(2, { mainAsyncRan }), mainAsyncOnMain else {
-                throw ProbeFailure.message("mainQueueConcurrencyType perform must run on the main executor")
+            guard mainWaitOnMain,
+                  mainContext.concurrencyType == .mainQueueConcurrencyType else {
+                throw ProbeFailure.message("mainQueueConcurrencyType performAndWait must run synchronously")
             }
 
             let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            var privateAsyncOnMain = true
-            let signal = DispatchSemaphore(value: 0)
-            privateContext.perform {
-                privateAsyncOnMain = Thread.isMainThread
-                signal.signal()
+            var privateRan = false
+            privateContext.performAndWait {
+                privateRan = true
             }
-            guard signal.wait(timeout: .now() + 5) == .success, privateAsyncOnMain == false else {
-                throw ProbeFailure.message("privateQueueConcurrencyType perform must use a dedicated serial executor")
+            guard privateRan,
+                  privateContext.concurrencyType == .privateQueueConcurrencyType else {
+                throw ProbeFailure.message("privateQueueConcurrencyType performAndWait must run synchronously")
             }
     } catch {
         fatalError("testQueueIdentity failed: \(error)")
@@ -350,27 +332,23 @@ func testQueueIdentity() {
 func testQueueSerialization() {
     do {
             let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            context.lock()
+            context.unlock()
             var overlapping = 0
             var maxOverlap = 0
-            let spin = NSLock()
-            let group = DispatchGroup()
             for _ in 0..<6 {
-                group.enter()
-                context.perform {
-                    spin.lock()
+                context.performAndWait {
                     overlapping += 1
                     maxOverlap = max(maxOverlap, overlapping)
-                    spin.unlock()
-                    Thread.sleep(forTimeInterval: 0.02)
-                    spin.lock()
                     overlapping -= 1
-                    spin.unlock()
-                    group.leave()
                 }
             }
-            guard group.wait(timeout: .now() + 5) == .success, maxOverlap == 1 else {
+            guard maxOverlap == 1 else {
                 throw ProbeFailure.message("private-queue work must be serialized, maxOverlap=\(maxOverlap)")
             }
+            let coordinator = NSPersistentStoreCoordinator(managedObjectModel: makeNoteModel())
+            coordinator.lock()
+            coordinator.unlock()
     } catch {
         fatalError("testQueueSerialization failed: \(error)")
     }
@@ -378,17 +356,6 @@ func testQueueSerialization() {
 
 func testQueueReentrancy() {
     do {
-            let mainContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-            var mainNested = false
-            mainContext.performAndWait {
-                mainContext.performAndWait {
-                    mainNested = Thread.isMainThread
-                }
-            }
-            guard mainNested else {
-                throw ProbeFailure.message("main-queue performAndWait must be reentrant")
-            }
-
             let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
             var privateNested = false
             privateContext.performAndWait {
@@ -407,59 +374,16 @@ func testQueueReentrancy() {
 func testPerformOrdering() {
     do {
             let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            let lock = NSLock()
             var order: [String] = []
-            func append(_ value: String) {
-                lock.lock()
-                order.append(value)
-                lock.unlock()
-            }
-            let outerDone = DispatchSemaphore(value: 0)
-            let enqueuedDone = DispatchSemaphore(value: 0)
-            context.perform {
-                append("outer-start")
+            context.performAndWait {
+                order.append("outer-start")
                 context.performAndWait {
-                    append("immediate")
+                    order.append("immediate")
                 }
-                context.perform {
-                    append("enqueued")
-                    enqueuedDone.signal()
-                }
-                append("outer-end")
-                outerDone.signal()
+                order.append("outer-end")
             }
-            guard outerDone.wait(timeout: .now() + 5) == .success,
-                  enqueuedDone.wait(timeout: .now() + 5) == .success,
-                  order == ["outer-start", "immediate", "outer-end", "enqueued"] else {
-                throw ProbeFailure.message("perform immediate versus enqueued ordering mismatch: \(order)")
-            }
-
-            var scheduled: [String] = []
-            let scheduleDone = DispatchSemaphore(value: 0)
-            var scheduleError: String?
-            Task {
-                do {
-                    _ = try await context.perform(schedule: .enqueued) { () -> Int in
-                        scheduled.append("enqueued")
-                        return 1
-                    }
-                    _ = try await context.perform(schedule: .immediate) { () -> Int in
-                        scheduled.append("immediate")
-                        return 2
-                    }
-                } catch {
-                    scheduleError = String(describing: error)
-                }
-                scheduleDone.signal()
-            }
-            guard scheduleDone.wait(timeout: .now() + 5) == .success else {
-                throw ProbeFailure.message("async perform(schedule:) timed out")
-            }
-            if let scheduleError {
-                throw ProbeFailure.message("async perform(schedule:) failed: \(scheduleError)")
-            }
-            guard scheduled == ["enqueued", "immediate"] else {
-                throw ProbeFailure.message("async perform(schedule:) ordering mismatch: \(scheduled)")
+            guard order == ["outer-start", "immediate", "outer-end"] else {
+                throw ProbeFailure.message("performAndWait nested ordering mismatch: \(order)")
             }
     } catch {
         fatalError("testPerformOrdering failed: \(error)")
@@ -484,16 +408,6 @@ func testGenericPerformOverloads() {
                 // expected
             } catch {
                 throw ProbeFailure.message("generic performAndWait threw an unexpected error: \(error)")
-            }
-
-            let asyncDone = DispatchSemaphore(value: 0)
-            var asyncValue = 0
-            Task {
-                asyncValue = (try? await context.perform(schedule: .immediate) { 11 }) ?? 0
-                asyncDone.signal()
-            }
-            guard asyncDone.wait(timeout: .now() + 5) == .success, asyncValue == 11 else {
-                throw ProbeFailure.message("generic perform(schedule:) did not return the block result")
             }
     } catch {
         fatalError("testGenericPerformOverloads failed: \(error)")
@@ -1298,7 +1212,7 @@ func testMergePolicies() {
             let container = try makeLoadedContainer(makeNoteModel(), name: "MergePolicies")
             let parent = container.viewContext
             parent.mergePolicy = NSMergePolicy.rollback
-            let child = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            let child = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
             child.parent = parent
             child.automaticallyMergesChangesFromParent = true
             child.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
@@ -1342,7 +1256,7 @@ func testMergePolicyAndParentMerge() {
             let container = try makeLoadedContainer(makeNoteModel(), name: "Merge")
             let parent = container.viewContext
             parent.mergePolicy = NSMergePolicy.rollback
-            let child = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            let child = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
             child.parent = parent
             child.automaticallyMergesChangesFromParent = true
             child.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump

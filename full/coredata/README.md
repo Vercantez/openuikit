@@ -79,6 +79,9 @@ Coverage (wave-1 → depth pass → ledger repair): **88 → 1206 → 682 implem
 - `NSPersistentContainer.defaultDirectoryURL()` returns the conventional
   Application Support path and does **not** eagerly create directories or
   sqlite files.
+- Isolated Linux hosts have no UI run loop. `mainQueueConcurrencyType`
+  confines with the context lock instead of `DispatchQueue.main.sync` /
+  `.async`, which deadlocks a runner that never pumps main.
 
 ## Deferred
 
@@ -120,7 +123,11 @@ top-level synchronous `func testName()`. Rows without that observation are
 `declared` as `source:full/coredata/<file>.swift#Symbol`. Enum / option-set
 members and C `k…`/`err…`/`NS*Error` constants share two table-driven value
 tests; no other test is cited by more than 40% of the remaining implemented
-rows (largest: `testFailClosedSurfaces` at 49 / 207 ≈ 24%).
+rows (largest: `testFailClosedSurfaces` at 49 / 207 ≈ 24%). Cited tests are
+synchronous `func testName()` bodies: they do not wait on `DispatchQueue.main`,
+`DispatchSemaphore`, `RunLoop`, or `Task`. Main-queue contexts confine with
+the context lock on Linux instead of `DispatchQueue.main.sync`, which deadlocks
+when the sealed merge runner has no UI run loop.
 
 Top-5 implemented evidence distribution (682 rows):
 

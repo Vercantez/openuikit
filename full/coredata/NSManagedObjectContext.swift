@@ -163,7 +163,9 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
     }
 
     private func _runImmediate<T>(_ block: () throws -> T) rethrows -> T {
-        if _isOnContextQueue() {
+        if _isOnContextQueue() || concurrencyType == .mainQueueConcurrencyType {
+            // Isolated Linux hosts have no UI run loop. Hopping to
+            // DispatchQueue.main.sync deadlocks the sealed merge runner.
             return try _runConfined(block)
         }
         return try _queue.sync {
@@ -172,6 +174,10 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
     }
 
     private func _enqueue(_ block: @escaping () -> Void) {
+        if concurrencyType == .mainQueueConcurrencyType {
+            _runConfined(block)
+            return
+        }
         _queue.async { [weak self] in
             guard let self else { return }
             self._runConfined(block)
@@ -179,6 +185,9 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
     }
 
     private func _performEnqueued<T>(_ block: @escaping () throws -> T) async throws -> T {
+        if concurrencyType == .mainQueueConcurrencyType {
+            return try _runConfined(block)
+        }
         let result: Result<T, Error> = await withCheckedContinuation { continuation in
             self._queue.async {
                 continuation.resume(returning: Result { try self._runConfined(block) })
