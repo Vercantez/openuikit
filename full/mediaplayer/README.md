@@ -58,4 +58,40 @@ Xcode 26.1 iPhoneOS Swift surface, 895 precise IDs.
 
 ## Tests
 
-`tests/agent/MediaPlayerRuntime.swift` prints `MEDIAPLAYER_AGENT_RUNTIME_OK`.
+`tests/agent/MediaPlayerRuntime.swift` is the schema-v1 sealed-gate entry
+point. It concatenates the focused `tests/agent/*Tests.swift` families,
+prints `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`,
+runs every `test*` function, and prints `MEDIAPLAYER_AGENT_RUNTIME_OK`.
+
+## Depth pass 2026-09
+
+Second pass on `origin/agent/fw-mediaplayer`. The implementation is unchanged
+in spirit: in-process Now Playing, remote commands, fixture library,
+music-player state machine, and fail-closed chrome. The refused ledger cited a
+source-file list on all 869 `implemented` rows. This pass:
+
+- Keeps the Linux module and fail-closed boundaries.
+- Splits runtime checks into focused families under `tests/agent/*Tests.swift`.
+- Cites every `implemented` row as `test:full/mediaplayer/tests/agent/<File>Tests.swift#testName`.
+- Uses one table test each for `MPMediaItemProperty*` / playlist keys and
+  `MPNowPlayingInfoProperty*` keys.
+- Dispatches each `MPRemoteCommandCenter` command through enable / handler /
+  `openuikit_invoke` / disable.
+- Queries a three-item fixture library with `equalTo` / `contains` predicates
+  and album grouping.
+- Exercises the music-player state machine and playback notifications.
+- Asserts every `MPError.Code` raw value, `~=` matching, and `MPErrorDomain`.
+
+Deferred AVFoundation overlays and unavailable CoreMedia/UIKit view types are
+unchanged. Isolated-host `UIImage` / `UIView` / `UIViewController` in
+`MPHostTypes.swift` are still not UIKit identity.
+
+Sealed gate: `bash full/mediaplayer/tests/acceptance/test_host.sh` (Linux host,
+no docker). Expected markers:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+MEDIAPLAYER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=MediaPlayer dylib=libMediaPlayer.dylib
+```
