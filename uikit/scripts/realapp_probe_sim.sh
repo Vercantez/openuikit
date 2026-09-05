@@ -33,6 +33,10 @@ sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Focus/FocusScre
 mkdir -p "$TMPSRC/Hackers"
 sed -e 's/^import OpenUIKit$/import UIKit/' \
     Sources/RealAppProbe/Hackers/HackersScreens.swift > "$TMPSRC/Hackers/HackersScreens.swift"
+sed -e 's/^import OpenUIKit$/import UIKit/' \
+    Sources/RealAppProbe/LedgerScreens.swift > "$TMPSRC/LedgerScreens.swift"
+cp Sources/RealAppProbe/LedgerStore.swift "$TMPSRC/LedgerStore.swift"
+cp Sources/RealAppProbe/LedgerListViewController.swift "$TMPSRC/LedgerListViewController.swift"
 # The vendored file's two ADAPTED(objc-runtime) lines are the ledger's own
 # `Selector.named` spelling for native ELF; on Darwin compile the UPSTREAM
 # `#selector` text (pocket-casts-ios podcasts/SimpleActionView.swift:106,137).
@@ -143,6 +147,9 @@ swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor \
   "$TMPSRC/RealAppScreen.swift" "$TMPSRC/Shims.swift" "$TMPSRC/FocusShims.swift" \
   "$TMPSRC/FocusScreens.swift" \
   "$TMPSRC/Hackers/HackersScreens.swift" \
+  "$TMPSRC/LedgerScreens.swift" \
+  "$TMPSRC/LedgerStore.swift" \
+  "$TMPSRC/LedgerListViewController.swift" \
   "$TMPSRC"/Vendored/*.swift \
   "$TMPSRC"/Vendored/Focus/*.swift \
   "$TMPSRC"/Vendored/Hackers/*.swift \

@@ -89,6 +89,9 @@ public enum RealAppScreen {
         /// main post list, wrapped in a UINavigationController as the app's
         /// NavigationStack chrome.
         case hackersFeed
+        /// Ninth conformance app (Sources/ConformanceApps/Ledger). First
+        /// screen only: formatter-backed transaction list + loopback row.
+        case ledger
     }
 
     /// One headless configuration: which app screen, which theme, and which
@@ -138,10 +141,9 @@ public enum RealAppScreen {
         }
     }
 
-    // Twelve screens on every route. Before this branch the guest builder
-    // only globbed RealAppProbe/*.swift + Vendored/*.swift, so
-    // canImport(Onboarding)/canImport(Domain) were false and the table
-    // stopped at 10 Pocket Casts screens (docs/agent_reports/guest-app-path.md).
+    // Thirteen screens on every route. The 13th is Ledger's first screen
+    // (guest-trial): formatter / JSON / regex / loopback URLSession row.
+    // Guest glob is RealAppProbe/*.swift (LedgerStore / List / Screens).
     public static let screens: [Screen] = [
         Screen(name: "realapp_history_light", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,
@@ -181,7 +183,7 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ] + focusScreenTable + hackersScreenTable
+    ] + focusScreenTable + hackersScreenTable + ledgerScreenTable
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
@@ -265,6 +267,8 @@ public enum RealAppScreen {
             return makeFocusSettingsScreen()
         case .hackersFeed:
             return makeHackersFeedScreen()
+        case .ledger:
+            return makeLedgerScreen()
         }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker

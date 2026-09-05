@@ -72,6 +72,11 @@ extension CMTimeRange: Hashable {
     }
 }
 
+public func CMTIMERANGE_IS_VALID(_ range: CMTimeRange) -> Bool { range.isValid }
+public func CMTIMERANGE_IS_INVALID(_ range: CMTimeRange) -> Bool { !range.isValid }
+public func CMTIMERANGE_IS_INDEFINITE(_ range: CMTimeRange) -> Bool { range.isIndefinite }
+public func CMTIMERANGE_IS_EMPTY(_ range: CMTimeRange) -> Bool { range.isEmpty }
+
 public func CMTimeRangeMake(start: CMTime, duration: CMTime) -> CMTimeRange {
     CMTimeRange(start: start, duration: duration)
 }
