@@ -102,11 +102,37 @@ modules are not imported here and were not edited.
   a `ChartBitmap`. The 3-bar fixture (categories A/B/C, values 1/2/3,
   90×60) matches a hand-computed RGBA raster.
 
-Coverage after this pass: implemented ≥ 1500; Chart / marks /
-`PlottableValue` / scales / axes / `ChartProxy` / stacking /
-interpolation families are nondeferred except 3D-only synthesized
-`Chart3DContent` members on marks (`metalness` / `roughness` /
-`symbolRotation`). The 464 `not-applicable` rows are unchanged.
+Coverage ledger (honest evidence, after the merge-refusal repair):
+
+| status | refused `a7f28027` | after repair |
+| --- | ---: | ---: |
+| implemented | 3652 | 341 |
+| declared | 4678 | 7996 |
+| deferred | 680 | 673 |
+| not-applicable | 464 | 464 |
+
+The refused revision cited `testSymbolShapePaths` from 1670 of 3652
+implemented rows (45.7%). Those rows were SwiftUI overlay witnesses on
+`AnyChartSymbolShape` / `BasicChartSymbolShape`, not symbol `path(in:)`
+checks. Implemented rows now cite a real `test*` that constructs or
+calls that identifier. Enum / option-set catalogs may share one
+table-driven test; no other test exceeds 40% of implemented rows.
+
+Top-5 implemented evidence after repair:
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 38 | 11.1% | `ChartsTests.swift#testPrimitivePlottable` |
+| 26 | 7.6% | `ChartsTests.swift#testBinsAndRanges` |
+| 14 | 4.1% | `ChartsTests.swift#testChart3DPoseCatalog` |
+| 14 | 4.1% | `ChartsDepthTests.swift#testPlottableValueLocalizedFactories` |
+| 12 | 3.5% | `ChartsTests.swift#testRectangleMarkScalars` |
+
+Chart / marks / `PlottableValue` / scales / axes / `ChartProxy` /
+stacking / interpolation families stay nondeferred except 3D-only
+synthesized `Chart3DContent` members on marks (`metalness` /
+`roughness` / `symbolRotation`). The 464 `not-applicable` rows are
+unchanged.
 
 ### SwiftUI port gaps (listed, not edited)
 
@@ -122,8 +148,6 @@ the lookalikes with the real SwiftUI/OpenCoreGraphics types.
 Selection, scroll, gestures, 3D/RealityKit, and live SwiftUI layout
 timing remain fail-closed. `ChartProxy` without installed scales still
 returns `nil` positions.
-
-## Wave-6 deliverable gate
 
 ## Wave-6 deliverable gate
 

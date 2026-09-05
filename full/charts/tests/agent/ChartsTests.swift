@@ -62,6 +62,11 @@ func testChartProxyFailClosed() {
     unavailable.selectYValue(at: 2)
     unavailable.selectXRange(from: 0, to: 1)
     unavailable.selectYRange(from: 0, to: 1)
+    let hostDriven = ChartProxy(xPosition: { CGFloat($0 * 2 + 1) })
+    precondition(hostDriven.position(forX: 5) == 11)
+    precondition(
+        hostDriven.position(forX: Date(timeIntervalSinceReferenceDate: 9)) == 19
+    )
 }
 
 func testChartProxyHostDriven() {
@@ -190,9 +195,20 @@ func testViewChartModifiersCompile() {
 }
 
 func testPrimitivePlottable() {
-    let value = 7
-    precondition(value.primitivePlottable == 7)
+    precondition((7 as Int).primitivePlottable == 7)
     precondition(Int(primitivePlottable: 7) == 7)
+    precondition((Int8(3)).primitivePlottable == 3)
+    precondition((Int16(3)).primitivePlottable == 3)
+    precondition((Int32(3)).primitivePlottable == 3)
+    precondition((Int64(3)).primitivePlottable == 3)
+    precondition((UInt(3)).primitivePlottable == 3)
+    precondition((UInt8(3)).primitivePlottable == 3)
+    precondition((UInt16(3)).primitivePlottable == 3)
+    precondition((UInt32(3)).primitivePlottable == 3)
+    precondition((UInt64(3)).primitivePlottable == 3)
+    precondition((Float(1.5)).primitivePlottable == Float(1.5))
+    precondition((2.5 as Double).primitivePlottable == 2.5)
+    precondition(("A" as String).primitivePlottable == "A")
     let day = Date(timeIntervalSinceReferenceDate: 3)
     precondition(day.primitivePlottable == day)
 }
@@ -200,6 +216,7 @@ func testPrimitivePlottable() {
 func testMarkChartContentModifiers() {
     let marked = LineMark(x: .value("x", 1), y: .value("y", 2))
         .symbolSize(12)
+        .symbolSize(CGSize(width: 3, height: 3))
         .alignsMarkStylesWithPlotArea(true)
         .compositingLayer()
         .annotation { Text("label") }
