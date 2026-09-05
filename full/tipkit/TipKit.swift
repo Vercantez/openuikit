@@ -2,14 +2,45 @@
 
 /// Linux starting point for Apple's public `TipKit` module.
 ///
-/// The Foundation-only event, rule-status, and configuration engine is real
-/// and in-memory. SwiftUI `Text`/`Image`/`TipView` surface and UIKit `TipUI*`
-/// types are gated off this isolated host; they are not replaced with local
-/// stand-ins. Persistence and CloudKit options are fail-closed / inert.
+/// The Foundation event, rule, parameter, and configuration engine is real.
+/// `datastoreLocation(.applicationDefault)` writes JSON under Application
+/// Support/TipKit. CloudKit options are recorded and never synchronized.
+/// SwiftUI `Text`/`Image`/`View` members and UIKit rendering stay gated;
+/// `TipView` / `TipUI*` exist as configuration models only.
 @frozen public enum Tips {}
+
+enum TipsTime {
+    private static let lock = NSLock()
+    private static var override: Date?
+
+    static var now: Date {
+        lock.lock()
+        defer { lock.unlock() }
+        return override ?? Date()
+    }
+
+    static func setNow(_ date: Date?) {
+        lock.lock()
+        override = date
+        lock.unlock()
+    }
+}
 
 enum TipsStore {
     static let shared = Storage()
+
+    struct DiskDonation: Codable {
+        var date: TimeInterval
+        var payload: Data
+    }
+
+    struct DiskState: Codable {
+        var donations: [String: [DiskDonation]]
+        var invalidations: [String: String]
+        var displayCounts: [String: Int]
+        var parameters: [String: Data]
+        var lastDisplayEpoch: TimeInterval?
+    }
 
     final class Storage: @unchecked Sendable {
         let completionQueue = DispatchQueue(label: "TipKit.Tips.completion")
@@ -18,6 +49,8 @@ enum TipsStore {
         private var displayFrequency: Tips.ConfigurationOption.DisplayFrequency?
         private var requestedDatastore: Tips.ConfigurationOption.DatastoreLocation?
         private var requestedCloudKit: Tips.ConfigurationOption.CloudKitContainer??
+        private var storeURL: URL?
+        private var applicationSupportRootOverride: URL?
         private var hideAllForTesting = false
         private var showAllForTesting = false
         private var hiddenTypeKeys: Set<String> = []
@@ -25,6 +58,9 @@ enum TipsStore {
         private var donations: [String: [StoredDonation]] = [:]
         private var invalidations: [String: Tips.InvalidationReason] = [:]
         private var displayCounts: [String: Int] = [:]
+        private var parameters: [String: Data] = [:]
+        private var transientParameters: [String: Data] = [:]
+        private var lastDisplayDate: Date?
         private var statusListeners: [UUID: () -> Void] = [:]
 
         struct StoredDonation: Sendable {
@@ -34,21 +70,31 @@ enum TipsStore {
 
         func configure(_ configuration: [Tips.ConfigurationOption]) throws {
             lock.lock()
-            defer { lock.unlock() }
             if configured {
+                lock.unlock()
                 throw TipKitError.tipsDatastoreAlreadyConfigured
             }
+            var location: Tips.ConfigurationOption.DatastoreLocation = .applicationDefault
             for option in configuration {
                 switch option.payload {
-                case .datastore(let location):
-                    requestedDatastore = location
+                case .datastore(let requested):
+                    location = requested
+                    requestedDatastore = requested
                 case .frequency(let frequency):
                     displayFrequency = frequency
                 case .cloudKit(let container):
                     requestedCloudKit = container
                 }
             }
+            if requestedDatastore == nil {
+                requestedDatastore = location
+            }
+            let url = resolveStoreURLLocked(location)
+            storeURL = url
             configured = true
+            lock.unlock()
+            loadFromDisk(url)
+            flushToDisk()
         }
 
         func resetDatastore() throws {
@@ -57,8 +103,12 @@ enum TipsStore {
             donations.removeAll()
             invalidations.removeAll()
             displayCounts.removeAll()
+            parameters.removeAll()
+            transientParameters.removeAll()
+            lastDisplayDate = nil
             listeners = Array(statusListeners.values)
             lock.unlock()
+            flushToDisk()
             listeners.forEach { $0() }
         }
 
@@ -68,6 +118,7 @@ enum TipsStore {
             displayFrequency = nil
             requestedDatastore = nil
             requestedCloudKit = nil
+            storeURL = nil
             hideAllForTesting = false
             showAllForTesting = false
             hiddenTypeKeys.removeAll()
@@ -75,9 +126,25 @@ enum TipsStore {
             donations.removeAll()
             invalidations.removeAll()
             displayCounts.removeAll()
+            parameters.removeAll()
+            transientParameters.removeAll()
+            lastDisplayDate = nil
             let listeners = Array(statusListeners.values)
+            let isolatedRoot = FileManager.default.temporaryDirectory
+                .appendingPathComponent(
+                    "tipkit-host-as-\(UUID().uuidString)",
+                    isDirectory: true
+                )
+            applicationSupportRootOverride = isolatedRoot
             lock.unlock()
+            TipsTime.setNow(nil)
             listeners.forEach { $0() }
+        }
+
+        func setApplicationSupportRootForHost(_ url: URL?) {
+            lock.lock()
+            applicationSupportRootOverride = url
+            lock.unlock()
         }
 
         func setHideAllForTesting() {
@@ -137,6 +204,22 @@ enum TipsStore {
             return (configured, displayFrequency, requestedDatastore, requestedCloudKit)
         }
 
+        func datastoreFileURL() -> URL? {
+            lock.lock()
+            defer { lock.unlock() }
+            return storeURL
+        }
+
+        func lastDisplayDateValue() -> Date? {
+            lock.lock()
+            defer { lock.unlock() }
+            return lastDisplayDate
+        }
+
+        func cloudKitSyncEnabled() -> Bool {
+            false
+        }
+
         func appendDonation(
             eventID: String,
             date: Date,
@@ -144,7 +227,6 @@ enum TipsStore {
             limit: Tips.DonationLimit
         ) {
             lock.lock()
-            defer { lock.unlock() }
             var list = donations[eventID, default: []]
             list.append(StoredDonation(date: date, payload: payload))
             if let maximumAge = limit.maximumAge {
@@ -155,6 +237,8 @@ enum TipsStore {
                 list.removeFirst(list.count - limit.maximumCount)
             }
             donations[eventID] = list
+            lock.unlock()
+            flushToDisk()
         }
 
         func loadDonations(eventID: String) -> [StoredDonation] {
@@ -167,6 +251,7 @@ enum TipsStore {
             lock.lock()
             donations[eventID] = []
             lock.unlock()
+            flushToDisk()
         }
 
         func invalidate(id: String, reason: Tips.InvalidationReason) {
@@ -174,6 +259,7 @@ enum TipsStore {
             invalidations[id] = reason
             let listeners = Array(statusListeners.values)
             lock.unlock()
+            flushToDisk()
             listeners.forEach { $0() }
         }
 
@@ -183,6 +269,7 @@ enum TipsStore {
             displayCounts[id] = 0
             let listeners = Array(statusListeners.values)
             lock.unlock()
+            flushToDisk()
             listeners.forEach { $0() }
         }
 
@@ -190,6 +277,7 @@ enum TipsStore {
             lock.lock()
             let next = displayCounts[id, default: 0] + 1
             displayCounts[id] = next
+            lastDisplayDate = TipsTime.now
             var didInvalidate = false
             if let maxDisplayCount, next >= maxDisplayCount {
                 invalidations[id] = .displayCountExceeded
@@ -197,9 +285,31 @@ enum TipsStore {
             }
             let listeners = Array(statusListeners.values)
             lock.unlock()
+            flushToDisk()
             if didInvalidate || !listeners.isEmpty {
                 listeners.forEach { $0() }
             }
+        }
+
+        func loadParameter(id: String, transient: Bool) -> Data? {
+            lock.lock()
+            defer { lock.unlock() }
+            if transient {
+                return transientParameters[id]
+            }
+            return parameters[id]
+        }
+
+        func storeParameter(id: String, payload: Data, transient: Bool) {
+            lock.lock()
+            if transient {
+                transientParameters[id] = payload
+                lock.unlock()
+                return
+            }
+            parameters[id] = payload
+            lock.unlock()
+            flushToDisk()
         }
 
         func status(
@@ -208,16 +318,16 @@ enum TipsStore {
             rules: [Tips.Rule]
         ) -> Tips.Status {
             lock.lock()
-            defer { lock.unlock() }
             if let reason = invalidations[id] {
-                if showAllForTesting || shownTypeKeys.contains(typeKey) {
-                    return .available
-                }
-                return .invalidated(reason)
+                let forceAvailable = showAllForTesting || shownTypeKeys.contains(typeKey)
+                lock.unlock()
+                return forceAvailable ? .available : .invalidated(reason)
             }
             if showAllForTesting || shownTypeKeys.contains(typeKey) {
+                lock.unlock()
                 return .available
             }
+            lock.unlock()
             let rulesPass = rules.allSatisfy { $0.evaluate() }
             return rulesPass ? .available : .pending
         }
@@ -225,13 +335,16 @@ enum TipsStore {
         func shouldDisplay(
             id: String,
             typeKey: String,
-            rules: [Tips.Rule]
+            rules: [Tips.Rule],
+            options: [any TipOption]
         ) -> Bool {
             lock.lock()
             let hideAll = hideAllForTesting
             let hidden = hiddenTypeKeys.contains(typeKey)
             let showAll = showAllForTesting
             let shown = shownTypeKeys.contains(typeKey)
+            let frequency = displayFrequency
+            let lastDisplay = lastDisplayDate
             lock.unlock()
             if hideAll || hidden {
                 return false
@@ -240,10 +353,19 @@ enum TipsStore {
                 return true
             }
             let resolved = status(id: id, typeKey: typeKey, rules: rules)
-            if case .available = resolved {
+            guard case .available = resolved else {
+                return false
+            }
+            let ignores = options.contains { option in
+                (option as? Tips.IgnoresDisplayFrequency)?.ignoresDisplayFrequency == true
+            }
+            if ignores {
                 return true
             }
-            return false
+            guard let seconds = frequency?.hostSeconds, let lastDisplay else {
+                return true
+            }
+            return TipsTime.now.timeIntervalSince(lastDisplay) >= seconds
         }
 
         func addStatusListener(_ body: @escaping () -> Void) -> UUID {
@@ -259,16 +381,118 @@ enum TipsStore {
             statusListeners[token] = nil
             lock.unlock()
         }
+
+        private func resolveStoreURLLocked(
+            _ location: Tips.ConfigurationOption.DatastoreLocation
+        ) -> URL {
+            switch location.kind {
+            case .applicationDefault:
+                let root = applicationSupportRootOverride
+                    ?? FileManager.default.urls(
+                        for: .applicationSupportDirectory,
+                        in: .userDomainMask
+                    ).first
+                    ?? FileManager.default.temporaryDirectory
+                return root
+                    .appendingPathComponent("TipKit", isDirectory: true)
+                    .appendingPathComponent("datastore.json", isDirectory: false)
+            case .url(let url):
+                if url.hasDirectoryPath {
+                    return url.appendingPathComponent("datastore.json", isDirectory: false)
+                }
+                return url
+            }
+        }
+
+        private func loadFromDisk(_ url: URL) {
+            let data: Data
+            do {
+                data = try Data(contentsOf: url)
+            } catch {
+                return
+            }
+            guard let state = try? JSONDecoder().decode(DiskState.self, from: data) else {
+                return
+            }
+            lock.lock()
+            donations = state.donations.mapValues { rows in
+                rows.map {
+                    StoredDonation(
+                        date: Date(timeIntervalSince1970: $0.date),
+                        payload: $0.payload
+                    )
+                }
+            }
+            invalidations = state.invalidations.compactMapValues(Tips.InvalidationReason.init(storeKey:))
+            displayCounts = state.displayCounts
+            parameters = state.parameters
+            if let epoch = state.lastDisplayEpoch {
+                lastDisplayDate = Date(timeIntervalSince1970: epoch)
+            } else {
+                lastDisplayDate = nil
+            }
+            lock.unlock()
+        }
+
+        private func flushToDisk() {
+            lock.lock()
+            guard let url = storeURL else {
+                lock.unlock()
+                return
+            }
+            let state = DiskState(
+                donations: donations.mapValues { rows in
+                    rows.map {
+                        DiskDonation(date: $0.date.timeIntervalSince1970, payload: $0.payload)
+                    }
+                },
+                invalidations: invalidations.mapValues(\.storeKey),
+                displayCounts: displayCounts,
+                parameters: parameters,
+                lastDisplayEpoch: lastDisplayDate?.timeIntervalSince1970
+            )
+            lock.unlock()
+            let directory = url.deletingLastPathComponent()
+            try? FileManager.default.createDirectory(
+                at: directory,
+                withIntermediateDirectories: true
+            )
+            guard let data = try? JSONEncoder().encode(state) else {
+                return
+            }
+            try? data.write(to: url, options: .atomic)
+        }
+    }
+}
+
+extension Tips.InvalidationReason {
+    var storeKey: String {
+        switch self {
+        case .actionPerformed: return "actionPerformed"
+        case .displayCountExceeded: return "displayCountExceeded"
+        case .displayDurationExceeded: return "displayDurationExceeded"
+        case .tipClosed: return "tipClosed"
+        }
+    }
+
+    init?(storeKey: String) {
+        switch storeKey {
+        case "actionPerformed": self = .actionPerformed
+        case "displayCountExceeded": self = .displayCountExceeded
+        case "displayDurationExceeded": self = .displayDurationExceeded
+        case "tipClosed": self = .tipClosed
+        default: return nil
+        }
     }
 }
 
 extension Tips {
-    /// Configures the in-memory Linux tip store once per process.
+    /// Configures the Linux tip store once per process.
     ///
-    /// `datastoreLocation(.url)` and `cloudKitContainer` are accepted as
-    /// option values and recorded, but they do not create a file, CloudKit
-    /// container, or synchronized store. A second call throws
-    /// `TipKitError.tipsDatastoreAlreadyConfigured`.
+    /// `datastoreLocation(.applicationDefault)` creates a JSON store under
+    /// Application Support/TipKit. `datastoreLocation(.url)` writes that file.
+    /// `cloudKitContainer` is recorded and never synchronized. A second call
+    /// throws `TipKitError.tipsDatastoreAlreadyConfigured`.
     public static func configure(
         _ configuration: [Tips.ConfigurationOption] = []
     ) throws {
@@ -317,6 +541,30 @@ public enum TipsHostControl {
         cloudKit: Tips.ConfigurationOption.CloudKitContainer??
     ) {
         TipsStore.shared.snapshotConfig()
+    }
+
+    public static func datastoreFileURL() -> URL? {
+        TipsStore.shared.datastoreFileURL()
+    }
+
+    public static func lastDisplayDate() -> Date? {
+        TipsStore.shared.lastDisplayDateValue()
+    }
+
+    public static func cloudKitSyncEnabled() -> Bool {
+        TipsStore.shared.cloudKitSyncEnabled()
+    }
+
+    public static func setApplicationSupportRootForHost(_ url: URL?) {
+        TipsStore.shared.setApplicationSupportRootForHost(url)
+    }
+
+    public static func setNow(_ date: Date) {
+        TipsTime.setNow(date)
+    }
+
+    public static func resetClock() {
+        TipsTime.setNow(nil)
     }
 
     /// Occupies the donation-completion queue until `release` so later `async`

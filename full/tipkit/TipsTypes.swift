@@ -186,6 +186,18 @@ extension Tips {
             public static var monthly: Tips.ConfigurationOption.DisplayFrequency {
                 Tips.ConfigurationOption.DisplayFrequency(kind: .monthly)
             }
+
+            /// Elapsed-second mapping used by Linux display-frequency arithmetic.
+            /// Calendar-month boundaries are unobserved; monthly is 30 days.
+            var hostSeconds: TimeInterval? {
+                switch kind {
+                case .immediate: return nil
+                case .hourly: return 3_600
+                case .daily: return 86_400
+                case .weekly: return 604_800
+                case .monthly: return 2_592_000
+                }
+            }
         }
 
         public struct DatastoreLocation: Hashable, Sendable {

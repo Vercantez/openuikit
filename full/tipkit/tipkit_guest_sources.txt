@@ -1,6 +1,7 @@
 full/tipkit/Tip.swift
 full/tipkit/TipGroup.swift
 full/tipkit/TipKit.swift
+full/tipkit/TipPresentation.swift
 full/tipkit/TipsAction.swift
 full/tipkit/TipsBuilders.swift
 full/tipkit/TipsEvent.swift

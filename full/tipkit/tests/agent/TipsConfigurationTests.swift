@@ -37,19 +37,17 @@ func testDatastoreLocationFailClosed() {
 
 func testConfigureOnceAndResetDatastore() {
     TipsHostControl.resetForHostTests()
+    let store = tipKitUniqueDirectory().appendingPathComponent("tips.store")
     try! Tips.configure([
         .displayFrequency(.daily),
-        .datastoreLocation(.url(URL(fileURLWithPath: "/tmp/tipkit-should-not-be-created.store"))),
+        .datastoreLocation(.url(store)),
         .cloudKitContainer(.named("iCloud.example")),
     ])
     let snapshot = TipsHostControl.snapshotConfig()
     precondition(snapshot.configured)
     precondition(snapshot.frequency == .daily)
-    precondition(
-        FileManager.default.fileExists(
-            atPath: "/tmp/tipkit-should-not-be-created.store"
-        ) == false
-    )
+    precondition(FileManager.default.fileExists(atPath: store.path))
+    precondition(TipsHostControl.cloudKitSyncEnabled() == false)
     do {
         try Tips.configure()
         fatalError("second configure must throw")
