@@ -127,7 +127,9 @@ was still the Foundation-hidden UIKITINC artifact (`canImport(Foundation)`
 false → FoundationEssentials re-export, no Dispatch). `GATE_B_FAIL rc=1`.
 `guest_realapp skipped`.
 
-Attempt 7: recompile UIKit into APPINC after the Foundation facade
-(`build_focus_package_guest.sh` "final app-facing UIKit after Foundation
-facade"): `@_exported import Foundation`, and FoundationGuest already
-`@_exported import Dispatch`. App compiles search APPINC, not UIKITINC.
+Attempt 7: `f600fd104a3b6aca9c58a9b9310ecfd87e695b31`.
+`TBD_CHECK_OK`, `difftest rc=0`. App-facing UIKit compiled (Preview macro
+warning only). All stub modules and RealAppProbe compiled. Renderer failed:
+`missing required module 'COpenCombineHelpers'` — renderer still used `CINC`
+(library C maps) and not `APPMODS_CINC`. `build_full rc=1`, `GATE_B_FAIL rc=1`.
+`guest_realapp skipped`.

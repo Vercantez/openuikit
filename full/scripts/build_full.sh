@@ -1361,8 +1361,12 @@ APP_PROBE_SOURCES=(
 # The renderer sees both app include roots: RealApp.swift imports RealAppProbe,
 # whose interface transitively names UIKit, Foundation, and FoundationEssentials.
 echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/main.swift)"
-"${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" \
-    "${PREVIEW_SWIFT_FLAGS[@]}" \
+# APPMODS_CINC, not CINC: RealAppProbe.swiftmodule imports Combine, which
+# needs COpenCombineHelpers. Passing both CINC and APPMODS_CINC redefines
+# CPortableIO (attempt 5). Attempt 7 (f600fd10) failed here with
+# `missing required module 'COpenCombineHelpers'`.
+"${SWIFTC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
     -I "$OUT" -I "$APPINC" -I "$APPMODS" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
