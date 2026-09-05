@@ -1,0 +1,9 @@
+full/sensorkit/SRAcousticSettings.swift
+full/sensorkit/SRDeviceAndUsage.swift
+full/sensorkit/SREnums.swift
+full/sensorkit/SRKeyboardMetrics.swift
+full/sensorkit/SRReader.swift
+full/sensorkit/SRSamples.swift
+full/sensorkit/SRSensor.swift
+full/sensorkit/SRTime.swift
+full/sensorkit/SensorKit.swift
