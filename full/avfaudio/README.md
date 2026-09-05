@@ -68,7 +68,26 @@ bash tests/acceptance/test_host.sh
 
 ## Depth pass 2026-09
 
-Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. This pass implements the value/state-machine core **without audio hardware**. Coverage: **1558 implemented / 0 declared / 79 deferred / 1 unavailable** of 1638 IDs (gate floor is 150 nondeferred). Families `AVAudioFormat`, `AVAudioPCMBuffer`, `AVAudioTime`, `AVAudioFile`, `AVAudioEngine` (manual rendering), and `AVAudioConverter` are nondeferred except C-ABI `canImport` APIs (`AudioStreamBasicDescription`, `AudioBufferList`, `AudioTimeStamp`, `AVAudioSourceNode`/`SinkNode`, `manualRenderingBlock`, MIDI event-list connect, `AUAudioUnit` wrappers).
+Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. This pass implements the value/state-machine core **without audio hardware**. Families `AVAudioFormat`, `AVAudioPCMBuffer`, `AVAudioTime`, `AVAudioFile`, `AVAudioEngine` (manual rendering), and `AVAudioConverter` are nondeferred except C-ABI `canImport` APIs (`AudioStreamBasicDescription`, `AudioBufferList`, `AudioTimeStamp`, `AVAudioSourceNode`/`SinkNode`, `manualRenderingBlock`, MIDI event-list connect, `AUAudioUnit` wrappers).
+
+Coverage ledger repair (merge refused `c620a7c9` because implemented rows cited a file path, not `test:…#testName`):
+
+| | implemented | declared | deferred | unavailable |
+| --- | ---: | ---: | ---: | ---: |
+| Before (`c620a7c9`) | 1558 | 0 | 79 | 1 |
+| After (this revision) | 1515 | 63 | 59 | 1 |
+
+Every `implemented` row now cites `test:full/avfaudio/tests/agent/<File>Tests.swift#testName` naming a real top-level `func testName()`. Rows without a focused test are `declared` with `source:full/avfaudio/<file>.swift#Symbol`. Option-set SetAlgebra on `AVMusicSequenceLoadOptions` moved from deferred to implemented because `testAVFAudioOptionSets` exercises it.
+
+Top-5 implemented evidence (1515 rows; no non-table test exceeds 40%):
+
+| rows | % | evidence |
+| ---: | ---: | --- |
+| 343 | 22.6% | `AVFAudioEnumTests.swift#testAVFAudioEnumCases` (table-driven enums/cases/`!=`) |
+| 186 | 12.3% | `AVFAudioOptionSetTests.swift#testAVFAudioOptionSets` (table-driven option-set members/algebra) |
+| 154 | 10.2% | `AVAudioMIDITests.swift#testAVAudioMIDISequencer` |
+| 131 | 8.6% | `AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications` |
+| 111 | 7.3% | `AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed` |
 
 ### Public surface (Linux-backed)
 
@@ -84,7 +103,7 @@ Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. T
 
 | Surface | Linux behavior |
 | --- | --- |
-| Hardware engine I/O | `start()` without manual mode throws `AVAudioEngineManualRenderingError.hostUnavailable`; `isRunning` stays false |
+| Hardware engine I/O | `start()` without manual mode throws a host-unavailable `NSError`; `isRunning` stays false |
 | Compressed converters / files | `AVAudioConverter` and `AVAudioFile` throw `AVFAudioError.hostUnavailable` |
 | `AVAudioUnitSampler` | `loadSoundBankInstrument` / `loadAudioFiles` throw; `startNote` is a no-op |
 | `AVSpeechSynthesizer` | Empty voice catalog; `speak` does not set `isSpeaking` |
@@ -94,7 +113,7 @@ Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. T
 
 ### Tests and markers
 
-`bash full/avfaudio/tests/acceptance/test_host.sh` (Linux host, no docker). Agent runtime covers format/settings, PCM layout, time extrapolation, WAV/CAF/AIFF, converter PCM/SRC/channelMap, mixer pan/gain, engine manual render mix, speech/sampler fail-closed, and a depth catalog of ≥900 symbols.
+`bash full/avfaudio/tests/acceptance/test_host.sh` (Linux host, no docker). Focused `tests/agent/*Tests.swift` functions cover format/settings, PCM layout, time extrapolation, WAV/CAF/AIFF, converter PCM/SRC/channelMap, mixer pan/gain, engine manual render, speech/sampler fail-closed, plus table-driven enums/option-sets/constants. `AVFAudioRuntime.swift` concatenates those tests for the schema-v1 sealed runner and prints `AVFAUDIO_AGENT_RUNTIME_OK`.
 
 Actual sealed host gate (`bash full/avfaudio/tests/acceptance/test_host.sh`, 2026-09-05, Swift 6.2.4 `x86_64-unknown-linux-gnu`):
 
