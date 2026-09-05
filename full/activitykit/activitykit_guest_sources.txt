@@ -1,1 +1,2 @@
 full/activitykit/ActivityKit.swift
+full/activitykit/ActivityKitRegistry.swift
