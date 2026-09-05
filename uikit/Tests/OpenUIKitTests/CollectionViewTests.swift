@@ -835,6 +835,37 @@ final class CompositionalLayoutTests: XCTestCase {
         XCTAssertEqual(cv.contentSize.height, 8 + 72 + 8, accuracy: 0.001)
     }
 
+    /// MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: stories pack
+    /// leading-to-trailing. Item 0 ("A") at x 287 = 375 − 16 − 72; item 1
+    /// at 203; item 4 ("E") clips at x −49.
+    func testOrthogonalStoriesPackRTLFromTheTrailingEdge() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = UICollectionLayoutSectionOrthogonalScrollingBehavior.continuous
+        section.interGroupSpacing = 12
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 8, leading: 16,
+                                                                      bottom: 8, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 400),
+                                   collectionViewLayout: layout)
+        cv.semanticContentAttribute = .forceRightToLeft
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([8])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 287, y: 8, width: 72, height: 72))
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 1, section: 0))?.frame,
+                       CGRect(x: 203, y: 8, width: 72, height: 72))
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 4, section: 0))?.frame,
+                       CGRect(x: -49, y: 8, width: 72, height: 72))
+    }
+
     /// scrollToItem on an orthogonal section shifts the section offset, not
     /// the parent contentOffset.
     func testOrthogonalScrollToItemKeepsParentOffset() {
@@ -888,6 +919,31 @@ final class CompositionalLayoutTests: XCTestCase {
                        CGRect(x: 16, y: 8, width: 343, height: 100))
         XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 1, section: 0))?.frame,
                        CGRect(x: 16, y: 124, width: 343, height: 100))
+    }
+
+    /// MEASURED Feed t200.rtl directional insets: equal 16/16 leaves the
+    /// 343 pt card at x 16 either way (375 − 16 − 343). Unequal leading /
+    /// trailing swaps the physical left edge under RTL.
+    func testVerticalCardsRTLSwapUnequalDirectionalInsets() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(1.0),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(100))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 8, leading: 16,
+                                                                      bottom: 8, trailing: 40)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                   collectionViewLayout: layout)
+        cv.semanticContentAttribute = .forceRightToLeft
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([1])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 40, y: 8, width: 319, height: 100))
     }
 
     /// Feed t200, SE 2x: 16:9 of 343 is 192.9375, snapped to 193 on the

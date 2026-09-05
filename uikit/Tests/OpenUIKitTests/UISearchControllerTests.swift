@@ -139,4 +139,29 @@ final class UISearchControllerTests: XCTestCase {
         tab.tabBar.layoutIfNeeded()
         XCTAssertEqual(tab.tabBar.itemViews.first?.titleLabel.text, "Library")
     }
+
+    /// MEASURED Tabs t200.rtl, iPhone SE 2x / iOS 26.1: items pack
+    /// leading-to-trailing. Index 0 sits on the right of the platter.
+    func testTabBarItemsMirrorAboutPlatterInRTL() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let items = [
+            UITabBarItem(title: "Library", image: nil, tag: 0),
+            UITabBarItem(title: "Tools", image: nil, tag: 1),
+            UITabBarItem(title: "Scroll", image: nil, tag: 2),
+        ]
+        let bar = UITabBar()
+        bar.items = items
+        bar.selectedItem = items[0]
+        bar.semanticContentAttribute = .forceRightToLeft
+        bar.frame = CGRect(x: 0, y: 0, width: 375, height: 62)
+        bar.layoutIfNeeded()
+        XCTAssertEqual(bar.itemViews.count, 3)
+        let left = bar.itemViews[2]
+        let right = bar.itemViews[0]
+        XCTAssertLessThan(left.frame.minX, right.frame.minX)
+        XCTAssertEqual(right.titleLabel.text, "Library")
+        XCTAssertEqual(left.titleLabel.text, "Scroll")
+    }
 }
