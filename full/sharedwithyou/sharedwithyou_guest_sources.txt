@@ -1,0 +1,10 @@
+full/sharedwithyou/SWAttributionView.swift
+full/sharedwithyou/SWCollaborationHighlight.swift
+full/sharedwithyou/SWCollaborationView.swift
+full/sharedwithyou/SWHighlight.swift
+full/sharedwithyou/SWHighlightCenter.swift
+full/sharedwithyou/SWHighlightEvents.swift
+full/sharedwithyou/SWPerson.swift
+full/sharedwithyou/SWRemoveParticipantAlertController.swift
+full/sharedwithyou/SharedWithYou.swift
+full/sharedwithyou/SharedWithYouLookalikes.swift

@@ -1,0 +1,7 @@
+precise	question	risk	reason
+c:@SWCollaborationMetadataTypeIdentifier	What are the exact UTF-8 bytes of Darwin `SWCollaborationMetadataTypeIdentifier`?	fail-closed	TBD exports the symbol but not the string payload. The Linux port uses a provisional UTI and keeps the row declared.
+c:objc(cs)SWHighlightCenter(cpy)highlightCollectionTitle	What localized string does Darwin return for `SWHighlightCenter.highlightCollectionTitle` on iOS 26.1?	os-service	Linux has no Messages catalog. The port returns empty rather than guessing "Shared with You".
+c:objc(cs)SWAttributionView(py)highlightMenu	Does Darwin `highlightMenu` incorporate `supplementalMenu` and `menuTitleForHideAction` as children, and on which queue is the menu built?	ui	Static headers do not document menu construction. Linux returns an empty UIMenu and never talks to Messages.
+c:objc(cs)SWCollaborationView(im)dismissPopover:	If no popover is visible, does Darwin still invoke the completion and `collaborationViewDidDismissPopover`?	ui	Linux never presents a popover; dismissPopover only runs the completion and does not call the delegate.
+c:objc(cs)SWHighlightCenter(im)postNoticeForHighlightEvent:	Does Darwin `postNotice` deliver exactly-once to Messages, and on which queue?	os-service	Linux records a process-local ledger only. Delivery, retention, and queue choice are unobserved.
+module	Which CloudKit / Messages entitlements are required before `isSystemCollaborationSupportAvailable` becomes true?	os-service	Linux always returns false. Entitlement and daemon identity need an Apple-oracle probe.
