@@ -67,6 +67,7 @@ open class PDFDocument: NSObject {
     var pages: [PDFPage] = []
     var originalData: Data?
     var mutated = false
+    var encryptInfo: PDFKitCrypto.EncryptInfo?
 
     public override init() {
         super.init()
@@ -130,9 +131,15 @@ open class PDFDocument: NSObject {
     }
 
     open func unlock(withPassword password: String) -> Bool {
-        _ = password
-        // Fail-closed: this port does not implement PDF encryption.
-        return false
+        guard isLocked, let originalData else { return false }
+        guard let parsed = PDFKitIO.parse(originalData, password: password), !parsed.pages.isEmpty else {
+            return false
+        }
+        applyParsed(parsed, data: originalData)
+        isLocked = false
+        NotificationCenter.default.post(name: .PDFDocumentDidUnlock, object: self)
+        delegate?.documentDidUnlock(Notification(name: .PDFDocumentDidUnlock, object: self))
+        return true
     }
 
     open func dataRepresentation() -> Data? {
@@ -304,16 +311,24 @@ open class PDFDocument: NSObject {
 
     private func ingest(_ data: Data) -> Bool {
         guard let parsed = PDFKitIO.parse(data) else { return false }
+        applyParsed(parsed, data: data)
+        return true
+    }
+
+    private func applyParsed(_ parsed: PDFKitParsedDocument, data: Data) {
         originalData = data
+        mutated = false
         majorVersion = parsed.majorVersion
         minorVersion = parsed.minorVersion
         isEncrypted = parsed.encrypted
-        isLocked = parsed.encrypted
-        if parsed.encrypted {
-            permissionsStatus = .none
-            accessPermissions = []
+        isLocked = parsed.encrypted && parsed.pages.isEmpty
+        encryptInfo = parsed.encryptInfo
+        permissionsStatus = parsed.permissionsStatus
+        accessPermissions = parsed.accessPermissions
+        if parsed.pages.isEmpty && parsed.encrypted {
             pages = []
-            return true
+            documentAttributes = parsed.attributes
+            return
         }
         documentAttributes = parsed.attributes
         pages = parsed.pages.map { description in
@@ -331,7 +346,6 @@ open class PDFDocument: NSObject {
             }
             outlineRoot = root
         }
-        return true
     }
 
     private func makePage() -> PDFPage {
@@ -401,17 +415,17 @@ open class PDFPage: NSObject {
     ]
     var contentData: Data?
     var resourceKeyCount = 0
+    var characters: [PDFKitParsedCharacter] = []
 
     public required override init() {
         super.init()
     }
 
-    #if canImport(UIKit)
-    public convenience init?(image: UIImage) {
+    public convenience init?(image: PDFKitImage) {
         self.init(image: image, options: [:])
     }
 
-    public init?(image: UIImage, options: [PDFPage.ImageInitializationOption: Any] = [:]) {
+    public init?(image: PDFKitImage, options: [PDFPage.ImageInitializationOption: Any] = [:]) {
         super.init()
         let media: CGRect
         if let rect = options[.mediaBox] as? CGRect {
@@ -427,30 +441,42 @@ open class PDFPage: NSObject {
         storedString = nil
     }
 
-    open func thumbnail(of size: CGSize, for box: PDFDisplayBox) -> UIImage {
-        _ = box
+    open func thumbnail(of size: CGSize, for box: PDFDisplayBox) -> PDFKitImage {
+        #if canImport(UIKit)
         let thumbSize = CGSize(width: max(1, size.width), height: max(1, size.height))
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
         let renderer = UIGraphicsImageRenderer(size: thumbSize, format: format)
-        return renderer.image { _ in }
+        return renderer.image { rendererContext in
+            let context = rendererContext.cgContext
+            let bounds = bounds(for: box)
+            let scale = min(
+                thumbSize.width / max(bounds.size.width, 1),
+                thumbSize.height / max(bounds.size.height, 1)
+            )
+            context.translateBy(x: 0, y: thumbSize.height)
+            context.scaleBy(x: scale, y: -scale)
+            draw(with: box, to: context)
+        }
+        #else
+        _ = box
+        return PDFKitImage(size: CGSize(width: max(1, size.width), height: max(1, size.height)))
+        #endif
     }
-    #endif
 
     #if canImport(CoreGraphics)
     open var pageRef: CGPDFPage? { nil }
 
     open func draw(with box: PDFDisplayBox, to context: CGContext) {
-        _ = (box, context)
+        PDFKitRenderer.draw(page: self, box: box, in: context)
     }
 
     open func transform(_ context: CGContext, for box: PDFDisplayBox) {
-        _ = (context, box)
+        context.concatenate(transform(for: box))
     }
 
     open func transform(for box: PDFDisplayBox) -> CGAffineTransform {
-        _ = box
-        return .identity
+        PDFKitRenderer.transform(page: self, box: box)
     }
     #endif
 
@@ -492,12 +518,14 @@ open class PDFPage: NSObject {
     }
 
     open func characterBounds(at index: Int) -> CGRect {
-        _ = index
-        return .zero
+        guard characters.indices.contains(index) else { return .zero }
+        return characters[index].bounds
     }
 
     open func characterIndex(at point: CGPoint) -> Int {
-        _ = point
+        if let index = characters.firstIndex(where: { $0.bounds.contains(point) }) {
+            return index
+        }
         return NSNotFound
     }
 
@@ -550,6 +578,40 @@ open class PDFPage: NSObject {
         storedString = parsed.text.isEmpty ? nil : parsed.text
         contentData = parsed.contents
         resourceKeyCount = parsed.resourceKeyCount
+        characters = parsed.characters
+        for parsedAnnotation in parsed.annotations {
+            let annotation = makeAnnotation(parsedAnnotation)
+            annotation.page = self
+            annotations.append(annotation)
+        }
+    }
+
+    private func makeAnnotation(_ parsed: PDFKitParsedAnnotation) -> PDFAnnotation {
+        let subtype = PDFAnnotationSubtype(rawValue: parsed.subtype.hasPrefix("/") ? parsed.subtype : "/\(parsed.subtype)")
+        let annotation = PDFAnnotation(bounds: parsed.bounds, forType: subtype, withProperties: nil)
+        annotation.contents = parsed.contents
+        annotation.fieldName = parsed.fieldName
+        annotation.widgetStringValue = parsed.fieldValue
+        if let uri = parsed.uri { annotation.url = URL(string: uri) }
+        if !parsed.quadPoints.isEmpty {
+            #if canImport(UIKit)
+            annotation.quadrilateralPoints = parsed.quadPoints.map { NSValue(cgPoint: $0) }
+            #endif
+        }
+        #if canImport(UIKit)
+        if parsed.colorComponents.count >= 3 {
+            annotation.color = UIColor(
+                red: parsed.colorComponents[0],
+                green: parsed.colorComponents[1],
+                blue: parsed.colorComponents[2],
+                alpha: parsed.colorComponents.count > 3 ? parsed.colorComponents[3] : 1
+            )
+        }
+        #endif
+        if let pageIndex = parsed.destinationPageIndex, let page = document?.page(at: pageIndex) {
+            annotation.destination = PDFDestination(page: page, at: .zero)
+        }
+        return annotation
     }
 
     func matches(of string: String, options: NSString.CompareOptions) -> [PDFSelection] {
@@ -629,9 +691,7 @@ open class PDFOutline: NSObject {
 open class PDFSelection: NSObject {
     public private(set) weak var owningDocument: PDFDocument?
     public private(set) var pages: [PDFPage] = []
-    #if canImport(UIKit)
-    open var color: UIColor?
-    #endif
+    open var color: PDFKitColor?
     private var pieces: [(page: PDFPage, text: String, range: NSRange?)] = []
 
     public init(document: PDFDocument) {
@@ -671,11 +731,18 @@ open class PDFSelection: NSObject {
     }
 
     open func extend(atEnd succeed: Int) {
-        _ = succeed
+        guard succeed > 0, let last = pieces.last, let stored = last.page.string else { return }
+        let extra = String(stored.prefix(succeed))
+        addText(extra, page: last.page)
     }
 
     open func extend(atStart precede: Int) {
-        _ = precede
+        guard precede > 0, let first = pieces.first, let stored = first.page.string else { return }
+        let extra = String(stored.prefix(precede))
+        pieces.insert((first.page, extra, nil), at: 0)
+        if !pages.contains(where: { $0 === first.page }) {
+            pages.insert(first.page, at: 0)
+        }
     }
 
     open func extendForLineBoundaries() {}
