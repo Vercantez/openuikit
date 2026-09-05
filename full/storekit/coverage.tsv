@@ -15634,8 +15634,8 @@ s:So33SKCloudServiceAuthorizationStatusV8rawValueABSgSi_tcfc	declared	source:ful
 s:So33SKProductStorePromotionVisibilityV8rawValueABSgSi_tcfc	implemented	test:full/storekit/tests/agent/StoreKitTests.swift#testPromotionInfoFailClosed	Exercised by testPromotionInfoFailClosed against the local .storekit testing store.
 s:So36SKCloudServiceSetupMessageIdentifiera8rawValueABSS_tcfc	declared	source:full/storekit/StoreKit.swift#init	
 s:So9SKANErrorV8rawValueABSgSi_tcfc	implemented	test:full/storekit/tests/agent/StoreKitTests.swift#testMerchandisingAndSKANError	Exercised by testMerchandisingAndSKANError against the local .storekit testing store.
-s:Sq17_StoreKit_SwiftUIAA0A7ContentRzlE4Bodya	not-applicable		Swift stdlib Optional/Never overlay of StoreContent; Linux does not conform stdlib types to StoreContent.
-s:Sq17_StoreKit_SwiftUIAA0A7ContentRzlE4bodys5NeverOvp	not-applicable		Swift stdlib Optional/Never overlay of StoreContent; Linux does not conform stdlib types to StoreContent.
+s:Sq17_StoreKit_SwiftUIAA0A7ContentRzlE4Bodya	deferred		Swift.Optional.Body from StoreContent overlay; Linux does not conform Optional to StoreContent (no compiling associated-type witness).
+s:Sq17_StoreKit_SwiftUIAA0A7ContentRzlE4bodys5NeverOvp	deferred		Swift.Optional.body from StoreContent overlay; Linux does not conform Optional to StoreContent (body would be Never).
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@SKCloudServiceCapability	declared	source:full/storekit/StoreKit.swift#init	
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:8StoreKit7ProductV01_aB8_SwiftUIE24SubscriptionRelationshipV	declared	source:full/storekit/StoreKit.swift#init	
 s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@SKCloudServiceCapability	deferred		No compiling source-compatible declaration on the isolated Foundation-only host.

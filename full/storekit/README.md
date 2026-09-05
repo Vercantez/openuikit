@@ -18,9 +18,9 @@ seed `7147ef0e`, PR #115). Immutable seed files were not rewritten.
 | --- | ---: | ---: |
 | implemented | 824 | 933 |
 | declared | 14483 | 14352 |
-| deferred | 368 | 346 |
+| deferred | 368 | 348 |
 | unavailable | 0 | 0 |
-| not-applicable | 20 | 64 |
+| not-applicable | 20 | 62 |
 
 Floor of 7848 nondeferred (`implemented` + `declared`) remains met
 (15285). CryptoKit `P256` JWS `signature` stays deferred.
@@ -36,8 +36,9 @@ rules, and model-level overlay/view types. Tests that previously waited on
 
 | | implemented | declared | deferred | unavailable | not-applicable |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| before | 824 | 14483 | 368 | 0 | 20 |
-| after | 933 | 14352 | 346 | 0 | 64 |
+| before (first pass) | 824 | 14483 | 368 | 0 | 20 |
+| after depth pass | 933 | 14352 | 346 | 0 | 64 |
+| after merge repair | 933 | 14352 | 348 | 0 | 62 |
 
 Nondeferred: 15307 → 15285 (floor 7848). Unique `implemented` evidence tests:
 55. Top-5 evidence distribution (of 933 implemented rows):
@@ -48,14 +49,25 @@ Nondeferred: 15307 → 15285 (floor 7848). Unique `implemented` evidence tests:
 4. `testSKCloudServiceEnumsAndConstants` — 41 (4.4%)
 5. `testSubscriptionPeriodUnits` — 40 (4.3%)
 
-No cited test covers more than 40% of implemented rows. SwiftUI
-cross-import overlay *base* identifiers (`s:7SwiftUI4ViewP…` without
-`::SYNTHESIZED::`, plus EnvironmentValues / ContainerBackgroundPlacement overlay
-roots) are `not-applicable` with note
-`SwiftUI cross-import overlay; owned by the SwiftUI lane`. Synthesized
-`View` modifier specializations remain `declared` so the 7848 nondeferred
-floor stays met (marking all ~13,610 synthesized overlay rows
-`not-applicable` would drop nondeferred to ~1,675). None of those rows are
+No cited test covers more than 40% of implemented rows. Every `implemented`
+row cites `test:full/storekit/tests/agent/<File>Tests.swift#testName` for a
+real top-level synchronous `func testName()`. Enum / option-set members and
+C `k…`/`err…` constants share table-driven value tests
+(`testSKErrorCodes`, `testSKCloudServiceEnumsAndConstants`,
+`testSKStoreProductParameterConstants`, `testRenewalStateValues`,
+`testRenewalInfoExpirationReasons`).
+
+SwiftUI cross-import overlay *base* identifiers (`s:7SwiftUI4ViewP…`
+without `::SYNTHESIZED::`, plus EnvironmentValues /
+ContainerBackgroundPlacement overlay roots) are `not-applicable` with
+note `SwiftUI cross-import overlay; owned by the SwiftUI lane`. Checked
+merge refused `Optional.Body` / `Optional.body`
+(`s:Sq17_StoreKit_SwiftUIAA0A7ContentRzlE4Bodya` and
+`s:Sq17_StoreKit_SwiftUIAA0A7ContentRzlE4bodys5NeverOvp`) as
+`not-applicable` because they are Swift.Optional witnesses, not SwiftUI
+overlay IDs; they are now `deferred` (Linux does not conform Optional to
+`StoreContent`). Synthesized `View` modifier specializations remain
+`declared` so the 7848 nondeferred floor stays met. None of those rows are
 `implemented`.
 
 **JWS:** compact serialization is `header.payload.signature` (base64url).
