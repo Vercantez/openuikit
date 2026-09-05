@@ -108,6 +108,11 @@ public struct PHPickerFilter: Equatable, Hashable, Sendable {
         PHPickerFilter(.playbackStyle(playbackStyle))
     }
 
+    /// Composition is structural: order of `subfilters` is significant on
+    /// Linux (`any(of: [.images, .videos]) != any(of: [.videos, .images])`).
+    /// Apple's equality for composed filters is unobserved (oracle-questions.tsv).
+    /// Catalog and combinators:
+    /// https://developer.apple.com/documentation/photosui/phpickerfilter-swift.struct
     public static func any(of subfilters: [PHPickerFilter]) -> PHPickerFilter {
         PHPickerFilter(.any(subfilters.map(\.storage)))
     }
@@ -192,6 +197,10 @@ public struct PHPickerConfiguration: Equatable, Hashable, Sendable {
     public init() {
         preferredAssetRepresentationMode = .automatic
         selection = .default
+        // Portable default 1, matching Apple's documented PHPickerConfiguration
+        // selectionLimit default (developer.apple.com/documentation/photosui/
+        // phpickerconfiguration/selectionlimit). iOS 26.1 runtime was not
+        // re-measured this round; see oracle-questions.tsv.
         selectionLimit = 1
         filter = nil
         preselectedAssetIdentifiers = []
