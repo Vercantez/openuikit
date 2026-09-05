@@ -203,6 +203,28 @@ final class UIRefreshControlIOSCutTests: XCTestCase {
         sv.layoutIfNeeded()
         XCTAssertEqual(rc.frame, CGRect(x: 0, y: -40, width: 320, height: 60))
     }
+
+    /// MEASURED spinnerprobe rc_n0..24, iPhone SE 2x / iOS 26.1: replicator
+    /// opacity is easeInOut (0.42, 0, 0.58, 1) over 1 s. Pager t4650 is
+    /// frame 9 = 0.15 s → 0.04521; Feed t700 is frame 18 = 0.30 s → 0.18740.
+    func testIOSAppearOpacityMatchesMeasuredEaseInOut() {
+        XCTAssertEqual(UIRefreshControl.easeInOut(0), 0, accuracy: 1e-6)
+        XCTAssertEqual(UIRefreshControl.easeInOut(1), 1, accuracy: 1e-6)
+        XCTAssertEqual(UIRefreshControl.easeInOut(0.15), 0.04521, accuracy: 0.00001)
+        XCTAssertEqual(UIRefreshControl.easeInOut(0.30), 0.18740, accuracy: 0.00001)
+        let savedTime = OpenUIKitRuntime.animationTime
+        defer { OpenUIKitRuntime.animationTime = savedTime }
+        OpenUIKitRuntime.animationTime = 4.50
+        let rc = UIRefreshControl()
+        rc.beginRefreshing()
+        OpenUIKitRuntime.animationTime = 4.65
+        XCTAssertEqual(rc.appearElapsed, 0.15, accuracy: 1e-9)
+        OpenUIKitRuntime.animationTime = 0.40
+        let feed = UIRefreshControl()
+        feed.beginRefreshing()
+        OpenUIKitRuntime.animationTime = 0.70
+        XCTAssertEqual(feed.appearElapsed, 0.30, accuracy: 1e-9)
+    }
 }
 
 @MainActor
