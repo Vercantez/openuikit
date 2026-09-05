@@ -354,9 +354,13 @@ func _portableRegisteredDescriptors() -> [CTFontDescriptor] {
     }
 }
 
-func _portableCopyRegisteredData() -> [Data] {
+func _portableCopyRegisteredRecords() -> [(URL, Data)] {
     let registry = _PortableFontRegistration.shared
     registry.lock.lock()
     defer { registry.lock.unlock() }
-    return registry.records.map(\.1)
+    return registry.records
+}
+
+func _portableCopyRegisteredData() -> [Data] {
+    _portableCopyRegisteredRecords().map(\.1)
 }
