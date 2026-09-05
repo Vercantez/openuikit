@@ -17,6 +17,10 @@
 # test_vendor_tree (chained on the attestation line), push.
 set -e
 cd "$(dirname "$0")/../.."          # monorepo root
+# One merge at a time: several waiters once launched merges into main together.
+MERGE_LOCK=/tmp/agent_merge.lock
+until mkdir "$MERGE_LOCK" 2>/dev/null; do sleep 30; done
+trap 'rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
 ROOT=$(pwd)
 NAME=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
@@ -46,20 +50,21 @@ if git diff --name-only main..."$BR" | grep -qE 'Package\.resolved$|\.app/'; the
   echo "REFUSED: the branch commits Package.resolved or a probe .app bundle"; exit 3
 fi
 rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks the merge
-# The Linux-hosted arm64-apple-macos GUEST route builds OpenUIKit against the
-# port's own Foundation (no DateFormatter / NumberFormatter / NSAttributedString
-# ...); the Docker check below uses corelibs and cannot see that. Refuse the
-# common traps in changed sources; the arm64/x86 authorities are the real check.
-# Only what the guest compiles into the library: OpenUIKit, CQuartz, and
-# the TOP-LEVEL harness files (Sources/RealAppProbe/*.swift, Vendored/*.swift).
-# App subdirectories (Focus/, Hackers/, *Modules/, Vendored/<App>/) now also
-# compile on the guest against the core-guest Foundation facade; the DateFormatter
-# grep below still applies to the library + top-level harness. Comment
-# lines do not count (a stub once said "not DateFormatter" and was refused).
+# The Linux-hosted arm64-apple-macos GUEST route builds the LIBRARY (OpenUIKit,
+# CQuartz) against the port's own Foundation (no DateFormatter / NumberFormatter
+# / NSAttributedString ...); the Docker check below uses corelibs and cannot see
+# that. Refuse the common traps in changed library sources; the arm64/x86
+# authorities are the real check. Since the guest app path (build_full.sh
+# "RealAppProbe (top-level + Vendored + ...)", APPINC) EVERY harness file under
+# Sources/RealAppProbe — top-level, Vendored/, Focus/, Hackers/, *Modules/ —
+# compiles against the core guest package's Foundation, which has all of these
+# (carried Darwin goldens under full/foundation/tests), so the harness is no
+# longer grepped (LedgerStore.swift was refused for a NumberFormatter the guest
+# has). Comment lines do not count (a stub once said "not DateFormatter" and was
+# refused).
 if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQuartz/*' \
-     $(git diff --name-only main..."$BR" | grep -E '^uikit/Sources/RealAppProbe/[^/]+\.swift$|^uikit/Sources/RealAppProbe/Vendored/[^/]+\.swift$') \
    | grep -E '^\+' | grep -vE '^\+\s*//' | grep -qE 'DateFormatter|NumberFormatter|DateComponentsFormatter|ISO8601DateFormatter|NSRegularExpression|JSONSerialization'; then
-  echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
+  echo "REFUSED: the branch adds a Foundation API the guest LIBRARY route does not have (DateFormatter & co. in OpenUIKit/CQuartz) — use Calendar/DateComponents or the port's own formatting"; exit 3
 fi
 
 # Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
@@ -72,7 +77,7 @@ done
 git worktree prune
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
-trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
+trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 cd "$WT/uikit"
 # When /tmp has no simulator goldens (Linux merge box, or a wiped Mac),
@@ -205,7 +210,11 @@ for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
     for cap in s["captures"]:
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
-        if row["status"] == "pass" and score < row["threshold"]: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
+        if row["status"] == "pass" and score < row["threshold"]:
+            # ALLOW_DROP also covers a passing row that a probe change turns honest
+            # (both sides omitted an element before): named in the merge, never silent.
+            if name in os.environ.get("ALLOW_DROP", "").split(): print(f"   {name}: {score:.3f} < bar {row['threshold']} (was {row['score']:.3f}) ALLOWED (ALLOW_DROP)")
+            else: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
         elif score < row["score"] - 0.5:
             # ALLOW_DROP="Tabs:t6000 ..." names failing rows a merge may lower on purpose
             # (a measured interaction another branch owns); it must be said in the merge.
