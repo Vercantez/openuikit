@@ -57,8 +57,9 @@ fi
 if [ -n "${INNER_IN_PLACE:-}" ]; then
   cd "$SRC"
 else
-  mkdir -p /work && cp -r "$SRC"/. /work/
-  cd /work && rm -rf .build
+  mkdir -p /work
+  tar -C "$SRC" --exclude=.build --exclude=Package.resolved -cf - . | tar -C /work -xf -
+  cd /work
 fi
 swift --version
 
@@ -68,27 +69,19 @@ swift build -c release --product openhost >/dev/null
 echo "    built clean"
 
 echo "==> selector dispatch tests"
-# Two Linux-only harness quirks, neither of them ours (both reproduce on
-# untouched suites -- see docs/PORTABILITY.md):
-#   * `swift test` blocks in poll() forever with no TTY, so we build the tests
-#     and run the XCTest bundle directly;
-#   * the bundle itself hangs mid-run roughly one launch in five, in this
-#     image, even for purely computational suites (GeometryTests/ColorTests
-#     flake at the same rate). So: run under a timeout and retry.
+# `swift test` still blocks in poll() with no TTY, so we build the tests
+# and run the XCTest bundle directly (docs/PORTABILITY.md). The in-bundle
+# hang (awaitUsingExpectation / CFRunLoop ppoll) is pumped by
+# CLinuxXCTestSupport — no retry loop.
 swift build --build-tests >/dev/null
 BUNDLE="$(swift build --build-tests --show-bin-path | tail -1)/OpenUIKitPackageTests.xctest"
 # ApplicationShellCompatibilityTests executes Linux-only Foundation fallbacks
 # (currently NSUserActivity) rather than merely letting the build type-check them.
 SUITES=OpenUIKitTests.SelectorNameTests,OpenUIKitTests.ActionTableTests,OpenUIKitTests.SelectorDispatchDeliveryTests,OpenUIKitTests.ControlSelectorTargetTests,OpenUIKitTests.GestureSelectorTargetTests,OpenUIKitTests.SelectorDemoAppTests,OpenUIKitTests.ApplicationShellCompatibilityTests
-ok=0
-for attempt in 1 2 3 4 5 6 7 8; do
-  if SWIFT_BACKTRACE=enable=no timeout 120 "$BUNDLE" "$SUITES" >"$OUT/tests.log" 2>&1; then
-    ok=1; break
-  fi
-  echo "    (attempt $attempt hung -- known Linux XCTest flake, retrying)"
-done
+if ! SWIFT_BACKTRACE=enable=no timeout 120 "$BUNDLE" "$SUITES" >"$OUT/tests.log" 2>&1; then
+  echo "    selector tests did not complete"; tail -20 "$OUT/tests.log"; exit 1
+fi
 tail -2 "$OUT/tests.log"
-[ "$ok" = 1 ] || { echo "    selector tests did not complete"; exit 1; }
 grep -qE "Executed [0-9]+ tests, with 0 failures" "$OUT/tests.log"
 
 echo "==> scripted replay of the selector-wired screen"
