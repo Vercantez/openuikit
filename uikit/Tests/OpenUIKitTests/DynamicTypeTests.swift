@@ -237,6 +237,106 @@ final class DynamicTypeTests: XCTestCase {
         XCTAssertEqual(ax1.sizeThatFits(CGSize(width: 393, height: 0)).height, 44.667,
                        accuracy: 0.01)
     }
+
+    /// MEASURED TableEditor t200.ax1 / Forms t200.ax1, iPhone SE 2x / iOS 26.1.
+    func testBarChromeCapsAtExtraExtraLarge() {
+        XCTAssertEqual(UIContentSizeCategory.accessibilityLarge.iOSBarCapped,
+                       .extraExtraLarge)
+        XCTAssertEqual(UIContentSizeCategory.large.iOSBarCapped, .large)
+        XCTAssertEqual(UIContentSizeCategory.extraExtraLarge.iOSBarCapped,
+                       .extraExtraLarge)
+        let ax1 = UITraitCollection(preferredContentSizeCategory: .accessibilityLarge)
+        let capped = UITraitCollection(
+            preferredContentSizeCategory: ax1.preferredContentSizeCategory.iOSBarCapped)
+        XCTAssertEqual(
+            UIFont.preferredFont(forTextStyle: .headline, compatibleWith: capped).pointSize, 21)
+        XCTAssertEqual(
+            _UIBarMetrics.iOSTitleFont(compatibleWith: ax1).pointSize, 21)
+        XCTAssertEqual(
+            _UIBarMetrics.iOSTitleFont(compatibleWith:
+                UITraitCollection(preferredContentSizeCategory: .large)).pointSize, 17)
+        XCTAssertEqual(
+            UIFont.preferredFont(forTextStyle: .body, compatibleWith: ax1).pointSize, 33)
+        XCTAssertEqual(
+            UIFont.preferredFont(forTextStyle: .largeTitle, compatibleWith: ax1).pointSize, 48)
+        XCTAssertEqual(
+            UIFont.preferredFont(forTextStyle: .subheadline, compatibleWith: ax1).pointSize, 30)
+    }
+
+    /// MEASURED TableEditor t200.ax1 / Feed t200.ax1 / Forms t200.ax1,
+    /// iPhone SE 2x / iOS 26.1: after the bar joins a window whose
+    /// `traitOverrides` is `.accessibilityLarge`, layout restyles chrome
+    /// from those traits (construction still saw process `.large`).
+    func testNavigationChromeRestylesFromWindowTraitOverridesAtLayout() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UITraitCollection.current = savedTraits
+        }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let root = UIViewController()
+        root.title = "Reminders"
+        root.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Edit", style: .plain, target: nil, action: nil)
+        let nav = UINavigationController(rootViewController: root)
+        nav.navigationBar.prefersLargeTitles = true
+        window.rootViewController = nav
+        window.layoutIfNeeded()
+
+        let bar = nav.navigationBar
+        XCTAssertEqual(bar.largeTitleLabel!.font.pointSize, 48, accuracy: 0.01)
+        XCTAssertEqual(bar.largeTitleLabel!.font.weight, .bold)
+        XCTAssertEqual(bar.titleLabel.font.pointSize, 21, accuracy: 0.01)
+        XCTAssertEqual(bar.effectiveLargeTitleZoneHeight, 61.5, accuracy: 0.01)
+        XCTAssertEqual(bar.effectiveLargeTitleLabelY, 54, accuracy: 0.01)
+        XCTAssertEqual(bar.rightItemViews.first!.titleLabel.font.pointSize, 21,
+                       accuracy: 0.01)
+    }
+
+    /// MEASURED TableEditor t200.ax1, iPhone SE 2x / iOS 26.1: plain subtitle
+    /// cell 117 = 15 + 39.5 + 6 + 36 + 20.5. `.large` stays 62.
+    func testPlainSubtitleCellGrowsAtAccessibilityLarge() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UITraitCollection.current = savedTraits
+        }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let table = UITableView(frame: window.bounds, style: .plain)
+        window.addSubview(table)
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "t")
+        table.addSubview(cell)
+        cell.textLabel.text = "Alpha"
+        cell.detailTextLabel?.text = "First item"
+        XCTAssertEqual(cell.iOSPlainSubtitleFittingHeight(), 117, accuracy: 0.01)
+        XCTAssertEqual(cell.textLabel.font.pointSize, 33, accuracy: 0.01)
+        XCTAssertEqual(cell.detailTextLabel!.font.pointSize, 30, accuracy: 0.01)
+        XCTAssertEqual(cell.textLabel.intrinsicContentSize.height, 39.5, accuracy: 0.01)
+        XCTAssertEqual(cell.detailTextLabel!.intrinsicContentSize.height, 36, accuracy: 0.01)
+
+        window.traitOverrides.preferredContentSizeCategory = .large
+        let large = UITableViewCell(style: .subtitle, reuseIdentifier: "l")
+        table.addSubview(large)
+        large.textLabel.text = "Alpha"
+        large.detailTextLabel?.text = "First item"
+        XCTAssertEqual(large.iOSPlainSubtitleFittingHeight(), 62, accuracy: 0.01)
+        XCTAssertEqual(large.textLabel.font.pointSize, 17, accuracy: 0.01)
+    }
 }
 
 @MainActor
