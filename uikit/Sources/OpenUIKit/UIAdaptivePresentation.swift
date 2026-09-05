@@ -191,7 +191,19 @@ open class UIPopoverPresentationController: UIPresentationController {
         container.addSubview(dim)
         presentedViewController.loadViewIfNeeded()
         let cv = presentedViewController.view!
-        if cv.backgroundColor == nil { cv.backgroundColor = .systemBackground }
+        if isPadRegular {
+            // MEASURED `/tmp/ipad-open-cap` popover_{white,black,red,grad}:
+            // content-popover interiors 252/215 (α=218/255, T=215/218). Dump
+            // has no corner radius; PNG top-left of `[561, 62, 240, 180]` is
+            // already the fill (252). No `_UIRoundedRectShadowView` — the
+            // 11-count halo is not modelled (scoreboard/open.txt).
+            cv._usesIOSGlass = true
+            cv._iosGlassKind = .padContentPopover
+            cv.backgroundColor = nil
+            cv.isOpaque = false
+        } else if cv.backgroundColor == nil {
+            cv.backgroundColor = .systemBackground
+        }
         cv.frame = frameOfPresentedViewInContainerView
         cv.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin,
                                .flexibleTopMargin, .flexibleBottomMargin]

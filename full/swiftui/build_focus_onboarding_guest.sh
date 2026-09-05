@@ -47,7 +47,8 @@ EXPECTED_ONBOARDING_DIRECTORIES=15
 EXPECTED_WIDGET_TREE=144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d
 EXPECTED_WIDGET_FILES=16
 EXPECTED_WIDGET_DIRECTORIES=7
-EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
+# 19 before the formatter oracles (2026-09-05): fewer undefined _StringProcessing symbols.
+EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=18
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
 
@@ -211,8 +212,8 @@ CF_HEADER_DIR=$W/full/foundation/include/CoreFoundation
 [ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
     || die "missing regular Foundation guest source manifest"
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38 ] \
-    || die "Foundation guest source manifest must contain exactly 38 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 41 ] \
+    || die "Foundation guest source manifest must contain exactly 41 lines"
 FOUNDATION_GUEST_SOURCES=()
 FOUNDATION_GUEST_EXCLUDED_URLSESSION=0
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
@@ -241,7 +242,7 @@ for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
     FOUNDATION_GUEST_SOURCES+=("$W/$relative")
 done
 [ "$FOUNDATION_GUEST_EXCLUDED_URLSESSION" -eq 1 ] \
-    && [ "${#FOUNDATION_GUEST_SOURCES[@]}" -eq 37 ] \
+    && [ "${#FOUNDATION_GUEST_SOURCES[@]}" -eq 40 ] \
     || die 'legacy Focus Foundation exclusion contract drifted'
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus

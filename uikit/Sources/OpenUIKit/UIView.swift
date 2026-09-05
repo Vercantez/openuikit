@@ -618,12 +618,14 @@ open class UIView: UIResponder, CALayerDelegate {
     /// `_UIGlassMaterial`; Catalyst ignores the flag.
     /// Public so the SwiftUI module can set it (`.glassEffect` on the iOS cut).
     public var _usesIOSGlass = false
-    /// Dark floating sheet only. Bar platters keep the measured dark flats
-    /// (19 / 25); the sheet's systemBackground fill tracks the dimmed
-    /// backdrop (MEASURED /tmp/sheetfill_dark, SE 2x).
+    /// Which measured glass mix `_UIGlassMaterial` applies. Bar platters
+    /// keep `.platter`. Pad popovers are two other mixes (content vs
+    /// action-sheet) — they do not share α with the platter or each other.
+    var _iosGlassKind: _UIGlassKind = .platter
     /// Dark floating sheet only. Bar platters use `_usesIOSDarkBarGlass`
     /// (MEASURED /tmp/glass-dark-out, SE 2x: 19 over black, not the
-    /// sheet's 57).
+    /// sheet's 57). The sheet's systemBackground fill tracks the dimmed
+    /// backdrop (MEASURED /tmp/sheetfill_dark, SE 2x).
     var _usesIOSDarkGlass = false
     /// Dark tab-bar / toolbar platters. Distinct from the floating-sheet
     /// mix; nav-bar platters keep the measured dark flats + refraction.
@@ -757,6 +759,10 @@ open class UIView: UIResponder, CALayerDelegate {
 
     /// Trait override; `.unspecified` inherits from superview / current.
     public var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
+    /// iOS 17 window/view trait overrides. Mutate in place
+    /// (`window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge`)
+    /// the way real UIKit does; unspecified inherits `UITraitCollection.current`.
+    public var traitOverrides = UITraitOverrides()
     /// `open`, as UIKit declares it: pocket-casts' TintableImageView overrides
     /// it to re-tint its image on assignment.
     open var tintColor: UIColor! {
@@ -1075,6 +1081,9 @@ open class UIView: UIResponder, CALayerDelegate {
         var t = superview?.traitCollection ?? UIScreen.main._currentTraitsResolvingSizeClasses
         if overrideUserInterfaceStyle != .unspecified {
             t.userInterfaceStyle = overrideUserInterfaceStyle
+        }
+        if traitOverrides.preferredContentSizeCategory != .unspecified {
+            t.preferredContentSizeCategory = traitOverrides.preferredContentSizeCategory
         }
         return t
     }

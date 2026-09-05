@@ -4541,8 +4541,9 @@ class ShellContractTests(unittest.TestCase):
 
         for token in (
             '"com.apple.ap.adservices.attributionError"',
-            "platformNotSupported = Code(rawValue: 3)",
-            "throw AAAttributionError(.platformNotSupported)",
+            "case platformNotSupported = 3",
+            "throw AAAttributionError(",
+            ".platformNotSupported,",
         ):
             self.assertIn(token, adservices)
         self.assertNotIn("return UUID", adservices)
@@ -4671,7 +4672,10 @@ class ShellContractTests(unittest.TestCase):
         for token in ("_md5", "_sha1", "_sha256", "_sha512"):
             self.assertIn(token, crypto)
         self.assertIn("SystemRandomNumberGenerator", crypto)
-        self.assertIn("return signature.count == 64 && false", crypto)
+        # Signing is fail-closed by ABSENCE since 6e400ce5 (no public-key surface is
+        # declared); the old `signature.count == 64 && false` stub is gone.
+        self.assertIn("fail closed", crypto)
+        self.assertNotIn("P256.Signing", crypto)
         self.assertIn("import CryptoKit", probe)
         self.assertIn("SHA256.hash", probe)
         self.assertIn("-lCryptoKit", source)
