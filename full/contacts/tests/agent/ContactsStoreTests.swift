@@ -8,14 +8,14 @@ func testContactStoreAuthorization() {
     expect(CNContactStore.authorizationStatus(for: .contacts) == .notDetermined, "denied-hook starts notDetermined")
     let deniedStore = CNContactStore()
     let deniedSem = DispatchSemaphore(value: 0)
-    var deniedGranted = true
+    let deniedGranted = Box(true)
     deniedStore.requestAccess(for: .contacts) { granted, error in
-        deniedGranted = granted
+        deniedGranted.value = granted
         expect(error == nil, "denied requestAccess has no fabricated TCC error")
         deniedSem.signal()
     }
     wait(deniedSem, "denied requestAccess deadlock")
-    expect(!deniedGranted, "documented denied decision")
+    expect(!deniedGranted.value, "documented denied decision")
     expect(CNContactStore.authorizationStatus(for: .contacts) == .denied, "status denied after hook")
     do {
         _ = try deniedStore.unifiedContacts(
@@ -44,20 +44,20 @@ func testContactStoreAuthorization() {
         fail("unexpected error \(error)")
     }
 
-    var requestAccessReturned = false
-    var granted = false
-    var grantError: Error?
+    let requestAccessReturned = Box(false)
+    let granted = Box(false)
+    let grantError = Box<Error?>(nil)
     let grantedSem = DispatchSemaphore(value: 0)
     store.requestAccess(for: .contacts) { ok, error in
-        expect(requestAccessReturned, "requestAccess callback is not reentrant on the calling stack")
-        granted = ok
-        grantError = error
+        expect(requestAccessReturned.value, "requestAccess callback is not reentrant on the calling stack")
+        granted.value = ok
+        grantError.value = error
         grantedSem.signal()
     }
-    requestAccessReturned = true
+    requestAccessReturned.value = true
     wait(grantedSem, "requestAccess callback deadlock")
-    expect(grantError == nil, "requestAccess error")
-    expect(granted, "in-memory requestAccess")
+    expect(grantError.value == nil, "requestAccess error")
+    expect(granted.value, "in-memory requestAccess")
     expect(CNContactStore.authorizationStatus(for: .contacts) == .authorized, "authorized after request")
 }
 
@@ -176,7 +176,7 @@ func testContactStoreNotifications() {
     resetIsolatedStore()
     let store = authorizeStore()
     expect(NSNotification.Name.CNContactStoreDidChange.rawValue == "CNContactStoreDidChangeNotification", "note name")
-    var observerQueries = 0
+    let observerQueries = Box(0)
     let observer = NotificationCenter.default.addObserver(
         forName: .CNContactStoreDidChange,
         object: store,
@@ -184,13 +184,13 @@ func testContactStoreNotifications() {
     ) { _ in
         let containers = try? store.containers(matching: nil)
         expect(containers?.count == 1, "observer reentered containers()")
-        observerQueries += 1
+        observerQueries.value += 1
     }
     let contact = makeAdaContact()
     let save = CNSaveRequest()
     save.add(contact, toContainerWithIdentifier: nil)
     try! store.execute(save)
-    expect(observerQueries >= 1, "did-change observer ran without deadlock")
+    expect(observerQueries.value >= 1, "did-change observer ran without deadlock")
     NotificationCenter.default.removeObserver(observer)
 }
 
