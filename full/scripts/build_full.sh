@@ -1131,6 +1131,7 @@ echo "== build pinned FoundationInternationalization (core-guest ICU closure)"
     -L/usr/lib -lSystem "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
     -o "$APPMODS/libFoundationEssentials.dylib" \
     "${FE_OBJECTS[@]}" "$OUT/swiftcorepatch.o"
+cp "$APPMODS/libFoundationEssentials.dylib" "$OUT/"
 for fe_artifact in FoundationEssentials.swiftmodule FoundationEssentials.swiftdoc; do
     [ -f "$FE_OUT/$fe_artifact" ] || die "missing $FE_OUT/$fe_artifact"
     cp "$FE_OUT/$fe_artifact" "$APPMODS/$fe_artifact"
@@ -1449,6 +1450,7 @@ cp "$OUT/render_full" "$OUT/Probe.app/probe"
 # @rpath dylibs the full app-facing Foundation pulls in. Probe.app runs the
 # same binary from a sibling directory, so @loader_path must find them here.
 for app_rpath in libCombine.dylib libOpenCombine.dylib libDispatch.dylib \
+    libFoundationEssentials.dylib \
     libFoundationInternationalization.dylib lib_FoundationICU.dylib; do
     [ -f "$OUT/$app_rpath" ] && cp "$OUT/$app_rpath" "$OUT/Probe.app/"
 done

@@ -63,10 +63,10 @@ HOST_SO="$TREE/scratch/mrroot_full/host"
   "$TREE/scratch/mrroot_full/machorun" ./render_full realapp "$W/guest-realapp" \
     "$TREE/uikit/fixtures/realapp/assets"
 ) > "$W/guest-realapp.log" 2>&1
-echo "GUEST_REALAPP_RC=$?"
+echo "build_full: GUEST_REALAPP_RC=$?"
 grep -E '^rendered realapp_|^\[render_full\] realapp' "$W/guest-realapp.log" | tail -20 \
     | sed 's/^/build_full: realapp: /'
-echo "GUEST_REALAPP_SCREENS=$(ls "$W/guest-realapp"/*.png 2>/dev/null | wc -l | tr -d ' ')"
+echo "build_full: GUEST_REALAPP_SCREENS=$(ls "$W/guest-realapp"/*.png 2>/dev/null | wc -l | tr -d ' ')"
 echo "build_full: --- guest realapp log ---"
 tail -30 "$W/guest-realapp.log" | sed 's/^/build_full: realapp: /'
 fi

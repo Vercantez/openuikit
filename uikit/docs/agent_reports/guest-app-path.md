@@ -145,3 +145,10 @@ Attempt 8: `f5074c6c0ad3cd4c9b19459409faa983c44d63b9`.
 `render_full` 26523184 bytes. `GUEST_REALAPP_SCREENS` was dropped by
 `ops_extract_result_lines`; this commit adds `GUEST_REALAPP` to the
 extractor and prefixes the guest realapp log.
+
+Attempt 9: `687e9138ac67d34b0dbdf20510fdce77081431b2`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+Guest realapp: `machorun: cannot find dylib '@rpath/libFoundationEssentials.dylib'`
+required by `./libFoundationInternationalization.dylib`. The FE dylib is
+built into APPMODS for the FI builder but was not copied to `$OUT`
+(build/full, the machorun cwd).
