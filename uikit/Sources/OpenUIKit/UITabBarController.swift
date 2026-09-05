@@ -107,7 +107,38 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
         tabBar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
         tabBar.delegate = self
         v.addSubview(tabBar)
+        layoutTabBarFrame()
         applyTabBarSafeArea()
+    }
+
+    /// MEASURED Tabs-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIFloatingTabBar [0, 32, 820, 44]` at window SA.top, not the
+    /// phone bottom bar `[0, 1097, 820, 83]`. Phone keeps the bottom 83.
+    func layoutTabBarFrame() {
+        guard isViewLoaded else { return }
+        let b = view.bounds
+        let h = UITabBar.barHeight
+        if UITabBar.isPad {
+            // MEASURED Tabs-ipad t4000: `_UIFloatingTabBar [0, -32, 820, 44]`
+            // while the hosted search is active (y = −SA.top). Rest t200
+            // keeps y = SA.top **32**.
+            let y: CGFloat = padHostedSearchIsActive
+                ? -view.safeAreaInsets.top : view.safeAreaInsets.top
+            tabBar.frame = CGRect(x: 0, y: y, width: b.width, height: h)
+            tabBar.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin]
+        } else {
+            tabBar.frame = CGRect(x: 0, y: b.height - h,
+                                  width: b.width, height: h)
+            tabBar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        }
+    }
+
+    /// Hosted `UISearchController.isActive` on the selected nav child.
+    var padHostedSearchIsActive: Bool {
+        guard UITabBar.isPad else { return false }
+        let nav = selectedViewController as? UINavigationController
+        return nav?.topViewController?.navigationItem.searchController?.isActive == true
+            || nav?.navigationBar.topItem?.searchController?.isActive == true
     }
 
     /// The child underlaps the floating platter but reports the bar's
@@ -116,14 +147,34 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     /// iOS 26.1, window SA `[0,0,0,0]`: UITabBar `[0, 584, 375, 83]`,
     /// table `safeAreaInsets.bottom` **83** (no home-indicator extra).
     /// `UITabBar.barHeight` is already 83 on the iOS cut / 72 Catalyst.
+    ///
+    /// Pad: the bar is at the top and does **not** add to the child's
+    /// bottom inset. MEASURED Tabs-ipad t200: transitionView SA
+    /// `[32, 0, 25, 0]` (window SA); table bottom **25** not 83. A
+    /// non-nav child gets extra top so content starts at **96**
+    /// (32 + 44 + 20) — Tabs-ipad t1000 toolbar / t2000 scroll.
     func applyTabBarSafeArea() {
         guard isViewLoaded else { return }
         let inherited = view.safeAreaInsets
-        transitionView._setSafeAreaInsets(UIEdgeInsets(
-            top: inherited.top,
-            left: inherited.left,
-            bottom: max(inherited.bottom, UITabBar.barHeight),
-            right: inherited.right))
+        if UITabBar.isPad {
+            let top: CGFloat
+            if selectedViewController is UINavigationController {
+                top = inherited.top
+            } else {
+                top = inherited.top + UITabBar.barHeight + UITabBar.padContentGapBelowBar
+            }
+            transitionView._setSafeAreaInsets(UIEdgeInsets(
+                top: top,
+                left: inherited.left,
+                bottom: inherited.bottom,
+                right: inherited.right))
+        } else {
+            transitionView._setSafeAreaInsets(UIEdgeInsets(
+                top: inherited.top,
+                left: inherited.left,
+                bottom: max(inherited.bottom, UITabBar.barHeight),
+                right: inherited.right))
+        }
     }
 
     open override func viewDidLoad() {
@@ -134,6 +185,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
 
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        layoutTabBarFrame()
         applyTabBarSafeArea()
     }
 
@@ -169,6 +221,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
 
         selectedViewController = incoming
         tabBar.selectedItem = incoming.tabBarItem
+        applyTabBarSafeArea()
         tabBarControllerDelegate?.tabBarController(self, didSelect: incoming)
     }
 

@@ -436,4 +436,12 @@ public enum GlyphRasterizer {
         }
         return InstancedGlyphFont(font: gf, coordsKey: key)
     }
+
+    /// True when an outline font file is readable for `font`. Linux VMs have
+    /// no `/System/Library/Fonts/SFNS*.ttf` (Linux trial 2026-09-05); the iOS
+    /// cut then draws only harvested masks and OPENUIKIT_IOS_INK_MISS on a
+    /// miss. Catalyst / rotated-CTM / non-integer sizes still need a file.
+    public static func hasOutlineFont(for font: UIFont) -> Bool {
+        Self.font(for: font) != nil
+    }
 }

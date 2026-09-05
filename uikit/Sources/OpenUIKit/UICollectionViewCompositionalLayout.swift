@@ -347,10 +347,24 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
 
     private var sections: [SectionCache] = []
     private var contentSize: CGSize = .zero
+    /// Cross-axis size `prepare()` last used. The collection view's bounds
+    /// setter asks `shouldInvalidateLayout` AFTER applying the new size, so
+    /// comparing to `cv.bounds` is always false (same trap flow layout
+    /// avoids with `preparedCrossExtent`).
+    private var preparedBoundsSize: CGSize = CGSize(width: -1, height: -1)
 
     open override var collectionViewContentSize: CGSize { contentSize }
 
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        // MEASURED Feed-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
+        // collection view abs `[0, 138, 820, 1180]` both sides, cards
+        // golden `[16, 298, 788, 533.5]` vs ours `[16, 298, 358, 291.5]`.
+        // 358 = 390 − 32 (section insets); 390 is UIViewController.loadView
+        // default. Phone / Catalyst keep the previous cv.bounds compare
+        // (phone Feed already prepares at 375).
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            return newBounds.size != preparedBoundsSize
+        }
         guard let cv = collectionView else { return false }
         return newBounds.size != cv.bounds.size
     }
@@ -382,6 +396,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         contentSize = .zero
         guard let cv = collectionView else { return }
 
+        preparedBoundsSize = cv.bounds.size
         let container = NSCollectionLayoutContainer(contentSize: cv.bounds.size,
                                                       contentInsets: .zero)
         let env = NSCollectionLayoutEnvironment(container: container,
@@ -407,6 +422,14 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         let insets = spec.contentInsets
         let containerW = env.container.effectiveContentSize.width
         let contentW = max(0, containerW - insets.leading - insets.trailing)
+        // MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: NSDirectionalEdgeInsets
+        // resolve against the collection view's layout direction. Equal 16/16
+        // leaves a 343 pt card at x 16 either way (375 − 16 − 343); unequal
+        // leading/trailing would swap the physical left edge. Orthogonal
+        // items stay packed in content-space from `leading` and are mirrored
+        // in `parentFrame`.
+        let rtl = cv._layoutIsRTL
+        let physicalLeading = rtl ? insets.trailing : insets.leading
         let groupSize = resolveSize(spec.group.layoutSize,
                                      containerWidth: contentW,
                                      containerHeight: env.container.effectiveContentSize.height)
@@ -425,7 +448,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                                     containerWidth: spec.supplementariesFollowContentInsets ? contentW : containerW,
                                     containerHeight: env.container.effectiveContentSize.height)
             headerHeight = hSize.height
-            let hx: CGFloat = spec.supplementariesFollowContentInsets ? insets.leading : 0
+            let hx: CGFloat = spec.supplementariesFollowContentInsets ? physicalLeading : 0
             let hw = spec.supplementariesFollowContentInsets ? contentW : containerW
             headerPlaced = Placed(
                 indexPath: IndexPath(item: 0, section: index),
@@ -446,7 +469,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
             if orthogonal {
                 origin = CGPoint(x: insets.leading + cursor, y: groupsY)
             } else {
-                origin = CGPoint(x: insets.leading, y: originY + groupsY + cursor)
+                origin = CGPoint(x: physicalLeading, y: originY + groupsY + cursor)
             }
             let placed = layoutGroup(spec.group, origin: origin, groupSize: groupSize,
                                       section: index, startItem: nextItem,
@@ -584,7 +607,21 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
     private func parentFrame(_ placed: Placed, in cache: SectionCache) -> CGRect {
         if cache.orthogonal {
             let shift: CGFloat = placed.kind == nil ? cache.orthogonalOffset : 0
-            return CGRect(x: cache.frame.minX + placed.localFrame.minX - shift,
+            // MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: stories A–D
+            // interiors (58,154,128)/(196,101,95)/(127,92,183)/(67,118,205)
+            // = palette 3,2,1,0. Item 0 ("A") sits at x 287 = 375 − 16 − 72
+            // (16 pt leading inset on the right); item 4 ("E") clips at x −49
+            // (23 pt of yellow from the left edge). Nested-scroller dumps
+            // stay in content space (A abs.x 16) and do not include the
+            // flip; pixels are the oracle. Mirror content-space frames about
+            // the section width: screenX = W − (localMaxX − offset).
+            let localX: CGFloat
+            if collectionView?._layoutIsRTL == true, placed.kind == nil {
+                localX = cache.frame.width - (placed.localFrame.maxX - shift)
+            } else {
+                localX = placed.localFrame.minX - shift
+            }
+            return CGRect(x: cache.frame.minX + localX,
                           y: cache.frame.minY + placed.localFrame.minY,
                           width: placed.localFrame.width,
                           height: placed.localFrame.height)

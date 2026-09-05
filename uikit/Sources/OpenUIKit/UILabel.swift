@@ -46,6 +46,16 @@ open class UILabel: UIView {
     public var font: UIFont = .systemFont(ofSize: 17)
     public var textColor: UIColor = .label
     public var textAlignment: NSTextAlignment = .natural
+    /// `.natural` follows `effectiveUserInterfaceLayoutDirection`.
+    /// MEASURED Forms t200.rtl / NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
+    /// full-width default-style cell labels and form fields pin their ink
+    /// to the leading (right) edge when the frame itself is not tight.
+    var _resolvedTextAlignment: NSTextAlignment {
+        if textAlignment == .natural {
+            return _layoutIsRTL ? .right : .left
+        }
+        return textAlignment
+    }
     public var numberOfLines: Int = 1
     public var lineBreakMode: NSLineBreakMode = .byTruncatingTail
     /// Shrink single-line plain text to fit the label's width. UIKit keeps
@@ -296,7 +306,7 @@ open class UILabel: UIView {
             AttributedTextLayout.draw(t, lines: lines,
                                       in: AttributedTextLayout.DrawContext(
                                         canvas: canvas, traits: traitCollection,
-                                        bounds: bounds, alignment: textAlignment))
+                                        bounds: bounds, alignment: _resolvedTextAlignment))
             canvas.restore()
             return
         }
@@ -407,7 +417,7 @@ open class UILabel: UIView {
 
         for (i, line) in drawLines.enumerated() {
             var penX: CGFloat
-            switch textAlignment {
+            switch _resolvedTextAlignment {
             case .left, .natural, .justified:
                 penX = 0
             case .center:
@@ -446,11 +456,13 @@ open class UILabel: UIView {
         let scale = canvas.scale
         // Harvested-ink fast path: exact real-UIKit glyph masks, valid for
         // scale-2 translation-only canvases and integer point sizes (see
-        // GlyphInkTable). Falls through per-glyph when a mask is missing.
+        // GlyphInkTable). Falls through per-glyph when a mask is missing
+        // AND an outline font is loaded. The iOS table is selected by
+        // hasIOSTable even when the Catalyst glyph_ink.json is absent.
         let ctm = canvas.ctm
         // Catalyst tables are 2x; the iOS tables exist per device scale.
-        let inkEligible = GlyphInkTable.isAvailable
-            && (scale == 2 || GlyphInkTable.hasIOSTable(scale: scale))
+        let iosInk = GlyphInkTable.hasIOSTable(scale: scale)
+        let inkEligible = (iosInk || (GlyphInkTable.isAvailable && scale == 2))
             && ctm.a == scale && ctm.b == 0 && ctm.c == 0 && ctm.d == scale
             && font.pointSize == font.pointSize.rounded(.down)
         let famKey = FontEngine.familyKey(for: font)
@@ -498,6 +510,10 @@ open class UILabel: UIView {
             if GlyphInkTable.usesIOSTable {
                 // Real-iOS masks are true coverage of an opaque colour:
                 // plain alpha compositing, no calibration LUT; 1/8-pt phases.
+                // MEASURED Linux trial 2026-09-05: with no SFNS.ttf the
+                // previous TTF fallback drew nothing (blank labels). A hit
+                // here needs no outline font; a miss without one is
+                // OPENUIKIT_IOS_INK_MISS plus the exact harvest key.
                 let (itag, ianchor) = GlyphInkTable.phaseIOS(size: font.pointSize, frac: frac, scale: scale)
                 if let m = GlyphInkTable.maskIOS(familyKey: famKey, sizeKey: sizeKey,
                                                  dark: dark, tag: itag, scalar: ch, scale: scale) {
@@ -505,6 +521,13 @@ open class UILabel: UIView {
                                     atPixelX: devOX + Int(scale) * Int(penFloor) + ianchor + m.ox,
                                     pixelY: devBaseY + m.oy, color: color)
                     return
+                }
+                if glyphFont == nil {
+                    let key = GlyphInkTable.iosMaskKey(familyKey: famKey, sizeKey: sizeKey,
+                                                       dark: dark, tag: itag, scalar: ch,
+                                                       scale: scale)
+                    if GlyphInkTable.logMisses { return }
+                    GlyphInkTable.missingIOSInk(key)
                 }
             } else if let m = GlyphInkTable.maskLinear(familyKey: famKey, sizeKey: sizeKey,
                                                 dark: dark, tag: tag, scalar: ch) {
@@ -516,6 +539,20 @@ open class UILabel: UIView {
                                 darkCalibration: dark)
                 return
             }
+        }
+        if GlyphInkTable.usesIOSTable, glyphFont == nil {
+            // Rotated/scaled CTM and fractional point sizes are not in the
+            // harvested tables (Linux trial 2026-09-05): those still need
+            // an outline font. Fail with the would-be key so a harvest
+            // knows what was asked for.
+            let penFloor = penX.rounded(.down)
+            let frac = penX - penFloor
+            let (itag, _) = GlyphInkTable.phaseIOS(size: font.pointSize, frac: frac, scale: scale)
+            let key = GlyphInkTable.iosMaskKey(familyKey: famKey, sizeKey: sizeKey,
+                                               dark: dark, tag: itag, scalar: ch,
+                                               scale: scale)
+            if GlyphInkTable.logMisses { return }
+            fatalError("OPENUIKIT_IOS_INK_MISS: \(key) — iOS ink path ineligible (non-integer size or non-axis-aligned CTM); this still requires an outline font file")
         }
         guard let gf = glyphFont else { return }
         let g = gf.glyphIndex(of: ch)

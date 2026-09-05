@@ -1,0 +1,167 @@
+{
+  "name" : "label_truncate",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        150,
+        22
+      ],
+      "bg" : [
+        0.94499999999999995,
+        0.95299999999999996,
+        0.96099999999999997,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        20,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        261.5,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        261.5,
+        20.5
+      ],
+      "text" : "This text is definitely too long to fit"
+    },
+    {
+      "absFrame" : [
+        20,
+        60,
+        150,
+        22
+      ],
+      "bg" : [
+        0.94499999999999995,
+        0.95299999999999996,
+        0.96099999999999997,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        60,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        261.5,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        261.5,
+        20.5
+      ],
+      "text" : "This text is definitely too long to fit"
+    },
+    {
+      "absFrame" : [
+        20,
+        100,
+        150,
+        22
+      ],
+      "bg" : [
+        0.94499999999999995,
+        0.95299999999999996,
+        0.96099999999999997,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        100,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        261.5,
+        20.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        261.5,
+        20.5
+      ],
+      "text" : "This text is definitely too long to fit"
+    },
+    {
+      "absFrame" : [
+        20,
+        140,
+        150,
+        22
+      ],
+      "bg" : [
+        0.94499999999999995,
+        0.95299999999999996,
+        0.96099999999999997,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        140,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        261.5,
+        20.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        261.5,
+        20.5
+      ],
+      "text" : "This text is definitely too long to fit"
+    }
+  ]
+}

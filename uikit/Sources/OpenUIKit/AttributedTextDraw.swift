@@ -99,8 +99,8 @@ extension AttributedTextLayout {
             let color = (st.color ?? .label).resolvedCGColor(with: ctx.traits)
             let glyphFont = GlyphRasterizer.font(for: st.font)
             let cm = canvas.ctm
-            let inkEligible = GlyphInkTable.isAvailable
-                && (canvas.scale == 2 || GlyphInkTable.hasIOSTable(scale: canvas.scale))
+            let iosInk = GlyphInkTable.hasIOSTable(scale: canvas.scale)
+            let inkEligible = (iosInk || (GlyphInkTable.isAvailable && canvas.scale == 2))
                 && cm.a == canvas.scale && cm.b == 0 && cm.c == 0 && cm.d == canvas.scale
                 && st.font.pointSize == st.font.pointSize.rounded(.down)
             let famKey = FontEngine.familyKey(for: st.font)

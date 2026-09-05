@@ -1,0 +1,804 @@
+{
+  "name" : "tabbar_basic",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        20,
+        375,
+        480
+      ],
+      "class" : "UITabBarStack",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        20,
+        375,
+        480
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UILayoutContainerView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        0,
+        20,
+        375,
+        480
+      ],
+      "class" : "UITransitionView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        20,
+        375,
+        480
+      ],
+      "class" : "UIViewControllerWrapperView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        20,
+        375,
+        480
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        220,
+        375,
+        30
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        20
+      ],
+      "frame" : [
+        0,
+        200,
+        375,
+        30
+      ],
+      "intrinsic" : [
+        121.5,
+        24
+      ],
+      "path" : "0.0.0.0.0",
+      "sizeThatFits200" : [
+        121.5,
+        24
+      ],
+      "text" : "Home screen"
+    },
+    {
+      "absFrame" : [
+        0,
+        417,
+        375,
+        83
+      ],
+      "class" : "_UITabBarContainerWrapperView",
+      "frame" : [
+        0,
+        397,
+        375,
+        83
+      ],
+      "path" : "0.1"
+    },
+    {
+      "absFrame" : [
+        0,
+        20,
+        375,
+        480
+      ],
+      "class" : "_UITabBarContainerView",
+      "frame" : [
+        0,
+        -397,
+        375,
+        480
+      ],
+      "path" : "0.1.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        417,
+        375,
+        83
+      ],
+      "class" : "UITabBar",
+      "frame" : [
+        0,
+        397,
+        375,
+        83
+      ],
+      "path" : "0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        51,
+        417,
+        274,
+        62
+      ],
+      "class" : "_UITabBarPlatterView",
+      "cornerRadius" : -1,
+      "frame" : [
+        51,
+        0,
+        274,
+        62
+      ],
+      "path" : "0.1.0.0.0"
+    },
+    {
+      "absFrame" : [
+        51,
+        417,
+        274,
+        62
+      ],
+      "class" : "SelectedContentView",
+      "frame" : [
+        0,
+        0,
+        274,
+        62
+      ],
+      "path" : "0.1.0.0.0.0"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabButton",
+      "frame" : [
+        4,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.0.0"
+    },
+    {
+      "absFrame" : [
+        90,
+        429,
+        24,
+        24
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        35,
+        8,
+        24,
+        24
+      ],
+      "intrinsic" : [
+        24,
+        24
+      ],
+      "path" : "0.1.0.0.0.0.0.0"
+    },
+    {
+      "absFrame" : [
+        87,
+        456,
+        29.5,
+        12
+      ],
+      "class" : "Label",
+      "font" : [
+        ".SFUI-Semibold",
+        10
+      ],
+      "frame" : [
+        32,
+        35,
+        29.5,
+        12
+      ],
+      "intrinsic" : [
+        29.5,
+        12
+      ],
+      "path" : "0.1.0.0.0.0.0.1",
+      "sizeThatFits200" : [
+        29.5,
+        12
+      ],
+      "text" : "Home"
+    },
+    {
+      "absFrame" : [
+        141,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabButton",
+      "frame" : [
+        90,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.0.1"
+    },
+    {
+      "absFrame" : [
+        176,
+        429,
+        24,
+        24
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        35,
+        8,
+        24,
+        24
+      ],
+      "intrinsic" : [
+        24,
+        24
+      ],
+      "path" : "0.1.0.0.0.0.1.0"
+    },
+    {
+      "absFrame" : [
+        171,
+        456,
+        35,
+        12
+      ],
+      "class" : "Label",
+      "font" : [
+        ".SFUI-Semibold",
+        10
+      ],
+      "frame" : [
+        30,
+        35,
+        35,
+        12
+      ],
+      "intrinsic" : [
+        35,
+        12
+      ],
+      "path" : "0.1.0.0.0.0.1.1",
+      "sizeThatFits200" : [
+        35,
+        12
+      ],
+      "text" : "Search"
+    },
+    {
+      "absFrame" : [
+        227,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabButton",
+      "frame" : [
+        176,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.0.2"
+    },
+    {
+      "absFrame" : [
+        264,
+        429,
+        20,
+        24
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        37,
+        8,
+        20,
+        24
+      ],
+      "intrinsic" : [
+        20,
+        24
+      ],
+      "path" : "0.1.0.0.0.0.2.0"
+    },
+    {
+      "absFrame" : [
+        258,
+        456,
+        33,
+        12
+      ],
+      "class" : "Label",
+      "font" : [
+        ".SFUI-Semibold",
+        10
+      ],
+      "frame" : [
+        31,
+        35,
+        33,
+        12
+      ],
+      "intrinsic" : [
+        33,
+        12
+      ],
+      "path" : "0.1.0.0.0.0.2.1",
+      "sizeThatFits200" : [
+        33,
+        12
+      ],
+      "text" : "Profile"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        4,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabSelectionView",
+      "cornerRadius" : -1,
+      "extraSublayers" : [
+        {
+          "class" : "CABackdropLayer",
+          "cornerRadius" : 27,
+          "frame" : [
+            0,
+            0,
+            94,
+            54
+          ]
+        }
+      ],
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "ClearGlassView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.1"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "SDFView",
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "SDFElementView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.1.0.0.0"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UIPortalView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.1.0.1"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.1.0.1.1"
+    },
+    {
+      "absFrame" : [
+        51,
+        417,
+        274,
+        62
+      ],
+      "class" : "ContentView",
+      "frame" : [
+        0,
+        0,
+        274,
+        62
+      ],
+      "path" : "0.1.0.0.0.2"
+    },
+    {
+      "absFrame" : [
+        55,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabButton",
+      "frame" : [
+        4,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.2.0"
+    },
+    {
+      "absFrame" : [
+        90,
+        429,
+        24,
+        24
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        35,
+        8,
+        24,
+        24
+      ],
+      "intrinsic" : [
+        24,
+        24
+      ],
+      "path" : "0.1.0.0.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        88,
+        456,
+        29,
+        12
+      ],
+      "class" : "Label",
+      "font" : [
+        ".SFUI-Medium",
+        10
+      ],
+      "frame" : [
+        33,
+        35,
+        29,
+        12
+      ],
+      "intrinsic" : [
+        29,
+        12
+      ],
+      "path" : "0.1.0.0.0.2.0.1",
+      "sizeThatFits200" : [
+        29,
+        12
+      ],
+      "text" : "Home"
+    },
+    {
+      "absFrame" : [
+        141,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabButton",
+      "frame" : [
+        90,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.2.1"
+    },
+    {
+      "absFrame" : [
+        176,
+        429,
+        24,
+        24
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        35,
+        8,
+        24,
+        24
+      ],
+      "intrinsic" : [
+        24,
+        24
+      ],
+      "path" : "0.1.0.0.0.2.1.0"
+    },
+    {
+      "absFrame" : [
+        171,
+        456,
+        34.5,
+        12
+      ],
+      "class" : "Label",
+      "font" : [
+        ".SFUI-Medium",
+        10
+      ],
+      "frame" : [
+        30,
+        35,
+        34.5,
+        12
+      ],
+      "intrinsic" : [
+        34.5,
+        12
+      ],
+      "path" : "0.1.0.0.0.2.1.1",
+      "sizeThatFits200" : [
+        34.5,
+        12
+      ],
+      "text" : "Search"
+    },
+    {
+      "absFrame" : [
+        227,
+        421,
+        94,
+        54
+      ],
+      "class" : "_UITabButton",
+      "frame" : [
+        176,
+        4,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.2.2"
+    },
+    {
+      "absFrame" : [
+        264,
+        429,
+        20,
+        24
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        37,
+        8,
+        20,
+        24
+      ],
+      "intrinsic" : [
+        20,
+        24
+      ],
+      "path" : "0.1.0.0.0.2.2.0"
+    },
+    {
+      "absFrame" : [
+        258,
+        456,
+        32.5,
+        12
+      ],
+      "class" : "Label",
+      "font" : [
+        ".SFUI-Medium",
+        10
+      ],
+      "frame" : [
+        31,
+        35,
+        32.5,
+        12
+      ],
+      "intrinsic" : [
+        32.5,
+        12
+      ],
+      "path" : "0.1.0.0.0.2.2.1",
+      "sizeThatFits200" : [
+        32.5,
+        12
+      ],
+      "text" : "Profile"
+    },
+    {
+      "absFrame" : [
+        51,
+        417,
+        94,
+        54
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "DestOutView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        94,
+        54
+      ],
+      "path" : "0.1.0.0.0.3",
+      "presentationFrame" : [
+        4,
+        4,
+        94,
+        54
+      ]
+    }
+  ]
+}

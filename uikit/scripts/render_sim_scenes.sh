@@ -30,9 +30,15 @@ echo "built $APP"
 # the honest oracle for scale-2 scenes — a 3x device captured at 2x
 # resamples every view edge (measured 2026-09-04: label backgrounds off by
 # 2-4/255 along their frame edges). Window/modal scenes need the iPhone 16.
+# SIM_DEVICE=ipad is the iPad (A16) 820×1180 @2x; uses SimScene-iPad-Info.plist
+# (UIDeviceFamily 1+2, status bar visible so SA is [32, 0, 25, 0]).
 if [[ "${SIM_DEVICE:-}" == "2x" ]]; then
   DEVNAME="OpenUIKit-2x${SIM_DEVICE_SUFFIX:-}"
   DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+elif [[ "${SIM_DEVICE:-}" == "ipad" ]]; then
+  DEVNAME="OpenUIKit-iPad-A16${SIM_DEVICE_SUFFIX:-}"
+  DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPad-A16"
+  cp Tools/oracle2/SimScene-iPad-Info.plist "$APP/Info.plist"
 else
   DEVNAME="OpenUIKit-Chrome${SIM_DEVICE_SUFFIX:-}"
   DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"

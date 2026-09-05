@@ -6,13 +6,17 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class CallbackLog {
     var entries: [String] = []
     func append(_ entry: String) { entries.append(entry) }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LayoutProbeView: UIView {
     let name: String
     let callbackLog: CallbackLog
@@ -37,7 +41,9 @@ private final class LayoutProbeView: UIView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LayoutProbeController: UIViewController {
     let callbackLog: CallbackLog
     let rootProbe: LayoutProbeView
@@ -71,7 +77,9 @@ private final class LayoutProbeController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ContentProbeController: UIViewController {
     let name: String
     let callbackLog: CallbackLog
@@ -108,7 +116,9 @@ private final class ContentProbeController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ProgrammaticNibController: UIViewController {
     private(set) var loadViewCallCount = 0
 
@@ -118,7 +128,9 @@ private final class ProgrammaticNibController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TransitionCoordinatorProbe: UIViewControllerTransitionCoordinator {
     var isAnimated = false
     var presentationStyle: UIModalPresentationStyle = .fullScreen
@@ -167,7 +179,9 @@ private final class TransitionCoordinatorProbe: UIViewControllerTransitionCoordi
     ) {}
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class CoordinatorVendingController: UIViewController {
     let coordinator: UIViewControllerTransitionCoordinator
 
@@ -181,7 +195,9 @@ private final class CoordinatorVendingController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ViewControllerLayoutTests: XCTestCase {
 
     func testNilNibInitializerMatchesPlainProgrammaticInitialization() {

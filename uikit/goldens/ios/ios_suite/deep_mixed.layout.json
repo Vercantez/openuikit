@@ -1,0 +1,941 @@
+{
+  "name" : "deep_mixed",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        0.94899999999999995,
+        0.94899999999999995,
+        0.96899999999999997,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "bg" : [
+        0.94899999999999995,
+        0.94899999999999995,
+        0.96899999999999997,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        10,
+        20,
+        300,
+        176
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        10,
+        20,
+        300,
+        176
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        10,
+        20,
+        300,
+        176
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        0,
+        0,
+        300,
+        176
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        10,
+        20,
+        300,
+        44
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        300,
+        44
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        26,
+        31,
+        150,
+        22
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        11,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        40.5,
+        20.5
+      ],
+      "path" : "1.0.0.0",
+      "sizeThatFits200" : [
+        40.5,
+        20.5
+      ],
+      "text" : "Wi-Fi"
+    },
+    {
+      "absFrame" : [
+        243,
+        26.5,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        233,
+        6.5,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "1.0.0.1"
+    },
+    {
+      "absFrame" : [
+        243,
+        26.5,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.0.1.0"
+    },
+    {
+      "absFrame" : [
+        243,
+        26.5,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        243,
+        26.5,
+        63,
+        28
+      ],
+      "bg" : [
+        0.20399999999999999,
+        0.78000000000000003,
+        0.34899999999999998,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.0.1.0.1"
+    },
+    {
+      "absFrame" : [
+        243,
+        26.5,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "1.0.0.1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        243,
+        26.5,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.0.1.0.1.1"
+    },
+    {
+      "absFrame" : [
+        291,
+        40.5,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.0.1.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        258,
+        40.5,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.0.1.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        267,
+        28.5,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "1.0.0.1.0.2"
+    },
+    {
+      "absFrame" : [
+        267,
+        28.5,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.0.1.0.2.0"
+    },
+    {
+      "absFrame" : [
+        267,
+        28.5,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.0.1.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        26,
+        63.5,
+        284,
+        0.5
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.12
+      ],
+      "class" : "UIView",
+      "frame" : [
+        16,
+        43.5,
+        284,
+        0.5
+      ],
+      "path" : "1.0.0.2"
+    },
+    {
+      "absFrame" : [
+        10,
+        64,
+        300,
+        44
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        44,
+        300,
+        44
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "absFrame" : [
+        26,
+        75,
+        150,
+        22
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        11,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        74,
+        20.5
+      ],
+      "path" : "1.0.1.0",
+      "sizeThatFits200" : [
+        74,
+        20.5
+      ],
+      "text" : "Bluetooth"
+    },
+    {
+      "absFrame" : [
+        243,
+        70.5,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        233,
+        6.5,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "1.0.1.1"
+    },
+    {
+      "absFrame" : [
+        243,
+        70.5,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        243,
+        70.5,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1.1.0.0"
+    },
+    {
+      "absFrame" : [
+        243,
+        70.5,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1.1.0.1"
+    },
+    {
+      "absFrame" : [
+        -324,
+        70.5,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        -567,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "1.0.1.1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        243,
+        70.5,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1.1.0.1.1"
+    },
+    {
+      "absFrame" : [
+        291,
+        84.5,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.1.1.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        258,
+        84.5,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.1.1.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        245,
+        72.5,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        2,
+        2,
+        37,
+        24
+      ],
+      "path" : "1.0.1.1.0.2"
+    },
+    {
+      "absFrame" : [
+        245,
+        72.5,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.1.0.2.0"
+    },
+    {
+      "absFrame" : [
+        245,
+        72.5,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.1.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        26,
+        107.5,
+        284,
+        0.5
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.12
+      ],
+      "class" : "UIView",
+      "frame" : [
+        16,
+        43.5,
+        284,
+        0.5
+      ],
+      "path" : "1.0.1.2"
+    },
+    {
+      "absFrame" : [
+        10,
+        108,
+        300,
+        44
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        88,
+        300,
+        44
+      ],
+      "path" : "1.0.2"
+    },
+    {
+      "absFrame" : [
+        26,
+        119,
+        120,
+        22
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        11,
+        120,
+        22
+      ],
+      "intrinsic" : [
+        60,
+        20.5
+      ],
+      "path" : "1.0.2.0",
+      "sizeThatFits200" : [
+        60,
+        20.5
+      ],
+      "text" : "Storage"
+    },
+    {
+      "absFrame" : [
+        160,
+        128,
+        134,
+        4
+      ],
+      "class" : "UIProgressView",
+      "frame" : [
+        150,
+        20,
+        134,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "1.0.2.1"
+    },
+    {
+      "absFrame" : [
+        160,
+        128,
+        134,
+        4
+      ],
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        134,
+        4
+      ],
+      "path" : "1.0.2.1.0"
+    },
+    {
+      "absFrame" : [
+        160,
+        128,
+        134,
+        4
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        134,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "1.0.2.1.0.0"
+    },
+    {
+      "absFrame" : [
+        160,
+        128,
+        96,
+        4
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        96,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "1.0.2.1.0.1"
+    },
+    {
+      "absFrame" : [
+        26,
+        151.5,
+        284,
+        0.5
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.12
+      ],
+      "class" : "UIView",
+      "frame" : [
+        16,
+        43.5,
+        284,
+        0.5
+      ],
+      "path" : "1.0.2.2"
+    },
+    {
+      "absFrame" : [
+        10,
+        152,
+        300,
+        44
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        132,
+        300,
+        44
+      ],
+      "path" : "1.0.3"
+    },
+    {
+      "absFrame" : [
+        26,
+        163,
+        120,
+        22
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        11,
+        120,
+        22
+      ],
+      "intrinsic" : [
+        55.5,
+        20.5
+      ],
+      "path" : "1.0.3.0",
+      "sizeThatFits200" : [
+        55.5,
+        20.5
+      ],
+      "text" : "Battery"
+    },
+    {
+      "absFrame" : [
+        160,
+        172,
+        134,
+        4
+      ],
+      "class" : "UIProgressView",
+      "frame" : [
+        150,
+        20,
+        134,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "1.0.3.1"
+    },
+    {
+      "absFrame" : [
+        160,
+        172,
+        134,
+        4
+      ],
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        134,
+        4
+      ],
+      "path" : "1.0.3.1.0"
+    },
+    {
+      "absFrame" : [
+        160,
+        172,
+        134,
+        4
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        134,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "1.0.3.1.0.0"
+    },
+    {
+      "absFrame" : [
+        160,
+        172,
+        42,
+        4
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        42,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "1.0.3.1.0.1"
+    },
+    {
+      "absFrame" : [
+        26,
+        202,
+        268,
+        16
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        12
+      ],
+      "frame" : [
+        26,
+        202,
+        268,
+        16
+      ],
+      "intrinsic" : [
+        177.5,
+        14.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        177.5,
+        14.5
+      ],
+      "text" : "Settings footer explanation text"
+    }
+  ]
+}

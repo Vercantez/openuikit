@@ -8,8 +8,16 @@
 // scripts/prove_focus_designsystem_swiftui.sh is the byte-exact source gate.
 
 import XCTest
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
+#if os(Linux)
+@preconcurrency @testable import OpenUIKit
+#else
 @testable import OpenUIKit
+#endif
 
 private enum DesignSystemRow: String, CaseIterable {
     case first
@@ -267,7 +275,9 @@ private struct CommentsScrollFixture: View {
         ScrollViewReader { proxy in makeContent(proxy) }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     private func makeContent(_ proxy: ScrollViewProxy) -> some View {
         captureProxy(proxy)
         return ScrollView {
@@ -436,7 +446,9 @@ private struct NavChromeFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUIDesignSystemTests: XCTestCase {
     private var savedResourceRoot = ""
     private var savedBackend: RenderBackend = .swift

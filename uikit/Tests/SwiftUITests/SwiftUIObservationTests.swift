@@ -2,8 +2,16 @@
 
 import XCTest
 import Combine
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
 
 private final class ObservationModel: Combine.ObservableObject {
     @Combine.Published var value: Int
@@ -565,7 +573,9 @@ private func makeNonisolatedObservedObject(
     ObservedObject(initialValue: model)
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUIObservationTests: XCTestCase {
     func testFoundationHiddenSchedulerDefersToOneHostClockTurn() {
         OpenUIKit.Timer._reset()

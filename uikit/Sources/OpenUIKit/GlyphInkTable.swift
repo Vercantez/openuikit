@@ -24,8 +24,12 @@
 //
 // Masks are stored for the exact (family, weight, integer size, light/dark,
 // phase, char) combinations exercised by the validation scenes. Lookup
-// misses fall back to the computed GlyphSmoothing path, so the library
-// degrades gracefully when the resource file is absent (portability).
+// misses on the Catalyst cut fall back to the computed GlyphSmoothing path
+// (needs an outline font). Under the iOS cut, a hit draws the harvested
+// mask with no font file; a miss with no outline font fails with
+// OPENUIKIT_IOS_INK_MISS and the exact key (Linux trial 2026-09-05: blank
+// labels when SFNS was absent). OPENUIKIT_INK_LOG still records misses
+// without aborting so a harvest run can collect keys.
 
 public struct GlyphInkMask {
     public var width: Int
@@ -128,15 +132,34 @@ public enum GlyphInkTable {
     public static func maskIOS(familyKey: String, sizeKey: Int, dark: Bool,
                                tag: String, scalar: Unicode.Scalar,
                                scale: CGFloat) -> GlyphInkMask? {
-        let key = "\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
-        let prefix = scale == 3 ? "I3|" : "I|"
+        let key = iosMaskKey(familyKey: familyKey, sizeKey: sizeKey, dark: dark,
+                             tag: tag, scalar: scalar, scale: scale)
         guard let e = iosEntries(scale: scale) else {
-            if logMisses { missedKeys.insert(prefix + key) }
+            if logMisses { missedKeys.insert(key) }
             return nil
         }
-        if let m = decode(e[key]?.objectValue, cacheKey: prefix + key) { return m }
-        if logMisses { missedKeys.insert(prefix + key) }
+        let tableKey = "\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
+        if let m = decode(e[tableKey]?.objectValue, cacheKey: key) { return m }
+        if logMisses { missedKeys.insert(key) }
         return nil
+    }
+
+    /// Key written by OPENUIKIT_IOS_INK_MISS / OPENUIKIT_INK_LOG for one
+    /// iOS-cut glyph. Prefix `I|` is the 2x table, `I3|` the 3x table.
+    /// MEASURED Linux trial 2026-09-05: without SFNS the previous path
+    /// returned a blank label; this string is what to harvest.
+    public static func iosMaskKey(familyKey: String, sizeKey: Int, dark: Bool,
+                                  tag: String, scalar: Unicode.Scalar,
+                                  scale: CGFloat) -> String {
+        let prefix = scale == 3 ? "I3|" : "I|"
+        return "\(prefix)\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
+    }
+
+    /// Abort with the exact missing iOS ink key so a Linux agent knows what
+    /// to harvest rather than shipping blank labels. Skipped when
+    /// OPENUIKIT_INK_LOG is collecting keys (logMisses).
+    public static func missingIOSInk(_ key: String) -> Never {
+        fatalError("OPENUIKIT_IOS_INK_MISS: \(key) — no outline font; harvest this (family|size|appearance|phase|scalar) into Resources/glyph_ink_ios.json (2x, prefix I|) or glyph_ink_ios_3x.json (3x, prefix I3|)")
     }
 
     /// When true (host renders a window-server-composited hierarchy, e.g. a

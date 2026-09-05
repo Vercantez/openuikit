@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # agent_merge.sh <branch> — the operator half of the fan-out: check an
 # agent's branch the way a merge to main must be checked, merge it, advance
 # the uikit vendor pin, and push.
@@ -31,7 +31,7 @@ done
 [[ -n "$BR" ]] || { echo "no such branch: $NAME" >&2; exit 2; }
 ADDS=$(git rev-list --count main.."$BR")
 echo "==> $BR: $(git log --oneline -1 "$BR") — $ADDS commit(s) over main"
-[[ "$ADDS" -gt 0 ]] || { echo "REFUSED: $BR adds no commits over main (stale base branch?)"; exit 3; }
+[ "$ADDS" -gt 0 ] || { echo "REFUSED: $BR adds no commits over main (stale base branch?)"; exit 3; }
 echo "==> files changed vs main:"
 git diff --stat main..."$BR" | tail -15
 # ALLOW_PATHS='^full/foundation/|^full/scripts/build_full\.sh$' widens the scope for
@@ -64,7 +64,8 @@ fi
 
 # Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
 # each; 25 of them once filled the disk. Reap any not attached to a live run.
-for stale in /tmp/agent_merge.*(N/); do
+for stale in /tmp/agent_merge.*/; do
+  [ -d "$stale" ] || continue
   pgrep -f "agent_merge.*$stale" >/dev/null 2>&1 && continue
   git worktree remove --force "$stale" 2>/dev/null || rm -rf "$stale"
 done
@@ -74,11 +75,19 @@ git worktree add -q --detach "$WT" main
 trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 cd "$WT/uikit"
+# When /tmp has no simulator goldens (Linux merge box, or a wiped Mac),
+# fall back to the committed snapshot. restore.sh leaves live /tmp captures
+# alone and prints which source it used.
+if [[ -d goldens/ios && -f goldens/ios/manifest.json ]]; then
+  zsh scripts/goldens_restore.sh
+fi
 echo "==> macOS build + Catalyst gate"
 swift build -c release --product openrender 2>&1 | grep -E 'error|Build of' | tail -3
 rm -rf /tmp/agent_merge_gate; ./.build/release/openrender render /tmp/agent_merge_gate fixtures/scenes/*.json >/dev/null
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -E '^FAIL|scenes pass' | tail -5
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5; }
+echo "==> test bundle builds (a keep-both on a test file once merged an unbalanced class)"
+swift build --build-tests > /tmp/agent_merge_tests.log 2>&1 || { grep -E 'error:' /tmp/agent_merge_tests.log | head -5; echo "TEST BUNDLE RED"; exit 5; }
 echo "==> real-app screens"
 rm -rf /tmp/agent_merge_app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/agent_merge_app >/dev/null
 python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out /tmp/agent_merge_app --scale 3 2>&1 | grep pixels | cut -c1-80
@@ -96,29 +105,82 @@ echo "==> conformance apps (SKIP_CAPTURE re-render against the last round's gold
 # captured (/tmp/hc-conformance-<App>) is re-rendered from the merged tree
 # and graded against scoreboard/latest.json: a passing row must stay at or
 # above its bar, a failing row must not lose more than 0.5.
-for app in Sources/ConformanceApps/*(/:t); do
-  [[ -d /tmp/hc-conformance-$app/golden ]] || { echo "   $app: no round capture, skipped"; continue; }
+for app_dir in Sources/ConformanceApps/*/; do
+  [ -d "$app_dir" ] || continue
+  app=$(basename "$app_dir")
+  [ -d /tmp/hc-conformance-$app/golden ] || { echo "   $app: no round capture, skipped"; continue; }
   rm -rf /tmp/agent_merge_conf-$app; cp -r /tmp/hc-conformance-$app /tmp/agent_merge_conf-$app
   # A branch that changes the PROBE (how a frame is named, what is dumped)
   # invalidates the round's goldens for that app: RECAPTURE_APPS="Pager Tabs"
   # captures them again with the merged tree's probe before grading.
   skip=1
-  for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skip=""; rm -rf /tmp/agent_merge_conf-$app/golden; echo "   $app: recapturing goldens with the merged probe"; }; done
-  SKIP_CAPTURE=$skip zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
+  for r in ${RECAPTURE_APPS:-}; do
+    if [ "$r" = "$app" ]; then
+      skip=""; rm -rf /tmp/agent_merge_conf-$app/golden
+      echo "   $app: recapturing goldens with the merged probe"
+    fi
+  done
+  SKIP_CAPTURE=$skip bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
-  if [[ -d /tmp/hc-conformance-$app-ipad/golden ]]; then
+  if [ -d /tmp/hc-conformance-$app-ipad/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad /tmp/agent_merge_conf-$app-ipad
     skip_ipad=1
-    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" || "$r" == "$app-ipad" ]] && { skip_ipad=""; rm -rf /tmp/agent_merge_conf-$app-ipad/golden; echo "   $app-ipad: recapturing goldens with the merged probe"; }; done
-    SKIP_CAPTURE=$skip_ipad zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
+    for r in ${RECAPTURE_APPS:-}; do
+      if [ "$r" = "$app" ] || [ "$r" = "$app-ipad" ]; then
+        skip_ipad=""; rm -rf /tmp/agent_merge_conf-$app-ipad/golden
+        echo "   $app-ipad: recapturing goldens with the merged probe"
+      fi
+    done
+    SKIP_CAPTURE=$skip_ipad bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see /tmp/agent_merge_conf-$app-ipad.log)"; exit 9; }
   fi
-  if [[ -d /tmp/hc-conformance-$app-dark/golden ]]; then
+  if [ -d /tmp/hc-conformance-$app-dark/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
     skipd=1
-    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skipd=""; rm -rf /tmp/agent_merge_conf-$app-dark/golden; echo "   $app-dark: recapturing goldens with the merged probe"; }; done
-    SKIP_CAPTURE=$skipd zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
+    for r in ${RECAPTURE_APPS:-}; do
+      if [ "$r" = "$app" ]; then
+        skipd=""; rm -rf /tmp/agent_merge_conf-$app-dark/golden
+        echo "   $app-dark: recapturing goldens with the merged probe"
+      fi
+    done
+    SKIP_CAPTURE=$skipd bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
+  fi
+  if [ -d /tmp/hc-conformance-$app-rtl/golden ]; then
+    rm -rf /tmp/agent_merge_conf-$app-rtl; cp -r /tmp/hc-conformance-$app-rtl /tmp/agent_merge_conf-$app-rtl
+    skipr=1
+    for r in ${RECAPTURE_APPS:-}; do
+      if [ "$r" = "$app" ]; then
+        skipr=""; rm -rf /tmp/agent_merge_conf-$app-rtl/golden
+        echo "   $app-rtl: recapturing goldens with the merged probe"
+      fi
+    done
+    SKIP_CAPTURE=$skipr bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-rtl $app --rtl > /tmp/agent_merge_conf-$app-rtl.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see /tmp/agent_merge_conf-$app-rtl.log)"; exit 9; }
+  fi
+  if [ -d /tmp/hc-conformance-$app-ax1/golden ]; then
+    rm -rf /tmp/agent_merge_conf-$app-ax1; cp -r /tmp/hc-conformance-$app-ax1 /tmp/agent_merge_conf-$app-ax1
+    skipax=1
+    for r in ${RECAPTURE_APPS:-}; do
+      if [ "$r" = "$app" ] || [ "$r" = "$app-ax1" ]; then
+        skipax=""; rm -rf /tmp/agent_merge_conf-$app-ax1/golden
+        echo "   $app-ax1: recapturing goldens with the merged probe"
+      fi
+    done
+    SKIP_CAPTURE=$skipax bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ax1 $app --ax1 > /tmp/agent_merge_conf-$app-ax1.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --ax1 (see /tmp/agent_merge_conf-$app-ax1.log)"; exit 9; }
+  fi
+  if [ -d /tmp/hc-conformance-$app-xxxl/golden ]; then
+    rm -rf /tmp/agent_merge_conf-$app-xxxl; cp -r /tmp/hc-conformance-$app-xxxl /tmp/agent_merge_conf-$app-xxxl
+    skipxx=1
+    for r in ${RECAPTURE_APPS:-}; do
+      if [ "$r" = "$app" ] || [ "$r" = "$app-xxxl" ]; then
+        skipxx=""; rm -rf /tmp/agent_merge_conf-$app-xxxl/golden
+        echo "   $app-xxxl: recapturing goldens with the merged probe"
+      fi
+    done
+    SKIP_CAPTURE=$skipxx bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-xxxl $app --xxxl > /tmp/agent_merge_conf-$app-xxxl.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see /tmp/agent_merge_conf-$app-xxxl.log)"; exit 9; }
   fi
 done
 python3 - <<'PY' || exit 9

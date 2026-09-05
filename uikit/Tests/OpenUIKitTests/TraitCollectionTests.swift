@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SizeClassChangeProbeController: UIViewController {
     private(set) var previousTraits: UITraitCollection?
 
@@ -11,7 +13,9 @@ private final class SizeClassChangeProbeController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RegisteredTraitProbeController: UIViewController {
     var log: [String] = []
     var handlerPrevious: UITraitCollection?
@@ -23,7 +27,9 @@ private final class RegisteredTraitProbeController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LegacyViewTraitProbe: UIView {
     var log: [String] = []
     var previousTraits: UITraitCollection?
@@ -40,7 +46,9 @@ private enum CustomTraitReusingStyleName: UITraitDefinition {
 
 /// Size-class initializer results and merge precedence were measured against
 /// UIKit 26.1 under Mac Catalyst before implementing this portable subset.
+#if !os(Linux)
 @MainActor
+#endif
 final class TraitCollectionTests: XCTestCase {
     func testUIViewLegacyTraitCallbackFollowsModernRegistration() {
         let savedCurrent = UITraitCollection.current
@@ -195,6 +203,26 @@ final class TraitCollectionTests: XCTestCase {
         )
         XCTAssertEqual(window.traitCollection.horizontalSizeClass, .regular)
         XCTAssertEqual(window.traitCollection.verticalSizeClass, .regular)
+    }
+
+    /// MEASURED confprobe --ax1, iPhone SE 2x / iOS 26.1: the window's
+    /// `traitOverrides.preferredContentSizeCategory` is the environment
+    /// descendants see, even when `UITraitCollection.current` is still
+    /// `.large`. Same setter realappprobe uses.
+    func testWindowTraitOverridesPreferredContentSizeCategory() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        XCTAssertEqual(window.traitCollection.preferredContentSizeCategory,
+                       .accessibilityLarge)
+        let child = UIView()
+        window.addSubview(child)
+        XCTAssertEqual(child.traitCollection.preferredContentSizeCategory,
+                       .accessibilityLarge)
     }
 
     func testDetachedViewsUseScreenAxesButWindowUsesItsOwnBounds() {

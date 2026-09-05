@@ -4,7 +4,9 @@ import XCTest
 import CSTBTrueType
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class RasterizeABTests: XCTestCase {
 
     func testWrapperMatchesStbDefaultPath() throws {

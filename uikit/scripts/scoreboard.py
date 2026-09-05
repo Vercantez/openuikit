@@ -97,7 +97,14 @@ def parse_conformance(dirs):
         # time its summary was written so a stale capture is visible.
         captured = datetime.datetime.fromtimestamp(os.path.getmtime(summary)).strftime("%Y-%m-%dT%H:%M")
         app = str(s.get("app"))
-        key = app + ".dark" if s.get("style") == "dark" else app
+        key = app
+        if s.get("style") == "dark":
+            key = key + ".dark"
+        if s.get("direction") == "rtl":
+            key = key + ".rtl"
+        cs = s.get("contentSize") or "large"
+        if cs in ("ax1", "xxxl"):
+            key = key + "." + cs
         CONFORMANCE_CAPTURED[key] = captured
         for cap in s.get("captures", []):
             rows.append({"scene": f"{s.get('app')}:{cap.get('name')}", "category": "conformance",

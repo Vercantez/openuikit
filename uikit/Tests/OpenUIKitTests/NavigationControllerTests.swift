@@ -10,13 +10,17 @@ import Foundation
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
 /// Shared appearance-event log.
+#if !os(Linux)
 @MainActor
+#endif
 private final class Log {
     var entries: [String] = []
     func add(_ s: String) { entries.append(s) }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private class LifecycleVC: UIViewController {
     let name: String
     let log: Log
@@ -33,7 +37,9 @@ private class LifecycleVC: UIViewController {
     override func viewDidDisappear(_ animated: Bool) { log.add("\(name).didDisappear") }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private func makeNav(_ root: UIViewController,
                      size: CGSize = CGSize(width: 390, height: 700))
     -> UINavigationController {
@@ -43,7 +49,9 @@ private func makeNav(_ root: UIViewController,
     return nav
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ViewControllerLifecycleTests: XCTestCase {
     override func setUp() {
         super.setUp()

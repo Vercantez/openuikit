@@ -1,0 +1,172 @@
+{
+  "name" : "label_basic",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        80,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        20,
+        80,
+        20.5
+      ],
+      "intrinsic" : [
+        80,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        80,
+        20.5
+      ],
+      "text" : "Hello UIKit"
+    },
+    {
+      "absFrame" : [
+        20,
+        50,
+        122.5,
+        16
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        13
+      ],
+      "frame" : [
+        20,
+        50,
+        122.5,
+        16
+      ],
+      "intrinsic" : [
+        122.5,
+        16
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        122.5,
+        16
+      ],
+      "text" : "The quick brown fox"
+    },
+    {
+      "absFrame" : [
+        20,
+        80,
+        166,
+        41
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Bold",
+        34
+      ],
+      "frame" : [
+        20,
+        80,
+        166,
+        41
+      ],
+      "intrinsic" : [
+        166,
+        41
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        166,
+        41
+      ],
+      "text" : "Large Title"
+    },
+    {
+      "absFrame" : [
+        20,
+        130,
+        280,
+        22
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        130,
+        280,
+        22
+      ],
+      "intrinsic" : [
+        129.5,
+        20.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        129.5,
+        20.5
+      ],
+      "text" : "Fixed frame label"
+    },
+    {
+      "absFrame" : [
+        20,
+        160,
+        142.5,
+        18
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        20,
+        160,
+        142.5,
+        18
+      ],
+      "intrinsic" : [
+        142.5,
+        18
+      ],
+      "path" : "4",
+      "sizeThatFits200" : [
+        142.5,
+        18
+      ],
+      "text" : "0123456789 !@#$%"
+    }
+  ]
+}

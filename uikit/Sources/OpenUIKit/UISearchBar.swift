@@ -403,6 +403,10 @@ open class UISearchBar: UIView {
     private var cancelButton: UIButton?
     /// Set by UINavigationBar when this bar is the active inline-nav search.
     var _navInlineActive = false
+    /// Set by UINavigationBar on pad: the field fills the 240/280 × 44
+    /// trailing chrome (Tabs-ipad t200 / t4000: UISearchBarTextField
+    /// frame equals the search bar).
+    var _padTrailingChrome = false
 
     public var text: String? {
         get { searchTextField.text }
@@ -512,6 +516,11 @@ open class UISearchBar: UIView {
             return
         }
         searchTextField.isHidden = false
+        if _padTrailingChrome {
+            cancelButton?.isHidden = true
+            searchTextField.frame = bounds
+            return
+        }
         if _navInlineActive {
             layoutNavInline()
             return
@@ -542,10 +551,21 @@ open class UISearchBar: UIView {
         let b = cancelButton ?? makeCancelButton()
         b.isHidden = false
         applyNavInlineCancelChrome(b)
-        b.frame = CGRect(x: bounds.width - side - d, y: y, width: d, height: d)
         let fieldW = max(0, bounds.width - side - d - gap - side)
-        searchTextField.frame = CGRect(x: side, y: y, width: fieldW,
-                                       height: UISearchBar.fieldHeight)
+        // MEASURED Tabs t4000.rtl, iPhone SE 2x / iOS 26.1: dismiss is on
+        // the trailing (left) edge — field abs [71, 18, 288, 44] =
+        // 16 + 44 + 11, not LTR's [16, 18, 288, 44] with dismiss at 315.
+        // Field internals stay physical (placeholder at field-x + 39.5 =
+        // 110.5).
+        if _layoutIsRTL {
+            b.frame = CGRect(x: side, y: y, width: d, height: d)
+            searchTextField.frame = CGRect(x: side + d + gap, y: y, width: fieldW,
+                                           height: UISearchBar.fieldHeight)
+        } else {
+            b.frame = CGRect(x: bounds.width - side - d, y: y, width: d, height: d)
+            searchTextField.frame = CGRect(x: side, y: y, width: fieldW,
+                                           height: UISearchBar.fieldHeight)
+        }
     }
 
     func applyStandaloneCancelChrome(_ b: UIButton) {

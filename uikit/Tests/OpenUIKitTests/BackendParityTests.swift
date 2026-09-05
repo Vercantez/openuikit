@@ -6,7 +6,9 @@ import XCTest
 
 private typealias CGAffineTransform = OpenCoreGraphics.CGAffineTransform
 
+#if !os(Linux)
 @MainActor
+#endif
 final class BackendParityTests: XCTestCase {
 
     private var savedBackend: RenderBackend = CanvasBackendSelection.current

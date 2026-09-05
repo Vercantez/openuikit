@@ -3,8 +3,16 @@
 // on SwiftUI to make ObservableObject and Published visible.
 
 import XCTest
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
+#if os(Linux)
+@preconcurrency import SwiftUI
+#else
 import SwiftUI
+#endif
 
 private final class ImportOnlyModel: ObservableObject {
     @Published var value = 1
@@ -32,7 +40,9 @@ private struct ImportOnlyView: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUIObservationImportTests: XCTestCase {
     func testSwiftUIOnlyImportProvidesTheWholeFocusObservationSurface() {
         let model = ImportOnlyModel()

@@ -240,6 +240,20 @@ public enum _UIBarMetrics {
     /// flexible space gets no extra gap at all.
     /// Item title font.
     public static let titleFontSize: CGFloat = 17
+
+    /// MEASURED TableEditor t200.ax1, iPhone SE 2x / iOS 26.1: the Edit
+    /// `UIButtonLabel` is **21 pt** (preferredFont `.body` at
+    /// `.extraExtraLarge`) inside a still-44 pt platter, not 33 pt
+    /// (uncapped ax1 body) and not `scaledValue(for: 17)` which is **20**
+    /// at extraExtraLarge (`dynamic_type.json` body scaled[17]). `.large`
+    /// stays 17. Cap via `UIContentSizeCategory.iOSBarCapped`.
+    static func iOSTitleFont(compatibleWith traits: UITraitCollection,
+                             weight: UIFont.Weight = .medium) -> UIFont {
+        let cap = UITraitCollection(
+            preferredContentSizeCategory: traits.preferredContentSizeCategory.iOSBarCapped)
+        let size = UIFont.preferredFont(forTextStyle: .body, compatibleWith: cap).pointSize
+        return .systemFont(ofSize: size, weight: weight)
+    }
     /// Measured platter shadow. Least-squares fit of (opacity, sigma,
     /// offset) to the golden's own falloff around the `navitem_buttons`
     /// leading platter (`python3 Tools/compare/fit_bar_shadow.py`):
@@ -367,13 +381,22 @@ final class _UIBarButtonItemView: UIControl {
         // Glass samples the backdrop. `.done` is a tint fill (measured
         // prominent style); grouped items yield to `_UIBarSharedPlatterView`.
         platter._usesIOSGlass = !_platterHiddenByGroup && item.style != .done && showsPlatter
+        // Toolbar platters (no refractive band) use the dark bar mix;
+        // nav-bar platters keep the measured dark flats. MEASURED
+        // /tmp/glass-dark-out glass_toolbar_dark_black: 19 over black,
+        // same mix as the tab bar (Tabs t1000.dark Left interior 19 vs
+        // the previous shared platterFill 25).
+        platter._usesIOSDarkBarGlass = platter._usesIOSGlass && !appliesRefraction
         platter.layer.shadowOpacity = _platterHiddenByGroup ? 0 : _UIBarMetrics.shadowOpacity
         platter.isHidden = !showsPlatter
     }
 
     /// Only navigation-bar platters show the refractive band (measured —
-    /// see `_UIBarMetrics.platterRefractionHeight`).
-    var appliesRefraction = true
+    /// see `_UIBarMetrics.platterRefractionHeight`). Toolbar platters
+    /// also use this to select the dark bar glass mix.
+    var appliesRefraction = true {
+        didSet { if appliesRefraction != oldValue { applyColors() } }
+    }
 
     /// An item that shows only an image / symbol (no title, no custom
     /// view): iOS 26 merges runs of these into one platter.
@@ -416,6 +439,9 @@ final class _UIBarButtonItemView: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            titleLabel.font = _UIBarMetrics.iOSTitleFont(compatibleWith: traitCollection)
+        }
         platter.frame = bounds
         refractionHost.frame = platter.bounds
         let band = _UIBarMetrics.platterRefractionHeight

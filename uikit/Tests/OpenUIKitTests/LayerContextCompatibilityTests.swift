@@ -7,7 +7,9 @@ private typealias PortableLayer = OpenUIKit.CALayer
 private typealias PortableGradientLayer = OpenUIKit.CAGradientLayer
 private typealias PortableColor = OpenUIKit.CGColor
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LayerLayoutDelegateProbe: OpenUIKit.CALayerDelegate {
     private(set) var layers: [PortableLayer] = []
 
@@ -16,7 +18,9 @@ private final class LayerLayoutDelegateProbe: OpenUIKit.CALayerDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LayerLayoutViewProbe: UIView {
     let gradient = PortableGradientLayer()
     private(set) var callbacks: [String] = []
@@ -42,7 +46,9 @@ private final class LayerLayoutViewProbe: UIView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class LayerContextCompatibilityTests: XCTestCase {
     private var savedBackend: RenderBackend = CanvasBackendSelection.current
     private var savedCompositor: RenderCompositor = OpenUIKitRuntime.compositor
@@ -124,9 +130,11 @@ final class LayerContextCompatibilityTests: XCTestCase {
     }
 
     func testCAFilterRuntimeMetadataAndBoundedInputsFailClosed() throws {
+#if canImport(ObjectiveC)
         XCTAssertEqual(NSStringFromClass(_OpenCAFilter.self), "CAFilter")
         XCTAssertTrue(_OpenCAFilter.responds(
             to: NSSelectorFromString("filterWithType:")))
+#endif
         XCTAssertNil(_OpenCAFilter.filter(withType: "unknownFilter"))
 
         let filter = try XCTUnwrap(

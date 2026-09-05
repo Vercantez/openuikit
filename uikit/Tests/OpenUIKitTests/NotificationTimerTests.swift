@@ -23,7 +23,9 @@ private final class NotificationTestBox<Value>: @unchecked Sendable {
     init(_ value: Value) { self.value = value }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NotificationCenterTests: XCTestCase {
 
     func testBlockObserverReceivesPostsAndUserInfo() {
@@ -117,7 +119,9 @@ final class NotificationCenterTests: XCTestCase {
     /// The selector form goes through the same portable dispatch
     /// `UIControl.addTarget(_:action:for:)` uses (docs/OBJC_RUNTIME.md).
     func testSelectorObserver() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Watcher: SelectorDispatching {
             var received: [Notification] = []
             static let actions: ActionTable<Watcher> = [
@@ -141,7 +145,9 @@ final class NotificationCenterTests: XCTestCase {
     }
 
     func testDeallocatedSelectorObserverIsReaped() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Watcher: SelectorDispatching {
             func perform(_ name: String, with sender: Any?) -> Bool { true }
         }
@@ -156,7 +162,9 @@ final class NotificationCenterTests: XCTestCase {
     }
 
     func testDuplicateSelectorRegistrationsAndExactRemoval() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Watcher: SelectorDispatching {
             var hits = 0
             func perform(_ name: String, with sender: Any?) -> Bool {
@@ -189,7 +197,9 @@ final class NotificationCenterTests: XCTestCase {
     }
 
     func testSelectorMissReportsExactlyOnceThroughCentralDispatch() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Watcher: SelectorDispatching {
             func perform(_ name: String, with sender: Any?) -> Bool { false }
         }
@@ -259,7 +269,9 @@ final class NotificationCenterTests: XCTestCase {
     /// The app lifecycle POSTS the UIKit notifications, which is the whole
     /// point of the type existing (docs/APP_COMPAT.md: ~90 uses).
     func testApplicationLifecyclePostsNotifications() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Delegate: UIApplicationDelegate {}
         let app = UIApplication.shared
         var heard: [String] = []
@@ -290,7 +302,9 @@ final class NotificationCenterTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TimerTests: XCTestCase {
 
     override func setUp() {
@@ -549,7 +563,9 @@ final class TimerTests: XCTestCase {
     }
 
     func testSelectorForm() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Ticker: SelectorDispatching {
             var ticks = 0
             var lastUserInfo: Any?

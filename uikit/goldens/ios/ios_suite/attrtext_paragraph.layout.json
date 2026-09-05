@@ -1,0 +1,120 @@
+{
+  "name" : "attrtext_paragraph",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        16,
+        240,
+        73
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        16,
+        240,
+        73
+      ],
+      "intrinsic" : [
+        486,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        185.5,
+        73
+      ],
+      "text" : "The quick brown fox jumps over the lazy dog near the river bank"
+    },
+    {
+      "absFrame" : [
+        20,
+        116,
+        240,
+        74
+      ],
+      "bg" : [
+        0.94499999999999995,
+        0.95299999999999996,
+        0.96099999999999997,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        20,
+        116,
+        240,
+        74
+      ],
+      "intrinsic" : [
+        438,
+        18
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        188,
+        60
+      ],
+      "text" : "The quick brown fox jumps over the lazy dog near the river bank"
+    },
+    {
+      "absFrame" : [
+        20,
+        200,
+        240,
+        46
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        200,
+        240,
+        46
+      ],
+      "intrinsic" : [
+        360,
+        20.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        197.5,
+        41
+      ],
+      "text" : "right aligned text that wraps over two lines here"
+    }
+  ]
+}

@@ -15,13 +15,19 @@ import XCTest
 /// The two app classes the cell nibs name, standing in for the harness's
 /// registrations (Sources/RealAppProbe/NibClasses.swift) so the parser can be
 /// tested without the whole real-app screen.
+#if !os(Linux)
 @MainActor
+#endif
 final class NibTestLabel: UILabel {}
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NibTestImageView: UIImageView {}
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NibTestSwitchCell: UITableViewCell, UINibOutletConnecting {
     var cellLabel: UILabel?
     var cellImage: UIImageView?
@@ -45,7 +51,9 @@ final class NibTestSwitchCell: UITableViewCell, UINibOutletConnecting {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UINibTests: XCTestCase {
     static let repoRoot = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()  // OpenUIKitTests

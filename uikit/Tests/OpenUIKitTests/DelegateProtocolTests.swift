@@ -15,28 +15,50 @@ import XCTest
 
 // MARK: - Compile-only conformances (empty on purpose)
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalTextFieldDelegate: UITextFieldDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalTextViewDelegate: UITextViewDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalGestureDelegate: UIGestureRecognizerDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalScrollDelegate: UIScrollViewDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalAdaptiveDelegate: UIAdaptivePresentationControllerDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalSheetDelegate: UISheetPresentationControllerDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalPopoverDelegate: UIPopoverPresentationControllerDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalSearchBarDelegate: UISearchBarDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalTabBarControllerDelegate: UITabBarControllerDelegate {}
+#if !os(Linux)
 @MainActor
+#endif
 private final class MinimalNavigationDelegate: UINavigationControllerDelegate {}
 
+#if !os(Linux)
 @MainActor
+#endif
 final class DelegateDeclarationTests: XCTestCase {
     /// Every protocol in the cluster can be conformed to with NO members —
     /// the portable stand-in for ObjC's `@objc optional`.
@@ -64,7 +86,9 @@ final class DelegateDeclarationTests: XCTestCase {
 
 // MARK: - UITextFieldDelegate gating
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RecordingFieldDelegate: UITextFieldDelegate {
     var log: [String] = []
     var allowBegin = true
@@ -87,7 +111,9 @@ private final class RecordingFieldDelegate: UITextFieldDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextFieldDelegateTests: XCTestCase {
 
     private func makeField(_ d: RecordingFieldDelegate) -> (UIWindow, UITextField) {
@@ -177,7 +203,9 @@ final class TextFieldDelegateTests: XCTestCase {
     }
 
     func testClearIsGatedToo() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class NoClear: UITextFieldDelegate {
             func textFieldShouldClear(_ textField: UITextField) -> Bool { false }
         }
@@ -192,7 +220,9 @@ final class TextFieldDelegateTests: XCTestCase {
 
 // MARK: - UITextViewDelegate gating
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RecordingTextViewDelegate: UITextViewDelegate {
     var changes = 0
     var allowChange = true
@@ -203,7 +233,9 @@ private final class RecordingTextViewDelegate: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) { changes += 1 }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextViewDelegateTests: XCTestCase {
     func testTextViewDelegateGatesAndReports() {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -227,7 +259,9 @@ final class TextViewDelegateTests: XCTestCase {
 
 // MARK: - UIGestureRecognizerDelegate gating
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class GestureDelegate: UIGestureRecognizerDelegate {
     var allowBegin = true
     var allowSimultaneous = false
@@ -247,7 +281,9 @@ private final class GestureDelegate: UIGestureRecognizerDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class GestureDelegateTests: XCTestCase {
 
     private func makeWindow() -> (UIWindow, UIView) {
@@ -327,7 +363,9 @@ final class GestureDelegateTests: XCTestCase {
 
 // MARK: - Scroll / tab-bar / adaptive presentation wiring
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RetargetingScrollDelegate: UIScrollViewDelegate {
     var target: CGPoint?
     var seenVelocity: CGPoint = .zero
@@ -340,7 +378,9 @@ private final class RetargetingScrollDelegate: UIScrollViewDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ScrollDelegateWiringTests: XCTestCase {
 
     private func makeScroll() -> UIScrollView {
@@ -376,7 +416,9 @@ final class ScrollDelegateWiringTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TabDelegate: UITabBarControllerDelegate {
     var allow = true
     var selected: [String] = []
@@ -388,7 +430,9 @@ private final class TabDelegate: UITabBarControllerDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TabBarControllerDelegateTests: XCTestCase {
     func testShouldSelectGatesAUserTapAndDidSelectReports() {
         let tab = UITabBarController()
@@ -411,7 +455,9 @@ final class TabBarControllerDelegateTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class AdaptiveDelegate: UIAdaptivePresentationControllerDelegate {
     var allowDismiss = true
     var log: [String] = []
@@ -429,7 +475,9 @@ private final class AdaptiveDelegate: UIAdaptivePresentationControllerDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class AdaptivePresentationDelegateTests: XCTestCase {
 
     func testModalTransitionStyleRawValuesDefaultAndRoundTrip() {
@@ -549,7 +597,9 @@ final class AdaptivePresentationDelegateTests: XCTestCase {
 
 // MARK: - UISearchBar
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SearchDelegate: UISearchBarDelegate {
     var texts: [String] = []
     var searches = 0
@@ -561,7 +611,9 @@ private final class SearchDelegate: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) { cancels += 1 }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SearchBarTests: XCTestCase {
     func testTypingAndSearchingReachTheDelegate() {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -584,7 +636,9 @@ final class SearchBarTests: XCTestCase {
 
 // MARK: - UIActivityViewController (the honest stub)
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TestActivity: UIActivity {
     let title: String
     var performed = 0
@@ -594,7 +648,9 @@ private final class TestActivity: UIActivity {
     override func perform() { performed += 1; activityDidFinish(true) }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ActivityViewControllerTests: XCTestCase {
 
     func testDismissWithoutPickingReportsNotCompleted() {

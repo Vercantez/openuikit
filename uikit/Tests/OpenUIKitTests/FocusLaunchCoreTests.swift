@@ -2,7 +2,9 @@ import XCTest
 import Foundation
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class FocusZoomDelegate: UIScrollViewDelegate {
     let zoomView: UIView
     var began = 0
@@ -21,7 +23,9 @@ private final class FocusZoomDelegate: UIScrollViewDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class FocusLaunchCoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -307,7 +311,9 @@ final class FocusLaunchCoreTests: XCTestCase {
 }
 
 #if os(macOS)
+#if !os(Linux)
 @MainActor
+#endif
 final class FocusLaunchCoreDuplicateTrapTests: XCTestCase {
     /// Public snapshot mutation is deliberately fail-fast, like UIKit. Run
     /// each invalid operation in a child xctest process so the parent can

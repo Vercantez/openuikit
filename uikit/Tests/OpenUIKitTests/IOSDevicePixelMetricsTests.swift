@@ -5,7 +5,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class IOSDevicePixelMetricsTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     private var savedBounds: CGRect!
@@ -239,6 +241,29 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
                        CGRect(x: 0, y: 59, width: 393, height: 793))
     }
 
+    /// MEASURED `/tmp/ipad-open-cap` sheet_{white,black,red,grad} +
+    /// NavFlow-ipad t1200 / Modal-ipad t3200, iPad (A16) 820×1180 @2x /
+    /// iOS 26.1: `UIDropShadowView [0, 42, 820, 1138]`. Window SA.top is 32.
+    func testPadPageSheetTopInsetIsFortyTwo() {
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+        let sheet = UIViewController()
+        sheet.view.backgroundColor = .systemBackground
+        sheet.modalPresentationStyle = .pageSheet
+        base.present(sheet, animated: false)
+        XCTAssertEqual(_UIPageSheetView.iOSPadTopInset, 42)
+        XCTAssertEqual(_UIPageSheetView.topInset(in: window), 42)
+        XCTAssertEqual(sheet._presentationSheet!.frame,
+                       CGRect(x: 0, y: 42, width: 820, height: 1138))
+    }
+
     // MARK: iPad formSheet (ipadprobe / realapp_settings_light_ipad)
 
     /// MEASURED ipadprobe on iPad (A16) 820×1180 @2x / iOS 26.1:
@@ -309,13 +334,32 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UITableView.iOSPadCellMargin, 16)
         let padCell = UITableViewCell(style: .default, reuseIdentifier: nil)
         XCTAssertEqual(padCell.iOSMargin, 16)
+        // Bare cell in the 820 pt window still reports 16 (storage xib
+        // SwitchCell). Forms-ipad fields at x 20 are a second sample that
+        // does not fit this default — OPEN, not a 20 override (that drop
+        // was realapp_storage_light_ipad 99.689 → 99.554).
+        let padWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        let padGrouped = UITableView(frame: padWindow.bounds, style: .grouped)
+        padWindow.addSubview(padGrouped)
+        padGrouped.addSubview(padCell)
+        padCell.frame = CGRect(x: 0, y: 0, width: 820, height: 44)
         XCTAssertEqual(padCell.layoutMargins.left, 16)
         XCTAssertEqual(padCell.layoutMargins.right, 16)
         XCTAssertEqual(padCell.layoutMargins.top, 15)
-        let padGrouped = UITableView(frame: CGRect(x: 0, y: 0, width: 820, height: 1180), style: .grouped)
         XCTAssertEqual(padGrouped.iOSMargin, 20, "inset-grouped / table chrome stays 20")
         let padInset = UITableView(frame: CGRect(x: 0, y: 0, width: 820, height: 1180), style: .insetGrouped)
         XCTAssertEqual(padInset.insetGroupedSideInset, 20)
+        XCTAssertEqual(padInset.groupedTextInset, 20)
+        XCTAssertEqual(padInset.groupedHeaderLabelX,
+                       padInset.insetGroupedSideInset + 20)
+        XCTAssertEqual(padGrouped.groupedTextInset, 16)
+        let insetCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        insetCell.tableView = padInset
+        XCTAssertEqual(insetCell.iOSMargin, 20)
+        XCTAssertEqual(insetCell.layoutMargins.left, 20)
+        let groupedCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        groupedCell.tableView = padGrouped
+        XCTAssertEqual(groupedCell.iOSMargin, 16)
 
         UIDevice.current.userInterfaceIdiom = .phone
         UITraitCollection.current = UITraitCollection(
@@ -352,6 +396,10 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertNil(vc._presentationSheet)
         XCTAssertEqual(vc.view.frame,
                        CGRect(x: 561, y: 62, width: 240, height: 180))
+        XCTAssertTrue(vc.view._usesIOSGlass)
+        XCTAssertEqual(vc.view._iosGlassKind, .padContentPopover)
+        XCTAssertEqual(_UIGlassMaterial.padContentPopoverMixAlpha, 218.0 / 255.0, accuracy: 1e-12)
+        XCTAssertEqual(_UIGlassMaterial.padContentPopoverTintGray, 215.0 / 218.0, accuracy: 1e-12)
     }
 
     /// MEASURED Modal-ipad t7200: `_UIPopoverView [266, 466, 288, 248]`,
@@ -388,10 +436,121 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         let dim = sheet.presentationController?.containerView?.subviews
             .first { $0 is _UIDimmingView }
         XCTAssertEqual(dim?.alpha ?? -1, 0, accuracy: 1e-9)
+        XCTAssertTrue(sheet.view._usesIOSGlass)
+        XCTAssertEqual(sheet.view._iosGlassKind, .padActionSheetPopover)
+        let shadow = sheet.presentationController?.containerView?.subviews
+            .compactMap { $0 as? _UIAlertShadowView }.first
+        XCTAssertEqual(shadow?.frame,
+                       CGRect(x: 266 - 150, y: 466 - 150,
+                              width: 288 + 300, height: 248 + 300))
+        XCTAssertEqual(shadow?.shadowOffsetY, 0)
+        XCTAssertEqual(shadow?.shadowAlpha ?? -1, 21.0 / 255.0, accuracy: 1e-12)
+        XCTAssertEqual(_UIGlassMaterial.padActionSheetMixAlpha, 187.0 / 255.0, accuracy: 1e-12)
+        XCTAssertEqual(_UIGlassMaterial.padActionSheetTintGray, 178.0 / 187.0, accuracy: 1e-12)
+    }
+
+    // MARK: iPad tab bar (Tabs-ipad t200 / t1000 / t2000)
+
+    /// MEASURED Tabs-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIFloatingTabBar [0, 32, 820, 44]`; child bottom inset is window
+    /// SA 25, not the phone 83. Non-nav children start at y **96**.
+    func testPadTabBarIsTopStripAndDoesNotStealBottomInset() {
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+
+        let tab = UITabBarController()
+        let plain = UIViewController()
+        plain.tabBarItem = UITabBarItem(title: "Tools", image: nil, tag: 0)
+        tab.viewControllers = [plain]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(UITabBar.barHeight, 44)
+        XCTAssertEqual(tab.tabBar.frame,
+                       CGRect(x: 0, y: 32, width: 820, height: 44))
+        XCTAssertEqual(tab.transitionView.safeAreaInsets.bottom, 25)
+        XCTAssertEqual(tab.transitionView.safeAreaInsets.top, 96)
+    }
+
+    /// MEASURED Tabs-ipad t200: title-only pills packed by intrinsic + 16
+    /// and centred; (820 − 237) / 2 = 291.5 for Library/Tools/Scroll.
+    func testPadTabBarItemsPackByTitleAndCenter() {
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+
+        let tab = UITabBarController()
+        let a = UIViewController(); a.tabBarItem = UITabBarItem(title: "Library", image: nil, tag: 0)
+        let b = UIViewController(); b.tabBarItem = UITabBarItem(title: "Tools", image: nil, tag: 1)
+        b.tabBarItem?.badgeValue = "3"
+        let c = UIViewController(); c.tabBarItem = UITabBarItem(title: "Scroll", image: nil, tag: 2)
+        tab.viewControllers = [a, b, c]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(tab.tabBar.itemViews.count, 3)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minY, 4)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.height, 36)
+        let total = tab.tabBar.itemViews.reduce(CGFloat(0)) { $0 + $1.frame.width }
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minX,
+                       (820 - total) / 2, accuracy: 0.5)
+        XCTAssertFalse(tab.tabBar.itemViews[1].badgeView.isHidden)
+        XCTAssertEqual(tab.tabBar.itemViews[1].badgeView.frame.size,
+                       CGSize(width: 18.5, height: 18.5))
+    }
+
+    /// MEASURED Tabs-ipad t200 / t4000, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// rest search `[565, 0, 240, 44]` bar-local (trailing 15);
+    /// active **280** wide, same trailing; tab bar y = −32; nav stays 54.
+    func testPadHostedSearchIsTrailing240AndHidesTabBarWhenActive() {
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+
+        let root = UIViewController()
+        root.title = "Library"
+        let sc = UISearchController(searchResultsController: nil)
+        sc.obscuresBackgroundDuringPresentation = false
+        root.navigationItem.searchController = sc
+        let nav = UINavigationController(rootViewController: root)
+        root.tabBarItem = UITabBarItem(title: "Library", image: nil, tag: 0)
+        let tab = UITabBarController()
+        tab.viewControllers = [nav]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        let bar = nav.navigationBar.hostedSearchBar
+        XCTAssertEqual(bar?.frame, CGRect(x: 565, y: 0, width: 240, height: 44))
+        XCTAssertEqual(bar?.searchTextField.frame,
+                       CGRect(x: 0, y: 0, width: 240, height: 44))
+        XCTAssertEqual(nav.navigationBar.titleLabel.alpha, 0)
+        XCTAssertTrue(nav.navigationBar.titleLabel.isHidden)
+        XCTAssertEqual(tab.tabBar.frame.minY, 32)
+        XCTAssertEqual(nav.navigationBar.bounds.height, 54)
+
+        sc.isActive = true
+        window.layoutIfNeeded()
+        XCTAssertEqual(bar?.frame, CGRect(x: 525, y: 0, width: 280, height: 44))
+        XCTAssertEqual(tab.tabBar.frame,
+                       CGRect(x: 0, y: -32, width: 820, height: 44))
+        XCTAssertEqual(nav.navigationBar.bounds.height, 54)
+        XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class UntitledGroupedSource: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { 2 }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

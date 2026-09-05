@@ -13,7 +13,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The 38-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The 41-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
@@ -69,9 +69,17 @@ platform `CGFloat` and `os_unfair_lock` APIs. The 38-source facade adds:
   or loading Apple's CoreFoundation.
 - `DateFormatter`, backed by FoundationEssentials `Calendar` and `TimeZone`.
   It implements Gregorian `G y Y M L d D E e c H k K h m s S a Z X x z`
-  pattern fields, quoted literals, English and French month/weekday names, and
-  the five date/time styles. The host gate compares 93 fixed-locale/time-zone
-  rows byte-for-byte with Apple Foundation.
+  pattern fields, quoted literals, English/German/French/Japanese month and
+  weekday name tables, and the five date/time styles from a carried
+  locale→pattern table (en_US_POSIX/en_US/en_GB/de_DE/fr_FR/ja_JP). Parsing
+  round trips for POSIX patterns are implemented. The native differential is
+  260 rows in `tests/foundation-date-formatter-apple-2026-09-05.txt`.
+- `NumberFormatter`, `ISO8601DateFormatter`, and `DateComponentsFormatter`
+  with the same carried-golden pattern (178 / 33 / 46 Apple rows). Locale
+  symbols are tables, not ICU.
+- `JSONSerialization` accepts the 16 RFC-invalid trailing-comma documents
+  Apple accepts (41-row golden). `NSRegularExpression` has a 62-row pattern
+  table (anchors, classes, groups, quantifiers, lookahead, named groups).
 - `UserDefaults`, with process-wide registration values, named suites, typed
   getters/setters, volatile domains, nested property-list values, and atomic
   persistence. Publication uses a uniquely named, fsynced same-directory file
@@ -114,6 +122,9 @@ platform `CGFloat` and `os_unfair_lock` APIs. The 38-source facade adds:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 \
   python3 full/foundation/tests/test_foundation_guest_services.py
+python3 full/foundation/tests/test_foundation_formatters.py
+python3 full/foundation/tests/test_foundation_byte_count_formatter.py
+bash full/foundation/tests/test_foundation_oracles_host.sh
 bash full/foundation/tests/test_foundation_guest_services_host.sh
 bash full/foundation/tests/test_foundation_progress_host.sh
 bash full/foundation/tests/test_foundation_guest_text_host.sh
@@ -127,10 +138,10 @@ are UTF-8 only. The formatting
 initializer is exact for Focus's measured string/object placeholders,
 positional arguments, percent escapes, and basic integer conversions; it is
 not a complete locale-aware printf implementation. `DateFormatter`
-does not yet use FoundationInternationalization/ICU, so localized symbol
-tables beyond English and French and date parsing are outside this slice.
-Unsupported Unicode pattern letters are rendered literally instead of being
-silently discarded. `UserDefaults` does not claim `cfprefsd`, managed-domain,
+does not use FoundationInternationalization/ICU; en/de/fr/ja name and style
+tables plus POSIX parsing are carried from the 2026-09-05 Apple golden.
+Locales outside that set fall back to English names. Unsupported Unicode
+pattern letters are rendered literally instead of being silently discarded. `UserDefaults` does not claim `cfprefsd`, managed-domain,
 NSGlobalDomain, general NSObject automatic KVO, cross-process Darwin notification delivery,
 or Apple binary-plist storage compatibility;
 its persistence path and encoding are intentionally project-owned. The public

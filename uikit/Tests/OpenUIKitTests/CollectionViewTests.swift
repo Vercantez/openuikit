@@ -17,7 +17,9 @@ import Foundation
 
 // MARK: - Shared drivers
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class FlowSource: UICollectionViewDataSource,
                                UICollectionViewDelegateFlowLayout {
     var counts: [Int]
@@ -50,7 +52,9 @@ private final class FlowSource: UICollectionViewDataSource,
 /// the tests keep them alive here.
 private var keptSources: [FlowSource] = []
 
+#if !os(Linux)
 @MainActor
+#endif
 private func makeCollection(width: CGFloat, height: CGFloat, counts: [Int],
                             sizeFor: ((IndexPath) -> CGSize)? = nil,
                             configure: (UICollectionViewFlowLayout) -> Void)
@@ -76,7 +80,9 @@ private func makeCollection(width: CGFloat, height: CGFloat, counts: [Int],
 
 // MARK: - 1. Measured flow-layout geometry
 
+#if !os(Linux)
 @MainActor
+#endif
 final class FlowLayoutMeasuredTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -487,7 +493,9 @@ final class FlowLayoutMeasuredTests: XCTestCase {
 // MARK: - 2. Reuse
 
 /// Counts instances so reuse can be proven (mirrors TableViewTests).
+#if !os(Linux)
 @MainActor
+#endif
 private final class CountingItemCell: UICollectionViewCell {
     static var created = 0
     override init(frame: CGRect = .zero) {
@@ -498,7 +506,9 @@ private final class CountingItemCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError() }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class BigGridSource: UICollectionViewDataSource {
     var items = 10_000
     func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
@@ -511,7 +521,9 @@ private final class BigGridSource: UICollectionViewDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CollectionViewReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -613,13 +625,17 @@ final class CollectionViewReuseTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class HeaderView: UICollectionReusableView {
     override init(frame: CGRect = .zero) { super.init(frame: frame) }
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 }
+#if !os(Linux)
 @MainActor
+#endif
 private final class FooterView: UICollectionReusableView {
     override init(frame: CGRect = .zero) { super.init(frame: frame) }
     @available(*, unavailable)
@@ -628,7 +644,9 @@ private final class FooterView: UICollectionReusableView {
 
 // MARK: - 3. Behaviour
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RecordingDelegate: UICollectionViewDelegate {
     var selected: [IndexPath] = []
     var deselected: [IndexPath] = []
@@ -645,7 +663,9 @@ private final class RecordingDelegate: UICollectionViewDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CollectionViewBehaviourTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -781,7 +801,9 @@ final class CollectionViewBehaviourTests: XCTestCase {
 
 // MARK: - Compositional layout (Feed)
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class CompSource: UICollectionViewDataSource {
     var counts: [Int]
     init(_ counts: [Int]) { self.counts = counts }
@@ -803,7 +825,9 @@ private final class CompSource: UICollectionViewDataSource {
 
 private var keptCompSources: [CompSource] = []
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CompositionalLayoutTests: XCTestCase {
 
     /// Feed stories: 72 pt items, 12 pt inter-group, 16 pt leading inset.
@@ -833,6 +857,37 @@ final class CompositionalLayoutTests: XCTestCase {
                        CGRect(x: 100, y: 8, width: 72, height: 72))
         XCTAssertEqual(cv.contentSize.width, 375, accuracy: 0.001)
         XCTAssertEqual(cv.contentSize.height, 8 + 72 + 8, accuracy: 0.001)
+    }
+
+    /// MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: stories pack
+    /// leading-to-trailing. Item 0 ("A") at x 287 = 375 − 16 − 72; item 1
+    /// at 203; item 4 ("E") clips at x −49.
+    func testOrthogonalStoriesPackRTLFromTheTrailingEdge() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(72))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = UICollectionLayoutSectionOrthogonalScrollingBehavior.continuous
+        section.interGroupSpacing = 12
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 8, leading: 16,
+                                                                      bottom: 8, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 400),
+                                   collectionViewLayout: layout)
+        cv.semanticContentAttribute = .forceRightToLeft
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([8])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 287, y: 8, width: 72, height: 72))
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 1, section: 0))?.frame,
+                       CGRect(x: 203, y: 8, width: 72, height: 72))
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 4, section: 0))?.frame,
+                       CGRect(x: -49, y: 8, width: 72, height: 72))
     }
 
     /// scrollToItem on an orthogonal section shifts the section offset, not
@@ -890,6 +945,31 @@ final class CompositionalLayoutTests: XCTestCase {
                        CGRect(x: 16, y: 124, width: 343, height: 100))
     }
 
+    /// MEASURED Feed t200.rtl directional insets: equal 16/16 leaves the
+    /// 343 pt card at x 16 either way (375 − 16 − 343). Unequal leading /
+    /// trailing swaps the physical left edge under RTL.
+    func testVerticalCardsRTLSwapUnequalDirectionalInsets() {
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(1.0),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.absolute(100))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 8, leading: 16,
+                                                                      bottom: 8, trailing: 40)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                   collectionViewLayout: layout)
+        cv.semanticContentAttribute = .forceRightToLeft
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([1])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
+                       CGRect(x: 40, y: 8, width: 319, height: 100))
+    }
+
     /// Feed t200, SE 2x: 16:9 of 343 is 192.9375, snapped to 193 on the
     /// pixel grid, so the card cell is 283 not 282.938.
     func testFractionalHeightSnapsToPixelGrid() {
@@ -915,5 +995,49 @@ final class CompositionalLayoutTests: XCTestCase {
         cv.layoutIfNeeded()
         XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
                        CGRect(x: 16, y: 0, width: 343, height: 193))
+    }
+
+    /// MEASURED Feed-ipad t200: cards `[16, 298, 788, 533.5]` at window
+    /// 820. `shouldInvalidateLayout` must compare `newBounds` to the size
+    /// `prepare()` last used, not `cv.bounds` (the setter applies the new
+    /// size first). 358 = 390 − 32, the loadView default.
+    func testPadCompositionalCardsInvalidateFrom390To820() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+        }
+
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(1.0),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(9.0 / 16.0))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 0, leading: 16,
+                                                                      bottom: 0, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 390, height: 400),
+                                   collectionViewLayout: layout)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([1])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        let narrow = cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame.width
+        XCTAssertEqual(narrow ?? -1, 358, accuracy: 0.5)
+
+        cv.frame.size = CGSize(width: 820, height: 1180)
+        cv.layoutIfNeeded()
+        let wide = cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame
+        XCTAssertEqual(wide?.minX ?? -1, 16, accuracy: 0.01)
+        XCTAssertEqual(wide?.width ?? -1, 788, accuracy: 0.01)
     }
 }
