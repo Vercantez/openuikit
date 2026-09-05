@@ -150,6 +150,17 @@ let package = Package(
         .library(name: "SafariServices", targets: ["SafariServices"]),
         .library(name: "MessageUI", targets: ["MessageUI"]),
         .library(name: "LinkPresentation", targets: ["LinkPresentation"]),
+        // Combine is a product so an ingested SwiftPM package can
+        // `import Combine` on Linux (17/20 ladder apps; 357 files under
+        // local Package.swift trees, scratch/ladder-corpus 2026-09-05).
+        // Darwin dependents keep the SDK module via
+        // `.product(..., condition: .when(platforms: [.linux]))`.
+        .library(name: "Combine", targets: ["Combine"]),
+        // Logger / OSLog / os_log / OSAllocatedUnfairLock / os_signpost.
+        // 13/20 ladder apps `import os` (202 files); call shapes in
+        // Sources/os/*.swift. Darwin dependents keep the SDK `os` the
+        // same way Combine does.
+        .library(name: "os", targets: ["os"]),
         .executable(name: "openrender", targets: ["openrender"]),
         .executable(name: "openhost", targets: ["openhost"]),
         // The C ABI an Objective-C app links against (docs/OBJC_FACADE.md).
@@ -432,6 +443,18 @@ let package = Package(
         .testTarget(
             name: "OpenUIKitCTests",
             dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-swift-version", "5",
+                    "-Xfrontend", "-strict-concurrency=minimal",
+                    "-Xfrontend", "-warn-concurrency",
+                ], .when(platforms: [.linux])),
+            ]
+        ),
+        .target(name: "os"),
+        .testTarget(
+            name: "OSTests",
+            dependencies: ["os"],
             swiftSettings: [
                 .unsafeFlags([
                     "-swift-version", "5",
