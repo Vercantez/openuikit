@@ -328,6 +328,36 @@ public struct TransferRepresentationBuilder<Item> where Item: Transferable {
             ])
         )
     }
+
+    public static func buildLimitedAvailability<Content>(
+        _ content: Content
+    ) -> Content where Content: TransferRepresentation, Content.Item == Item {
+        content
+    }
+
+    public static func buildOptional<Content>(
+        _ content: Content?
+    ) -> _HostNodeRepresentation<Item>
+    where Content: TransferRepresentation, Content.Item == Item {
+        guard let content else {
+            return _HostNodeRepresentation(node: .empty())
+        }
+        return _HostNodeRepresentation(node: .leaf(content))
+    }
+
+    public static func buildEither<TrueContent>(
+        first component: TrueContent
+    ) -> _HostNodeRepresentation<Item>
+    where TrueContent: TransferRepresentation, TrueContent.Item == Item {
+        _HostNodeRepresentation(node: .leaf(component))
+    }
+
+    public static func buildEither<FalseContent>(
+        second component: FalseContent
+    ) -> _HostNodeRepresentation<Item>
+    where FalseContent: TransferRepresentation, FalseContent.Item == Item {
+        _HostNodeRepresentation(node: .leaf(component))
+    }
 }
 
 @preconcurrency
@@ -532,11 +562,77 @@ private func _hostFirstSuccess<Item, Result>(
     throw last
 }
 
+public struct _HostNodeRepresentation<Transferred>: TransferRepresentation, Sendable
+where Transferred: Transferable {
+    public typealias Item = Transferred
+    public typealias Body = Never
+
+    let node: _TransferNode<Transferred>
+
+    init(node: _TransferNode<Transferred>) {
+        self.node = node
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostExportedContentTypes(
+        visibility: TransferRepresentationVisibility
+    ) -> [UTType] {
+        node.exportedTypes(visibility)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostImportedContentTypes() -> [UTType] {
+        node.importedTypes()
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostSuggestedFileName(_ item: Transferred) -> String? {
+        node.suggestedFileName(item)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostAllowsExport(_ item: Transferred) -> Bool {
+        node.allowsExport(item)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostExportData(
+        _ item: Transferred,
+        contentType: UTType?
+    ) async throws -> Data {
+        try await node.exportData(item, contentType)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostExportFile(
+        _ item: Transferred,
+        contentType: UTType?
+    ) async throws -> SentTransferredFile {
+        try await node.exportFile(item, contentType)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostImportData(
+        _ data: Data,
+        contentType: UTType?
+    ) async throws -> Transferred {
+        try await node.importData(data, contentType)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _hostImportFile(
+        _ file: ReceivedTransferredFile,
+        contentType: UTType?
+    ) async throws -> Transferred {
+        try await node.importFile(file, contentType)
+    }
+}
+
 public struct TupleTransferRepresentation<Transferred, Value>:
     TransferRepresentation, Sendable
 where Transferred: Transferable, Value: Sendable {
     public typealias Item = Transferred
-    public typealias Body = Never
+    public typealias Body = _HostNodeRepresentation<Transferred>
 
     let value: Value
     let node: _TransferNode<Transferred>
@@ -551,10 +647,8 @@ where Transferred: Transferable, Value: Sendable {
         self.node = .empty()
     }
 
-    public var body: Never {
-        preconditionFailure(
-            "TupleTransferRepresentation.body composition is unobserved on Linux"
-        )
+    public var body: _HostNodeRepresentation<Transferred> {
+        _HostNodeRepresentation(node: node)
     }
 
     @_spi(OpenUIKitHost)
@@ -899,8 +993,32 @@ where Transferred: Transferable {
         _ file: ReceivedTransferredFile,
         contentType: UTType?
     ) async throws -> Transferred {
-        try await _import(file)
+        // Documented FileRepresentation import copies into a temporary
+        // location. In-place delivery (`shouldAttemptToOpenInPlace` plus a
+        // sender that set allowAccessingOriginalFile) is unobserved on Linux,
+        // so this host always copies and reports isOriginalFile = false.
+        _ = contentType
+        let copied = try _hostCopyToTemporaryLocation(file.file)
+        return try await _import(
+            ReceivedTransferredFile(file: copied, isOriginalFile: false)
+        )
     }
+}
+
+func _hostCopyToTemporaryLocation(_ source: URL) throws -> URL {
+    let directory = FileManager.default.temporaryDirectory
+        .appendingPathComponent(
+            "coretransferable-import-\(UUID().uuidString)",
+            isDirectory: true
+        )
+    try FileManager.default.createDirectory(
+        at: directory,
+        withIntermediateDirectories: true
+    )
+    let name = source.lastPathComponent.isEmpty ? "payload.bin" : source.lastPathComponent
+    let destination = directory.appendingPathComponent(name)
+    try FileManager.default.copyItem(at: source, to: destination)
+    return destination
 }
 
 func _hostWriteTempFile(

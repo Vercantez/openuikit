@@ -79,6 +79,8 @@ public protocol TopLevelDecoder: Sendable {
 
 extension JSONEncoder: TopLevelEncoder {}
 extension JSONDecoder: TopLevelDecoder {}
+extension PropertyListEncoder: TopLevelEncoder {}
+extension PropertyListDecoder: TopLevelDecoder {}
 #endif
 
 func _hostUTType(_ have: UTType, matches want: UTType) -> Bool {
