@@ -117,6 +117,21 @@ for app_dir in Sources/ConformanceApps/*/; do
   rm -rf /tmp/agent_merge_conf-$app; cp -r /tmp/hc-conformance-$app /tmp/agent_merge_conf-$app
   # A branch that changes the PROBE (how a frame is named, what is dumped)
   # invalidates the round's goldens for that app: RECAPTURE_APPS="Pager Tabs"
+# A recapture that comes back short (the iPad probe missed Tabs t6000 once:
+# 7 of 8 goldens, scored 0.000 and refused as a fidelity drop) is a capture
+# failure: re-run the flow once, then refuse as INCOMPLETE — never score it.
+# With SKIP_CAPTURE=1 a short OURS set is a render failure and is refused as is.
+frames_complete() { # <dir> <skip> <flow args...>
+  local d=$1 skip=$2; shift 2
+  local g o; g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
+  [ "$g" = "$o" ] && return 0
+  if [ "$skip" = 1 ]; then echo "RENDER INCOMPLETE: $d golden $g frame(s) vs ours $o"; return 1; fi
+  echo "   $d: golden $g frame(s) vs ours $o — recapturing once"
+  rm -rf "$d"
+  bash scripts/conformance_flow.sh "$d" "$@" > "$d.log" 2>&1 || { echo "CONFORMANCE FLOW FAILED on retry: $d"; return 1; }
+  g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
+  [ "$g" = "$o" ] || { echo "RECAPTURE INCOMPLETE: $d golden $g frame(s) vs ours $o"; return 1; }
+}
   # captures them again with the merged tree's probe before grading.
   skip=1
   for r in ${RECAPTURE_APPS:-}; do
@@ -127,6 +142,7 @@ for app_dir in Sources/ConformanceApps/*/; do
   done
   SKIP_CAPTURE=$skip bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app $skip $app || exit 9
   if [ -d /tmp/hc-conformance-$app-ipad/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad /tmp/agent_merge_conf-$app-ipad
     skip_ipad=1
@@ -138,6 +154,7 @@ for app_dir in Sources/ConformanceApps/*/; do
     done
     SKIP_CAPTURE=$skip_ipad bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see /tmp/agent_merge_conf-$app-ipad.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app-ipad $skip_ipad $app --ipad || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-dark/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
@@ -150,6 +167,7 @@ for app_dir in Sources/ConformanceApps/*/; do
     done
     SKIP_CAPTURE=$skipd bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app-dark $skipd $app --dark || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-rtl/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-rtl; cp -r /tmp/hc-conformance-$app-rtl /tmp/agent_merge_conf-$app-rtl
@@ -162,6 +180,7 @@ for app_dir in Sources/ConformanceApps/*/; do
     done
     SKIP_CAPTURE=$skipr bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-rtl $app --rtl > /tmp/agent_merge_conf-$app-rtl.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see /tmp/agent_merge_conf-$app-rtl.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app-rtl $skipr $app --rtl || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-ax1/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-ax1; cp -r /tmp/hc-conformance-$app-ax1 /tmp/agent_merge_conf-$app-ax1
@@ -174,6 +193,7 @@ for app_dir in Sources/ConformanceApps/*/; do
     done
     SKIP_CAPTURE=$skipax bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ax1 $app --ax1 > /tmp/agent_merge_conf-$app-ax1.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --ax1 (see /tmp/agent_merge_conf-$app-ax1.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app-ax1 $skipax $app --ax1 || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-xxxl/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-xxxl; cp -r /tmp/hc-conformance-$app-xxxl /tmp/agent_merge_conf-$app-xxxl
@@ -186,6 +206,7 @@ for app_dir in Sources/ConformanceApps/*/; do
     done
     SKIP_CAPTURE=$skipxx bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-xxxl $app --xxxl > /tmp/agent_merge_conf-$app-xxxl.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see /tmp/agent_merge_conf-$app-xxxl.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app-xxxl $skipxx $app --xxxl || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-landscape/golden ]; then
     rm -rf /tmp/agent_merge_conf-$app-landscape; cp -r /tmp/hc-conformance-$app-landscape /tmp/agent_merge_conf-$app-landscape
@@ -198,6 +219,7 @@ for app_dir in Sources/ConformanceApps/*/; do
     done
     SKIP_CAPTURE=$skipl bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-landscape $app --landscape > /tmp/agent_merge_conf-$app-landscape.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --landscape (see /tmp/agent_merge_conf-$app-landscape.log)"; exit 9; }
+  frames_complete /tmp/agent_merge_conf-$app-landscape $skipl $app --landscape || exit 9
   fi
 done
 python3 - <<'PY' || exit 9
