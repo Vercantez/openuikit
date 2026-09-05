@@ -30,7 +30,7 @@ step.
   reuses that path and yields **no** `CSSuggestion` values.
 - `CSSearchableItem.expirationDate` defaults to one month from creation.
 - `CSCustomAttributeKey` fail-closes empty / `kMD` / `_kMD` / invalid
-  characters and unique+searchable pairings.
+  character names. Reverse-DNS dots are accepted.
 - `fetchData`, `CSImportExtension.update`, and delegate data/fileURL hooks
   fail closed with `indexUnavailableError` or `indexingUnsupported`.
 - `FileProtectionType` is the real Foundation type. Linux does not isolate
