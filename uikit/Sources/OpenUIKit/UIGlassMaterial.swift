@@ -38,6 +38,25 @@
 // Floating systemBackground sheet 245 is the same mix over the 20 % dim
 // (0.1294·204 + 220 = 246.4, residual 1.4).
 //
+// Nav title / menu / search platters (probe /tmp/glass-navplatters,
+// iPhone 16 @3x, four backdrops under a transparent bar + filled content):
+//
+//   item                         white   black   red              r
+//   Done title `[303.667,0,73.333,44]`  255     198     (255,174,179)   22
+//   UIBarButtonItem+menu "Top" `[16,0,62,44]`  255  198  (255,174,179)  22
+//   searchController field `[28,835,337,48]`  — bottom toolbar, not a
+//     44×44 nav icon (Hackers search is `.searchable` + `.minimize`)
+//
+// Same mix as the toolbar table; black frost 198 matches
+// glass_navbar_iphone16_black Back (filled content under the bar). Focus
+// Done over the unpainted bar stays 220. Mix is not retuned.
+//
+// Hackers Top is NOT a UIKit menu item: it is SwiftUI
+// `.glassEffect(.regular.interactive(), in: .capsule)` 79.333×44, r=22,
+// title pad leading 14 / trailing 10, HStack spacing 8, chevron in an
+// 18×18 circle, host 119.667×36 at y 4. Search/settings are two isolated
+// 44×44 platters.
+//
 // Catalyst keeps the flat fills. Dark iOS chrome is a separate measured
 // flat (19,19,19) / (25,25,25) and is not this material.
 

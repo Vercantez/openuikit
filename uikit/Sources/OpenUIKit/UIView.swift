@@ -616,7 +616,8 @@ open class UIView: UIResponder, CALayerDelegate {
     /// iOS 26 liquid-glass chrome (tab-bar / toolbar / bar-button platters,
     /// floating sheet). The Canvas backdrop-filter path applies
     /// `_UIGlassMaterial`; Catalyst ignores the flag.
-    var _usesIOSGlass = false
+    /// Public so the SwiftUI module can set it (`.glassEffect` on the iOS cut).
+    public var _usesIOSGlass = false
     /// Which measured glass mix `_UIGlassMaterial` applies. Bar platters
     /// keep `.platter`. Pad popovers are two other mixes (content vs
     /// action-sheet) — they do not share α with the platter or each other.
