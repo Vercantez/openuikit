@@ -390,7 +390,7 @@ func testChartForegroundStyleScaleStore() {
 
 func testBarMarkXYPlotRecord() {
     let mark = BarMark(x: .value("x", "A"), y: .value("y", 1), stacking: .unstacked)
-    precondition(mark.x != nil)
+    precondition(mark.category == "A")
     precondition(mark.y == 1)
     precondition(mark.stacking == .unstacked)
     precondition(mark.chartPlotRecords.first?.kind == .bar)
