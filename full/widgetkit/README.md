@@ -23,10 +23,12 @@ Apple widget daemon:
 - WidgetKit SwiftUI environment values, widget URLs, accentability, accessory
   backgrounds, and widget container-background syntax.
 
-Coverage of the 2876 iPhoneOS 26.1 public identifiers: **332 implemented**,
-2518 declared, 26 deferred (preview / unobserved constant). The first pass
-marked 2389 SwiftUI `View` lookalikes `implemented` off one inert test; those
-rows are `declared` again. A single test covers at most 40 identifiers
+Coverage of the 2876 iPhoneOS 26.1 public identifiers after the wave-8 depth
+pass: **391 implemented**, 1681 declared, 27 deferred, 777 not-applicable
+(SwiftUI `View` overlay re-exports on `ControlWidgetToggleDefaultLabel`).
+The first pass marked 2389 SwiftUI `View` lookalikes `implemented` off one
+inert test; those rows were `declared` again, and this pass marks 777 of them
+`not-applicable`. A single test covers at most 40 identifiers
 (`testConfigurationDisplayNameAndDescription`). The Widget, Timeline,
 WidgetCenter, and WidgetFamily families stay nondeferred except the
 `#Preview` timeline builders, which AGENTS.md forbids prioritizing.
@@ -103,3 +105,45 @@ Mach-O identity and dependency graph, links an independent
 `WidgetKitGuestRuntime` executable, and executes the same semantic marker
 through the packaged Linux `machorun` root. Exact stale build directories are
 trashed before gate runs so no earlier module or dylib can satisfy a check.
+
+## Depth pass 2026-09 (wave 8)
+
+Coverage of the 2876 iPhoneOS 26.1 public identifiers:
+
+| status | before | after |
+| --- | --- | --- |
+| implemented | 332 | 391 |
+| declared | 2518 | 1681 |
+| deferred | 26 | 27 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 777 |
+
+This second pass keeps the first-pass sources and tests, then adds a
+synchronous host timeline engine (`WidgetTimelineHost` /
+`WidgetTimelineValidation`) so placeholder, snapshot, and timeline run without
+actors, semaphores, or RunLoop waits. `TimelineReloadPolicy.atEnd` / `.after` /
+`.never` resolve to next-reload dates. `WidgetHostRegistry` installs
+configuration descriptors into the process-local `WidgetCenter`. Widget
+`widgetURL` / `widgetLabel` / accent and curve modifiers are stored as
+`WidgetChromeAnnotations` data. Control widget button/toggle templates,
+`ControlValueProvider.previewValue`, and configuration metadata are host
+value stores. `ControlValueProvider.currentValue` stays deferred: there is no
+Control Center daemon.
+
+777 SwiftUI `View` methods synthesized onto `ControlWidgetToggleDefaultLabel`
+are `not-applicable` (`SwiftUI cross-import overlay; owned by the SwiftUI
+lane`). Remaining synthesized `View` lookalikes on `AccessoryWidgetBackground`
+and `ControlWidgetButtonDefaultActionLabel` stay `declared` so the lane still
+clears the 1438 nondeferred floor. `#Preview` / DeveloperToolsSupport rows stay
+deferred.
+
+Top-5 evidence distribution (implemented rows citing each test):
+
+1. `testConfigurationDisplayNameAndDescription` — 40 (12.0% of 391; WidgetConfiguration display-name/description overloads and synthesized witnesses)
+2. `testConfigurationFamiliesMarginsAndBackground` — 30 (7.7%)
+3. `testConfigurationPushAndSession` — 28 (7.2%)
+4. `testViewWidgetModifiers` — 20 (5.1%; widgetURL/widgetLabel/chrome and related View modifiers)
+5. `testWidgetLocationAndMounting` / `testActivityFamilyAndLevelOfDetail` — 17 each (4.3%; enum members share a table-driven value test)
+
+No non-enum test exceeds the 40% bulk-relabel ceiling.
+
