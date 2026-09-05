@@ -61,6 +61,30 @@ Apple ABI bytes.
 SDK depth for `CarPlay` in `full/carplay/` (988 IDs). No car head unit: the
 template model and a simulated interface controller are implemented.
 
+Coverage ledger repair after `FW_MERGE REFUSED` at `448e66fa` (988 implemented
+rows cited `tests/agent/CarPlayRuntime.swift`, which is not
+`test:full/carplay/tests/agent/<File>Tests.swift#testName`):
+
+- Before: 988 implemented / 0 declared. Every implemented row pointed at the
+  runtime probe file path, not a named `func test*()`.
+- After: 977 implemented / 11 declared. Implemented rows cite a real
+  top-level synchronous `func testName()` in `tests/agent/*Tests.swift`.
+  The 11 declared rows are async/throws overloads (interface-controller
+  completion variants, `dismissNavigationAlert(animated:)`, and async list /
+  search delegate requirements) that a no-argument synchronous test cannot
+  await.
+
+Top-5 implemented evidence citations (977 implemented rows):
+
+1. `CarPlayEnumTests.swift#testEnumOptionSetAndConstantValues` — 353 (36.1%).
+   Table-driven enum / OptionSet / C-constant values (allowed to share).
+2. `CarPlayMapTests.swift#testMapTemplateTripPreviewAndPanning` — 51 (5.2%).
+3. `CarPlayListImageTests.swift#testListImageRowItemElements` — 48 (4.9%).
+4. `CarPlayMapTests.swift#testManeuverLaneAndRouteInformation` — 36 (3.7%).
+5. `CarPlayNowPlayingTests.swift#testNowPlayingSportsMode` — 32 (3.3%).
+
+No other single test exceeds 40% of implemented rows (cap 390.8).
+
 - `CPTemplateApplicationScene` / `CPTemplateApplicationSceneDelegate`: the
   documented `@_spi(OpenUIKitHost)` hook `openuikit_connectSimulatedSession`
   wires a simulated `CPInterfaceController` and `CPWindow`, sets
@@ -88,15 +112,16 @@ template model and a simulated interface controller are implemented.
 - `CPSessionConfiguration` `limitedUserInterfaces` / `contentStyle`.
 - `CPDashboardController` / `CPInstrumentClusterController` fail closed.
 
-Coverage of the 988 sealed precise IDs: 988 implemented, 0 declared. Numeric
-size/count constants are documented process-local values, not SDK-byte
+Numeric size/count constants are documented process-local values, not SDK-byte
 observations. Dashboard and instrument-cluster types are implemented as
 fail-closed surfaces.
 
 ## Tests
 
-`tests/agent/CarPlayRuntime.swift` is the host-gate probe and prints
-`CARPLAY_AGENT_RUNTIME_OK`.
+`tests/agent/CarPlayRuntime.swift` is the sealed host-gate probe and prints
+`CARPLAY_AGENT_RUNTIME_OK`. Focused behavioral evidence lives in
+`tests/agent/*Tests.swift` as top-level synchronous `func test*()` functions
+cited by `coverage.tsv`.
 
 Expected isolated-host markers:
 
