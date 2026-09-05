@@ -20,15 +20,21 @@ This directory is a clean-room Linux implementation of Apple's public
   returns `kCMClockError_UnsupportedOperation`. Timers throw
   `kCMTimebaseError_TimerIntervalTooShort`.
 - `CMBlockBuffer` owned-byte copy-in/copy-out, fill/replace/append,
-  `AccessDataBytes` copying into the caller temporary. Interior
-  `GetDataPointer` fails closed (`kCMBlockBufferUnallocatedBlockErr`).
-- `CMSampleBuffer` create/ready/copy/timing/size/attachments/invalidate.
-  Image-buffer and AudioBufferList entry points stay deferred until
-  CoreVideo/CoreAudioTypes are present.
+  `AccessDataBytes` (prefers an interior cache pointer), and
+  `GetDataPointer` into a contiguous cache invalidated on mutation.
+- `CMSampleBuffer` create/ready/copy/timing/size/attachments/invalidate,
+  per-sample attachment dictionaries, data-failed status, and
+  same-thread data-readiness tracking. Image-buffer and AudioBufferList
+  entry points stay deferred until CoreVideo/CoreAudioTypes are present.
 - `CMFormatDescription` media type/subtype, video dimensions, extensions,
-  equality. Audio `AudioStreamBasicDescription` bridging is compiled only
-  when `CoreAudioTypes` is imported (`CMDependencyBridges.swift`); the
-  isolated host does not claim it.
+  clean aperture / presentation dimensions, text/timecode getters, and
+  metadata identifier arrays. Audio `AudioStreamBasicDescription`
+  bridging is compiled only when `CoreAudioTypes` is imported
+  (`CMDependencyBridges.swift`); the isolated host does not claim it.
+- `CMSimpleQueue` and `CMBufferQueue` (unsorted and PTS-sorted sample
+  buffers, duration/size/PTS getters, end-of-data, validation, and
+  rising-edge triggers). `CMBufferQueueCreateWithHandlers` fails closed:
+  Linux has no ABI for Apple's internal handlers blob.
 - Public `kCMTime*` / `kCMSampleAttachment*` / `kCMFormatDescription*`
   CFString keys (suffix payloads; color aliases match this repo's CoreVideo
   strings) and OSStatus integers from the public headers.
@@ -45,14 +51,20 @@ color/matrix, sample attachments, metadata key spaces).
 - Big-endian sample-description bridges and H.264/HEVC parameter-set
   parsers return `kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor`
   / `kCMFormatDescriptionError_InvalidParameter`: there is no QuickTime
-  decoder on this isolated Linux gate.
+  decoder on this isolated Linux gate. SoundDescription CBR layout is never
+  required (`CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout`
+  returns false).
+- `CMBufferQueueCreateWithHandlers` returns
+  `kCMBufferQueueError_InvalidCMBufferCallbacksStruct`.
+- Timebase `Timer` / `DispatchSource` registration returns
+  `kCMTimebaseError_TimerIntervalTooShort` (no run-loop scheduling).
 - Arbitrary payload bytes are stored as opaque sample data; they are not
   treated as a decoded bitstream.
 
 ## Deferred
 
-- `CMBufferQueue`, `CMSimpleQueue`, `CMMemoryPool`, `CMTag`,
-  `CMReadySampleBuffer`, stereo/packing, and tagged-buffer types.
+- `CMMemoryPool`, `CMTag`, `CMReadySampleBuffer`, stereo/packing, and
+  tagged-buffer types.
 - APIs that require `AudioStreamBasicDescription` / `CVImageBuffer` until
   the central build supplies CoreAudioTypes and CoreVideo.
 - Remaining Swift overlay Collection/camera-calibration helpers on
@@ -60,3 +72,28 @@ color/matrix, sample attachments, metadata key spaces).
 - C-callable `@_cdecl` entry points are not emitted: Swift `CMTime` structs
   are not Clang-imported C types. Layout is reconstructed in
   `tests/agent/cm_value_layout.c`.
+
+## Depth pass 2026-09 (wave 8)
+
+Second pass over the first-pass seed. Counts are exact `coverage.tsv`
+rows (3504 public precise IDs).
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 437 | 721 |
+| declared | 1289 | 1172 |
+| deferred | 648 | 481 |
+| unavailable | 0 | 0 |
+| not-applicable | 1130 | 1130 |
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMKeyStringTests.swift#testCMFormatDescriptionExtensionKeyStrings` — 46 (6.4%)
+2. `CMKeyStringTests.swift#testCMSampleAttachmentKeyStrings` — 34 (4.7%)
+3. `CMQueueTests.swift#testCMBufferQueueErrorAndTriggerConstants` — 33 (4.6%)
+4. `CMKeyStringTests.swift#testCMFormatDescriptionColorMatrixKeyStrings` — 29 (4.0%)
+5. `CMFormatDescriptionTests.swift#testCMFormatDescriptionOverlayKeys` — 26 (3.6%)
+
+No non-constant test owns more than 40% of the newly implemented rows.
+SwiftUI cross-import overlay IDs are not in this module's public surface.
+Audio ASBD / CVImageBuffer / MemoryPool / Tag / packing remain deferred.
