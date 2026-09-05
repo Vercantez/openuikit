@@ -182,9 +182,9 @@ func testGeneratedIntentStubsFailClosed() {
     response.code = .failure
     precondition(response.code == .failure)
     INPreferences.requestSiriAuthorization { status in
-        precondition(status == .restricted)
+        precondition(status == .denied)
     }
-    precondition(INPreferences.siriAuthorizationStatus() == .restricted)
+    precondition(INPreferences.siriAuthorizationStatus() == .denied)
 }
 
 func testIntentIdentifierConstants() {
