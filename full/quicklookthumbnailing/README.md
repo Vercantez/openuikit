@@ -84,3 +84,60 @@ type.
 TBD-only Swift overlays (`ThumbnailProvider`, `ThumbnailExtension`,
 `ThumbnailRequest`) and private ObjC cache/service classes are out of the
 exact public-ID census and are not implemented here.
+
+## Depth pass 2026-09
+
+Coverage **before** this pass: 99 implemented / 0 declared / 6 deferred /
+0 unavailable / 0 not-applicable.
+
+Coverage **after**: 99 implemented / 0 declared / 6 deferred / 0 unavailable /
+0 not-applicable.
+
+The 20-app corpus ranks QuickLookThumbnailing 129th (one WordPress-iOS file,
+`ZendeskAttachmentsSection.swift`). That file constructs
+`QLThumbnailGenerator.Request(fileAt:size:scale:representationTypes: .all)`,
+awaits `QLThumbnailGenerator().generateBestRepresentation(for:)`, and reads
+`preview.uiImage`. Request construction, `.all`, and the async generate path
+are implemented and fail closed. `uiImage` stays **deferred**: isolated Linux
+cannot import UIKit, generation never produces pixels, and a framework-local
+image type is forbidden.
+
+`scratch/ladder-corpus` (pinned `focus-ios`) is not present in this snapshot.
+The roadmap corpus-summary is the authority for the one-app hit; focus-ios is
+not among the 20 apps that import this module.
+
+The six deferred rows still require dependency-owned types that the isolated
+host module graph does not provide (`UTType`, `CGContext`, `CGImage`,
+`UIImage`). They were not promoted.
+
+This pass recast **ledger citations** so each implemented identifier points at
+a focused test that actually exercises that member (request `scale` /
+`minimumDimension` no longer cite unrelated cancellation/queue tests). Error
+protocol witnesses were split across userInfo, equality, code, and
+localizedDescription tests. Option-set and enum raw-value rows still share
+table-driven tests, which the evidence rule allows.
+
+Top-5 evidence distribution (99 implemented rows):
+
+| Citations | Share | Test |
+| --- | --- | --- |
+| 28 | 28.3% | `testRepresentationTypesOptionSet` (option-set family; sharing allowed) |
+| 15 | 15.2% | `testQLThumbnailErrorCodes` (enum/code family; sharing allowed) |
+| 8 | 8.1% | `testRepresentationTypeRawValues` (enum family; sharing allowed) |
+| 4 | 4.0% | `testRequestStoresInputs` |
+| 4 | 4.0% | `testQLThumbnailErrorUserInfoAndInit` |
+
+No non-enum/option-set test is cited by more than 40% of the remaining
+implemented rows (max 9.1% after excluding shareable enum/option-set/C
+constant rows).
+
+Isolated-host gate markers expected from
+`bash full/quicklookthumbnailing/tests/acceptance/test_host.sh`:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=QuickLookThumbnailing lane=medium-full symbols=105
+FRAMEWORK_FANOUT_REFERENCE_OK
+QUICKLOOKTHUMBNAILING_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=QuickLookThumbnailing dylib=libQuickLookThumbnailing.dylib
+```
+
