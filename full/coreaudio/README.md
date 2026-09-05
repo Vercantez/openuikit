@@ -41,6 +41,7 @@ Linux has no Apple HAL, Core Audio server, or physical I/O device graph.
   listener add/remove return `kAudioHardwareUnsupportedOperationError` and do
   not invent device lists, default devices, or property payloads.
 - `CoreAudioHardware.isAvailable` is `false`.
+- `AudioObjectExists` is always false.
 - Realtime I/O procs, aggregate devices, tap descriptions, and driver plug-ins
   from the TBD export list are not implemented here.
 
@@ -52,3 +53,36 @@ entry points, not a claim of Apple HAL parity. Combine `publisher` members
 are unavailable because Combine is not a declared dependency.
 
 See `oracle-questions.tsv` for questions that need a central Apple-oracle probe.
+
+## Depth pass 2026-09
+
+Coverage of the 347 exact overlay IDs:
+
+| status | before | after |
+| --- | --- | --- |
+| implemented | 102 | 317 |
+| declared | 241 | 26 |
+| unavailable | 4 | 4 |
+| deferred | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Raised `implemented` first for the overlay types the Home Assistant corpus
+reaches through `AudioBuffer` / channel-layout helpers, then for documented
+Swift `Sequence` / `Collection` / `BidirectionalCollection` /
+`MutableCollection` semantics on the four overlay collections. HAL C entry
+points used by `HACoreAudioObjectSystem` remain fail-closed extras (not in the
+347 overlay IDs). Foundation `SortComparator` / `FormatStyle` members stay
+`declared` because `AudioBuffer` / `AudioChannelDescription` are not a
+documented `Compared` / `FormatInput` match. Optional-returning
+`Sequence.flatMap` stays `declared` because Swift 6 deprecates that overload
+under warnings-as-errors. Combine `publisher` stays `unavailable`.
+
+Top-5 implemented evidence distribution (of 317 implemented rows; no test
+exceeds 4%):
+
+1. `testLayoutPointerTypealiases` — 12
+2. `testCollectionMap` — 8
+3. `testBufferListPointerTypealiases` — 6
+4. `testMutablePartition` — 6
+5. `testLayoutUnsafePointerInitAndCollection` — 6
+
