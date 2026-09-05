@@ -1,5 +1,4 @@
 import Foundation
-@preconcurrency import Dispatch
 
 public protocol CXCallDirectoryExtensionContextDelegate: NSObjectProtocol {
     func requestFailed(for extensionContext: CXCallDirectoryExtensionContext, withError error: any Error)
@@ -18,23 +17,49 @@ open class CXCallDirectoryManager: NSObject, @unchecked Sendable {
         super.init()
     }
 
-    public func enabledStatusForExtension(withIdentifier identifier: String) async throws -> EnabledStatus {
+    public func enabledStatusForExtension(
+        withIdentifier identifier: String,
+        completionHandler: @escaping (EnabledStatus, (any Error)?) -> Void
+    ) {
         _ = identifier
-        throw CXErrorCodeCallDirectoryManagerError(.noExtensionFound)
+        completionHandler(.unknown, CXErrorCodeCallDirectoryManagerError(.noExtensionFound))
+    }
+
+    public func enabledStatusForExtension(withIdentifier identifier: String) async throws -> EnabledStatus {
+        try await withCheckedThrowingContinuation { continuation in
+            self.enabledStatusForExtension(withIdentifier: identifier) { status, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: status)
+                }
+            }
+        }
+    }
+
+    public func reloadExtension(
+        withIdentifier identifier: String,
+        completionHandler: (((any Error)?) -> Void)? = nil
+    ) {
+        _ = identifier
+        completionHandler?(CXErrorCodeCallDirectoryManagerError(.noExtensionFound))
     }
 
     public func reloadExtension(withIdentifier identifier: String) async throws {
-        _ = identifier
-        throw CXErrorCodeCallDirectoryManagerError(.noExtensionFound)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            self.reloadExtension(withIdentifier: identifier) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 
     public func openSettings(completionHandler completion: (((any Error)?) -> Void)? = nil) {
         let error = CXErrorCodeCallDirectoryManagerError(.noExtensionFound)
-        if let completion {
-            callKitHop(DispatchQueue.global(qos: .utility)) {
-                completion(error)
-            }
-        }
+        completion?(error)
     }
 }
 
@@ -133,12 +158,10 @@ open class CXCallDirectoryExtensionContext: NSObject, @unchecked Sendable {
     public func completeRequest(completionHandler completion: ((Bool) -> Void)? = nil) {
         let error = CXErrorCodeCallDirectoryManagerError(.noExtensionFound)
         let delegate = self.delegate
-        callKitHop(DispatchQueue.global(qos: .utility)) { [weak self] in
-            if let self, let delegate {
-                delegate.requestFailed(for: self, withError: error)
-            }
-            completion?(false)
+        if let delegate {
+            delegate.requestFailed(for: self, withError: error)
         }
+        completion?(false)
     }
 }
 

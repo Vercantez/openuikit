@@ -45,11 +45,13 @@ final class CallKitOnceFlag: @unchecked Sendable {
     }
 }
 
+/// Linux has no CallKit daemon or main run loop. Completions and delegate
+/// callbacks run on the calling thread so CLI tests return. Darwin hop
+/// ordering is unobserved; see `oracle-questions.tsv`.
 func callKitHop(_ queue: DispatchQueue, _ body: @escaping () -> Void) {
+    _ = queue
     let work = CallKitUncheckedWork(body: body)
-    queue.async {
-        work.body()
-    }
+    work.body()
 }
 
 func callKitQueueOrDedicated(_ queue: DispatchQueue?, label: String) -> DispatchQueue {
@@ -108,6 +110,14 @@ public enum CallKitHostControl {
 
     public static func translationEngine(for uuid: UUID) -> CXTranslationEngine? {
         CallKitRegistry.shared.translationEngine(for: uuid)
+    }
+
+    public static func setTimeoutDate(_ action: CXAction, _ date: Date) {
+        action.hostSetTimeoutDate(date)
+    }
+
+    public static func notifyTimeout(_ provider: CXProvider, action: CXAction) {
+        provider.hostNotifyTimeout(action)
     }
 }
 

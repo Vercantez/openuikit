@@ -215,10 +215,25 @@ open class CXProvider: NSObject, @unchecked Sendable {
     }
 
     public class func reportNewIncomingVoIPPushPayload(
+        _ dictionaryPayload: [AnyHashable: Any],
+        completion: ((Error?) -> Void)? = nil
+    ) {
+        _ = dictionaryPayload
+        completion?(CXErrorCodeNotificationServiceExtensionError(.invalidClientProcess))
+    }
+
+    public class func reportNewIncomingVoIPPushPayload(
         _ dictionaryPayload: [AnyHashable: Any]
     ) async throws {
-        _ = dictionaryPayload
-        throw CXErrorCodeNotificationServiceExtensionError(.invalidClientProcess)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            reportNewIncomingVoIPPushPayload(dictionaryPayload) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 
     func perform(transaction: CXTransaction, completion: @escaping (Error?) -> Void, controllerQueue: DispatchQueue) {
@@ -274,7 +289,22 @@ open class CXProvider: NSObject, @unchecked Sendable {
         }
     }
 
+    func hostNotifyTimeout(_ action: CXAction) {
+        lock.lock()
+        let delegate = self.delegate
+        lock.unlock()
+        guard let delegate else { return }
+        delegate.provider(self, timedOutPerforming: action)
+    }
+
     private func dispatchPerform(_ action: CXAction, delegate: CXProviderDelegate) {
+        if action.timeoutDate < Date() {
+            delegate.provider(self, timedOutPerforming: action)
+            if !action.isComplete {
+                action.fail()
+            }
+            return
+        }
         switch action {
         case let start as CXStartCallAction:
             delegate.provider(self, perform: start)
