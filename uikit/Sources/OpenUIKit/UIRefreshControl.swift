@@ -149,7 +149,17 @@ open class UIRefreshControl: UIControl {
             sv._scrollObserver?.scrollViewDidScroll(sv)
             sv.layoutIfNeeded()
             if overscrolled {
-                sv.contentOffset.y -= UIRefreshControl.controlHeight
+                // MEASURED Feed t700.landscape, iPhone SE 2x / iOS 26.1,
+                // window 667×375, vSizeClass compact: the bar does NOT
+                // stretch (stays `[0, 24, 667, 54]`). The script already set
+                // offset to −adj−60 (−138); a second −60 lands at −198 and
+                // shifts every card 60 pt (t700.landscape 60.998, blob 60421).
+                // Portrait Feed t700 still stretches 106 → 166 then
+                // rebases −176 → −236. Skip the extra −60 when compact
+                // height already collapsed the large-title overlay.
+                if !UINavigationBar.isCompactHeight {
+                    sv.contentOffset.y -= UIRefreshControl.controlHeight
+                }
             }
         }
         setNeedsDisplay()

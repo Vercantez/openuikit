@@ -180,6 +180,47 @@ final class UIRefreshControlIOSCutTests: XCTestCase {
         XCTAssertEqual(rc.frame.height, 60)
     }
 
+    /// MEASURED Feed t700.landscape, iPhone SE 2x / iOS 26.1, window
+    /// 667×375: compact-height bar stays `[0, 24, 667, 54]` (no 60 pt
+    /// stretch). beginRefreshing while already at −adj−60 must leave the
+    /// offset at −138, not subtract a second 60.
+    func testIOSBeginRefreshingCompactHeightDoesNotRebaseOffset() {
+        let savedTraits = UITraitCollection.current
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        defer {
+            UITraitCollection.current = savedTraits
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .compact)
+        UIScreen.main._hostConfigure(
+            bounds: CGRect(x: 0, y: 0, width: 667, height: 375), scale: 2)
+        let vc = UIViewController()
+        vc.title = "Feed"
+        vc.navigationItem.largeTitleDisplayMode = .always
+        let scroll = UIScrollView(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scroll.contentSize = CGSize(width: 667, height: 2000)
+        vc.view.addSubview(scroll)
+        vc.setContentScrollView(scroll)
+        let rc = UIRefreshControl()
+        scroll.refreshControl = rc
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.prefersLargeTitles = true
+        nav.view.frame = CGRect(x: 0, y: 0, width: 667, height: 375)
+        nav.view.layoutIfNeeded()
+        let top = scroll.adjustedContentInset.top
+        XCTAssertEqual(nav.navigationBar.frame.height, 54, accuracy: 0.5)
+        scroll.contentOffset.y = -top - 60
+        rc.beginRefreshing()
+        XCTAssertEqual(scroll.contentOffset.y, -top - 60, accuracy: 0.5)
+        XCTAssertEqual(nav.navigationBar.frame.height, 54, accuracy: 0.5)
+    }
+
     /// Suite `control_refresh` (iOS cut): a rest offset of 0 with adj 0
     /// is not overscroll. beginRefreshing must leave the offset (and the
     /// control's frame.y) at 0 — a `y < adj + 0.5` slack had subtracted 60.
