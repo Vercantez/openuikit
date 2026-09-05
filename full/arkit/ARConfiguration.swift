@@ -64,9 +64,14 @@ open class ARConfiguration: NSObject, NSCopying {
             isRecommendedForHighResolutionFrameCapturing: false,
             isVideoHDRSupported: false
         )
+
+        public var captureDevicePosition: AVCaptureDevice.Position { .unspecified }
+        public var captureDeviceType: AVCaptureDevice.DeviceType { .builtInWideAngleCamera }
+        public var defaultColorSpace: AVCaptureColorSpace { .sRGB }
+        public var defaultPhotoSettings: AVCapturePhotoSettings { AVCapturePhotoSettings() }
     }
 
-    public class var isSupported: Bool { false }
+    public class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
 
     public class var supportedVideoFormats: [VideoFormat] { [] }
 
@@ -85,6 +90,8 @@ open class ARConfiguration: NSObject, NSCopying {
     public var videoFormat: VideoFormat = .unsupportedPlaceholder
     public var videoHDRAllowed: Bool = false
     public var worldAlignment: WorldAlignment = .gravity
+
+    public class var configurableCaptureDeviceForPrimaryCamera: AVCaptureDevice? { nil }
 
     public required override init() {
         super.init()
@@ -121,7 +128,7 @@ open class ARWorldTrackingConfiguration: ARConfiguration {
         public static let vertical = PlaneDetection(rawValue: 1 << 1)
     }
 
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
 
     public class var supportsAppClipCodeTracking: Bool { false }
 
@@ -172,17 +179,23 @@ open class ARWorldTrackingConfiguration: ARConfiguration {
 }
 
 open class AROrientationTrackingConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
     public var isAutoFocusEnabled: Bool = true
 
     public required init() {
         super.init()
     }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! AROrientationTrackingConfiguration
+        copy.isAutoFocusEnabled = isAutoFocusEnabled
+        return copy
+    }
 }
 
 open class ARFaceTrackingConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
-    public class var supportedNumberOfTrackedFaces: Int { 0 }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
+    public class var supportedNumberOfTrackedFaces: Int { ARKitTestHook.isSimulatedDeviceInstalled ? 1 : 0 }
     public class var supportsWorldTracking: Bool { false }
     public var maximumNumberOfTrackedFaces: Int = 1
     public var isWorldTrackingEnabled: Bool = false
@@ -190,10 +203,17 @@ open class ARFaceTrackingConfiguration: ARConfiguration {
     public required init() {
         super.init()
     }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! ARFaceTrackingConfiguration
+        copy.maximumNumberOfTrackedFaces = maximumNumberOfTrackedFaces
+        copy.isWorldTrackingEnabled = isWorldTrackingEnabled
+        return copy
+    }
 }
 
 open class ARImageTrackingConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
     public var isAutoFocusEnabled: Bool = true
     public var maximumNumberOfTrackedImages: Int = 1
     public var trackingImages: Set<ARReferenceImage> = []
@@ -201,20 +221,35 @@ open class ARImageTrackingConfiguration: ARConfiguration {
     public required init() {
         super.init()
     }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! ARImageTrackingConfiguration
+        copy.isAutoFocusEnabled = isAutoFocusEnabled
+        copy.maximumNumberOfTrackedImages = maximumNumberOfTrackedImages
+        copy.trackingImages = trackingImages
+        return copy
+    }
 }
 
 open class ARObjectScanningConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
     public var isAutoFocusEnabled: Bool = true
     public var planeDetection: ARWorldTrackingConfiguration.PlaneDetection = []
 
     public required init() {
         super.init()
     }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! ARObjectScanningConfiguration
+        copy.isAutoFocusEnabled = isAutoFocusEnabled
+        copy.planeDetection = planeDetection
+        return copy
+    }
 }
 
 open class ARBodyTrackingConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
     public class var supportsAppClipCodeTracking: Bool { false }
     public var appClipCodeTrackingEnabled: Bool = false
     public var isAutoFocusEnabled: Bool = true
@@ -230,25 +265,55 @@ open class ARBodyTrackingConfiguration: ARConfiguration {
     public required init() {
         super.init()
     }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! ARBodyTrackingConfiguration
+        copy.appClipCodeTrackingEnabled = appClipCodeTrackingEnabled
+        copy.isAutoFocusEnabled = isAutoFocusEnabled
+        copy.automaticImageScaleEstimationEnabled = automaticImageScaleEstimationEnabled
+        copy.automaticSkeletonScaleEstimationEnabled = automaticSkeletonScaleEstimationEnabled
+        copy.detectionImages = detectionImages
+        copy.environmentTexturing = environmentTexturing
+        copy.initialWorldMap = initialWorldMap
+        copy.maximumNumberOfTrackedImages = maximumNumberOfTrackedImages
+        copy.planeDetection = planeDetection
+        copy.wantsHDREnvironmentTextures = wantsHDREnvironmentTextures
+        return copy
+    }
 }
 
 open class ARPositionalTrackingConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
     public var initialWorldMap: ARWorldMap?
     public var planeDetection: ARWorldTrackingConfiguration.PlaneDetection = []
 
     public required init() {
         super.init()
     }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! ARPositionalTrackingConfiguration
+        copy.initialWorldMap = initialWorldMap
+        copy.planeDetection = planeDetection
+        return copy
+    }
 }
 
 open class ARGeoTrackingConfiguration: ARConfiguration {
-    public override class var isSupported: Bool { false }
+    public override class var isSupported: Bool { ARKitTestHook.isSimulatedDeviceInstalled }
     public class var supportsAppClipCodeTracking: Bool { false }
 
     public class func checkAvailability(
         completionHandler: @escaping (Bool, (any Error)?) -> Void
     ) {
+        completionHandler(false, ARError(.geoTrackingNotAvailableAtLocation))
+    }
+
+    public class func checkAvailability(
+        at coordinate: CLLocationCoordinate2D,
+        completionHandler: @escaping (Bool, (any Error)?) -> Void
+    ) {
+        _ = coordinate
         completionHandler(false, ARError(.geoTrackingNotAvailableAtLocation))
     }
 
@@ -263,5 +328,18 @@ open class ARGeoTrackingConfiguration: ARConfiguration {
 
     public required init() {
         super.init()
+    }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! ARGeoTrackingConfiguration
+        copy.appClipCodeTrackingEnabled = appClipCodeTrackingEnabled
+        copy.automaticImageScaleEstimationEnabled = automaticImageScaleEstimationEnabled
+        copy.detectionImages = detectionImages
+        copy.detectionObjects = detectionObjects
+        copy.environmentTexturing = environmentTexturing
+        copy.maximumNumberOfTrackedImages = maximumNumberOfTrackedImages
+        copy.planeDetection = planeDetection
+        copy.wantsHDREnvironmentTextures = wantsHDREnvironmentTextures
+        return copy
     }
 }
