@@ -445,39 +445,36 @@ func testPickerDidCancel() {
     precondition(!ContactsUIHostControl.pickerIsVisible(picker))
 }
 
-private final class PickerNotificationProbe: NSObject {
+private final class PickerNotificationProbe: @unchecked Sendable {
     var shown = 0
     var hidden = 0
     weak var lastObject: AnyObject?
-
-    @objc func didShow(_ notification: Notification) {
-        lastObject = notification.object as AnyObject?
-        shown += 1
-    }
-
-    @objc func didHide(_ notification: Notification) {
-        lastObject = notification.object as AnyObject?
-        hidden += 1
-    }
 }
 
 @MainActor
 func testPickerDidShowHideNotifications() {
     let picker = CNContactPickerViewController()
     let notes = PickerNotificationProbe()
-    NotificationCenter.default.addObserver(
-        notes,
-        selector: #selector(PickerNotificationProbe.didShow(_:)),
-        name: .CNContactPickerViewControllerPickerDidShow,
-        object: picker
-    )
-    NotificationCenter.default.addObserver(
-        notes,
-        selector: #selector(PickerNotificationProbe.didHide(_:)),
-        name: .CNContactPickerViewControllerPickerDidHide,
-        object: picker
-    )
-    defer { NotificationCenter.default.removeObserver(notes) }
+    let showObserver = NotificationCenter.default.addObserver(
+        forName: .CNContactPickerViewControllerPickerDidShow,
+        object: picker,
+        queue: nil
+    ) { notification in
+        notes.lastObject = notification.object as AnyObject?
+        notes.shown += 1
+    }
+    let hideObserver = NotificationCenter.default.addObserver(
+        forName: .CNContactPickerViewControllerPickerDidHide,
+        object: picker,
+        queue: nil
+    ) { notification in
+        notes.lastObject = notification.object as AnyObject?
+        notes.hidden += 1
+    }
+    defer {
+        NotificationCenter.default.removeObserver(showObserver)
+        NotificationCenter.default.removeObserver(hideObserver)
+    }
     precondition(CNContactPickerViewControllerPickerDidShowNotification.rawValue
         == "CNContactPickerViewControllerPickerDidShowNotification")
     precondition(CNContactPickerViewControllerPickerDidHideNotification.rawValue
