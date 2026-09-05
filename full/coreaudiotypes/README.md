@@ -73,13 +73,34 @@ lookalikes.
 - The 20 graph rows under `AVAudioSession.ErrorCode` require the canonical
   AVAudioSession class owned by AVFAudio/AVFoundation. They are deliberately
   deferred: defining an empty `AVAudioSession` namespace here collides with
-  the repository's real class and does not match Apple ordinary-import
-  behavior.
+  the repository's real class (`full/avfaudio/AVAudioSession.swift` already
+  `import CoreAudioTypes`) and does not match Apple ordinary-import behavior.
+  The C global `AVAudioSessionErrorInsufficientPriority` remains implemented.
 - Linked CoreFoundation runtime in the central guest package. The portable
   gate typechecks a client importing both `CoreAudioTypes` and
   `CoreFoundation`; it does not turn an overlay typecheck into link proof.
 - Integration with downstream CoreAudio, AudioToolbox, AVFAudio, AudioUnit,
   and CoreMedia builds.
+
+## Depth pass 2026-09
+
+- implemented before: 677
+- implemented after: 677
+- declared: 0
+- deferred: 20 (`AVAudioSession.ErrorCode` and its cases / synthesized
+  Equatable/Hashable/`init(rawValue:)`)
+- unavailable / not-applicable: 0
+- Top-5 evidence distribution among implemented rows:
+  1. `testConstantAndMemberRawValues` — 463 (table-driven C `k…`/`err…`
+     constants plus enum/option-set members)
+  2. `testAudioChannelBitmapAlgebra` — 24
+  3. `testAudioChannelFlagsAlgebra` — 24
+  4. `testAudioTimeStampFlagsAlgebra` — 24
+  5. `testSMPTETimeFlagsAlgebra` — 24
+- Remaining implemented identifiers use focused layout, enum-identity,
+  typealias, and `AudioChannelLayoutTag_GetNumberOfChannels` tests under
+  `tests/agent/*Tests.swift`. No non-constant test exceeds 40% of implemented
+  rows.
 
 ## Tests
 
@@ -90,6 +111,8 @@ lookalikes.
   typecheck): `bash tests/agent/test_integration.sh`
 - Focused Swift layouts/runtime: `tests/agent/CoreAudioTypesRuntime.swift`
   marker `COREAUDIOTYPES_AGENT_RUNTIME_OK`
+- Depth-pass focused tests: `tests/agent/*Tests.swift` (constants, layouts,
+  option-set algebra, enum identity, typealiases, channel-count packing)
 - Internal overflow/negative-count helper:
   `COREAUDIOTYPES_FLEXIBLE_ARRAY_OK`
 - Reconstructed C fixture: `COREAUDIOTYPES_C_LAYOUT_OK`
