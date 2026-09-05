@@ -54,6 +54,14 @@ public struct ContactAccessButton: @MainActor View {
         return granted
     }
 
+    func linuxAccessPickerModel() -> ContactAccessPickerModel {
+        ContactAccessPickerModel(
+            queryString: queryString,
+            ignoredEmails: ignoredEmails ?? [],
+            ignoredPhoneNumbers: ignoredPhoneNumbers ?? []
+        )
+    }
+
     /// ContactsUI-authored caption modifier. Returns `Self` on isolated Linux
     /// because the Darwin overlay returns `some View`.
     @discardableResult

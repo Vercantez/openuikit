@@ -18,9 +18,26 @@ public class CNContactPickerViewController: UIViewController {
     @NSCopying public var predicateForSelectionOfContact: NSPredicate?
     @NSCopying public var predicateForSelectionOfProperty: NSPredicate?
 
+    /// Host observation: Darwin posts show when chrome appears. Linux sets
+    /// this only from `hostAppear()` / hide on a successful dismiss.
+    var linuxPickerVisible: Bool = false
+
     public override init() {
         super.init()
         self.title = "Contacts"
+    }
+
+    func hostAppear() {
+        linuxPickerVisible = true
+        NotificationCenter.default.post(
+            name: .CNContactPickerViewControllerPickerDidShow,
+            object: self
+        )
+    }
+
+    func hostCancel() {
+        hostHideIfVisible()
+        delegate?.contactPickerDidCancel(self)
     }
 
     func hostSelect(contact: CNContact) -> Bool {
@@ -30,6 +47,7 @@ public class CNContactPickerViewController: UIViewController {
         guard ContactsUIPredicateEvaluation.evaluate(predicateForSelectionOfContact, contact: contact) else {
             return false
         }
+        hostHideIfVisible()
         delegate?.contactPicker(self, didSelect: contact)
         return true
     }
@@ -46,6 +64,7 @@ public class CNContactPickerViewController: UIViewController {
             accepted.append(contact)
         }
         guard !accepted.isEmpty else { return false }
+        hostHideIfVisible()
         delegate?.contactPicker(self, didSelect: accepted)
         return true
     }
@@ -66,6 +85,7 @@ public class CNContactPickerViewController: UIViewController {
         ) else {
             return false
         }
+        hostHideIfVisible()
         delegate?.contactPicker(self, didSelect: property)
         return true
     }
@@ -91,8 +111,18 @@ public class CNContactPickerViewController: UIViewController {
             accepted.append(property)
         }
         guard !accepted.isEmpty else { return false }
+        hostHideIfVisible()
         delegate?.contactPicker(self, didSelectContactProperties: accepted)
         return true
+    }
+
+    private func hostHideIfVisible() {
+        guard linuxPickerVisible else { return }
+        linuxPickerVisible = false
+        NotificationCenter.default.post(
+            name: .CNContactPickerViewControllerPickerDidHide,
+            object: self
+        )
     }
 }
 

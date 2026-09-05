@@ -18,15 +18,71 @@ import SwiftUI
 /// limited-access grant sheet: every path that would reveal or persist contact
 /// records stays fail-closed.
 
+/// TBD exports `_CNContactPickerViewControllerPickerDidShowNotification` and
+/// `_CNContactPickerViewControllerPickerDidHideNotification`. Raw values match
+/// those ObjC constant names. Linux posts them only from host SPI, never from
+/// an address-book presentation.
+public extension NSNotification.Name {
+    static let CNContactPickerViewControllerPickerDidShow = NSNotification.Name(
+        "CNContactPickerViewControllerPickerDidShowNotification"
+    )
+    static let CNContactPickerViewControllerPickerDidHide = NSNotification.Name(
+        "CNContactPickerViewControllerPickerDidHideNotification"
+    )
+}
+
+public let CNContactPickerViewControllerPickerDidShowNotification =
+    NSNotification.Name.CNContactPickerViewControllerPickerDidShow
+public let CNContactPickerViewControllerPickerDidHideNotification =
+    NSNotification.Name.CNContactPickerViewControllerPickerDidHide
+
+/// Fail-closed model of Darwin's limited-access contact picker sheet.
+/// Isolated Linux never presents chrome and never grants identifiers.
+@_spi(OpenUIKitHost)
+public struct ContactAccessPickerModel: Equatable, Hashable, Sendable {
+    public var queryString: String
+    public var ignoredEmails: Set<String>
+    public var ignoredPhoneNumbers: Set<String>
+
+    public init(
+        queryString: String = "",
+        ignoredEmails: Set<String> = [],
+        ignoredPhoneNumbers: Set<String> = []
+    ) {
+        self.queryString = queryString
+        self.ignoredEmails = ignoredEmails
+        self.ignoredPhoneNumbers = ignoredPhoneNumbers
+    }
+
+    /// Darwin delivers identifiers the user approved. Linux always returns `[]`.
+    public func failClosedApprovedIdentifiers() -> [String] {
+        []
+    }
+}
+
 /// Linux host-test control. Hidden from ordinary `import ContactsUI` clients
 /// and not part of Apple's public ContactsUI surface.
 @_spi(OpenUIKitHost)
 @MainActor
 public enum ContactsUIHostControl {
+    /// Posts `CNContactPickerViewControllerPickerDidShowNotification`. Darwin
+    /// would post this when picker chrome appears; Linux has no chrome.
+    public static func reportPickerDidShow(_ picker: CNContactPickerViewController) {
+        picker.hostAppear()
+    }
+
     /// Delivers `contactPickerDidCancel` through the existential delegate.
-    /// Never fabricates a selected `CNContact`.
+    /// Never fabricates a selected `CNContact`. Posts hide if the picker was shown.
     public static func reportPickerCancel(_ picker: CNContactPickerViewController) {
-        picker.delegate?.contactPickerDidCancel(picker)
+        picker.hostCancel()
+    }
+
+    public static func pickerIsVisible(_ picker: CNContactPickerViewController) -> Bool {
+        picker.linuxPickerVisible
+    }
+
+    public static func accessPickerModel(_ button: ContactAccessButton) -> ContactAccessPickerModel {
+        button.linuxAccessPickerModel()
     }
 
     /// Scripts a single-contact selection. Darwin would present picker chrome;
