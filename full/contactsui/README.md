@@ -98,6 +98,16 @@ Wave-8 additions on top of the first pass:
   `queryString` / `ignoredEmails` / `ignoredPhoneNumbers` and always
   returns `[]` from `failClosedApprovedIdentifiers()`.
 
+`bash full/contactsui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+CONTACTSUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ContactsUI dylib=libContactsUI.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
+
 ### What is real
 
 - `CNContactPickerViewController` stores `displayedPropertyKeys` and the three
