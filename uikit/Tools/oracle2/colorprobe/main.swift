@@ -13,12 +13,18 @@ let docsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomai
 
 func r6(_ v: CGFloat) -> Double { (Double(v) * 1_000_000).rounded() / 1_000_000 }
 
-func resolve(_ name: String, style: UIUserInterfaceStyle) -> [Double]? {
+func resolve(_ name: String, style: UIUserInterfaceStyle, elevated: Bool = false) -> [Double]? {
     // Swift `UIColor.systemBackground` is ObjC `+[UIColor systemBackgroundColor]`.
     let sel = NSSelectorFromString(name + "Color")
     guard UIColor.responds(to: sel),
           let any = UIColor.perform(sel)?.takeUnretainedValue() as? UIColor else { return nil }
-    let traits = UITraitCollection(userInterfaceStyle: style)
+    var traits = UITraitCollection(userInterfaceStyle: style)
+    if elevated {
+        traits = UITraitCollection(traitsFrom: [
+            traits,
+            UITraitCollection(userInterfaceLevel: .elevated)
+        ])
+    }
     let c = any.resolvedColor(with: traits)
     var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
     guard c.getRed(&r, green: &g, blue: &b, alpha: &a) else { return nil }
@@ -47,6 +53,20 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             out[styleName] = m
         }
         out["missing"] = missing
+        // Elevated palette: large dark pageSheets paint elevated
+        // systemBackground, which is secondarySystemBackground (MEASURED
+        // /tmp/sheetfill_dark large_* + colorprobe, SE 2x / iOS 26.1).
+        // Written as a sibling so the light/dark tables stay the Catalyst-
+        // keyed iOS dump SystemColors.tableIOS loads.
+        var elevatedOut: [String: Any] = [:]
+        for (styleName, style) in [("light", UIUserInterfaceStyle.light), ("dark", .dark)] {
+            var m: [String: Any] = [:]
+            for n in names.sorted() {
+                if let v = resolve(n, style: style, elevated: true) { m[n] = v }
+            }
+            elevatedOut[styleName] = m
+        }
+        out["elevated"] = elevatedOut
         out["device"] = ["system": UIDevice.current.systemVersion, "model": UIDevice.current.model]
         let data = try! JSONSerialization.data(withJSONObject: out, options: [.sortedKeys, .prettyPrinted])
         try! data.write(to: URL(fileURLWithPath: "\(docsDir)/system_colors_ios.json"))

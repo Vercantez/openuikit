@@ -422,6 +422,69 @@ final class SheetDetentTests: XCTestCase {
             .resolvedCGColor(with: UITraitCollection.current)
         XCTAssertEqual(full.red, 1, accuracy: 1e-9)
     }
+
+    /// MEASURED /tmp/sheetfill_dark + Modal t3200.dark / t1200.dark /
+    /// NavFlow t1200.dark, iPhone SE 2x / iOS 26.1: large dark
+    /// systemBackground is elevated secondarySystemBackground (28/255);
+    /// floating dark fallback is 57/255 (glass samples the dimmed backdrop).
+    func testDarkSystemBackgroundSheetFillOnIOS() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.overrideUserInterfaceStyle = .dark
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+
+        let large = UIViewController()
+        large.view.backgroundColor = .systemBackground
+        large.modalPresentationStyle = .pageSheet
+        large.sheetPresentationController?.detents = [.large()]
+        large.sheetPresentationController?.selectedDetentIdentifier = .large
+        base.present(large, animated: false)
+        window.layoutIfNeeded()
+        let full = large._presentationSheet!.paintedFillColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(full.red, 28.0 / 255.0, accuracy: 0.002)
+        XCTAssertEqual(full.green, 28.0 / 255.0, accuracy: 0.002)
+        XCTAssertEqual(full.blue, 30.0 / 255.0, accuracy: 0.002)
+        XCTAssertFalse(large._presentationSheet!._usesIOSDarkGlass)
+        base.dismiss(animated: false)
+
+        let medium = UIViewController()
+        medium.view.backgroundColor = .systemBackground
+        medium.modalPresentationStyle = .pageSheet
+        medium.sheetPresentationController?.detents = [.medium(), .large()]
+        base.present(medium, animated: false)
+        window.layoutIfNeeded()
+        let glass = medium._presentationSheet!.paintedFillColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(glass.red, 57.0 / 255.0, accuracy: 1e-9)
+        XCTAssertTrue(medium._presentationSheet!._usesIOSDarkGlass)
+        XCTAssertTrue(_UIGlassMaterial.shouldApply(medium._presentationSheet!))
+        base.dismiss(animated: false)
+
+        // MEASURED modal_sheet_grabber_dark, iPhone 16 3x / iOS 26.1:
+        // presented view with nil background keeps unelevated
+        // systemBackground (0, 0, 0). The 28/30 remap is only for an
+        // explicit `.systemBackground` (NavFlow / Modal / the probe).
+        let implicit = UIViewController()
+        implicit.view.backgroundColor = nil
+        implicit.modalPresentationStyle = .pageSheet
+        implicit.sheetPresentationController?.detents = [.large()]
+        implicit.sheetPresentationController?.selectedDetentIdentifier = .large
+        base.present(implicit, animated: false)
+        window.layoutIfNeeded()
+        XCTAssertFalse(implicit._presentationSheet!.presentedViewSetBackground)
+        let implicitFill = implicit._presentationSheet!.paintedFillColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(implicitFill.red, 0, accuracy: 1e-9)
+        XCTAssertEqual(implicitFill.green, 0, accuracy: 1e-9)
+        XCTAssertEqual(implicitFill.blue, 0, accuracy: 1e-9)
+    }
 }
 
 @MainActor

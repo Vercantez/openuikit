@@ -1733,7 +1733,17 @@ open class UITableView: UIScrollView {
                     // The section card draws the background.
                     cell.backgroundColor = nil
                 } else if cell.backgroundColor == nil {
-                    cell.backgroundColor = .systemBackground
+                    if UITableView.isIOSChrome, style == .grouped {
+                        // MEASURED Forms t200.dark, iPhone SE 2x / iOS 26.1:
+                        // `.grouped` cell interior is (28, 28, 30) =
+                        // secondarySystemGroupedBackground. Light both
+                        // resolve to white so light captures do not move;
+                        // systemBackground dark is black and erases the
+                        // grouped card (Forms mean 46.9).
+                        cell.backgroundColor = .secondarySystemGroupedBackground
+                    } else {
+                        cell.backgroundColor = .systemBackground
+                    }
                 }
                 cell.setSelected(path == indexPathForSelectedRow
                     || additionalSelectedRows.contains(path), animated: false)
