@@ -102,5 +102,12 @@ agent uikit/ edits (RealAppProbe Focus/Hackers) change HEAD:uikit; the pin
 advances after merge. `GATE_B_FAIL rc=2` (widget guest asserts the same pin).
 `guest_realapp` SIGTRAP on a stale `render_full`.
 
-Attempt 2: attest in-repo HEAD:uikit in `build_full.sh` and
-`build_focus_widget_guest.sh`; skip realapp when build_full fails.
+Attempt 2: `2c2958924b90ccfea8cdcb3124ff11677e978278`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=2`:
+`ObservationMacros plugin missing (Shared @Observable)` after
+`FOUNDATION_INTERNATIONALIZATION_BUILD_OK swift=61 icu-cpp=474 icu-headers=205`.
+Pin override worked. `GATE_B_FAIL rc=2` (nested build_full same miss).
+`GUEST_REALAPP_SCREENS=0` skipped.
+
+Attempt 3: resolve ObservationMacros from `swiftc`'s toolchain (`host/plugins`
+and `host/compilerPlugins`), dump those directories if still missing.

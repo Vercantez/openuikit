@@ -1227,17 +1227,44 @@ echo "== RealAppProbe stub modules (FocusModules / HackersModules, dependency or
 # module names ObservationMacros, which live in the host toolchain plugin
 # (full/frameworks/build_core_guest_package.sh OBSERVATION_MACRO_PLUGIN).
 if [ -z "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
+    swiftc_bin=$(command -v swiftc || true)
+    swift_usr=
+    if [ -n "$swiftc_bin" ]; then
+        swift_usr=$(CDPATH= cd -- "$(dirname -- "$swiftc_bin")/.." && pwd -P)
+    fi
     for cand in \
+        ${swift_usr:+"$swift_usr/lib/swift/host/plugins/libObservationMacros.so"} \
+        ${swift_usr:+"$swift_usr/lib/swift/host/compilerPlugins/libObservationMacros.so"} \
         /opt/swift624/usr/lib/swift/host/plugins/libObservationMacros.so \
-        /usr/lib/swift/host/plugins/libObservationMacros.so; do
+        /opt/swift624/usr/lib/swift/host/compilerPlugins/libObservationMacros.so \
+        /opt/swift/usr/lib/swift/host/plugins/libObservationMacros.so \
+        /usr/lib/swift/host/plugins/libObservationMacros.so \
+        /usr/lib/swift/host/compilerPlugins/libObservationMacros.so; do
         if [ -f "$cand" ]; then
             OBSERVATION_MACRO_PLUGIN=$cand
             break
         fi
     done
+    if [ -z "${OBSERVATION_MACRO_PLUGIN:-}" ] && [ -n "$swift_usr" ]; then
+        OBSERVATION_MACRO_PLUGIN=$(find "$swift_usr/lib" \
+            \( -name 'libObservationMacros.so' -o -name 'libObservationMacros.dylib' \) \
+            -print -quit 2>/dev/null || true)
+    fi
 fi
-[ -f "${OBSERVATION_MACRO_PLUGIN:-}" ] \
-    || die "ObservationMacros plugin missing (Shared @Observable)"
+if [ ! -f "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
+    echo "build_full: ObservationMacros not at the known host-plugin paths" >&2
+    echo "   swiftc=$(command -v swiftc || echo missing)" >&2
+    for dir in \
+        ${swift_usr:+"$swift_usr/lib/swift/host/plugins"} \
+        ${swift_usr:+"$swift_usr/lib/swift/host/compilerPlugins"} \
+        /opt/swift624/usr/lib/swift/host/plugins \
+        /usr/lib/swift/host/plugins; do
+        echo "   ls $dir:" >&2
+        ls -la "$dir" 2>&1 | head -20 >&2 || true
+    done
+    die "ObservationMacros plugin missing (Shared @Observable)"
+fi
+echo "   ObservationMacros=$OBSERVATION_MACRO_PLUGIN"
 OBSERVATION_PLUGIN_FLAGS=(-load-plugin-library "$OBSERVATION_MACRO_PLUGIN")
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
