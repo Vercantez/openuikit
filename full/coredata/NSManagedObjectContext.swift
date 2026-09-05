@@ -899,4 +899,5 @@ extension Notification.Name {
     public static let NSPersistentStoreCoordinatorWillRemoveStore = Notification.Name("NSPersistentStoreCoordinatorWillRemoveStore")
     public static let NSPersistentStoreDidImportUbiquitousContentChanges = Notification.Name("NSPersistentStoreDidImportUbiquitousContentChanges")
     public static let NSPersistentStoreRemoteChange = Notification.Name("NSPersistentStoreRemoteChange")
+    public static let NSCoreDataCoreSpotlightDelegateIndexDidUpdate = NSCoreDataCoreSpotlightDelegate.indexDidUpdateNotification
 }
