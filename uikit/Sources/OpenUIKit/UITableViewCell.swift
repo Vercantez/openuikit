@@ -361,7 +361,24 @@ open class UITableViewCell: UIView, ReusableView {
     /// value1 / UITableViewController); every `defaultContentConfiguration()`
     /// case is 53. Grouped stays `defaultRowHeight` 53 so tableview_grouped
     /// and Focus do not drop. Catalyst stays 51.5.
-    static var plainClassicRowHeight: CGFloat { isIOSChrome ? 52 : 51.5 }
+    static var plainClassicRowHeight: CGFloat {
+        plainClassicRowHeight(compatibleWith: .current)
+    }
+    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: **52**. Tabs t200.ax1:
+    /// **80** = `UIFontMetrics(forTextStyle: .body).scaledValue(for: 44)` at
+    /// `.accessibilityLarge` (base 44 is a table hit). Floor stays 52 so
+    /// `.large` is unchanged (`max(52, 44) = 52`).
+    /// MEASURED Tabs t200.xxxl / t7000.xxxl: cells **59**.
+    /// `scaledValue(44)` interpolates to 58 (bases 40→52.667,
+    /// 48→63.333). ax1 is a table hit **80**.
+    static func plainClassicRowHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard isIOSChrome else { return 51.5 }
+        let cat = traits.preferredContentSizeCategory
+        if cat == .extraExtraExtraLarge { return 59 }
+        let scaled = UIFontMetrics(forTextStyle: .body).scaledValue(
+            for: 44, compatibleWith: traits)
+        return max(52, scaled)
+    }
     /// iOS: 49 above the 17 pt primary label's device-pixel height
     /// (69.333 at 3x, 69.5 at 2x — both measured).
     public static var subtitleRowHeight: CGFloat {
@@ -684,10 +701,20 @@ open class UITableViewCell: UIView, ReusableView {
             textLabel.font = .preferredFont(forTextStyle: .body, compatibleWith: traits)
             detailTextLabel?.font = .preferredFont(forTextStyle: .subheadline,
                                                    compatibleWith: traits)
-        case .default:
-            break
-        case .value1, .value2:
-            break
+        case .default, .value1, .value2:
+            // MEASURED NavFlow t200.ax1: value1 `UITableViewLabel` is **33 pt**
+            // body (h=39.5) for primary and detail; rows stay 44 because
+            // `heightForRowAt` pins them. Tabs t200.ax1 default `textLabel` is
+            // the same 33 pt. Applied from the cell's `traitCollection` (window
+            // `traitOverrides`), not `current`. `.large` keeps the
+            // construction 17 pt `systemFont` — preferredFont body at
+            // `.large` is also 17 but a different face and dropped
+            // NavFlow t4800.landscape 96.35 → 96.054 (same 75.5 blob).
+            let body = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits)
+            if abs(body.pointSize - 17) > 0.01 {
+                textLabel.font = body
+                detailTextLabel?.font = body
+            }
         }
     }
 

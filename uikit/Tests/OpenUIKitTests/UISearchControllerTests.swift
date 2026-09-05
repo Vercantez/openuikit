@@ -63,16 +63,25 @@ final class UISearchControllerTests: XCTestCase {
 
     func testSearchActiveExtraHeightMatchesTabsT4000() {
         let saved = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
         OpenUIKitRuntime.systemFontCut = .iOS
-        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UIDevice.current.userInterfaceIdiom = .phone
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+        }
         let sc = UISearchController(searchResultsController: nil)
         let item = UINavigationItem(title: "Library")
         item.searchController = sc
         let bar = UINavigationBar()
         bar.pushItem(item, animated: false)
         XCTAssertEqual(bar.searchOverlayHeight, 0)
+        // MEASURED Tabs t7000, iPhone SE 2x / iOS 26.1: hide-on-scroll
+        // bump is the 60 pt overlay slot (8+44+8). Pad is 0.
+        XCTAssertEqual(bar.hideOnScrollContentBump(requestedY: 200), 60)
         sc.isActive = true
         XCTAssertEqual(bar.searchOverlayHeight, 6)
+        XCTAssertEqual(bar.hideOnScrollContentBump(requestedY: 200), 0)
         sc.isActive = false
         XCTAssertEqual(bar.searchOverlayHeight, 0)
     }

@@ -247,6 +247,11 @@ final class DynamicTypeTests: XCTestCase {
         XCTAssertEqual(UIContentSizeCategory.large.iOSBarCapped, .large)
         XCTAssertEqual(UIContentSizeCategory.extraExtraLarge.iOSBarCapped,
                        .extraExtraLarge)
+        XCTAssertEqual(UIContentSizeCategory.extraExtraExtraLarge.iOSBarCapped,
+                       .extraExtraLarge)
+        XCTAssertEqual(
+            _UIBarMetrics.iOSTitleFont(compatibleWith:
+                UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)).pointSize, 21)
         let ax1 = UITraitCollection(preferredContentSizeCategory: .accessibilityLarge)
         let capped = UITraitCollection(
             preferredContentSizeCategory: ax1.preferredContentSizeCategory.iOSBarCapped)

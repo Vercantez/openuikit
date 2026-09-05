@@ -170,6 +170,14 @@ enum _UISearchFieldMetrics {
     /// Field height: 44 on iOS (probed at eight bar heights), 36 on Catalyst.
     static var fieldHeight: CGFloat { isIOS ? 44 : 36 }
 
+    /// MEASURED Tabs t4000.ax1 / Notes t4000.ax1, iPhone SE 2x / iOS 26.1:
+    /// field **80** = `UIFontMetrics.body.scaledValue(44)` at ax1 (table hit).
+    /// `.large` stays 44. Catalyst stays `fieldHeight`.
+    static func scaledFieldHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard isIOS else { return fieldHeight }
+        return UIFontMetrics(forTextStyle: .body).scaledValue(for: 44, compatibleWith: traits)
+    }
+
     /// Flat equivalent of the pill's glass material (file header): the
     /// measured centre reading over eight backdrops.
     static let pillFill = UIColor(.dynamic { t in
@@ -491,6 +499,16 @@ open class UISearchBar: UIView {
         addSubview(searchTextField)
     }
 
+    /// MEASURED Tabs t4000.ax1 / Notes t4000.ax1: placeholder
+    /// `UISearchBarTextFieldLabel` is **33 pt Medium** = body preferred size
+    /// at ax1, weight medium. `.large` stays 17 medium.
+    private func applyIOSDynamicTypeFieldFont() {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return }
+        let size = UIFont.preferredFont(forTextStyle: .body,
+                                        compatibleWith: traitCollection).pointSize
+        searchTextField.font = .systemFont(ofSize: size, weight: .medium)
+    }
+
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
         searchTextField.becomeFirstResponder()
@@ -515,6 +533,7 @@ open class UISearchBar: UIView {
     /// active (Tabs t4000): field (16, 8, 288, 44) and dismiss (315, 8, 44, 44).
     open override func layoutSubviews() {
         super.layoutSubviews()
+        applyIOSDynamicTypeFieldFont()
         if bounds.height < 1 {
             searchTextField.isHidden = true
             cancelButton?.isHidden = true
@@ -530,7 +549,8 @@ open class UISearchBar: UIView {
             layoutNavInline()
             return
         }
-        let y = (bounds.height - UISearchBar.standardHeight) / 2
+        let fieldH = _UISearchFieldMetrics.scaledFieldHeight(compatibleWith: traitCollection)
+        let y = (bounds.height - fieldH) / 2
         var right = bounds.width - UISearchBar.fieldSideInset
         if showsCancelButton {
             let b = cancelButton ?? makeCancelButton()
@@ -538,19 +558,19 @@ open class UISearchBar: UIView {
             applyStandaloneCancelChrome(b)
             let w = b.sizeThatFits(bounds.size).width
             b.frame = CGRect(x: bounds.width - UISearchBar.fieldSideInset - w,
-                             y: y, width: w, height: UISearchBar.standardHeight)
+                             y: y, width: w, height: fieldH)
             right -= w + UISearchBar.cancelButtonGap
         } else {
             cancelButton?.isHidden = true
         }
         searchTextField.frame = CGRect(x: UISearchBar.fieldSideInset, y: y,
                                        width: max(0, right - UISearchBar.fieldSideInset),
-                                       height: UISearchBar.fieldHeight)
+                                       height: fieldH)
     }
 
     func layoutNavInline() {
         let side = UISearchBar.navInlineSideInset
-        let d = UISearchBar.navInlineDismissSize
+        let d = _UISearchFieldMetrics.scaledFieldHeight(compatibleWith: traitCollection)
         let gap = UISearchBar.navInlineDismissGap
         let y = UISearchBar.navInlineFieldY
         let b = cancelButton ?? makeCancelButton()
@@ -561,15 +581,16 @@ open class UISearchBar: UIView {
         // the trailing (left) edge — field abs [71, 18, 288, 44] =
         // 16 + 44 + 11, not LTR's [16, 18, 288, 44] with dismiss at 315.
         // Field internals stay physical (placeholder at field-x + 39.5 =
-        // 110.5).
+        // 110.5). MEASURED Tabs t4000.ax1 / Notes t4000.ax1: field height
+        // `d` = `scaledFieldHeight` (80 at ax1, 44 at `.large`).
         if _layoutIsRTL {
             b.frame = CGRect(x: side, y: y, width: d, height: d)
             searchTextField.frame = CGRect(x: side + d + gap, y: y, width: fieldW,
-                                           height: UISearchBar.fieldHeight)
+                                           height: d)
         } else {
             b.frame = CGRect(x: bounds.width - side - d, y: y, width: d, height: d)
             searchTextField.frame = CGRect(x: side, y: y, width: fieldW,
-                                           height: UISearchBar.fieldHeight)
+                                           height: d)
         }
     }
 
