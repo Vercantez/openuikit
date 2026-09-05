@@ -8,6 +8,10 @@ open class VNContour: NSObject {
     public var pointCount: Int { normalizedPoints.count }
     public var childContourCount: Int { childContours.count }
 
+    public var normalizedPath: CGPath {
+        visionPath(from: normalizedPoints)
+    }
+
     public var aspectRatio: Float {
         guard let box = axisAlignedBounds(), box.height > 0 else { return 0 }
         return Float(box.width / box.height)
@@ -48,7 +52,7 @@ open class VNContour: NSObject {
         guard normalizedPoints.count >= 2 else {
             throw vnMakeError(.invalidArgument, description: "polygonApproximation needs two points")
         }
-        let simplified = douglasPeucker(normalizedPoints, epsilon: max(0, Double(epsilon)))
+        let simplified = contourDouglasPeucker(normalizedPoints, epsilon: max(0, Double(epsilon)))
         return VNContour(
             normalizedPoints: simplified,
             indexPath: indexPath,
@@ -221,7 +225,7 @@ private func circleFromThree(_ a: VNPoint, _ b: VNPoint, _ c: VNPoint) -> VNCirc
     return VNCircle(center: center, radius: radius)
 }
 
-private func douglasPeucker(_ points: [SIMD2<Float>], epsilon: Double) -> [SIMD2<Float>] {
+func contourDouglasPeucker(_ points: [SIMD2<Float>], epsilon: Double) -> [SIMD2<Float>] {
     if points.count <= 2 {
         return points
     }

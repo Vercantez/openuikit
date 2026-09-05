@@ -46,6 +46,12 @@ func run() throws {
     try testCoordinateMapping()
     try testObservations()
     try testRequestsAndHandler()
+    try testBarcodeFixtures()
+    try testRectangleAndContourDetectors()
+    try testFeaturePrintAndRegistration()
+    try testObjectTracker()
+    try testFailClosedModels()
+    try testSwiftOverlay()
     print("VISION_AGENT_RUNTIME_OK")
 }
 
@@ -356,6 +362,8 @@ func testObservations() throws {
 
 func testRequestsAndHandler() throws {
     try expectEqual(VNRequestRevisionUnspecified, 0, "unspecified revision")
+    try expectEqual(VNDetectContourRequestRevision1, 1, "contour revision graph spelling")
+    try expectEqual(VNDetectContoursRequestRevision1, VNDetectContourRequestRevision1, "contour revision alias")
     let request = VNDetectRectanglesRequest()
     try expectEqual(request.minimumAspectRatio, 0.5, "min aspect")
     try expectEqual(request.maximumObservations, 8, "max observations")
@@ -409,10 +417,10 @@ func testRequestsAndHandler() throws {
     let failClosed = VNDetectFaceRectanglesRequest()
     do {
         try handler.perform([failClosed])
-        throw VisionRuntimeFailure.message("ml unavailable should throw")
+        throw VisionRuntimeFailure.message("invalid image should throw")
     } catch let error as NSError {
         try expectEqual(error.domain, VNErrorDomain, "error domain")
-        try expectEqual(error.code, VNErrorCode.notImplemented.rawValue, "not implemented code")
+        try expectEqual(error.code, VNErrorCode.invalidImage.rawValue, "invalid image on garbage data")
     }
 
     let sequence = VNSequenceRequestHandler()
@@ -429,6 +437,248 @@ func testRequestsAndHandler() throws {
     let segmentation = VNGeneratePersonSegmentationRequest()
     segmentation.qualityLevel = .fast
     try expectEqual(segmentation.qualityLevel, .fast, "quality stored")
+}
+
+func waitFor<T>(_ work: @escaping () async throws -> T) throws -> T {
+    let lock = DispatchSemaphore(value: 0)
+    var stored: Result<T, Error>?
+    Task {
+        do {
+            stored = .success(try await work())
+        } catch {
+            stored = .failure(error)
+        }
+        lock.signal()
+    }
+    lock.wait()
+    return try stored!.get()
+}
+
+func testBarcodeFixtures() throws {
+    let qrImage = try VisionHost.makeQRImage(payload: "HELLO", moduleSize: 6, quietZone: 4)
+    let qrHandler = VNImageRequestHandler(cgImage: qrImage, orientation: .up, options: [:])
+    let qrRequest = VNDetectBarcodesRequest()
+    qrRequest.symbologies = [.qr]
+    try qrHandler.perform([qrRequest])
+    let qrHits = (qrRequest.results ?? []).compactMap { $0 as? VNBarcodeObservation }
+    try expect(qrHits.contains(where: { $0.payloadStringValue == "HELLO" && $0.symbology == .qr }), "QR payload")
+
+    let codeImage = try VisionHost.makeCode128Image(payload: "ABC123")
+    let codeHandler = VNImageRequestHandler(cgImage: codeImage)
+    let codeRequest = VNDetectBarcodesRequest()
+    codeRequest.symbologies = [.code128]
+    try codeHandler.perform([codeRequest])
+    let codeHits = (codeRequest.results ?? []).compactMap { $0 as? VNBarcodeObservation }
+    try expect(codeHits.contains(where: { $0.payloadStringValue == "ABC123" }), "Code128 payload")
+
+    let eanImage = try VisionHost.makeEAN13Image(payload: "5901234123457")
+    let eanData = VisionHost.encodeNetpbm(eanImage)
+    let eanHandler = VNImageRequestHandler(data: eanData, orientation: .up)
+    let eanRequest = VNDetectBarcodesRequest()
+    eanRequest.symbologies = [.ean13]
+    try eanHandler.perform([eanRequest])
+    let eanHits = (eanRequest.results ?? []).compactMap { $0 as? VNBarcodeObservation }
+    try expect(eanHits.contains(where: { $0.payloadStringValue == "5901234123457" }), "EAN-13 payload")
+
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("vision-qr.ppm")
+    try VisionHost.encodeNetpbm(qrImage).write(to: url)
+    let urlHandler = VNImageRequestHandler(URL: url, orientation: .up, options: [:])
+    let urlRequest = VNDetectBarcodesRequest()
+    urlRequest.symbologies = [.qr]
+    try urlHandler.perform([urlRequest])
+    try expect((urlHandler.source == .url(url)), "url source")
+}
+
+func makeRectangleImage() -> CGImage {
+    var raster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
+    for y in 20..<60 {
+        for x in 20..<60 {
+            raster[x, y] = (255, 255, 255, 255)
+        }
+    }
+    return raster.makeCGImage()
+}
+
+func testRectangleAndContourDetectors() throws {
+    let image = makeRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    let rectangles = VNDetectRectanglesRequest()
+    rectangles.minimumSize = 0.1
+    rectangles.minimumAspectRatio = 0.2
+    rectangles.maximumAspectRatio = 1.0
+    rectangles.quadratureTolerance = 40
+    rectangles.minimumConfidence = 0
+    rectangles.maximumObservations = 4
+    try handler.perform([rectangles])
+    let found = (rectangles.results ?? []).compactMap { $0 as? VNRectangleObservation }
+    try expect(!found.isEmpty, "detected rectangle")
+    if let box = found.first?.boundingBox {
+        try expect(box.width > 0.2 && box.height > 0.2, "rectangle size")
+        try expect(box.origin.y >= 0, "lower-left origin")
+    }
+
+    let contours = VNDetectContoursRequest()
+    contours.detectsDarkOnLight = false
+    contours.maximumImageDimension = 128
+    try handler.perform([contours])
+    let contourObs = contours.results?.first as? VNContoursObservation
+    try expect((contourObs?.contourCount ?? 0) >= 1, "contour count")
+    let path = contourObs?.normalizedPath
+    try expect(path != nil, "normalized path")
+    if let first = try contourObs?.contour(at: 0) {
+        try expect(first.pointCount >= 4, "contour points")
+        _ = first.normalizedPath
+        var area: Double = 0
+        try VNGeometryUtils.calculateArea(&area, for: first, orientedArea: false)
+        try expect(area > 0, "contour area")
+    }
+}
+
+func testFeaturePrintAndRegistration() throws {
+    let red = VisionRaster(width: 32, height: 32, filled: (200, 20, 20, 255))
+    let blue = VisionRaster(width: 32, height: 32, filled: (20, 20, 200, 255))
+    let redHandler = VNImageRequestHandler(cgImage: red.makeCGImage())
+    let blueHandler = VNImageRequestHandler(ciImage: blue.makeCIImage(), orientation: .up)
+    let redPrint = VNGenerateImageFeaturePrintRequest()
+    let bluePrint = VNGenerateImageFeaturePrintRequest()
+    try redHandler.perform([redPrint])
+    try blueHandler.perform([bluePrint])
+    let lhs = redPrint.results?.first as? VNFeaturePrintObservation
+    let rhs = bluePrint.results?.first as? VNFeaturePrintObservation
+    try expect(lhs != nil && rhs != nil, "feature prints")
+    var same: Float = 0
+    var different: Float = 0
+    try lhs!.computeDistance(&same, to: lhs!)
+    try lhs!.computeDistance(&different, to: rhs!)
+    try expect(same < 1e-5, "identical feature print")
+    try expect(different > same, "colour histograms differ")
+
+    var shifted = VisionRaster(width: 64, height: 64, filled: (0, 0, 0, 255))
+    var base = VisionRaster(width: 64, height: 64, filled: (0, 0, 0, 255))
+    for y in 10..<30 {
+        for x in 10..<30 {
+            base[x, y] = (255, 255, 255, 255)
+            shifted[x + 8, y + 4] = (255, 255, 255, 255)
+        }
+    }
+    let registration = VNTranslationalImageRegistrationRequest(
+        targetedCGImage: base.makeCGImage(),
+        orientation: .up
+    )
+    let moving = VNImageRequestHandler(cgImage: shifted.makeCGImage())
+    try moving.perform([registration])
+    let align = registration.results?.first as? VNImageTranslationAlignmentObservation
+    try expect(align != nil, "translation observation")
+    try expect(abs(align!.alignmentTransform.tx - 8) < 3, "tx")
+    try expect(abs(align!.alignmentTransform.ty - 4) < 3, "ty")
+
+    let homo = VNHomographicImageRegistrationRequest(targetedCGImage: base.makeCGImage())
+    do {
+        try moving.perform([homo])
+        throw VisionRuntimeFailure.message("homography should fail closed")
+    } catch let error as NSError {
+        try expectEqual(error.code, VNErrorCode.unsupportedRequest.rawValue, "homography unsupported")
+        try expect(homo.results == nil, "homography results nil")
+    }
+}
+
+func testObjectTracker() throws {
+    var frame1 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
+    var frame2 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
+    for y in 10..<22 {
+        for x in 10..<22 {
+            frame1[x, y] = (255, 255, 255, 255)
+        }
+    }
+    for y in 14..<26 {
+        for x in 18..<30 {
+            frame2[x, y] = (255, 255, 255, 255)
+        }
+    }
+    let seedBox = CGRect(x: 10.0 / 60.0, y: 1 - 22.0 / 60.0, width: 12.0 / 60.0, height: 12.0 / 60.0)
+    let seed = VNDetectedObjectObservation(boundingBox: seedBox)
+    let tracker = VNTrackObjectRequest(detectedObjectObservation: seed)
+    try VNImageRequestHandler(cgImage: frame1.makeCGImage()).perform([tracker])
+    try VNImageRequestHandler(cvPixelBuffer: frame2.makePixelBuffer()).perform([tracker])
+    let tracked = tracker.results?.first as? VNDetectedObjectObservation
+    try expect(tracked != nil, "tracked box")
+    try expect(tracked!.boundingBox.origin.x > seedBox.origin.x - 0.05, "centroid moved")
+}
+
+func testFailClosedModels() throws {
+    let image = makeRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    let requests: [VNRequest] = [
+        VNRecognizeTextRequest(),
+        VNDetectFaceRectanglesRequest(),
+        VNClassifyImageRequest(),
+        VNDetectHumanBodyPoseRequest(),
+        VNCoreMLRequest(completionHandler: nil),
+    ]
+    for request in requests {
+        do {
+            try handler.perform([request])
+            throw VisionRuntimeFailure.message("expected invalidModel for \(type(of: request))")
+        } catch let error as NSError {
+            try expectEqual(error.domain, VNErrorDomain, "ml domain")
+            try expectEqual(error.code, VNErrorCode.invalidModel.rawValue, "ml invalidModel")
+            try expect(request.results == nil, "ml results nil")
+        }
+    }
+    do {
+        _ = try VNClassifyImageRequest.knownClassifications(forRevision: 1)
+        throw VisionRuntimeFailure.message("classifications should fail")
+    } catch let error as NSError {
+        try expectEqual(error.code, VNErrorCode.invalidModel.rawValue, "known classifications")
+    }
+}
+
+func testSwiftOverlay() throws {
+    try expectEqual(BarcodeSymbology.qr, BarcodeSymbology.qr, "overlay symbology eq")
+    try expect(BarcodeSymbology.allCases.contains(.code128), "overlay allCases")
+    try expect(DetectBarcodesRequest.Revision.revision4 < DetectBarcodesRequest.Revision.revision4
+        || DetectBarcodesRequest.Revision.revision4 == .revision4, "revision comparable")
+    let rect = NormalizedRect(x: 0.1, y: 0.2, width: 0.3, height: 0.4)
+    let imageRect = rect.toImageCoordinates(CGSize(width: 100, height: 200), origin: .lowerLeft)
+    try expectEqual(imageRect.origin, CGPoint(x: 10, y: 40), "overlay rect mapping")
+    let point = NormalizedPoint(x: 0.25, y: 0.5)
+    try expectEqual(point.toImageCoordinates(CGSize(width: 200, height: 100)), CGPoint(x: 50, y: 50), "overlay point")
+    try expect(NormalizedRect.fullImage.verticallyFlipped().height == 1, "flipped identity")
+    _ = CoordinateOrigin.lowerLeft
+    _ = ComputeStage.main
+    _ = ElementType.float
+    _ = ImageCropAndScaleAction.allCases
+    _ = Chirality.left
+    var hasher = Hasher()
+    DetectRectanglesRequest().hash(into: &hasher)
+    _ = hasher.finalize()
+    try expect(DetectBarcodesRequest().revision == .revision4, "overlay revision")
+    _ = VisionError.invalidModel("gap")
+    _ = RequestDescriptor.detectBarcodesRequest(.revision4)
+    _ = VisionResult.detectBarcodes(DetectBarcodesRequest(), [])
+
+    let qrImage = try VisionHost.makeQRImage(payload: "HELLO")
+    let data = VisionHost.encodeNetpbm(qrImage)
+    let overlayHits = try waitFor {
+        try await DetectBarcodesRequest().perform(on: data)
+    }
+    try expect(overlayHits.contains(where: { $0.payloadString == "HELLO" }), "overlay QR")
+    let rectangles = try waitFor {
+        try await DetectRectanglesRequest().perform(on: makeRectangleImage())
+    }
+    try expect(!rectangles.isEmpty, "overlay rectangles")
+    let printObs = try waitFor {
+        try await GenerateImageFeaturePrintRequest().perform(on: makeRectangleImage())
+    }
+    _ = try printObs.distance(to: printObs)
+    var contourRequest = DetectContoursRequest()
+    contourRequest.detectsDarkOnLight = false
+    let contours = try waitFor {
+        try await contourRequest.perform(on: makeRectangleImage())
+    }
+    try expect(contours.contourCount >= 1, "overlay contours")
+    _ = ImageRequestHandler(data)
+    _ = TrackObjectRequest(detectedObject: DetectedObjectObservation(boundingBox: .fullImage))
 }
 
 do {
