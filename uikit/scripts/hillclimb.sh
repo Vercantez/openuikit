@@ -43,7 +43,11 @@ swift build -c release --product openrender >/dev/null
 rm -rf /tmp/hc_gate /tmp/hc_app
 ./.build/release/openrender render /tmp/hc_gate fixtures/scenes/*.json >/dev/null
 OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/hc_app >/dev/null
-conf=(/tmp/conformance-*)
+# Score only the apps registered in THIS tree: agents' in-progress work dirs
+# for apps not yet merged also live in the shared /tmp (round 7 once scored
+# and fanned out on two of them).
+conf=()
+for app in Sources/ConformanceApps/*(/:t); do [[ -d /tmp/conformance-$app ]] && conf+=(/tmp/conformance-$app); done
 confargs=()
 (( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")
 python3 scripts/scoreboard.py --suite /tmp/ios_suite --realapp-out /tmp/hc_app --gate-out /tmp/hc_gate \
