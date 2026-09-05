@@ -67,7 +67,15 @@ table-driven enum-member and static `PT*Error.*` code tests.
 test. Construction tests cover distinct non-enum error families and stay
 well under the 40% bulk-relabel bound.
 
-The sealed host gate was run as `bash full/pushtotalk/tests/acceptance/test_host.sh`.
+The sealed host gate was run as `bash full/pushtotalk/tests/acceptance/test_host.sh`
+and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=PushToTalk lane=leaf-full symbols=154
+FRAMEWORK_FANOUT_REFERENCE_OK
+PUSHTOTALK_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=PushToTalk dylib=libPushToTalk.dylib
+```
 
 `swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` does not print

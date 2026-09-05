@@ -198,6 +198,7 @@ func testPTChannelManagerDelegateRequiredCallbacks() {
         pushPayload: ["leave": true]
     )
     precondition(leave.hostLeavesChannel)
+    precondition(probe.lastLeavePush)
 
     let participantResult = probe.incomingPushResult(
         channelManager: manager,
@@ -206,6 +207,7 @@ func testPTChannelManagerDelegateRequiredCallbacks() {
     )
     precondition(participantResult.hostActiveParticipant?.name == "Riley")
     precondition(probe.lastParticipantName == "Riley")
+    precondition(!probe.lastLeavePush)
 
     let session = NSObject()
     probe.channelManager(manager, didActivate: session)
@@ -221,7 +223,6 @@ func testPTChannelManagerDelegateRequiredCallbacks() {
     precondition(probe.lastEndSource == .developerRequest)
     precondition(probe.tokens == 1)
     precondition(probe.lastToken == Data([0x01, 0x02]))
-    precondition(probe.lastLeavePush)
     precondition(probe.activated == 1)
     precondition(probe.deactivated == 1)
 }

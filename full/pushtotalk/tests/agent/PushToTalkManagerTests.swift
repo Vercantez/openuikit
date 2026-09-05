@@ -179,17 +179,21 @@ func testChannelManagerFactoryFailsClosed() {
         receivedError = error
     }
     precondition(receivedManager == nil)
+    guard let receivedError else {
+        preconditionFailure("factory must report PTInstantiationError.invalidPlatform")
+    }
     let ns = receivedError as NSError
     precondition(ns.domain == PTInstantiationErrorDomain)
     precondition(ns.code == PTInstantiationError.Code.invalidPlatform.rawValue)
-    precondition(PTInstantiationError.Code.invalidPlatform ~= receivedError!)
+    precondition(PTInstantiationError.Code.invalidPlatform ~= receivedError)
 }
 
 func testChannelManagerHostInitActiveChannelNil() {
-    let (manager, _, restoration) = hostManager()
+    let (manager, delegate, restoration) = hostManager()
     precondition(manager.activeChannelUUID == nil)
     precondition(manager.hostDelegate != nil)
     precondition(manager.hostRestorationDelegate != nil)
+    _ = delegate
     let uuid = UUID()
     let descriptor = restoration.channelDescriptor(restoredChannelUUID: uuid)
     precondition(restoration.restored == uuid)
