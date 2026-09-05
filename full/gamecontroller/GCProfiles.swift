@@ -13,6 +13,10 @@ open class GCPhysicalInputProfile: NSObject {
 
     var namedElements: [String: GCControllerElement] = [:]
 
+    public required override init() {
+        super.init()
+    }
+
     open var elements: [String: GCControllerElement] { namedElements }
     open var axes: [String: GCControllerAxisInput] {
         Dictionary(uniqueKeysWithValues: namedElements.compactMap { key, value in
@@ -52,7 +56,12 @@ open class GCPhysicalInputProfile: NSObject {
     }
 
     open func capture() -> Self {
-        self
+        let copy = type(of: self).init()
+        copy.setStateFromPhysicalInput(self)
+        copy.lastEventTimestamp = lastEventTimestamp
+        copy.hasRemappedElements = hasRemappedElements
+        copy.device = device
+        return copy
     }
 
     open func mappedElementAlias(forPhysicalInputName inputName: String) -> String {
@@ -82,7 +91,7 @@ open class GCGamepad: GCPhysicalInputProfile {
     open var rightShoulder = GCControllerButtonInput()
     open var valueChangedHandler: GCGamepadValueChangedHandler?
 
-    override init() {
+    public required init() {
         super.init()
         register(buttonA, name: GCInputButtonA)
         register(buttonB, name: GCInputButtonB)
@@ -91,6 +100,12 @@ open class GCGamepad: GCPhysicalInputProfile {
         register(dpad, name: GCInputDirectionPad)
         register(leftShoulder, name: GCInputLeftShoulder)
         register(rightShoulder, name: GCInputRightShoulder)
+        buttonA.isAnalog = true
+        buttonB.isAnalog = true
+        buttonX.isAnalog = true
+        buttonY.isAnalog = true
+        leftShoulder.isAnalog = true
+        rightShoulder.isAnalog = true
         valueDidChangeHandler = { [weak self] _, element in
             guard let self else { return }
             self.valueChangedHandler?(self, element)
@@ -123,7 +138,7 @@ open class GCExtendedGamepad: GCPhysicalInputProfile {
     open var rightThumbstickButton: GCControllerButtonInput? = GCControllerButtonInput()
     open var valueChangedHandler: GCExtendedGamepadValueChangedHandler?
 
-    override init() {
+    public required init() {
         super.init()
         register(buttonA, name: GCInputButtonA)
         register(buttonB, name: GCInputButtonB)
@@ -141,6 +156,19 @@ open class GCExtendedGamepad: GCPhysicalInputProfile {
         register(rightThumbstick, name: GCInputRightThumbstick)
         if let leftThumbstickButton { register(leftThumbstickButton, name: GCInputLeftThumbstickButton) }
         if let rightThumbstickButton { register(rightThumbstickButton, name: GCInputRightThumbstickButton) }
+        buttonA.isAnalog = true
+        buttonB.isAnalog = true
+        buttonX.isAnalog = true
+        buttonY.isAnalog = true
+        buttonMenu.isAnalog = false
+        buttonOptions?.isAnalog = false
+        buttonHome?.isAnalog = false
+        leftShoulder.isAnalog = true
+        rightShoulder.isAnalog = true
+        leftTrigger.isAnalog = true
+        rightTrigger.isAnalog = true
+        leftThumbstickButton?.isAnalog = false
+        rightThumbstickButton?.isAnalog = false
         valueDidChangeHandler = { [weak self] _, element in
             guard let self else { return }
             self.valueChangedHandler?(self, element)
@@ -167,12 +195,15 @@ open class GCMicroGamepad: GCPhysicalInputProfile {
     open var dpad = GCControllerDirectionPad()
     open var valueChangedHandler: GCMicroGamepadValueChangedHandler?
 
-    override init() {
+    public required init() {
         super.init()
         register(buttonA, name: GCInputMicroGamepadButtonA, aliases: [GCInputButtonA])
         register(buttonX, name: GCInputMicroGamepadButtonX, aliases: [GCInputButtonX])
         register(buttonMenu, name: GCInputMicroGamepadButtonMenu, aliases: [GCInputButtonMenu])
         register(dpad, name: GCInputMicroGamepadDpad, aliases: [GCInputDirectionPad])
+        buttonA.isAnalog = true
+        buttonX.isAnalog = true
+        buttonMenu.isAnalog = false
         valueDidChangeHandler = { [weak self] _, element in
             guard let self else { return }
             self.valueChangedHandler?(self, element)
@@ -196,7 +227,7 @@ open class GCDualShockGamepad: GCExtendedGamepad {
     open var touchpadPrimary: GCControllerDirectionPad! = GCControllerDirectionPad()
     open var touchpadSecondary: GCControllerDirectionPad! = GCControllerDirectionPad()
 
-    override init() {
+    public required init() {
         super.init()
         if let touchpadButton { register(touchpadButton, name: GCInputDualShockTouchpadButton) }
         if let touchpadPrimary { register(touchpadPrimary, name: GCInputDualShockTouchpadOne) }
@@ -217,7 +248,7 @@ open class GCDualSenseGamepad: GCExtendedGamepad {
         rightTrigger as! GCDualSenseAdaptiveTrigger
     }
 
-    override init() {
+    public required init() {
         super.init()
         leftTrigger = GCDualSenseAdaptiveTrigger()
         rightTrigger = GCDualSenseAdaptiveTrigger()
@@ -236,7 +267,7 @@ open class GCXboxGamepad: GCExtendedGamepad {
     open var paddleButton3: GCControllerButtonInput? = GCControllerButtonInput()
     open var paddleButton4: GCControllerButtonInput? = GCControllerButtonInput()
 
-    override init() {
+    public required init() {
         super.init()
         if let buttonShare { register(buttonShare, name: GCInputButtonShare) }
         if let paddleButton1 { register(paddleButton1, name: GCInputXboxPaddleOne) }

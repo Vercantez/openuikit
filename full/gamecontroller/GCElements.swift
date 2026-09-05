@@ -47,7 +47,9 @@ open class GCControllerAxisInput: GCControllerElement {
 
     open func setValue(_ value: Float) {
         let clamped = _gcClampUnit(value)
+        let changed = clamped != self.value
         self.value = clamped
+        guard changed else { return }
         let handler = valueChangedHandler
         let element = self
         _gcAsync(_gcHandlerQueue(for: self)) {
@@ -66,31 +68,34 @@ open class GCControllerButtonInput: GCControllerElement {
     open var valueChangedHandler: GCControllerButtonValueChangedHandler?
 
     open func setValue(_ value: Float) {
-        let clamped = _gcClamp01(value)
+        let analogValue = isAnalog ? _gcClamp01(value) : (value > 0 ? Float(1) : Float(0))
         let wasPressed = isPressed
-        self.value = clamped
+        let wasTouched = isTouched
+        let valueChanged = analogValue != self.value
+        self.value = analogValue
         let pressed = isPressed
+        if analogValue > 0 {
+            isTouched = true
+        } else if analogValue == 0 {
+            isTouched = false
+        }
+        let pressedChanged = wasPressed != pressed
+        let touchedChanged = wasTouched != isTouched
         let touched = isTouched
+        guard valueChanged || pressedChanged || touchedChanged else { return }
         let valueHandler = valueChangedHandler
         let pressedHandler = pressedChangedHandler
         let touchedHandler = touchedChangedHandler
         let element = self
-        let becameTouched = !touched && clamped > 0
-        let becameUntouched = touched && clamped == 0
-        if becameTouched {
-            isTouched = true
-        } else if becameUntouched {
-            isTouched = false
-        }
         _gcAsync(_gcHandlerQueue(for: self)) {
-            if becameTouched {
-                touchedHandler?(element, clamped, pressed, true)
-            } else if becameUntouched {
-                touchedHandler?(element, clamped, pressed, false)
+            if touchedChanged {
+                touchedHandler?(element, analogValue, pressed, touched)
             }
-            valueHandler?(element, clamped, pressed)
-            if wasPressed != pressed {
-                pressedHandler?(element, clamped, pressed)
+            if valueChanged {
+                valueHandler?(element, analogValue, pressed)
+            }
+            if pressedChanged {
+                pressedHandler?(element, analogValue, pressed)
             }
         }
         _gcNotifyProfile(self)
@@ -109,6 +114,12 @@ open class GCControllerDirectionPad: GCControllerElement {
     public override init() {
         super.init()
         isAnalog = true
+        xAxis.isAnalog = true
+        yAxis.isAnalog = true
+        up.isAnalog = false
+        down.isAnalog = false
+        left.isAnalog = false
+        right.isAnalog = false
         for child in [xAxis, yAxis, up, down, left, right] as [GCControllerElement] {
             child.collection = self
         }
@@ -303,6 +314,10 @@ func _gcNotifyProfile(_ element: GCControllerElement) {
     }
     profile = profile ?? element.owningProfile
     guard let profile else { return }
+    profile.lastEventTimestamp = ProcessInfo.processInfo.systemUptime
+    if let controller = profile.device as? GCController {
+        controller.input.recordElementChange(element)
+    }
     let handler = profile.valueDidChangeHandler
     _gcAsync(_gcHandlerQueue(for: element)) {
         handler?(profile, element)
