@@ -974,6 +974,11 @@ func testCFNetServiceClientContext() {
     require(serviceContext.retain == nil, "service context retain")
     require(serviceContext.release == nil, "service context release")
     require(serviceContext.copyDescription == nil, "service context copyDescription")
+    serviceContext.version = 0
+    serviceContext.info = nil
+    serviceContext.retain = nil
+    serviceContext.release = nil
+    serviceContext.copyDescription = nil
     let filledServiceContext = CFNetServiceClientContext(
         version: 0,
         info: nil,
