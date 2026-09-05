@@ -50,15 +50,50 @@ the exact graphs). The monorepo `reference/` dossier is kept
   absent from the guest `Network` module as well.
 - `isApplicationService` is `false`. Linux never publishes.
 - No public convenience constructors were added for system-produced
-  `WAEndpoint` / `WAPath` values. Host tests may use `@_spi(OpenUIKitHost)`.
-- `hashValue` is synthesized; tests do not read it (`-warnings-as-errors`
-  treats the access as deprecated).
+  `WAEndpoint` / `WAPath` values. Host tests construct them through
+  `@_spi(OpenUIKitHost)` and treat the values as fail-closed snapshots.
+- `hashValue` is the synthesized `Hashable` witness. Swift 6.2.4 on this host
+  compiles `.hashValue` under `-warnings-as-errors`, so focused tests read it.
 
 ## Tests
 
 `tests/agent/WiFiAwareRuntime.swift` is the host-gate probe and prints
 `WIFIAWARE_AGENT_RUNTIME_OK`.
 
+Focused family tests live under `tests/agent/*Tests.swift` as top-level
+synchronous `func testName()` functions. Coverage evidence cites those tests
+in `test:full/wifiaware/tests/agent/<File>Tests.swift#testName` form.
+
 `tests/agent/WiFiAwareDependencyIdentity.swift` is a future EC2 identity
 probe: it requires real `Foundation`, `Network`, and `OSLog` modules. It is
 not part of the isolated host gate.
+
+## Depth pass 2026-09
+
+Implemented before: **223** / declared 23 / deferred 14 / unavailable 0 /
+not-applicable 0 (260 exact IDs).
+
+Implemented after: **245** / declared 1 / deferred 14 / unavailable 0 /
+not-applicable 0.
+
+Raised from `declared` to `implemented`: `WAEndpoint`, `WAPath`,
+`WAPublisherListener` / `isApplicationService`, `WASubscriberBrowser`, and
+synthesized `hashValue` witnesses. Those are exercised by host SPI or by
+reading `hashValue`. The 14 `Network` overlay / provider members stay
+`deferred` (no `Network` module; no lookalike stubs). One
+`AsyncSequence.flatMap` overload remains `declared`: the graph synthesizes
+the `Self.Failure == Never` variant onto `DevicesSequence`, but
+`DevicesSequence.Failure` is `Error`, so that overload is not callable.
+
+The 20-app corpus summary lists WiFiAware only in Signal-iOS device-transfer
+files (`WAPublisherListener` / `WASubscriberBrowser` / paired devices /
+services). `scratch/ladder-corpus/focus-ios` contains no WiFiAware symbols.
+
+Top-5 evidence distribution (of 245 implemented rows; 40% cap = 98):
+
+1. `WAErrorTests.swift#testErrorDetailsEmptyCodable` — 45 rows (18.4%)
+2. `WAErrorTests.swift#testErrorCasesTableDriven` — 16 rows (6.5%)
+3. `WAParametersTests.swift#testAccessCategoryCases` — 14 rows (5.7%)
+4. `WAPairedDeviceTests.swift#testPairedDeviceCodable` — 13 rows (5.3%)
+5. `WAServiceTests.swift#testPublishableService` — 12 rows (4.9%)
+
