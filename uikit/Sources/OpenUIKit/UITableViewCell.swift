@@ -142,12 +142,21 @@ final class UITableCellAccessoryView: UIView {
             break
         case .disclosureIndicator:
             // 10.5x14 box; ink fitted to the golden chevron (2 pt stroke,
-            // round caps, apex right of center).
+            // round caps, apex right of center). RTL (MEASURED /tmp/rtlprobe,
+            // iPhone SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron
+            // points toward trailing (left), mirrored in the 10.5 box.
             let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
-            strokePolyline([CGPoint(x: 3.2, y: 1.1),
-                            CGPoint(x: 8.0, y: 5.85),
-                            CGPoint(x: 3.2, y: 10.6)],
-                           width: 2, in: canvas, color: color)
+            let points: [CGPoint]
+            if _layoutIsRTL {
+                points = [CGPoint(x: 7.3, y: 1.1),
+                          CGPoint(x: 2.5, y: 5.85),
+                          CGPoint(x: 7.3, y: 10.6)]
+            } else {
+                points = [CGPoint(x: 3.2, y: 1.1),
+                          CGPoint(x: 8.0, y: 5.85),
+                          CGPoint(x: 3.2, y: 10.6)]
+            }
+            strokePolyline(points, width: 2, in: canvas, color: color)
         case .checkmark:
             // 19x18 box; tintColor stroke fitted to the golden checkmark.
             let color = tintColor.resolvedCGColor(with: traitCollection)
@@ -925,6 +934,33 @@ open class UITableViewCell: UIView, ReusableView {
             x: inset.left, y: 0,
             width: separatorWidth,
             height: UITableViewCell.separatorThickness)
+
+        // MEASURED NavFlow t200.rtl / TableEditor t200.rtl, iPhone SE 2x /
+        // iOS 26.1: appearance-RTL mirrors stock chrome about the cell
+        // width. Notifications primary 247 vs LTR 32; Alpha 315.5 =
+        // 375 − 16 − 43.5; disclosure abs.x 16. Auto Layout children of
+        // contentView (Forms `pinTrailingControl`) are already placed by
+        // leading/trailing and must not be mirrored again.
+        if _layoutIsRTL {
+            func mirror(_ v: UIView, inWidth span: CGFloat) {
+                var f = v.frame
+                f.origin.x = span - f.maxX
+                v.frame = f
+            }
+            var cf = contentView.frame
+            cf.origin.x = w - cf.maxX
+            contentView.frame = cf
+            mirror(_accessoryGlyphView, inWidth: w)
+            if let custom = accessoryView { mirror(custom, inWidth: w) }
+            if let edit = _editControl { mirror(edit, inWidth: w) }
+            if let reorder = _reorderControl { mirror(reorder, inWidth: w) }
+            mirror(separatorView, inWidth: w)
+            mirror(topSeparatorView, inWidth: w)
+            let cw = contentView.bounds.width
+            mirror(textLabel, inWidth: cw)
+            if let d = detailTextLabel { mirror(d, inWidth: cw) }
+            if let img = imageView, !img.isHidden { mirror(img, inWidth: cw) }
+        }
     }
 }
 
@@ -1051,8 +1087,15 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         if _wholePointLabelHeight, kind == .header { s.height = textLabel.font.lineHeight.rounded(.up) }
         let y = kind == .header ? _headerLabelY
                                 : UITableViewHeaderFooterView.footerLabelY
-        textLabel.frame = CGRect(x: labelX, y: y,
-                                 width: min(s.width, maxW), height: s.height)
+        var lf = CGRect(x: labelX, y: y,
+                         width: min(s.width, maxW), height: s.height)
+        // MEASURED NavFlow t200.rtl, iPhone SE 2x / iOS 26.1: "General"
+        // header abs.x 281 vs LTR 32 — leading inset mirrored about the
+        // header width.
+        if _layoutIsRTL {
+            lf.origin.x = bounds.width - lf.maxX
+        }
+        textLabel.frame = lf
     }
 }
 

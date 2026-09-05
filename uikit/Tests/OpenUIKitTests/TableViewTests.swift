@@ -1414,4 +1414,20 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertEqual(table.visibleCells.count, 2)
         XCTAssertTrue(table.visibleCells.allSatisfy { $0.animations.isEmpty })
     }
+
+    func testRTLMirrorsDisclosureAndValue1Labels() {
+        // MEASURED /tmp/rtlprobe + NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
+        // disclosure abs.x 16; value1 primary sits on the leading (right)
+        // edge. Unspecified cells (every existing test) stay LTR.
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        cell.semanticContentAttribute = .forceRightToLeft
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel.text = "Notifications"
+        cell.detailTextLabel?.text = "On"
+        cell.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell._accessoryGlyphView.frame.origin.x, 16, accuracy: 0.51)
+        XCTAssertGreaterThan(cell.textLabel.frame.origin.x, cell.detailTextLabel!.frame.origin.x)
+        XCTAssertGreaterThan(cell.textLabel.frame.origin.x, 200)
+    }
 }
