@@ -1,10 +1,12 @@
 import CoreFoundation
 import Foundation
 
-#if !canImport(Darwin)
-/// MacTypes.Fixed is Darwin-owned. Isolated Linux uses the 16.16 Int32 layout.
+// MacTypes.Fixed / FourCharCode are Darwin-owned. Isolated hosts (Linux and
+// this module's Darwin compile without importing Darwin) use the 16.16 Int32
+// layout and UInt32 FourCC. Do not `import Darwin` here: it is not a declared
+// CoreText dependency.
 public typealias Fixed = Int32
-#endif
+public typealias FourCharCode = UInt32
 
 // MARK: - Scalar SFNT / CoreText C typealiases
 

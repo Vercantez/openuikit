@@ -1,6 +1,14 @@
 @_exported import Foundation
 import Dispatch
 
+/// Darwin's `ASPresentationAnchor` is `UIWindow` on iOS and `NSWindow` on
+/// macOS (`typealias ASPresentationAnchor = UIWindow` in the iPhoneOS 26.1
+/// graph). Isolated Linux has no UIKit. The overlay is `NSObject` so
+/// presentation-context protocols compile; supplying an anchor never presents
+/// a sheet. See Apple's
+/// `ASWebAuthenticationPresentationContextProviding.presentationAnchor(for:)`.
+public typealias ASPresentationAnchor = NSObject
+
 /// The public error domain used by web-authentication sessions.
 /// Matches the pinned `dotnet/macios` `[ErrorDomain ("ASWebAuthenticationSessionErrorDomain")]`.
 public let ASWebAuthenticationSessionErrorDomain =

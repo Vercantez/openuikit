@@ -92,6 +92,8 @@ open class WKWebView: UIView {
     private var isDeliveringFailure = false
     private var isAllMediaPlaybackSuspended = false
     private var stringObservers: [_WKStringKeyPathObserver] = []
+    private var portableDocumentHTML: String?
+    private var portableDocumentMIME = "text/html"
 
     public init(frame: CGRect, configuration: WKWebViewConfiguration) {
         self.configuration = configuration._portableCopyForWebView()
@@ -120,10 +122,13 @@ open class WKWebView: UIView {
 
     @discardableResult
     open func load(_ request: URLRequest) -> WKNavigation? {
-        _beginUnavailableNavigation(
+        _beginNavigation(
             request: request,
             navigationType: .other,
-            operation: "load(request:)"
+            operation: "load(request:)",
+            html: nil,
+            mimeType: "text/html",
+            networkUnavailable: WKPortableIsNetworkURL(request.url)
         )
     }
 
@@ -132,20 +137,34 @@ open class WKWebView: UIView {
         _ url: URL,
         allowingReadAccessTo readAccessURL: URL
     ) -> WKNavigation? {
-        _beginUnavailableNavigation(
+        var html: String?
+        var unavailable = true
+        if url.path.hasPrefix(readAccessURL.path),
+           FileManager.default.fileExists(atPath: url.path),
+           let data = try? Data(contentsOf: url) {
+            html = String(data: data, encoding: .utf8) ?? ""
+            unavailable = false
+        }
+        return _beginNavigation(
             request: URLRequest(url: url),
             navigationType: .other,
-            operation: "loadFileURL(_:allowingReadAccessTo:)"
+            operation: "loadFileURL(_:allowingReadAccessTo:)",
+            html: html,
+            mimeType: "text/html",
+            networkUnavailable: unavailable
         )
     }
 
     @discardableResult
     open func loadHTMLString(_ string: String, baseURL: URL?) -> WKNavigation? {
         let requested = baseURL ?? URL(string: "about:blank")!
-        return _beginUnavailableNavigation(
+        return _beginNavigation(
             request: URLRequest(url: requested),
             navigationType: .other,
-            operation: "loadHTMLString(_:baseURL:)"
+            operation: "loadHTMLString(_:baseURL:)",
+            html: string,
+            mimeType: "text/html",
+            networkUnavailable: false
         )
     }
 
@@ -156,10 +175,15 @@ open class WKWebView: UIView {
         characterEncodingName: String,
         baseURL: URL
     ) -> WKNavigation? {
-        _beginUnavailableNavigation(
+        let encoding = _portableStringEncoding(characterEncodingName)
+        let html = String(data: data, encoding: encoding) ?? String(data: data, encoding: .utf8)
+        return _beginNavigation(
             request: URLRequest(url: baseURL),
             navigationType: .other,
-            operation: "load(_:mimeType:characterEncodingName:baseURL:)"
+            operation: "load(_:mimeType:characterEncodingName:baseURL:)",
+            html: html,
+            mimeType: mimeType,
+            networkUnavailable: false
         )
     }
 
@@ -199,67 +223,66 @@ open class WKWebView: UIView {
     @discardableResult
     open func reload() -> WKNavigation? {
         guard let url else { return nil }
-        return _beginUnavailableNavigation(
+        return _beginNavigation(
             request: URLRequest(url: url),
             navigationType: .reload,
-            operation: "reload()"
+            operation: "reload()",
+            html: portableDocumentHTML,
+            mimeType: portableDocumentMIME,
+            networkUnavailable: portableDocumentHTML == nil && WKPortableIsNetworkURL(url)
         )
     }
 
     @discardableResult
     open func reloadFromOrigin() -> WKNavigation? {
         guard let url else { return nil }
-        return _beginUnavailableNavigation(
+        return _beginNavigation(
             request: URLRequest(
                 url: url,
                 cachePolicy: .reloadIgnoringLocalCacheData
             ),
             navigationType: .reload,
-            operation: "reloadFromOrigin()"
+            operation: "reloadFromOrigin()",
+            html: portableDocumentHTML,
+            mimeType: portableDocumentMIME,
+            networkUnavailable: portableDocumentHTML == nil && WKPortableIsNetworkURL(url)
         )
     }
 
     @discardableResult
     open func goBack() -> WKNavigation? {
         guard let item = backForwardList.backItem else { return nil }
-        return _beginUnavailableNavigation(
-            request: URLRequest(url: item.url),
-            navigationType: .backForward,
-            operation: "goBack()"
-        )
+        return _navigateToHistoryItem(item, operation: "goBack()")
     }
 
     @discardableResult
     open func goForward() -> WKNavigation? {
         guard let item = backForwardList.forwardItem else { return nil }
-        return _beginUnavailableNavigation(
-            request: URLRequest(url: item.url),
-            navigationType: .backForward,
-            operation: "goForward()"
-        )
+        return _navigateToHistoryItem(item, operation: "goForward()")
     }
 
     @discardableResult
     open func go(to item: WKBackForwardListItem) -> WKNavigation? {
         guard backForwardList._portableContains(item) else { return nil }
-        return _beginUnavailableNavigation(
-            request: URLRequest(url: item.url),
-            navigationType: .backForward,
-            operation: "go(to:)"
-        )
+        return _navigateToHistoryItem(item, operation: "go(to:)")
     }
 
     open func evaluateJavaScript(
         _ javaScriptString: String,
         completionHandler: ((Any?, Error?) -> Void)? = nil
     ) {
-        completionHandler?(
-            nil,
-            WKError(
-                code: .unknown,
-                operation: "evaluateJavaScript(_:)"
+        switch WKPortableJavaScriptLiteral(javaScriptString) {
+        case .value(let value):
+            completionHandler?(value, nil)
+        case .notLiteral:
+            completionHandler?(
+                nil,
+                WKError(
+                    code: .javaScriptExceptionOccurred,
+                    operation: "evaluateJavaScript(_:)"
+                )
             )
-        )
+        }
     }
 
     open func evaluateJavaScript(_ javaScriptString: String) async throws -> Any? {
@@ -338,8 +361,11 @@ open class WKWebView: UIView {
     }
 
     public class func handlesURLScheme(_ urlScheme: String) -> Bool {
-        _ = urlScheme
-        return false
+        WKPortableEqualsIgnoreASCIICase(urlScheme, "http")
+            || WKPortableEqualsIgnoreASCIICase(urlScheme, "https")
+            || WKPortableEqualsIgnoreASCIICase(urlScheme, "file")
+            || WKPortableEqualsIgnoreASCIICase(urlScheme, "about")
+            || WKPortableEqualsIgnoreASCIICase(urlScheme, "data")
     }
 
     open func closeAllMediaPresentations() {
@@ -387,12 +413,17 @@ open class WKWebView: UIView {
         _ request: URLRequest,
         allowingReadAccessTo readAccessURL: URL
     ) -> WKNavigation? {
-        _ = readAccessURL
-        return _beginUnavailableNavigation(
-            request: request,
-            navigationType: .other,
-            operation: "loadFileRequest(_:allowingReadAccessTo:)"
-        )
+        guard let url = request.url else {
+            return _beginNavigation(
+                request: request,
+                navigationType: .other,
+                operation: "loadFileRequest(_:allowingReadAccessTo:)",
+                html: nil,
+                mimeType: "text/html",
+                networkUnavailable: true
+            )
+        }
+        return loadFileURL(url, allowingReadAccessTo: readAccessURL)
     }
 
     @discardableResult
@@ -400,11 +431,13 @@ open class WKWebView: UIView {
         _ request: URLRequest,
         responseHTML string: String
     ) -> WKNavigation {
-        _ = string
-        return _beginUnavailableNavigation(
+        _beginNavigation(
             request: request,
             navigationType: .other,
-            operation: "loadSimulatedRequest(_:responseHTML:)"
+            operation: "loadSimulatedRequest(_:responseHTML:)",
+            html: string,
+            mimeType: "text/html",
+            networkUnavailable: false
         )
     }
 
@@ -422,11 +455,16 @@ open class WKWebView: UIView {
         response: URLResponse,
         responseData data: Data
     ) -> WKNavigation {
-        _ = (response, data)
-        return _beginUnavailableNavigation(
+        let mime = response.mimeType ?? "application/octet-stream"
+        let html = String(data: data, encoding: .utf8)
+        return _beginNavigation(
             request: request,
             navigationType: .other,
-            operation: "loadSimulatedRequest(_:response:responseData:)"
+            operation: "loadSimulatedRequest(_:response:responseData:)",
+            html: html,
+            mimeType: mime,
+            networkUnavailable: false,
+            responseOverride: response
         )
     }
 
@@ -449,13 +487,31 @@ open class WKWebView: UIView {
         throw WKPortableUnknown("restoreData")
     }
 
+    open func startDownload(
+        using request: URLRequest,
+        completionHandler: @escaping (WKDownload) -> Void
+    ) {
+        completionHandler(WKDownload(request: request, webView: self, userInitiated: true))
+    }
+
     open func startDownload(using request: URLRequest) async -> WKDownload {
-        WKDownload(request: request, webView: self, userInitiated: true)
+        await withCheckedContinuation { continuation in
+            startDownload(using: request) { continuation.resume(returning: $0) }
+        }
+    }
+
+    open func resumeDownload(
+        fromResumeData resumeData: Data,
+        completionHandler: @escaping (WKDownload) -> Void
+    ) {
+        _ = resumeData
+        completionHandler(WKDownload(request: nil, webView: self))
     }
 
     open func resumeDownload(fromResumeData resumeData: Data) async -> WKDownload {
-        _ = resumeData
-        return WKDownload(request: nil, webView: self)
+        await withCheckedContinuation { continuation in
+            resumeDownload(fromResumeData: resumeData) { continuation.resume(returning: $0) }
+        }
     }
 
     open func takeSnapshot(configuration snapshotConfiguration: WKSnapshotConfiguration?) async throws -> UIImage {
@@ -585,17 +641,48 @@ open class WKWebView: UIView {
     }
 
     internal func _portableRecordCommittedItem(url: URL, title: String?) {
+        let oldBack = canGoBack
+        let oldForward = canGoForward
         backForwardList._portableRecordCommitted(url: url, title: title)
         _setObservedIfChanged(\WKWebView.url, stringKey: "url", storage: &self.url, to: Optional(url))
         let recordedTitle: String? = title ?? ""
         _setObservedIfChanged(\WKWebView.title, stringKey: "title", storage: &self.title, to: recordedTitle)
+        _publishHistoryKVO(oldBack: oldBack, oldForward: oldForward)
     }
 
     @discardableResult
-    private func _beginUnavailableNavigation(
+    private func _navigateToHistoryItem(
+        _ item: WKBackForwardListItem,
+        operation: String
+    ) -> WKNavigation? {
+        var allowed = true
+        navigationDelegate?.webView(
+            self,
+            shouldGoTo: item,
+            willUseInstantBack: false
+        ) { allowed = $0 }
+        guard allowed else { return nil }
+        return _beginNavigation(
+            request: URLRequest(url: item.url),
+            navigationType: .backForward,
+            operation: operation,
+            html: nil,
+            mimeType: "text/html",
+            networkUnavailable: false,
+            historyItem: item
+        )
+    }
+
+    @discardableResult
+    private func _beginNavigation(
         request: URLRequest,
         navigationType: WKNavigationType,
-        operation: String
+        operation: String,
+        html: String?,
+        mimeType: String,
+        networkUnavailable: Bool,
+        historyItem: WKBackForwardListItem? = nil,
+        responseOverride: URLResponse? = nil
     ) -> WKNavigation {
         navigationGeneration &+= 1
         let generation = navigationGeneration
@@ -607,16 +694,25 @@ open class WKWebView: UIView {
         let action = WKNavigationAction(
             request: request,
             navigationType: navigationType,
-            targetFrame: WKFrameInfo(isMainFrame: true, request: request)
+            targetFrame: WKFrameInfo(
+                isMainFrame: true,
+                request: request,
+                webView: self
+            )
         )
-        if isDeliveringFailure {
+        if isDeliveringFailure && networkUnavailable {
             _setObservedIfChanged(
                 \WKWebView.url, stringKey: "url", storage: &url, to: request.url
             )
             _setObservedIfChanged(
                 \WKWebView.title, stringKey: "title", storage: &title, to: ""
             )
-            estimatedProgress = 0
+            _setObservedIfChanged(
+                \WKWebView.estimatedProgress,
+                stringKey: "estimatedProgress",
+                storage: &estimatedProgress,
+                to: 0
+            )
             hasOnlySecureContent = false
             _setObservedIfChanged(
                 \WKWebView.isLoading, stringKey: "isLoading", storage: &isLoading, to: false
@@ -647,49 +743,123 @@ open class WKWebView: UIView {
 
             navigation.effectiveContentMode = selectedPreferences.preferredContentMode
             self._setObservedIfChanged(
+                \WKWebView.isLoading, stringKey: "isLoading", storage: &self.isLoading, to: true
+            )
+            self._setObservedIfChanged(
                 \WKWebView.url, stringKey: "url", storage: &self.url, to: request.url
             )
             self._setObservedIfChanged(
                 \WKWebView.title, stringKey: "title", storage: &self.title, to: ""
             )
-            self.estimatedProgress = 0
-            self.hasOnlySecureContent = false
+            // WebKit WKWebView.mm initialProgressValue = 0.1 at provisional start.
             self._setObservedIfChanged(
-                \WKWebView.isLoading, stringKey: "isLoading", storage: &self.isLoading, to: true
+                \WKWebView.estimatedProgress,
+                stringKey: "estimatedProgress",
+                storage: &self.estimatedProgress,
+                to: 0.1
             )
+            self.hasOnlySecureContent = {
+                guard let scheme = request.url?.scheme else { return false }
+                return WKPortableEqualsIgnoreASCIICase(scheme, "https")
+            }()
             self._portableLastError = nil
+            // Apple: didStartProvisionalNavigation after provisional approval,
+            // before a response (WKNavigationDelegate).
             self.navigationDelegate?.webView(
                 self,
                 didStartProvisionalNavigation: navigation
             )
+            guard self.navigationGeneration == generation else { return }
 
-            // No transport or renderer is linked. A provisional failure is a
-            // real outcome; didCommit/didFinish are deliberately impossible.
-            // Setting the requested URL without committing history is the
-            // established inert-but-stateful load: a silent fake success would
-            // put a URL bar into browsing mode over a blank page.
-            let failure = WKError(
-                code: .unknown,
-                operation: operation,
-                requestedURL: request.url
+            var documentHTML = html
+            var documentMIME = mimeType
+            var documentResponse = responseOverride
+            var unavailable = networkUnavailable
+
+            if let scheme = request.url?.scheme,
+               let handler = self.configuration.urlSchemeHandler(forURLScheme: scheme) {
+                let task = _WKPortableURLSchemeTask(request: request)
+                handler.webView(self, start: task)
+                if let error = task.failure {
+                    self._failProvisional(
+                        navigation: navigation,
+                        error: error as? WKError ?? WKError(
+                            code: .unknown,
+                            operation: operation,
+                            requestedURL: request.url
+                        ),
+                        generation: generation
+                    )
+                    return
+                }
+                if let response = task.response {
+                    documentResponse = response
+                    documentMIME = response.mimeType ?? documentMIME
+                    documentHTML = String(data: task.body, encoding: .utf8) ?? documentHTML
+                    unavailable = false
+                }
+            }
+
+            if unavailable {
+                let failure = WKError(
+                    code: .unknown,
+                    operation: operation,
+                    requestedURL: request.url
+                )
+                self._failProvisional(
+                    navigation: navigation,
+                    error: failure,
+                    generation: generation
+                )
+                return
+            }
+
+            let response = documentResponse ?? URLResponse(
+                url: request.url ?? URL(string: "about:blank")!,
+                mimeType: documentMIME,
+                expectedContentLength: documentHTML?.utf8.count ?? 0,
+                textEncodingName: "utf-8"
             )
-            self._setObservedIfChanged(
-                \WKWebView.isLoading, stringKey: "isLoading", storage: &self.isLoading, to: false
+            let navigationResponse = WKNavigationResponse(
+                response: response,
+                canShowMIMEType: WKPortableCanShowMIMEType(documentMIME),
+                isForMainFrame: true
             )
-            self._portableLastError = failure
-            // Focus and many browsers respond to a provisional failure by
-            // synchronously loading locally generated error-page data. There
-            // is still no renderer, so that nested request cannot succeed;
-            // record its terminal error without recursively invoking the same
-            // delegate until the stack overflows. A later, non-reentrant load
-            // remains observable through a fresh failure callback.
-            self.isDeliveringFailure = true
-            self.navigationDelegate?.webView(
-                self,
-                didFailProvisionalNavigation: navigation,
-                withError: failure
-            )
-            self.isDeliveringFailure = false
+            var responseDecided = false
+            let applyResponse: (WKNavigationResponsePolicy) -> Void = { policy in
+                guard !responseDecided else { return }
+                responseDecided = true
+                guard self.navigationGeneration == generation else { return }
+                guard policy == .allow else {
+                    self._failProvisional(
+                        navigation: navigation,
+                        error: WKError(
+                            code: .unknown,
+                            operation: operation,
+                            requestedURL: request.url
+                        ),
+                        generation: generation
+                    )
+                    return
+                }
+                self._commitAndFinish(
+                    navigation: navigation,
+                    request: request,
+                    html: documentHTML,
+                    mimeType: documentMIME,
+                    historyItem: historyItem,
+                    generation: generation
+                )
+            }
+            if let navigationDelegate = self.navigationDelegate {
+                navigationDelegate.webView(
+                    self,
+                    decidePolicyFor: navigationResponse,
+                    decisionHandler: applyResponse
+                )
+            } else {
+                applyResponse(.allow)
+            }
         }
 
         if let navigationDelegate {
@@ -703,6 +873,114 @@ open class WKWebView: UIView {
             apply(.allow, preferences)
         }
         return navigation
+    }
+
+    private func _failProvisional(
+        navigation: WKNavigation,
+        error: WKError,
+        generation: UInt64
+    ) {
+        guard navigationGeneration == generation else { return }
+        _setObservedIfChanged(
+            \WKWebView.estimatedProgress,
+            stringKey: "estimatedProgress",
+            storage: &estimatedProgress,
+            to: 0
+        )
+        _setObservedIfChanged(
+            \WKWebView.isLoading, stringKey: "isLoading", storage: &isLoading, to: false
+        )
+        _portableLastError = error
+        isDeliveringFailure = true
+        navigationDelegate?.webView(
+            self,
+            didFailProvisionalNavigation: navigation,
+            withError: error
+        )
+        isDeliveringFailure = false
+    }
+
+    private func _commitAndFinish(
+        navigation: WKNavigation,
+        request: URLRequest,
+        html: String?,
+        mimeType: String,
+        historyItem: WKBackForwardListItem?,
+        generation: UInt64
+    ) {
+        guard navigationGeneration == generation else { return }
+        // Apple: didCommit after navigation-response policy, immediately
+        // before the main frame updates (webView(_:didCommit:)).
+        navigationDelegate?.webView(self, didCommit: navigation)
+        guard navigationGeneration == generation else { return }
+
+        portableDocumentHTML = html
+        portableDocumentMIME = mimeType
+        let parsedTitle = html.flatMap(WKPortableHTMLTitle)
+        let committedURL = request.url ?? URL(string: "about:blank")!
+        let oldBack = canGoBack
+        let oldForward = canGoForward
+        if let historyItem {
+            backForwardList._portableSelect(historyItem)
+            _setObservedIfChanged(
+                \WKWebView.url, stringKey: "url", storage: &url, to: Optional(historyItem.url)
+            )
+            let restored: String? = parsedTitle ?? historyItem.title ?? ""
+            _setObservedIfChanged(
+                \WKWebView.title, stringKey: "title", storage: &title, to: restored
+            )
+        } else {
+            backForwardList._portableRecordCommitted(
+                url: committedURL,
+                title: parsedTitle
+            )
+            _setObservedIfChanged(
+                \WKWebView.url, stringKey: "url", storage: &url, to: Optional(committedURL)
+            )
+            _setObservedIfChanged(
+                \WKWebView.title, stringKey: "title", storage: &title, to: parsedTitle ?? ""
+            )
+        }
+        _publishHistoryKVO(oldBack: oldBack, oldForward: oldForward)
+        _setObservedIfChanged(
+            \WKWebView.estimatedProgress,
+            stringKey: "estimatedProgress",
+            storage: &estimatedProgress,
+            to: 1.0
+        )
+        navigationDelegate?.webView(self, didFinish: navigation)
+        guard navigationGeneration == generation else { return }
+        _setObservedIfChanged(
+            \WKWebView.isLoading, stringKey: "isLoading", storage: &isLoading, to: false
+        )
+    }
+
+    private func _publishHistoryKVO(oldBack: Bool, oldForward: Bool) {
+        if oldBack != canGoBack {
+            _deliverStringKVO(
+                keyPath: "canGoBack",
+                oldValue: oldBack,
+                newValue: canGoBack,
+                isPrior: false,
+                forceInitial: false
+            )
+        }
+        if oldForward != canGoForward {
+            _deliverStringKVO(
+                keyPath: "canGoForward",
+                oldValue: oldForward,
+                newValue: canGoForward,
+                isPrior: false,
+                forceInitial: false
+            )
+        }
+    }
+
+    private func _portableStringEncoding(_ name: String) -> String.Encoding {
+        if WKPortableEqualsIgnoreASCIICase(name, "utf-8") { return .utf8 }
+        if WKPortableEqualsIgnoreASCIICase(name, "utf-16") { return .utf16 }
+        if WKPortableEqualsIgnoreASCIICase(name, "iso-8859-1") { return .isoLatin1 }
+        return .utf8
     }
 
     private func _setObserved<Value>(
@@ -831,4 +1109,37 @@ private struct _WKStringKeyPathObserver {
     let keyPath: String
     let options: NSKeyValueObservingOptions
     let context: UnsafeMutableRawPointer?
+}
+
+@MainActor
+private final class _WKPortableURLSchemeTask: NSObject, WKURLSchemeTask {
+    let request: URLRequest
+    private(set) var response: URLResponse?
+    private(set) var body = Data()
+    private(set) var failure: Error?
+    private var stopped = false
+
+    init(request: URLRequest) {
+        self.request = request
+        super.init()
+    }
+
+    func didReceive(_ response: URLResponse) {
+        guard !stopped else { return }
+        self.response = response
+    }
+
+    func didReceive(_ data: Data) {
+        guard !stopped else { return }
+        body.append(data)
+    }
+
+    func didFinish() {
+        stopped = true
+    }
+
+    func didFailWithError(_ error: any Error) {
+        failure = error
+        stopped = true
+    }
 }

@@ -6,5 +6,6 @@ full/webkit/WebKitExtensions.swift
 full/webkit/WebKitNavigation.swift
 full/webkit/WebKitOptionSets.swift
 full/webkit/WebKitPage.swift
+full/webkit/WebKitPortableModel.swift
 full/webkit/WebKitSupport.swift
 full/webkit/WebKitWebView.swift

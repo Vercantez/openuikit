@@ -51,6 +51,22 @@ nonisolated(unsafe) var realAppScale: CGFloat = 2
 
 @MainActor
 func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
+    // MEASURED openrender realapp scale 2 iOS cut, this Mac: SimpleActionView
+    // picker rows are `UIFont.font(ofSize: 18, weight: .semibold,
+    // scalingWith: .headline)` — "Select Episodes" starts with S (U+0053).
+    // `glyph_ink_ios.json` has no 18 pt keys (sizes 10–15, 17, 19…). Guest
+    // 4284aa2d wrote 12 PNGs then `OPENUIKIT_IOS_INK_MISS:
+    // I|system-semibold|18|light|F0.0|83`. The 13th variant is Ledger, whose
+    // own labels dump as 17 semibold / 13 regular / 17 regular — no 18 pt.
+    // Prior windows were kept alive in `realAppRetained`; drop them before
+    // the next screen so a leftover picker cannot supply that glyph.
+    for object in realAppRetained {
+        if let window = object as? UIWindow {
+            window.isHidden = true
+            window.rootViewController = nil
+        }
+    }
+    realAppRetained.removeAll()
     let size = variant.windowSize
     // Phone goldens are the iPhone 16 at 3x (`OPENUIKIT_REALAPP_SCALE=3`);
     // the Linux byte-identity fixture stays at 2. Pad goldens are the

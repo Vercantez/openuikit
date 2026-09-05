@@ -1,9 +1,12 @@
 import Foundation
+#if os(macOS)
+import CoreGraphics
+#endif
 
-#if canImport(AVFoundation)
+#if canImport(AVFoundation) && !os(macOS)
 @_exported import AVFoundation
 #endif
-#if canImport(SwiftUI)
+#if canImport(SwiftUI) && !os(macOS)
 @_exported import SwiftUI
 #endif
 #if canImport(UIKit)

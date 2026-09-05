@@ -42,7 +42,14 @@ func testWidgetRenderingMode() {
 }
 
 func testWidgetCenterReloadAndConfigurations() {
-    let center = WidgetCenter()
+    // Apple WidgetCenter documentation: clients use WidgetCenter.shared.
+    // Linux is a process-local registry the host can drive; every instance
+    // shares that storage so WidgetCenter() and .shared agree.
+    let center = WidgetCenter.shared
+    center.resetProcessLocalState()
+    precondition(center === WidgetCenter.shared)
+    let alias = WidgetCenter()
+
     let configurations = _ValueBox<[WidgetInfo]>()
     center.getCurrentConfigurations { result in
         configurations.value = try? result.get()
@@ -50,7 +57,7 @@ func testWidgetCenterReloadAndConfigurations() {
     precondition(configurations.value?.isEmpty == true)
 
     center.reloadTimelines(ofKind: "account")
-    center.reloadAllTimelines()
+    alias.reloadAllTimelines()
     center.reloadTimelines(ofKind: "note")
     let drained = center.drainReloadRequests()
     precondition(drained.count == 3)
@@ -60,7 +67,7 @@ func testWidgetCenterReloadAndConfigurations() {
     precondition(drained[0].sequence == 1)
     precondition(drained[1].sequence == 2)
     precondition(drained[2].sequence == 3)
-    precondition(center.drainReloadRequests().isEmpty)
+    precondition(alias.drainReloadRequests().isEmpty)
 
     let info = WidgetInfo(kind: "account", family: .systemSmall)
     center.installCurrentConfigurations([info])
@@ -69,12 +76,31 @@ func testWidgetCenterReloadAndConfigurations() {
         installed.value = try? result.get()
     }
     precondition(installed.value == [info])
+    // getCurrentConfigurations and currentConfigurations() are the same snapshot.
+    // Cited: Apple WidgetCenter.getCurrentConfigurations / currentConfigurations.
+    let asyncBox = _ValueBox<[WidgetInfo]>()
+    let done = DispatchSemaphore(value: 0)
+    Task {
+        asyncBox.value = try? await center.currentConfigurations()
+        done.signal()
+    }
+    precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
+    precondition(asyncBox.value == [info])
+    // invalidateConfigurationRecommendations does not drop installed widgets
+    // (Apple: it asks WidgetKit for new recommendations, not current configs).
     center.invalidateConfigurationRecommendations()
+    center.invalidateConfigurationRecommendations()
+    precondition(center.drainConfigurationRecommendationInvalidations() == 2)
+    let stillInstalled = _ValueBox<[WidgetInfo]>()
+    center.getCurrentConfigurations { result in
+        stillInstalled.value = try? result.get()
+    }
+    precondition(stillInstalled.value == [info])
     center.invalidateRelevance(ofKind: "account")
-    _ = WidgetCenter.shared
     _ = WidgetCenter.UserInfoKey.kind
     _ = WidgetCenter.UserInfoKey.family
     _ = WidgetCenter.UserInfoKey.activityID
+    center.resetProcessLocalState()
 }
 
 func testWidgetInfoHashable() {
@@ -86,7 +112,7 @@ func testWidgetInfoHashable() {
     precondition(first.hashValue == second.hashValue)
     precondition(first.kind == "a")
     precondition(first.family == .systemSmall)
-    precondition(first.debugDescription.contains("a"))
+    precondition(first.debugDescription.hasPrefix("WidgetInfo(kind: a"))
     precondition(first.widgetConfigurationIntent(of: String.self) == nil)
 }
 
@@ -107,8 +133,13 @@ func testTimelineConstruction() {
 }
 
 func testAccessoryWidgetBackground() {
+    // AccessoryWidgetBackground is the Lock Screen / accessory chrome shape.
+    // Cited: Apple AccessoryWidgetBackground. containerBackground(for: .widget)
+    // is the Home Screen container fill (Apple View.containerBackground).
     let background = AccessoryWidgetBackground()
     _ = background.body
+    _ = background.containerBackground(Color.clear, for: .widget)
+    _ = background.containerBackground(for: .widget) { Color.clear }
 }
 
 func testWidgetLocationAndMounting() {

@@ -1,6 +1,9 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #endif
+#if canImport(Intents)
+@preconcurrency import Intents
+#endif
 import Foundation
 
 // MARK: - Locations, mounting, accent, relevance, push

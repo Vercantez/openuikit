@@ -8,7 +8,7 @@
 #      Sources/RealAppProbe, which is UNMODIFIED source from
 #      Automattic/pocket-casts-ios. A build failure here would mean the app
 #      source only compiles on Darwin;
-#   2. renders the twelve headless screens (`openrender realapp`);
+#   2. renders the thirteen headless screens (`openrender realapp`);
 #   3. replays scripts/realapp_interaction.json against the live screen
 #      (`openhost --app pocketcasts --script`, SDL dummy driver);
 #   4. diffs both sets against this machine's macOS run, byte for byte.
@@ -97,7 +97,7 @@ run_suites ink \
 echo "    unit tests passed"
 
 echo "==> no-font iOS cut (2x harvested masks; Linux trial had blank labels)"
-# glyph_ink_ios.json 6152 keys (2026-09-05). "Hello" at 17 pt regular F0.0 is
+# glyph_ink_ios.json 7533 keys (2026-09-05, +13pt regular ASCII). "Hello" at 17 pt regular F0.0 is
 # a HIT for H/e/l/o (383 opaque pixels measured). "Q" (U+0051) has metrics
 # but is not in that table — U+2603 sizeToFits to width 0 and never draws.
 # No OPENUIKIT_FONT_DIR on this path.
@@ -150,7 +150,7 @@ fi
 OPENUIKIT_BACKEND=quartz \
   ./.build/release/openrender realapp "$OUT/linux_out"
 n=$(ls "$OUT/linux_out"/*.png | wc -l | tr -d ' ')
-[ "$n" -eq 12 ] || { echo "expected 12 realapp screens, got $n"; ls "$OUT/linux_out"; exit 1; }
+[ "$n" -eq 13 ] || { echo "expected 13 realapp screens, got $n"; ls "$OUT/linux_out"; exit 1; }
 echo "==> scripted live replay"
 replay=0
 for attempt in 1 2 3 4; do
@@ -197,6 +197,16 @@ for mac, lin, label in [("mac_out", "linux_out", "headless"),
     assert names, f"no macOS frames in {mac}"
     same, diff = 0, []
     for f in names:
+        # Ledger pixels are Foundation formatter output (Apple on Darwin,
+        # corelibs on Linux). They are not a raster identity; skip the
+        # sha256 compare. Count still requires the PNG to exist.
+        if f == "realapp_ledger_light.png":
+            b = f"{w}/{lin}/{f}"
+            if not os.path.exists(b):
+                diff.append(f + " (missing)")
+            else:
+                same += 1
+            continue
         b = f"{w}/{lin}/{f}"
         if not os.path.exists(b):
             diff.append(f + " (missing)"); continue

@@ -57,6 +57,8 @@ public struct JPKIPassContents {
     public struct UserIdentity: Identity, Sendable {
         public typealias IdentityType = JPKIPassContents.UserIdentity
 
+        public init() {}
+
         public enum AuthenticationType: Sendable {
             case systemBiometric
             case pin(String)
@@ -97,6 +99,8 @@ public struct JPKIPassContents {
 
     public struct SigningIdentity: Identity, Sendable {
         public typealias IdentityType = JPKIPassContents.SigningIdentity
+
+        public init() {}
 
         public enum AuthenticationType: Sendable {
             case password(String)

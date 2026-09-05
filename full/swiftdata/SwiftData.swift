@@ -16,6 +16,15 @@ public struct PersistentIdentifier: Comparable, Hashable, Sendable, Codable, Cus
     public struct ID: Hashable, Sendable {
         public let rawValue: UInt64
         public init(rawValue: UInt64) { self.rawValue = rawValue }
+
+        public static func == (lhs: ID, rhs: ID) -> Bool {
+            lhs.rawValue == rhs.rawValue
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(rawValue)
+        }
+
     }
 
     public let rawValue: UInt64
@@ -50,6 +59,19 @@ public struct PersistentIdentifier: Comparable, Hashable, Sendable, Codable, Cus
     public static func < (lhs: PersistentIdentifier, rhs: PersistentIdentifier) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
+
+    public static func == (lhs: PersistentIdentifier, rhs: PersistentIdentifier) -> Bool {
+        lhs.rawValue == rhs.rawValue
+            && lhs.entityName == rhs.entityName
+            && lhs.storeIdentifier == rhs.storeIdentifier
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(rawValue)
+        hasher.combine(entityName)
+        hasher.combine(storeIdentifier)
+    }
+
 
     public static func identifier<T>(
         for storeIdentifier: String,
@@ -93,6 +115,14 @@ public struct PersistentIdentifier: Comparable, Hashable, Sendable, Codable, Cus
 
     private enum CodingKeys: String, CodingKey {
         case rawValue, entityName, storeIdentifier, primaryKeyDescription
+    }
+}
+
+enum _SwiftDataHashable {
+    static func hashValue(_ body: (inout Hasher) -> Void) -> Int {
+        var hasher = Hasher()
+        body(&hasher)
+        return hasher.finalize()
     }
 }
 
@@ -299,6 +329,12 @@ public struct SwiftDataError: Error, Equatable, Hashable, CustomStringConvertibl
     public static func ~= (lhs: SwiftDataError, rhs: any Error) -> Bool {
         (rhs as? SwiftDataError) == lhs
     }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+        hasher.combine(message)
+    }
+
 }
 
 public struct ModelConfiguration: Hashable, Identifiable, Sendable, DataStoreConfiguration {
@@ -414,7 +450,9 @@ public struct ModelConfiguration: Hashable, Identifiable, Sendable, DataStoreCon
         if name.utf8.count > 255 {
             throw SwiftDataError.configurationFileNameTooLong
         }
-        if name.contains("/") || name.contains("\0") {
+        // Character contains, not String.contains — the latter pulls
+        // libswift_StringProcessing into the guest load list (GATE_B, 54be0035).
+        if name.contains("/" as Character) || name.contains("\0" as Character) {
             throw SwiftDataError.configurationFileNameContainsInvalidCharacters
         }
     }
@@ -427,6 +465,7 @@ public struct ModelConfiguration: Hashable, Identifiable, Sendable, DataStoreCon
         hasher.combine(groupContainer)
         hasher.combine(cloudKitDatabase)
     }
+
 
     public static func == (lhs: ModelConfiguration, rhs: ModelConfiguration) -> Bool {
         lhs.name == rhs.name
@@ -609,6 +648,7 @@ public struct FetchResultsCollection<Element>: RandomAccessCollection {
 
 public final class ModelContext: Equatable, CustomDebugStringConvertible, @unchecked Sendable {
     public enum NotificationKey: String {
+        public typealias RawValue = String
         case insertedIdentifiers
         case deletedIdentifiers
         case updatedIdentifiers
