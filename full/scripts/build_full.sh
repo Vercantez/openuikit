@@ -1289,7 +1289,11 @@ OBSERVATION_PLUGIN_FLAGS=(
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
     echo "   module $name"
-    "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    # APPMODS_CINC already has CPortableIO / CSTBTrueType / CHostClock / CQuartz
+    # (copies under appmods/include). Passing CINC as well redefines those four
+    # maps (attempt 5, 5486bdde, arm64 verify): APPMODS/include/CPortableIO vs
+    # $OUT/inc/CPortableIO, likewise CSTBTrueType, CHostClock, CQuartz.
+    "${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
         "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
         -I "$OUT" -I "$UIKITINC" -I "$APPINC" -I "$APPMODS" \
         -disable-availability-checking \
@@ -1328,7 +1332,7 @@ APP_PROBE_SOURCES=(
     "$UIKIT"/Sources/RealAppProbe/Focus/*.swift
     "$UIKIT"/Sources/RealAppProbe/Hackers/*.swift
 )
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+"${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
     "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
     -I "$OUT" -I "$UIKITINC" -I "$APPINC" -I "$APPMODS" \
     -default-isolation MainActor -disable-availability-checking \

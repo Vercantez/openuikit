@@ -118,5 +118,11 @@ Attempt 4: `d2efe432e962cebabf7d0084c02b0ad13548e6bd`.
 `TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log tail was not in
 `ops_extract_result_lines` (only `^build_full:` / `build_full rc=`).
 
-Attempt 5: prefix `build_full.log` tail with `build_full:` so run_box
-extracts the swiftc/ld line.
+Attempt 5: `5486bdde3e2fd7361674fbcdbbbab96eb7ddebf2`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log prefix worked.
+ObservationMacros staged at `$OUT/host-tools/swift/host/plugins`. Then
+`redefinition of module 'CPortableIO'` (also CSTBTrueType, CHostClock,
+CQuartz): `compile_app_module` passed both `CINC` (`$OUT/inc/…`) and
+`APPMODS_CINC` (copies under `appmods/include`). Combine/SwiftUI/Foundation
+use APPMODS_CINC only and compiled. `GATE_B_FAIL rc=1`.
+`guest_realapp skipped`.
