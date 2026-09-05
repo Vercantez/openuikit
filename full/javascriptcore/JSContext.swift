@@ -119,18 +119,7 @@ public final class JSContext: NSObject {
 
     public func setObject(_ object: Any!, forKeyedSubscript key: (any NSCopying & NSObjectProtocol)!) {
         let name = stringifyKey(key)
-        let value = engineValue(from: object)
-        if let block = object as? ([Any]) -> Any {
-            let fn = engine.makeNativeFunction(name) { [weak self] args, _, _ in
-                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
-                let bridged = args.map { JSValue(engineValue: $0, context: self) as Any }
-                return self.engineValue(from: block(bridged))
-            }
-            engine.setProperty(engine.global, name, fn, enumerable: true)
-            fn.object?.hostFunction = { _, arguments in block(arguments) }
-            return
-        }
-        engine.setProperty(engine.global, name, value, enumerable: true)
+        engine.setProperty(engine.global, name, engineValue(from: object, functionName: name), enumerable: true)
     }
 
     public class func current() -> JSContext! { JSContextTLS.current.0 }
@@ -138,10 +127,11 @@ public final class JSContext: NSObject {
     public class func currentArguments() -> [Any]! { JSContextTLS.current.2 }
     public class func currentCallee() -> JSValue! { JSContextTLS.current.3 }
 
-    func engineValue(from object: Any?) -> JSCValue {
+    func engineValue(from object: Any?, functionName: String = "host") -> JSCValue {
         guard let object else { return JSCValue(primitive: .null, context: engine) }
         if object is NSNull { return JSCValue(primitive: .null, context: engine) }
         if let value = object as? JSValue { return value.engineValue }
+        if let fn = makeHostFunction(from: object, name: functionName) { return fn }
         if let flag = object as? Bool { return JSCValue(primitive: .boolean(flag), context: engine) }
         if let number = object as? NSNumber {
             let typeID = CFGetTypeID(number)
@@ -163,7 +153,7 @@ public final class JSContext: NSObject {
             jsObject.date = date
             return JSCValue.object(jsObject, context: engine)
         }
-        if let array = object as? [Any] { return engine.makeArray(array.map(engineValue(from:))) }
+        if let array = object as? [Any] { return engine.makeArray(array.map { engineValue(from: $0) }) }
         if let dict = object as? [AnyHashable: Any] {
             let jsObject = JSCValue.object(JSCObject(kind: .ordinary), context: engine)
             for (key, value) in dict {
@@ -172,6 +162,51 @@ public final class JSContext: NSObject {
             return jsObject
         }
         return JSCValue(primitive: .undefined, context: engine)
+    }
+
+    /// Swift closure bridge used where the port has no ObjC JSExport class export.
+    /// Accepted signatures: `() -> Any`, `(Any) -> Any`, `(Any, Any) -> Any`,
+    /// `(Any, Any, Any) -> Any`, `([Any]) -> Any`.
+    func makeHostFunction(from object: Any, name: String) -> JSCValue? {
+        if let block = object as? ([Any]) -> Any {
+            return engine.makeNativeFunction(name) { [weak self] args, _, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                let bridged = args.map { JSValue(engineValue: $0, context: self) as Any }
+                return self.engineValue(from: block(bridged))
+            }
+        }
+        if let block = object as? () -> Any {
+            return engine.makeNativeFunction(name) { [weak self] _, _, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                return self.engineValue(from: block())
+            }
+        }
+        if let block = object as? (Any) -> Any {
+            return engine.makeNativeFunction(name) { [weak self] args, _, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                let arg: Any = args.first.map { JSValue(engineValue: $0, context: self) as Any } ?? NSNull()
+                return self.engineValue(from: block(arg))
+            }
+        }
+        if let block = object as? (Any, Any) -> Any {
+            return engine.makeNativeFunction(name) { [weak self] args, _, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                func arg(_ index: Int) -> Any {
+                    index < args.count ? JSValue(engineValue: args[index], context: self) as Any : NSNull()
+                }
+                return self.engineValue(from: block(arg(0), arg(1)))
+            }
+        }
+        if let block = object as? (Any, Any, Any) -> Any {
+            return engine.makeNativeFunction(name) { [weak self] args, _, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                func arg(_ index: Int) -> Any {
+                    index < args.count ? JSValue(engineValue: args[index], context: self) as Any : NSNull()
+                }
+                return self.engineValue(from: block(arg(0), arg(1), arg(2)))
+            }
+        }
+        return nil
     }
 }
 
@@ -202,6 +237,11 @@ public final class JSValue: NSObject {
     }
 
     public var jsValueRef: JSValueRef! { jscPointer(engineValue) }
+
+    public override var description: String {
+        guard context != nil else { return super.description }
+        return context.engine.toString(engineValue)
+    }
 
     public convenience init!(bool value: Bool, in context: JSContext!) {
         self.init(bool: value, inContext: context)
@@ -507,14 +547,14 @@ public final class JSValue: NSObject {
         return dict
     }
     public func toObject() -> Any! {
-        if isUndefined || isNull { return NSNull() }
-        if isBoolean { return toBool() }
-        if isNumber { return toDouble() }
-        if isString { return toString() }
-        if isDate { return toDate() }
-        if isArray { return toArray() }
-        if isObject { return toDictionary() }
-        return toString()
+        if isUndefined || isNull { return nil }
+        if isBoolean { return NSNumber(value: toBool()) }
+        if isNumber { return NSNumber(value: toDouble()) }
+        if isString { return toString() as NSString }
+        if isDate { return (engineValue.object?.date ?? Date()) as NSDate }
+        if isArray { return toArray() as NSArray }
+        if isObject { return toDictionary() as NSDictionary }
+        return toString() as NSString
     }
     public func toObjectOf(_ expectedClass: AnyClass!) -> Any! {
         let object = toObject()
@@ -622,10 +662,17 @@ public final class JSValue: NSObject {
         }
     }
 
+#if os(Linux)
     public func isEqual(to value: Any!) -> Bool {
         let other = context.engineValue(from: value)
         return JSCInterpreter(context: context.engine, environment: JSCEnvironment(parent: nil)).strictEqual(engineValue, other)
     }
+#else
+    public override func isEqual(to value: Any!) -> Bool {
+        let other = context.engineValue(from: value)
+        return JSCInterpreter(context: context.engine, environment: JSCEnvironment(parent: nil)).strictEqual(engineValue, other)
+    }
+#endif
 
     public func isEqualWithTypeCoercion(to value: Any!) -> Bool {
         let other = context.engineValue(from: value)

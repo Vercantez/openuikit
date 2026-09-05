@@ -585,8 +585,9 @@ public func JSObjectMakeFunction(
             params.append(jscString(parameterNames[index])?.string ?? "")
         }
     }
-    let header = "function \(jscString(name)?.string ?? "")(\(params.joined(separator: ","))) { \(jscString(body)?.string ?? "") }"
-    let result = context.evaluate(header, this: nil, sourceURL: nil, startingLine: 0)
+    let fnName = jscString(name)?.string ?? "anonymous"
+    let source = "function \(fnName)(\(params.joined(separator: ","))) { \(jscString(body)?.string ?? "") }; \(fnName)"
+    let result = context.evaluate(source, this: nil, sourceURL: jscString(sourceURL)?.string, startingLine: startingLineNumber)
     if let thrown = context.exception {
         writeException(exception, thrown)
         return nil
