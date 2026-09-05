@@ -18,6 +18,11 @@ func testAccessButtonInit() {
     let granted = ContactsUIHostControl.invokeAccessApproval(button)
     precondition(granted.isEmpty)
     precondition(received == [])
+    let model = ContactsUIHostControl.accessPickerModel(button)
+    precondition(model.queryString == "Anne")
+    precondition(model.ignoredEmails == ["skip@example.com"])
+    precondition(model.ignoredPhoneNumbers == ["+15555550100"])
+    precondition(model.failClosedApprovedIdentifiers().isEmpty)
 }
 
 @MainActor
@@ -61,6 +66,9 @@ func testContactAccessPickerFailClosed() {
     precondition(granted == [])
     let tags = ContactsUIHostControl.linuxModifierTags(gated)
     precondition(tags.contains("contactAccessPicker(isPresented:completionHandler:)"))
+    let model = ContactsUIHostControl.accessPickerModel(button)
+    precondition(model.queryString == "Ada")
+    precondition(model.failClosedApprovedIdentifiers() == [])
 }
 
 @MainActor

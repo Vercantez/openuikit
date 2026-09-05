@@ -76,6 +76,11 @@ func testAccessButtonInit() {
     let granted = ContactsUIHostControl.invokeAccessApproval(button)
     precondition(granted.isEmpty)
     precondition(received == [])
+    let model = ContactsUIHostControl.accessPickerModel(button)
+    precondition(model.queryString == "Anne")
+    precondition(model.ignoredEmails == ["skip@example.com"])
+    precondition(model.ignoredPhoneNumbers == ["+15555550100"])
+    precondition(model.failClosedApprovedIdentifiers().isEmpty)
 }
 
 @MainActor
@@ -119,6 +124,9 @@ func testContactAccessPickerFailClosed() {
     precondition(granted == [])
     let tags = ContactsUIHostControl.linuxModifierTags(gated)
     precondition(tags.contains("contactAccessPicker(isPresented:completionHandler:)"))
+    let model = ContactsUIHostControl.accessPickerModel(button)
+    precondition(model.queryString == "Ada")
+    precondition(model.failClosedApprovedIdentifiers() == [])
 }
 
 @MainActor
@@ -208,11 +216,27 @@ private func makeAda() -> CNMutableContact {
     return contact
 }
 
+private func makePhoneProperty(for contact: CNContact) -> CNContactProperty {
+    CNContactProperty(
+        contact: contact,
+        key: CNContactPhoneNumbersKey,
+        value: contact.phoneNumbers[0].value.stringValue as NSString,
+        identifier: contact.phoneNumbers[0].identifier,
+        label: contact.phoneNumbers[0].label
+    )
+}
+
 @MainActor
 func testPickerConstruction() {
     let picker = CNContactPickerViewController()
     precondition(type(of: picker) === CNContactPickerViewController.self)
     precondition(picker.delegate == nil)
+    let probe = PickerProbe()
+    picker.delegate = probe
+    ContactsUIHostControl.reportPickerDidShow(picker)
+    ContactsUIHostControl.reportPickerCancel(picker)
+    precondition(probe.cancelled)
+    precondition(probe.selectedContact == nil)
 }
 
 @MainActor
@@ -223,6 +247,12 @@ func testPickerDelegateProperty() {
     let existential: any CNContactPickerDelegate = probe
     precondition(picker.delegate === probe)
     _ = existential
+    picker.predicateForEnablingContact = NSPredicate(value: true)
+    picker.predicateForSelectionOfContact = NSPredicate(value: true)
+    let ada = makeAda()
+    precondition(ContactsUIHostControl.reportPickerSelection(picker, contact: ada))
+    precondition(probe.selectedContact?.givenName == "Ada")
+    precondition(!probe.cancelled)
 }
 
 @MainActor
@@ -230,6 +260,18 @@ func testPickerDisplayedPropertyKeys() {
     let picker = CNContactPickerViewController()
     picker.displayedPropertyKeys = [CNContactGivenNameKey, CNContactPhoneNumbersKey]
     precondition(picker.displayedPropertyKeys == [CNContactGivenNameKey, CNContactPhoneNumbersKey])
+    picker.displayedPropertyKeys = [CNContactEmailAddressesKey]
+    picker.predicateForEnablingContact = NSPredicate(value: true)
+    picker.predicateForSelectionOfProperty = NSPredicate(value: true)
+    let probe = PickerProbe()
+    picker.delegate = probe
+    let ada = makeAda()
+    let phone = makePhoneProperty(for: ada)
+    precondition(!ContactsUIHostControl.reportPickerSelection(picker, property: phone))
+    precondition(probe.selectedProperty == nil)
+    picker.displayedPropertyKeys = [CNContactPhoneNumbersKey]
+    precondition(ContactsUIHostControl.reportPickerSelection(picker, property: phone))
+    precondition(probe.selectedProperty?.key == CNContactPhoneNumbersKey)
     picker.displayedPropertyKeys = nil
     precondition(picker.displayedPropertyKeys == nil)
 }
@@ -243,10 +285,20 @@ func testPickerPredicateForEnablingContact() {
     let ada = makeAda()
     let named = ContactsUIHostControl.predicate(format: "givenName == %@", argument: "Ada")
     picker.predicateForEnablingContact = named
+    picker.predicateForSelectionOfContact = NSPredicate(value: true)
     precondition(ContactsUIHostControl.evaluate(picker.predicateForEnablingContact, contact: ada))
     let bob = CNMutableContact()
     bob.givenName = "Bob"
     precondition(!ContactsUIHostControl.evaluate(picker.predicateForEnablingContact, contact: bob))
+    let probe = PickerProbe()
+    picker.delegate = probe
+    precondition(!ContactsUIHostControl.reportPickerSelection(picker, contact: bob))
+    precondition(probe.selectedContact == nil)
+    precondition(ContactsUIHostControl.reportPickerSelection(picker, contact: ada))
+    precondition(probe.selectedContact?.givenName == "Ada")
+    let begins = ContactsUIHostControl.predicate(format: "familyName BEGINSWITH[cd] %@", argument: "love")
+    picker.predicateForEnablingContact = begins
+    precondition(ContactsUIHostControl.evaluate(picker.predicateForEnablingContact, contact: ada))
 }
 
 @MainActor
@@ -256,9 +308,13 @@ func testPickerPredicateForSelectionOfContact() {
     precondition(picker.predicateForSelectionOfContact == NSPredicate(value: false))
     let ada = makeAda()
     picker.predicateForEnablingContact = NSPredicate(value: true)
+    let probe = PickerProbe()
+    picker.delegate = probe
     precondition(!ContactsUIHostControl.reportPickerSelection(picker, contact: ada))
+    precondition(probe.selectedContact == nil)
     picker.predicateForSelectionOfContact = NSPredicate(value: true)
     precondition(ContactsUIHostControl.reportPickerSelection(picker, contact: ada))
+    precondition(probe.selectedContact?.givenName == "Ada")
 }
 
 @MainActor
@@ -271,14 +327,22 @@ func testPickerPredicateForSelectionOfProperty() {
         argument: CNContactPhoneNumbersKey
     )
     let ada = makeAda()
-    let property = CNContactProperty(
-        contact: ada,
-        key: CNContactPhoneNumbersKey,
-        value: ada.phoneNumbers[0].value.stringValue as NSString,
-        identifier: ada.phoneNumbers[0].identifier,
-        label: ada.phoneNumbers[0].label
-    )
+    let property = makePhoneProperty(for: ada)
     precondition(ContactsUIHostControl.evaluate(picker.predicateForSelectionOfProperty, property: property))
+    let probe = PickerProbe()
+    picker.delegate = probe
+    let email = CNContactProperty(
+        contact: ada,
+        key: CNContactEmailAddressesKey,
+        value: "ada@example.com" as NSString,
+        identifier: ada.emailAddresses[0].identifier,
+        label: CNLabelWork
+    )
+    picker.displayedPropertyKeys = [CNContactPhoneNumbersKey, CNContactEmailAddressesKey]
+    precondition(!ContactsUIHostControl.reportPickerSelection(picker, property: email))
+    precondition(probe.selectedProperty == nil)
+    precondition(ContactsUIHostControl.reportPickerSelection(picker, property: property))
+    precondition(probe.selectedProperty?.key == CNContactPhoneNumbersKey)
 }
 
 @MainActor
@@ -299,8 +363,14 @@ func testPickerDidSelectContact() {
     let probe = PickerProbe()
     picker.delegate = probe
     let ada = makeAda()
+    ContactsUIHostControl.reportPickerDidShow(picker)
+    precondition(ContactsUIHostControl.pickerIsVisible(picker))
     precondition(ContactsUIHostControl.reportPickerSelection(picker, contact: ada))
     precondition(probe.selectedContact?.givenName == "Ada")
+    precondition(probe.selectedContact?.familyName == "Lovelace")
+    precondition(!probe.cancelled)
+    precondition(probe.selectedContacts.isEmpty)
+    precondition(!ContactsUIHostControl.pickerIsVisible(picker))
 }
 
 @MainActor
@@ -315,9 +385,12 @@ func testPickerDidSelectContacts() {
     let ada = makeAda()
     let bob = CNMutableContact()
     bob.givenName = "Bob"
+    ContactsUIHostControl.reportPickerDidShow(picker)
     precondition(ContactsUIHostControl.reportPickerSelection(picker, contacts: [ada, bob]))
     precondition(probe.selectedContacts.count == 1)
     precondition(probe.selectedContacts[0].givenName == "Ada")
+    precondition(probe.selectedContact == nil)
+    precondition(!probe.cancelled)
 }
 
 @MainActor
@@ -329,15 +402,13 @@ func testPickerDidSelectContactProperty() {
     let probe = PickerProbe()
     picker.delegate = probe
     let ada = makeAda()
-    let property = CNContactProperty(
-        contact: ada,
-        key: CNContactPhoneNumbersKey,
-        value: ada.phoneNumbers[0].value.stringValue as NSString,
-        identifier: ada.phoneNumbers[0].identifier,
-        label: ada.phoneNumbers[0].label
-    )
+    let property = makePhoneProperty(for: ada)
+    ContactsUIHostControl.reportPickerDidShow(picker)
     precondition(ContactsUIHostControl.reportPickerSelection(picker, property: property))
     precondition(probe.selectedProperty?.key == CNContactPhoneNumbersKey)
+    precondition(probe.selectedProperty?.identifier == ada.phoneNumbers[0].identifier)
+    precondition(probe.selectedContact == nil)
+    precondition(!probe.cancelled)
 }
 
 @MainActor
@@ -349,15 +420,13 @@ func testPickerDidSelectContactProperties() {
     let probe = PickerProbe()
     picker.delegate = probe
     let ada = makeAda()
-    let property = CNContactProperty(
-        contact: ada,
-        key: CNContactPhoneNumbersKey,
-        value: ada.phoneNumbers[0].value.stringValue as NSString,
-        identifier: ada.phoneNumbers[0].identifier,
-        label: ada.phoneNumbers[0].label
-    )
+    let property = makePhoneProperty(for: ada)
+    ContactsUIHostControl.reportPickerDidShow(picker)
     precondition(ContactsUIHostControl.reportPickerSelection(picker, properties: [property]))
     precondition(probe.selectedProperties.count == 1)
+    precondition(probe.selectedProperties[0].key == CNContactPhoneNumbersKey)
+    precondition(probe.selectedContact == nil)
+    precondition(!probe.cancelled)
 }
 
 @MainActor
@@ -366,7 +435,62 @@ func testPickerDidCancel() {
     let probe = PickerProbe()
     picker.delegate = probe
     precondition(!probe.cancelled)
+    ContactsUIHostControl.reportPickerDidShow(picker)
     ContactsUIHostControl.reportPickerCancel(picker)
+    precondition(probe.cancelled)
+    precondition(probe.selectedContact == nil)
+    precondition(probe.selectedContacts.isEmpty)
+    precondition(probe.selectedProperty == nil)
+    precondition(probe.selectedProperties.isEmpty)
+    precondition(!ContactsUIHostControl.pickerIsVisible(picker))
+}
+
+private final class PickerNotificationProbe: NSObject {
+    var shown = 0
+    var hidden = 0
+    weak var lastObject: AnyObject?
+
+    @objc func didShow(_ notification: Notification) {
+        lastObject = notification.object as AnyObject?
+        shown += 1
+    }
+
+    @objc func didHide(_ notification: Notification) {
+        lastObject = notification.object as AnyObject?
+        hidden += 1
+    }
+}
+
+@MainActor
+func testPickerDidShowHideNotifications() {
+    let picker = CNContactPickerViewController()
+    let notes = PickerNotificationProbe()
+    NotificationCenter.default.addObserver(
+        notes,
+        selector: #selector(PickerNotificationProbe.didShow(_:)),
+        name: .CNContactPickerViewControllerPickerDidShow,
+        object: picker
+    )
+    NotificationCenter.default.addObserver(
+        notes,
+        selector: #selector(PickerNotificationProbe.didHide(_:)),
+        name: .CNContactPickerViewControllerPickerDidHide,
+        object: picker
+    )
+    defer { NotificationCenter.default.removeObserver(notes) }
+    precondition(CNContactPickerViewControllerPickerDidShowNotification.rawValue
+        == "CNContactPickerViewControllerPickerDidShowNotification")
+    precondition(CNContactPickerViewControllerPickerDidHideNotification.rawValue
+        == "CNContactPickerViewControllerPickerDidHideNotification")
+    ContactsUIHostControl.reportPickerDidShow(picker)
+    precondition(notes.shown == 1)
+    precondition(notes.hidden == 0)
+    precondition(notes.lastObject === picker)
+    let probe = PickerProbe()
+    picker.delegate = probe
+    ContactsUIHostControl.reportPickerCancel(picker)
+    precondition(notes.shown == 1)
+    precondition(notes.hidden == 1)
     precondition(probe.cancelled)
 }
 
@@ -414,11 +538,20 @@ private func makeEditorAda() -> CNMutableContact {
 }
 
 @MainActor
+private func assertFailClosedCompletion(_ editor: CNContactViewController) {
+    let probe = EditorProbe()
+    editor.delegate = probe
+    ContactsUIHostControl.reportViewControllerCompletion(editor)
+    precondition(probe.completed == .some(nil))
+}
+
+@MainActor
 func testViewControllerClass() {
     let editor = CNContactViewController(for: makeEditorAda())
     precondition(type(of: editor) === CNContactViewController.self)
     let asController: UIViewController = editor
     precondition(asController === editor)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -427,6 +560,7 @@ func testViewControllerInitFor() {
     let editor = CNContactViewController(for: ada)
     precondition(editor.contact.givenName == "Ada")
     precondition(editor.allowsEditing == true)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -435,15 +569,18 @@ func testViewControllerInitForContact() {
     let editor = CNContactViewController(forContact: ada)
     precondition(editor.contact.familyName == "Lovelace")
     precondition(editor.allowsEditing == true)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
 func testViewControllerInitForNewContact() {
     let fresh = CNContactViewController(forNewContact: nil)
     precondition(fresh.allowsEditing == true)
+    assertFailClosedCompletion(fresh)
     let ada = makeEditorAda()
     let seeded = CNContactViewController(forNewContact: ada)
     precondition(seeded.contact.givenName == "Ada")
+    assertFailClosedCompletion(seeded)
 }
 
 @MainActor
@@ -451,12 +588,15 @@ func testViewControllerInitForUnknownContact() {
     let editor = CNContactViewController(forUnknownContact: makeEditorAda())
     precondition(editor.allowsEditing == false)
     precondition(editor.contact.givenName == "Ada")
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
 func testViewControllerDescriptorForRequiredKeys() {
     let descriptor = CNContactViewController.descriptorForRequiredKeys()
     _ = descriptor
+    let editor = CNContactViewController(for: makeEditorAda())
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -474,6 +614,7 @@ func testViewControllerHighlightProperty() {
         ContactsUIHostControl.highlightedPropertyIdentifier(editor)
             == ada.emailAddresses[0].identifier
     )
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -483,6 +624,7 @@ func testViewControllerAllowsActions() {
     precondition(editor.allowsActions == false)
     editor.allowsActions = true
     precondition(editor.allowsActions == true)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -490,6 +632,7 @@ func testViewControllerAllowsEditing() {
     let editor = CNContactViewController(for: makeEditorAda())
     editor.allowsEditing = false
     precondition(editor.allowsEditing == false)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -500,6 +643,7 @@ func testViewControllerAlternateName() {
     let sections = ContactsUIHostControl.linuxContactSections(editor)
     let nameRow = sections.first { $0.kind == .name }?.rows.first
     precondition(nameRow?.value == "Ada L.")
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -508,6 +652,7 @@ func testViewControllerContact() {
     let editor = CNContactViewController(for: ada)
     precondition(editor.contact.givenName == "Ada")
     precondition(editor.contact.identifier == ada.identifier)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -516,6 +661,7 @@ func testViewControllerContactStore() {
     let store = CNContactStore()
     editor.contactStore = store
     precondition(editor.contactStore === store)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -524,6 +670,8 @@ func testViewControllerDelegateProperty() {
     let probe = EditorProbe()
     editor.delegate = probe
     precondition(editor.delegate === probe)
+    ContactsUIHostControl.reportViewControllerCompletion(editor)
+    precondition(probe.completed == .some(nil))
 }
 
 @MainActor
@@ -540,6 +688,7 @@ func testViewControllerDisplayedPropertyKeys() {
     precondition(kinds.contains(.phone))
     precondition(kinds.contains(.email))
     precondition(kinds.contains(.address))
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -549,6 +698,7 @@ func testViewControllerMessage() {
     precondition(editor.message == "Mathematician")
     let sections = ContactsUIHostControl.linuxContactSections(editor)
     precondition(sections.contains { $0.kind == .message })
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -557,6 +707,7 @@ func testViewControllerParentContainer() {
     let container = CNContainer()
     editor.parentContainer = container
     precondition(editor.parentContainer === container)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -565,6 +716,7 @@ func testViewControllerParentGroup() {
     let group = CNGroup()
     editor.parentGroup = group
     precondition(editor.parentGroup === group)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -574,6 +726,7 @@ func testViewControllerShouldShowLinkedContacts() {
     precondition(editor.shouldShowLinkedContacts == true)
     editor.shouldShowLinkedContacts = false
     precondition(editor.shouldShowLinkedContacts == false)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -583,6 +736,8 @@ func testViewControllerDelegateProtocol() {
     editor.delegate = probe
     let existential: any CNContactViewControllerDelegate = probe
     _ = existential
+    ContactsUIHostControl.reportViewControllerCompletion(editor)
+    precondition(probe.completed == .some(nil))
 }
 
 @MainActor
@@ -654,6 +809,7 @@ func contactsUIRuntimeMain() {
     testPickerDidSelectContactProperty()
     testPickerDidSelectContactProperties()
     testPickerDidCancel()
+    testPickerDidShowHideNotifications()
     testViewControllerClass()
     testViewControllerInitFor()
     testViewControllerInitForContact()
