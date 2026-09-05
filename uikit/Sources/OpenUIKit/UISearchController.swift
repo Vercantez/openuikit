@@ -32,8 +32,9 @@ open class UISearchController: UIViewController, UISearchBarDelegate {
     /// Dims the presenting view while active. Stored; the Tabs app sets
     /// it false so the table stays the results view.
     public var obscuresBackgroundDuringPresentation: Bool = true
-    /// Stored for source compatibility; OpenUIKit does not hide the
-    /// navigation bar itself while active (the bar hosts the search field).
+    /// Stored for source compatibility. iOS 26 honours this for the
+    /// bottom-docked phone search (Ledger t3000 collapses the bar to
+    /// height 0). Tab-hosted search keeps the bar (it hosts the field).
     public var hidesNavigationBarDuringPresentation: Bool = true
     public var automaticallyShowsCancelButton: Bool = true
 

@@ -175,4 +175,160 @@ final class UISearchControllerTests: XCTestCase {
         XCTAssertEqual(right.titleLabel.text, "Library")
         XCTAssertEqual(left.titleLabel.text, "Scroll")
     }
+
+    /// MEASURED Ledger t200 / t3000, iPhone SE 2x / iOS 26.1: phone
+    /// `searchController` with no tab bar docks at the bottom (slot 86,
+    /// field `[33, 596, 309, 38]`); activating collapses the bar to
+    /// height 0 at y 10 and shrinks the field to 249.
+    func testPhoneSearchWithoutTabBarDocksAtBottom() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .phone
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .phone)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        }
+
+        let root = UITableViewController(style: .insetGrouped)
+        root.title = "Ledger"
+        let sc = UISearchController(searchResultsController: nil)
+        sc.obscuresBackgroundDuringPresentation = false
+        sc.searchBar.placeholder = "Regex"
+        root.navigationItem.searchController = sc
+        let nav = UINavigationController(rootViewController: root)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.rootViewController = nav
+        window.layoutIfNeeded()
+
+        XCTAssertTrue(nav.navigationBar.usesBottomSearch)
+        XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 10, width: 375, height: 54))
+        XCTAssertEqual(root.view.safeAreaInsets.bottom, 86, accuracy: 0.01)
+        XCTAssertEqual(nav.floatingSearchContainer?.frame,
+                       CGRect(x: 0, y: 581, width: 375, height: 86))
+        let fieldAbs = sc.searchBar.convert(sc.searchBar.bounds, to: window)
+        XCTAssertEqual(fieldAbs, CGRect(x: 33, y: 596, width: 309, height: 38))
+
+        sc.isActive = true
+        window.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 10, width: 375, height: 0))
+        XCTAssertEqual(root.view.safeAreaInsets.top, 10, accuracy: 0.01)
+        XCTAssertEqual(root.view.safeAreaInsets.bottom, 86, accuracy: 0.01)
+        let activeAbs = sc.searchBar.convert(sc.searchBar.bounds, to: window)
+        XCTAssertEqual(activeAbs, CGRect(x: 33, y: 596, width: 249, height: 38))
+        XCTAssertEqual(nav.floatingSearchDismissPlatter?.isHidden, false)
+        XCTAssertEqual(nav.navigationBar.hideOnScrollContentBump(requestedY: 200), 0)
+    }
+
+    /// Compact height (Ledger t200.landscape): slot 82, platter 44, field 36.
+    func testPhoneBottomSearchCompactHeightSlotIs82() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .phone
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 667, height: 375),
+                                     scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            verticalSizeClass: .compact, userInterfaceIdiom: .phone)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        }
+
+        let root = UIViewController()
+        let sc = UISearchController(searchResultsController: nil)
+        root.navigationItem.searchController = sc
+        let nav = UINavigationController(rootViewController: root)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        window.rootViewController = nav
+        window.layoutIfNeeded()
+
+        XCTAssertTrue(nav.navigationBar.usesBottomSearch)
+        XCTAssertEqual(nav.navigationBar.frame.minY, 24, accuracy: 0.01)
+        XCTAssertEqual(root.view.safeAreaInsets.bottom, 82, accuracy: 0.01)
+        XCTAssertEqual(nav.floatingSearchContainer?.frame,
+                       CGRect(x: 0, y: 293, width: 667, height: 82))
+        let fieldAbs = sc.searchBar.convert(sc.searchBar.bounds, to: window)
+        XCTAssertEqual(fieldAbs, CGRect(x: 32, y: 307, width: 603, height: 36))
+    }
+
+    /// Tabs / Notes: a tab-hosted search stays the nav overlay, not the
+    /// bottom dock. MEASURED Tabs t200 / t4000.
+    func testTabHostedSearchStaysNavOverlay() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .phone
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+        }
+
+        let root = UIViewController()
+        root.title = "Library"
+        let sc = UISearchController(searchResultsController: nil)
+        root.navigationItem.searchController = sc
+        let nav = UINavigationController(rootViewController: root)
+        nav.tabBarItem = UITabBarItem(title: "Library", image: nil, tag: 0)
+        let tab = UITabBarController()
+        tab.viewControllers = [nav]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertFalse(nav.navigationBar.usesBottomSearch)
+        XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
+        XCTAssertEqual(nav.navigationBar.frame.height, 54, accuracy: 0.01)
+        sc.isActive = true
+        window.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 6)
+        XCTAssertEqual(nav.navigationBar.frame.height, 60, accuracy: 0.01)
+        XCTAssertEqual(nav.floatingSearchContainer?.isHidden ?? true, true)
+    }
+
+    /// MEASURED Ledger t200: disclosure contentView trailing margin is 8
+    /// (subtitle 292.5 in a 316.5-wide content view).
+    func testDisclosureContentViewTrailingMarginIs8() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                     scale: 2)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        }
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.accessoryType = .disclosureIndicator
+        cell.frame = CGRect(x: 0, y: 0, width: 343, height: 92)
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell.contentView.frame.width, 316.5, accuracy: 0.01)
+        XCTAssertEqual(cell.contentView.layoutMargins.right, 8, accuracy: 0.01)
+        XCTAssertEqual(cell.contentView.layoutMargins.left, 16, accuracy: 0.01)
+
+        cell.semanticContentAttribute = .forceRightToLeft
+        cell.contentView._notifyLayoutMarginsChanged()
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell.contentView.layoutMargins.left, 8, accuracy: 0.01)
+        XCTAssertEqual(cell.contentView.layoutMargins.right, 16, accuracy: 0.01)
+    }
 }

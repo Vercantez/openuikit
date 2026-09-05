@@ -53,17 +53,36 @@ final class UITableViewCellContentView: UIView {
     var cell: UITableViewCell? { superview as? UITableViewCell }
 
     /// The content view takes the cell's margins, except on a trailing edge
-    /// an accessory view already ate — there it keeps `UIView`'s 8 pt.
+    /// accessory chrome already ate — there it keeps `UIView`'s 8 pt.
     ///
     /// MEASURED (realapp_storage_light, both oracle devices): the content
     /// view of the accessory-less DisclosureCell reports the cell's own
     /// [15, 20, 15, 20], while SwitchCell's — 310 wide, with the switch as
     /// its accessory view — reports [15, 20, 15, 8] on the iPhone 16 and
     /// [15, 16, 15, 8] on the SE.
+    ///
+    /// MEASURED Ledger t200, iPhone SE 2x / iOS 26.1: disclosureIndicator
+    /// contentView 316.5, subtitle `[16, 39.5, 292.5, 16]` → trailing **8**
+    /// (same 8 the custom accessoryView path already carried). Amount
+    /// `$4.50` trailing edge 308.5 = 316.5 − 8. The previous `accessoryView
+    /// != nil` guard left `accessoryType` cells at 16 and shifted every
+    /// Auto Layout label 8 pt left.
+    ///
+    /// MEASURED Ledger t200.rtl: contentView still `[42.5, …, 316.5, 92]`
+    /// (accessory on the leading/left edge); subtitle abs x **50.5** =
+    /// 42.5 + **8**, `$4.50` at 50.5. Tight inset follows the accessory
+    /// (physical left in RTL), not `layoutMargins.right`.
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         guard let cell else { return super._defaultBaseLayoutMargins }
         var m = cell.layoutMargins
-        if cell.accessoryView != nil { m.right = super._defaultBaseLayoutMargins.right }
+        if cell.accessoryView != nil || cell.accessoryType != .none {
+            let tight = super._defaultBaseLayoutMargins.right
+            if cell._layoutIsRTL {
+                m.left = tight
+            } else {
+                m.right = tight
+            }
+        }
         return m
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -563,6 +582,7 @@ open class UITableViewCell: UIView, ReusableView {
         didSet {
             if accessoryType != oldValue {
                 _accessoryGlyphView.accessoryType = accessoryType
+                contentView._notifyLayoutMarginsChanged()
                 setNeedsLayout()
             }
         }
