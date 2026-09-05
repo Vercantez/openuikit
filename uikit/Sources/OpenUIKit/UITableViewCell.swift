@@ -257,12 +257,20 @@ final class UITableViewCellEditControl: UIView {
 
 /// Three-line reorder handle. MEASURED TableEditor t900, SE 2x: control
 /// [332, cellY, 27, 62], glyph [332, cellY+24, 27, 15], three 1.5 pt
-/// bars at glyph-local y 2.0 / 6.5 / 11.5, ink (197, 197, 199).
+/// bars at glyph-local y 2.0 / 6.5 / 11.5. iOS ink is `.tertiaryLabel`
+/// (not the opaque (197, 197, 199) that happens to match it over white):
+/// TableEditor t900.dark over black → (70, 70, 73); t3800.dark over
+/// selected systemGray4 (58, 58, 60) → (111, 111, 115); light t900 over
+/// white → (197, 197, 199); light t3800 over selected (209, 209, 214) →
+/// (165, 165, 170). Catalyst keeps the opaque light-over-white constant.
 @preconcurrency @MainActor
 final class UITableViewCellReorderControl: UIView {
     static let glyphSize = CGSize(width: 27, height: 15)
-    static let ink = UIColor(red: 197.0 / 255.0, green: 197.0 / 255.0,
-                             blue: 199.0 / 255.0, alpha: 1)
+    static var ink: UIColor {
+        if UITableView.isIOSChrome { return .tertiaryLabel }
+        return UIColor(red: 197.0 / 255.0, green: 197.0 / 255.0,
+                       blue: 199.0 / 255.0, alpha: 1)
+    }
     static let lineHeight: CGFloat = 1.5
     static let lineOrigins: [CGFloat] = [2.0, 6.5, 11.5]
     static let lineInsetX: CGFloat = 2.5
