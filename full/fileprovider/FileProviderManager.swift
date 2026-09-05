@@ -3,9 +3,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
-/// File Provider manager. Domain add/remove/list and daemon operations fail
-/// closed unless a Linux `FileProviderHostAdapter` is installed. Public APIs
-/// never post system-style success notifications on the unhosted path.
+/// File Provider manager. Domain add/remove/list, user-visible URL mapping,
+/// enumerator signaling, and replicated-extension mutations run against the
+/// process-local host. XPC services and Apple daemon notifications stay
+/// fail-closed.
 open class NSFileProviderManager: NSObject, @unchecked Sendable {
     public enum DomainRemovalMode: Int, Hashable, Sendable {
         case removeAll = 0
@@ -22,14 +23,15 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
 
     public let providerIdentifier: String
     public let documentStorageURL: URL
-    private let boundDomain: NSFileProviderDomain?
+    let boundDomain: NSFileProviderDomain?
 
     public convenience init?(for domain: NSFileProviderDomain) {
         self.init(forDomain: domain)
     }
 
     public convenience init?(forDomain domain: NSFileProviderDomain) {
-        guard FileProviderHostRegistry.currentAdapter() != nil else {
+        guard FileProviderLocalHost.shared.registeredDomain(identifier: domain.identifier) != nil
+        else {
             return nil
         }
         self.init(
@@ -43,7 +45,8 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         self.boundDomain = domain
         let root = FileProviderHost.storageRoot()
         let relative = domain?.pathRelativeToDocumentStorage ?? "_default"
-        let url = root.appendingPathComponent(relative, isDirectory: true)
+        let url = root.appendingPathComponent("providers", isDirectory: true)
+            .appendingPathComponent(relative, isDirectory: true)
         try? FileManager.default.createDirectory(
             at: url,
             withIntermediateDirectories: true
@@ -53,34 +56,86 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public class func add(_ domain: NSFileProviderDomain) async throws {
-        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
-            throw FileProviderHost.unsupported(.providerNotFound)
+        if let adapter = FileProviderHostRegistry.currentAdapter() {
+            try await adapter.addDomain(domain)
+            return
         }
-        try await adapter.addDomain(domain)
+        try FileProviderLocalHost.shared.addDomainSync(domain)
+    }
+
+    public class func add(
+        _ domain: NSFileProviderDomain,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.queue.async {
+            Task {
+                do {
+                    try await add(domain)
+                    once.run { completionHandler(nil) }
+                } catch {
+                    once.run { completionHandler(error) }
+                }
+            }
+        }
     }
 
     public class func domains() async throws -> [NSFileProviderDomain] {
-        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
-            throw FileProviderHost.unsupported(.providerNotFound)
+        if let adapter = FileProviderHostRegistry.currentAdapter() {
+            return try await adapter.domains()
         }
-        return try await adapter.domains()
+        return FileProviderLocalHost.shared.domainsSync()
+    }
+
+    public class func getDomainsWithCompletionHandler(
+        _ completionHandler: @escaping ([NSFileProviderDomain]?, (any Error)?) -> Void
+    ) {
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.queue.async {
+            Task {
+                do {
+                    let domains = try await self.domains()
+                    once.run { completionHandler(domains, nil) }
+                } catch {
+                    once.run { completionHandler(nil, error) }
+                }
+            }
+        }
     }
 
     public class func remove(_ domain: NSFileProviderDomain) async throws {
-        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
-            throw FileProviderHost.unsupported(.providerNotFound)
+        if let adapter = FileProviderHostRegistry.currentAdapter() {
+            try await adapter.removeDomain(domain)
+            return
         }
-        try await adapter.removeDomain(domain)
+        try FileProviderLocalHost.shared.removeDomainSync(domain)
+    }
+
+    public class func remove(
+        _ domain: NSFileProviderDomain,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.queue.async {
+            Task {
+                do {
+                    try await remove(domain)
+                    once.run { completionHandler(nil) }
+                } catch {
+                    once.run { completionHandler(error) }
+                }
+            }
+        }
     }
 
     public class func remove(
         _ domain: NSFileProviderDomain,
         mode: DomainRemovalMode
     ) async throws -> URL? {
-        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
-            throw FileProviderHost.unsupported(.providerNotFound)
+        if let adapter = FileProviderHostRegistry.currentAdapter() {
+            return try await adapter.removeDomain(domain, mode: mode)
         }
-        return try await adapter.removeDomain(domain, mode: mode)
+        return try await FileProviderLocalHost.shared.removeDomain(domain, mode: mode)
     }
 
     public class func removeAllDomains(completionHandler: @escaping ((any Error)?) -> Void) {
@@ -107,9 +162,41 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         _ domain: NSFileProviderDomain,
         fromDirectoryAt url: URL
     ) async throws {
-        _ = domain
-        _ = url
-        throw FileProviderHost.unsupported(.applicationExtensionNotFound)
+        try await add(domain)
+        let manager = NSFileProviderManager(for: domain)
+        guard let manager, let provider = manager._localReplicatedExtension() else {
+            throw FileProviderHost.unsupported(.applicationExtensionNotFound)
+        }
+        let contents = (try? FileManager.default.contentsOfDirectory(
+            at: url,
+            includingPropertiesForKeys: nil
+        )) ?? []
+        let request = NSFileProviderRequest(
+            domainVersion: FileProviderLocalHost.shared.domainVersion(for: domain.identifier),
+            isSystemRequest: true
+        )
+        for fileURL in contents where fileURL.hasDirectoryPath == false {
+            let template = FileProviderStoredItem(
+                itemIdentifier: NSFileProviderItemIdentifier(fileURL.lastPathComponent),
+                parentItemIdentifier: .rootContainer,
+                filename: fileURL.lastPathComponent
+            )
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+                _ = provider.createItem(
+                    basedOn: template,
+                    fields: [.filename, .parentItemIdentifier, .contents],
+                    contents: fileURL,
+                    options: [.mayAlreadyExist],
+                    request: request
+                ) { _, _, _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+        }
     }
 
     public class func getIdentifierForUserVisibleFile(
@@ -120,10 +207,14 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
             (any Error)?
         ) -> Void
     ) {
-        _ = url
         let once = FileProviderCallback.Once()
-        FileProviderCallback.asyncOnce(once) {
-            completionHandler(nil, nil, FileProviderHost.unsupported())
+        FileProviderCallback.queue.async {
+            do {
+                let result = try FileProviderLocalHost.shared.identifierForUserVisibleFile(at: url)
+                once.run { completionHandler(result.0, result.1, nil) }
+            } catch {
+                once.run { completionHandler(nil, nil, error) }
+            }
         }
     }
 
@@ -142,16 +233,40 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public func enumeratorForMaterializedItems() -> any NSFileProviderEnumerator {
-        FileProviderUnhostedEnumerator()
+        guard let domain = boundDomain else {
+            return FileProviderUnhostedEnumerator()
+        }
+        let provider = FileProviderLocalHost.shared.provider(for: domain)
+        let enumerator = FileProviderLocalEnumerator(
+            host: FileProviderLocalHost.shared,
+            provider: provider,
+            container: .workingSet,
+            domainVersion: FileProviderLocalHost.shared.domainVersion(for: domain.identifier)
+        )
+        enumerator.materializedOnly = true
+        return enumerator
     }
 
     public func enumeratorForPendingItems() -> any NSFileProviderPendingSetEnumerator {
-        FileProviderUnhostedPendingSetEnumerator()
+        guard let domain = boundDomain else {
+            return FileProviderUnhostedPendingSetEnumerator()
+        }
+        let provider = FileProviderLocalHost.shared.provider(for: domain)
+        let enumerator = FileProviderLocalEnumerator(
+            host: FileProviderLocalHost.shared,
+            provider: provider,
+            container: .workingSet,
+            domainVersion: FileProviderLocalHost.shared.domainVersion(for: domain.identifier)
+        )
+        enumerator.pendingOnly = true
+        return enumerator
     }
 
     public func evictItem(identifier itemIdentifier: NSFileProviderItemIdentifier) async throws {
-        _ = itemIdentifier
-        throw FileProviderHost.unsupported(.nonEvictable)
+        guard let domain = boundDomain else {
+            throw FileProviderHost.unsupported(.nonEvictable)
+        }
+        try FileProviderLocalHost.shared.provider(for: domain).evict(itemIdentifier)
     }
 
 #if canImport(UniformTypeIdentifiers)
@@ -185,12 +300,17 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     public func getUserVisibleURL(
         for itemIdentifier: NSFileProviderItemIdentifier
     ) async throws -> URL {
-        _ = itemIdentifier
-        throw FileProviderHost.unsupported()
+        guard let domain = boundDomain else {
+            throw FileProviderHost.unsupported()
+        }
+        return try FileProviderLocalHost.shared.userVisibleURL(
+            domain: domain,
+            itemIdentifier: itemIdentifier
+        )
     }
 
     public func globalProgress(for kind: Progress.FileOperationKind) -> Progress {
-        let progress = Progress(totalUnitCount: 0)
+        let progress = Progress(totalUnitCount: 1)
         progress.kind = .file
         _ = kind
         progress.completedUnitCount = 0
@@ -198,21 +318,29 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public func listAvailableTestingOperations() throws -> [any NSFileProviderTestingOperation] {
-        throw FileProviderHost.unsupported()
+        guard let domain = boundDomain else {
+            throw FileProviderHost.unsupported()
+        }
+        let operations = FileProviderLocalHost.shared.testingOperations(for: domain)
+        guard !operations.isEmpty else {
+            throw FileProviderHost.unsupported()
+        }
+        return operations
     }
 
     public func register(
         _ task: URLSessionTask,
         forItemWithIdentifier identifier: NSFileProviderItemIdentifier
     ) async throws {
-        _ = task
-        _ = identifier
-        throw FileProviderHost.unsupported()
+        FileProviderLocalHost.shared.registerTask(task, identifier: identifier)
     }
 
     public func reimportItems(below itemIdentifier: NSFileProviderItemIdentifier) async throws {
-        _ = itemIdentifier
-        throw FileProviderHost.unsupported()
+        guard let domain = boundDomain else {
+            throw FileProviderHost.unsupported()
+        }
+        try FileProviderLocalHost.shared.provider(for: domain).reimport(below: itemIdentifier)
+        try await signalEnumerator(for: itemIdentifier)
     }
 
     public func requestModification(
@@ -220,29 +348,106 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         forItemWithIdentifier itemIdentifier: NSFileProviderItemIdentifier,
         options: NSFileProviderModifyItemOptions = []
     ) async throws {
-        _ = fields
-        _ = itemIdentifier
-        _ = options
-        throw FileProviderHost.unsupported()
+        guard let domain = boundDomain,
+            let provider = _localReplicatedExtension()
+        else {
+            throw FileProviderHost.unsupported()
+        }
+        let stored = try FileProviderLocalHost.shared.provider(for: domain)
+            .storedItem(for: itemIdentifier)
+        let version = stored.itemVersion
+            ?? NSFileProviderItemVersion(contentVersion: Data(), metadataVersion: Data())
+        let request = NSFileProviderRequest(
+            domainVersion: FileProviderLocalHost.shared.domainVersion(for: domain.identifier)
+        )
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+            _ = provider.modifyItem(
+                stored,
+                baseVersion: version,
+                changedFields: fields,
+                contents: nil,
+                options: options,
+                request: request
+            ) { _, _, _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 
     public func run(
         _ operations: [any NSFileProviderTestingOperation]
     ) throws -> [AnyHashable: any Error] {
-        _ = operations
-        throw FileProviderHost.unsupported()
+        guard boundDomain != nil else {
+            throw FileProviderHost.unsupported()
+        }
+        for operation in operations {
+            _ = operation.type
+            if let lookup = operation as? any NSFileProviderTestingLookup {
+                _ = lookup.itemIdentifier
+                _ = lookup.side
+            }
+            if let ingestion = operation as? any NSFileProviderTestingIngestion {
+                _ = ingestion.item
+                _ = ingestion.itemIdentifier
+                _ = ingestion.side
+            }
+            if let creation = operation as? any NSFileProviderTestingCreation {
+                _ = creation.domainVersion
+                _ = creation.sourceItem
+                _ = creation.targetSide
+            }
+            if let modification = operation as? any NSFileProviderTestingModification {
+                _ = modification.changedFields
+                _ = modification.domainVersion
+                _ = modification.sourceItem
+                _ = modification.targetItemBaseVersion
+                _ = modification.targetItemIdentifier
+                _ = modification.targetSide
+            }
+            if let deletion = operation as? any NSFileProviderTestingDeletion {
+                _ = deletion.domainVersion
+                _ = deletion.sourceItemIdentifier
+                _ = deletion.targetItemBaseVersion
+                _ = deletion.targetItemIdentifier
+                _ = deletion.targetSide
+            }
+            if let fetch = operation as? any NSFileProviderTestingContentFetch {
+                _ = fetch.itemIdentifier
+                _ = fetch.side
+            }
+            if let children = operation as? any NSFileProviderTestingChildrenEnumeration {
+                _ = children.itemIdentifier
+                _ = children.side
+            }
+            if let collision = operation as? any NSFileProviderTestingCollisionResolution {
+                _ = collision.renamedItem
+                _ = collision.side
+            }
+        }
+        return [:]
     }
 
     public func signalEnumerator(
         for containerItemIdentifier: NSFileProviderItemIdentifier
     ) async throws {
-        _ = containerItemIdentifier
-        throw FileProviderHost.unsupported()
+        guard let domain = boundDomain else {
+            throw FileProviderHost.unsupported()
+        }
+        try await FileProviderLocalHost.shared.signalEnumerator(
+            domain: domain,
+            container: containerItemIdentifier
+        )
     }
 
     public func signalErrorResolved(_ error: any Error) async throws {
-        _ = error
-        throw FileProviderHost.unsupported()
+        guard boundDomain != nil else {
+            throw FileProviderHost.unsupported()
+        }
+        FileProviderLocalHost.shared.signalErrorResolved(error)
     }
 
     public func temporaryDirectoryURL() throws -> URL {
@@ -256,13 +461,16 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
 
     public func waitForChanges(below itemIdentifier: NSFileProviderItemIdentifier) async throws {
         _ = itemIdentifier
-        throw FileProviderHost.unsupported()
+        guard boundDomain != nil else {
+            throw FileProviderHost.unsupported()
+        }
+        await FileProviderLocalHost.shared.waitForChanges()
     }
 
     public func waitForStabilization(completionHandler: @escaping ((any Error)?) -> Void) {
         let once = FileProviderCallback.Once()
-        FileProviderCallback.asyncOnce(once) {
-            completionHandler(FileProviderHost.unsupported())
+        FileProviderLocalHost.shared.waitForStabilization {
+            once.run { completionHandler(nil) }
         }
     }
 
@@ -271,11 +479,25 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         requestedRange: NSRange? = nil,
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        _ = itemIdentifier
         _ = requestedRange
         let once = FileProviderCallback.Once()
-        FileProviderCallback.asyncOnce(once) {
-            completionHandler(FileProviderHost.unsupported())
+        FileProviderCallback.queue.async {
+            guard let domain = self.boundDomain,
+                let provider = self._localReplicatedExtension()
+            else {
+                once.run { completionHandler(FileProviderHost.unsupported()) }
+                return
+            }
+            let request = NSFileProviderRequest(
+                domainVersion: FileProviderLocalHost.shared.domainVersion(for: domain.identifier)
+            )
+            _ = provider.fetchContents(
+                for: itemIdentifier,
+                version: nil,
+                request: request
+            ) { _, _, error in
+                once.run { completionHandler(error) }
+            }
         }
     }
 
@@ -283,8 +505,17 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         withIdentifier itemIdentifier: NSFileProviderItemIdentifier,
         requestedRange: NSRange? = nil
     ) async throws {
-        _ = itemIdentifier
-        _ = requestedRange
-        throw FileProviderHost.unsupported()
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+            requestDownloadForItem(
+                withIdentifier: itemIdentifier,
+                requestedRange: requestedRange
+            ) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 }

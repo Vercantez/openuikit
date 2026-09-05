@@ -6,6 +6,8 @@ full/fileprovider/FileProviderExtension.swift
 full/fileprovider/FileProviderHost.swift
 full/fileprovider/FileProviderIdentifiers.swift
 full/fileprovider/FileProviderItem.swift
+full/fileprovider/FileProviderLocalHost.swift
 full/fileprovider/FileProviderManager.swift
 full/fileprovider/FileProviderOptionSets.swift
 full/fileprovider/FileProviderProtocols.swift
+full/fileprovider/FileProviderTesting.swift
