@@ -5,41 +5,58 @@ This directory is a clean-room Linux implementation of Apple's public
 
 ## What is real
 
-- `CMTime` and `CMTimeFlags` / `CMTimeRoundingMethod` with make, seconds,
-  convert-scale, add/subtract/multiply, compare, min/max, absolute value,
-  clamp/map, and dictionary round-trip through real `CFDictionary` values.
-- `CMTimeRange`, `CMTimeMapping`, `CMSampleTimingInfo`, `CMVideoDimensions`
-  with the C field layouts (`24 / 48 / 96 / 72 / 8` bytes on LP64).
-- Media type and codec/pixel-format FourCC constants, plus
-  `CMFormatDescription` identity (`mediaType`, `mediaSubType`, dimensions).
-- `CMBlockBuffer` owned-byte copy-in/copy-out (no interior pointers into
-  temporaries). `CMSampleBuffer` timing and data-read surfaces, invalidate
-  exactly-once, not-ready/make-ready, and fail-closed invalidation.
-- Attachment propagate vs not-propagate, and `NSError` contracts on
-  `NSOSStatusErrorDomain`.
-- C-callable `@_cdecl` entry points are not emitted on this isolated Linux
-  Swift 6.2 gate: Swift `CMTime` / `CMTimeRange` structs are not Clang-imported
-  C types, so they cannot be passed through a C calling convention. The
-  functions exist as Swift overlay (`public func CMTimeMake` and siblings).
-  Layout is independently reconstructed in `tests/agent/cm_value_layout.c`.
-  Central ARM64 integration must import the real C structs before claiming
-  TBD C ABI. Everything else is Swift-only overlay.
+- `CMTime` arithmetic exactly as documented in `CMTime.h`: make,
+  make-with-seconds, get-seconds, add/subtract/multiply/multiplyByFloat64/
+  multiplyByRatio, compare/min/max/absoluteValue, convertScale for every
+  `CMTimeRoundingMethod` (QuickTime uses toward-+infinity as a labeled
+  stand-in; see `oracle-questions.tsv`), flags, epoch mismatch → invalid,
+  and `kCMTimeZero` / `Invalid` / `Indefinite` / `±Infinity`. Dictionary
+  round-trip uses `value` / `timescale` / `epoch` / `flags` CFString keys.
+- `CMTimeRange` (make, fromTimeToTime, contains, union/intersection, end,
+  equal, dictionary) and `CMTimeMapping`.
+- Host `CMClock` on `DispatchTime` nanoseconds (CMSync.h: "large integer
+  timescale (eg, nanoseconds)") and `CMTimebase` rate/anchor interpolation
+  `time = anchor + (sourceNow − sourceAnchor) * rate`. Audio clock create
+  returns `kCMClockError_UnsupportedOperation`. Timers throw
+  `kCMTimebaseError_TimerIntervalTooShort`.
+- `CMBlockBuffer` owned-byte copy-in/copy-out, fill/replace/append,
+  `AccessDataBytes` copying into the caller temporary. Interior
+  `GetDataPointer` fails closed (`kCMBlockBufferUnallocatedBlockErr`).
+- `CMSampleBuffer` create/ready/copy/timing/size/attachments/invalidate.
+  Image-buffer and AudioBufferList entry points stay deferred until
+  CoreVideo/CoreAudioTypes are present.
+- `CMFormatDescription` media type/subtype, video dimensions, extensions,
+  equality. Audio `AudioStreamBasicDescription` bridging is compiled only
+  when `CoreAudioTypes` is imported (`CMDependencyBridges.swift`); the
+  isolated host does not claim it.
+- Public `kCMTime*` / `kCMSampleAttachment*` / `kCMFormatDescription*`
+  CFString keys (suffix payloads; color aliases match this repo's CoreVideo
+  strings) and OSStatus integers from the public headers.
+
+`implemented` rows cite a focused test of that identifier. Enum/option-set
+members may share one table-driven raw-value test. kCM* string payloads are
+split into family tables (time/range/mapping, format-description extensions,
+color/matrix, sample attachments, metadata key spaces).
 
 ## Fail-closed
 
 - Invalid timescale, NaN seconds, mixed infinities, different epochs on add,
   empty/malformed buffer offsets, and invalidated sample buffers fail closed.
+- Big-endian sample-description bridges and H.264/HEVC parameter-set
+  parsers return `kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor`
+  / `kCMFormatDescriptionError_InvalidParameter`: there is no QuickTime
+  decoder on this isolated Linux gate.
 - Arbitrary payload bytes are stored as opaque sample data; they are not
-  treated as a decoded or validated bitstream.
-- Apple clocks, timebases, buffer queues, tagged buffers, hardware, and
-  daemon-backed services are not implemented. Those identifiers are deferred
-  or unavailable.
+  treated as a decoded bitstream.
 
 ## Deferred
 
-- `OSStatus`-typed C APIs wait for Darwin in the central ARM64 build.
-- `AudioStreamBasicDescription` / `AudioBuffer` / `CVImageBuffer` APIs are
-  compiled only when the real `CoreAudioTypes` and `CoreVideo` modules exist.
-- Unobserved rounding details (`quickTime`), CFString pointer identity versus
-  Apple's interned keys, and process-local `CFTypeID` values are queued in
-  `oracle-questions.tsv`.
+- `CMBufferQueue`, `CMSimpleQueue`, `CMMemoryPool`, `CMTag`,
+  `CMReadySampleBuffer`, stereo/packing, and tagged-buffer types.
+- APIs that require `AudioStreamBasicDescription` / `CVImageBuffer` until
+  the central build supplies CoreAudioTypes and CoreVideo.
+- Remaining Swift overlay Collection/camera-calibration helpers on
+  `CMFormatDescription.Extensions.Value`.
+- C-callable `@_cdecl` entry points are not emitted: Swift `CMTime` structs
+  are not Clang-imported C types. Layout is reconstructed in
+  `tests/agent/cm_value_layout.c`.

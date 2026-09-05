@@ -36,6 +36,13 @@ public typealias CMTimeCodeFormatType = UInt32
 public typealias CMTextFormatType = UInt32
 public typealias CMTaggedBufferGroupFormatType = UInt32
 
+public typealias CMImageDescriptionFlavor = CFString
+public typealias CMSoundDescriptionFlavor = CFString
+public typealias CMTextDescriptionFlavor = CFString
+public typealias CMMetadataDescriptionFlavor = CFString
+public typealias CMClosedCaptionDescriptionFlavor = CFString
+public typealias CMTimeCodeDescriptionFlavor = CFString
+
 public typealias CMAttachmentMode = UInt32
 public typealias CMBlockBufferFlags = UInt32
 public typealias CMPersistentTrackID = Int32
@@ -63,6 +70,17 @@ public typealias CMTaggedBufferGroupFormatDescription = CMFormatDescription
 
 public typealias CMSampleBufferInvalidateCallback = (CMSampleBuffer, UInt64) -> Void
 public typealias CMSampleBufferInvalidateHandler = (CMSampleBuffer) -> Void
+public typealias CMSampleBufferMakeDataReadyCallback = (CMSampleBuffer, UnsafeMutableRawPointer?) -> OSStatus
+public typealias CMSampleBufferMakeDataReadyHandler = (CMSampleBuffer) -> OSStatus
+
+public var kCMTimeZero: CMTime { .zero }
+public var kCMTimeInvalid: CMTime { .invalid }
+public var kCMTimeIndefinite: CMTime { .indefinite }
+public var kCMTimePositiveInfinity: CMTime { .positiveInfinity }
+public var kCMTimeNegativeInfinity: CMTime { .negativeInfinity }
+public var kCMTimeRangeZero: CMTimeRange { .zero }
+public var kCMTimeRangeInvalid: CMTimeRange { .invalid }
+public var kCMTimeMappingInvalid: CMTimeMapping { .invalid }
 
 public var kCMTimeMaxTimescale: Int { Int(Int32.max) }
 
@@ -76,6 +94,25 @@ public var kCMBlockBufferAlwaysCopyDataFlag: CMBlockBufferFlags { 1 << 1 }
 public var kCMBlockBufferDontOptimizeDepthFlag: CMBlockBufferFlags { 1 << 2 }
 public var kCMBlockBufferPermitEmptyReferenceFlag: CMBlockBufferFlags { 1 << 3 }
 public var kCMBlockBufferCustomBlockSourceVersion: UInt32 { 1 }
+
+// CMTextFormatDescription.h display flags and justification.
+public var kCMTextDisplayFlag_scrollIn: CMTextDisplayFlags { 0x0000_0020 }
+public var kCMTextDisplayFlag_scrollOut: CMTextDisplayFlags { 0x0000_0040 }
+public var kCMTextDisplayFlag_scrollDirectionMask: CMTextDisplayFlags { 0x0000_0180 }
+public var kCMTextDisplayFlag_scrollDirection_bottomToTop: CMTextDisplayFlags { 0x0000_0000 }
+public var kCMTextDisplayFlag_scrollDirection_rightToLeft: CMTextDisplayFlags { 0x0000_0080 }
+public var kCMTextDisplayFlag_scrollDirection_topToBottom: CMTextDisplayFlags { 0x0000_0100 }
+public var kCMTextDisplayFlag_scrollDirection_leftToRight: CMTextDisplayFlags { 0x0000_0180 }
+public var kCMTextDisplayFlag_continuousKaraoke: CMTextDisplayFlags { 0x0000_0800 }
+public var kCMTextDisplayFlag_writeTextVertically: CMTextDisplayFlags { 0x0002_0000 }
+public var kCMTextDisplayFlag_fillTextRegion: CMTextDisplayFlags { 0x0004_0000 }
+public var kCMTextDisplayFlag_obeySubtitleFormatting: CMTextDisplayFlags { 0x2000_0000 }
+public var kCMTextDisplayFlag_forcedSubtitlesPresent: CMTextDisplayFlags { 0x4000_0000 }
+public var kCMTextDisplayFlag_allSubtitlesForced: CMTextDisplayFlags { 0x8000_0000 }
+public var kCMTextJustification_left_top: CMTextJustificationValue { 0 }
+public var kCMTextJustification_centered: CMTextJustificationValue { 1 }
+public var kCMTextJustification_bottom_right: CMTextJustificationValue { -1 }
+public var kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment: UInt32 { 1 << 0 }
 
 @inline(__always)
 internal func cmFourCC(_ a: UInt8, _ b: UInt8, _ c: UInt8, _ d: UInt8) -> UInt32 {
