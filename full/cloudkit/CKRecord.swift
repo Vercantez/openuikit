@@ -68,23 +68,23 @@ open class CKRecord: NSObject, NSSecureCoding, @unchecked Sendable {
 
     public required init?(coder: NSCoder) {
         guard let recordType = coder.decodeObject(of: NSString.self, forKey: CKRecord.ArchiveKey.recordType) as String?,
-              let recordID = coder.decodeObject(of: CKRecord.ID.self, forKey: CKRecord.ArchiveKey.recordID)
+              let recordID = coder.decodeObject(of: CKRecordID.self, forKey: CKRecord.ArchiveKey.recordID)
         else {
             return nil
         }
         self.recordType = recordType
         self.recordID = recordID
         super.init()
-        recordChangeTag = coder.decodeObject(of: NSString.self, forKey: CKRecord.ArchiveKey.changeTag) as String?
-        creatorUserRecordID = coder.decodeObject(of: CKRecord.ID.self, forKey: CKRecord.ArchiveKey.creator)
-        lastModifiedUserRecordID = coder.decodeObject(of: CKRecord.ID.self, forKey: CKRecord.ArchiveKey.lastModified)
-        creationDate = coder.decodeObject(of: NSDate.self, forKey: CKRecord.ArchiveKey.creationDate) as Date?
-        modificationDate = coder.decodeObject(of: NSDate.self, forKey: CKRecord.ArchiveKey.modificationDate) as Date?
-        parent = coder.decodeObject(of: CKRecord.Reference.self, forKey: CKRecord.ArchiveKey.parent)
-        share = coder.decodeObject(of: CKRecord.Reference.self, forKey: CKRecord.ArchiveKey.share)
-        if let fieldKeys = coder.decodeObject(of: [NSArray.self, NSString.self], forKey: CKRecord.ArchiveKey.fieldKeys) as? [String] {
+        recordChangeTag = coder.ck_decodeIfPresent(NSString.self, forKey: CKRecord.ArchiveKey.changeTag) as String?
+        creatorUserRecordID = coder.ck_decodeIfPresent(CKRecordID.self, forKey: CKRecord.ArchiveKey.creator)
+        lastModifiedUserRecordID = coder.ck_decodeIfPresent(CKRecordID.self, forKey: CKRecord.ArchiveKey.lastModified)
+        creationDate = coder.ck_decodeIfPresent(NSDate.self, forKey: CKRecord.ArchiveKey.creationDate) as Date?
+        modificationDate = coder.ck_decodeIfPresent(NSDate.self, forKey: CKRecord.ArchiveKey.modificationDate) as Date?
+        parent = coder.ck_decodeIfPresent(CKRecordReference.self, forKey: CKRecord.ArchiveKey.parent)
+        share = coder.ck_decodeIfPresent(CKRecordReference.self, forKey: CKRecord.ArchiveKey.share)
+        if let fieldKeys = coder.ck_decodeIfPresent(classes: [NSArray.self, NSString.self], forKey: CKRecord.ArchiveKey.fieldKeys) as? [String] {
             for key in fieldKeys {
-                if let value = CKRecord.unarchiveValue(coder.decodeObject(forKey: CKRecord.ArchiveKey.fieldPrefix + key)) {
+                if let value = CKRecord.unarchiveValue(coder.ck_decodeIfPresent(forKey: CKRecord.ArchiveKey.fieldPrefix + key)) {
                     store.setObject(value, forKey: key)
                 }
             }
@@ -168,7 +168,7 @@ open class CKRecord: NSObject, NSSecureCoding, @unchecked Sendable {
         coder.encode(share, forKey: CKRecord.ArchiveKey.share)
     }
 
-    open override func value(forKey key: String) -> Any? {
+    open func value(forKey key: String) -> Any? {
         if key == CKRecord.SystemFieldKey.recordID { return recordID }
         if key == CKRecord.SystemFieldKey.creatorUserRecordID { return creatorUserRecordID }
         if key == CKRecord.SystemFieldKey.lastModifiedUserRecordID { return lastModifiedUserRecordID }
@@ -200,113 +200,114 @@ open class CKRecord: NSObject, NSSecureCoding, @unchecked Sendable {
 
 extension CKRecord: Sequence {}
 
+open class CKRecordID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    open private(set) var recordName: String
+    open private(set) var zoneID: CKRecordZone.ID
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public convenience init(
+        recordName: String = UUID().uuidString,
+        zoneID: CKRecordZone.ID = CKRecordZone.ID.default
+    ) {
+        self.init(_recordName: recordName, zoneID: zoneID)
+    }
+
+    init(_recordName: String, zoneID: CKRecordZone.ID) {
+        self.recordName = _recordName
+        self.zoneID = zoneID
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        guard let recordName = coder.decodeObject(of: NSString.self, forKey: "ck.recordName") as String?,
+              let zoneID = coder.decodeObject(of: CKRecordZoneID.self, forKey: "ck.zoneID")
+        else {
+            return nil
+        }
+        self.recordName = recordName
+        self.zoneID = zoneID
+        super.init()
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(recordName as NSString, forKey: "ck.recordName")
+        coder.encode(zoneID, forKey: "ck.zoneID")
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        CKRecordID(_recordName: recordName, zoneID: zoneID)
+    }
+
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(recordName)
+        hasher.combine(zoneID.zoneName)
+        hasher.combine(zoneID.ownerName)
+        return hasher.finalize()
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CKRecordID else { return false }
+        return recordName == other.recordName && zoneID.isEqual(other.zoneID)
+    }
+}
+
+open class CKRecordReference: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public typealias Action = CKRecord.ReferenceAction
+
+    open private(set) var recordID: CKRecord.ID
+    open private(set) var action: CKRecord.ReferenceAction
+
+    public var referenceAction: CKRecord.ReferenceAction { action }
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public convenience init(record: CKRecord, action: CKRecord.ReferenceAction) {
+        self.init(recordID: record.recordID, action: action)
+    }
+
+    public init(recordID: CKRecord.ID, action: CKRecord.ReferenceAction) {
+        self.recordID = recordID
+        self.action = action
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        guard let recordID = coder.decodeObject(of: CKRecordID.self, forKey: "ck.ref.recordID") else {
+            return nil
+        }
+        self.recordID = recordID
+        let raw = coder.decodeInteger(forKey: "ck.ref.action")
+        self.action = CKRecord.ReferenceAction(rawValue: UInt(raw)) ?? .none
+        super.init()
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(recordID, forKey: "ck.ref.recordID")
+        coder.encode(Int(action.rawValue), forKey: "ck.ref.action")
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        CKRecordReference(recordID: recordID, action: action)
+    }
+
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(recordID.hash)
+        hasher.combine(action)
+        return hasher.finalize()
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CKRecordReference else { return false }
+        return recordID.isEqual(other.recordID) && action == other.action
+    }
+}
+
 extension CKRecord {
-    @objc(CKRecordID)
-    open class ID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        open private(set) var recordName: String
-        open private(set) var zoneID: CKRecordZone.ID
-
-        public static var supportsSecureCoding: Bool { true }
-
-        public convenience init(
-            recordName: String = UUID().uuidString,
-            zoneID: CKRecordZone.ID = CKRecordZone.ID.default
-        ) {
-            self.init(_recordName: recordName, zoneID: zoneID)
-        }
-
-        init(_recordName: String, zoneID: CKRecordZone.ID) {
-            self.recordName = _recordName
-            self.zoneID = zoneID
-            super.init()
-        }
-
-        public required init?(coder: NSCoder) {
-            guard let recordName = coder.decodeObject(of: NSString.self, forKey: "ck.recordName") as String?,
-                  let zoneID = coder.decodeObject(of: CKRecordZone.ID.self, forKey: "ck.zoneID")
-            else {
-                return nil
-            }
-            self.recordName = recordName
-            self.zoneID = zoneID
-            super.init()
-        }
-
-        open func encode(with coder: NSCoder) {
-            coder.encode(recordName as NSString, forKey: "ck.recordName")
-            coder.encode(zoneID, forKey: "ck.zoneID")
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            CKRecord.ID(_recordName: recordName, zoneID: zoneID)
-        }
-
-        open override var hash: Int {
-            var hasher = Hasher()
-            hasher.combine(recordName)
-            hasher.combine(zoneID.zoneName)
-            hasher.combine(zoneID.ownerName)
-            return hasher.finalize()
-        }
-
-        open override func isEqual(_ object: Any?) -> Bool {
-            guard let other = object as? CKRecord.ID else { return false }
-            return recordName == other.recordName && zoneID.isEqual(other.zoneID)
-        }
-    }
-
-    @objc(CKReference)
-    open class Reference: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        public typealias Action = CKRecord.ReferenceAction
-
-        open private(set) var recordID: CKRecord.ID
-        open private(set) var action: CKRecord.ReferenceAction
-
-        public var referenceAction: CKRecord.ReferenceAction { action }
-
-        public static var supportsSecureCoding: Bool { true }
-
-        public convenience init(record: CKRecord, action: CKRecord.ReferenceAction) {
-            self.init(recordID: record.recordID, action: action)
-        }
-
-        public init(recordID: CKRecord.ID, action: CKRecord.ReferenceAction) {
-            self.recordID = recordID
-            self.action = action
-            super.init()
-        }
-
-        public required init?(coder: NSCoder) {
-            guard let recordID = coder.decodeObject(of: CKRecord.ID.self, forKey: "ck.ref.recordID") else {
-                return nil
-            }
-            self.recordID = recordID
-            let raw = coder.decodeInteger(forKey: "ck.ref.action")
-            self.action = CKRecord.ReferenceAction(rawValue: UInt(raw)) ?? .none
-            super.init()
-        }
-
-        open func encode(with coder: NSCoder) {
-            coder.encode(recordID, forKey: "ck.ref.recordID")
-            coder.encode(Int(action.rawValue), forKey: "ck.ref.action")
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            CKRecord.Reference(recordID: recordID, action: action)
-        }
-
-        open override var hash: Int {
-            var hasher = Hasher()
-            hasher.combine(recordID.hash)
-            hasher.combine(action)
-            return hasher.finalize()
-        }
-
-        open override func isEqual(_ object: Any?) -> Bool {
-            guard let other = object as? CKRecord.Reference else { return false }
-            return recordID.isEqual(other.recordID) && action == other.action
-        }
-    }
+    public typealias ID = CKRecordID
+    public typealias Reference = CKRecordReference
 }
 
 open class CKAsset: NSObject, NSSecureCoding, @unchecked Sendable {

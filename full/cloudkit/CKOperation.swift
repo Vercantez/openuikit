@@ -209,9 +209,8 @@ open class CKModifyRecordsOperation: CKDatabaseOperation, @unchecked Sendable {
 }
 
 open class CKQueryOperation: CKDatabaseOperation, @unchecked Sendable {
-    public static let maximumResults: Int = 0
+    public static let maximumResults: Int = CKQueryOperationMaximumResults
 
-    @objc(CKQueryCursor)
     open class Cursor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         public static var supportsSecureCoding: Bool { true }
 
@@ -224,8 +223,9 @@ open class CKQueryOperation: CKDatabaseOperation, @unchecked Sendable {
 
         public required init?(coder: NSCoder) {
             ck_recordType = coder.decodeObject(of: NSString.self, forKey: "ck.cursor.recordType") as String? ?? ""
-            ck_predicate = coder.decodeObject(of: NSPredicate.self, forKey: "ck.cursor.predicate") ?? NSPredicate(value: true)
-            ck_zoneID = coder.decodeObject(of: CKRecordZone.ID.self, forKey: "ck.cursor.zoneID")
+            // Linux Foundation NSPredicate is not NSCoding; restore a TRUEPREDICATE.
+            ck_predicate = NSPredicate(value: true)
+            ck_zoneID = coder.decodeObject(of: CKRecordZoneID.self, forKey: "ck.cursor.zoneID")
             ck_offset = coder.decodeInteger(forKey: "ck.cursor.offset")
             super.init()
         }
@@ -254,7 +254,6 @@ open class CKQueryOperation: CKDatabaseOperation, @unchecked Sendable {
 
         open func encode(with coder: NSCoder) {
             coder.encode(ck_recordType as NSString, forKey: "ck.cursor.recordType")
-            coder.encode(ck_predicate, forKey: "ck.cursor.predicate")
             coder.encode(ck_zoneID, forKey: "ck.cursor.zoneID")
             coder.encode(ck_offset, forKey: "ck.cursor.offset")
         }

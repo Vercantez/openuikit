@@ -17,6 +17,8 @@ public let CKCurrentUserDefaultName = "__defaultOwner__"
 public let CKOwnerDefaultName = "__defaultOwner__"
 public let CKRecordZoneDefaultName = "_defaultZone"
 public let CKRecordNameZoneWideShare = "cloudkit.zoneshare"
+public let CKQueryOperationMaximumResults = 0
+public let CKAccountChangedNotification = "CKAccountChangedNotification"
 
 public let CKRecordTypeUserRecord = "Users"
 public let CKRecordTypeShare = "cloudkit.share"
@@ -27,7 +29,7 @@ public let CKShareTypeKey = "cloudkit.share.type"
 public let CKShareThumbnailImageDataKey = "cloudkit.share.thumbnailImageData"
 
 extension NSNotification.Name {
-    public static let CKAccountChanged = NSNotification.Name("CKAccountChangedNotification")
+    public static let CKAccountChanged = NSNotification.Name(CKAccountChangedNotification)
 }
 
 // MARK: - Compatibility aliases (Swift overlay)
@@ -95,6 +97,39 @@ enum CloudKitHost {
     }
 
     static func schedule(_ work: @escaping () -> Void) {
-        operationQueue.addOperation(work)
+        let boxed = CloudKitUncheckedWork(work)
+        operationQueue.addOperation {
+            boxed.run()
+        }
+    }
+}
+
+final class CloudKitUncheckedWork: @unchecked Sendable {
+    private let body: () -> Void
+
+    init(_ body: @escaping () -> Void) {
+        self.body = body
+    }
+
+    func run() {
+        body()
+    }
+}
+
+extension NSCoder {
+    /// Linux NSKeyedUnarchiver raises on a missing key; Apple returns nil.
+    func ck_decodeIfPresent<T: NSObject & NSCoding>(_ type: T.Type, forKey key: String) -> T? {
+        guard containsValue(forKey: key) else { return nil }
+        return decodeObject(of: type, forKey: key)
+    }
+
+    func ck_decodeIfPresent(classes: [AnyClass], forKey key: String) -> Any? {
+        guard containsValue(forKey: key) else { return nil }
+        return decodeObject(of: classes, forKey: key)
+    }
+
+    func ck_decodeIfPresent(forKey key: String) -> Any? {
+        guard containsValue(forKey: key) else { return nil }
+        return decodeObject(forKey: key)
     }
 }

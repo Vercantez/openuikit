@@ -9,7 +9,6 @@ open class CKSubscription: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
         case database = 3
     }
 
-    @objc(CKNotificationInfo)
     open class NotificationInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         open var alertActionLocalizationKey: String?
         open var alertBody: String?

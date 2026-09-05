@@ -8,7 +8,6 @@ open class CKNotification: NSObject, @unchecked Sendable {
         case database = 4
     }
 
-    @objc(CKNotificationID)
     open class ID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         public static var supportsSecureCoding: Bool { true }
         var ck_payload: String = ""

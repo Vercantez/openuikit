@@ -544,7 +544,7 @@ final class CKRecordPredicateTarget: NSObject {
         super.init()
     }
 
-    override func value(forUndefinedKey key: String) -> Any? {
+    func value(forUndefinedKey key: String) -> Any? {
         nil
     }
 

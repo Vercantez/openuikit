@@ -68,7 +68,6 @@ open class CKUserIdentity: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
             && hasiCloudAccount == other.hasiCloudAccount
     }
 
-    @objc(CKUserIdentityLookupInfo)
     open class LookupInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         open private(set) var emailAddress: String?
         open private(set) var phoneNumber: String?

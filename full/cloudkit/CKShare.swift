@@ -24,11 +24,13 @@ public struct CKSharingParticipantPermissionOption: OptionSet, Sendable, Hashabl
     public static let any: CKSharingParticipantPermissionOption = [.readOnly, .readWrite]
 }
 
-open class CKAllowedSharingOptions: NSObject, @unchecked Sendable {
+open class CKAllowedSharingOptions: NSObject, NSSecureCoding, @unchecked Sendable {
     open var allowedParticipantAccessOptions: CKSharingParticipantAccessOption
     open var allowedParticipantPermissionOptions: CKSharingParticipantPermissionOption
     open var allowsAccessRequests: Bool = false
     open var allowsParticipantsToInviteOthers: Bool = false
+
+    public static var supportsSecureCoding: Bool { true }
 
     open class var standard: CKAllowedSharingOptions {
         CKAllowedSharingOptions(
@@ -44,6 +46,15 @@ open class CKAllowedSharingOptions: NSObject, @unchecked Sendable {
         self.allowedParticipantPermissionOptions = allowedParticipantPermissionOptions
         self.allowedParticipantAccessOptions = allowedParticipantAccessOptions
         super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
     }
 }
 
@@ -153,7 +164,6 @@ open class CKShare: CKRecord, @unchecked Sendable {
         return nil
     }
 
-    @objc(CKShareAccessRequester)
     open class AccessRequester: NSObject, NSSecureCoding, @unchecked Sendable {
         open private(set) var participantLookupInfo: CKUserIdentity.LookupInfo
         open private(set) var userIdentity: CKUserIdentity
@@ -176,7 +186,6 @@ open class CKShare: CKRecord, @unchecked Sendable {
         }
     }
 
-    @objc(CKShareBlockedIdentity)
     open class BlockedIdentity: NSObject, NSSecureCoding, @unchecked Sendable {
         open private(set) var userIdentity: CKUserIdentity
 
@@ -197,7 +206,6 @@ open class CKShare: CKRecord, @unchecked Sendable {
         }
     }
 
-    @objc(CKShareMetadata)
     open class Metadata: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         open private(set) var containerIdentifier: String
         open private(set) var hierarchicalRootRecordID: CKRecord.ID?
@@ -225,7 +233,6 @@ open class CKShare: CKRecord, @unchecked Sendable {
         }
     }
 
-    @objc(CKShareParticipant)
     open class Participant: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         public typealias Permission = CKShare.ParticipantPermission
         public typealias AcceptanceStatus = CKShare.ParticipantAcceptanceStatus
