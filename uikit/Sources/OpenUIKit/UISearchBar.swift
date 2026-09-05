@@ -387,11 +387,22 @@ open class UISearchBar: UIView {
     /// NOT measured (file header): the cancel button's metrics.
     public static let cancelButtonFontSize: CGFloat = 17
     public static let cancelButtonGap: CGFloat = 8
+    /// MEASURED Tabs t4000, iPhone SE 2x / iOS 26.1: inline-nav search
+    /// (isActive) uses 16 pt side inset, a 44×44 dismiss at trailing 16,
+    /// 11 pt gap to the field, field y 8 in a 60 pt bar. Not the
+    /// standalone "Cancel" text button.
+    static let navInlineSideInset: CGFloat = 16
+    static let navInlineFieldY: CGFloat = 8
+    static let navInlineDismissSize: CGFloat = 44
+    static let navInlineDismissRadius: CGFloat = 17
+    static let navInlineDismissGap: CGFloat = 11
 
     public weak var delegate: UISearchBarDelegate?
 
     public let searchTextField = UISearchTextField()
     private var cancelButton: UIButton?
+    /// Set by UINavigationBar when this bar is the active inline-nav search.
+    var _navInlineActive = false
 
     public var text: String? {
         get { searchTextField.text }
@@ -491,15 +502,26 @@ open class UISearchBar: UIView {
         CGSize(width: size.width, height: UISearchBar.standardHeight)
     }
 
-    /// Measured: (8, (H - 44) / 2, W - 16, 36), shrunk by the cancel button
-    /// when one is shown (that part is NOT measured -- file header).
+    /// Measured: standalone (8, (H - 44) / 2, W - 16, 36/44); inline-nav
+    /// active (Tabs t4000): field (16, 8, 288, 44) and dismiss (315, 8, 44, 44).
     open override func layoutSubviews() {
         super.layoutSubviews()
+        if bounds.height < 1 {
+            searchTextField.isHidden = true
+            cancelButton?.isHidden = true
+            return
+        }
+        searchTextField.isHidden = false
+        if _navInlineActive {
+            layoutNavInline()
+            return
+        }
         let y = (bounds.height - UISearchBar.standardHeight) / 2
         var right = bounds.width - UISearchBar.fieldSideInset
         if showsCancelButton {
             let b = cancelButton ?? makeCancelButton()
             b.isHidden = false
+            applyStandaloneCancelChrome(b)
             let w = b.sizeThatFits(bounds.size).width
             b.frame = CGRect(x: bounds.width - UISearchBar.fieldSideInset - w,
                              y: y, width: w, height: UISearchBar.standardHeight)
@@ -510,6 +532,40 @@ open class UISearchBar: UIView {
         searchTextField.frame = CGRect(x: UISearchBar.fieldSideInset, y: y,
                                        width: max(0, right - UISearchBar.fieldSideInset),
                                        height: UISearchBar.fieldHeight)
+    }
+
+    func layoutNavInline() {
+        let side = UISearchBar.navInlineSideInset
+        let d = UISearchBar.navInlineDismissSize
+        let gap = UISearchBar.navInlineDismissGap
+        let y = UISearchBar.navInlineFieldY
+        let b = cancelButton ?? makeCancelButton()
+        b.isHidden = false
+        applyNavInlineCancelChrome(b)
+        b.frame = CGRect(x: bounds.width - side - d, y: y, width: d, height: d)
+        let fieldW = max(0, bounds.width - side - d - gap - side)
+        searchTextField.frame = CGRect(x: side, y: y, width: fieldW,
+                                       height: UISearchBar.fieldHeight)
+    }
+
+    func applyStandaloneCancelChrome(_ b: UIButton) {
+        b.setTitle("Cancel", for: .normal)
+        b.setImage(nil, for: .normal)
+        b.backgroundColor = nil
+        b.layer.cornerRadius = 0
+        b.titleLabel?.font = .systemFont(ofSize: UISearchBar.cancelButtonFontSize)
+    }
+
+    func applyNavInlineCancelChrome(_ b: UIButton) {
+        // Tabs t4000: UIButton `[315, 18, 44, 44]` with an empty title and
+        // a 22.5×21.5 image view (not the word "Cancel", not a "×" label —
+        // golden has 0 of both). Portable SF subset includes `multiply`.
+        b.setTitle(nil, for: .normal)
+        b.setImage(UIImage(systemName: "multiply"), for: .normal)
+        b.tintColor = .label
+        b.backgroundColor = _UISearchFieldMetrics.pillFill
+        b.layer.cornerRadius = UISearchBar.navInlineDismissRadius
+        b.clipsToBounds = true
     }
 
     private func makeCancelButton() -> UIButton {

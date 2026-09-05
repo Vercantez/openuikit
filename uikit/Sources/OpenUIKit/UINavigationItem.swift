@@ -90,6 +90,21 @@ public class UINavigationItem {
         hidesBackButton = hides
     }
 
+    /// The search controller this item presents in its navigation bar.
+    /// Assigning it installs the search bar; `hidesSearchBarWhenScrolling`
+    /// (UIKit default true) hides that slot once the tracked table scrolls.
+    public var searchController: UISearchController? {
+        didSet {
+            oldValue?._item = nil
+            searchController?._item = self
+            _bar?._navigationItemChanged(self)
+        }
+    }
+    /// UIKit default true. Tabs t7000 (scroll-200 on tab 1) is the hide.
+    public var hidesSearchBarWhenScrolling: Bool = true {
+        didSet { _bar?._navigationItemChanged(self) }
+    }
+
     /// Per-item appearance overrides (UIKit lets a single screen restyle the
     /// bar without touching the shared bar appearance).
     public var standardAppearance: UINavigationBarAppearance? {
