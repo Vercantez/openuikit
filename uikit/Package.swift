@@ -76,6 +76,34 @@ let swiftUICombineDependencies: [Target.Dependency] = [
 // Package.swift is evaluated on the build host: the Linux image compiles a
 // stub; Darwin still compiles the full SwiftUITests tree.
 #if os(Linux)
+let linuxXCTestSupportTargets: [Target] = [
+    .target(name: "CLinuxXCTestSupport", publicHeadersPath: "include"),
+]
+let openUIKitTestDeps: [Target.Dependency] = [
+    "OpenUIKit", "UIKit", "ConformanceApps",
+    "SafariServices", "MessageUI", "LinkPresentation",
+    "CLinuxXCTestSupport",
+]
+let openUIKitCTestDeps: [Target.Dependency] = [
+    "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
+    "CLinuxXCTestSupport",
+]
+let swiftUITestLinuxDeps: [Target.Dependency] = [
+    "CLinuxXCTestSupport",
+]
+#else
+let linuxXCTestSupportTargets: [Target] = []
+let openUIKitTestDeps: [Target.Dependency] = [
+    "OpenUIKit", "UIKit", "ConformanceApps",
+    "SafariServices", "MessageUI", "LinkPresentation",
+]
+let openUIKitCTestDeps: [Target.Dependency] = [
+    "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
+]
+let swiftUITestLinuxDeps: [Target.Dependency] = []
+#endif
+
+#if os(Linux)
 let swiftUITestTarget: Target = .testTarget(
     name: "SwiftUITests",
     dependencies: [
@@ -83,7 +111,7 @@ let swiftUITestTarget: Target = .testTarget(
         "OpenUIKit",
         "Symbols",
         "DeveloperToolsSupport",
-    ] + swiftUICombineDependencies,
+    ] + swiftUICombineDependencies + swiftUITestLinuxDeps,
     sources: ["SwiftUILinuxStub.swift"],
     swiftSettings: [
         .unsafeFlags([
@@ -105,6 +133,29 @@ let swiftUITestTarget: Target = .testTarget(
 )
 #endif
 
+let openUIKitTestTarget: Target = .testTarget(
+    name: "OpenUIKitTests",
+    dependencies: openUIKitTestDeps,
+    swiftSettings: [
+        .unsafeFlags([
+            "-swift-version", "5",
+            "-Xfrontend", "-strict-concurrency=minimal",
+            "-Xfrontend", "-warn-concurrency",
+        ], .when(platforms: [.linux])),
+    ]
+)
+let openUIKitCTestTarget: Target = .testTarget(
+    name: "OpenUIKitCTests",
+    dependencies: openUIKitCTestDeps,
+    swiftSettings: [
+        .unsafeFlags([
+            "-swift-version", "5",
+            "-Xfrontend", "-strict-concurrency=minimal",
+            "-Xfrontend", "-warn-concurrency",
+        ], .when(platforms: [.linux])),
+    ]
+)
+
 // Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
 // here -- no swiftSettings, no linkerSettings, no `.when(platforms:)`:
 //
@@ -118,6 +169,8 @@ let swiftUITestTarget: Target = .testTarget(
 // whole package unusable as an SPM *dependency*, so needing them would have
 // forced the feature to be opt-in. It does not, and this package stays
 // dependency-clean on both platforms.
+
+let extraPackageTargets: [Target] = platformCombineTargets + linuxXCTestSupportTargets
 
 let package = Package(
     name: "OpenUIKit",
@@ -427,30 +480,9 @@ let package = Package(
         // attribute on Linux (see CoreAnimationCompatibilityTests). The
         // compiler's default isolation is Swift 6, so a nonisolated XCTestCase
         // cannot call `@preconcurrency @MainActor` UIKit without -swift-version 5.
-        .testTarget(
-            name: "OpenUIKitTests",
-            dependencies: ["OpenUIKit", "UIKit", "ConformanceApps",
-                           "SafariServices", "MessageUI", "LinkPresentation"],
-            swiftSettings: [
-                .unsafeFlags([
-                    "-swift-version", "5",
-                    "-Xfrontend", "-strict-concurrency=minimal",
-                    "-Xfrontend", "-warn-concurrency",
-                ], .when(platforms: [.linux])),
-            ]
-        ),
+        openUIKitTestTarget,
         swiftUITestTarget,
-        .testTarget(
-            name: "OpenUIKitCTests",
-            dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"],
-            swiftSettings: [
-                .unsafeFlags([
-                    "-swift-version", "5",
-                    "-Xfrontend", "-strict-concurrency=minimal",
-                    "-Xfrontend", "-warn-concurrency",
-                ], .when(platforms: [.linux])),
-            ]
-        ),
+        openUIKitCTestTarget,
         .target(name: "os"),
         .testTarget(
             name: "OSTests",
@@ -463,6 +495,6 @@ let package = Package(
                 ], .when(platforms: [.linux])),
             ]
         ),
-    ] + platformCombineTargets,
+    ] + extraPackageTargets,
     cxxLanguageStandard: .cxx17
 )
