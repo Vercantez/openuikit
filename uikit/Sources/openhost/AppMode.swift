@@ -94,6 +94,15 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
     /// `semanticContentAttribute` is in place for the first layout.
     /// Default false matches the previous LTR pin.
     var rtl = false
+    /// Applied to the window BEFORE `makeRoot()` so
+    /// `traitOverrides.preferredContentSizeCategory` is in place for
+    /// descendant `view.traitCollection`. Default `.large` stays unspecified.
+    /// Do **not** pin `UITraitCollection.current` — MEASURED Pager t200.ax1 /
+    /// Modal t200.ax1 / Notes t200.ax1 / Feed t200.ax1, iPhone SE 2x /
+    /// iOS 26.1: `UIFont.preferredFont(forTextStyle:)` without
+    /// `compatibleWith:` stays `.large` (heading 34, cards 17, buttons 17,
+    /// Notes rows 17/15/13) while window overrides scale chrome.
+    var contentSizeCategory: UIContentSizeCategory = .large
 
     /// openhost owns this concrete delegate instance and supplies it directly
     /// to `UIApplicationMain(delegate:)`; no class-name construction is
@@ -116,6 +125,13 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
             UIView.appearance().semanticContentAttribute = .forceRightToLeft
             UINavigationBar.appearance().semanticContentAttribute = .forceRightToLeft
             w.semanticContentAttribute = .forceRightToLeft
+        }
+        if contentSizeCategory != .large && contentSizeCategory != .unspecified {
+            // Same pin as confprobe --ax1. MEASURED TableEditor t200.ax1 /
+            // Feed t200.ax1, iPhone SE 2x / iOS 26.1: window traitOverrides
+            // `.accessibilityLarge` before makeRoot; large-title 48 pt,
+            // bar height 115.5. Default `.large` stays unspecified.
+            w.traitOverrides.preferredContentSizeCategory = contentSizeCategory
         }
         let vc = makeRoot()
         w.rootViewController = vc
@@ -152,7 +168,8 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
 @MainActor
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
                    style: UIUserInterfaceStyle = .light,
-                   rtl: Bool = false) -> HostScene {
+                   rtl: Bool = false,
+                   contentSizeCategory: UIContentSizeCategory = .large) -> HostScene {
     guard let app = appRegistry[appName] else {
         let names = appRegistry.keys.sorted().joined(separator: ", ")
         fatalError("unknown app \"\(appName)\" (available: \(names))")
@@ -184,6 +201,7 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
     let delegate = HostAppDelegate(name: appName, makeRoot: app.makeRoot)
     delegate.style = style
     delegate.rtl = rtl
+    delegate.contentSizeCategory = contentSizeCategory
     _appDelegate = delegate
     UIApplicationMain(delegate: delegate)
 
@@ -198,6 +216,9 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
     window.overrideUserInterfaceStyle = style
     if rtl {
         window.semanticContentAttribute = .forceRightToLeft
+    }
+    if contentSizeCategory != .large && contentSizeCategory != .unspecified {
+        window.traitOverrides.preferredContentSizeCategory = contentSizeCategory
     }
     window.setNeedsLayout()
     window.layoutIfNeeded()

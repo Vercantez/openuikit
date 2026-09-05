@@ -155,6 +155,62 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UINavigationBar.iOSBarContentHeight, 54)
         XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight, 106)
         XCTAssertEqual(UINavigationBar.iOSMinimumBarTop, 10)
+
+        // MEASURED NavFlow t200.ax1 / TableEditor t200.ax1, iPhone SE 2x /
+        // iOS 26.1: 48 pt Bold, label 57.5, zone 61.5, bar 115.5, inset 125.5.
+        device(375, 667, scale: 2)
+        let ax1 = UITraitCollection(preferredContentSizeCategory: .accessibilityLarge)
+        XCTAssertEqual(UINavigationBar.largeTitleFont(compatibleWith: ax1).pointSize, 48)
+        XCTAssertEqual(UINavigationBar.largeTitleLabelHeight(compatibleWith: ax1), 57.5)
+        XCTAssertEqual(UINavigationBar.largeTitleLabelY(compatibleWith: ax1), 54)
+        XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight(compatibleWith: ax1), 115.5)
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset(compatibleWith: ax1), 125.5)
+        XCTAssertEqual(
+            UIFontMetrics(forTextStyle: .body).scaledValue(for: 44, compatibleWith: ax1),
+            80)
+        XCTAssertEqual(UITableViewCell.plainClassicRowHeight(compatibleWith: ax1), 80)
+        let actionFont = UIAlertMetrics.actionFont(compatibleWith: ax1)
+        XCTAssertEqual(actionFont.pointSize, 33)
+        XCTAssertEqual(UIAlertMetrics.actionHeight(for: actionFont), 63.5)
+        let titleFont = UIAlertMetrics.titleFont(compatibleWith: ax1)
+        XCTAssertEqual(titleFont.pointSize, 33)
+        let messageFont = UIAlertMetrics.messageFont(compatibleWith: ax1)
+        XCTAssertEqual(messageFont.pointSize, 30)
+        XCTAssertEqual(
+            UIAlertMetrics.labelBoxHeight(for: messageFont, lines: 2,
+                                          oneLine: 18, pitch: 20),
+            72)
+
+        // prefersLargeTitles is set before the bar joins the window, as
+        // NavFlow's makeRoot does. Layout must pick up 48 pt from the
+        // window override, not keep the construction-time 34 pt font.
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let bar = UINavigationBar(frame: CGRect(x: 0, y: 10, width: 375, height: 106))
+        bar.prefersLargeTitles = true
+        bar.setState(title: "Library", backTitle: nil)
+        XCTAssertEqual(bar.largeTitleLabel?.font.pointSize, 34)
+        window.addSubview(bar)
+        bar.setNeedsLayout()
+        bar.layoutIfNeeded()
+        XCTAssertEqual(bar.largeTitleLabel?.font.pointSize, 48)
+        XCTAssertEqual(bar.largeTitleLabel?.frame.height, 57.5)
+
+        // MEASURED Modal t5200.ax1: action label 33 Medium in a 63.5 pill.
+        // `_layoutCard` styles actions from the presenting view's traits.
+        let root = UIViewController()
+        window.rootViewController = root
+        window.makeKeyAndVisible()
+        let alert = UIAlertController(title: "Save changes?",
+                                      message: "This cannot be undone.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Save", style: .default))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        root.present(alert, animated: false)
+        let pill = alert.actionViews.first
+        XCTAssertEqual(pill?.label.font.pointSize, 33)
+        XCTAssertEqual(pill?.bounds.height, 63.5)
+
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
             XCTAssertEqual(UINavigationBar.largeTitleX, 20)

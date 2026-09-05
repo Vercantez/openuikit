@@ -224,6 +224,28 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(window.traitCollection.verticalSizeClass, .compact)
     }
 
+    func testWindowTraitOverridesStampDescendantContentSizeCategory() {
+        // MEASURED Pager t200.ax1 / NavFlow t200.ax1, iPhone SE 2x / iOS 26.1:
+        // `window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge`
+        // (openhost `--ax1`) must reach chrome that reads `view.traitCollection`.
+        // `UITraitCollection.current` stays `.large` so construction-time
+        // `preferredFont(forTextStyle:)` without `compatibleWith:` does not scale.
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            preferredContentSizeCategory: .large
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let child = UIView(frame: .zero)
+        window.addSubview(child)
+        XCTAssertEqual(UITraitCollection.current.preferredContentSizeCategory, .large)
+        XCTAssertEqual(window.traitCollection.preferredContentSizeCategory, .accessibilityLarge)
+        XCTAssertEqual(child.traitCollection.preferredContentSizeCategory, .accessibilityLarge)
+    }
+
     func testScreenDerivationPreservesCurrentAndDoesNotMutateIt() {
         let screen = UIScreen.main
         let savedBounds = screen.bounds

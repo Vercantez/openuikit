@@ -157,6 +157,26 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.resolvedDirection(script: "rtl", environment: "ltr"), "rtl")
     }
 
+    /// ax1 / xxxl captures append `.ax1` / `.xxxl` so `.large` goldens keep
+    /// `t200` and the scoreboard can hold both timelines (`NavFlow:t200` vs
+    /// `NavFlow:t200.ax1`). Env wins so `conformance_flow.sh --ax1` can
+    /// drive a default script.json.
+    func testAx1CaptureSuffixAndContentSizeResolution() {
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, contentSize: "large"), "t200")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, contentSize: "ax1"), "t200.ax1")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.08, contentSize: "ax1"), "t080.ax1")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 1.0, contentSize: "xxxl"), "t1000.xxxl")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "dark",
+                                                     direction: "rtl",
+                                                     contentSize: "ax1"), "t200.dark.rtl.ax1")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: nil), "large")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: "ax1"), "ax1")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: "xxxl"), "xxxl")
+        XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "ax1"), .accessibilityLarge)
+        XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "xxxl"), .extraExtraExtraLarge)
+        XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "large"), .large)
+    }
+
     @MainActor
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()

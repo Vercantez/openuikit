@@ -113,6 +113,50 @@ public enum UIAlertMetrics {
     public static let actionFont = UIFont.systemFont(ofSize: 17, weight: .medium)
     public static let preferredActionFont = UIFont.systemFont(ofSize: 17, weight: .semibold)
 
+    /// MEASURED Modal t5200.ax1, iPhone SE 2x / iOS 26.1: title **33 pt
+    /// Semibold** = body size + semibold; message **30 pt Regular** =
+    /// `preferredFont(.subheadline)`; action **33 pt Medium**. `.large`
+    /// preferredFont body/subheadline are 17/15 — the constants above.
+    static func titleFont(compatibleWith traits: UITraitCollection) -> UIFont {
+        let size = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits).pointSize
+        return .systemFont(ofSize: size, weight: .semibold)
+    }
+    static func messageFont(compatibleWith traits: UITraitCollection) -> UIFont {
+        .preferredFont(forTextStyle: .subheadline, compatibleWith: traits)
+    }
+    static func soloFont(compatibleWith traits: UITraitCollection) -> UIFont {
+        .preferredFont(forTextStyle: .body, compatibleWith: traits)
+    }
+    static func actionFont(compatibleWith traits: UITraitCollection) -> UIFont {
+        let size = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits).pointSize
+        return .systemFont(ofSize: size, weight: .medium)
+    }
+    static func preferredActionFont(compatibleWith traits: UITraitCollection) -> UIFont {
+        let size = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits).pointSize
+        return .systemFont(ofSize: size, weight: .semibold)
+    }
+
+    /// Line box for an alert label. 17/15 pt keep the measured 1/3-pt-grid
+    /// constants (title 20.333 / pitch 22, message 18 / pitch 20) so
+    /// `alert_*` fixtures do not move. Scaled fonts use
+    /// `FontEngine.labelBlockHeight` — MEASURED Modal t5200.ax1: 33 pt
+    /// title h=39.5; 30 pt message "This cannot be undone." 2-line **72**.
+    static func labelBoxHeight(for font: UIFont, lines: Int,
+                               oneLine: CGFloat, pitch: CGFloat) -> CGFloat {
+        if font.pointSize <= 17 {
+            return oneLine + CGFloat(max(0, lines - 1)) * pitch
+        }
+        return FontEngine.labelBlockHeight(for: font, lines: lines)
+    }
+
+    /// MEASURED Modal t5200.ax1 / t7200.ax1: action pill **63.5** =
+    /// 12 + 39.5 + 12 (`labelLineHeight` + 24). `.large` 20.5+24=44.5
+    /// floors at **48**.
+    static func actionHeight(for font: UIFont) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return actionHeight }
+        return max(actionHeight, FontEngine.labelLineHeight(for: font) + 24)
+    }
+
     /// Dimming behind the card. MEASURED: black at 0.2 in light, 0.48 in
     /// dark (the page sheet uses 0.2 in both).
     public static let dimAlphaLight: CGFloat = 0.2
@@ -292,11 +336,18 @@ final class _UIAlertActionView: UIControl {
         fatalError("alert action views cannot be decoded")
     }
 
-    func applyStyle() {
+    func applyStyle(compatibleWith traits: UITraitCollection? = nil) {
         backgroundColor = isPreferred ? UIAlertMetrics.preferredActionFill
                                       : UIAlertMetrics.actionFill
-        label.font = isPreferred ? UIAlertMetrics.preferredActionFont
-                                 : UIAlertMetrics.actionFont
+        // MEASURED Modal t5200.ax1, iPhone SE 2x / iOS 26.1: action
+        // label **33 pt Medium** h=39.5 in the 63.5 pill (12+39.5+12).
+        // `applyStyle` runs from `_layoutCard` before the card joins the
+        // window, so `self.traitCollection` is still `.large` (17 / 20.5).
+        // Callers pass the presenting view's traits (window overrides).
+        let t = traits ?? window?.traitCollection ?? traitCollection
+        label.font = isPreferred
+            ? UIAlertMetrics.preferredActionFont(compatibleWith: t)
+            : UIAlertMetrics.actionFont(compatibleWith: t)
         let base: UIColor
         if isPreferred {
             base = UIAlertMetrics.preferredActionTitleColor
@@ -314,8 +365,16 @@ final class _UIAlertActionView: UIControl {
     override func layoutSubviews() {
         super.layoutSubviews()
         let h = label.font.labelLineHeight
-        label.frame = CGRect(x: 0, y: ((bounds.height - h) / 2).rounded(),
-                             width: bounds.width, height: h)
+        // MEASURED Modal t5200.ax1, iPhone SE 2x / iOS 26.1: "Save"
+        // `[151.5, 382.5, 72, 39.5]` inside the 288×63.5 pill — intrinsic
+        // width, horizontally centred, 12 pt vertical pad
+        // (`(63.5 − 39.5) / 2`). Full-width + `.center` painted the same
+        // 17 pt glyphs at `.large` but at ax1 the 33 pt ink filled the
+        // pill (t5200 blob 1028).
+        let w = min(label.intrinsicContentSize.width, bounds.width)
+        let x = (bounds.width - w) / 2
+        let y = ((bounds.height - h) / 2).rounded()
+        label.frame = CGRect(x: x, y: y, width: w, height: h)
     }
 }
 
@@ -371,9 +430,12 @@ open class UIAlertController: UIViewController {
     }
 
     func _refreshActionStyles() {
+        let traits = presentingViewController?.viewIfLoaded?.traitCollection
+            ?? viewIfLoaded?.window?.traitCollection
+            ?? viewIfLoaded?.traitCollection
         for v in actionViews {
             v.isPreferred = (preferredAction === v.action)
-            v.applyStyle()
+            v.applyStyle(compatibleWith: traits)
         }
     }
 
@@ -424,6 +486,15 @@ open class UIAlertController: UIViewController {
         let textWidth = width - 2 * inset
         var y: CGFloat = 0
 
+        // MEASURED Modal t5200.ax1 / Notes t11000.ax1, iPhone SE 2x /
+        // iOS 26.1: title 33 Semibold, message 30 Regular 2-line 72,
+        // action pills 63.5. `_layoutCard` runs from
+        // `frameOfPresentedViewInContainerView` *before* the card is
+        // added to the container, so `view.traitCollection` is still
+        // `current` (`.large`). The presenting view is already in the
+        // window that carries `traitOverrides`.
+        let traits = presentingViewController?.viewIfLoaded?.traitCollection
+            ?? view.traitCollection
         let hasTitle = !(title ?? "").isEmpty
         let hasMessage = !(message ?? "").isEmpty
         let solo = hasTitle != hasMessage
@@ -434,29 +505,32 @@ open class UIAlertController: UIViewController {
                 // MEASURED: a lone title (or a lone message) renders 17 pt
                 // REGULAR and centred.
                 let text = hasTitle ? title! : message!
-                let f = UIAlertMetrics.soloFont
-                let h = UIAlertMetrics.titleLineHeight
-                    + CGFloat(_lineCount(text, font: f, cardWidth: width) - 1)
-                    * UIAlertMetrics.titleLinePitch
+                let f = UIAlertMetrics.soloFont(compatibleWith: traits)
+                let h = UIAlertMetrics.labelBoxHeight(
+                    for: f, lines: _lineCount(text, font: f, cardWidth: width),
+                    oneLine: UIAlertMetrics.titleLineHeight,
+                    pitch: UIAlertMetrics.titleLinePitch)
                 card.addSubview(_makeLabel(text, font: f, color: .label,
                                            alignment: .center,
                                            frame: CGRect(x: inset, y: y,
                                                          width: textWidth, height: h)))
                 y += h
             } else {
-                let tf = UIAlertMetrics.titleFont
-                let th = UIAlertMetrics.titleLineHeight
-                    + CGFloat(_lineCount(title!, font: tf, cardWidth: width) - 1)
-                    * UIAlertMetrics.titleLinePitch
+                let tf = UIAlertMetrics.titleFont(compatibleWith: traits)
+                let th = UIAlertMetrics.labelBoxHeight(
+                    for: tf, lines: _lineCount(title!, font: tf, cardWidth: width),
+                    oneLine: UIAlertMetrics.titleLineHeight,
+                    pitch: UIAlertMetrics.titleLinePitch)
                 card.addSubview(_makeLabel(title!, font: tf, color: .label,
                                            alignment: .left,
                                            frame: CGRect(x: inset, y: y,
                                                          width: textWidth, height: th)))
                 y += th + UIAlertMetrics.titleMessageGap
-                let mf = UIAlertMetrics.messageFont
-                let mh = UIAlertMetrics.messageLineHeight
-                    + CGFloat(_lineCount(message!, font: mf, cardWidth: width) - 1)
-                    * UIAlertMetrics.messageLinePitch
+                let mf = UIAlertMetrics.messageFont(compatibleWith: traits)
+                let mh = UIAlertMetrics.labelBoxHeight(
+                    for: mf, lines: _lineCount(message!, font: mf, cardWidth: width),
+                    oneLine: UIAlertMetrics.messageLineHeight,
+                    pitch: UIAlertMetrics.messageLinePitch)
                 card.addSubview(_makeLabel(message!, font: mf, color: .secondaryLabel,
                                            alignment: .left,
                                            frame: CGRect(x: inset, y: y,
@@ -497,26 +571,28 @@ open class UIAlertController: UIViewController {
         let pad = UIAlertMetrics.actionsPadding
         y += pad
         let rowWidth = width - 2 * pad
+        let actionFont = UIAlertMetrics.actionFont(compatibleWith: traits)
+        let actionH = UIAlertMetrics.actionHeight(for: actionFont)
         if ordered.count == 2 {
             // MEASURED: exactly two actions sit side by side, cancel LEFT.
             let w = (rowWidth - UIAlertMetrics.actionSpacing) / 2
             for (i, a) in ordered.enumerated() {
                 let v = _makeActionView(a)
                 v.frame = CGRect(x: pad + CGFloat(i) * (w + UIAlertMetrics.actionSpacing),
-                                 y: y, width: w, height: UIAlertMetrics.actionHeight)
+                                 y: y, width: w, height: actionH)
                 card.addSubview(v)
             }
-            y += UIAlertMetrics.actionHeight
+            y += actionH
         } else {
             for (i, a) in ordered.enumerated() {
                 let v = _makeActionView(a)
                 v.frame = CGRect(
                     x: pad,
-                    y: y + CGFloat(i) * (UIAlertMetrics.actionHeight + UIAlertMetrics.actionSpacing),
-                    width: rowWidth, height: UIAlertMetrics.actionHeight)
+                    y: y + CGFloat(i) * (actionH + UIAlertMetrics.actionSpacing),
+                    width: rowWidth, height: actionH)
                 card.addSubview(v)
             }
-            y += CGFloat(ordered.count) * UIAlertMetrics.actionHeight
+            y += CGFloat(ordered.count) * actionH
                 + CGFloat(ordered.count - 1) * UIAlertMetrics.actionSpacing
         }
         y += pad

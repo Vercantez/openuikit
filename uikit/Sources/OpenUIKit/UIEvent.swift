@@ -84,6 +84,15 @@ open class UIWindow: UIView {
         if overrideUserInterfaceStyle != .unspecified {
             traits.userInterfaceStyle = overrideUserInterfaceStyle
         }
+        // MEASURED Pager t200.ax1 / NavFlow t200.ax1 / Notes t200.ax1,
+        // iPhone SE 2x / iOS 26.1: window `traitOverrides` must stamp
+        // descendant `view.traitCollection` so chrome
+        // (`preferredFont(..., compatibleWith:)` / `UIFontMetrics.scaledValue`)
+        // sees `.accessibilityLarge`. `UIFont.preferredFont(forTextStyle:)`
+        // without `compatibleWith:` still tracks `current` (stays `.large`).
+        if traitOverrides.preferredContentSizeCategory != .unspecified {
+            traits.preferredContentSizeCategory = traitOverrides.preferredContentSizeCategory
+        }
         traits._resolveUnspecifiedSizeClasses(for: bounds.size)
         return traits
     }

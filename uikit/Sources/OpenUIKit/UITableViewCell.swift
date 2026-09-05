@@ -361,7 +361,19 @@ open class UITableViewCell: UIView, ReusableView {
     /// value1 / UITableViewController); every `defaultContentConfiguration()`
     /// case is 53. Grouped stays `defaultRowHeight` 53 so tableview_grouped
     /// and Focus do not drop. Catalyst stays 51.5.
-    static var plainClassicRowHeight: CGFloat { isIOSChrome ? 52 : 51.5 }
+    static var plainClassicRowHeight: CGFloat {
+        plainClassicRowHeight(compatibleWith: .current)
+    }
+    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: **52**. Tabs t200.ax1:
+    /// **80** = `UIFontMetrics(forTextStyle: .body).scaledValue(for: 44)` at
+    /// `.accessibilityLarge` (base 44 is a table hit). Floor stays 52 so
+    /// `.large` is unchanged (`max(52, 44) = 52`).
+    static func plainClassicRowHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard isIOSChrome else { return 51.5 }
+        let scaled = UIFontMetrics(forTextStyle: .body).scaledValue(
+            for: 44, compatibleWith: traits)
+        return max(52, scaled)
+    }
     /// iOS: 49 above the 17 pt primary label's device-pixel height
     /// (69.333 at 3x, 69.5 at 2x — both measured).
     public static var subtitleRowHeight: CGFloat {
@@ -630,6 +642,26 @@ open class UITableViewCell: UIView, ReusableView {
         addSubview(topSeparatorView)
     }
 
+    /// MEASURED NavFlow t200.ax1, iPhone SE 2x / iOS 26.1: value1
+    /// `UITableViewLabel` is **33 pt** body (h=39.5) for both primary and
+    /// detail; rows stay 44 because `heightForRowAt` pins them. Tabs t200.ax1
+    /// default `textLabel` is the same 33 pt. `.large` preferredFont body is
+    /// 17 / subheadline 15 — the hardcoded configureCell sizes — so default
+    /// captures do not move. Subtitle stays 17/15 (TableEditor-ax1 row
+    /// height unmeasured for a retune). Applied from the cell's
+    /// `traitCollection` (window `traitOverrides`), not `current`.
+    private func applyIOSClassicDynamicTypeFonts() {
+        guard UITableView.isIOSChrome else { return }
+        let traits = traitCollection
+        switch style {
+        case .default, .value1, .value2:
+            textLabel.font = .preferredFont(forTextStyle: .body, compatibleWith: traits)
+            detailTextLabel?.font = .preferredFont(forTextStyle: .body, compatibleWith: traits)
+        case .subtitle:
+            break
+        }
+    }
+
     // MARK: Reuse
 
     open func prepareForReuse() {
@@ -814,6 +846,7 @@ open class UITableViewCell: UIView, ReusableView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
+        applyIOSClassicDynamicTypeFonts()
         let w = bounds.width
         let pad = _leadingPadding
         let h = bounds.height - pad

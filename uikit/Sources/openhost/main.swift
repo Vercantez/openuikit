@@ -171,22 +171,29 @@ try MainActor.assumeIsolated {
         // timeline. Probe honours CONFPROBE_STYLE the same way.
         // OPENUIKIT_APP_DIRECTION (set by conformance_flow.sh --rtl) wins
         // the same way for layout direction.
+        // OPENUIKIT_APP_CONTENT_SIZE (set by conformance_flow.sh --ax1 /
+        // --xxxl) wins the same way for Dynamic Type.
         let style = ConformanceClock.resolvedStyle(
             script: parsed.style,
             environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_STYLE"])
         let direction = ConformanceClock.resolvedDirection(
             script: parsed.direction,
             environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_DIRECTION"])
+        let contentSize = ConformanceClock.resolvedContentSize(
+            environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_CONTENT_SIZE"])
         let uiStyle: UIUserInterfaceStyle = style == "dark" ? .dark : .light
+        let category = ConformanceClock.contentSizeCategory(for: contentSize)
         let scene = buildAppScene(appName, scaleOverride: scale, style: uiStyle,
-                                   rtl: direction == "rtl")
+                                   rtl: direction == "rtl",
+                                   contentSizeCategory: category)
         try FileManager.default.createDirectory(atPath: record,
                                                 withIntermediateDirectories: true)
         let written = try runConformanceScripted(scene, app: appName, steps: parsed.steps,
                                                  captures: parsed.captures, style: style,
                                                  direction: direction,
+                                                 contentSize: contentSize,
                                                  outdir: record)
-        print("recorded \(written.count) captures to \(record) style=\(style) direction=\(direction)")
+        print("recorded \(written.count) captures to \(record) style=\(style) direction=\(direction) contentSize=\(contentSize)")
         exit(0)
     }
 
@@ -212,8 +219,12 @@ try MainActor.assumeIsolated {
                     Data("warning: ignoring unknown OPENUIKIT_APP_DIRECTION=\(v) (use ltr|rtl)\n".utf8))
             }
         }
+        var category = UIContentSizeCategory.large
+        if let v = ProcessInfo.processInfo.environment["OPENUIKIT_APP_CONTENT_SIZE"] {
+            category = ConformanceClock.contentSizeCategory(for: v)
+        }
         scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) },
-                              style: style, rtl: rtl)
+                              style: style, rtl: rtl, contentSizeCategory: category)
     } else if navDemo {
         scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) }, largeTitles: navLargeTitles)
     } else {

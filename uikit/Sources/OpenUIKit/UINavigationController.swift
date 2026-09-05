@@ -410,7 +410,8 @@ open class UINavigationController: UIViewController {
         // (updateContentSafeArea), exactly as it does on the device, so only
         // the rest offset is settled here.
         if navigationBar.prefersLargeTitles {
-            let inset = UINavigationBar.largeTitleExpandedInset
+            let inset = UINavigationBar.largeTitleExpandedInset(
+                compatibleWith: navigationBar.traitCollection)
             let wasAtRest = scroll.contentOffset.y == -scroll.adjustedContentInset.top
             updateContentSafeArea()
             if wasAtRest, scroll.contentOffset.y != -inset {
@@ -432,7 +433,8 @@ open class UINavigationController: UIViewController {
     func snapLargeTitleIfNeeded(_ scroll: UIScrollView) {
         guard navigationBar.prefersLargeTitles,
               scroll === navigationBar.trackedScrollView else { return }
-        let d = scroll.contentOffset.y + UINavigationBar.largeTitleExpandedInset
+        let d = scroll.contentOffset.y
+            + UINavigationBar.largeTitleExpandedInset(compatibleWith: navigationBar.traitCollection)
         guard d > 0.5, d < UINavigationBar.largeTitleZoneHeight - 0.5 else { return }
         // MEASURED 2026-09-04, navprobe scroll holds, iPhone 16 / iOS 26.1:
         // zero-velocity release at d=36 retargets to the expanded rest;
@@ -443,7 +445,8 @@ open class UINavigationController: UIViewController {
         let target: CGFloat = d <= threshold ? 0 : UINavigationBar.largeTitleZoneHeight
         scroll.setContentOffset(
             CGPoint(x: scroll.contentOffset.x,
-                    y: target - UINavigationBar.largeTitleExpandedInset),
+                    y: target - UINavigationBar.largeTitleExpandedInset(
+                        compatibleWith: navigationBar.traitCollection)),
             animated: true)
     }
 

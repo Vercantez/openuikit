@@ -12,10 +12,11 @@
 // Per capture time t in the app's script it writes, into the app container's
 // Documents (the shell script copies them out):
 //
-//   <app>.t<ms>.png          light LTR capture (default)
+//   <app>.t<ms>.png          light LTR `.large` capture (default)
 //   <app>.t<ms>.dark.png     dark capture (`"style":"dark"` or CONFPROBE_STYLE)
 //   <app>.t<ms>.rtl.png      RTL capture (`"direction":"rtl"` or CONFPROBE_DIRECTION)
-//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "clock", "screen", "views"}
+//   <app>.t<ms>.ax1.png      ax1 capture (CONFPROBE_CONTENT_SIZE=ax1)
+//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "contentSize", "clock", "screen", "views"}
 //                            — absolute MODEL frames plus presentation-layer
 //                            geometry (pframe / pabs / popacity) and the
 //                            CADisplayLink timestamp of this capture
@@ -239,11 +240,11 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
 /// `{t, action}` steps, capture times, optional `"style"` (`light` /
 /// `dark`) and `"direction"` (`ltr` / `rtl`), read out of the app's
 /// script.json (copied into the bundle by scripts/conformance_probe_sim.sh).
-/// `CONFPROBE_STYLE` / `CONFPROBE_DIRECTION` override the fields so
-/// `conformance_flow.sh --dark` / `--rtl` can replay a light LTR script
-/// without rewriting it.
+/// `CONFPROBE_STYLE` / `CONFPROBE_DIRECTION` / `CONFPROBE_CONTENT_SIZE`
+/// override the fields so `conformance_flow.sh --dark` / `--rtl` / `--ax1`
+/// can replay a light LTR `.large` script without rewriting it.
 func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
-                       style: String, direction: String) {
+                       style: String, direction: String, contentSize: String) {
     guard let url = Bundle.main.url(forResource: "script", withExtension: "json"),
           let data = try? Data(contentsOf: url),
           let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -262,7 +263,9 @@ func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
     let direction = ConformanceClock.resolvedDirection(
         script: (obj["direction"] as? String) ?? "ltr",
         environment: ProcessInfo.processInfo.environment["CONFPROBE_DIRECTION"])
-    return (steps, captures, style, direction)
+    let contentSize = ConformanceClock.resolvedContentSize(
+        environment: ProcessInfo.processInfo.environment["CONFPROBE_CONTENT_SIZE"])
+    return (steps, captures, style, direction, contentSize)
 }
 
     /// First CASpringAnimation.beginTime in the tree (absolute media time).
@@ -370,6 +373,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// `ltr` or `rtl`. Set on the window *before* `makeRoot()` so
     /// `semanticContentAttribute` is in place for the first layout.
     var direction: String = "ltr"
+    /// `large` / `ax1` / `xxxl`. Set on the window *before* `makeRoot()` so
+    /// `traitOverrides.preferredContentSizeCategory` is in place for the
+    /// first `UIFont.preferredFont(forTextStyle:)` at construction.
+    var contentSize: String = "large"
     var performAction: ((String) -> Void)?
     var link: CADisplayLink?
     var frameIndex = 0
@@ -412,7 +419,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             }
             fatalError("confprobe: unknown app \"\(appName)\" (have \(have))")
         }
-        (steps, captures, style, direction) = loadScript()
+        (steps, captures, style, direction, contentSize) = loadScript()
         // RTL: `UIView.appearance()` BEFORE the window. MEASURED /tmp/rtlprobe,
         // iPhone SE 2x / iOS 26.1: window-only `semanticContentAttribute =
         // .forceRightToLeft` stamps the window (1/76 views `uiDir=rtl`,
@@ -437,6 +444,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if direction == "rtl" {
             w.semanticContentAttribute = .forceRightToLeft
         }
+        // Dynamic Type on the window BEFORE makeRoot so preferredFont at
+        // construction sees `.accessibilityLarge` / `.extraExtraExtraLarge`.
+        // MEASURED TableEditor t200.ax1 / Feed t200.ax1, iPhone SE 2x /
+        // iOS 26.1: large-title UILabel 48 pt (preferredFont .largeTitle),
+        // bar `[0, 10, 375, 115.5]`. Default `.large` stays unspecified
+        // so existing goldens do not move.
+        if contentSize != "large" {
+            w.traitOverrides.preferredContentSizeCategory =
+                ConformanceClock.contentSizeCategory(for: contentSize)
+        }
         // A dismissed alert or sheet leaves the process's tint dimmed
         // (docs/ORACLE_FLOW.md capture hazards); NavFlow dismisses a sheet
         // halfway through its script, so pin the tint for the whole run.
@@ -448,7 +465,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if w.bounds.size != entry.windowSize {
             print("confprobe: WARNING device \(w.bounds.size) != app \(entry.windowSize)")
         }
-        print("confprobe: style=\(style) direction=\(direction)")
+        print("confprobe: style=\(style) direction=\(direction) contentSize=\(contentSize)")
         tracing = ProcessInfo.processInfo.environment["CONFPROBE_TRACE"] != nil
         // Let the first frame commit before the timeline starts: UIKit skips
         // presentation work for a hierarchy that has never been displayed,
@@ -745,7 +762,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
         // PNG bytes without the ICC, so the golden has to be untagged sRGB.
         let suffix = ConformanceClock.captureSuffix(for: t, style: style,
-                                                    direction: direction)
+                                                    direction: direction,
+                                                    contentSize: contentSize)
         try! normalizedSRGB(img).pngData()!.write(
             to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
 
@@ -779,6 +797,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             "t": round3(CGFloat(t)),
             "style": style,
             "direction": direction,
+            "contentSize": contentSize,
             "clock": clock,
             "screen": ["scale": Double(UIScreen.main.scale),
                        "bounds": [round3(w.bounds.width), round3(w.bounds.height)],
