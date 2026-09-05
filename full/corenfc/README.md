@@ -36,6 +36,7 @@ Implemented and exercised:
   `NFCTagReaderSession.init?` returns `nil`
 - `CardSession` / `NFCPresentmentIntentAssertion` refuse with
   `systemNotAvailable`
+
 ## Fail-closed boundaries
 
 Linux has no NFC controller, Core NFC entitlement, privacy prompt, or Apple
@@ -54,6 +55,48 @@ VAS/card-emulation daemon.
 - Swift cannot overload `sendCommand(apdu:)` by return type alone, so the
   `NFCISO7816ResponseAPDU`-returning overlay is deferred; Linux exposes the
   ObjC tuple result.
+
+## Depth pass 2026-09
+
+SDK depth against the sealed 587-ID public surface. Coverage before this pass:
+**167 implemented / 396 declared / 24 deferred**. After: **542 implemented /
+21 declared / 24 deferred**.
+
+The pinned 20-app corpus summary names only home-assistant-ios
+(`NFCReader` / `NFCWriter` / `NFCNDEFPayload+Additions` / `iOSTagManager`).
+`scratch/ladder-corpus/focus-ios` contains no `CoreNFC` / `NFCNDEF` /
+`NFCReader` / `NFCTag` references, so ranking followed that NDEF
+reader/writer family first, then the rest of the documented public API.
+
+Implemented on Linux:
+
+- NFC Forum NDEF 1.0 text/URI factories, message encode/decode, payload
+  properties, and `NSSecureCoding` round-trip
+- ISO 7816-4 short APDU construct/parse and response status words
+- Table-driven enum / OptionSet raw values and algebra
+- `NFCReaderError` codes (macios binding integers 1 / 100 / 200 / 300 / 400)
+- Fail-closed reader sessions, tag protocols (async + completion + Result
+  overlays), `CardSession`, and `NFCPresentmentIntentAssertion`
+
+Still deferred (24): UIKit scene overlay, `NSUserActivity.ndefMessagePayload`,
+Darwin `_BridgedStoredNSError` bridging, and the return-type-overloaded
+ISO 7816 `sendCommand` / `sendMiFareISO7816Command` overlays.
+
+The 21 remaining `declared` rows are Swift stdlib `AsyncSequence` combinators
+on `CardSession.EventStream` (not CoreNFC-specific behavior).
+
+Top-5 implemented evidence distribution:
+
+| rows | evidence |
+| ---: | --- |
+| 29 | `test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues` |
+| 25 | `test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties` |
+| 22 | `test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed` |
+| 21 | `test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues` |
+| 21 | `test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra` |
+
+Enum / OptionSet / C-constant members share table-driven value tests. No other
+single test exceeds 40% of the remaining implemented rows (max 5.7%).
 
 ## Oracle questions
 
