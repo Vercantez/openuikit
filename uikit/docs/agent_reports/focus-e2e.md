@@ -204,13 +204,14 @@ not a parameter search against a missing golden.
 - **Home toolbar vs simulator.** Operator golden will show where the 148 pt
   tip band sits on iOS 26.1. Ours is a UIStackView resolution, not a new
   layout constant.
-- Guest `queue_box.sh arm64 verify 399c3d76`: `TBD_CHECK_OK`, `difftest rc=0`,
-  `build_full rc=0`, `GATE_B_PASS`. `GUEST_REALAPP_RC=133` on
+- Guest `queue_box.sh arm64 verify`: `TBD_CHECK_OK`, `difftest rc=0`,
+  `build_full rc=0`, `GATE_B_PASS` at both `399c3d76` and `739cc5f4`.
+  `GUEST_REALAPP_RC=133` on
   `OPENUIKIT_IOS_INK_MISS: I|system-semibold|18|light|F0.0|83` after
   **12** PNGs. The 2x iOS table has **no** system-semibold|18 (3x has 48
-  keys including that S). Home is now last in `RealAppScreen.screens` so
-  that miss cannot drop Hackers. Harvesting the 2x mask is a follow-up;
-  a parameter search into `glyph_ink_ios.json` is not a measurement.
+  keys including that S). 739cc5f4 puts home last so the miss is the 13th
+  screen and cannot drop Hackers. Harvesting the 2x mask is a follow-up;
+  copying it from the 3x table is not a measurement.
 
 ## 7. What was not done
 
