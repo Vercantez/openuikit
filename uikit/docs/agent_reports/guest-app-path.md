@@ -84,9 +84,12 @@ production Intents modules (those would collide).
 
 ### What stays Foundation-hidden
 
-OpenUIKit, OpenCoreGraphics, the UIKit shim, SwiftUI (widget-gate compile:
-`UIHostingController` is not behind `canImport(Foundation)`). A module named
-Foundation on those invocations' `-I` is the measured hazard.
+OpenUIKit, OpenCoreGraphics, the **first** UIKit shim (`UIKITINC`), SwiftUI
+(widget-gate compile: `UIHostingController` is not behind
+`canImport(Foundation)`). A module named Foundation on those invocations' `-I`
+is the measured hazard. After the Foundation facade overwrite, a **second**
+UIKit compile into APPINC takes `@_exported import Foundation` so unchanged
+`import UIKit` app files see UserDefaults / DispatchQueue.
 
 ## Verify attempts
 
@@ -168,3 +171,12 @@ Swift `_assertionFailure` in render_full. Screen 4 is storage, first
 nib-loaded variant; `configureNibs` used cwd-relative `fixtures/realapp/nibs`
 while machorun cwd is `build/full`. `UINib` `fatalError`s when the archive
 is missing. Derive nibs as the sibling of the absolute assets argv.
+
+Attempt 12: `8e2b15da82cb88249d4b82a541be1d7caa84e352`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+`GUEST_REALAPP_RC=0` `GUEST_REALAPP_SCREENS=12`.
+`[render_full] realapp rendered=12 failed=0` including
+`realapp_focus_settings_light` and `realapp_hackers_feed_light`.
+objc duplicate-class warnings for FoundationEssentials plist types (not
+fatal). `docker swift:6.2-noble` `swift build -c release --product openrender`
+green (209.47s). x86 cycle next.
