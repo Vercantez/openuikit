@@ -291,5 +291,9 @@ final class GlyphInkTableTests: XCTestCase {
                                               dark: false, tag: "F0.0",
                                               scalar: Unicode.Scalar(UInt32(82))!,
                                               scale: 2))
+        XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-regular", sizeKey: 13,
+                                              dark: false, tag: "F0.75",
+                                              scalar: Unicode.Scalar(UInt32(36))!,
+                                              scale: 2))
     }
 }

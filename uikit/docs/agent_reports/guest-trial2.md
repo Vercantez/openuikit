@@ -181,7 +181,21 @@ of the 13 screens (372 keys; 369 masks; 3 skipped `U+00A0` "no ink" —
 de_DE currency NBSP). Table **6221 → 6590**. UILabel / attributed draw
 skip U+00A0 like SPACE (inkprobe: no coverage).
 
-Attempt 5: *(pending this push)*
+Attempt 5 (`77ccad18`): **`build_full rc=0`**, **`TBD_CHECK_OK`**,
+**`difftest rc=0`**, **`GATE_B_PASS`**, `GUEST_REALAPP_RC=133`
+**`GUEST_REALAPP_SCREENS=12`**:
+
+```
+Fatal error: OPENUIKIT_IOS_INK_MISS: I|system-regular|13|light|F0.75|36
+```
+
+Scalar 36 is `'$'`. On Apple Mac, Ledger USD (`$4.50`) is **17 pt
+regular**; 13 pt regular had digits/euro/middot but no `$`. Guest drew
+`$` at footnote size (formatter/layout difference, not guessed). Harvest
+ASCII 33–126 at 13 pt regular light+dark × 8 phases on SE 2x / iOS 26.1
+(943/943). Table **6590 → 7533**.
+
+Attempt 6: *(pending this push)*
 
 ## What ran on Apple Foundation (this Mac), still unproven on the guest
 

@@ -78,8 +78,9 @@ public enum GlyphInkTable {
     /// skipped []. Table 6152 → 6221. Second harvest of the remaining
     /// OPENUIKIT_INK_LOG `I|` keys from the 13-screen scale-2 run (372
     /// asked, 369 masks, 3 skipped U+00A0 "no ink") → **6590**.
-    /// Ledger itself dumps 17/13 only; 13 pt bold R is picker
-    /// `OptionsPickerRootController` "ROW ACTION".
+    /// Guest 77ccad18 then `I|system-regular|13|light|F0.75|36` (`$`,
+    /// Ledger USD at footnote size). ASCII 33–126 at 13 pt regular
+    /// light+dark × 8 phases, 943/943 → **7533**.
     private static var iosEntries: [String: JSONValue]? = {
         guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
               let e = json["entries"]?.objectValue else { return nil }
