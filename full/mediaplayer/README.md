@@ -1,64 +1,105 @@
-# MediaPlayer (Linux starting point)
+# MediaPlayer (Linux corpus surface)
 
-This directory is a fail-closed portable `MediaPlayer` module for the OpenUIKit
-Linux platform. It reconstructs a substantial subset of the public Xcode 26.1
-iPhoneOS Swift surface from the sealed symbol graph. It is not wired into the
-shared guest package.
+Fail-closed portable `MediaPlayer` for the OpenUIKit Linux guest. Public
+Xcode 26.1 iPhoneOS Swift surface, 895 precise IDs.
 
-**Provenance:** the legacy fan-out branch
-`cursor/port-mediaplayer-to-linux-9de2` (platform PR #11, ~2564 Swift lines)
-could not be fetched: this run's GitHub App token only installs
-`Vercantez/openuikit`. This tree is therefore a seed-based deliverable that
-follows `FANOUT_TASK.md` and the in-repo PR #11 repair brief
-(`full/framework-fanout/repairs-wave1-pr10-18.json`). It is not a byte-copy of
-the inaccessible branch.
-
-**Reference dossier:** kept the monorepo `full/mediaplayer/reference/`
-(generator `scripts/framework-fanout/generate_seed.py`, SHA256
-`2b8230ced5a3ed78f070607346f6a684d9e0fb74a8932b92bc0f5e38f46f0a8e`,
-iPhoneOS 26.1 / Xcode 17B55). The platform branch `reference/` could not be
-compared (`unavailable`).
+**Oracle:** `/tmp/mp_oracle.json` from `com.openuikit.mporacle` on
+`OpenUIKit-2x-fw-mediaplayer` (iPhone SE 3rd gen, 375×667 @2x, iOS 26.1).
 
 ## What is real
 
-- Enums and option sets compile and are distinct. Option-set bits follow public
-  Apple documentation and are Linux-local, not SDK-extracted.
-- `MPError` is a typed error with `~=` matching. `errorDomain` is the
-  Linux-local string `MPErrorDomain`.
-- `MPMediaLibrary.authorizationStatus` is `.denied`. `requestAuthorization`
-  hops asynchronously and never prompts.
-- `MPMediaQuery` stores predicates and grouping; `items` / `collections` are
-  empty. `MPMediaItem` property getters are inert empties.
-- `MPMusicPlayerController.play()` does not invent a playing session.
-  `prepareToPlay(completionHandler:)` completes asynchronously with
-  `MPError.notSupported`.
-- `MPNowPlayingInfoCenter` stores a process-local dictionary. Animated artwork
-  keys are empty.
-- `MPRemoteCommandCenter` records handler closures. Commands never fire unless
-  a host injects `@_spi(OpenUIKitHost) openuikit_invoke`.
-- `MPPlayableContentDataSource` / `MPPlayableContentDelegate` optional
-  Objective-C methods are protocol requirements with extension defaults so
-  existential dispatch honors conformer overrides (PR #11 repair). Defaults
-  fail closed (`notFound` / `notSupported`). `MPPlayableContentManagerContext`
-  reports no CarPlay endpoint.
+- Enum and option-set **raw values** match the oracle (not declaration
+  order). `MPRemoteCommandHandlerStatus.success` is 0;
+  `commandFailed` is 200. `MPNowPlayingPlaybackState.stopped` is 3.
+- `MPErrorDomain` is `MPErrorDomain`; `MPError.Code.notSupported` is 5.
+- `MPMediaItemProperty*` / playlist keys are the short Darwin payloads
+  (`title`, `albumPID`, `playlistPersistentID`, …). Now Playing keys keep
+  the `MPNowPlayingInfoProperty*` spelling except
+  `MPNowPlayingInfoPropertyCurrentLanguageOptions` →
+  `MPNowPlayingInfoPropertyCurrentLanguageOption` (singular).
+- Language-option characteristics are the `public.*` AVMediaCharacteristic
+  strings.
+- Notification `rawValue`s end in `Notification`.
+- `MPNowPlayingInfoCenter.default()` stores a process-local dictionary and
+  `playbackState`. `supportedAnimatedArtworkKeys` is
+  `[MPNowPlayingInfoProperty3x4AnimatedArtwork]`.
+- `MPRemoteCommandCenter.shared()` exposes every command. Handlers run
+  in-process through `@_spi(OpenUIKitHost) openuikit_invoke`.
+  `addTarget(_:action:)` / `removeTarget(_:action:)` are implemented.
+  Skip-interval default is `[10]`; rating min/max at rest are 0.
+- `MPMediaLibrary.authorizationStatus` is `.denied` until
+  `openuikit_loadFixtureLibrary` (then `.authorized`). Unauthorized
+  `MPMediaQuery.items` is `nil`. Queries filter (`equalTo` / `contains`)
+  and group over the fixture. `canFilter(byProperty:)` follows the
+  measured item vs entity tables.
+- `MPMusicPlayerController` play/pause/stop/skip is an in-process state
+  machine when `setQueue` has items. Empty-queue `play()` stays `.stopped`
+  (measured). Defaults: `repeatMode == .none`, `shuffleMode == .off`,
+  `currentPlaybackRate == 0`. Notifications fire only between
+  `beginGeneratingPlaybackNotifications` / `endGeneratingPlaybackNotifications`.
+- `MPMediaItemArtwork.image(at:)` calls the request handler.
+  `init(image:)` bounds equal `image.size`.
+- `MPVolumeView()` frame is `.zero`, `showsRouteButton == false`,
+  `showsVolumeSlider == true`. Slider/route rects fail closed to `.zero`
+  (one 200×44 route-button sample is in the report; no general rule).
+- `MPMediaPickerController` is a fail-closed `UIViewController`. Defaults:
+  `allowsPickingMultipleItems == false`, `showsCloudItems == true`,
+  `showsItemsWithProtectedAssets == true`.
 
 ## Fail-closed / omitted
 
-- No UIKit types: `MPMediaItemArtwork`, `MPVolumeView`, picker/view-controller
-  types, and any API whose declaration needs `UIImage`, `CGSize`, `CGRect`, or
-  `UIView` are omitted (`unavailable`).
-- `AVPlayer` Now Playing session members and `CMTimeRange` ad ranges are
-  omitted.
-- Objective-C `Selector` command targets are unavailable on this toolchain.
+- No Apple Music / iPod library / CarPlay endpoint.
+- `MPAdTimeRange` (`CMTimeRange`), `AVPlayer` now-playing session members,
+  `MPMediaItemAnimatedArtwork`, movie-player `view` / thumbnail /
+  `MPMoviePlayerViewController` remain unavailable.
 - Volume-settings alerts never become visible.
-- String constants (`MPMediaItemPropertyTitle`, notification names, …) are
-  Linux-local identities equal to the Swift name, not claimed Apple NSString
-  bytes.
+- Isolated-host `UIImage`/`UIView`/`UIViewController` in `MPHostTypes.swift`
+  are not UIKit identity; the guest imports OpenUIKit.
+- Isolated-host `CGSize`/`CGRect` in `MPHostTypes.swift` are not CoreGraphics
+  identity. The sealed Linux gate has no CoreGraphics module; guest builds
+  `canImport(CoreGraphics)` and use the real types.
+- Isolated-host `Selector` is a name-only lookalike because this Swift
+  toolchain has Objective-C interoperability disabled. Closure handlers
+  dispatch; `addTarget(_:action:)` records targets but does not `perform`.
 
 ## Tests
 
-`tests/agent/MediaPlayerRuntime.swift` prints `MEDIAPLAYER_AGENT_RUNTIME_OK`.
+`tests/agent/MediaPlayerRuntime.swift` is the schema-v1 sealed-gate entry
+point. It concatenates the focused `tests/agent/*Tests.swift` families,
+prints `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`,
+runs every `test*` function, and prints `MEDIAPLAYER_AGENT_RUNTIME_OK`.
 
-`tests/agent/MediaPlayerDependencyIdentity.swift` is a future EC2 probe
-(`MEDIAPLAYER_DEPENDENCY_IDENTITY_OK`) against real guest Foundation (and
-CoreGraphics once artwork exists).
+## Depth pass 2026-09
+
+Second pass on `origin/agent/fw-mediaplayer`. The implementation is unchanged
+in spirit: in-process Now Playing, remote commands, fixture library,
+music-player state machine, and fail-closed chrome. The refused ledger cited a
+source-file list on all 869 `implemented` rows. This pass:
+
+- Keeps the Linux module and fail-closed boundaries.
+- Splits runtime checks into focused families under `tests/agent/*Tests.swift`.
+- Cites every `implemented` row as `test:full/mediaplayer/tests/agent/<File>Tests.swift#testName`.
+- Uses one table test each for `MPMediaItemProperty*` / playlist keys and
+  `MPNowPlayingInfoProperty*` keys.
+- Dispatches each `MPRemoteCommandCenter` command through enable / handler /
+  `openuikit_invoke` / disable.
+- Queries a three-item fixture library with `equalTo` / `contains` predicates
+  and album grouping.
+- Exercises the music-player state machine and playback notifications.
+- Asserts every `MPError.Code` raw value, `~=` matching, and `MPErrorDomain`.
+
+Deferred AVFoundation overlays and unavailable CoreMedia/UIKit view types are
+unchanged. Isolated-host `UIImage` / `UIView` / `UIViewController` in
+`MPHostTypes.swift` are still not UIKit identity. This host has no
+CoreGraphics module and no Objective-C interop, so `CGSize`/`CGRect`/`Selector`
+are lookalikes behind `canImport` — the same honesty rule as the UIKit stubs.
+
+Sealed gate: `bash full/mediaplayer/tests/acceptance/test_host.sh` (Linux host,
+no docker). Expected markers:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+MEDIAPLAYER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=MediaPlayer dylib=libMediaPlayer.dylib
+```

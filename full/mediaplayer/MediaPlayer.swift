@@ -1,8 +1,8 @@
 import Foundation
 
-/// Linux starting implementation of Apple's public `MediaPlayer` module.
-/// Playback, library, CarPlay, and Now Playing sessions fail closed. UIKit
-/// artwork and view types are omitted rather than faked.
+/// Linux MediaPlayer module. Now Playing, remote commands, media items,
+/// queries, and the music-player state machine are in-process. Artwork /
+/// volume / picker use OpenUIKit when imported, else isolated-host lookalikes.
 
 public func MPVolumeSettingsAlertHide() {}
 

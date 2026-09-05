@@ -10,6 +10,7 @@ open class MPContentItem: NSObject {
     public var isStreamingContent: Bool = false
     public var subtitle: String?
     public var title: String?
+    public var artwork: MPMediaItemArtwork?
 
     public init(identifier: String) {
         self.identifier = identifier
