@@ -142,16 +142,18 @@ open class PDFBorder: NSObject, NSSecureCoding {
     }
 
     open func draw(in rect: CGRect) {
+        #if canImport(UIKit)
+        UIGraphicsGetCurrentContext()?.setLineWidth(lineWidth)
+        UIGraphicsGetCurrentContext()?.stroke(rect)
+        #else
         _ = rect
-        // Fail-closed: this host has no CG drawing context for PDF borders.
+        #endif
     }
 }
 
 open class PDFAppearanceCharacteristics: NSObject {
-    #if canImport(UIKit)
-    open var backgroundColor: UIColor?
-    open var borderColor: UIColor?
-    #endif
+    open var backgroundColor: PDFKitColor?
+    open var borderColor: PDFKitColor?
     open var rotation: Int = 0
     open var caption: String?
     open var rolloverCaption: String?

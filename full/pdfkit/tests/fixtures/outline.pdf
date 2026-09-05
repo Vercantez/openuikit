@@ -1,0 +1,41 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Title (Outline Fixture) >>
+endobj
+2 0 obj
+<< /Type /Catalog /Pages 3 0 R /Outlines 6 0 R >>
+endobj
+3 0 obj
+<< /Type /Pages /Kids [4 0 R] /Count 1 >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 43 >>
+stream
+BT /F1 12 Tf 72 720 Td (Hello PDFKit) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Outlines /First 7 0 R /Last 7 0 R /Count 1 >>
+endobj
+7 0 obj
+<< /Title (Hello) /Parent 6 0 R /Dest [4 0 R /XYZ 0 792 0] >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000015 00000 n 
+0000000061 00000 n 
+0000000126 00000 n 
+0000000183 00000 n 
+0000000358 00000 n 
+0000000451 00000 n 
+0000000522 00000 n 
+trailer
+<< /Size 8 /Root 2 0 R /Info 1 0 R >>
+startxref
+599
+%%EOF
