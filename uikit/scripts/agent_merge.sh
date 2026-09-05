@@ -75,7 +75,7 @@ python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out 
 python3 - <<'PY' || exit 6
 import re, subprocess
 out = subprocess.run(['python3', 'Tools/compare/compare_realapp.py', '--golden', '/tmp/golden_realapp_ios', '--out', '/tmp/agent_merge_app', '--scale', '3'], capture_output=True, text=True).stdout
-floors = {'realapp_history_light': 99.0, 'realapp_settings_light': 98.4, 'realapp_settings_dark': 98.4, 'realapp_storage_light': 99.0, 'realapp_settings_light_xs': 98.4, 'realapp_settings_light_xxxl': 98.0, 'realapp_settings_light_ax1': 97.0, 'realapp_settings_light_ipad': 99.4, 'realapp_focus_settings_light': 80.2}
+floors = {'realapp_history_light': 99.0, 'realapp_settings_light': 98.4, 'realapp_settings_dark': 98.4, 'realapp_storage_light': 99.0, 'realapp_settings_light_xs': 98.4, 'realapp_settings_light_xxxl': 98.0, 'realapp_settings_light_ax1': 97.0, 'realapp_settings_light_ipad': 99.4, 'realapp_history_light_ipad': 99.6, 'realapp_storage_light_ipad': 99.5, 'realapp_focus_settings_light': 80.2}
 for name, floor in floors.items():
     m = re.search(name + r".*?'score': np\.float64\(([\d.]+)\)", out)
     if not m or float(m.group(1)) < floor: raise SystemExit(f'REAL APP DROPPED: {name} {m.group(1) if m else "?"} < {floor}')

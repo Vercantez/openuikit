@@ -47,6 +47,12 @@ public class UITabBarItem {
     public var title: String?
     public var image: UIImage?
     public var tag: Int
+    /// Badge text drawn on the item's icon. `nil` / `""` hides it.
+    /// The bar reads this from `_UITabBarItemView.layoutSubviews`.
+    public var badgeValue: String? {
+        didSet { _bar?.setNeedsLayout() }
+    }
+    weak var _bar: UITabBar?
 
     public init(title: String?, image: UIImage?, tag: Int) {
         self.title = title
@@ -67,6 +73,8 @@ final class _UITabBarItemView: UIControl {
     let item: UITabBarItem
     let iconView = UIImageView()
     let titleLabel = UILabel()
+    let badgeView = UIView()
+    let badgeLabel = UILabel()
 
     init(item: UITabBarItem) {
         self.item = item
@@ -78,6 +86,12 @@ final class _UITabBarItemView: UIControl {
         titleLabel.textAlignment = .center
         addSubview(iconView)
         addSubview(titleLabel)
+        badgeView.isHidden = true
+        badgeView.clipsToBounds = true
+        addSubview(badgeView)
+        badgeLabel.textAlignment = .center
+        badgeLabel.textColor = .white
+        badgeView.addSubview(badgeLabel)
     }
 
     @available(*, unavailable, message: "tab-bar item views require a UITabBarItem")
@@ -102,6 +116,52 @@ final class _UITabBarItemView: UIControl {
         titleLabel.frame = CGRect(x: (bounds.width - t.width) / 2,
                                   y: UITabBar.titleCenterY - t.height / 2,
                                   width: t.width, height: t.height)
+        layoutBadge()
+    }
+
+    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: `_UIBarBadgeView`
+    /// `[196.5, 590, 20, 20]` (button-local `[55.5, 2]` on the 94×54
+    /// Tools button at `[141, 588]`), cornerRadius 10, fill (255, 56, 60)
+    /// = the captured `systemRed`. The "3" is 13 pt regular in a 12×16
+    /// label at badge-local `[4, 2]`. Origin vs icon centre: x = iconCenterX
+    /// + 8.5, y = 6 in the 62 pt platter item view.
+    func layoutBadge() {
+        let value = item.badgeValue ?? ""
+        if value.isEmpty {
+            badgeView.isHidden = true
+            return
+        }
+        badgeView.isHidden = false
+        badgeLabel.text = value
+        let size = UITabBar.isIOS ? UITabBar.badgeSizeIOS : UITabBar.badgeHeight
+        let fontSize = UITabBar.isIOS ? UITabBar.badgeFontSizeIOS : UITabBar.badgeFontSize
+        badgeLabel.font = .systemFont(ofSize: fontSize, weight: .regular)
+        badgeView.backgroundColor = UITabBar.badgeColor
+        badgeView.layer.cornerRadius = size / 2
+        let iconCenterX = bounds.width / 2
+        let x: CGFloat
+        let y: CGFloat
+        if UITabBar.isIOS {
+            x = iconCenterX + UITabBar.badgeOriginXFromIconCenter
+            y = UITabBar.badgeOriginYInPlatter
+        } else {
+            x = iconView.frame.maxX - size / 2
+            y = iconView.frame.minY - size / 2
+        }
+        badgeView.frame = CGRect(x: x, y: y, width: size, height: size)
+        if UITabBar.isIOS {
+            // Tabs t200: the "3" label is `[200.5, 592, 12, 16]` inside
+            // `_UIBarBadgeView` `[196.5, 590, 20, 20]` → badge-local
+            // `[4, 2, 12, 16]`. Intrinsic of our 13 pt "3" is 8.5×16 —
+            // the dump reports the label bounds, not the glyph ink.
+            badgeLabel.textAlignment = .center
+            badgeLabel.frame = CGRect(x: 4, y: 2, width: 12, height: 16)
+        } else {
+            let text = badgeLabel.intrinsicContentSize
+            badgeLabel.frame = CGRect(x: (size - text.width) / 2,
+                                      y: (size - text.height) / 2,
+                                      width: text.width, height: text.height)
+        }
     }
 }
 
@@ -134,6 +194,23 @@ public final class UITabBar: UIView {
     static let iconCenterY: CGFloat = 24
     static var titleCenterY: CGFloat { isIOS ? 45 : 44.5 }
     static let titleFontSize: CGFloat = 10
+    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: `_UIBarBadgeView` is
+    /// 20×20, r=10, fill (255, 56, 60); the digit is 13 pt regular.
+    static let badgeSizeIOS: CGFloat = 20
+    static let badgeFontSizeIOS: CGFloat = 13
+    static let badgeOriginXFromIconCenter: CGFloat = 8.5
+    static let badgeOriginYInPlatter: CGFloat = 6
+    static let badgeFontSize: CGFloat = 11
+    static let badgeHeight: CGFloat = 16
+    static let badgeSidePad: CGFloat = 8
+    static var badgeColor: UIColor {
+        if isIOS {
+            // Same captured sRGB as the table delete-control fill
+            // (editredprobe / Tabs t200 badge interior).
+            return UIColor(red: 255 / 255, green: 56 / 255, blue: 60 / 255, alpha: 1)
+        }
+        return .systemRed
+    }
 
     static var platterColor: UIColor {
         UIColor(dynamicProvider: { traits in
@@ -244,6 +321,7 @@ public final class UITabBar: UIView {
     func rebuildItemViews() {
         for v in itemViews { v.removeFromSuperview() }
         itemViews = (items ?? []).map { item in
+            item._bar = self
             let v = _UITabBarItemView(item: item)
             v.addTarget(for: .touchUpInside) { [weak self] control, _ in
                 guard let self, let iv = control as? _UITabBarItemView else { return }

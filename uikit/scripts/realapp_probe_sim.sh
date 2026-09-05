@@ -135,7 +135,8 @@ rm -rf "$TMPSRC"
 # width can only be caught by asking twice. A non-default device writes to
 # whatever outdir the caller names; it must not be the golden one.
 #
-# Pad rows (`realapp_settings_light_ipad`) capture on a private
+# Pad rows (`realapp_settings_light_ipad`, `realapp_history_light_ipad`,
+# `realapp_storage_light_ipad`) capture on a private
 # "iPad (A16)" (820×1180 @2x). The probe itself skips rows whose idiom
 # does not match the booted device, so the two launches do not overwrite
 # each other's goldens.

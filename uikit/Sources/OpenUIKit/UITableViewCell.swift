@@ -381,12 +381,14 @@ open class UITableViewCell: UIView, ReusableView {
     /// `SwitchCell.layoutMargins` and its content view's are [15, 20, 15, 20]
     /// on the iPhone 16 (393 pt) and [15, 16, 15, 16] on the SE (375 pt) —
     /// the same 390 pt threshold `UITableView.iOSSystemMargin` already
-    /// carries, confirmed here on a second view class.
+    /// carries, confirmed here on a second view class. Pad (A16) 820 pt is
+    /// 16, not that 20 — see `iOSMargin`.
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         UIEdgeInsets(top: 15, left: trailingMargin, bottom: 15, right: trailingMargin)
     }
     var iOSMargin: CGFloat {
-        UITableView.iOSSystemMargin(width: window?.bounds.width ?? tableView?.bounds.width ?? bounds.width)
+        if UITableView.isPadChrome { return UITableView.iOSPadCellMargin }
+        return UITableView.iOSSystemMargin(width: window?.bounds.width ?? tableView?.bounds.width ?? bounds.width)
     }
     /// Right edge of a value1 detail label with no accessory (16 in on iOS).
     static var detailTrailingMargin: CGFloat { isIOSChrome ? 16 : 16 }

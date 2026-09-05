@@ -273,6 +273,41 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(custom._presentationSheet!.layer.cornerRadius, 32)
         XCTAssertEqual(custom._presentationDim?.alpha ?? 0, 0.2, accuracy: 1e-9)
     }
+
+    /// MEASURED realapp_storage_light_ipad, iPad (A16) 820×1180 @2x /
+    /// iOS 26.1: large-title label x **20** (phone iOS stays 16); grouped
+    /// cell layoutMargins horizontal **16** (phone 393 stays 20); inset-
+    /// grouped card x stays **20**.
+    func testPadLargeTitleXAndGroupedCellMargin() {
+        XCTAssertEqual(UINavigationBar.largeTitleX, 16)
+        let phoneCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        // No window: iOSMargin falls back to bounds width (0 → 16).
+        device(393, 852, scale: 3)
+        let phone = UITableView(frame: CGRect(x: 0, y: 0, width: 393, height: 600), style: .grouped)
+        XCTAssertEqual(phone.insetGroupedSideInset, 20)
+
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+        XCTAssertEqual(UINavigationBar.largeTitleX, 20)
+        XCTAssertEqual(UITableView.iOSPadCellMargin, 16)
+        let padCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        XCTAssertEqual(padCell.iOSMargin, 16)
+        XCTAssertEqual(padCell.layoutMargins.left, 16)
+        XCTAssertEqual(padCell.layoutMargins.right, 16)
+        XCTAssertEqual(padCell.layoutMargins.top, 15)
+        let padGrouped = UITableView(frame: CGRect(x: 0, y: 0, width: 820, height: 1180), style: .grouped)
+        XCTAssertEqual(padGrouped.iOSMargin, 20, "inset-grouped / table chrome stays 20")
+        let padInset = UITableView(frame: CGRect(x: 0, y: 0, width: 820, height: 1180), style: .insetGrouped)
+        XCTAssertEqual(padInset.insetGroupedSideInset, 20)
+
+        UIDevice.current.userInterfaceIdiom = .phone
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 3, userInterfaceIdiom: .phone)
+        XCTAssertEqual(UINavigationBar.largeTitleX, 16)
+        _ = phoneCell
+    }
 }
 
 @MainActor

@@ -42,6 +42,11 @@ REALAPP_FLOOR = {
     # Firefox Focus Settings (iPhone 16 / iOS 26.1). MEASURED 80.345 after
     # the opaque-bar inset, nil container fill, and inset-grouped footer wrap.
     "realapp_focus_settings_light": 80.2,   # 80.345
+    # iPad (A16) History picker + Storage screen. MEASURED 2026-09-04:
+    # history formSheet [120, 753, 580, 157] 99.760; storage large-title
+    # x 20 and grouped cell margin 16 → 99.689.
+    "realapp_history_light_ipad": 99.6,   # 99.760
+    "realapp_storage_light_ipad": 99.5,   # 99.689
 }
 
 def parse_compare(path):

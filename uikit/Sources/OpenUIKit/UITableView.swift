@@ -253,6 +253,14 @@ open class UITableView: UIScrollView {
     /// cards, plain text insets, separator insets and accessory margins all
     /// move by the same 4 pt).
     static func iOSSystemMargin(width: CGFloat) -> CGFloat { width >= 390 ? 20 : 16 }
+    /// Horizontal layout margin of a grouped/plain *cell* on the pad idiom.
+    /// MEASURED realapp_storage_light_ipad, iPad (A16) 820×1180 @2x /
+    /// iOS 26.1: SwitchCell and DisclosureCell `layoutMargins` `[15, 16, 15, 16]`;
+    /// SwitchCell content view 741 wide with the 63 pt switch at x 741
+    /// (`820 − 16 − 63`). Phone 393 stays 20. Inset-grouped card x stays 20
+    /// (ipadprobe / realapp_settings_light_ipad) — that uses `iOSMargin`,
+    /// not this cell value.
+    static let iOSPadCellMargin: CGFloat = 16
     /// This table's margin (window width; its own width without a window).
     var iOSMargin: CGFloat { UITableView.iOSSystemMargin(width: window?.bounds.width ?? bounds.width) }
     /// Plain cells' text inset (Catalyst 16; iOS: the system margin) and

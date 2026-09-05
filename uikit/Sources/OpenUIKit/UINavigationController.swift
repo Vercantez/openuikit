@@ -287,7 +287,7 @@ open class UINavigationController: UIViewController {
             let pad = iOSBarTop
             let barH = navigationBar.prefersLargeTitles
                 ? navigationBar.largeTitleOverlayHeight
-                : UINavigationBar.iOSBarContentHeight
+                : UINavigationBar.iOSBarContentHeight + navigationBar.searchOverlayHeight
             navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
             if navigationBar.isTranslucent {
                 contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)
@@ -398,7 +398,8 @@ open class UINavigationController: UIViewController {
     /// the scroll view was still at its default offset, and observe it.
     func bindContentScrollView(of vc: UIViewController) {
         let previous = navigationBar.trackedScrollView
-        guard navigationBar.prefersLargeTitles,
+        let wantsSearch = vc.navigationItem.searchController != nil
+        guard navigationBar.prefersLargeTitles || wantsSearch,
               let scroll = vc._contentScrollView else {
             previous?._scrollObserver = nil
             navigationBar.trackedScrollView = nil
@@ -408,17 +409,22 @@ open class UINavigationController: UIViewController {
         // The expanded overlay reaches the scroll view as SAFE AREA
         // (updateContentSafeArea), exactly as it does on the device, so only
         // the rest offset is settled here.
-        let inset = UINavigationBar.largeTitleExpandedInset
-        let wasAtRest = scroll.contentOffset.y == -scroll.adjustedContentInset.top
-        updateContentSafeArea()
-        if wasAtRest, scroll.contentOffset.y != -inset {
-            scroll.contentOffset.y = -inset
+        if navigationBar.prefersLargeTitles {
+            let inset = UINavigationBar.largeTitleExpandedInset
+            let wasAtRest = scroll.contentOffset.y == -scroll.adjustedContentInset.top
+            updateContentSafeArea()
+            if wasAtRest, scroll.contentOffset.y != -inset {
+                scroll.contentOffset.y = -inset
+            }
+        } else {
+            updateContentSafeArea()
         }
         // Observe, do not become the delegate: the app owns `scroll.delegate`
         // (a UITableViewController is its own). See UIScrollView._scrollObserver.
         scroll._scrollObserver = self
         navigationBar.trackedScrollView = scroll
         navigationBar.updateFromScroll()
+        navigationBar.updateSearchFromScroll()
     }
 
     /// Snap a release inside the large-title zone to the nearest rest state
@@ -898,6 +904,7 @@ extension UINavigationController: UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView === navigationBar.trackedScrollView else { return }
         navigationBar.updateFromScroll()
+        navigationBar.updateSearchFromScroll()
     }
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView,
