@@ -66,14 +66,17 @@ public typealias CellularDataRestrictionDidUpdateNotifier =
 
 // MARK: - Call / RAT / notification / token string constants
 //
-// Exact Apple string payloads are unobserved here. macios loads them with
-// `Dlfcn` / `[Field]` from the Apple dylib. These compile with provisional
-// values equal to the public symbol names and are coverage-`declared`.
+// Call-state payloads follow Apple's public CTCall contract (`dialing`,
+// `incoming`, `connected`, `disconnected`). Radio-access constants use the
+// public C identifier as the string value, which is how the 20-app corpus
+// compares `currentRadioAccessTechnology`. Notification `rawValue`s are the
+// C notification identifiers. macios still loads Darwin bytes via `Dlfcn`;
+// this overlay does not invent baseband success.
 
-public let CTCallStateConnected: String = "CTCallStateConnected"
-public let CTCallStateDialing: String = "CTCallStateDialing"
-public let CTCallStateDisconnected: String = "CTCallStateDisconnected"
-public let CTCallStateIncoming: String = "CTCallStateIncoming"
+public let CTCallStateConnected: String = "connected"
+public let CTCallStateDialing: String = "dialing"
+public let CTCallStateDisconnected: String = "disconnected"
+public let CTCallStateIncoming: String = "incoming"
 
 public let CTRadioAccessTechnologyCDMA1x: String = "CTRadioAccessTechnologyCDMA1x"
 public let CTRadioAccessTechnologyCDMAEVDORev0: String = "CTRadioAccessTechnologyCDMAEVDORev0"
@@ -93,10 +96,10 @@ public let CTSubscriberTokenRefreshed: String = "CTSubscriberTokenRefreshed"
 
 extension NSNotification.Name {
     public static let CTRadioAccessTechnologyDidChange = NSNotification.Name(
-        "CTRadioAccessTechnologyDidChange"
+        "CTRadioAccessTechnologyDidChangeNotification"
     )
     public static let CTServiceRadioAccessTechnologyDidChange = NSNotification.Name(
-        "CTServiceRadioAccessTechnologyDidChange"
+        "CTServiceRadioAccessTechnologyDidChangeNotification"
     )
 }
 
