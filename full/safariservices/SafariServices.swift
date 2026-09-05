@@ -1,23 +1,10 @@
 @_exported import Foundation
-import Dispatch
 
 #if canImport(UIKit)
 @_exported import UIKit
 #elseif canImport(OpenUIKit)
 @_exported import OpenUIKit
 #endif
-
-enum SafariServicesHost {
-    static let contentBlockerQueue = DispatchQueue(
-        label: "SafariServices.SFContentBlockerManager.completion"
-    )
-    static let settingsQueue = DispatchQueue(
-        label: "SafariServices.SFSafariSettings.completion"
-    )
-    static let dataStoreQueue = DispatchQueue(
-        label: "SafariServices.SFSafariViewController.DataStore.completion"
-    )
-}
 
 public struct SafariServicesPortableError: Error, Equatable, Sendable,
     CustomStringConvertible
@@ -86,6 +73,8 @@ public struct SFAuthenticationError: Foundation._BridgedStoredNSError, @unchecke
 
 /// Deprecated content-blocker error codes. The Swift graph exposes this C
 /// enum directly rather than a bridged `SFContentBlockerError` struct.
+/// Pinned `dotnet/macios` also lists `ok = 0`; that case is not in the
+/// sealed iPhoneOS 26.1 public surface.
 public enum SFContentBlockerErrorCode: Int, Sendable {
     case noExtensionFound = 1
     case noAttachmentFound = 2
@@ -166,7 +155,9 @@ public final class SFContentBlockerState: NSObject {
 }
 
 /// Linux has no Safari content-blocker service or app-extension host.
-/// Manager APIs fail closed and never report an enabled blocker.
+/// Manager APIs fail closed on the calling thread and never report an
+/// enabled blocker. Apple's callback queue is unobserved; hopping would
+/// hang a host with no run loop.
 public final class SFContentBlockerManager: NSObject {
     @available(*, unavailable)
     public override init() {
@@ -178,12 +169,10 @@ public final class SFContentBlockerManager: NSObject {
         completionHandler: @escaping (SFContentBlockerState?, Error?) -> Void
     ) {
         _ = identifier
-        SafariServicesHost.contentBlockerQueue.async {
-            completionHandler(
-                nil,
-                SafariServicesPortableError(.contentBlockerServiceUnavailable)
-            )
-        }
+        completionHandler(
+            nil,
+            SafariServicesPortableError(.contentBlockerServiceUnavailable)
+        )
     }
 
     public static func reloadContentBlocker(
@@ -191,11 +180,9 @@ public final class SFContentBlockerManager: NSObject {
         completionHandler: @escaping (Error?) -> Void
     ) {
         _ = identifier
-        SafariServicesHost.contentBlockerQueue.async {
-            completionHandler(
-                SafariServicesPortableError(.contentBlockerServiceUnavailable)
-            )
-        }
+        completionHandler(
+            SafariServicesPortableError(.contentBlockerServiceUnavailable)
+        )
     }
 
     public static func reloadContentBlocker(withIdentifier identifier: String) async throws {
@@ -220,16 +207,15 @@ public final class SFSafariSettings: NSObject {
     public static func openExportBrowsingDataSettings(
         completionHandler: ((Error?) -> Void)? = nil
     ) {
-        guard let completionHandler else { return }
-        SafariServicesHost.settingsQueue.async {
-            completionHandler(
-                SafariServicesPortableError(.browserServiceUnavailable)
-            )
-        }
+        completionHandler?(
+            SafariServicesPortableError(.browserServiceUnavailable)
+        )
     }
 }
 
+#if canImport(UIKit) || canImport(OpenUIKit)
 @MainActor
+#endif
 public protocol SFSafariViewControllerDelegate: AnyObject {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController)
     func safariViewController(
@@ -267,7 +253,11 @@ public typealias SFSafariViewControllerBase = NSObject
 
 /// A constructible presentation shell. It preserves the requested URL and
 /// copied configuration but deliberately never claims that Safari loaded it.
+/// Isolated Linux drops `@MainActor` because the host has no UI run loop;
+/// Darwin / OpenUIKit keep the sealed-graph isolation.
+#if canImport(UIKit) || canImport(OpenUIKit)
 @MainActor
+#endif
 open class SFSafariViewController: SFSafariViewControllerBase {
     public typealias Configuration = SFSafariViewControllerConfiguration
 
@@ -297,12 +287,10 @@ open class SFSafariViewController: SFSafariViewControllerBase {
             super.init()
         }
 
-        /// Linux has no Safari website-data store. The completion runs after
-        /// return on a private serial queue; no cookies or caches are touched.
+        /// Linux has no Safari website-data store. The optional completion
+        /// runs on the calling thread; no cookies or caches are touched.
         public func clearWebsiteData(completionHandler completion: (() -> Void)? = nil) {
-            SafariServicesHost.dataStoreQueue.async {
-                completion?()
-            }
+            completion?()
         }
     }
 
@@ -359,11 +347,7 @@ open class SFSafariViewController: SFSafariViewControllerBase {
     public override init() {
         initialURL = URL(string: "about:blank")!
         configuration = Configuration()
-#if canImport(UIKit) || canImport(OpenUIKit)
         super.init()
-#else
-        super.init()
-#endif
     }
 
     /// Hosts call this when presentation begins. The callback is explicitly a
@@ -474,8 +458,8 @@ public final class SFAuthenticationSession: NSObject {
 }
 
 /// Protocol for Add to Home Screen activity items. Methods that require
-/// BrowserEngineKit `BEWebAppManifest` or `NSItemProvider` are omitted on
-/// this isolated host.
+/// BrowserEngineKit `BEWebAppManifest`, `SFAddToHomeScreenInfo`, or
+/// `NSItemProvider` are omitted on this isolated host.
 public protocol SFAddToHomeScreenActivityItem: AnyObject {
     var url: URL { get }
     var title: String { get }
