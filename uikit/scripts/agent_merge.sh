@@ -50,20 +50,21 @@ if git diff --name-only main..."$BR" | grep -qE 'Package\.resolved$|\.app/'; the
   echo "REFUSED: the branch commits Package.resolved or a probe .app bundle"; exit 3
 fi
 rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks the merge
-# The Linux-hosted arm64-apple-macos GUEST route builds OpenUIKit against the
-# port's own Foundation (no DateFormatter / NumberFormatter / NSAttributedString
-# ...); the Docker check below uses corelibs and cannot see that. Refuse the
-# common traps in changed sources; the arm64/x86 authorities are the real check.
-# Only what the guest compiles into the library: OpenUIKit, CQuartz, and
-# the TOP-LEVEL harness files (Sources/RealAppProbe/*.swift, Vendored/*.swift).
-# App subdirectories (Focus/, Hackers/, *Modules/, Vendored/<App>/) now also
-# compile on the guest against the core-guest Foundation facade; the DateFormatter
-# grep below still applies to the library + top-level harness. Comment
-# lines do not count (a stub once said "not DateFormatter" and was refused).
+# The Linux-hosted arm64-apple-macos GUEST route builds the LIBRARY (OpenUIKit,
+# CQuartz) against the port's own Foundation (no DateFormatter / NumberFormatter
+# / NSAttributedString ...); the Docker check below uses corelibs and cannot see
+# that. Refuse the common traps in changed library sources; the arm64/x86
+# authorities are the real check. Since the guest app path (build_full.sh
+# "RealAppProbe (top-level + Vendored + ...)", APPINC) EVERY harness file under
+# Sources/RealAppProbe — top-level, Vendored/, Focus/, Hackers/, *Modules/ —
+# compiles against the core guest package's Foundation, which has all of these
+# (carried Darwin goldens under full/foundation/tests), so the harness is no
+# longer grepped (LedgerStore.swift was refused for a NumberFormatter the guest
+# has). Comment lines do not count (a stub once said "not DateFormatter" and was
+# refused).
 if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQuartz/*' \
-     $(git diff --name-only main..."$BR" | grep -E '^uikit/Sources/RealAppProbe/[^/]+\.swift$|^uikit/Sources/RealAppProbe/Vendored/[^/]+\.swift$') \
    | grep -E '^\+' | grep -vE '^\+\s*//' | grep -qE 'DateFormatter|NumberFormatter|DateComponentsFormatter|ISO8601DateFormatter|NSRegularExpression|JSONSerialization'; then
-  echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
+  echo "REFUSED: the branch adds a Foundation API the guest LIBRARY route does not have (DateFormatter & co. in OpenUIKit/CQuartz) — use Calendar/DateComponents or the port's own formatting"; exit 3
 fi
 
 # Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
