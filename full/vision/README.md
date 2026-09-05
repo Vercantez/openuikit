@@ -108,7 +108,7 @@ code, rectangle-filter coordinate space.
 Environment note: `.cursor/verify-cloud-environment.sh` did not print
 `CURSOR_SWIFT_ENVIRONMENT_OK` in this VM because `scratch/ladder-corpus/focus-ios`
 is missing. `swiftc` is Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The sealed
-gate is run directly on this Linux host (no docker). Expected gate markers:
+gate ran directly on this Linux host (no docker). Host gate output (2026-09-05):
 
 ```
 CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
