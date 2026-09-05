@@ -71,6 +71,41 @@ let swiftUICombineDependencies: [Target.Dependency] = [
     .target(name: "Combine", condition: .when(platforms: [.linux])),
 ]
 
+// Linux-only C target that pumps corelibs XCTest's CFRunLoop so the ink
+// and selector lists do not stall in awaitUsingExpectation → ppoll
+// (swift-corelibs-xctest#504). MEASURED uikit-linux Swift 6.2.4: ink 3/5
+// hung at timeout 20 s; 10 ms non-main DISPATCH_SOURCE_TYPE_TIMER +
+// dispatch_async_f onto _dispatch_main_q made ink 20/20 and selector 20/20
+// (docs/agent_reports/linux-xctest.md). Empty on Darwin so the test count
+// is unchanged. Package.swift is evaluated on the build host.
+#if os(Linux)
+let linuxXCTestSupportTargets: [Target] = [
+    .target(name: "CLinuxXCTestSupport", publicHeadersPath: "include"),
+]
+let openUIKitTestDeps: [Target.Dependency] = [
+    "OpenUIKit", "UIKit", "ConformanceApps",
+    "SafariServices", "MessageUI", "LinkPresentation",
+    "CLinuxXCTestSupport",
+]
+let openUIKitCTestDeps: [Target.Dependency] = [
+    "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
+    "CLinuxXCTestSupport",
+]
+let swiftUITestLinuxDeps: [Target.Dependency] = [
+    "CLinuxXCTestSupport",
+]
+#else
+let linuxXCTestSupportTargets: [Target] = []
+let openUIKitTestDeps: [Target.Dependency] = [
+    "OpenUIKit", "UIKit", "ConformanceApps",
+    "SafariServices", "MessageUI", "LinkPresentation",
+]
+let openUIKitCTestDeps: [Target.Dependency] = [
+    "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
+]
+let swiftUITestLinuxDeps: [Target.Dependency] = []
+#endif
+
 // Linux 6.2.4 XCTest cannot invoke `@MainActor` SwiftUI test methods
 // (discovery casts them to `() throws -> Void` and traps; linux-trial).
 // Package.swift is evaluated on the build host: the Linux image compiles a
@@ -83,7 +118,7 @@ let swiftUITestTarget: Target = .testTarget(
         "OpenUIKit",
         "Symbols",
         "DeveloperToolsSupport",
-    ] + swiftUICombineDependencies,
+    ] + swiftUICombineDependencies + swiftUITestLinuxDeps,
     sources: ["SwiftUILinuxStub.swift"],
     swiftSettings: [
         .unsafeFlags([
@@ -480,8 +515,7 @@ let testTargets: [Target] = [
     // cannot call `@preconcurrency @MainActor` UIKit without -swift-version 5.
     .testTarget(
         name: "OpenUIKitTests",
-        dependencies: ["OpenUIKit", "UIKit", "ConformanceApps",
-                       "SafariServices", "MessageUI", "LinkPresentation"],
+        dependencies: openUIKitTestDeps,
         swiftSettings: [
             .unsafeFlags([
                 "-swift-version", "5",
@@ -493,7 +527,7 @@ let testTargets: [Target] = [
     swiftUITestTarget,
     .testTarget(
         name: "OpenUIKitCTests",
-        dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"],
+        dependencies: openUIKitCTestDeps,
         swiftSettings: [
             .unsafeFlags([
                 "-swift-version", "5",
@@ -562,6 +596,6 @@ let package = Package(
     platforms: [.macOS(.v11)],
     products: coreProducts + frameworkProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
-    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets,
+    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets,
     cxxLanguageStandard: .cxx17
 )
