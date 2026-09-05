@@ -1,0 +1,61 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave8-repair-1",
+    "maxActive": 24,
+    "maxRuns": 3
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "avkit": {
+      "agentId": "bc-54dd2c00-375f-58e2-ab58-5198fa4ac430",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T23:02:05Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/152",
+      "expectedPriorHead": "434c1dca18a9c123e3a900ab7a324a461c15f65d",
+      "idempotencyKey": "3d2e0f28-8ecc-5d41-8051-57b72cfee44c",
+      "launchStatus": "SENT",
+      "module": "AVKit",
+      "promptBytes": 3300,
+      "promptSha256": "9d483dfe8a92cf9e93f172705b6741f365614c29e73ae170bf27857103e41fc8",
+      "runId": "run-d358cb63-8895-4ac2-8213-a0472a3bf1cc",
+      "runStatus": "running",
+      "slug": "avkit"
+    },
+    "contactsui": {
+      "agentId": "bc-9992df72-cd8f-5750-8c6e-5552dbaa5aeb",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T23:02:10Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/153",
+      "expectedPriorHead": "0b654805f05e81010ec64a345c0baed33acd82b5",
+      "idempotencyKey": "c7c9f296-a85d-5d2c-96d7-ff0d9538cc53",
+      "launchStatus": "SENT",
+      "module": "ContactsUI",
+      "promptBytes": 3223,
+      "promptSha256": "0461a77f911b2e08fd5e6df1aaa1c856c3938a8e24eb9f70392a90e43a4496c4",
+      "runId": "run-13a2e61e-b9eb-4de1-b75e-97ec799bfc7f",
+      "runStatus": "running",
+      "slug": "contactsui"
+    },
+    "photosui": {
+      "agentId": "bc-8118607f-b1ed-57ec-91d3-a523df395b44",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T23:02:15Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/154",
+      "expectedPriorHead": "295e58728fd1dea73142b7cf716809dc4c1b3c2d",
+      "idempotencyKey": "ac7ed780-d8da-5867-aba0-f8578e0ce798",
+      "launchStatus": "SENT",
+      "module": "PhotosUI",
+      "promptBytes": 3223,
+      "promptSha256": "6e3f7991e9e69afbf708c19336165b68aaa3bfe1ca9533d5ca8734bbd77c39cd",
+      "runId": "run-2fba0408-ba43-410b-8b0f-7aaa237f7b29",
+      "runStatus": "running",
+      "slug": "photosui"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

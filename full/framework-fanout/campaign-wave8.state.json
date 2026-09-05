@@ -88,11 +88,12 @@
     "avkit": {
       "agentId": "bc-54dd2c00-375f-58e2-ab58-5198fa4ac430",
       "agentName": "Port AVKit to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-54dd2c00-375f-58e2-ab58-5198fa4ac430",
       "branches": [
         {
           "branch": "cursor/port-avkit-to-linux-4c47",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/152",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -101,10 +102,13 @@
       "launchStatus": "CREATED",
       "module": "AVKit",
       "priority": 100,
+      "resultBytes": 1784,
+      "resultSha256": "fb8917070c46faddbe741a2c76eb769e89191cffaf84583ba17ce41c504abe6a",
       "runCreatedAt": "2026-09-05T22:25:25.824Z",
+      "runDurationMs": 805562,
       "runId": "run-c9d18013-252a-46e8-863f-71a3affa4de5",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T22:25:33.145Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T22:38:58.513Z"
     },
     "charts": {
       "agentId": "bc-0841653a-0cea-5e5e-8999-2e186f42ed3e",
@@ -130,11 +134,12 @@
     "contactsui": {
       "agentId": "bc-9992df72-cd8f-5750-8c6e-5552dbaa5aeb",
       "agentName": "Port ContactsUI to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-9992df72-cd8f-5750-8c6e-5552dbaa5aeb",
       "branches": [
         {
           "branch": "cursor/port-contactsui-to-linux-2f2b",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/153",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -143,10 +148,13 @@
       "launchStatus": "CREATED",
       "module": "ContactsUI",
       "priority": 100,
+      "resultBytes": 2013,
+      "resultSha256": "8c9eb7de6ede3dd5e68bb19aedbc110a3e10dc57ae02b7779a5386ec99b0e3b8",
       "runCreatedAt": "2026-09-05T22:25:37.978Z",
+      "runDurationMs": 887196,
       "runId": "run-a886c091-cfe5-4ea6-9799-8a9849478406",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T22:25:38.631Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T22:40:25.671Z"
     },
     "coremedia": {
       "agentId": "bc-ad1b0aec-0bc7-536b-bbd5-af728388995b",
@@ -256,11 +264,12 @@
     "photosui": {
       "agentId": "bc-8118607f-b1ed-57ec-91d3-a523df395b44",
       "agentName": "Port PhotosUI to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-8118607f-b1ed-57ec-91d3-a523df395b44",
       "branches": [
         {
           "branch": "cursor/port-photosui-to-linux-931e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/154",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -269,10 +278,13 @@
       "launchStatus": "CREATED",
       "module": "PhotosUI",
       "priority": 100,
+      "resultBytes": 1426,
+      "resultSha256": "200715d9178e8fcaf88116820596d81e66f909ca540e71312f240fc356bd6a64",
       "runCreatedAt": "2026-09-05T22:26:11.090Z",
+      "runDurationMs": 848818,
       "runId": "run-e6f7d0c5-17ad-4ba5-88db-fdb8a00af216",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T22:26:11.895Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T22:40:20.505Z"
     },
     "storekit": {
       "agentId": "bc-d7a09d28-8716-54b0-987d-907303e855c0",
@@ -369,5 +381,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T22:27:03Z"
+  "updatedAt": "2026-09-05T22:42:36Z"
 }

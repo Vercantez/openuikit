@@ -1,0 +1,27 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave9-repair-1",
+    "maxActive": 16,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "addressbook": {
+      "agentId": "bc-b694763b-0649-5446-bcb6-058882661833",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/167",
+      "expectedPriorHead": "b805b6bba3da4d54dd6eb5850bf6cec007052134",
+      "idempotencyKey": "d6f8b523-0500-58f6-885a-14d96ad648de",
+      "launchStatus": "PENDING",
+      "module": "AddressBook",
+      "promptBytes": 1813,
+      "promptSha256": "86c4acc1edef4ac7900e505fda4d748f2959dd7bc91da01b966d8b64f9d44e09",
+      "slug": "addressbook"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}
