@@ -110,7 +110,37 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
         }
     }
 
-    public var outputPresentationTimeStamp: CMTime { presentationTimeStamp }
+    public var outputPresentationTimeStamp: CMTime {
+        get {
+            lock.locked { valid ? (outputPTS ?? presentationTimeStampUnlocked()) : .invalid }
+        }
+        set {
+            lock.locked { outputPTS = newValue }
+        }
+    }
+
+    public var outputDuration: CMTime { duration }
+    public var outputDecodeTimeStamp: CMTime { decodeTimeStamp }
+
+    private var outputPTS: CMTime?
+
+    public init(referencing object: CMSampleBuffer) throws {
+        self.ownedDataBuffer = object.ownedDataBuffer
+        self.ownedFormat = object.ownedFormat
+        self.sampleCount = object.sampleCount
+        self.timings = object.timings
+        self.sizes = object.sizes
+        self.ready = object.ready
+        self.valid = object.valid
+        self.attachments = object.attachments
+        self.sampleAttachments = object.sampleAttachments
+        self.outputPTS = object.outputPTS
+    }
+
+    private func presentationTimeStampUnlocked() -> CMTime {
+        guard valid, let first = timings.first else { return .invalid }
+        return first.presentationTimeStamp
+    }
 
     public var totalSampleSize: Int {
         lock.locked {
@@ -119,6 +149,11 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
             if sizes.count == 1 { return sizes[0] * sampleCount }
             return sizes.reduce(0, +)
         }
+    }
+
+    public func setOutputPresentationTimeStamp(_ pts: CMTime) throws {
+        if !isValid { throw Error.invalidated }
+        outputPresentationTimeStamp = pts
     }
 
     public func invalidate() {
@@ -156,6 +191,19 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
         try lock.locked {
             if !valid { throw Error.invalidated }
             ready = true
+        }
+    }
+
+    func forceNotReady() {
+        lock.locked { ready = false }
+    }
+
+    fileprivate func replaceDataBuffer(_ buffer: CMBlockBuffer) -> OSStatus {
+        lock.locked {
+            if !valid { return kCMSampleBufferError_Invalidated }
+            if ownedDataBuffer != nil { return kCMSampleBufferError_AlreadyHasDataBuffer }
+            ownedDataBuffer = buffer
+            return 0
         }
     }
 
@@ -235,6 +283,220 @@ public func CMSampleBufferGetTypeID() -> CFTypeID {
 
 public func CMSampleBufferGetOutputPresentationTimeStamp(_ sbuf: CMSampleBuffer) -> CMTime {
     sbuf.outputPresentationTimeStamp
+}
+
+public func CMSampleBufferSetOutputPresentationTimeStamp(_ sbuf: CMSampleBuffer, newValue: CMTime) -> OSStatus {
+    do {
+        try sbuf.setOutputPresentationTimeStamp(newValue)
+        return 0
+    } catch {
+        return kCMSampleBufferError_Invalidated
+    }
+}
+
+public func CMSampleBufferCreateReady(
+    allocator: CFAllocator?,
+    dataBuffer: CMBlockBuffer?,
+    formatDescription: CMFormatDescription?,
+    sampleCount: CMItemCount,
+    sampleTimingEntryCount: CMItemCount,
+    sampleTimingArray: UnsafePointer<CMSampleTimingInfo>?,
+    sampleSizeEntryCount: CMItemCount,
+    sampleSizeArray: UnsafePointer<Int>?,
+    sampleBufferOut: UnsafeMutablePointer<CMSampleBuffer?>
+) -> OSStatus {
+    _ = allocator
+    var timings: [CMSampleTimingInfo] = []
+    if let sampleTimingArray, sampleTimingEntryCount > 0 {
+        timings = Array(UnsafeBufferPointer(start: sampleTimingArray, count: Int(sampleTimingEntryCount)))
+    }
+    var sizes: [Int] = []
+    if let sampleSizeArray, sampleSizeEntryCount > 0 {
+        sizes = Array(UnsafeBufferPointer(start: sampleSizeArray, count: Int(sampleSizeEntryCount)))
+    }
+    do {
+        let sample = try CMSampleBuffer(
+            dataBuffer: dataBuffer,
+            formatDescription: formatDescription,
+            numSamples: Int(sampleCount),
+            sampleTimings: timings,
+            sampleSizes: sizes,
+            dataReady: true
+        )
+        sampleBufferOut.pointee = sample
+        return 0
+    } catch {
+        sampleBufferOut.pointee = nil
+        return kCMSampleBufferError_InvalidEntryCount
+    }
+}
+
+public func CMSampleBufferCreate(
+    allocator: CFAllocator?,
+    dataBuffer: CMBlockBuffer?,
+    dataReady: Bool,
+    makeDataReadyCallback: CMSampleBufferMakeDataReadyCallback?,
+    makeDataReadyRefcon: UnsafeMutableRawPointer?,
+    formatDescription: CMFormatDescription?,
+    sampleCount: CMItemCount,
+    sampleTimingEntryCount: CMItemCount,
+    sampleTimingArray: UnsafePointer<CMSampleTimingInfo>?,
+    sampleSizeEntryCount: CMItemCount,
+    sampleSizeArray: UnsafePointer<Int>?,
+    sampleBufferOut: UnsafeMutablePointer<CMSampleBuffer?>
+) -> OSStatus {
+    _ = (makeDataReadyCallback, makeDataReadyRefcon)
+    let status = CMSampleBufferCreateReady(
+        allocator: allocator,
+        dataBuffer: dataBuffer,
+        formatDescription: formatDescription,
+        sampleCount: sampleCount,
+        sampleTimingEntryCount: sampleTimingEntryCount,
+        sampleTimingArray: sampleTimingArray,
+        sampleSizeEntryCount: sampleSizeEntryCount,
+        sampleSizeArray: sampleSizeArray,
+        sampleBufferOut: sampleBufferOut
+    )
+    if status == 0, !dataReady, let sample = sampleBufferOut.pointee {
+        sample.forceNotReady()
+    }
+    return status
+}
+
+public func CMSampleBufferCreateCopy(
+    allocator: CFAllocator?,
+    sampleBuffer sbuf: CMSampleBuffer,
+    sampleBufferOut: UnsafeMutablePointer<CMSampleBuffer?>
+) -> OSStatus {
+    _ = allocator
+    do {
+        sampleBufferOut.pointee = try CMSampleBuffer(referencing: sbuf)
+        return 0
+    } catch {
+        sampleBufferOut.pointee = nil
+        return kCMSampleBufferError_AllocationFailed
+    }
+}
+
+public func CMSampleBufferInvalidate(_ sbuf: CMSampleBuffer) -> OSStatus {
+    sbuf.invalidate()
+    return 0
+}
+
+public func CMSampleBufferMakeDataReady(_ sbuf: CMSampleBuffer) -> OSStatus {
+    do {
+        try sbuf.makeDataReady()
+        return 0
+    } catch {
+        return kCMSampleBufferError_Invalidated
+    }
+}
+
+public func CMSampleBufferSetDataReady(_ sbuf: CMSampleBuffer) -> OSStatus {
+    CMSampleBufferMakeDataReady(sbuf)
+}
+
+public func CMSampleBufferGetSampleTimingInfo(
+    _ sbuf: CMSampleBuffer,
+    at sampleIndex: CMItemIndex,
+    timingInfoOut: UnsafeMutablePointer<CMSampleTimingInfo>
+) -> OSStatus {
+    do {
+        timingInfoOut.pointee = try sbuf.sampleTimingInfo(at: Int(sampleIndex))
+        return 0
+    } catch let error as NSError {
+        return OSStatus(error.code)
+    } catch {
+        return kCMSampleBufferError_SampleIndexOutOfRange
+    }
+}
+
+public func CMSampleBufferGetSampleSizeArray(
+    _ sbuf: CMSampleBuffer,
+    sizeArrayEntries: CMItemCount,
+    sizeArrayOut: UnsafeMutablePointer<Int>?,
+    sizeArrayEntriesNeededOut: UnsafeMutablePointer<CMItemCount>?
+) -> OSStatus {
+    let count = sbuf.numSamples
+    sizeArrayEntriesNeededOut?.pointee = CMItemCount(count)
+    if count == 0 { return 0 }
+    if sizeArrayEntries < count { return kCMSampleBufferError_ArrayTooSmall }
+    guard let sizeArrayOut else { return kCMSampleBufferError_RequiredParameterMissing }
+    for index in 0..<count {
+        sizeArrayOut.advanced(by: index).pointee = (try? sbuf.sampleSize(at: index)) ?? 0
+    }
+    return 0
+}
+
+public func CMSampleBufferSetDataBuffer(_ sbuf: CMSampleBuffer, dataBuffer: CMBlockBuffer) -> OSStatus {
+    sbuf.replaceDataBuffer(dataBuffer)
+}
+
+public func CMSetAttachment(
+    _ target: CMAttachmentBearer,
+    key: CFString,
+    value: CFTypeRef?,
+    attachmentMode: CMAttachmentMode
+) {
+    guard let bearer = target as? CMAttachmentBearerProtocol else { return }
+    let name = unsafeBitCast(key, to: NSString.self) as String
+    guard let value else {
+        bearer.attachments[name] = nil
+        return
+    }
+    if attachmentMode == kCMAttachmentMode_ShouldPropagate {
+        bearer.attachments[name] = .shouldPropagate(value)
+    } else {
+        bearer.attachments[name] = .shouldNotPropagate(value)
+    }
+}
+
+public func CMGetAttachment(
+    _ target: CMAttachmentBearer,
+    key: CFString,
+    attachmentModeOut: UnsafeMutablePointer<CMAttachmentMode>?
+) -> CFTypeRef? {
+    guard let bearer = target as? CMAttachmentBearerProtocol else { return nil }
+    let name = unsafeBitCast(key, to: NSString.self) as String
+    guard let entry = bearer.attachments[name] else { return nil }
+    attachmentModeOut?.pointee = entry.mode.rawValue
+    return entry.value as CFTypeRef
+}
+
+public func CMRemoveAttachment(_ target: CMAttachmentBearer, key: CFString) {
+    guard let bearer = target as? CMAttachmentBearerProtocol else { return }
+    let name = unsafeBitCast(key, to: NSString.self) as String
+    bearer.attachments[name] = nil
+}
+
+public func CMRemoveAllAttachments(_ target: CMAttachmentBearer) {
+    guard let bearer = target as? CMAttachmentBearerProtocol else { return }
+    bearer.attachments.removeAll()
+}
+
+public func CMPropagateAttachments(_ source: CMAttachmentBearer, destination: CMAttachmentBearer) {
+    guard let src = source as? CMAttachmentBearerProtocol,
+          let dst = destination as? CMAttachmentBearerProtocol
+    else { return }
+    src.propagateAttachments(to: dst)
+}
+
+public func CMCopyDictionaryOfAttachments(
+    allocator: CFAllocator?,
+    target: CMAttachmentBearer,
+    attachmentMode: CMAttachmentMode
+) -> CFDictionary? {
+    _ = allocator
+    guard let bearer = target as? CMAttachmentBearerProtocol else { return nil }
+    let map = attachmentMode == kCMAttachmentMode_ShouldPropagate
+        ? bearer.attachments.propagated
+        : bearer.attachments.nonPropagated
+    var pairs: [(CFString, CFTypeRef)] = []
+    for (key, value) in map {
+        pairs.append((cmMakeCFString(key), value as CFTypeRef))
+    }
+    if pairs.isEmpty { return nil }
+    return cmCFDictionary(pairs)
 }
 
 private func cmTotalDuration(_ timings: [CMSampleTimingInfo], count: Int) -> CMTime {
