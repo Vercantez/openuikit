@@ -120,7 +120,9 @@ open class PDFBorder: NSObject, NSSecureCoding {
     public required init?(coder: NSCoder) {
         style = PDFBorderStyle(rawValue: coder.decodeInteger(forKey: "style")) ?? .solid
         lineWidth = CGFloat(coder.decodeDouble(forKey: "lineWidth"))
-        dashPattern = coder.decodeObject(forKey: "dashPattern") as? [Any]
+        if let numbers = coder.decodeObject(of: [NSArray.self, NSNumber.self], forKey: "dashPattern") as? [NSNumber] {
+            dashPattern = numbers
+        }
         super.init()
     }
 

@@ -1198,10 +1198,21 @@ func testActionsDestinationsAndOutlines() {
     document.outlineRoot = outline
     pdfkitExpect(document.outlineRoot?.label == "Chapter 1", "outline root")
     pdfkitExpect(document.outlineRoot?.document === document, "outline document")
-    pdfkitExpect(document.outlineItem(for: document.selectionForEntireDocument!)?.label == "Chapter 1", "outline item for selection")
     childOutline.removeFromParent()
     pdfkitExpect(outline.numberOfChildren == 0, "removed child")
     outline.insertChild(childOutline, at: 0)
+
+    let helloDoc = PDFDocument(data: pdfkitValidHelloPDF())
+    let helloPage = helloDoc?.page(at: 0)
+    let helloDest = PDFDestination(page: helloPage!, at: .zero)
+    let helloOutline = PDFOutline()
+    helloOutline.label = "HelloDest"
+    helloOutline.destination = helloDest
+    helloDoc?.outlineRoot = helloOutline
+    pdfkitExpect(
+        helloDoc?.outlineItem(for: helloDoc!.selectionForEntireDocument!)?.label == "HelloDest",
+        "outline item for selection"
+    )
 
     let serialized = document.dataRepresentation()
     pdfkitExpect(serialized != nil, "write with outlines")
