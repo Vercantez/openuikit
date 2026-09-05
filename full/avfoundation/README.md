@@ -18,9 +18,13 @@ CoreGraphics, and CoreImage types used in signatures are host lookalikes behind
   `currentTime()`, periodic and boundary observers, and item-end notifications.
   Seek with a completion handler finishes synchronously with the caller's
   `CMTime` identity while paused. No frames are decoded or displayed.
-- `AVURLAsset` / `AVAsset.load(.duration/.tracks/.isPlayable/.metadata)` is
-  fail-closed: duration is `.invalid` until a host injects seconds via SPI,
-  `isPlayable` is false, tracks and metadata are empty.
+- `AVURLAsset` / `AVAsset.load(.duration/.tracks/.isPlayable/.metadata)`: a
+  local file URL is probed for ISO BMFF (`ftyp`/`moov`/`mvhd`/`trak`/`tkhd`/
+  `mdia`/`hdlr`/`stsd`/`stts`) plus WAV and AIFF/AIFC headers. That supplies
+  duration, tracks, media type, `naturalSize`, `preferredTransform`, and
+  `nominalFrameRate`. Missing files stay fail-closed (`duration` `.invalid`,
+  empty tracks). `isPlayable` remains false. An injected host SPI duration
+  still wins over the probe.
 - `AVPlayerLayer` subclasses `CALayer` (QuartzCore on Mac; host lookalike on
   Linux). Default `videoGravity` is `AVLayerVideoGravityResizeAspect`.
   `isReadyForDisplay` is false.
@@ -32,15 +36,18 @@ CoreGraphics, and CoreImage types used in signatures are host lookalikes behind
   `.cancelled`. Status raw values are 0...5.
 - `AVAssetImageGenerator.generateCGImageAsynchronously` calls the completion
   handler with `frameGenerationUnavailable` when no host frame handler is
-  installed. Delivery is synchronous on this host.
+  installed. Delivery is synchronous on this host. `copyCGImage(at:actualTime:)`
+  and `generateCGImagesAsynchronously(forTimes:)` fail closed with
+  `AVError.noImageAtTime`.
 - `AVMakeRect(aspectRatio:insideRect:)` is an aspect-fit rectangle centered in
   the bounds; non-positive geometry returns `.zero`.
 - `AVError.Code` raw values match the pinned `dotnet/macios` `AVError` enum.
   `AVFoundationErrorDomain` is the string `AVFoundationErrorDomain`.
 - `AVCaptureDevice.authorizationStatus(for:)` is `.denied`. `requestAccess`
   returns false. `devices()` is empty. `lockForConfiguration()` throws
-  `mediaServiceUnavailable`. `AVCaptureSession.startRunning()` leaves
-  `isRunning` false.
+  `mediaServiceUnavailable`. `AVCaptureDeviceInput(device:)` throws
+  `AVError.applicationIsNotAuthorizedToUseDevice`. `AVCaptureSession.startRunning()`
+  leaves `isRunning` false.
 - Portable `AVAudioSession` category/mode/options/active state is
   process-local. Linux has no audio hardware: `currentRoute` is empty and
   `outputVolume` is 0. Changing `category` posts
@@ -88,3 +95,40 @@ Coverage is a review index, not a percentage slogan. `implemented` rows cite a
 focused test of that identifier. Enum/option-set members may share one
 table-driven raw-value test. Touching a property without asserting it is
 `declared`.
+
+## Depth pass 2026-09 (wave 8)
+
+Second SDK-depth pass on `cursor/port-avfoundation-to-linux-9929`. The first
+pass (277 implemented identity/behavior rows) is kept and stays green. This
+pass adds a local-container probe, fail-closed writer/reader/image/capture
+errors with documented `AVError` codes, mix/composition instruction models,
+and table-driven metadata/capture constant tests.
+
+| | before (pass 1) | after (pass 2) |
+|---|---|---|
+| `implemented` | 277 | 1188 |
+| `declared` | 5086 | 4175 |
+| `deferred` | 269 | 269 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 `implemented` evidence distribution (table-driven enum / option-set /
+metadata-constant tests may share a value test; no other single test exceeds
+40% of the remaining implemented rows):
+
+| citations | test |
+|---|---|
+| 292 | `testAVMetadataIdentifierRawValues` (identifier constants) |
+| 279 | `testAVMetadataKeyRawValues` (key constants) |
+| 98 | `testAVCaptureEnumRawValues` (capture enum cases) |
+| 89 | `testAVErrorCodeMaciosRawValues` (AVError.Code raw values) |
+| 47 | `testAVCaptureDeviceTypeAndPresetRawValues` (DeviceType/Preset/AspectRatio) |
+
+Local ISO BMFF / WAV / AIFF probing, `AVMutableComposition.insertTimeRange`,
+`AVAssetWriter.startWriting` / `AVAssetReader.startReading` (`encoderNotFound` /
+`decoderNotFound`), `copyCGImage` (`noImageAtTime`), capture device-input
+unauthorized, `AVPlayerLooper`, and audio-mix / video-composition instruction
+models are covered by focused tests in `tests/agent/AVMediaProbeTests.swift`
+and `tests/agent/AVFailClosedTests.swift`. `AVSpeechSynthesizer` remains extra
+portable AVFAudio surface from pass 1; it is not in this module's public
+census. No SwiftUI cross-import overlay rows exist in this seed.
