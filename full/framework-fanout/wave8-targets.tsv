@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+StoreKit	storekit	medium-full	100	ui,fail-closed	Foundation
+AppIntents	appintents	medium-full	100	ui,fail-closed	Foundation
+AVFoundation	avfoundation	medium-full	100	ui,fail-closed	Foundation
+PassKit	passkit	medium-full	100	ui,fail-closed	Foundation
+CoreMedia	coremedia	large-partitioned	100	media,time,c-abi,buffer-ownership,callbacks,concurrency	CoreAudioTypes,CoreFoundation,CoreVideo,Foundation
+WidgetKit	widgetkit	medium-full	100	ui,fail-closed	Foundation
+Intents	intents	medium-full	100	ui,fail-closed	Foundation
+WebKit	webkit	medium-full	100	ui,fail-closed	Foundation
+Charts	charts	medium-full	100	ui,fail-closed	Foundation
+ContactsUI	contactsui	large-partitioned	100	privacy,ui,contacts	Contacts,Foundation,UIKit
+TipKit	tipkit	large-partitioned	100	persistence,swiftui,macros	Foundation,SwiftUI
+Network	network	medium-full	100	ui,fail-closed	Foundation
+PhotosUI	photosui	medium-full	100	ui,fail-closed	Foundation
+AVKit	avkit	medium-full	100	ui,fail-closed	Foundation
+AudioToolbox	audiotoolbox	large-partitioned	100	audio,realtime,c-abi,callbacks,buffer-ownership,fail-closed	CoreAudioTypes,CoreFoundation,Foundation
+CoreText	coretext	medium-full	100	ui,fail-closed	Foundation
