@@ -107,6 +107,9 @@ public final class UIImage {
     /// named, literal, and bitmap-backed images do not. This is metadata, not
     /// a heuristic over pixels or names, and it survives immutable copies.
     private var _isSystemSymbol = false
+    /// The `systemName` this image was created with. Tab-bar chrome uses it
+    /// to pick the filled sibling (clock → clock.fill) under the iOS cut.
+    var _systemSymbolName: String?
 
     /// Whether this image was created from the supported system-symbol
     /// provider. The flag is semantic metadata and is preserved by UIImage's
@@ -119,8 +122,9 @@ public final class UIImage {
             || (renderingMode == .automatic && _isSystemSymbol)
     }
 
-    func _markAsSystemSymbol() {
+    func _markAsSystemSymbol(_ name: String) {
         _isSystemSymbol = true
+        _systemSymbolName = name
     }
 
     public init(bitmap: Bitmap, scale: CGFloat = 1) {
@@ -137,11 +141,13 @@ public final class UIImage {
 
     private init(bitmap: Bitmap, scale: CGFloat,
                  renderingMode: UIImageRenderingMode,
-                 isSystemSymbol: Bool) {
+                 isSystemSymbol: Bool,
+                 systemSymbolName: String?) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
         self.renderingMode = renderingMode
         self._isSystemSymbol = isSystemSymbol
+        self._systemSymbolName = systemSymbolName
     }
 
     // MARK: Rendering mode / tinting
@@ -150,7 +156,8 @@ public final class UIImage {
     /// backing store (UIKit does the same — images are immutable).
     public func withRenderingMode(_ mode: UIImageRenderingMode) -> UIImage {
         UIImage(bitmap: bitmap, scale: scale, renderingMode: mode,
-                isSystemSymbol: _isSystemSymbol)
+                isSystemSymbol: _isSystemSymbol,
+                systemSymbolName: _systemSymbolName)
     }
 
     /// A copy whose pixels are recolored with `color`, keeping the original
@@ -195,7 +202,8 @@ public final class UIImage {
             }
         }
         return UIImage(bitmap: out, scale: scale, renderingMode: mode,
-                       isSystemSymbol: _isSystemSymbol)
+                       isSystemSymbol: _isSystemSymbol,
+                       systemSymbolName: _systemSymbolName)
     }
 
     // MARK: Loading (PNG / JPEG plus indexed vector PDF via ImageCodec)
@@ -317,7 +325,8 @@ public final class UIImage {
         guard let img = UIImage.named(name) else { return nil }
         self.init(bitmap: img.bitmap, scale: img.scale,
                   renderingMode: img.renderingMode,
-                  isSystemSymbol: img._isSystemSymbol)
+                  isSystemSymbol: img._isSystemSymbol,
+                  systemSymbolName: img._systemSymbolName)
     }
 
     /// UIKit's bundle-selecting named-image initializer.
@@ -343,7 +352,8 @@ public final class UIImage {
         ) else { return nil }
         self.init(bitmap: img.bitmap, scale: img.scale,
                   renderingMode: img.renderingMode,
-                  isSystemSymbol: img._isSystemSymbol)
+                  isSystemSymbol: img._isSystemSymbol,
+                  systemSymbolName: img._systemSymbolName)
     }
 
     /// Drop every cached `named:` lookup (hosts call this after changing
@@ -373,7 +383,8 @@ public final class UIImage {
         }
         self.init(bitmap: image.bitmap, scale: image.scale,
                   renderingMode: image.renderingMode,
-                  isSystemSymbol: image._isSystemSymbol)
+                  isSystemSymbol: image._isSystemSymbol,
+                  systemSymbolName: image._systemSymbolName)
     }
 
     /// "…@2x.png" → 2, "…@3x" → 3, anything else → 1.

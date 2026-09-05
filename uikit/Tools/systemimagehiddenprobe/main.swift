@@ -16,7 +16,7 @@ struct SystemImageHiddenProbe {
         OpenUIKitRuntime.imageScreenScale = 2
 
         let expected: [String: UInt64] = [
-            "calendar": 15_296_482_417_337_452_853,
+            "calendar": 17_688_738_542_957_584_656,
             "clock": 11_422_362_519_469_204_408,
             "multiply": 930_275_962_113_226_808,
             "plus.circle.fill": 5_248_006_694_040_004_741,

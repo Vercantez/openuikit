@@ -42,6 +42,10 @@ final class SystemImageTests: XCTestCase {
         XCTAssertEqual(UIImage.SymbolWeight.bold.rawValue, 7)
         XCTAssertEqual(UIImage.SymbolWeight.heavy.rawValue, 8)
         XCTAssertEqual(UIImage.SymbolWeight.black.rawValue, 9)
+        XCTAssertEqual(UIImage.SymbolScale.unspecified.rawValue, 0)
+        XCTAssertEqual(UIImage.SymbolScale.small.rawValue, 1)
+        XCTAssertEqual(UIImage.SymbolScale.medium.rawValue, 2)
+        XCTAssertEqual(UIImage.SymbolScale.large.rawValue, 3)
     }
 
     func testSixDefaultSystemImageSizesMatchNativeAtOneAndTwoX() throws {
@@ -73,6 +77,29 @@ final class SystemImageTests: XCTestCase {
             XCTAssertEqual(two.bitmap.width, Int(twoX.width * 2), name)
             XCTAssertEqual(two.bitmap.height, Int(twoX.height * 2), name)
         }
+    }
+
+    /// MEASURED Tabs probe, iPhone SE 2x / iOS 26.1: tab-bar
+    /// preferredSymbolConfiguration is 18pt medium large; calendar is
+    /// 29×25, clock / clock.fill / plus.circle.fill are 27.5×27.5.
+    func testTabBarSymbolConfigurationSizesMatchIOS() throws {
+        OpenUIKitRuntime.imageScreenScale = 2
+        let configuration = UIImage.SymbolConfiguration(
+            pointSize: 18, weight: .medium, scale: .large)
+        let calendar = try XCTUnwrap(UIImage(systemName: "calendar",
+                                              withConfiguration: configuration))
+        XCTAssertEqual(calendar.size, CGSize(width: 29, height: 25))
+        let clock = try XCTUnwrap(UIImage(systemName: "clock",
+                                           withConfiguration: configuration))
+        XCTAssertEqual(clock.size, CGSize(width: 27.5, height: 27.5))
+        let clockFill = try XCTUnwrap(UIImage(systemName: "clock.fill",
+                                               withConfiguration: configuration))
+        XCTAssertEqual(clockFill.size, CGSize(width: 27.5, height: 27.5))
+        XCTAssertNil(UIImage(systemName: "calendar.fill"))
+        XCTAssertEqual(UITabBar.filledSymbolName("clock"), "clock.fill")
+        XCTAssertEqual(UITabBar.filledSymbolName("calendar"), "calendar")
+        XCTAssertEqual(UITabBar.filledSymbolName("plus.circle.fill"),
+                       "plus.circle.fill")
     }
 
     func testReminderConfiguredPlusSizeAndAutomaticMode() throws {
@@ -183,7 +210,7 @@ final class SystemImageTests: XCTestCase {
 
     func testEveryProceduralMaskHasInkAndTransparency() throws {
         OpenUIKitRuntime.imageScreenScale = 2
-        for name in ["calendar", "clock", "multiply", "plus.circle.fill",
+        for name in ["calendar", "clock", "clock.fill", "multiply", "plus.circle.fill",
                      "circlebadge", "checkmark.circle.fill"] {
             let image = try XCTUnwrap(UIImage(systemName: name))
             let alpha = stride(from: 3, to: image.bitmap.pixels.count, by: 4)
@@ -228,7 +255,7 @@ final class SystemImageTests: XCTestCase {
             switch backend {
             case .swift:
                 expected = [
-                    "calendar": 15_296_482_417_337_452_853,
+                    "calendar": 17_688_738_542_957_584_656,
                     "clock": 11_422_362_519_469_204_408,
                     "multiply": 930_275_962_113_226_808,
                     "plus.circle.fill": 5_248_006_694_040_004_741,
@@ -238,7 +265,7 @@ final class SystemImageTests: XCTestCase {
                 ]
             case .quartz:
                 expected = [
-                    "calendar": 14_746_791_109_878_677_541,
+                    "calendar": 12_281_659_517_316_363_357,
                     "clock": 15_692_902_194_808_184_169,
                     "multiply": 13_863_169_408_881_935_547,
                     "plus.circle.fill": 14_527_487_182_206_405_157,

@@ -101,9 +101,17 @@ final class _UITabBarItemView: UIControl {
 
     /// Recolor icon + title. The icon is the item image's alpha channel
     /// flattened to `color` (template rendering).
-    func apply(color: UIColor) {
+    ///
+    /// iOS 26 tab buttons dump `preferredSymbolConfiguration =
+    /// pointSize=18, weight=Medium, scale=Large` (Tabs probe, SE 2x).
+    /// Selected items use the `.fill` sibling when that name exists
+    /// (`clock.fill`; `calendar.fill` is nil on iOS 26.1 so calendar
+    /// stays calendar — but at 18/medium/large the glyph already has a
+    /// filled header). Catalyst keeps the raw item image.
+    func apply(color: UIColor, selected: Bool) {
         titleLabel.textColor = color
-        iconView.image = item.image.map { UITabBar.templateImage($0, tint: color) }
+        iconView.image = UITabBar.resolvedItemImage(item, selected: selected)
+            .map { UITabBar.templateImage($0, tint: color) }
     }
 
     override func layoutSubviews() {
@@ -342,7 +350,8 @@ public final class UITabBar: UIView {
             .resolvedColor(with: UITraitCollection.current)
         for v in itemViews {
             v.apply(color: v.item === selectedItem ? tint
-                                                   : unselected)
+                                                   : unselected,
+                    selected: v.item === selectedItem)
         }
     }
 
@@ -371,6 +380,40 @@ public final class UITabBar: UIView {
         } else {
             capsule.isHidden = true
         }
+    }
+
+    /// iOS tab-bar symbol at the measured preferred configuration, with the
+    /// selected filled sibling when that name exists. Catalyst returns
+    /// the item image unchanged.
+    static func resolvedItemImage(_ item: UITabBarItem, selected: Bool) -> UIImage? {
+        guard isIOS,
+              let image = item.image,
+              image.isSymbolImage,
+              let name = image._systemSymbolName else {
+            return item.image
+        }
+        let display: String
+        if selected {
+            display = filledSymbolName(name)
+        } else {
+            display = name
+        }
+        // MEASURED Tabs probe, iPhone SE 2x / iOS 26.1:
+        // preferredSymbolConfiguration "pointSize=18, weight=Medium, scale=Large".
+        let configuration = UIImage.SymbolConfiguration(
+            pointSize: 18, weight: .medium, scale: .large)
+        return UIImage(systemName: display, withConfiguration: configuration)
+            ?? UIImage(systemName: name, withConfiguration: configuration)
+            ?? image
+    }
+
+    /// `clock` → `clock.fill` when the filled name is in the portable
+    /// set; `calendar.fill` is not (nil on iOS 26.1), so calendar stays.
+    static func filledSymbolName(_ name: String) -> String {
+        if name.hasSuffix(".fill") { return name }
+        let filled = name + ".fill"
+        if UIImage(systemName: filled) != nil { return filled }
+        return name
     }
 
     /// Template rendering: `image`'s alpha channel flattened to `tint`.
