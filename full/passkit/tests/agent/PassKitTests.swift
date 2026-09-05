@@ -7,6 +7,32 @@ func testPaymentNetworks() {
     precondition(PKPaymentNetwork.masterCard.rawValue == "MasterCard")
     precondition(PKPaymentNetwork.discover.rawValue == "Discover")
     precondition(PKPaymentNetwork.JCB.rawValue == "JCB")
+    precondition(PKPaymentNetwork.NAPAS.rawValue == "NAPAS")
+    precondition(PKPaymentNetwork.bancontact.rawValue == "Bancontact")
+    precondition(PKPaymentNetwork.bankAxept.rawValue == "BankAxept")
+    precondition(PKPaymentNetwork.barcode.rawValue == "Barcode")
+    precondition(PKPaymentNetwork.carteBancaire.rawValue == "CarteBancaire")
+    precondition(PKPaymentNetwork.carteBancaires.rawValue == "CarteBancaires")
+    precondition(PKPaymentNetwork.cartesBancaires.rawValue == "CartesBancaires")
+    precondition(PKPaymentNetwork.dankort.rawValue == "Dankort")
+    precondition(PKPaymentNetwork.eftpos.rawValue == "Eftpos")
+    precondition(PKPaymentNetwork.electron.rawValue == "Electron")
+    precondition(PKPaymentNetwork.girocard.rawValue == "Girocard")
+    precondition(PKPaymentNetwork.himyan.rawValue == "Himyan")
+    precondition(PKPaymentNetwork.idCredit.rawValue == "IDCredit")
+    precondition(PKPaymentNetwork.interac.rawValue == "Interac")
+    precondition(PKPaymentNetwork.jaywan.rawValue == "Jaywan")
+    precondition(PKPaymentNetwork.meeza.rawValue == "Meeza")
+    precondition(PKPaymentNetwork.mir.rawValue == "Mir")
+    precondition(PKPaymentNetwork.myDebit.rawValue == "MyDebit")
+    precondition(PKPaymentNetwork.nanaco.rawValue == "Nanaco")
+    precondition(PKPaymentNetwork.pagoBancomat.rawValue == "PagoBancomat")
+    precondition(PKPaymentNetwork.postFinance.rawValue == "PostFinance")
+    precondition(PKPaymentNetwork.privateLabel.rawValue == "PrivateLabel")
+    precondition(PKPaymentNetwork.quicPay.rawValue == "QuicPay")
+    precondition(PKPaymentNetwork.tmoney.rawValue == "Tmoney")
+    precondition(PKPaymentNetwork.vPay.rawValue == "VPay")
+    precondition(PKPaymentNetwork.waon.rawValue == "Waon")
     precondition(PKPaymentNetwork.chinaUnionPay.rawValue == "ChinaUnionPay")
     precondition(PKPaymentNetwork.maestro.rawValue == "Maestro")
     precondition(PKPaymentNetwork.mada.rawValue == "Mada")
@@ -71,9 +97,10 @@ func testAuthorizationStatusAndSummaryItems() {
 func testPassInitFailClosed() {
     do {
         _ = try PKPass(data: Data("not-a-pass".utf8))
-        preconditionFailure("unsigned bytes must not become a PKPass")
-    } catch let error as PassKitPortableError {
-        precondition(error.code == .passValidationUnavailable)
+        preconditionFailure("non-ZIP bytes must not become a PKPass")
+    } catch let error as PKPassKitError {
+        precondition(error.code == .invalidDataError)
+        precondition(error.errorCode == PKPassKitError.invalidDataError.rawValue)
     } catch {
         preconditionFailure("unexpected error \(error)")
     }
@@ -82,13 +109,49 @@ func testPassInitFailClosed() {
 func testPassLibraryFailClosed() {
     let library = PKPassLibrary()
     precondition(library.passes().isEmpty)
+    precondition(library.passes(of: .barcode).isEmpty)
+    precondition(library.passes(withReaderIdentifier: "r").isEmpty)
     precondition(PKPassLibrary.isPassLibraryAvailable() == false)
+    precondition(PKPassLibrary.isPaymentPassActivationAvailable() == false)
+    precondition(PKPassLibrary.isSuppressingAutomaticPassPresentation() == false)
+    precondition(library.isPaymentPassActivationAvailable() == false)
+    precondition(library.isSecureElementPassActivationAvailable == false)
+    precondition(library.remoteSecureElementPasses.isEmpty)
+    precondition(library.remotePaymentPasses().isEmpty)
     precondition(library.containsPass(PKPass()) == false)
+    precondition(library.pass(withPassTypeIdentifier: "pass.example", serialNumber: "1") == nil)
     precondition(library.canAddFelicaPass() == false)
+    precondition(library.canAddPaymentPass(withPrimaryAccountIdentifier: "x") == false)
+    precondition(library.canAddSecureElementPass(primaryAccountIdentifier: "x") == false)
     precondition(library.authorizationStatus(for: .backgroundAddPasses) == .denied)
-    var added = true
-    library.addPasses([], withCompletionHandler: { added = $0 })
-    precondition(added == false)
+    precondition(library.replacePass(with: PKPass()) == false)
+    library.removePass(PKPass())
+    library.openPaymentSetup()
+    library.present(PKPaymentPass())
+    library.present(PKSecureElementPass())
+    PKPassLibrary.endAutomaticPassPresentationSuppression(withRequestToken: 0)
+    var suppression = PKAutomaticPassPresentationSuppressionResult.success
+    let token = PKPassLibrary.requestAutomaticPassPresentationSuppression { suppression = $0 }
+    precondition(token == 0)
+    precondition(suppression == .notSupported)
+    var status = PKPassLibraryAddPassesStatus.didAddPasses
+    library.addPasses([], withCompletionHandler: { status = $0 })
+    precondition(status == .didCancelAddPasses)
+    var activateOK = true
+    var activateError: (any Error)?
+    library.activate(PKPaymentPass(), withActivationCode: "0000") { ok, error in
+        activateOK = ok
+        activateError = error
+    }
+    precondition(activateOK == false)
+    precondition((activateError as? PKPassKitError)?.code == .notEntitledError)
+    var dataOK = true
+    library.activate(PKPaymentPass(), withActivationData: Data()) { ok, error in
+        dataOK = ok
+        activateError = error
+    }
+    precondition(dataOK == false)
+    precondition((activateError as? PKPassKitError)?.code == .notEntitledError)
 }
 
 func testApplePayUnavailable() {
@@ -117,14 +180,24 @@ func testApplePayUnavailable() {
 
 func testPaymentErrors() {
     precondition(PKPassKitError.unknownError.rawValue == -1)
+    precondition(PKPassKitError.invalidDataError.rawValue == 1)
+    precondition(PKPassKitError.unsupportedVersionError.rawValue == 2)
+    precondition(PKPassKitError.invalidSignature.rawValue == 3)
+    precondition(PKPassKitError.notEntitledError.rawValue == 4)
+    precondition(PKPassKitError.Code(rawValue: 1) == .invalidDataError)
     precondition(PKPaymentError.couponCodeInvalidError.rawValue == 4)
+    precondition(PKPaymentError.couponCodeExpiredError.rawValue == 5)
     precondition(PKIdentityError.cancelled.rawValue == 2)
     precondition(PKAddSecureElementPassError.genericError.rawValue == 0)
     let payment = PKPaymentError(.billingContactInvalidError)
     precondition(payment.code == .billingContactInvalidError)
     precondition(PKPaymentError.errorDomain == PKPaymentErrorDomain)
     precondition(PKPassKitErrorDomain == "PKPassKitErrorDomain")
+    precondition(PKPassKitError.errorDomain == PKPassKitErrorDomain)
     precondition(PKIdentityErrorDomain == "PKIdentityErrorDomain")
+    let kit = PKPassKitError(.notEntitledError)
+    precondition(kit.errorCode == 4)
+    precondition(kit.errorUserInfo.isEmpty)
 }
 
 func testEncryptionAndRadio() {
@@ -163,7 +236,21 @@ func testPassKitButtonDisabled() {
             paymentButtonStyle: .black
         )
         precondition(button.paymentButtonType == .buy)
+        precondition(button.paymentButtonStyle == .black)
         precondition(button.isEnabled == false)
+        button.cornerRadius = 8
+        precondition(button.cornerRadius == 8)
+        let art = PKPaymentButton(
+            paymentButtonType: .plain,
+            paymentButtonStyle: .white,
+            disableCardArt: true
+        )
+        precondition(art.isEnabled == false)
+        let typed = PKPaymentButton(type: .donate, style: .automatic, disableCardArt: true)
+        precondition(typed.paymentButtonType == .donate)
         precondition(PKAddPassButtonStyle.black.rawValue == 0)
+        precondition(PKAddPassButtonStyle(rawValue: 1) == .blackOutline)
+        // Drawing (Apple Pay button artwork) is not modelled; UIKit note
+        // in README. Construction and the disabled flag are the host evidence.
     }
 }

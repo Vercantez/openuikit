@@ -265,13 +265,20 @@ func testChaChaPolyRFC8439() {
 }
 
 func testAESKeyWrapRoundTripShape() {
-    let kek = SymmetricKey(size: .bits128)
-    let key = SymmetricKey(size: .bits128)
+    // RFC 3394 §4.1 128-bit KEK / 128-bit key vector.
+    let kek = SymmetricKey(data: ckData("000102030405060708090a0b0c0d0e0f"))
+    let key = SymmetricKey(data: ckData("00112233445566778899aabbccddeeff"))
     let wrapped = try! AES.KeyWrap.wrap(key, using: kek)
-    precondition(wrapped.count == 24)
-    let error = ckExpectError { try AES.KeyWrap.unwrap(wrapped, using: kek) }
-    guard case CryptoKitError.unwrapFailure = error else {
-        preconditionFailure("unwrap must fail closed until AES decrypt exists")
+    precondition(ckHex(wrapped) == "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cfe5")
+    let unwrapped = try! AES.KeyWrap.unwrap(wrapped, using: kek)
+    precondition(unwrapped == key)
+    let randomKEK = SymmetricKey(size: .bits128)
+    let randomKey = SymmetricKey(size: .bits192)
+    let randomWrapped = try! AES.KeyWrap.wrap(randomKey, using: randomKEK)
+    precondition(try! AES.KeyWrap.unwrap(randomWrapped, using: randomKEK) == randomKey)
+    let bad = ckExpectError { try AES.KeyWrap.unwrap(Data(count: 24), using: kek) }
+    guard case CryptoKitError.unwrapFailure = bad else {
+        preconditionFailure("corrupt wrap must throw unwrapFailure")
     }
 }
 
@@ -310,6 +317,8 @@ func testCryptoKitErrorSurface() {
         _ = item.hashValue
     }
     let _: CryptoKitMetaError = CryptoKitError.invalidParameter
+    precondition(!CryptoKitError.incorrectKeySize.localizedDescription.isEmpty)
+    precondition(!CryptoKitASN1Error.invalidPEMDocument.localizedDescription.isEmpty)
 }
 
 func testCurve25519FailClosed() {
@@ -319,47 +328,118 @@ func testCurve25519FailClosed() {
     guard case CryptoKitError.incorrectKeySize = tooShort else {
         preconditionFailure("short Ed25519 public key must throw incorrectKeySize")
     }
-    let publicKey = try! Curve25519.Signing.PublicKey(rawRepresentation: Data(count: 32))
-    precondition(publicKey.rawRepresentation.count == 32)
-    precondition(!publicKey.isValidSignature(Data(count: 64), for: Data("abc".utf8)))
-    let privateKey = try! Curve25519.Signing.PrivateKey(rawRepresentation: Data(count: 32))
-    let signError = ckExpectError { try privateKey.signature(for: Data("abc".utf8)) }
-    guard case CryptoKitError.underlyingCoreCryptoError = signError else {
-        preconditionFailure("Ed25519 signing must fail closed")
-    }
+    // RFC 7748 §6.1 X25519.
+    let alice = try! Curve25519.KeyAgreement.PrivateKey(
+        rawRepresentation: ckData("77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a")
+    )
+    precondition(
+        ckHex(alice.publicKey.rawRepresentation)
+            == "8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a"
+    )
+    let bob = try! Curve25519.KeyAgreement.PrivateKey(
+        rawRepresentation: ckData("5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb")
+    )
+    precondition(
+        ckHex(bob.publicKey.rawRepresentation)
+            == "de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f"
+    )
+    let shared = try! alice.sharedSecretFromKeyAgreement(with: bob.publicKey)
+    let sharedBytes = shared.withUnsafeBytes { Data($0) }
+    precondition(ckHex(sharedBytes) == "4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742")
+    let shared2 = try! bob.sharedSecretFromKeyAgreement(with: alice.publicKey)
+    precondition(shared == shared2)
+    precondition(shared == sharedBytes)
+    _ = try! bob.publicKey.hpkeRepresentation(kem: .Curve25519_HKDF_SHA256)
+    _ = try! Curve25519.KeyAgreement.PublicKey(sharedBytes, kem: .Curve25519_HKDF_SHA256)
+
+    // RFC 8032 §7.1 empty-message Ed25519 vector.
+    let seed = ckData("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60")
+    let signing = try! Curve25519.Signing.PrivateKey(rawRepresentation: seed)
+    precondition(
+        ckHex(signing.publicKey.rawRepresentation)
+            == "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+    )
+    let signature = try! signing.signature(for: Data())
+    precondition(
+        ckHex(signature)
+            == "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b"
+    )
+    precondition(signing.publicKey.isValidSignature(signature, for: Data()))
+    precondition(!signing.publicKey.isValidSignature(signature, for: Data("x".utf8)))
     let generated = Curve25519.Signing.PrivateKey()
     precondition(generated.rawRepresentation.count == 32)
-    let kaPrivate = Curve25519.KeyAgreement.PrivateKey()
-    let kaPublic = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(count: 32))
-    let kaError = ckExpectError {
-        try kaPrivate.sharedSecretFromKeyAgreement(with: kaPublic)
-    }
-    guard case CryptoKitError.underlyingCoreCryptoError = kaError else {
-        preconditionFailure("X25519 key agreement must fail closed")
-    }
-    _ = try! kaPublic.hpkeRepresentation(kem: .Curve25519_HKDF_SHA256)
+    let roundTrip = try! generated.signature(for: Data("abc".utf8))
+    precondition(generated.publicKey.isValidSignature(roundTrip, for: Data("abc".utf8)))
 }
 
 func testNISTCurvesFailClosed() {
-    let p256 = try! P256.Signing.PublicKey(rawRepresentation: Data(count: 64))
-    precondition(p256.rawRepresentation.count == 64)
-    precondition(p256.pemRepresentation.isEmpty)
-    precondition(p256.compactRepresentation == nil)
+    // RFC 6979 A.2.5 P-256 key; public point measured against that appendix.
+    let d = ckData("C9AFA9D845BA75166B5C215767B1D6934E50C3DB36E89B127B8A622B120F6721")
+    let privateKey = try! P256.Signing.PrivateKey(rawRepresentation: d)
+    precondition(
+        ckHex(privateKey.publicKey.rawRepresentation)
+            == "60fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb6"
+            + "7903fe1008b8bc99a41ae9e95628bc64f2f1b20c2d7e9f5177a3c294d4462299"
+    )
+    precondition(privateKey.publicKey.x963Representation.first == 0x04)
+    precondition(privateKey.publicKey.pemRepresentation.hasPrefix("-----BEGIN PUBLIC KEY-----"))
+    precondition(privateKey.pemRepresentation.hasPrefix("-----BEGIN PRIVATE KEY-----"))
+    let fromPEM = try! P256.Signing.PublicKey(pemRepresentation: privateKey.publicKey.pemRepresentation)
+    precondition(fromPEM.rawRepresentation == privateKey.publicKey.rawRepresentation)
+    let fromDER = try! P256.Signing.PublicKey(derRepresentation: privateKey.publicKey.derRepresentation)
+    precondition(fromDER.rawRepresentation == privateKey.publicKey.rawRepresentation)
+    let fromX963 = try! P256.Signing.PublicKey(x963Representation: privateKey.publicKey.x963Representation)
+    precondition(fromX963.rawRepresentation == privateKey.publicKey.rawRepresentation)
+    let compressed = try! P256.Signing.PublicKey(
+        compressedRepresentation: privateKey.publicKey.compressedRepresentation
+    )
+    precondition(compressed.rawRepresentation == privateKey.publicKey.rawRepresentation)
+    if let compact = privateKey.publicKey.compactRepresentation {
+        let recovered = try! P256.Signing.PublicKey(compactRepresentation: compact)
+        precondition(recovered.rawRepresentation == privateKey.publicKey.rawRepresentation)
+    }
+    let signature = try! privateKey.signature(for: Data("sample".utf8))
+    precondition(privateKey.publicKey.isValidSignature(signature, for: Data("sample".utf8)))
+    precondition(!privateKey.publicKey.isValidSignature(signature, for: Data("other".utf8)))
+    let digest = SHA256.hash(data: Data("sample".utf8))
+    let digestSig = try! privateKey.signature(for: digest)
+    precondition(privateKey.publicKey.isValidSignature(digestSig, for: digest))
+    let derSig = try! P256.Signing.ECDSASignature(derRepresentation: signature.derRepresentation)
+    precondition(derSig.rawRepresentation == signature.rawRepresentation)
+    _ = signature.withUnsafeBytes { $0.count }
     let pemError = ckExpectError { try P256.Signing.PublicKey(pemRepresentation: "not-pem") }
     guard case CryptoKitASN1Error.invalidPEMDocument = pemError else {
         preconditionFailure("PEM init must throw invalidPEMDocument")
     }
-    let signature = try! P256.Signing.ECDSASignature(rawRepresentation: Data(count: 64))
-    precondition(!p256.isValidSignature(signature, for: Data("abc".utf8)))
-    let privateKey = P256.Signing.PrivateKey()
-    let signError = ckExpectError { try privateKey.signature(for: Data("abc".utf8)) }
-    guard case CryptoKitError.underlyingCoreCryptoError = signError else {
-        preconditionFailure("P256 signing must fail closed")
-    }
-    let p384 = try! P384.KeyAgreement.PublicKey(rawRepresentation: Data(count: 96))
-    precondition(p384.rawRepresentation.count == 96)
-    let p521 = try! P521.Signing.PublicKey(rawRepresentation: Data(count: 132))
-    precondition(p521.rawRepresentation.count == 132)
+
+    let p384 = P384.Signing.PrivateKey()
+    let p384Sig = try! p384.signature(for: Data("abc".utf8))
+    precondition(p384.publicKey.isValidSignature(p384Sig, for: Data("abc".utf8)))
+    precondition(p384.rawRepresentation.count == 48)
+    let p384KA = try! P384.KeyAgreement.PrivateKey(rawRepresentation: p384.rawRepresentation)
+    let peer384 = P384.KeyAgreement.PrivateKey()
+    let secret384 = try! p384KA.sharedSecretFromKeyAgreement(with: peer384.publicKey)
+    precondition(secret384.withUnsafeBytes { $0.count } == 48)
+
+    let p521 = P521.Signing.PrivateKey()
+    let p521Sig = try! p521.signature(for: Data("abc".utf8))
+    precondition(p521.publicKey.isValidSignature(p521Sig, for: Data("abc".utf8)))
+    precondition(p521.rawRepresentation.count == 66)
+    let p256KA = try! P256.KeyAgreement.PrivateKey(rawRepresentation: d)
+    let peer = P256.KeyAgreement.PrivateKey()
+    let secret = try! p256KA.sharedSecretFromKeyAgreement(with: peer.publicKey)
+    let secret2 = try! peer.sharedSecretFromKeyAgreement(with: p256KA.publicKey)
+    precondition(secret == secret2)
+    let hkdf = secret.hkdfDerivedSymmetricKey(
+        using: SHA256.self, salt: Data("salt".utf8), sharedInfo: Data("info".utf8), outputByteCount: 16
+    )
+    precondition(hkdf.bitCount == 128)
+    let x963 = secret.x963DerivedSymmetricKey(
+        using: SHA256.self, sharedInfo: Data("info".utf8), outputByteCount: 16
+    )
+    precondition(x963.bitCount == 128)
+    _ = secret.description
+    _ = CorecryptoCurveType()
 }
 
 func testHPKEFailClosed() {
@@ -374,12 +454,37 @@ func testHPKEFailClosed() {
     _ = HPKE.Ciphersuite.P384_SHA384_AES_GCM_256
     _ = HPKE.Ciphersuite.P521_SHA512_AES_GCM_256
     _ = HPKE.Ciphersuite.XWingMLKEM768X25519_SHA256_AES_GCM_256
-    let recipient = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(count: 32))
-    let senderError = ckExpectError {
-        try HPKE.Sender(recipientKey: recipient, ciphersuite: suite, info: Data())
+    let recipientKey = Curve25519.KeyAgreement.PrivateKey()
+    var sender = try! HPKE.Sender(
+        recipientKey: recipientKey.publicKey,
+        ciphersuite: suite,
+        info: Data("info".utf8)
+    )
+    var recipient = try! HPKE.Recipient(
+        privateKey: recipientKey,
+        ciphersuite: suite,
+        info: Data("info".utf8),
+        encapsulatedKey: sender.encapsulatedKey
+    )
+    let message = Data("hpke-base".utf8)
+    let sealed = try! sender.seal(message, authenticating: Data("aad".utf8))
+    precondition(try! recipient.open(sealed, authenticating: Data("aad".utf8)) == message)
+    let exported = try! sender.exportSecret(context: Data("ctx".utf8), outputByteCount: 16)
+    precondition(exported.bitCount == 128)
+    let p256 = P256.KeyAgreement.PrivateKey()
+    let p256Suite = HPKE.Ciphersuite.P256_SHA256_AES_GCM_256
+    var p256Sender = try! HPKE.Sender(recipientKey: p256.publicKey, ciphersuite: p256Suite, info: Data())
+    var p256Recipient = try! HPKE.Recipient(
+        privateKey: p256, ciphersuite: p256Suite, info: Data(), encapsulatedKey: p256Sender.encapsulatedKey
+    )
+    let p256Sealed = try! p256Sender.seal(message)
+    precondition(try! p256Recipient.open(p256Sealed) == message)
+    let xwing = try! XWingMLKEM768X25519.PublicKey(rawRepresentation: Data(count: 32))
+    let xwingError = ckExpectError {
+        try HPKE.Sender(recipientKey: xwing, ciphersuite: .XWingMLKEM768X25519_SHA256_AES_GCM_256, info: Data())
     }
-    guard case CryptoKitError.incorrectParameterSize = senderError else {
-        preconditionFailure("HPKE sender must fail closed without a native KEM")
+    guard case CryptoKitError.incorrectParameterSize = xwingError else {
+        preconditionFailure("X-Wing HPKE must fail closed")
     }
     let hpkeErrors: [HPKE.Errors] = [
         .inconsistentCiphersuiteAndKey,
@@ -424,6 +529,15 @@ func testPostQuantumFailClosed() {
     precondition(!mldsa.isValidSignature(Data(), for: Data("abc".utf8)))
     _ = KEM.EncapsulationResult(sharedSecret: SymmetricKey(size: .bits256), encapsulated: Data())
     _ = KEM.Errors.invalidSeed
+    _ = try! MLKEM1024.PrivateKey(seedRepresentation: seed, publicKey: nil)
+    _ = try! MLKEM1024.PrivateKey(integrityCheckedRepresentation: seed)
+    _ = ckExpectError { try MLKEM1024.PrivateKey.generate() }
+    _ = ckExpectError { try MLKEM768.PublicKey(rawRepresentation: Data()).encapsulate() }
+    _ = try! MLDSA87.PublicKey(rawRepresentation: Data())
+    let mldsaPriv = try! MLDSA65.PrivateKey(seedRepresentation: Data(), publicKey: nil)
+    _ = ckExpectError { try mldsaPriv.signature(for: Data("abc".utf8)) }
+    _ = ckExpectError { try SecureEnclave.MLKEM768.PrivateKey.generate() }
+    _ = ckExpectError { try SecureEnclave.MLKEM1024.PrivateKey.generate() }
 }
 
 func testSecureEnclaveUnavailable() {
@@ -446,4 +560,56 @@ func testDigestSequenceAndEquality() {
     precondition(Array(mac).count == 32)
     let nonce = try! AES.GCM.Nonce(data: Data(count: 12))
     precondition(Array(nonce).count == 12)
+    func exercise<S: Sequence>(_ values: S) where S.Element == UInt8 {
+        let mapped = values.map { $0 }
+        precondition(!mapped.isEmpty)
+        _ = values.filter { $0 > 0 }
+        _ = values.contains { $0 == mapped[0] }
+        _ = values.contains(mapped[0])
+        _ = values.sorted()
+        _ = values.sorted(by: >)
+        _ = values.reversed()
+        _ = values.prefix(2)
+        _ = values.prefix(while: { $0 >= 0 })
+        _ = values.dropFirst()
+        _ = values.dropFirst(1)
+        _ = values.dropLast()
+        _ = values.dropLast(1)
+        _ = values.drop(while: { $0 == 255 })
+        _ = values.suffix(2)
+        _ = values.reduce(0 as UInt16) { $0 &+ UInt16($1) }
+        _ = values.reduce(into: 0 as UInt16) { $0 &+= UInt16($1) }
+        _ = values.min()
+        _ = values.max()
+        _ = values.min(by: <)
+        _ = values.max(by: <)
+        _ = values.allSatisfy { _ in true }
+        _ = values.compactMap { Optional($0) }
+        _ = values.enumerated()
+        _ = values.lazy
+        _ = values.shuffled()
+        var rng = SystemRandomNumberGenerator()
+        _ = values.shuffled(using: &rng)
+        values.forEach { _ in }
+        _ = values.underestimatedCount
+        _ = values.first { $0 == mapped[0] }
+        _ = values.elementsEqual(mapped)
+        _ = values.starts(with: mapped.prefix(1))
+        _ = values.split(separator: mapped[0])
+        _ = values.flatMap { [$0] }
+        _ = values.lexicographicallyPrecedes(mapped)
+        _ = values.withContiguousStorageIfAvailable { $0.count }
+        _ = values.count(where: { $0 > 0 })
+    }
+    exercise(digest)
+    exercise(mac)
+    exercise(nonce)
+    exercise(SHA384.hash(data: Data()))
+    exercise(SHA512.hash(data: Data()))
+    exercise(SHA3_256.hash(data: Data()))
+    exercise(SHA3_384.hash(data: Data()))
+    exercise(SHA3_512.hash(data: Data()))
+    exercise(Insecure.SHA1.hash(data: Data()))
+    exercise(Insecure.MD5.hash(data: Data()))
+    exercise(ChaChaPoly.Nonce())
 }

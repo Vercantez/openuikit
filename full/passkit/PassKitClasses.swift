@@ -77,9 +77,9 @@ open class PKAddPaymentPassRequest: NSObject, @unchecked Sendable {
 
 open class PKAddPaymentPassRequestConfiguration: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    public init(encryptionScheme: PKEncryptionScheme) {
-        _ = (encryptionScheme)
+    public init?(encryptionScheme: PKEncryptionScheme) {
         super.init()
+        self.encryptionScheme = encryptionScheme
     }
     public var cardDetails: [PKLabeledValue] = []
     public var cardholderName: String? = nil
@@ -136,8 +136,10 @@ open class PKAddShareablePassConfiguration: PKAddSecureElementPassConfiguration,
 open class PKAutomaticReloadPaymentRequest: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(paymentDescription: String, automaticReloadBilling: PKAutomaticReloadPaymentSummaryItem, managementURL: URL) {
-        _ = (paymentDescription, automaticReloadBilling, managementURL)
         super.init()
+        self.paymentDescription = paymentDescription
+        self.automaticReloadBilling = automaticReloadBilling
+        self.managementURL = managementURL
     }
     public var automaticReloadBilling: PKAutomaticReloadPaymentSummaryItem = PKAutomaticReloadPaymentSummaryItem()
     public var billingAgreement: String? = nil
@@ -148,6 +150,9 @@ open class PKAutomaticReloadPaymentRequest: NSObject, @unchecked Sendable {
 
 open class PKAutomaticReloadPaymentSummaryItem: PKPaymentSummaryItem, @unchecked Sendable {
     public override init() { super.init() }
+    public override init(label: String, amount: NSDecimalNumber, type: PKPaymentSummaryItemType = .final) {
+        super.init(label: label, amount: amount, type: type)
+    }
     public var thresholdAmount: NSDecimalNumber = 0
 }
 
@@ -167,8 +172,8 @@ open class PKBarcodeEventMetadataRequest: NSObject, @unchecked Sendable {
 open class PKBarcodeEventMetadataResponse: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(paymentInformation: Data) {
-        _ = (paymentInformation)
         super.init()
+        self.paymentInformation = paymentInformation
     }
     public var paymentInformation: Data = Data()
 }
@@ -190,8 +195,8 @@ open class PKBarcodeEventSignatureRequest: NSObject, @unchecked Sendable {
 open class PKBarcodeEventSignatureResponse: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(signedData: Data) {
-        _ = (signedData)
         super.init()
+        self.signedData = signedData
     }
     public var signedData: Data = Data()
 }
@@ -199,12 +204,14 @@ open class PKBarcodeEventSignatureResponse: NSObject, @unchecked Sendable {
 open class PKDateComponentsRange: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(start startDateComponents: DateComponents, end endDateComponents: DateComponents) {
-        _ = (startDateComponents, endDateComponents)
         super.init()
+        self.startDateComponents = startDateComponents
+        self.endDateComponents = endDateComponents
     }
     public init(startDateComponents: DateComponents, endDateComponents: DateComponents) {
-        _ = (startDateComponents, endDateComponents)
         super.init()
+        self.startDateComponents = startDateComponents
+        self.endDateComponents = endDateComponents
     }
     public var endDateComponents: DateComponents = DateComponents()
     public var startDateComponents: DateComponents = DateComponents()
@@ -217,8 +224,10 @@ open class PKDateComponentsRange: NSObject, @unchecked Sendable {
 open class PKDeferredPaymentRequest: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(paymentDescription: String, deferredBilling: PKDeferredPaymentSummaryItem, managementURL: URL) {
-        _ = (paymentDescription, deferredBilling, managementURL)
         super.init()
+        self.paymentDescription = paymentDescription
+        self.deferredBilling = deferredBilling
+        self.managementURL = managementURL
     }
     public var billingAgreement: String? = nil
     public var deferredBilling: PKDeferredPaymentSummaryItem = PKDeferredPaymentSummaryItem()
@@ -231,6 +240,9 @@ open class PKDeferredPaymentRequest: NSObject, @unchecked Sendable {
 
 open class PKDeferredPaymentSummaryItem: PKPaymentSummaryItem, @unchecked Sendable {
     public override init() { super.init() }
+    public override init(label: String, amount: NSDecimalNumber, type: PKPaymentSummaryItemType = .final) {
+        super.init(label: label, amount: amount, type: type)
+    }
     public var deferredDate: Date = Date.distantPast
 }
 
@@ -252,8 +264,13 @@ open class PKDisbursementRequest: NSObject, @unchecked Sendable {
     public var supportedNetworks: [PKPaymentNetwork] = []
     public var supportedRegions: [Locale.Region]? = nil
     public init(merchantIdentifier: String, currency: Locale.Currency, region: Locale.Region, supportedNetworks: [PKPaymentNetwork], merchantCapabilities: PKMerchantCapability, summaryItems: [PKPaymentSummaryItem]) {
-        _ = (merchantIdentifier, currency, region, supportedNetworks, merchantCapabilities, summaryItems)
         super.init()
+        self.merchantIdentifier = merchantIdentifier
+        self.currency = currency
+        self.region = region
+        self.supportedNetworks = supportedNetworks
+        self.merchantCapabilities = merchantCapabilities
+        self.summaryItems = summaryItems
     }
     public var region: Locale.Region? = nil
     public var currency: Locale.Currency? = nil
@@ -263,7 +280,7 @@ open class PKDisbursementSummaryItem: PKPaymentSummaryItem, @unchecked Sendable 
     public override init() { super.init() }
 }
 
-open class PKIdentityAnyOfDescriptor: NSObject, @unchecked Sendable {
+open class PKIdentityAnyOfDescriptor: NSObject, PKIdentityDocumentDescriptor, @unchecked Sendable {
     public override init() { super.init() }
     public init(descriptors: [any PKIdentityDocumentDescriptor]) {
         _ = (descriptors)
@@ -322,7 +339,7 @@ open class PKIdentityDocumentMetadata: NSObject, @unchecked Sendable {
     public var sharingInstanceIdentifier: String = ""
 }
 
-open class PKIdentityDriversLicenseDescriptor: NSObject, @unchecked Sendable {
+open class PKIdentityDriversLicenseDescriptor: NSObject, PKIdentityDocumentDescriptor, @unchecked Sendable {
     public override init() { super.init() }
 }
 
@@ -363,12 +380,12 @@ open class PKIdentityIntentToStore: NSObject, @unchecked Sendable {
     public static var willNotStore: PKIdentityIntentToStore = PKIdentityIntentToStore()
 }
 
-open class PKIdentityNationalIDCardDescriptor: NSObject, @unchecked Sendable {
+open class PKIdentityNationalIDCardDescriptor: NSObject, PKIdentityDocumentDescriptor, @unchecked Sendable {
     public override init() { super.init() }
     public var region: Locale.Region? = nil
 }
 
-open class PKIdentityPhotoIDDescriptor: NSObject, @unchecked Sendable {
+open class PKIdentityPhotoIDDescriptor: NSObject, PKIdentityDocumentDescriptor, @unchecked Sendable {
     public override init() { super.init() }
 }
 
@@ -444,8 +461,9 @@ open class PKJapanIndividualNumberCardMetadata: PKIdentityDocumentMetadata, @unc
 open class PKLabeledValue: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(label: String, value: String) {
-        _ = (label, value)
         super.init()
+        self.label = label
+        self.value = value
     }
     public var label: String = ""
     public var value: String = ""
@@ -463,8 +481,9 @@ open class PKPassRelevantDate: NSObject, @unchecked Sendable {
     public weak var delegate: (any PKPayLaterViewDelegate)?
     public var displayStyle: PKPayLaterDisplayStyle = .standard
     public init(amount: Decimal, currency: Locale.Currency) {
-        _ = (amount, currency)
         super.init(frame: .zero)
+        self.amount = amount
+        self.currency = currency
     }
     public var amount: Decimal = 0
     public var currency: Locale.Currency? = nil
@@ -495,8 +514,11 @@ open class PKPaymentMethod: NSObject, @unchecked Sendable {
 open class PKPaymentOrderDetails: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(orderTypeIdentifier: String, orderIdentifier: String, webServiceURL: URL, authenticationToken: String) {
-        _ = (orderTypeIdentifier, orderIdentifier, webServiceURL, authenticationToken)
         super.init()
+        self.orderTypeIdentifier = orderTypeIdentifier
+        self.orderIdentifier = orderIdentifier
+        self.webServiceURL = webServiceURL
+        self.authenticationToken = authenticationToken
     }
     public var authenticationToken: String = ""
     public var orderIdentifier: String = ""
@@ -523,8 +545,8 @@ open class PKPaymentPass: PKSecureElementPass, @unchecked Sendable {
 open class PKPaymentRequestUpdate: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(paymentSummaryItems: [PKPaymentSummaryItem]) {
-        _ = (paymentSummaryItems)
         super.init()
+        self.paymentSummaryItems = paymentSummaryItems
     }
     public var automaticReloadPaymentRequest: PKAutomaticReloadPaymentRequest? = nil
     public var deferredPaymentRequest: PKDeferredPaymentRequest? = nil
@@ -597,8 +619,12 @@ open class PKPaymentRequestShippingMethodUpdate: PKPaymentRequestUpdate, @unchec
 open class PKPaymentTokenContext: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(merchantIdentifier: String, externalIdentifier: String, merchantName: String, merchantDomain: String?, amount: NSDecimalNumber) {
-        _ = (merchantIdentifier, externalIdentifier, merchantName, merchantDomain, amount)
         super.init()
+        self.merchantIdentifier = merchantIdentifier
+        self.externalIdentifier = externalIdentifier
+        self.merchantName = merchantName
+        self.merchantDomain = merchantDomain
+        self.amount = amount
     }
     public var amount: NSDecimalNumber = 0
     public var externalIdentifier: String = ""
@@ -610,8 +636,10 @@ open class PKPaymentTokenContext: NSObject, @unchecked Sendable {
 open class PKRecurringPaymentRequest: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(paymentDescription: String, regularBilling: PKRecurringPaymentSummaryItem, managementURL: URL) {
-        _ = (paymentDescription, regularBilling, managementURL)
         super.init()
+        self.paymentDescription = paymentDescription
+        self.regularBilling = regularBilling
+        self.managementURL = managementURL
     }
     public var billingAgreement: String? = nil
     public var managementURL: URL = URL(fileURLWithPath: "/")
@@ -678,6 +706,9 @@ open class PKShareablePassMetadata: NSObject, @unchecked Sendable {
 
 open class PKShippingMethod: PKPaymentSummaryItem, @unchecked Sendable {
     public override init() { super.init() }
+    public override init(label: String, amount: NSDecimalNumber, type: PKPaymentSummaryItemType = .final) {
+        super.init(label: label, amount: amount, type: type)
+    }
     public var dateComponentsRange: PKDateComponentsRange? = nil
     public var detail: String? = nil
     public var identifier: String? = nil

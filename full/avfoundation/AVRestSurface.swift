@@ -1,16 +1,54 @@
 import Foundation
+#if canImport(CoreImage)
+import CoreImage
+#endif
 
 open class AVAnyAsyncProperty: NSObject, @unchecked Sendable {
   public override init() { super.init() }
 }
 
 open class AVAsyncProperty<Root, Value>: AVPartialAsyncProperty<Root>, @unchecked Sendable {
-  public override init() { super.init() }
-  public enum Status {
+  public let portableKey: String
+
+  public override init() {
+    self.portableKey = ""
+    super.init()
+  }
+
+  public init(portableKey: String) {
+    self.portableKey = portableKey
+    super.init()
+  }
+
+  public enum Status: CustomStringConvertible {
     case notYetLoaded
     case loading
     case loaded(Value)
     case failed(NSError)
+
+    public var description: String {
+      switch self {
+      case .notYetLoaded: return "notYetLoaded"
+      case .loading: return "loading"
+      case .loaded: return "loaded"
+      case .failed: return "failed"
+      }
+    }
+  }
+}
+
+extension AVAsyncProperty.Status: Equatable where Value: Equatable {
+  public static func == (lhs: AVAsyncProperty<Root, Value>.Status, rhs: AVAsyncProperty<Root, Value>.Status) -> Bool {
+    switch (lhs, rhs) {
+    case (.notYetLoaded, .notYetLoaded), (.loading, .loading):
+      return true
+    case (.loaded(let a), .loaded(let b)):
+      return a == b
+    case (.failed(let a), .failed(let b)):
+      return a == b
+    default:
+      return false
+    }
   }
 }
 
@@ -121,9 +159,11 @@ public struct AVLayerVideoGravity: RawRepresentable, Hashable, Sendable, Express
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let resizeAspect = AVLayerVideoGravity(rawValue: "resizeAspect")
-  public static let resizeAspectFill = AVLayerVideoGravity(rawValue: "resizeAspectFill")
-  public static let resize = AVLayerVideoGravity(rawValue: "resize")
+  // Apple AVLayerVideoGravity*. Measured from the public C-string constants
+  // (`AVLayerVideoGravityResizeAspect` and siblings) in AVFoundation/AVAnimation.h.
+  public static let resizeAspect = AVLayerVideoGravity(rawValue: "AVLayerVideoGravityResizeAspect")
+  public static let resizeAspectFill = AVLayerVideoGravity(rawValue: "AVLayerVideoGravityResizeAspectFill")
+  public static let resize = AVLayerVideoGravity(rawValue: "AVLayerVideoGravityResize")
 }
 
 public struct AVMergedMetrics<MetricEvent1: AVMetricEvent, MetricEvent2: AVMetricEvent, MetricEventPack>: Sendable {
@@ -138,6 +178,36 @@ public struct AVMergedMetrics<MetricEvent1: AVMetricEvent, MetricEvent2: AVMetri
 
 open class AVPartialAsyncProperty<Root>: AVAnyAsyncProperty, @unchecked Sendable {
   public override init() { super.init() }
+}
+
+extension AVPartialAsyncProperty where Root: AVAsset {
+  public static var duration: AVAsyncProperty<Root, CMTime> {
+    AVAsyncProperty(portableKey: "duration")
+  }
+  public static var tracks: AVAsyncProperty<Root, [AVAssetTrack]> {
+    AVAsyncProperty(portableKey: "tracks")
+  }
+  public static var isPlayable: AVAsyncProperty<Root, Bool> {
+    AVAsyncProperty(portableKey: "isPlayable")
+  }
+  public static var metadata: AVAsyncProperty<Root, [AVMetadataItem]> {
+    AVAsyncProperty(portableKey: "metadata")
+  }
+  public static var commonMetadata: AVAsyncProperty<Root, [AVMetadataItem]> {
+    AVAsyncProperty(portableKey: "commonMetadata")
+  }
+  public static var lyrics: AVAsyncProperty<Root, String?> {
+    AVAsyncProperty(portableKey: "lyrics")
+  }
+  public static var isExportable: AVAsyncProperty<Root, Bool> {
+    AVAsyncProperty(portableKey: "isExportable")
+  }
+  public static var isReadable: AVAsyncProperty<Root, Bool> {
+    AVAsyncProperty(portableKey: "isReadable")
+  }
+  public static var isComposable: AVAsyncProperty<Root, Bool> {
+    AVAsyncProperty(portableKey: "isComposable")
+  }
 }
 
 open class AVPersistableContentKeyRequest: AVContentKeyRequest, @unchecked Sendable {
@@ -160,14 +230,69 @@ open class AVPortraitEffectsMatte: NSObject, @unchecked Sendable {
 }
 
 open class AVQueuePlayer: AVPlayer, @unchecked Sendable {
-  public override init() { super.init() }
-  convenience init(items: [AVPlayerItem]) { self.init() }
-  public func items() -> [AVPlayerItem] { [] }
-  public func advanceToNextItem() {}
-  public func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool { false }
-  public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {}
-  public func remove(_ item: AVPlayerItem) {}
-  public func removeAllItems() {}
+  private let queueLock = NSLock()
+  private var queuedItems: [AVPlayerItem] = []
+
+  public override init() {
+    super.init()
+  }
+
+  public init(items: [AVPlayerItem]) {
+    queuedItems = items
+    super.init(playerItem: items.first)
+  }
+
+  public func items() -> [AVPlayerItem] {
+    queueLock.withLock { queuedItems }
+  }
+
+  public func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    _ = item
+    if let afterItem {
+      return queueLock.withLock { queuedItems.contains { $0 === afterItem } }
+    }
+    return true
+  }
+
+  public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
+    queueLock.lock()
+    if let afterItem, let index = queuedItems.firstIndex(where: { $0 === afterItem }) {
+      queuedItems.insert(item, at: queuedItems.index(after: index))
+    } else {
+      queuedItems.insert(item, at: queuedItems.startIndex)
+    }
+    let head = queuedItems.first
+    queueLock.unlock()
+    if currentItem == nil {
+      replaceCurrentItem(with: head)
+    }
+  }
+
+  public func remove(_ item: AVPlayerItem) {
+    queueLock.lock()
+    queuedItems.removeAll { $0 === item }
+    let head = queuedItems.first
+    let removingCurrent = currentItem === item
+    queueLock.unlock()
+    if removingCurrent {
+      replaceCurrentItem(with: head)
+    }
+  }
+
+  public func removeAllItems() {
+    queueLock.withLock { queuedItems.removeAll() }
+    replaceCurrentItem(with: nil)
+  }
+
+  public func advanceToNextItem() {
+    queueLock.lock()
+    if !queuedItems.isEmpty {
+      queuedItems.removeFirst()
+    }
+    let head = queuedItems.first
+    queueLock.unlock()
+    replaceCurrentItem(with: head)
+  }
 }
 
 open class AVRenderedCaptionImage: NSObject, @unchecked Sendable {

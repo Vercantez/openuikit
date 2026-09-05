@@ -1,4 +1,5 @@
 import Foundation
+@_spi(OpenUIKitHost)
 import PhotosUI
 
 /// Future clean EC2 probe. Isolated Linux hosts typecheck Foundation
@@ -21,6 +22,11 @@ func photosUIDependencyIdentityProbe() {
     let item = PhotosPickerItem(itemIdentifier: "identity")
     precondition(item.itemIdentifier == "identity")
     precondition(item.supportedContentTypes.isEmpty)
+
+    let provider = NSItemProvider()
+    let result = PHPickerResult(itemProvider: provider, assetIdentifier: "identity")
+    precondition(result.assetIdentifier == "identity")
+    precondition(result.itemProvider === provider)
 
     _ = PHPickerCapabilities.search
     _ = PhotosPickerSelectionBehavior.default

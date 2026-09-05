@@ -47,9 +47,19 @@ private final class LocationDelegate: NSObject, CLLocationManagerDelegate {
   var headings: [CLHeading] = []
   var errors: [CLError.Code] = []
   var regionStates: [CLRegionState] = []
+  var enteredRegions: [String] = []
+  var exitedRegions: [String] = []
+  var startedRegions: [String] = []
+  var monitoringFailures: [CLError.Code] = []
+  var visits: [CLVisit] = []
+  var pauseCount = 0
+  var resumeCount = 0
+  var rangedBeaconCounts: [Int] = []
+  var rangedConstraintCounts: [Int] = []
   var rangingFailures: [CLError.Code] = []
   var deferredErrors: [CLError.Code] = []
   var constraintFailures: [CLError.Code] = []
+  var headingCalibrationAsked = false
 
   func locationManager(
     _ manager: CLLocationManager,
@@ -93,6 +103,77 @@ private final class LocationDelegate: NSObject, CLLocationManagerDelegate {
     _ = manager
     _ = region
     regionStates.append(state)
+  }
+
+  func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+    _ = manager
+    enteredRegions.append(region.identifier)
+  }
+
+  func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+    _ = manager
+    exitedRegions.append(region.identifier)
+  }
+
+  func locationManager(
+    _ manager: CLLocationManager,
+    didStartMonitoringFor region: CLRegion
+  ) {
+    _ = manager
+    startedRegions.append(region.identifier)
+  }
+
+  func locationManager(
+    _ manager: CLLocationManager,
+    monitoringDidFailFor region: CLRegion?,
+    withError error: Error
+  ) {
+    _ = manager
+    _ = region
+    if let error = error as? CLError {
+      monitoringFailures.append(error.code)
+    }
+  }
+
+  func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
+    _ = manager
+    visits.append(visit)
+  }
+
+  func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+    _ = manager
+    pauseCount += 1
+  }
+
+  func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
+    _ = manager
+    resumeCount += 1
+  }
+
+  func locationManager(
+    _ manager: CLLocationManager,
+    didRangeBeacons beacons: [CLBeacon],
+    in region: CLBeaconRegion
+  ) {
+    _ = manager
+    _ = region
+    rangedBeaconCounts.append(beacons.count)
+  }
+
+  func locationManager(
+    _ manager: CLLocationManager,
+    didRange beacons: [CLBeacon],
+    satisfying beaconConstraint: CLBeaconIdentityConstraint
+  ) {
+    _ = manager
+    _ = beaconConstraint
+    rangedConstraintCounts.append(beacons.count)
+  }
+
+  func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
+    _ = manager
+    headingCalibrationAsked = true
+    return false
   }
 
   func locationManager(
@@ -195,6 +276,8 @@ func testAuthorizationFailClosed() {
 }
 
 func testHostInjectedLocationHeadingRegion() {
+  CLLocationManager._portableSetLocationServicesEnabled(true)
+  defer { CLLocationManager._portableSetLocationServicesEnabled(false) }
   let origin = CLLocation(latitude: 40.7128, longitude: -74.0060)
   let destination = CLLocation(latitude: 51.5074, longitude: -0.1278)
   let region = CLCircularRegion(
@@ -221,6 +304,8 @@ func testHostInjectedLocationHeadingRegion() {
   precondition(delegate.headings.count == 1)
   precondition(delegate.headings[0].magneticHeading == 14)
   precondition(delegate.regionStates == [.inside])
+  precondition(delegate.enteredRegions == ["downtown"])
+  precondition(delegate.startedRegions == ["downtown"])
   manager.stopUpdatingLocation()
   manager._portableInject(locations: [destination])
   precondition(delegate.locations == [origin])
@@ -319,8 +404,53 @@ func testEnumRawValues() {
   precondition(CLLocationUpdate.LiveConfiguration.default != .fitness)
   precondition(CLLocationUpdate.LiveConfiguration.automotiveNavigation != .airborne)
   precondition(CLLocationUpdate.LiveConfiguration.otherNavigation != .default)
+  precondition(CLLocationUpdate.LiveConfiguration.airborne == .airborne)
+  precondition(CLLocationUpdate.LiveConfiguration.automotiveNavigation == .automotiveNavigation)
+  precondition(CLLocationUpdate.LiveConfiguration.otherNavigation == .otherNavigation)
+  var liveHasher = Hasher()
+  CLLocationUpdate.LiveConfiguration.airborne.hash(into: &liveHasher)
+  precondition(CLLocationUpdate.LiveConfiguration.airborne.hashValue == CLLocationUpdate.LiveConfiguration.airborne.hashValue)
   precondition(CLServiceSession.AuthorizationRequirement.whenInUse != .always)
   precondition(CLServiceSession.AuthorizationRequirement.none != .always)
+  precondition(CLServiceSession.AuthorizationRequirement.none == .none)
+  var sessionHasher = Hasher()
+  CLServiceSession.AuthorizationRequirement.none.hash(into: &sessionHasher)
+  precondition(CLServiceSession.AuthorizationRequirement.none.hashValue == CLServiceSession.AuthorizationRequirement.none.hashValue)
+  precondition(CLAccuracyAuthorization(rawValue: 0) == .fullAccuracy)
+  precondition(CLAccuracyAuthorization(rawValue: 99) == nil)
+  precondition(CLActivityType(rawValue: 2) == .automotiveNavigation)
+  precondition(CLActivityType(rawValue: 99) == nil)
+  precondition(CLAuthorizationStatus(rawValue: 2) == .denied)
+  precondition(CLAuthorizationStatus(rawValue: 99) == nil)
+  precondition(CLDeviceOrientation(rawValue: 1) == .portrait)
+  precondition(CLDeviceOrientation(rawValue: 99) == nil)
+  precondition(CLProximity(rawValue: 2) == .near)
+  precondition(CLProximity(rawValue: 99) == nil)
+  precondition(CLRegionState(rawValue: 1) == .inside)
+  precondition(CLRegionState(rawValue: 99) == nil)
+  precondition(CLError.Code(rawValue: 1) == .denied)
+  precondition(CLError.Code(rawValue: 99) == nil)
+  precondition(CLLocationPushServiceError.Code(rawValue: 4) == .unsupportedPlatform)
+  precondition(CLLocationPushServiceError.Code(rawValue: 99) == nil)
+  var enumHasher = Hasher()
+  CLAccuracyAuthorization.fullAccuracy.hash(into: &enumHasher)
+  CLActivityType.fitness.hash(into: &enumHasher)
+  CLAuthorizationStatus.denied.hash(into: &enumHasher)
+  CLDeviceOrientation.portrait.hash(into: &enumHasher)
+  CLError.Code.network.hash(into: &enumHasher)
+  CLLocationPushServiceError.Code.unknown.hash(into: &enumHasher)
+  CLProximity.near.hash(into: &enumHasher)
+  CLRegionState.inside.hash(into: &enumHasher)
+  let accuracySet: Set<CLAccuracyAuthorization> = [.fullAccuracy, .reducedAccuracy]
+  precondition(accuracySet.count == 2)
+  _ = CLAccuracyAuthorization.fullAccuracy.hashValue
+  _ = CLActivityType.other.hashValue
+  _ = CLAuthorizationStatus.denied.hashValue
+  _ = CLDeviceOrientation.portrait.hashValue
+  _ = CLError.Code.denied.hashValue
+  _ = CLLocationPushServiceError.Code.unknown.hashValue
+  _ = CLProximity.far.hashValue
+  _ = CLRegionState.outside.hashValue
 }
 
 func testCLErrorCodesAndBridging() {
@@ -354,6 +484,11 @@ func testCLErrorCodesAndBridging() {
   } catch {
     preconditionFailure("expected CLError.network")
   }
+  var errorHasher = Hasher()
+  denied.hash(into: &errorHasher)
+  precondition(denied.hashValue == denied.hashValue)
+  let sameDenied = CLError(.denied, userInfo: [kCLErrorUserInfoAlternateRegionKey: "unused"])
+  precondition(denied.hashValue == sameDenied.hashValue)
 }
 
 func testLocationPushServiceError() {
@@ -367,6 +502,11 @@ func testLocationPushServiceError() {
   precondition(error.code == .unsupportedPlatform)
   precondition(error.errorCode == 4)
   precondition(!error.localizedDescription.isEmpty)
+  _ = error.userInfo
+  _ = error.errorUserInfo
+  var hasher = Hasher()
+  error.hash(into: &hasher)
+  precondition(error.hashValue == error.hashValue)
 }
 
 func testBeaconIdentityAndPeripheralData() {
@@ -608,9 +748,261 @@ func testHeadingVisitAndManagerDefaults() {
   precondition(manager.headingFilter == 1)
   precondition(manager.activityType == .other)
   precondition(manager.headingOrientation == .portrait)
-  precondition(CLLocationManager.locationServicesEnabled())
-  precondition(CLLocationManager.headingAvailable())
+  precondition(CLLocationManager.locationServicesEnabled() == false)
+  precondition(CLLocationManager.headingAvailable() == false)
   manager.dismissHeadingCalibrationDisplay()
   manager.startMonitoringSignificantLocationChanges()
   manager.stopMonitoringSignificantLocationChanges()
+}
+
+func testBeaconRegionInitializerMatrix() {
+  let uuid = UUID()
+  let proximityOnly = CLBeaconRegion(proximityUUID: uuid, identifier: "proximity")
+  precondition(proximityOnly.uuid == uuid)
+  precondition(proximityOnly.notifyEntryStateOnDisplay == false)
+  proximityOnly.notifyEntryStateOnDisplay = true
+  precondition(proximityOnly.notifyEntryStateOnDisplay)
+  let proximityMajor = CLBeaconRegion(proximityUUID: uuid, major: 3, identifier: "prox-major")
+  precondition(proximityMajor.major?.uint16Value == 3)
+  let uuidMajor = CLBeaconRegion(uuid: uuid, major: 11, identifier: "uuid-major")
+  precondition(uuidMajor.major?.uint16Value == 11)
+  let labeled = CLBeaconRegion(UUID: uuid, major: 8, identifier: "labeled-major")
+  precondition(labeled.major?.uint16Value == 8)
+  let labeledFull = CLBeaconRegion(UUID: uuid, major: 8, minor: 4, identifier: "labeled-full")
+  precondition(labeledFull.minor?.uint16Value == 4)
+  let constraint = labeledFull.beaconIdentityConstraint
+  precondition(constraint.uuid == uuid)
+  precondition(constraint.major == NSNumber(value: UInt16(8)))
+  precondition(constraint.minor == NSNumber(value: UInt16(4)))
+}
+
+func testManagerValueStoresAndAvailability() {
+  precondition(CLLocationManager.locationServicesEnabled() == false)
+  CLLocationManager._portableSetLocationServicesEnabled(true)
+  defer { CLLocationManager._portableSetLocationServicesEnabled(false) }
+  precondition(CLLocationManager.locationServicesEnabled())
+  precondition(CLLocationManager.significantLocationChangeMonitoringAvailable())
+  precondition(CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self))
+  precondition(CLLocationManager.isMonitoringAvailable(for: CLRegion.self))
+  precondition(!CLLocationManager.isMonitoringAvailable(for: NSObject.self))
+  let manager = CLLocationManager()
+  manager._portableSetAuthorization(.authorizedAlways, accuracy: .reducedAccuracy)
+  precondition(manager.accuracyAuthorization == .reducedAccuracy)
+  manager.allowsBackgroundLocationUpdates = true
+  manager.showsBackgroundLocationIndicator = true
+  manager.pausesLocationUpdatesAutomatically = false
+  manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+  manager.distanceFilter = 25
+  manager.activityType = .fitness
+  precondition(manager.allowsBackgroundLocationUpdates)
+  precondition(manager.showsBackgroundLocationIndicator)
+  precondition(manager.pausesLocationUpdatesAutomatically == false)
+  precondition(manager.desiredAccuracy == kCLLocationAccuracyHundredMeters)
+  precondition(manager.distanceFilter == 25)
+  precondition(manager.activityType == .fitness)
+  precondition(manager.maximumRegionMonitoringDistance == CLLocationDistanceMax)
+}
+
+func testRegionEnterExitAndRequestState() {
+  CLLocationManager._portableSetLocationServicesEnabled(true)
+  defer { CLLocationManager._portableSetLocationServicesEnabled(false) }
+  let origin = CLLocation(latitude: 40.7128, longitude: -74.0060)
+  let outside = CLLocation(latitude: 51.5074, longitude: -0.1278)
+  let region = CLCircularRegion(
+    center: origin.coordinate,
+    radius: 100,
+    identifier: "campus"
+  )
+  let manager = CLLocationManager()
+  let delegate = LocationDelegate()
+  manager.delegate = delegate
+  manager._portableSetAuthorization(.authorizedWhenInUse)
+  manager.startUpdatingLocation()
+  manager.startMonitoring(for: region)
+  precondition(delegate.startedRegions == ["campus"])
+  manager._portableInject(locations: [origin])
+  precondition(delegate.enteredRegions == ["campus"])
+  manager._portableInject(locations: [outside])
+  precondition(delegate.exitedRegions == ["campus"])
+  manager.requestState(for: region)
+  precondition(delegate.regionStates.last == .outside)
+  let denied = CLLocationManager()
+  let deniedDelegate = LocationDelegate()
+  denied.delegate = deniedDelegate
+  denied.startMonitoring(for: region)
+  precondition(deniedDelegate.monitoringFailures == [.regionMonitoringDenied])
+  precondition(denied.monitoredRegions.isEmpty)
+}
+
+func testDelegatePauseResumeVisitRangingAndCalibration() {
+  CLLocationManager._portableSetLocationServicesEnabled(true)
+  defer { CLLocationManager._portableSetLocationServicesEnabled(false) }
+  let manager = CLLocationManager()
+  let delegate = LocationDelegate()
+  manager.delegate = delegate
+  manager._portableSetAuthorization(.authorizedAlways)
+  manager.startMonitoringVisits()
+  let visit = CLVisit(
+    coordinate: CLLocationCoordinate2D(latitude: 37.33, longitude: -122.03),
+    horizontalAccuracy: 8,
+    arrivalDate: Date(timeIntervalSince1970: 10),
+    departureDate: Date(timeIntervalSince1970: 20)
+  )
+  manager._portableInject(visit: visit)
+  precondition(delegate.visits.count == 1)
+  precondition(delegate.visits[0].horizontalAccuracy == 8)
+  manager.pausesLocationUpdatesAutomatically = true
+  manager._portablePauseLocationUpdates()
+  manager._portableResumeLocationUpdates()
+  precondition(delegate.pauseCount == 1)
+  precondition(delegate.resumeCount == 1)
+  let uuid = UUID()
+  let region = CLBeaconRegion(uuid: uuid, identifier: "aisle")
+  let constraint = CLBeaconIdentityConstraint(uuid: uuid)
+  let beacon = CLBeacon(
+    uuid: uuid,
+    major: 1,
+    minor: 2,
+    proximity: .immediate,
+    accuracy: 0.4,
+    rssi: -40
+  )
+  delegate.locationManager(manager, didRangeBeacons: [beacon], in: region)
+  delegate.locationManager(manager, didRange: [beacon], satisfying: constraint)
+  precondition(delegate.rangedBeaconCounts == [1])
+  precondition(delegate.rangedConstraintCounts == [1])
+  precondition(delegate.locationManagerShouldDisplayHeadingCalibration(manager) == false)
+  precondition(delegate.headingCalibrationAsked)
+}
+
+func testPlacemarkExtendedFields() {
+  let origin = CLLocation(latitude: 37.8, longitude: -122.4)
+  let zone = TimeZone(secondsFromGMT: -8 * 3600) ?? TimeZone.current
+  let region = CLCircularRegion(center: origin.coordinate, radius: 50, identifier: "wharf")
+  let source = CLPlacemark(
+    location: origin,
+    region: region,
+    timeZone: zone,
+    name: "Ferry Building",
+    thoroughfare: "Embarcadero",
+    subThoroughfare: "1",
+    locality: "San Francisco",
+    subLocality: "Financial District",
+    administrativeArea: "CA",
+    subAdministrativeArea: "San Francisco County",
+    postalCode: "94111",
+    isoCountryCode: "US",
+    country: "United States",
+    inlandWater: "San Francisco Bay",
+    ocean: "Pacific Ocean",
+    areasOfInterest: ["Ferry Building"]
+  )
+  precondition(source.region?.identifier == "wharf")
+  precondition(source.timeZone == zone)
+  precondition(source.subThoroughfare == "1")
+  precondition(source.subLocality == "Financial District")
+  precondition(source.subAdministrativeArea == "San Francisco County")
+  precondition(source.inlandWater == "San Francisco Bay")
+  precondition(source.ocean == "Pacific Ocean")
+  precondition(source.areasOfInterest == ["Ferry Building"])
+  let copy = CLPlacemark(placemark: source)
+  precondition(copy.subThoroughfare == "1")
+  precondition(copy.ocean == "Pacific Ocean")
+}
+
+private final class ProbePushExtension: NSObject, CLLocationPushServiceExtension {
+  private let payloadCount = CLLocked(0)
+  private let didTerminate = CLLocked(false)
+
+  var payloads: Int { payloadCount.load() }
+  var terminated: Bool { didTerminate.load() }
+
+  func didReceiveLocationPushPayload(_ payload: [String: Any]) async {
+    _ = payload
+    payloadCount.store(payloadCount.load() + 1)
+  }
+
+  func serviceExtensionWillTerminate() {
+    didTerminate.store(true)
+  }
+}
+
+func testLocationPushServiceExtensionConformance() {
+  let ext = ProbePushExtension()
+  switch clAwait({
+    await ext.didReceiveLocationPushPayload(["key": "value"])
+    return ext.payloads
+  }) {
+  case .success(let count):
+    precondition(count == 1)
+  case .failure(let error):
+    preconditionFailure("push payload threw \(error)")
+  }
+  ext.serviceExtensionWillTerminate()
+  precondition(ext.terminated)
+}
+
+func testHeadingFailClosedWithoutCompass() {
+  let manager = CLLocationManager()
+  let delegate = LocationDelegate()
+  manager.delegate = delegate
+  precondition(CLLocationManager.headingAvailable() == false)
+  manager.startUpdatingHeading()
+  precondition(delegate.errors == [.headingFailure])
+}
+
+func testMonitorEventDiagnosticFlags() {
+  let event = CLMonitor.Event(
+    identifier: "campus",
+    refinement: nil,
+    state: .unsatisfied,
+    authorizationDenied: false,
+    authorizationDeniedGlobally: true,
+    authorizationRestricted: true,
+    insufficientlyInUse: true,
+    accuracyLimited: true,
+    conditionUnsupported: true,
+    conditionLimitExceeded: true,
+    persistenceUnavailable: true,
+    serviceSessionRequired: true,
+    authorizationRequestInProgress: true
+  )
+  precondition(event.accuracyLimited)
+  precondition(event.insufficientlyInUse)
+  precondition(event.conditionUnsupported)
+  precondition(event.conditionLimitExceeded)
+  precondition(event.persistenceUnavailable)
+  precondition(event.serviceSessionRequired)
+  precondition(event.authorizationRestricted)
+  precondition(event.authorizationDeniedGlobally)
+  precondition(event.authorizationRequestInProgress)
+  precondition(event.authorizationDenied == false)
+}
+
+func testMonitorInjectedGeographicEvents() {
+  let campus = CLLocation(latitude: 37.3349, longitude: -122.0090)
+  let elsewhere = CLLocation(latitude: 40.7128, longitude: -74.0060)
+  switch clAwait({
+    let monitor = await CLMonitor("corelocation-lane-inject")
+    let geographic = CLMonitor.CircularGeographicCondition(
+      center: campus.coordinate,
+      radius: 50
+    )
+    await monitor.add(geographic, identifier: "campus", assuming: .unknown)
+    await monitor._portableInject(location: campus)
+    var iterator = await monitor.events.makeAsyncIterator()
+    let inside = try await iterator.next()
+    await monitor._portableInject(location: elsewhere)
+    let outside = try await iterator.next()
+    let drained = try await iterator.next()
+    return (inside?.state, outside?.state, drained, inside?.authorizationDenied)
+  }) {
+  case .success(let (inside, outside, drained, denied)):
+    precondition(inside == .satisfied)
+    precondition(outside == .unsatisfied)
+    precondition(drained == nil)
+    precondition(denied == false)
+  case .failure(let error):
+    preconditionFailure("monitor inject threw \(error)")
+  }
 }

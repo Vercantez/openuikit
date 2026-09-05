@@ -127,6 +127,7 @@ public struct DefaultHistoryToken: HistoryToken, Sendable {
     public static func < (lhs: DefaultHistoryToken, rhs: DefaultHistoryToken) -> Bool {
         lhs.id < rhs.id
     }
+
 }
 
 public struct DefaultHistoryTransaction: HistoryTransaction, Hashable, Sendable {
@@ -173,6 +174,7 @@ public struct DefaultHistoryTransaction: HistoryTransaction, Hashable, Sendable 
         hasher.combine(transactionIdentifier)
         hasher.combine(storeIdentifier)
     }
+
 }
 
 public struct DefaultHistoryInsert<Model: PersistentModel>: HistoryInsert, Hashable, Sendable {
@@ -181,6 +183,16 @@ public struct DefaultHistoryInsert<Model: PersistentModel>: HistoryInsert, Hasha
     public let changeIdentifier: Int64
     public let changedPersistentIdentifier: PersistentIdentifier
     public let transactionIdentifier: Int64
+
+    public init(
+        changeIdentifier: Int64,
+        changedPersistentIdentifier: PersistentIdentifier,
+        transactionIdentifier: Int64
+    ) {
+        self.changeIdentifier = changeIdentifier
+        self.changedPersistentIdentifier = changedPersistentIdentifier
+        self.transactionIdentifier = transactionIdentifier
+    }
 }
 
 public struct DefaultHistoryUpdate<Model: PersistentModel>: HistoryUpdate, Sendable {
@@ -191,6 +203,18 @@ public struct DefaultHistoryUpdate<Model: PersistentModel>: HistoryUpdate, Senda
     public let changedPersistentIdentifier: PersistentIdentifier
     public let transactionIdentifier: Int64
     public let updatedAttributes: [any PartialKeyPath<Model> & Sendable]
+
+    public init(
+        changeIdentifier: Int64,
+        changedPersistentIdentifier: PersistentIdentifier,
+        transactionIdentifier: Int64,
+        updatedAttributes: [any PartialKeyPath<Model> & Sendable]
+    ) {
+        self.changeIdentifier = changeIdentifier
+        self.changedPersistentIdentifier = changedPersistentIdentifier
+        self.transactionIdentifier = transactionIdentifier
+        self.updatedAttributes = updatedAttributes
+    }
 
     public static func == (lhs: DefaultHistoryUpdate<Model>, rhs: DefaultHistoryUpdate<Model>) -> Bool {
         lhs.changeIdentifier == rhs.changeIdentifier
@@ -212,6 +236,18 @@ public struct DefaultHistoryDelete<Model: PersistentModel>: HistoryDelete, Hasha
     public let changedPersistentIdentifier: PersistentIdentifier
     public let transactionIdentifier: Int64
     public let tombstone: HistoryTombstone<Model>
+
+    public init(
+        changeIdentifier: Int64,
+        changedPersistentIdentifier: PersistentIdentifier,
+        transactionIdentifier: Int64,
+        tombstone: HistoryTombstone<Model>
+    ) {
+        self.changeIdentifier = changeIdentifier
+        self.changedPersistentIdentifier = changedPersistentIdentifier
+        self.transactionIdentifier = transactionIdentifier
+        self.tombstone = tombstone
+    }
 }
 
 extension HistoryTombstone: Equatable {

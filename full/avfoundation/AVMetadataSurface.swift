@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(CoreImage)
+import CoreImage
+#endif
 
 open class AVMetadataBodyObject: AVMetadataObject, @unchecked Sendable {
   public override init() { super.init() }
