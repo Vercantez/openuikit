@@ -758,9 +758,15 @@ final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
         // The real UIKit oracle self-sizes; the measured subtitle cell is
         // taller than the default (portable self-sizing is out of scope —
         // docs/KNOWN_GAPS.md).
+        //
+        // MEASURED rowprobe, iPhone SE 2x / iOS 26.1: SceneKit's
+        // `defaultContentConfiguration()` cells are 53; classic
+        // `textLabel` cells are 52. Fixture scenes use content-config on
+        // the iOS oracle, so pin `defaultRowHeight` (53 / Catalyst 51.5)
+        // rather than `automaticDimension` (which is now 52 on iOS plain).
         sections[indexPath.section].rows[indexPath.row].style == .subtitle
             ? UITableViewCell.subtitleRowHeight
-            : UITableView.automaticDimension
+            : UITableViewCell.defaultRowHeight
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,

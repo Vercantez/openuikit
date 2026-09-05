@@ -1139,10 +1139,11 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         XCTAssertEqual(cell.detailTextLabel!.frame.origin.y, 32.5, accuracy: 0.001)
     }
 
-    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: classic `textLabel`
-    /// fills the content view (`[16, 0, 343, h]`, intrinsic 20.5). Row
-    /// height stays `defaultRowHeight` (53 — tableview_grouped / plain
-    /// content-configuration cells; Tabs itself dumps 52).
+    /// MEASURED Tabs t200 golden PNG + dump, iPhone SE 2x / iOS 26.1:
+    /// classic `textLabel` fills the content view (`[16, 0, 343, 52]`,
+    /// intrinsic 20.5) and the row is **52** (separator stride 52,
+    /// contentSize 1560/30). `defaultContentConfiguration()` stays 53
+    /// (`defaultRowHeight`; tableview_grouped / SceneBuilder fixtures).
     func testPlainDefaultLabelFillsContentViewOnIOS() {
         let source = DefaultListSource()
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
@@ -1152,12 +1153,50 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         window.layoutIfNeeded()
 
         let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.frame.height, 52, accuracy: 0.001)
+        XCTAssertEqual(cell.contentView.frame.height, 52, accuracy: 0.001)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
+                       52, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame, CGRect(x: 16, y: 0, width: 343, height: 52))
+        XCTAssertEqual(cell.textLabel.intrinsicContentSize.height, 20.5, accuracy: 0.001)
+        XCTAssertEqual(table.contentSize.height, 156, accuracy: 0.001)
+    }
+
+    /// MEASURED rowprobe grouped_classic vs grouped_config, iPhone SE 2x /
+    /// iOS 26.1: classic grouped is also 52, but `defaultContentConfiguration()`
+    /// (tableview_grouped / Focus) is 53. Grouped automaticDimension stays 53.
+    func testGroupedDefaultRowStays53OnIOS() {
+        let source = DefaultListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .insetGrouped)
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
         XCTAssertEqual(cell.frame.height, 53, accuracy: 0.001)
-        XCTAssertEqual(cell.contentView.frame.height, 53, accuracy: 0.001)
         XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
                        53, accuracy: 0.001)
-        XCTAssertEqual(cell.textLabel.frame, CGRect(x: 16, y: 0, width: 343, height: 53))
-        XCTAssertEqual(cell.textLabel.intrinsicContentSize.height, 20.5, accuracy: 0.001)
+    }
+
+    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: a plain table under a
+    /// nav (adjustedContentInset.top 64) has a top hairline on row 0 at
+    /// cell y=0. A plain table with no inset does not.
+    func testPlainFirstRowHasTopSeparatorWhenUnderlappingOnIOS() {
+        let source = DefaultListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 0, section: 0))!.topSeparatorView.isHidden)
+
+        table.contentInset.top = 64
+        table.layoutIfNeeded()
+        XCTAssertFalse(table.cellForRow(at: IndexPath(row: 0, section: 0))!.topSeparatorView.isHidden)
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 1, section: 0))!.topSeparatorView.isHidden)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 0, section: 0))!.topSeparatorView.frame.minY,
+                       0, accuracy: 0.001)
     }
 
     /// MEASURED TableEditor t900, iPhone SE 2x: content view at x 40 width
