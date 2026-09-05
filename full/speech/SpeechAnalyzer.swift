@@ -200,6 +200,12 @@ public final actor SpeechAnalyzer {
         throw speechFailClosedError(.noModel)
     }
 
+    public func hostCheckIsolation() {
+        assertIsolated()
+        preconditionIsolated()
+        _ = assumeIsolated { isolated in isolated.modules.count }
+    }
+
 #if canImport(AVFoundation)
     public func prepareToAnalyze(in audioFormat: AVAudioFormat?) async throws {
         _ = audioFormat
