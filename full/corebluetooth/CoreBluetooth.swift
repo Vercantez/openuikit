@@ -249,6 +249,12 @@ public struct CBError: Error, CustomNSError, Hashable, Equatable, @unchecked Sen
     public func hash(into hasher: inout Hasher) {
         hasher.combine(code)
     }
+
+    public var hashValue: Int {
+        var hasher = Hasher()
+        hash(into: &hasher)
+        return hasher.finalize()
+    }
 }
 
 extension CBError.Code {
@@ -281,6 +287,8 @@ public struct CBATTError: Error, CustomNSError, Hashable, Equatable, @unchecked 
         case insufficientEncryption = 0x0F
         case unsupportedGroupType = 0x10
         case insufficientResources = 0x11
+
+        public var hashValue: Int { rawValue }
     }
 
     public let code: Code
@@ -321,6 +329,12 @@ public struct CBATTError: Error, CustomNSError, Hashable, Equatable, @unchecked 
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(code)
+    }
+
+    public var hashValue: Int {
+        var hasher = Hasher()
+        hash(into: &hasher)
+        return hasher.finalize()
     }
 }
 

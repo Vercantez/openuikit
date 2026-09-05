@@ -39,6 +39,29 @@ synthesized members. Linux implements the observable `CustomNSError` /
 
 ## Depth pass 2026-09
 
+Coverage before this evidence repair: **460 implemented / 14 declared / 474
+total**, but every implemented row cited `tests/agent/CoreBluetoothRuntime.swift`
+(a file path). Merge refused that form.
+
+Coverage after: **460 implemented / 14 declared / 474 total**. Implemented rows
+cite `test:full/corebluetooth/tests/agent/<File>Tests.swift#testName`. The 14
+`declared` rows are Apple `_BridgedStoredNSError` synthesized members and now
+use `source:full/corebluetooth/CoreBluetooth.swift#Symbol`.
+
+Top-5 implemented evidence distribution:
+
+| Citations | Evidence |
+| ---: | --- |
+| 40 | `CoreBluetoothErrorTests.swift#testCBATTErrorCodes` |
+| 40 | `CoreBluetoothErrorTests.swift#testCBErrorCodes` |
+| 21 | `CoreBluetoothOptionSetTests.swift#testCBAttributePermissionsAlgebra` |
+| 21 | `CoreBluetoothOptionSetTests.swift#testCBCentralManagerFeatureAlgebra` |
+| 21 | `CoreBluetoothOptionSetTests.swift#testCBCharacteristicPropertiesAlgebra` |
+
+`testCBErrorCodes` / `testCBATTErrorCodes` are table-driven enum-member and
+static `err…` value tests. The three algebra tests cover SetAlgebra witnesses
+per option-set type (not a bulk relabel of unrelated rows).
+
 This pass adds an explicit `@_spi(OpenUIKitHost)` simulated adapter
 (`CBHostSimulation`) so tests can exercise the public central / peripheral /
 GATT / ATT surface **without a radio**. Installing the adapter is the only
@@ -98,8 +121,9 @@ Implemented against the simulated adapter:
 
 ## Tests
 
-`tests/agent/CoreBluetoothRuntime.swift` is the host-gate probe and prints
-`COREBLUETOOTH_AGENT_RUNTIME_OK`.
+Focused `func test*()` families live in `tests/agent/*Tests.swift`. The sealed
+v1 gate compiles only `tests/agent/CoreBluetoothRuntime.swift`, which concatenates
+those tests plus support probes and prints `COREBLUETOOTH_AGENT_RUNTIME_OK`.
 
 `tests/agent/CoreBluetoothDependencyIdentity.swift` is a future EC2 identity
 probe: real Foundation / CoreFoundation / Dispatch / CoreBluetooth imports,
