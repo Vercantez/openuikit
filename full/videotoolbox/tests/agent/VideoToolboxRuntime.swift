@@ -1011,7 +1011,7 @@ func testCreateCGImageFromPixelBuffer() {
     vtExpect(VTHostCGImageGetByte(image2, offset: 0) == 10, "cg red")
     vtExpect(VTHostCGImageGetByte(image2, offset: 1) == 20, "cg green")
     vtExpect(VTHostCGImageGetByte(image2, offset: 2) == 30, "cg blue")
-    let fakeBuffer = OpaquePointer(bitPattern: 0x11)!
+    let fakeBuffer = OpaquePointer(bitPattern: 0x00FF_FFFF)!
     var image3: OpaquePointer?
     vtExpectStatus(
         VTCreateCGImageFromCVPixelBuffer(pixelBuffer: fakeBuffer, imageOut: &image3),
