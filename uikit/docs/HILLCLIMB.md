@@ -93,6 +93,15 @@ is always measured against the iOS simulator.
   moved under `docs/agent_reports/`), pushed as `agent/<name>-merged`, and
   then handed to `scripts/agent_merge.sh`. Do not touch `uikit/` while the
   script runs: the vendor-tree attestation hashes the working tree.
+- The merge check re-renders every conformance app against the last
+  round's goldens (`/tmp/hc-conformance-<App>`) and refuses a drop: a
+  passing row must stay at its bar, a failing one may not lose 0.5. A
+  branch that changes the PROBE (how a frame is named, what is dumped)
+  invalidates those goldens for its app — run it with
+  `RECAPTURE_APPS="Pager"` so the goldens are captured again with the
+  merged tree's probe before grading; and refresh the round's goldens
+  (`PICK_ONLY=1 scripts/hillclimb.sh N`) after such a merge lands, or every
+  later branch is graded against stale goldens.
 - Housekeeping after each wave: finished agents' simulator devices
   (`xcrun simctl delete`) and worktrees (`git worktree remove --force`);
   58 devices and 50 worktrees once filled the disk.
