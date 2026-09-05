@@ -6,4 +6,6 @@ full/imageio/ImageIOConstants.swift
 full/imageio/ImageIODestination.swift
 full/imageio/ImageIOEnums.swift
 full/imageio/ImageIOMetadata.swift
+full/imageio/ImageIOProperties.swift
 full/imageio/ImageIOSource.swift
+full/imageio/ImageIOThumbnail.swift

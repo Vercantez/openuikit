@@ -18,7 +18,9 @@ func imageioSupportedDestinationTypes() -> [CFString] {
 
 func imageioDetectType(_ data: Data) -> CFString? {
     let bytes = Array(data.prefix(14))
-    if bytes.count >= 8,
+    // MEASURED 2026-09-05 Apple ImageIO: a PNG signature alone (8 bytes)
+    // stays untyped; type public.png appears at 10 bytes.
+    if bytes.count >= 10,
        bytes[0...7].elementsEqual([137, 80, 78, 71, 13, 10, 26, 10]) {
         return imageioTypePNG
     }
