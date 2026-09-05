@@ -1,2 +1,3 @@
 full/coreaudio/CoreAudio.swift
+full/coreaudio/CoreAudioHardware.swift
 full/coreaudio/ManagedAudioChannelLayout.swift

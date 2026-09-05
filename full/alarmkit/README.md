@@ -59,3 +59,37 @@ for `Color` and `LocalizedStringResource` are unobserved.
   (Linux uses a local `stop.circle` placeholder)
 - Live Activity / App Intent execution
 - SwiftUI presentation and `#Preview`
+
+## Depth pass 2026-09
+
+Coverage before this pass: **219 implemented / 43 declared / 0 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after: **258 implemented / 4 declared / 0 deferred / 0 unavailable /
+0 not-applicable** (262 exact IDs). The 20-app corpus names AlarmKit only in
+videolan/vlc-ios `Sources/Network/Radio/VLCRadioAlarmService.swift`
+(`AlarmManager.shared`, `alarms`, `schedule`, `cancel`,
+`requestAuthorization`, relative `Alarm.Schedule` with `Locale.Weekday`
+recurrence, `AlarmButton`, default-stop `AlarmPresentation.Alert`,
+`AlarmAttributes`, `AlarmMetadata`). `scratch/ladder-corpus/focus-ios` has no
+AlarmKit symbols. Those corpus APIs now have dedicated tests, including
+`testCorpusVLCRadioAlarmConstruction`. Empty `AsyncSequence` stdlib algorithms
+(`map`, `filter`, `reduce`, throwing `flatMap`, …) are exercised on the
+fail-closed streams. Four overlapping `flatMap` protocol witnesses stay
+`declared` because Linux Swift selects the throwing and Never/Never overloads
+and does not uniquely bind the remaining two.
+
+Implemented evidence is `test:full/alarmkit/tests/agent/<File>Tests.swift#testName`.
+The v1 sealed gate still compiles `AlarmKitRuntime.swift`, which inlines those
+tests and prints `ALARMKIT_AGENT_RUNTIME_OK`.
+
+Top-5 implemented evidence distribution (258 implemented rows; no test exceeds
+40%):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 16 | 6.2% | `AlarmKitPresentationStateTests.swift#testPresentationStateIdentity` |
+| 13 | 5.0% | `AlarmKitPresentationTests.swift#testAlarmPresentationCodable` |
+| 10 | 3.9% | `AlarmKitPresentationStateTests.swift#testPresentationStateCountdownMode` |
+| 10 | 3.9% | `AlarmKitUpdatesTests.swift#testAuthorizationUpdatesTypesAndEmptyNext` |
+| 9 | 3.5% | `AlarmKitUpdatesTests.swift#testAlarmUpdatesTypesAndEmptyNext` |

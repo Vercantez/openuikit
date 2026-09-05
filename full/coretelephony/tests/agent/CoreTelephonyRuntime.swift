@@ -86,11 +86,18 @@ enum CoreTelephonyRuntime {
         CTCellularPlanProvisioningAddPlanResult.cancel.hash(into: &resultHasher)
         _ = resultHasher.finalize()
 
-        _ = CTCallStateConnected
-        _ = CTRadioAccessTechnologyLTE
-        _ = CTSubscriberTokenRefreshed
-        _ = NSNotification.Name.CTRadioAccessTechnologyDidChange
-        _ = NSNotification.Name.CTServiceRadioAccessTechnologyDidChange
+        precondition(CTCallStateConnected == "connected")
+        precondition(CTCallStateDialing == "dialing")
+        precondition(CTRadioAccessTechnologyLTE == "CTRadioAccessTechnologyLTE")
+        precondition(CTSubscriberTokenRefreshed == "CTSubscriberTokenRefreshed")
+        precondition(
+            NSNotification.Name.CTRadioAccessTechnologyDidChange.rawValue
+                == "CTRadioAccessTechnologyDidChangeNotification"
+        )
+        precondition(
+            NSNotification.Name.CTServiceRadioAccessTechnologyDidChange.rawValue
+                == "CTServiceRadioAccessTechnologyDidChangeNotification"
+        )
         let _: CellularDataRestrictionDidUpdateNotifier = { _ in }
     }
 

@@ -17,8 +17,19 @@ public final class NFCPresentmentIntentAssertion: Sendable {
 
     public let isValid: Bool = false
 
+    init(hostBypass: Bool) {
+        _ = hostBypass
+    }
+
     public static func acquire() async throws -> NFCPresentmentIntentAssertion {
         throw Error.systemNotAvailable
+    }
+}
+
+@_spi(OpenUIKitHost)
+extension NFCPresentmentIntentAssertion {
+    public static func hostMakeInvalidAssertion() -> NFCPresentmentIntentAssertion {
+        NFCPresentmentIntentAssertion(hostBypass: true)
     }
 }
 
@@ -125,6 +136,10 @@ public final class CardSession: @unchecked Sendable {
         throw Error.systemNotAvailable
     }
 
+    init(hostBypass: Bool) {
+        _ = hostBypass
+    }
+
     public func invalidate() {}
 
     public func stopEmulation(status: EmulationUIStatus) async {
@@ -133,5 +148,12 @@ public final class CardSession: @unchecked Sendable {
 
     public func startEmulation() async throws {
         throw Error.systemNotAvailable
+    }
+}
+
+@_spi(OpenUIKitHost)
+extension CardSession {
+    public static func hostMakeUnsupportedSession() -> CardSession {
+        CardSession(hostBypass: true)
     }
 }
