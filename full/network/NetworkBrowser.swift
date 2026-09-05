@@ -31,7 +31,14 @@ public final class NWBrowser: @unchecked Sendable, CustomDebugStringConvertible 
         public enum Metadata: Hashable, Sendable, CustomDebugStringConvertible {
             case none
             case bonjour(NWTXTRecord)
-            public var debugDescription: String { "\(self)" }
+            public var debugDescription: String {
+                switch self {
+                case .none:
+                    return "none"
+                case .bonjour(let record):
+                    return "bonjour(\(record.debugDescription))"
+                }
+            }
         }
 
         public enum Change: Hashable, Sendable {
