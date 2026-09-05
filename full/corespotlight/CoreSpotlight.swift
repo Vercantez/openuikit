@@ -125,6 +125,30 @@ public final class CSCustomAttributeKey: NSObject, NSSecureCoding, @unchecked Se
 
   public static var supportsSecureCoding: Bool { true }
 
+  /// Apple documents that custom keys must start with a letter, contain only
+  /// ASCII letters, digits, and underscore (this port also allows `.` for the
+  /// reverse-DNS names used by app indexes), and must not start with `kMD` or
+  /// `_kMD`. Unique keys cannot be searchable.
+  fileprivate static func isValidKeyName(_ keyName: String) -> Bool {
+    if keyName.hasPrefix("kMD") || keyName.hasPrefix("_kMD") {
+      return false
+    }
+    guard let first = keyName.unicodeScalars.first else { return false }
+    guard first.isASCII, (first >= "A" && first <= "Z") || (first >= "a" && first <= "z") else {
+      return false
+    }
+    return keyName.unicodeScalars.allSatisfy { scalar in
+      scalar.isASCII
+        && (
+          (scalar >= "A" && scalar <= "Z")
+            || (scalar >= "a" && scalar <= "z")
+            || (scalar >= "0" && scalar <= "9")
+            || scalar == "_"
+            || scalar == "."
+        )
+    }
+  }
+
   public convenience init?(keyName: String) {
     self.init(
       keyName: keyName,
@@ -142,7 +166,10 @@ public final class CSCustomAttributeKey: NSObject, NSSecureCoding, @unchecked Se
     unique: Bool,
     multiValued: Bool
   ) {
-    guard !keyName.isEmpty else { return nil }
+    guard CSCustomAttributeKey.isValidKeyName(keyName) else { return nil }
+    // Apple documents unique keys as a storage-saving flag that is not
+    // independently searchable. The portable index fail-closes that pairing.
+    if unique && searchable { return nil }
     self.keyName = keyName
     self.isSearchable = searchable
     self.isSearchableByDefault = searchableByDefault
@@ -153,7 +180,7 @@ public final class CSCustomAttributeKey: NSObject, NSSecureCoding, @unchecked Se
 
   public required init?(coder: NSCoder) {
     guard let keyName = coder.decodeObject(of: NSString.self, forKey: "keyName") as String?,
-      !keyName.isEmpty
+      CSCustomAttributeKey.isValidKeyName(keyName)
     else {
       return nil
     }
@@ -1221,7 +1248,40 @@ open class CSSearchableItemAttributeSet: NSObject, NSSecureCoding, @unchecked Se
     if let textContent = coder.decodeObject(of: NSString.self, forKey: "textContent") as String? {
       self.textContent = textContent
     }
-    contentType = itemContentType
+    if let thumbnailData = coder.decodeObject(of: NSData.self, forKey: "thumbnailData") as Data? {
+      self.thumbnailData = thumbnailData
+    }
+    if let lastUsedDate = coder.decodeObject(of: NSDate.self, forKey: "lastUsedDate") as Date? {
+      self.lastUsedDate = lastUsedDate
+    }
+    if let codedContentType = coder.decodeObject(of: NSString.self, forKey: "contentType") as String?
+    {
+      contentType = codedContentType
+    } else {
+      contentType = itemContentType
+    }
+    if let namedLocation = coder.decodeObject(of: NSString.self, forKey: "namedLocation") as String?
+    {
+      self.namedLocation = namedLocation
+    }
+    if let latitude = coder.decodeObject(of: NSNumber.self, forKey: "latitude") {
+      self.latitude = latitude
+    }
+    if let longitude = coder.decodeObject(of: NSNumber.self, forKey: "longitude") {
+      self.longitude = longitude
+    }
+    if let customNames = coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "customKeyNames")
+      as? [String]
+    {
+      for name in customNames {
+        guard let key = CSCustomAttributeKey(keyName: name) else { continue }
+        let value = coder.decodeObject(of: [NSString.self, NSNumber.self, NSDate.self, NSData.self],
+          forKey: "custom." + name)
+        if let value {
+          setValue(value as? any NSSecureCoding, forCustomKey: key)
+        }
+      }
+    }
   }
 
   public func encode(with coder: NSCoder) {
@@ -1231,6 +1291,19 @@ open class CSSearchableItemAttributeSet: NSObject, NSSecureCoding, @unchecked Se
     coder.encode(contentDescription as NSString?, forKey: "contentDescription")
     coder.encode(keywords as NSArray?, forKey: "keywords")
     coder.encode(textContent as NSString?, forKey: "textContent")
+    coder.encode(thumbnailData as NSData?, forKey: "thumbnailData")
+    coder.encode(lastUsedDate as NSDate?, forKey: "lastUsedDate")
+    coder.encode(contentType as NSString?, forKey: "contentType")
+    coder.encode(namedLocation as NSString?, forKey: "namedLocation")
+    coder.encode(latitude, forKey: "latitude")
+    coder.encode(longitude, forKey: "longitude")
+    let customNames = Array(customValues.keys)
+    coder.encode(customNames as NSArray, forKey: "customKeyNames")
+    for (name, value) in customValues {
+      if let object = value as? NSObject {
+        coder.encode(object, forKey: "custom." + name)
+      }
+    }
   }
 
   /// AppIntents uses this hook for IndexedEntity association. The portable
@@ -1301,6 +1374,10 @@ public final class CSSearchableItem: NSObject, NSSecureCoding, @unchecked Sendab
     self.attributeSet = attributeSet
     self.isUpdate = false
     self.updateListenerOptions = []
+    // Apple documents a default expiration of one month from creation.
+    self.expirationDate =
+      Calendar(identifier: .gregorian).date(byAdding: .month, value: 1, to: Date())
+      ?? Date(timeIntervalSinceNow: 30 * 24 * 60 * 60)
     super.init()
   }
 
@@ -1692,6 +1769,446 @@ public final class CSSearchableIndex: NSObject, @unchecked Sendable {
     storage.appEntityDeletes = 0
     storage.lock.unlock()
   }
+
+  /// Documented OpenUIKitHost test hook. Linux has no Spotlight daemon, so
+  /// `CSSearchableIndexDelegate` reindex callbacks are never fired by a system
+  /// indexer. Tests call these methods to exercise the delegate contract
+  /// against the process-local index.
+  @_spi(OpenUIKitHost)
+  public func _requestDelegateReindexAll() {
+    indexDelegate?.searchableIndex(self) {}
+  }
+
+  /// Documented OpenUIKitHost test hook. See `_requestDelegateReindexAll()`.
+  @_spi(OpenUIKitHost)
+  public func _requestDelegateReindex(identifiers: [String]) {
+    indexDelegate?.searchableIndex(
+      self,
+      reindexSearchableItemsWithIdentifiers: identifiers,
+      acknowledgementHandler: {}
+    )
+  }
+
+  fileprivate func itemsMatching(
+    queryString: String,
+    filterQueries: [String]
+  ) throws -> [CSSearchableItem] {
+    let snapshot = _allPortableItems()
+    var matches: [CSSearchableItem]
+    if CSQueryLanguage.looksLikeQueryLanguage(queryString) {
+      let predicate = try CSQueryLanguage.parse(queryString)
+      matches = snapshot.filter { predicate.matches($0) }
+    } else {
+      matches = _searchPortable(queryString)
+    }
+    for filter in filterQueries where !filter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+      let node = try CSQueryLanguage.parse(filter)
+      matches = matches.filter { node.matches($0) }
+    }
+    return matches
+  }
+}
+
+/// Documented Core Spotlight query-language subset evaluated against the
+/// process-local index: `attribute == "value"`, `!=`, `<`, `>`, `<=`, `>=`,
+/// `&&` / `||`, parentheses, and `*` wildcards with `c` (case-insensitive)
+/// and `d` (diacritic-insensitive) modifiers. Unprefixed strings keep the
+/// portable whitespace-separated term matcher.
+fileprivate enum CSQueryLanguage {
+  indirect enum Node {
+    case and(Node, Node)
+    case or(Node, Node)
+    case comparison(attribute: String, op: Op, value: Value, modifiers: Modifiers)
+  }
+
+  enum Op {
+    case eq, ne, lt, le, gt, ge
+  }
+
+  struct Modifiers {
+    var caseInsensitive = false
+    var diacriticInsensitive = false
+  }
+
+  enum Value {
+    case string(String)
+    case number(Double)
+    case wildcard
+  }
+
+  static func looksLikeQueryLanguage(_ raw: String) -> Bool {
+    let pattern =
+      #"InRange\s*\(|&&|\|\||[A-Za-z_][A-Za-z0-9_]*\s*(==|!=|<=|>=|<|>)"#
+    return raw.range(of: pattern, options: .regularExpression) != nil
+  }
+
+  static func parse(_ raw: String) throws -> Node {
+    var parser = Parser(raw)
+    let node = try parser.parseOr()
+    parser.skipWhitespace()
+    guard parser.isAtEnd else {
+      throw CSSearchQueryError(.invalidQuery)
+    }
+    return node
+  }
+
+  struct Parser {
+    let scalars: [Unicode.Scalar]
+    var index = 0
+
+    init(_ raw: String) {
+      self.scalars = Array(raw.unicodeScalars)
+    }
+
+    var isAtEnd: Bool { index >= scalars.count }
+
+    func peek() -> Unicode.Scalar? {
+      index < scalars.count ? scalars[index] : nil
+    }
+
+    mutating func skipWhitespace() {
+      while let scalar = peek(), CharacterSet.whitespacesAndNewlines.contains(scalar) {
+        index += 1
+      }
+    }
+
+    mutating func parseOr() throws -> Node {
+      var node = try parseAnd()
+      while true {
+        skipWhitespace()
+        if consume("||") {
+          node = .or(node, try parseAnd())
+        } else {
+          return node
+        }
+      }
+    }
+
+    mutating func parseAnd() throws -> Node {
+      var node = try parsePrimary()
+      while true {
+        skipWhitespace()
+        if consume("&&") {
+          node = .and(node, try parsePrimary())
+        } else {
+          return node
+        }
+      }
+    }
+
+    mutating func parsePrimary() throws -> Node {
+      skipWhitespace()
+      if consume("(") {
+        let inner = try parseOr()
+        skipWhitespace()
+        guard consume(")") else { throw CSSearchQueryError(.invalidQuery) }
+        return inner
+      }
+      return try parseComparison()
+    }
+
+    mutating func parseComparison() throws -> Node {
+      skipWhitespace()
+      let attribute = try parseIdentifier()
+      skipWhitespace()
+      let op: Op
+      if consume("==") {
+        op = .eq
+      } else if consume("!=") {
+        op = .ne
+      } else if consume("<=") {
+        op = .le
+      } else if consume(">=") {
+        op = .ge
+      } else if consume("<") {
+        op = .lt
+      } else if consume(">") {
+        op = .gt
+      } else {
+        throw CSSearchQueryError(.invalidQuery)
+      }
+      skipWhitespace()
+      let value = try parseValue()
+      var modifiers = Modifiers()
+      while let scalar = peek(), "cdCD".unicodeScalars.contains(scalar) {
+        if scalar == "c" || scalar == "C" { modifiers.caseInsensitive = true }
+        if scalar == "d" || scalar == "D" { modifiers.diacriticInsensitive = true }
+        index += 1
+      }
+      return .comparison(attribute: attribute, op: op, value: value, modifiers: modifiers)
+    }
+
+    mutating func parseIdentifier() throws -> String {
+      skipWhitespace()
+      guard let first = peek(), isIdentStart(first) else {
+        throw CSSearchQueryError(.invalidQuery)
+      }
+      var result = String(Character(first))
+      index += 1
+      while let scalar = peek(), isIdentContinue(scalar) {
+        result.append(Character(scalar))
+        index += 1
+      }
+      return result
+    }
+
+    mutating func parseValue() throws -> Value {
+      skipWhitespace()
+      if consume("*") {
+        return .wildcard
+      }
+      if peek() == "\"" || peek() == "'" {
+        return .string(try parseQuoted())
+      }
+      if let scalar = peek(), (scalar >= "0" && scalar <= "9") || scalar == "-" || scalar == "." {
+        return .number(try parseNumber())
+      }
+      return .string(try parseIdentifier())
+    }
+
+    mutating func parseQuoted() throws -> String {
+      guard let quote = peek(), quote == "\"" || quote == "'" else {
+        throw CSSearchQueryError(.invalidQuery)
+      }
+      index += 1
+      var result = ""
+      var escaped = false
+      while let scalar = peek() {
+        index += 1
+        if escaped {
+          result.append(Character(scalar))
+          escaped = false
+          continue
+        }
+        if scalar == "\\" {
+          escaped = true
+          continue
+        }
+        if scalar == quote {
+          return result
+        }
+        result.append(Character(scalar))
+      }
+      throw CSSearchQueryError(.invalidQuery)
+    }
+
+    mutating func parseNumber() throws -> Double {
+      var raw = ""
+      if peek() == "-" {
+        raw.append("-")
+        index += 1
+      }
+      var sawDigit = false
+      while let scalar = peek(), (scalar >= "0" && scalar <= "9") || scalar == "." {
+        raw.append(Character(scalar))
+        if scalar >= "0" && scalar <= "9" { sawDigit = true }
+        index += 1
+      }
+      guard sawDigit, let value = Double(raw) else {
+        throw CSSearchQueryError(.invalidQuery)
+      }
+      return value
+    }
+
+    mutating func consume(_ token: String) -> Bool {
+      let parts = Array(token.unicodeScalars)
+      guard index + parts.count <= scalars.count else { return false }
+      for (offset, scalar) in parts.enumerated() {
+        if scalars[index + offset] != scalar { return false }
+      }
+      index += parts.count
+      return true
+    }
+
+    func isIdentStart(_ scalar: Unicode.Scalar) -> Bool {
+      (scalar >= "A" && scalar <= "Z") || (scalar >= "a" && scalar <= "z") || scalar == "_"
+    }
+
+    func isIdentContinue(_ scalar: Unicode.Scalar) -> Bool {
+      isIdentStart(scalar) || (scalar >= "0" && scalar <= "9")
+    }
+  }
+
+  static func match(
+    item: CSSearchableItem,
+    attribute: String,
+    op: Op,
+    value: Value,
+    modifiers: Modifiers
+  ) -> Bool {
+    let samples = stringSamples(item: item, attribute: attribute)
+    let numbers = numericSamples(item: item, attribute: attribute)
+    switch value {
+    case .wildcard:
+      let present = !samples.isEmpty || !numbers.isEmpty
+      switch op {
+      case .eq: return present
+      case .ne: return !present
+      default: return false
+      }
+    case .number(let expected):
+      switch op {
+      case .eq: return numbers.contains { almostEqual($0, expected) }
+      case .ne: return !numbers.contains { almostEqual($0, expected) }
+      case .lt: return numbers.contains { $0 < expected }
+      case .le: return numbers.contains { $0 <= expected }
+      case .gt: return numbers.contains { $0 > expected }
+      case .ge: return numbers.contains { $0 >= expected }
+      }
+    case .string(let expected):
+      if op == .lt || op == .le || op == .gt || op == .ge, let expectedNumber = Double(expected) {
+        return match(
+          item: item,
+          attribute: attribute,
+          op: op,
+          value: .number(expectedNumber),
+          modifiers: modifiers
+        )
+      }
+      switch op {
+      case .eq:
+        return samples.contains { wildcardMatch($0, pattern: expected, modifiers: modifiers) }
+      case .ne:
+        return samples.allSatisfy { !wildcardMatch($0, pattern: expected, modifiers: modifiers) }
+      case .lt:
+        return samples.contains { fold($0, modifiers: modifiers) < fold(expected, modifiers: modifiers) }
+      case .le:
+        return samples.contains { fold($0, modifiers: modifiers) <= fold(expected, modifiers: modifiers) }
+      case .gt:
+        return samples.contains { fold($0, modifiers: modifiers) > fold(expected, modifiers: modifiers) }
+      case .ge:
+        return samples.contains { fold($0, modifiers: modifiers) >= fold(expected, modifiers: modifiers) }
+      }
+    }
+  }
+
+  static func almostEqual(_ lhs: Double, _ rhs: Double) -> Bool {
+    abs(lhs - rhs) < 0.000_000_1
+  }
+
+  static func fold(_ value: String, modifiers: Modifiers) -> String {
+    var result = value
+    if modifiers.diacriticInsensitive {
+      result = result.folding(options: .diacriticInsensitive, locale: Locale(identifier: "en_US_POSIX"))
+    }
+    if modifiers.caseInsensitive {
+      result = result.lowercased()
+    }
+    return result
+  }
+
+  static func wildcardMatch(_ value: String, pattern: String, modifiers: Modifiers) -> Bool {
+    let foldedValue = fold(value, modifiers: modifiers)
+    let foldedPattern = fold(pattern, modifiers: modifiers)
+    if !foldedPattern.contains("*") {
+      return foldedValue == foldedPattern
+    }
+    var regex = "^"
+    var escaped = false
+    for character in foldedPattern {
+      if escaped {
+        regex += NSRegularExpression.escapedPattern(for: String(character))
+        escaped = false
+        continue
+      }
+      if character == "\\" {
+        escaped = true
+        continue
+      }
+      if character == "*" {
+        regex += ".*"
+        continue
+      }
+      regex += NSRegularExpression.escapedPattern(for: String(character))
+    }
+    if escaped {
+      regex += NSRegularExpression.escapedPattern(for: "\\")
+    }
+    regex += "$"
+    return foldedValue.range(of: regex, options: .regularExpression) != nil
+  }
+
+  static func stringSamples(item: CSSearchableItem, attribute: String) -> [String] {
+    switch attribute {
+    case "uniqueIdentifier":
+      return [item.uniqueIdentifier]
+    case "domainIdentifier", "domain":
+      return item.domainIdentifier.map { [$0] } ?? []
+    default:
+      break
+    }
+    let attributes = item.attributeSet
+    if let custom = CSCustomAttributeKey(keyName: attribute),
+      let value = attributes.value(forCustomKey: custom)
+    {
+      return stringify(value)
+    }
+    guard let raw = attributes.storage[attribute] else {
+      if attribute == "contentType" || attribute == "itemContentType" {
+        return [attributes.itemContentType]
+      }
+      return []
+    }
+    return stringify(raw)
+  }
+
+  static func numericSamples(item: CSSearchableItem, attribute: String) -> [Double] {
+    let attributes = item.attributeSet
+    guard let raw = attributes.storage[attribute] else { return [] }
+    if let number = raw as? NSNumber {
+      return [number.doubleValue]
+    }
+    if let date = raw as? Date {
+      return [date.timeIntervalSinceReferenceDate]
+    }
+    if let text = raw as? String, let value = Double(text) {
+      return [value]
+    }
+    return []
+  }
+
+  static func stringify(_ raw: Any) -> [String] {
+    if let text = raw as? String {
+      return [text]
+    }
+    if let number = raw as? NSNumber {
+      return [number.stringValue]
+    }
+    if let texts = raw as? [String] {
+      return texts
+    }
+    if let people = raw as? [CSPerson] {
+      return people.flatMap { person -> [String] in
+        ([person.displayName, person.handleIdentifier].compactMap { $0 } + person.handles)
+      }
+    }
+    if let url = raw as? URL {
+      return [url.absoluteString, url.path]
+    }
+    if let type = raw as? UTType {
+      return [type.identifier]
+    }
+    return []
+  }
+}
+
+extension CSQueryLanguage.Node {
+  func matches(_ item: CSSearchableItem) -> Bool {
+    switch self {
+    case .and(let lhs, let rhs):
+      return lhs.matches(item) && rhs.matches(item)
+    case .or(let lhs, let rhs):
+      return lhs.matches(item) || rhs.matches(item)
+    case .comparison(let attribute, let op, let value, let modifiers):
+      return CSQueryLanguage.match(
+        item: item,
+        attribute: attribute,
+        op: op,
+        value: value,
+        modifiers: modifiers
+      )
+    }
+  }
 }
 
 open class CSSearchQueryContext: NSObject, NSSecureCoding, @unchecked Sendable {
@@ -1761,6 +2278,10 @@ open class CSSearchQuery: NSObject, @unchecked Sendable {
         lhs.id == rhs.id
       }
 
+      public static func > (lhs: Item, rhs: Item) -> Bool {
+        rhs < lhs
+      }
+
       public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
       }
@@ -1814,7 +2335,18 @@ open class CSSearchQuery: NSObject, @unchecked Sendable {
       completionHandler?(CSSearchQueryError(.cancelled))
       return
     }
-    let matches = searchIndex._searchPortable(queryString)
+    let matches: [CSSearchableItem]
+    do {
+      matches = try searchIndex.itemsMatching(
+        queryString: queryString,
+        filterQueries: queryContext?.filterQueries ?? []
+      )
+    } catch {
+      foundItemCount = 0
+      results = Results(items: [])
+      completionHandler?(error)
+      return
+    }
     foundItemCount = matches.count
     results = Results(items: matches.map { Results.Item(item: $0) })
     if !matches.isEmpty {
@@ -1931,6 +2463,10 @@ public final class CSUserQuery: CSSearchQuery, @unchecked Sendable {
       lhs.id == rhs.id
     }
 
+    public static func > (lhs: Item, rhs: Item) -> Bool {
+      rhs < lhs
+    }
+
     public func hash(into hasher: inout Hasher) {
       hasher.combine(id)
     }
@@ -1954,6 +2490,10 @@ public final class CSUserQuery: CSSearchQuery, @unchecked Sendable {
 
     public static func == (lhs: Suggestion, rhs: Suggestion) -> Bool {
       lhs.id == rhs.id
+    }
+
+    public static func > (lhs: Suggestion, rhs: Suggestion) -> Bool {
+      rhs < lhs
     }
 
     public func hash(into hasher: inout Hasher) {

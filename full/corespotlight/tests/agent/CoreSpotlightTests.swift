@@ -212,6 +212,10 @@ func testPersonAndContactIdentifier() {
 
 func testCustomAttributeKey() {
   precondition(CSCustomAttributeKey(keyName: "") == nil)
+  precondition(CSCustomAttributeKey(keyName: "kMDItemTitle") == nil)
+  precondition(CSCustomAttributeKey(keyName: "_kMDItemSecret") == nil)
+  precondition(CSCustomAttributeKey(keyName: "1leadingDigit") == nil)
+  precondition(CSCustomAttributeKey(keyName: "has space") == nil)
   let key = CSCustomAttributeKey(keyName: "org.example.tag")
   precondition(key != nil)
   precondition(key!.keyName == "org.example.tag")
@@ -231,6 +235,14 @@ func testCustomAttributeKey() {
   precondition(full!.isSearchableByDefault)
   precondition(full!.isUnique)
   precondition(full!.isMultiValued)
+  let uniqueSearchable = CSCustomAttributeKey(
+    keyName: "org.example.uniqueSearchable",
+    searchable: true,
+    searchableByDefault: false,
+    unique: true,
+    multiValued: false
+  )
+  precondition(uniqueSearchable == nil)
   let restored = csRoundTrip(full!)
   precondition(restored.keyName == "org.example.multi")
   precondition(restored.isSearchable == false)
@@ -511,12 +523,23 @@ func testAttributeSetMoveAndCoding() {
   precondition(dest.title == "Moved")
   precondition(dest.keywords == ["k"])
   precondition(dest.value(forCustomKey: key) as? NSString == "blue")
+  source.thumbnailData = Data([7, 8, 9])
+  source.lastUsedDate = Date(timeIntervalSince1970: 99)
+  source.namedLocation = "Paris"
+  source.latitude = 48.8
+  source.longitude = 2.3
   let restored = csRoundTrip(source)
   precondition(restored.itemContentType == "public.text")
   precondition(restored.title == "Moved")
   precondition(restored.displayName == "DN")
   precondition(restored.keywords == ["k"])
   precondition(restored.textContent == "body")
+  precondition(restored.thumbnailData == Data([7, 8, 9]))
+  precondition(restored.lastUsedDate == Date(timeIntervalSince1970: 99))
+  precondition(restored.namedLocation == "Paris")
+  precondition(restored.latitude == 48.8)
+  precondition(restored.longitude == 2.3)
+  precondition(restored.value(forCustomKey: key) as? NSString == "blue")
 }
 
 func testCustomAttributeValues() {
@@ -546,6 +569,10 @@ func testSearchableItemAndUpdateOptions() {
   precondition(item.domainIdentifier == "articles")
   precondition(item.attributeSet.title == "Portable Swift runtime")
   precondition(item.isUpdate == false)
+  let defaultExpiration = item.expirationDate
+  precondition(defaultExpiration != nil)
+  let monthFromNow = Calendar(identifier: .gregorian).date(byAdding: .month, value: 1, to: Date())!
+  precondition(abs(defaultExpiration!.timeIntervalSince(monthFromNow)) < 5)
   precondition(item.updateListenerOptions.isEmpty)
   item.isUpdate = true
   item.updateListenerOptions = [.priority, .summarization]
@@ -765,15 +792,9 @@ func testIndexProtectionClassAndDelegate() {
   }
   let delegate = ProbeDelegate()
   protected.indexDelegate = delegate
-  protected.indexDelegate?.searchableIndex(protected) {
-    delegate.reindexedAll = true
-  }
+  protected._requestDelegateReindexAll()
   precondition(delegate.reindexedAll)
-  protected.indexDelegate?.searchableIndex(
-    protected,
-    reindexSearchableItemsWithIdentifiers: ["a"],
-    acknowledgementHandler: {}
-  )
+  protected._requestDelegateReindex(identifiers: ["a"])
   precondition(delegate.reindexedIDs == ["a"])
   protected.indexDelegate?.searchableIndexDidThrottle(protected)
   protected.indexDelegate?.searchableIndexDidFinishThrottle(protected)
@@ -1094,4 +1115,298 @@ func testUserQueryComparableWrappers() {
   precondition(r1 != r2)
   precondition(r1.id.hasPrefix("item:"))
   precondition(r2.id.hasPrefix("suggestion:"))
+}
+
+func testComparableRangeOperators() {
+  let itemA = CSUserQuery.Item(item: csSampleItem(id: "a"))
+  let itemB = CSUserQuery.Item(item: csSampleItem(id: "b"))
+  precondition(itemB > itemA)
+  precondition(itemA <= itemB)
+  precondition(itemB >= itemA)
+  precondition((itemA..<itemB).contains(itemA))
+  precondition(!(itemA..<itemB).contains(itemB))
+  precondition((itemA...itemB).contains(itemB))
+  precondition((itemA...).contains(itemB))
+  precondition((..<itemB).contains(itemA))
+  precondition((...itemB).contains(itemB))
+
+  let resultA = CSSearchQuery.Results.Item(item: csSampleItem(id: "a"))
+  let resultB = CSSearchQuery.Results.Item(item: csSampleItem(id: "b"))
+  precondition(resultB > resultA)
+  precondition(resultA <= resultB)
+  precondition(resultB >= resultA)
+  precondition((resultA..<resultB).contains(resultA))
+  precondition((resultA...resultB).contains(resultB))
+  precondition((resultA...).contains(resultB))
+  precondition((..<resultB).contains(resultA))
+  precondition((...resultB).contains(resultB))
+
+  let suggestionA = CSUserQuery.Suggestion(suggestion: CSSuggestion(kind: .none, text: "a"))
+  let suggestionB = CSUserQuery.Suggestion(suggestion: CSSuggestion(kind: .none, text: "b"))
+  precondition(suggestionB > suggestionA)
+  precondition(suggestionA <= suggestionB)
+  precondition(suggestionB >= suggestionA)
+  precondition((suggestionA..<suggestionB).contains(suggestionA))
+  precondition((suggestionA...suggestionB).contains(suggestionB))
+  precondition((suggestionA...).contains(suggestionB))
+  precondition((..<suggestionB).contains(suggestionA))
+  precondition((...suggestionB).contains(suggestionB))
+}
+
+func testSearchQueryLanguage() {
+  csResetDefaultIndex()
+  let paris = csSampleItem(id: "paris", title: "Paris")
+  paris.attributeSet.contentDescription = "capital"
+  paris.attributeSet.duration = 42
+  paris.attributeSet.keywords = ["travel", "france"]
+  let lowercase = csSampleItem(id: "lowercase", title: "paris")
+  lowercase.attributeSet.contentDescription = "city"
+  let accent = csSampleItem(id: "accent", title: "Frédéric")
+  accent.domainIdentifier = "people"
+  accent.attributeSet.contentDescription = nil
+  let other = csSampleItem(id: "other", domain: "notes", title: "London")
+  other.attributeSet.duration = 10
+  other.attributeSet.contentDescription = nil
+  _ = csAwait {
+    try await CSSearchableIndex.default().indexSearchableItems([
+      paris, lowercase, accent, other,
+    ])
+  }
+
+  func run(_ queryString: String) -> [String] {
+    let query = CSSearchQuery(queryString: queryString, queryContext: nil)
+    var found: [CSSearchableItem] = []
+    query.foundItemsHandler = { found = $0 }
+    query.start()
+    return found.map(\.uniqueIdentifier).sorted()
+  }
+
+  precondition(run("title == \"Paris\"") == ["paris"])
+  precondition(run("title == \"Paris\"c") == ["lowercase", "paris"])
+  precondition(run("title == \"par*\"c") == ["lowercase", "paris"])
+  precondition(run("title == \"*ris\"") == ["lowercase", "paris"])
+  precondition(run("title == \"Frédéric\"d") == ["accent"])
+  precondition(run("title == \"Frederic\"cd") == ["accent"])
+  precondition(run("duration > 20") == ["paris"])
+  precondition(run("duration <= 10") == ["other"])
+  precondition(run("title == \"Paris\" && contentDescription == \"capital\"") == ["paris"])
+  precondition(run("title == \"Paris\" || title == \"London\"") == ["other", "paris"])
+  precondition(
+    run("(title == \"Paris\"c || title == \"London\") && duration >= 10")
+      == ["other", "paris"]
+  )
+  precondition(run("keywords == \"france\"") == ["paris"])
+  precondition(run("domainIdentifier == notes") == ["other"])
+  precondition(run("title == *") == ["accent", "lowercase", "other", "paris"])
+  precondition(run("contentDescription != *") == ["accent", "other"])
+
+  let invalid = CSSearchQuery(queryString: "title ==", queryContext: nil)
+  var seen: CSSearchQueryError.Code?
+  invalid.completionHandler = { error in
+    seen = (error as? CSSearchQueryError)?.code
+  }
+  invalid.start()
+  precondition(seen == .invalidQuery)
+
+  let context = CSSearchQueryContext()
+  context.filterQueries = ["domainIdentifier == articles"]
+  let filtered = CSSearchQuery(queryString: "title == \"Paris\"c", queryContext: context)
+  var filteredIDs: [String] = []
+  filtered.foundItemsHandler = { filteredIDs = $0.map(\.uniqueIdentifier) }
+  filtered.start()
+  precondition(filteredIDs.sorted() == ["lowercase", "paris"])
+}
+
+func testAsyncSequenceProtocolDefaults() {
+  csResetDefaultIndex()
+  _ = csAwait {
+    try await CSSearchableIndex.default().indexSearchableItems([
+      csSampleItem(id: "a", title: "alpha"),
+      csSampleItem(id: "b", title: "beta"),
+    ])
+  }
+  let query = CSSearchQuery(queryString: "title == \"*\"", queryContext: nil)
+  query.start()
+  let user = CSUserQuery(userQueryString: "title == \"*\"", userQueryContext: nil)
+  user.start()
+
+  let resultsWork = csAwait { () async throws -> Bool in
+    let allNamed = try await query.results.allSatisfy { !$0.id.isEmpty }
+    precondition(allNamed)
+    var mappedIDs: [String] = []
+    for try await id in query.results.map({ $0.id }) { mappedIDs.append(id) }
+    precondition(mappedIDs.sorted() == ["a", "b"])
+    var throwingIDs: [String] = []
+    for try await id in query.results.map({ (item) async throws -> String in item.id }) {
+      throwingIDs.append(id)
+    }
+    precondition(throwingIDs.count == 2)
+    var compactIDs: [String] = []
+    for try await id in query.results.compactMap({ $0.id == "missing" ? nil : $0.id }) {
+      compactIDs.append(id)
+    }
+    precondition(compactIDs.sorted() == ["a", "b"])
+    var throwingCompactIDs: [String] = []
+    for try await id in query.results.compactMap({ (item) async throws -> String? in item.id }) {
+      throwingCompactIDs.append(id)
+    }
+    precondition(throwingCompactIDs.count == 2)
+    let maxBy = try await query.results.max(by: { $0.id < $1.id })
+    precondition(maxBy?.id == "b")
+    let minBy = try await query.results.min(by: { $0.id < $1.id })
+    precondition(minBy?.id == "a")
+    let maxItem = try await query.results.max()
+    precondition(maxItem?.id == "b")
+    let minItem = try await query.results.min()
+    precondition(minItem?.id == "a")
+    var dropped: [String] = []
+    for try await item in query.results.drop(while: { $0.id == "a" }) {
+      dropped.append(item.id)
+    }
+    precondition(!dropped.isEmpty)
+    let firstB = try await query.results.first(where: { $0.id == "b" })
+    precondition(firstB?.id == "b")
+    var filtered: [String] = []
+    for try await item in query.results.filter({ $0.id == "a" }) {
+      filtered.append(item.id)
+    }
+    precondition(filtered == ["a"])
+    var prefixedWhile: [String] = []
+    let keepBoth: @Sendable (CSSearchQuery.Results.Item) async -> Bool = { item in
+      item.id == "a" || item.id == "b"
+    }
+    for try await item in try query.results.prefix(while: keepBoth) {
+      prefixedWhile.append(item.id)
+    }
+    precondition(prefixedWhile.count == 2)
+    var prefixed: [String] = []
+    for try await item in query.results.prefix(1) {
+      prefixed.append(item.id)
+    }
+    precondition(prefixed.count == 1)
+    let reduced = try await query.results.reduce(0) { partial, item in partial + item.id.count }
+    precondition(reduced == 2)
+    let reducedInto = try await query.results.reduce(into: [String]()) { $0.append($1.id) }
+    precondition(reducedInto.sorted() == ["a", "b"])
+    var flatIDs: [String] = []
+    for try await id in query.results.flatMap({ item -> AsyncStream<String> in
+      AsyncStream { continuation in
+        continuation.yield(item.id)
+        continuation.finish()
+      }
+    }) {
+      flatIDs.append(id)
+    }
+    precondition(flatIDs.sorted() == ["a", "b"])
+    var sameFailureFlat: [String] = []
+    for try await item in query.results.flatMap({ _ in query.results }) {
+      sameFailureFlat.append(item.id)
+    }
+    precondition(!sameFailureFlat.isEmpty)
+    var throwingFlat: [String] = []
+    for try await item in query.results.flatMap({ (item) async throws -> CSSearchQuery.Results in
+      _ = item
+      return query.results
+    }) {
+      throwingFlat.append(item.id)
+    }
+    precondition(!throwingFlat.isEmpty)
+    var droppedFirst: [String] = []
+    for try await item in query.results.dropFirst(1) {
+      droppedFirst.append(item.id)
+    }
+    precondition(droppedFirst.count == 1)
+    var iterator = query.results.makeAsyncIterator()
+    _ = try await iterator.next(isolation: nil)
+    return true
+  }
+  guard case .success(true) = resultsWork else {
+    preconditionFailure("results async defaults failed")
+  }
+
+  let userWork = csAwait { () async throws -> Bool in
+    let responsesOk = try await user.responses.allSatisfy { _ in true }
+    precondition(responsesOk)
+    let suggestionsOk = try await user.suggestions.allSatisfy { _ in true }
+    precondition(suggestionsOk)
+    var responseIDs: [String] = []
+    for try await id in user.responses.map({ $0.id }) { responseIDs.append(id) }
+    precondition(!responseIDs.isEmpty)
+    var throwingResponseIDs: [String] = []
+    for try await id in user.responses.map({ (response) async throws -> String in response.id }) {
+      throwingResponseIDs.append(id)
+    }
+    precondition(throwingResponseIDs.count == responseIDs.count)
+    var compactResponses: [String] = []
+    for try await id in user.responses.compactMap({ $0.id }) { compactResponses.append(id) }
+    precondition(compactResponses.count == responseIDs.count)
+    var throwingCompactResponses: [String] = []
+    for try await id in user.responses.compactMap({ (response) async throws -> String? in response.id }) {
+      throwingCompactResponses.append(id)
+    }
+    precondition(throwingCompactResponses.count == responseIDs.count)
+    _ = try await user.responses.max(by: { $0.id < $1.id })
+    _ = try await user.responses.min(by: { $0.id < $1.id })
+    _ = try await user.suggestions.max(by: { $0.id < $1.id })
+    _ = try await user.suggestions.min(by: { $0.id < $1.id })
+    _ = try await user.suggestions.max()
+    _ = try await user.suggestions.min()
+    for try await _ in user.responses.drop(while: { _ in false }) { break }
+    for try await _ in user.suggestions.drop(while: { _ in false }) { break }
+    _ = try await user.responses.first(where: { _ in true })
+    _ = try await user.suggestions.first(where: { _ in true })
+    for try await _ in user.responses.filter({ _ in true }) { break }
+    for try await _ in user.suggestions.filter({ _ in true }) { break }
+    for try await _ in try user.responses.prefix(while: { (_: CSUserQuery.Response) async -> Bool in true }) { break }
+    for try await _ in try user.suggestions.prefix(while: { (_: CSUserQuery.Suggestion) async -> Bool in true }) { break }
+    for try await _ in user.responses.prefix(1) { break }
+    for try await _ in user.suggestions.prefix(1) { break }
+    _ = try await user.responses.reduce(0) { partial, _ in partial + 1 }
+    _ = try await user.suggestions.reduce(0) { partial, _ in partial + 1 }
+    _ = try await user.responses.reduce(into: 0) { partial, _ in partial += 1 }
+    _ = try await user.suggestions.reduce(into: 0) { partial, _ in partial += 1 }
+    for try await _ in user.responses.flatMap({ _ in AsyncStream<String> { $0.finish() } }) {}
+    for try await _ in user.suggestions.flatMap({ _ in AsyncStream<String> { $0.finish() } }) {}
+    for try await _ in user.responses.flatMap({ _ in user.responses }) {}
+    for try await _ in user.suggestions.flatMap({ _ in user.suggestions }) {}
+    for try await _ in user.responses.flatMap({ _ throws -> CSUserQuery.Responses in user.responses })
+    {}
+    for try await _ in user.suggestions.flatMap({ _ throws -> CSUserQuery.Suggestions in
+      user.suggestions
+    }) {}
+    for try await _ in user.responses.dropFirst() { break }
+    for try await _ in user.suggestions.dropFirst() { break }
+    _ = try await user.responses.contains(where: { _ in true })
+    _ = try await user.suggestions.contains(where: { _ in true })
+    if let first = try await user.responses.first(where: { _ in true }) {
+      _ = try await user.responses.contains(first)
+    }
+    _ = try await user.suggestions.contains(where: { _ in false })
+    var suggestionIterator = user.suggestions.makeAsyncIterator()
+    _ = try await suggestionIterator.next(isolation: nil)
+    var responseIterator = user.responses.makeAsyncIterator()
+    _ = try await responseIterator.next(isolation: nil)
+    var mappedSuggestions: [String] = []
+    for try await id in user.suggestions.map({ $0.id }) { mappedSuggestions.append(id) }
+    precondition(mappedSuggestions.isEmpty)
+    var throwingSuggestionIDs: [String] = []
+    for try await id in user.suggestions.map({ (suggestion) async throws -> String in suggestion.id }) {
+      throwingSuggestionIDs.append(id)
+    }
+    precondition(throwingSuggestionIDs.isEmpty)
+    var compactSuggestions: [String] = []
+    for try await id in user.suggestions.compactMap({ $0.id }) { compactSuggestions.append(id) }
+    precondition(compactSuggestions.isEmpty)
+    var throwingCompactSuggestions: [String] = []
+    for try await id in user.suggestions.compactMap({ (suggestion) async throws -> String? in
+      suggestion.id
+    }) {
+      throwingCompactSuggestions.append(id)
+    }
+    precondition(throwingCompactSuggestions.isEmpty)
+    return true
+  }
+  guard case .success(true) = userWork else {
+    preconditionFailure("user query async defaults failed")
+  }
 }
