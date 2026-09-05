@@ -434,11 +434,71 @@ public final class HKUnit: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
         return HKUnit(dimension: .amount, scaleToSI: factor, unitString: symbol)
     }
 
+    public convenience init(from string: String) {
+        let parsed = HKUnit.unit(string) ?? HKUnit(dimension: .none, scaleToSI: 1, unitString: "")
+        self.init(
+            dimension: parsed.dimension,
+            scaleToSI: parsed.scaleToSI,
+            offsetToSI: parsed.offsetToSI,
+            unitString: parsed.unitString.isEmpty ? string : parsed.unitString
+        )
+    }
+
+    public convenience init(fromString string: String) {
+        self.init(from: string)
+    }
+
+    public convenience init(from energyFormatterUnit: EnergyFormatter.Unit) {
+        let unit: HKUnit
+        switch energyFormatterUnit {
+        case .kilocalorie: unit = .kilocalorie()
+        case .calorie: unit = .calorie()
+        default: unit = .joule()
+        }
+        self.init(dimension: unit.dimension, scaleToSI: unit.scaleToSI, offsetToSI: unit.offsetToSI, unitString: unit.unitString)
+    }
+
+    public convenience init(fromEnergyFormatterUnit energyFormatterUnit: EnergyFormatter.Unit) {
+        self.init(from: energyFormatterUnit)
+    }
+
+    public convenience init(from lengthFormatterUnit: LengthFormatter.Unit) {
+        let unit: HKUnit
+        switch lengthFormatterUnit {
+        case .mile: unit = .mile()
+        case .yard: unit = .yard()
+        case .foot: unit = .foot()
+        case .inch: unit = .inch()
+        case .millimeter: unit = .meterUnit(with: .milli)
+        case .centimeter: unit = .meterUnit(with: .centi)
+        case .kilometer: unit = .meterUnit(with: .kilo)
+        default: unit = .meter()
+        }
+        self.init(dimension: unit.dimension, scaleToSI: unit.scaleToSI, offsetToSI: unit.offsetToSI, unitString: unit.unitString)
+    }
+
+    public convenience init(fromLengthFormatterUnit lengthFormatterUnit: LengthFormatter.Unit) {
+        self.init(from: lengthFormatterUnit)
+    }
+
+    public convenience init(from massFormatterUnit: MassFormatter.Unit) {
+        let unit: HKUnit
+        switch massFormatterUnit {
+        case .pound: unit = .pound()
+        case .ounce: unit = .ounce()
+        case .stone: unit = .stone()
+        case .kilogram: unit = .gramUnit(with: .kilo)
+        default: unit = .gram()
+        }
+        self.init(dimension: unit.dimension, scaleToSI: unit.scaleToSI, offsetToSI: unit.offsetToSI, unitString: unit.unitString)
+    }
+
+    public convenience init(fromMassFormatterUnit massFormatterUnit: MassFormatter.Unit) {
+        self.init(from: massFormatterUnit)
+    }
+
     public class func unit(_ unitString: String) -> HKUnit? {
-        // Only the factories above are a closed Linux conversion table.
-        // Arbitrary Apple unit strings are not reverse-engineered here.
-        _ = unitString
-        return nil
+        HKUnitParser.parse(unitString)
     }
 
     public class func energyFormatterUnit(from unit: HKUnit) -> EnergyFormatter.Unit {
@@ -464,5 +524,109 @@ public final class HKUnit: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
         if unit.isEqual(stone()) { return .stone }
         if unit.isEqual(gramUnit(with: .kilo)) { return .kilogram }
         return .gram
+    }
+}
+
+enum HKUnitParser {
+    static func parse(_ string: String) -> HKUnit? {
+        let trimmed = string.trimmingCharacters(in: .whitespaces)
+        if trimmed.isEmpty { return nil }
+        return parseExpression(trimmed)
+    }
+
+    private static func parseExpression(_ string: String) -> HKUnit? {
+        if let atom = atom(string) { return atom }
+        if let slash = splitTop(string, sep: "/") {
+            guard let lhs = parseExpression(slash.0), let rhs = parseExpression(slash.1) else { return nil }
+            return lhs.unitDivided(by: rhs)
+        }
+        if let star = splitTop(string, sep: "*") {
+            guard let lhs = parseExpression(star.0), let rhs = parseExpression(star.1) else { return nil }
+            return lhs.unitMultiplied(by: rhs)
+        }
+        if string.hasPrefix("("), string.hasSuffix(")") {
+            return parseExpression(String(string.dropFirst().dropLast()))
+        }
+        return atom(string)
+    }
+
+    private static func splitTop(_ string: String, sep: Character) -> (String, String)? {
+        var depth = 0
+        var index = string.startIndex
+        while index < string.endIndex {
+            let ch = string[index]
+            if ch == "(" { depth += 1 }
+            if ch == ")" { depth -= 1 }
+            if ch == sep, depth == 0, index != string.startIndex {
+                let left = String(string[string.startIndex..<index])
+                let right = String(string[string.index(after: index)...])
+                if !left.isEmpty, !right.isEmpty { return (left, right) }
+            }
+            index = string.index(after: index)
+        }
+        return nil
+    }
+
+    private static func atom(_ string: String) -> HKUnit? {
+        let known: [String: HKUnit] = [
+            "g": .gram(),
+            "kg": .gramUnit(with: .kilo),
+            "mg": .gramUnit(with: .milli),
+            "m": .meter(),
+            "cm": .meterUnit(with: .centi),
+            "mm": .meterUnit(with: .milli),
+            "km": .meterUnit(with: .kilo),
+            "s": .second(),
+            "min": .minute(),
+            "hr": .hour(),
+            "d": .day(),
+            "L": .liter(),
+            "mL": .literUnit(with: .milli),
+            "ml": .literUnit(with: .milli),
+            "J": .joule(),
+            "kJ": .jouleUnit(with: .kilo),
+            "cal": .calorie(),
+            "kcal": .kilocalorie(),
+            "count": .count(),
+            "%": .percent(),
+            "degC": .degreeCelsius(),
+            "degF": .degreeFahrenheit(),
+            "K": .kelvin(),
+            "mmHg": .millimeterOfMercury(),
+            "inHg": .inchesOfMercury(),
+            "Pa": .pascal(),
+            "atm": .atmosphere(),
+            "W": .watt(),
+            "Hz": .hertz(),
+            "V": .volt(),
+            "S": .siemen(),
+            "lx": .lux(),
+            "rad": .radianAngle(),
+            "deg": .degreeAngle(),
+            "in": .inch(),
+            "ft": .foot(),
+            "mi": .mile(),
+            "yd": .yard(),
+            "oz": .ounce(),
+            "lb": .pound(),
+            "st": .stone(),
+            "IU": .internationalUnit(),
+            "dpt": .diopter(),
+            "dBASPL": .decibelAWeightedSoundPressureLevel(),
+            "dBHL": .decibelHearingLevel(),
+            "appleEffortScore": .appleEffortScore(),
+            "cmAq": .centimeterOfWater(),
+            "fl_oz_us": .fluidOunceUS(),
+            "pt_us": .pintUS(),
+            "cup_us": .cupUS()
+        ]
+        if let unit = known[string] { return unit }
+        if string.hasSuffix("2"), let base = parseExpression(String(string.dropLast())) {
+            return base.unitRaised(toPower: 2)
+        }
+        if string.hasSuffix("3"), let base = parseExpression(String(string.dropLast())) {
+            return base.unitRaised(toPower: 3)
+        }
+        return nil
     }
 }

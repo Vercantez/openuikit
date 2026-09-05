@@ -1,0 +1,42 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 9,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/GroupActivities.symbols.json",
+      "relationshipCount": 376,
+      "sha256": "5d9eafac9203a8d84813e168d67e7522fb9343a977604773c723c13fcfd4a4a3",
+      "symbolCount": 296
+    },
+    {
+      "path": "reference/symbol-graphs/GroupActivities@AVFoundation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "29b1d457e3b98c41569d57dc3df8296e0e78af61120e84b2008c9f986be1599a",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/GroupActivities@Foundation.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "07fc10c1de295c84790469ca32a6af28a6adc3fdd2046584be2831fe8d140494",
+      "symbolCount": 2
+    },
+    {
+      "path": "reference/symbol-graphs/_GroupActivities_UIKit@GroupActivities.symbols.json",
+      "relationshipCount": 39,
+      "sha256": "e4f7e7f048dc4831a42ea57986a1090d807ea4e6a442cfdf8d45438c46ad060b",
+      "symbolCount": 14
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "GroupActivities",
+  "relationshipCount": 418,
+  "relationshipMultisetSHA256": "dbc6b7f726833668f6fb9e073ae7870a7b5d868f13135a32c15f4772eacfdacc",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 313,
+  "symbolMultisetSHA256": "d93adccc620cc90d2441b89ca0c4beb79cc7da2504b922745b90f3ff7990de34",
+  "target": "arm64-apple-ios26.0"
+}

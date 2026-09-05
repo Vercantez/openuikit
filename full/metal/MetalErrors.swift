@@ -100,3 +100,52 @@ extension MTLCommandBufferError.Code {
         (error as? MTLCommandBufferError)?.code == match
     }
 }
+
+/// CPU-reference pipeline / descriptor validation. This is not an Apple
+/// `MTLRenderPipelineError` domain (that identifier is absent from the
+/// iPhoneOS 26.1 Swift graph). Callers must not treat the raw value as ABI.
+public struct MTLCPUValidationError: Error, CustomStringConvertible, Equatable {
+    public let reason: String
+
+    public init(_ reason: String) {
+        self.reason = reason
+    }
+
+    public var description: String { reason }
+}
+
+public struct MTLIOError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
+    public enum Code: Int, Hashable, Sendable {
+        case urlInvalid = 1
+        case `internal` = 2
+    }
+
+    public let code: Code
+    public let userInfo: [String: Any]
+
+    public init(_ code: Code, userInfo: [String: Any] = [:]) {
+        self.code = code
+        self.userInfo = userInfo
+    }
+
+    public static var errorDomain: String { MTLIOErrorDomain }
+    public var errorCode: Int { code.rawValue }
+    public var errorUserInfo: [String: Any] { userInfo }
+
+    public static let urlInvalid = Code.urlInvalid
+    public static let `internal` = Code.internal
+
+    public static func == (lhs: MTLIOError, rhs: MTLIOError) -> Bool {
+        lhs.code == rhs.code
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+    }
+}
+
+extension MTLIOError.Code {
+    public static func ~= (match: MTLIOError.Code, error: any Error) -> Bool {
+        (error as? MTLIOError)?.code == match
+    }
+}

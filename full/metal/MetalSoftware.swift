@@ -3,7 +3,7 @@ import Foundation
 /// MetalKit writes `MTLTextureDescriptor.storageMode` (and the sibling
 /// mode fields) without updating `resourceOptions`. The created resource
 /// must report those descriptor fields, not only the option bits.
-fileprivate func metalResourceOptions(from descriptor: MTLTextureDescriptor) -> MTLResourceOptions {
+func metalResourceOptions(from descriptor: MTLTextureDescriptor) -> MTLResourceOptions {
     var options = descriptor.resourceOptions
     options.remove(.storageModePrivate)
     options.remove(.storageModeMemoryless)
@@ -41,13 +41,13 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
     private var allocated: Int = 0
     private var nextResourceID: UInt64 = 1
 
-    var name: String { "OpenUIKit Software Metal" }
+    var name: String { "OpenUIKit CPU Reference" }
     var registryID: UInt64 { 0x4F55494B4D544C01 }
-    var maxThreadsPerThreadgroup: MTLSize { MTLSize(width: 1, height: 1, depth: 1) }
+    var maxThreadsPerThreadgroup: MTLSize { MTLSize(width: 64, height: 1, depth: 1) }
     var hasUnifiedMemory: Bool { true }
     var recommendedMaxWorkingSetSize: UInt64 { 256 * 1024 * 1024 }
     var maxBufferLength: Int { 256 * 1024 * 1024 }
-    var maxThreadgroupMemoryLength: Int { 0 }
+    var maxThreadgroupMemoryLength: Int { 32 * 1024 }
     var maxArgumentBufferSamplerCount: Int { 16 }
     var argumentBuffersSupport: MTLArgumentBuffersTier { .tier1 }
     var readWriteTextureSupport: MTLReadWriteTextureTier { .tierNone }
@@ -151,7 +151,9 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
             options: options,
             storage: storage,
             ownsStorage: true,
-            deallocator: nil
+            deallocator: nil,
+            heap: nil,
+            heapOffset: 0
         )
     }
 
@@ -167,8 +169,31 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
         return buffer
     }
 
+    func makeBuffer(
+        bytesNoCopy pointer: UnsafeMutableRawPointer,
+        length: Int,
+        options: MTLResourceOptions = [],
+        deallocator: ((UnsafeMutableRawPointer, Int) -> Void)? = nil
+    ) -> (any MTLBuffer)? {
+        guard length >= 0 else { return nil }
+        noteAllocated(length)
+        return LinuxMTLBuffer(
+            device: self,
+            length: length,
+            options: options,
+            storage: pointer,
+            ownsStorage: false,
+            deallocator: deallocator,
+            heap: nil,
+            heapOffset: 0
+        )
+    }
+
     func makeTexture(descriptor: MTLTextureDescriptor) -> (any MTLTexture)? {
-        guard descriptor.width > 0, descriptor.height > 0 else { return nil }
+        guard MetalCPULayout.isValidTextureDescriptor(descriptor) else { return nil }
+        if descriptor.sampleCount != 1, !supportsTextureSampleCount(descriptor.sampleCount) {
+            return nil
+        }
         let bytes = LinuxMTLTexture.storageByteCount(descriptor: descriptor)
         let storage = UnsafeMutableRawPointer.allocate(byteCount: max(bytes, 1), alignment: 16)
         storage.initializeMemory(as: UInt8.self, repeating: 0, count: max(bytes, 1))
@@ -180,7 +205,9 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
             ownsStorage: true,
             parentBuffer: nil,
             bufferOffset: 0,
-            bufferBytesPerRow: 0
+            bufferBytesPerRow: 0,
+            heap: nil,
+            heapOffset: 0
         )
     }
 
@@ -192,15 +219,28 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
         LinuxMTLDepthStencilState(device: self, descriptor: descriptor, resourceID: nextID())
     }
 
+    func makeHeap(descriptor: MTLHeapDescriptor) -> (any MTLHeap)? {
+        guard descriptor.size >= 0 else { return nil }
+        return LinuxMTLHeap(device: self, descriptor: descriptor)
+    }
+
     func makeDefaultLibrary() -> (any MTLLibrary)? {
         nil
+    }
+
+    func makeDefaultLibrary(bundle: Bundle) throws -> any MTLLibrary {
+        _ = bundle
+        throw metalUnsupportedLibraryError(
+            .fileNotFound,
+            reason: "Linux Metal has no default metallib in the process bundle"
+        )
     }
 
     func makeLibrary(source: String, options: MTLCompileOptions?) throws -> any MTLLibrary {
         _ = (source, options)
         throw metalUnsupportedLibraryError(
-            .unsupported,
-            reason: "Linux Metal has no AIR/Metal shader compiler"
+            .compileFailure,
+            reason: "no shader compiler"
         )
     }
 
@@ -212,12 +252,55 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
         )
     }
 
+    func makeLibrary(filepath: String) throws -> any MTLLibrary {
+        _ = filepath
+        throw metalUnsupportedLibraryError(
+            .fileNotFound,
+            reason: "Linux Metal cannot load Apple metallib binaries"
+        )
+    }
+
+    func makeComputePipelineState(function computeFunction: any MTLFunction) throws -> any MTLComputePipelineState {
+        guard let function = computeFunction as? LinuxMTLFunction, function.isCPUBuiltin else {
+            throw metalUnsupportedLibraryError(
+                .compileFailure,
+                reason: "no shader compiler"
+            )
+        }
+        return LinuxMTLComputePipelineState(device: self, function: function)
+    }
+
+    func makeComputePipelineState(descriptor: MTLComputePipelineDescriptor) throws -> any MTLComputePipelineState {
+        guard let function = descriptor.computeFunction else {
+            throw MTLCPUValidationError("compute pipeline descriptor has no compute function")
+        }
+        return try makeComputePipelineState(function: function)
+    }
+
+    func makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor) throws -> any MTLRenderPipelineState {
+        try validateRenderPipeline(descriptor)
+        return LinuxMTLRenderPipelineState(device: self, descriptor: descriptor)
+    }
+
     func makeEvent() -> (any MTLEvent)? {
         LinuxMTLEvent(device: self)
     }
 
     func makeFence() -> (any MTLFence)? {
         LinuxMTLFence(device: self)
+    }
+
+    func makeArgumentEncoder(arguments: [MTLArgumentDescriptor]) -> (any MTLArgumentEncoder)? {
+        LinuxMTLArgumentEncoder(device: self, arguments: arguments)
+    }
+
+    func makeIndirectCommandBuffer(
+        descriptor: MTLIndirectCommandBufferDescriptor,
+        maxCommandCount maxCount: Int,
+        options: MTLResourceOptions = []
+    ) -> (any MTLIndirectCommandBuffer)? {
+        _ = (descriptor, maxCount, options)
+        return nil
     }
 
     func getDefaultSamplePositions(sampleCount: Int) -> [MTLSamplePosition] {
@@ -227,19 +310,29 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
         return []
     }
 
-    fileprivate func noteAllocated(_ bytes: Int) {
+    private func validateRenderPipeline(_ descriptor: MTLRenderPipelineDescriptor) throws {
+        if descriptor.sampleCount < 1 || descriptor.rasterSampleCount < 1 {
+            throw MTLCPUValidationError("render pipeline sampleCount must be >= 1")
+        }
+        let attachment = descriptor.colorAttachments[0]!
+        if attachment.isBlendingEnabled, attachment.pixelFormat == .invalid {
+            throw MTLCPUValidationError("blending requires a valid color pixel format")
+        }
+    }
+
+    func noteAllocated(_ bytes: Int) {
         lock.lock()
         allocated += max(bytes, 0)
         lock.unlock()
     }
 
-    fileprivate func noteFreed(_ bytes: Int) {
+    func noteFreed(_ bytes: Int) {
         lock.lock()
         allocated = max(0, allocated - max(bytes, 0))
         lock.unlock()
     }
 
-    fileprivate func nextID() -> MTLResourceID {
+    func nextID() -> MTLResourceID {
         lock.lock()
         defer { lock.unlock() }
         let value = nextResourceID
@@ -258,15 +351,25 @@ class LinuxMTLResource: NSObject, MTLResource, @unchecked Sendable {
     var label: String?
     private var aliasable = false
     private var purgeableState: MTLPurgeableState = .nonVolatile
+    weak var owningHeap: LinuxMTLHeap?
+    let heapOffsetValue: Int
 
     var device: any MTLDevice { owningDevice }
-    var heap: (any MTLHeap)? { nil }
-    var heapOffset: Int { 0 }
+    var heap: (any MTLHeap)? { owningHeap }
+    var heapOffset: Int { heapOffsetValue }
 
-    init(device: LinuxMTLDevice, options: MTLResourceOptions, allocatedSize: Int) {
+    init(
+        device: LinuxMTLDevice,
+        options: MTLResourceOptions,
+        allocatedSize: Int,
+        heap: LinuxMTLHeap?,
+        heapOffset: Int
+    ) {
         self.owningDevice = device
         self.resourceOptions = options
         self.allocatedSize = allocatedSize
+        self.owningHeap = heap
+        self.heapOffsetValue = heapOffset
         if options.contains(.storageModePrivate) {
             self.storageMode = .private
         } else if options.contains(.storageModeMemoryless) {
@@ -309,6 +412,7 @@ final class LinuxMTLBuffer: LinuxMTLResource, MTLBuffer, @unchecked Sendable {
     private let storage: UnsafeMutableRawPointer
     private let ownsStorage: Bool
     private let deallocator: ((UnsafeMutableRawPointer, Int) -> Void)?
+    private(set) var lastModifiedRange: Range<Int> = 0..<0
 
     init(
         device: LinuxMTLDevice,
@@ -316,14 +420,16 @@ final class LinuxMTLBuffer: LinuxMTLResource, MTLBuffer, @unchecked Sendable {
         options: MTLResourceOptions,
         storage: UnsafeMutableRawPointer,
         ownsStorage: Bool,
-        deallocator: ((UnsafeMutableRawPointer, Int) -> Void)?
+        deallocator: ((UnsafeMutableRawPointer, Int) -> Void)?,
+        heap: LinuxMTLHeap?,
+        heapOffset: Int
     ) {
         self.length = length
         self.gpuAddress = UInt64(UInt(bitPattern: storage))
         self.storage = storage
         self.ownsStorage = ownsStorage
         self.deallocator = deallocator
-        super.init(device: device, options: options, allocatedSize: length)
+        super.init(device: device, options: options, allocatedSize: length, heap: heap, heapOffset: heapOffset)
     }
 
     deinit {
@@ -339,6 +445,10 @@ final class LinuxMTLBuffer: LinuxMTLResource, MTLBuffer, @unchecked Sendable {
         storage
     }
 
+    func didModifyRange(_ range: Range<Int>) {
+        lastModifiedRange = range
+    }
+
     func addDebugMarker(_ marker: String, range: Range<Int>) {
         _ = (marker, range)
     }
@@ -351,6 +461,7 @@ final class LinuxMTLBuffer: LinuxMTLResource, MTLBuffer, @unchecked Sendable {
         bytesPerRow: Int
     ) -> (any MTLTexture)? {
         guard offset >= 0, bytesPerRow > 0, offset < length else { return nil }
+        guard MetalCPULayout.isValidTextureDescriptor(descriptor) else { return nil }
         return LinuxMTLTexture(
             device: owningDevice,
             descriptor: descriptor,
@@ -358,7 +469,9 @@ final class LinuxMTLBuffer: LinuxMTLResource, MTLBuffer, @unchecked Sendable {
             ownsStorage: false,
             parentBuffer: self,
             bufferOffset: offset,
-            bufferBytesPerRow: bytesPerRow
+            bufferBytesPerRow: bytesPerRow,
+            heap: owningHeap,
+            heapOffset: heapOffsetValue + offset
         )
     }
 }
@@ -389,9 +502,10 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
     let firstMipmapInTail: Int = 0
     let tailSizeInBytes: Int = 0
     let sparseTextureTier: MTLTextureSparseTier = .tierNone
-    private let storage: UnsafeMutableRawPointer
+    let storage: UnsafeMutableRawPointer
     private let ownsStorage: Bool
-    private let bytesPerPixel: Int?
+    let bytesPerPixel: Int?
+    let mipLevels: [MetalCPUMipLevel]
 
     var rootResource: (any MTLResource)? { buffer }
 
@@ -402,7 +516,9 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         ownsStorage: Bool,
         parentBuffer: (any MTLBuffer)?,
         bufferOffset: Int,
-        bufferBytesPerRow: Int
+        bufferBytesPerRow: Int,
+        heap: LinuxMTLHeap?,
+        heapOffset: Int
     ) {
         self.textureType = descriptor.textureType
         self.pixelFormat = descriptor.pixelFormat
@@ -423,10 +539,22 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         self.storage = storage
         self.ownsStorage = ownsStorage
         self.bytesPerPixel = metalBytesPerPixel(descriptor.pixelFormat)
+        let pixelBytes = self.bytesPerPixel ?? 4
+        self.mipLevels = MetalCPULayout.levels(
+            width: descriptor.width,
+            height: descriptor.height,
+            depth: descriptor.depth,
+            mipmapLevelCount: descriptor.mipmapLevelCount,
+            arrayLength: descriptor.arrayLength,
+            sampleCount: descriptor.sampleCount,
+            bytesPerPixel: pixelBytes
+        ).levels
         super.init(
             device: device,
             options: metalResourceOptions(from: descriptor),
-            allocatedSize: LinuxMTLTexture.storageByteCount(descriptor: descriptor)
+            allocatedSize: LinuxMTLTexture.storageByteCount(descriptor: descriptor),
+            heap: heap,
+            heapOffset: heapOffset
         )
     }
 
@@ -451,12 +579,26 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
 
     static func storageByteCount(descriptor: MTLTextureDescriptor) -> Int {
         let pixelBytes = metalBytesPerPixel(descriptor.pixelFormat) ?? 4
-        let width = max(descriptor.width, 1)
-        let height = max(descriptor.height, 1)
-        let depth = max(descriptor.depth, 1)
-        let array = max(descriptor.arrayLength, 1)
-        let samples = max(descriptor.sampleCount, 1)
-        return width * height * depth * array * samples * pixelBytes
+        return MetalCPULayout.levels(
+            width: descriptor.width,
+            height: descriptor.height,
+            depth: descriptor.depth,
+            mipmapLevelCount: descriptor.mipmapLevelCount,
+            arrayLength: descriptor.arrayLength,
+            sampleCount: descriptor.sampleCount,
+            bytesPerPixel: pixelBytes
+        ).total
+    }
+
+    func mipLevel(_ level: Int) -> MetalCPUMipLevel? {
+        guard level >= 0, level < mipLevels.count else { return nil }
+        return mipLevels[level]
+    }
+
+    func sliceOffset(level: Int, slice: Int) -> Int? {
+        guard let mip = mipLevel(level), slice >= 0, slice < arrayLength else { return nil }
+        let sliceBytes = mip.bytesPerImage * max(depth, 1) * max(sampleCount, 1)
+        return mip.offset + slice * sliceBytes
     }
 
     func replace(
@@ -483,8 +625,8 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         bytesPerRow: Int,
         bytesPerImage: Int
     ) {
-        _ = (level, slice, bytesPerImage)
-        copyRegion(region, bytesPerRow: bytesPerRow, from: pixelBytes, to: storage)
+        _ = bytesPerImage
+        copyRegion(region, level: level, slice: slice, bytesPerRow: bytesPerRow, from: pixelBytes, toStorage: true)
     }
 
     func getBytes(
@@ -511,8 +653,8 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         mipmapLevel level: Int,
         slice: Int
     ) {
-        _ = (level, slice, bytesPerImage)
-        copyRegion(region, bytesPerRow: bytesPerRow, from: storage, to: pixelBytes)
+        _ = bytesPerImage
+        copyRegion(region, level: level, slice: slice, bytesPerRow: bytesPerRow, from: pixelBytes, toStorage: false)
     }
 
     func makeTextureView(pixelFormat: MTLPixelFormat) -> (any MTLTexture)? {
@@ -520,239 +662,186 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         return self
     }
 
-    private func copyRegion(
-        _ region: MTLRegion,
-        bytesPerRow: Int,
-        from source: UnsafeRawPointer,
-        to destination: UnsafeMutableRawPointer
-    ) {
-        guard let bytesPerPixel, levelZeroContains(region) else { return }
-        let origin = region.origin
-        let size = region.size
-        let destBytesPerRow = max(width * bytesPerPixel, bytesPerPixel)
-        for row in 0..<max(size.height, 0) {
-            let src = source.advanced(by: row * bytesPerRow)
-            let dst = destination.advanced(
-                by: (origin.y + row) * destBytesPerRow + origin.x * bytesPerPixel
-            )
-            dst.copyMemory(from: src, byteCount: max(size.width, 0) * bytesPerPixel)
+    func generateMipmapsBoxFilter() {
+        guard bytesPerPixel != nil, mipmapLevelCount > 1 else { return }
+        for level in 1..<mipmapLevelCount {
+            guard let src = mipLevel(level - 1), let dst = mipLevel(level) else { continue }
+            for slice in 0..<arrayLength {
+                guard let srcOffset = sliceOffset(level: level - 1, slice: slice),
+                      let dstOffset = sliceOffset(level: level, slice: slice)
+                else { continue }
+                MetalCPUPixels.boxFilter(
+                    format: pixelFormat,
+                    source: UnsafeRawPointer(storage.advanced(by: srcOffset)),
+                    sourceWidth: src.width,
+                    sourceHeight: src.height,
+                    sourceBytesPerRow: src.bytesPerRow,
+                    destination: storage.advanced(by: dstOffset),
+                    destWidth: dst.width,
+                    destHeight: dst.height,
+                    destBytesPerRow: dst.bytesPerRow
+                )
+            }
         }
+    }
+
+    func clearLevelZero(color: MTLClearColor) {
+        guard let mip = mipLevel(0) else { return }
+        let pixels = mip.width * mip.height * max(depth, 1) * arrayLength * max(sampleCount, 1)
+        MetalCPUPixels.writeClear(color, format: pixelFormat, to: storage.advanced(by: mip.offset), pixelCount: pixels)
+    }
+
+    func clearLevelZero(depth: Double) {
+        guard pixelFormat == .depth32Float, let mip = mipLevel(0) else { return }
+        let count = mip.width * mip.height * self.depth * arrayLength * max(sampleCount, 1)
+        MetalCPUPixels.writeDepth(depth, to: storage.advanced(by: mip.offset), pixelCount: count)
     }
 
     private func copyRegion(
         _ region: MTLRegion,
+        level: Int,
+        slice: Int,
         bytesPerRow: Int,
-        from source: UnsafeMutableRawPointer,
-        to destination: UnsafeMutableRawPointer
+        from pointer: UnsafeRawPointer,
+        toStorage: Bool
     ) {
-        guard let bytesPerPixel, levelZeroContains(region) else { return }
+        guard let bytesPerPixel,
+              let mip = mipLevel(level),
+              let base = sliceOffset(level: level, slice: slice)
+        else { return }
         let origin = region.origin
         let size = region.size
+        guard origin.x >= 0, origin.y >= 0,
+              origin.x + size.width <= mip.width,
+              origin.y + size.height <= mip.height
+        else { return }
+        let storageRow = mip.bytesPerRow
         for row in 0..<max(size.height, 0) {
-            let src = source.advanced(
-                by: ((origin.y + row) * width + origin.x) * bytesPerPixel
-            )
-            let dst = destination.advanced(by: row * bytesPerRow)
-            dst.copyMemory(from: src, byteCount: max(size.width, 0) * bytesPerPixel)
+            let storageIndex = base + (origin.y + row) * storageRow + origin.x * bytesPerPixel
+            let external = pointer.advanced(by: row * bytesPerRow)
+            let count = max(size.width, 0) * bytesPerPixel
+            if toStorage {
+                storage.advanced(by: storageIndex).copyMemory(from: external, byteCount: count)
+            } else {
+                UnsafeMutableRawPointer(mutating: external).copyMemory(
+                    from: storage.advanced(by: storageIndex),
+                    byteCount: count
+                )
+            }
         }
-    }
-
-    private func levelZeroContains(_ region: MTLRegion) -> Bool {
-        region.origin.x >= 0
-            && region.origin.y >= 0
-            && region.origin.x + region.size.width <= width
-            && region.origin.y + region.size.height <= height
     }
 }
 
-final class LinuxMTLCommandQueue: NSObject, MTLCommandQueue, @unchecked Sendable {
+final class LinuxMTLHeap: NSObject, MTLHeap, @unchecked Sendable {
     unowned let owningDevice: LinuxMTLDevice
     var label: String?
+    let size: Int
+    private(set) var usedSize: Int = 0
+    let storageMode: MTLStorageMode
+    let cpuCacheMode: MTLCPUCacheMode
+    let hazardTrackingMode: MTLHazardTrackingMode
+    let resourceOptions: MTLResourceOptions
+    let type: MTLHeapType
+    let allocatedSize: Int
+    private let storage: UnsafeMutableRawPointer
+    private var bump: Int = 0
+    private var purgeableState: MTLPurgeableState = .nonVolatile
 
     var device: any MTLDevice { owningDevice }
+    var currentAllocatedSize: Int { usedSize }
 
-    init(device: LinuxMTLDevice) {
+    init(device: LinuxMTLDevice, descriptor: MTLHeapDescriptor) {
         self.owningDevice = device
+        self.size = max(descriptor.size, 0)
+        self.storageMode = descriptor.storageMode
+        self.cpuCacheMode = descriptor.cpuCacheMode
+        self.hazardTrackingMode = descriptor.hazardTrackingMode
+        self.resourceOptions = descriptor.resourceOptions
+        self.type = descriptor.type
+        self.allocatedSize = max(descriptor.size, 0)
+        self.storage = UnsafeMutableRawPointer.allocate(byteCount: max(descriptor.size, 1), alignment: 16)
+        self.storage.initializeMemory(as: UInt8.self, repeating: 0, count: max(descriptor.size, 1))
         super.init()
+        device.noteAllocated(self.size)
     }
 
-    func makeCommandBuffer() -> (any MTLCommandBuffer)? {
-        LinuxMTLCommandBuffer(queue: self, retainedReferences: true)
+    deinit {
+        owningDevice.noteFreed(size)
+        storage.deallocate()
     }
 
-    func makeCommandBuffer(descriptor: MTLCommandBufferDescriptor) -> (any MTLCommandBuffer)? {
-        LinuxMTLCommandBuffer(queue: self, retainedReferences: descriptor.retainedReferences)
+    func maxAvailableSize(alignment: Int) -> Int {
+        let align = max(alignment, 1)
+        let aligned = (bump + align - 1) / align * align
+        return max(0, size - aligned)
     }
 
-    func makeCommandBufferWithUnretainedReferences() -> (any MTLCommandBuffer)? {
-        LinuxMTLCommandBuffer(queue: self, retainedReferences: false)
-    }
-
-    func insertDebugCaptureBoundary() {}
-}
-
-final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendable {
-    unowned let queue: LinuxMTLCommandQueue
-    let retainedReferences: Bool
-    let errorOptions: MTLCommandBufferErrorOption = []
-    var label: String?
-    private(set) var status: MTLCommandBufferStatus = .notEnqueued
-    private(set) var error: (any Error)?
-    var kernelStartTime: TimeInterval = 0
-    var kernelEndTime: TimeInterval = 0
-    var gpuStartTime: TimeInterval = 0
-    var gpuEndTime: TimeInterval = 0
-    let logs = MTLLogContainer()
-    private var completedHandlers: [MTLCommandBufferHandler] = []
-    private var scheduledHandlers: [MTLCommandBufferHandler] = []
-    private var recorded: [() -> Void] = []
-    private var encoding = false
-
-    var device: any MTLDevice { queue.device }
-    var commandQueue: any MTLCommandQueue { queue }
-
-    init(queue: LinuxMTLCommandQueue, retainedReferences: Bool) {
-        self.queue = queue
-        self.retainedReferences = retainedReferences
-        super.init()
-    }
-
-    func enqueue() {
-        if status == .notEnqueued {
-            status = .enqueued
+    func setPurgeableState(_ state: MTLPurgeableState) -> MTLPurgeableState {
+        let previous = purgeableState
+        if state != .keepCurrent {
+            purgeableState = state
         }
+        return previous
     }
 
-    func commit() {
-        enqueue()
-        status = .committed
-        status = .scheduled
-        for handler in scheduledHandlers {
-            handler(self)
+    func makeBuffer(length: Int, options: MTLResourceOptions = []) -> (any MTLBuffer)? {
+        makeBuffer(length: length, options: options, offset: -1)
+    }
+
+    func makeBuffer(length: Int, options: MTLResourceOptions = [], offset: Int) -> (any MTLBuffer)? {
+        guard length >= 0 else { return nil }
+        let placement: Int
+        if offset >= 0 {
+            placement = offset
+            guard placement + length <= size else { return nil }
+        } else {
+            let aligned = (bump + 15) / 16 * 16
+            guard aligned + length <= size else { return nil }
+            bump = aligned + length
+            usedSize = bump
+            placement = aligned
         }
-        for work in recorded {
-            work()
+        return LinuxMTLBuffer(
+            device: owningDevice,
+            length: length,
+            options: options.isEmpty ? resourceOptions : options,
+            storage: storage.advanced(by: placement),
+            ownsStorage: false,
+            deallocator: nil,
+            heap: self,
+            heapOffset: placement
+        )
+    }
+
+    func makeTexture(descriptor: MTLTextureDescriptor) -> (any MTLTexture)? {
+        makeTexture(descriptor: descriptor, offset: -1)
+    }
+
+    func makeTexture(descriptor: MTLTextureDescriptor, offset: Int) -> (any MTLTexture)? {
+        guard MetalCPULayout.isValidTextureDescriptor(descriptor) else { return nil }
+        let bytes = LinuxMTLTexture.storageByteCount(descriptor: descriptor)
+        let placement: Int
+        if offset >= 0 {
+            placement = offset
+            guard placement + bytes <= size else { return nil }
+        } else {
+            let aligned = (bump + 15) / 16 * 16
+            guard aligned + bytes <= size else { return nil }
+            bump = aligned + bytes
+            usedSize = bump
+            placement = aligned
         }
-        recorded.removeAll()
-        status = .completed
-        for handler in completedHandlers {
-            handler(self)
-        }
-    }
-
-    func addScheduledHandler(_ block: @escaping MTLCommandBufferHandler) {
-        scheduledHandlers.append(block)
-    }
-
-    func addCompletedHandler(_ block: @escaping MTLCommandBufferHandler) {
-        completedHandlers.append(block)
-    }
-
-    func waitUntilScheduled() {}
-
-    func waitUntilCompleted() {
-        if status == .committed || status == .scheduled {
-            status = .completed
-        }
-    }
-
-    func pushDebugGroup(_ string: String) {
-        _ = string
-    }
-
-    func popDebugGroup() {}
-
-    func present(_ drawable: any MTLDrawable) {
-        drawable.present()
-    }
-
-    func makeBlitCommandEncoder() -> (any MTLBlitCommandEncoder)? {
-        guard !encoding else { return nil }
-        encoding = true
-        return LinuxMTLBlitCommandEncoder(commandBuffer: self)
-    }
-
-    fileprivate func finishEncoder() {
-        encoding = false
-    }
-
-    fileprivate func record(_ work: @escaping () -> Void) {
-        recorded.append(work)
-    }
-}
-
-final class LinuxMTLBlitCommandEncoder: NSObject, MTLBlitCommandEncoder, @unchecked Sendable {
-    unowned let commandBuffer: LinuxMTLCommandBuffer
-    var label: String?
-    private var ended = false
-
-    var device: any MTLDevice { commandBuffer.device }
-
-    init(commandBuffer: LinuxMTLCommandBuffer) {
-        self.commandBuffer = commandBuffer
-        super.init()
-    }
-
-    func endEncoding() {
-        guard !ended else { return }
-        ended = true
-        commandBuffer.finishEncoder()
-    }
-
-    func insertDebugSignpost(_ string: String) {
-        _ = string
-    }
-
-    func pushDebugGroup(_ string: String) {
-        _ = string
-    }
-
-    func popDebugGroup() {}
-
-    func fill(buffer: any MTLBuffer, range: Range<Int>, value: UInt8) {
-        let lower = range.lowerBound
-        let count = range.count
-        commandBuffer.record {
-            guard lower >= 0, lower + count <= buffer.length else { return }
-            buffer.contents().advanced(by: lower).initializeMemory(
-                as: UInt8.self,
-                repeating: value,
-                count: count
-            )
-        }
-    }
-
-    func copy(
-        from sourceBuffer: any MTLBuffer,
-        sourceOffset: Int,
-        to destinationBuffer: any MTLBuffer,
-        destinationOffset: Int,
-        size: Int
-    ) {
-        commandBuffer.record {
-            guard size > 0,
-                  sourceOffset >= 0,
-                  destinationOffset >= 0,
-                  sourceOffset + size <= sourceBuffer.length,
-                  destinationOffset + size <= destinationBuffer.length
-            else { return }
-            destinationBuffer.contents().advanced(by: destinationOffset).copyMemory(
-                from: sourceBuffer.contents().advanced(by: sourceOffset),
-                byteCount: size
-            )
-        }
-    }
-
-    func generateMipmaps(for texture: any MTLTexture) {
-        _ = texture
-    }
-
-    func optimizeContentsForCPUAccess(texture: any MTLTexture) {
-        _ = texture
-    }
-
-    func optimizeContentsForGPUAccess(texture: any MTLTexture) {
-        _ = texture
+        return LinuxMTLTexture(
+            device: owningDevice,
+            descriptor: descriptor,
+            storage: storage.advanced(by: placement),
+            ownsStorage: false,
+            parentBuffer: nil,
+            bufferOffset: 0,
+            bufferBytesPerRow: 0,
+            heap: self,
+            heapOffset: placement
+        )
     }
 }
 
@@ -760,6 +849,7 @@ final class LinuxMTLSamplerState: NSObject, MTLSamplerState, @unchecked Sendable
     unowned let owningDevice: LinuxMTLDevice
     let label: String?
     let gpuResourceID: MTLResourceID
+    let descriptor: MTLSamplerDescriptor
 
     var device: any MTLDevice { owningDevice }
 
@@ -767,6 +857,7 @@ final class LinuxMTLSamplerState: NSObject, MTLSamplerState, @unchecked Sendable
         self.owningDevice = device
         self.label = descriptor.label
         self.gpuResourceID = resourceID
+        self.descriptor = descriptor
         super.init()
     }
 }
@@ -775,6 +866,7 @@ final class LinuxMTLDepthStencilState: NSObject, MTLDepthStencilState, @unchecke
     unowned let owningDevice: LinuxMTLDevice
     let label: String?
     let gpuResourceID: MTLResourceID
+    let descriptor: MTLDepthStencilDescriptor
 
     var device: any MTLDevice { owningDevice }
 
@@ -782,6 +874,7 @@ final class LinuxMTLDepthStencilState: NSObject, MTLDepthStencilState, @unchecke
         self.owningDevice = device
         self.label = descriptor.label
         self.gpuResourceID = resourceID
+        self.descriptor = descriptor
         super.init()
     }
 }
@@ -789,6 +882,7 @@ final class LinuxMTLDepthStencilState: NSObject, MTLDepthStencilState, @unchecke
 final class LinuxMTLFence: NSObject, MTLFence, @unchecked Sendable {
     unowned let owningDevice: LinuxMTLDevice
     var label: String?
+    private(set) var signaled = false
 
     var device: any MTLDevice { owningDevice }
 
@@ -796,17 +890,32 @@ final class LinuxMTLFence: NSObject, MTLFence, @unchecked Sendable {
         self.owningDevice = device
         super.init()
     }
+
+    func signal() {
+        signaled = true
+    }
+
+    func wait() {
+        signaled = false
+    }
 }
 
 final class LinuxMTLEvent: NSObject, MTLEvent, @unchecked Sendable {
     unowned let owningDevice: LinuxMTLDevice
     var label: String?
+    private(set) var value: UInt64 = 0
 
     var device: any MTLDevice { owningDevice }
 
     init(device: LinuxMTLDevice) {
         self.owningDevice = device
         super.init()
+    }
+
+    func signal(_ newValue: UInt64) {
+        if newValue > value {
+            value = newValue
+        }
     }
 }
 

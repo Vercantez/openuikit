@@ -301,5 +301,11 @@ final class GlyphInkTableTests: XCTestCase {
                                               dark: false, tag: "F0.25",
                                               scalar: Unicode.Scalar(UInt32(107))!,
                                               scale: 2))
+        // MEASURED Docker corelibs font-free realapp: Ledger footnote
+        // euro U+20AC at 13 pt regular F0.25 (de_DE `4,50 €`).
+        XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-regular", sizeKey: 13,
+                                              dark: false, tag: "F0.25",
+                                              scalar: Unicode.Scalar(UInt32(8364))!,
+                                              scale: 2))
     }
 }

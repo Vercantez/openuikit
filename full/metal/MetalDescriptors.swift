@@ -412,6 +412,7 @@ open class MTLRenderPipelineDescriptor: NSObject, @unchecked Sendable {
     public var maxFragmentCallStackDepth: Int = 1
     public var supportAddingVertexBinaryFunctions: Bool = false
     public var supportAddingFragmentBinaryFunctions: Bool = false
+    public var shaderValidation: MTLShaderValidation = .default
 
     public override init() {
         super.init()
@@ -472,6 +473,9 @@ open class MTLComputePipelineDescriptor: NSObject, @unchecked Sendable {
     public var maxCallStackDepth: Int = 1
     public var supportAddingBinaryFunctions: Bool = false
     public var requiredThreadsPerThreadgroup = MTLSize()
+    public var shaderValidation: MTLShaderValidation = .default
+    public var linkedFunctions: MTLLinkedFunctions?
+    public var stageInputDescriptor: MTLStageInputOutputDescriptor?
 
     public override init() {
         super.init()
@@ -486,5 +490,246 @@ open class MTLComputePipelineDescriptor: NSObject, @unchecked Sendable {
         maxCallStackDepth = 1
         supportAddingBinaryFunctions = false
         requiredThreadsPerThreadgroup = MTLSize()
+        shaderValidation = .default
     }
+}
+
+open class MTLArgumentDescriptor: NSObject, @unchecked Sendable {
+    public var dataType: MTLDataType = .none
+    public var index: Int = 0
+    public var arrayLength: Int = 0
+    public var access: MTLBindingAccess = .readOnly
+    public var textureType: MTLTextureType = .type2D
+    public var constantBlockAlignment: Int = 0
+
+    public override init() {
+        super.init()
+    }
+
+    public class func argumentDescriptor() -> MTLArgumentDescriptor {
+        MTLArgumentDescriptor()
+    }
+}
+
+open class MTLBlitPassDescriptor: NSObject, @unchecked Sendable {
+    public let sampleBufferAttachments = MTLBlitPassSampleBufferAttachmentDescriptorArray()
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLBlitPassSampleBufferAttachmentDescriptor: NSObject, @unchecked Sendable {
+    public var sampleBuffer: (any MTLCounterSampleBuffer)?
+    public var startOfEncoderSampleIndex: Int = 0
+    public var endOfEncoderSampleIndex: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLBlitPassSampleBufferAttachmentDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLBlitPassSampleBufferAttachmentDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(attachmentIndex: Int) -> MTLBlitPassSampleBufferAttachmentDescriptor! {
+        get {
+            if let existing = storage[attachmentIndex] {
+                return existing
+            }
+            let created = MTLBlitPassSampleBufferAttachmentDescriptor()
+            storage[attachmentIndex] = created
+            return created
+        }
+        set {
+            storage[attachmentIndex] = newValue
+        }
+    }
+}
+
+open class MTLComputePassDescriptor: NSObject, @unchecked Sendable {
+    public var dispatchType: MTLDispatchType = .serial
+    public let sampleBufferAttachments = MTLComputePassSampleBufferAttachmentDescriptorArray()
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLComputePassSampleBufferAttachmentDescriptor: NSObject, @unchecked Sendable {
+    public var sampleBuffer: (any MTLCounterSampleBuffer)?
+    public var startOfEncoderSampleIndex: Int = 0
+    public var endOfEncoderSampleIndex: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLComputePassSampleBufferAttachmentDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLComputePassSampleBufferAttachmentDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(attachmentIndex: Int) -> MTLComputePassSampleBufferAttachmentDescriptor! {
+        get {
+            if let existing = storage[attachmentIndex] {
+                return existing
+            }
+            let created = MTLComputePassSampleBufferAttachmentDescriptor()
+            storage[attachmentIndex] = created
+            return created
+        }
+        set {
+            storage[attachmentIndex] = newValue
+        }
+    }
+}
+
+open class MTLFunctionConstantValues: NSObject, @unchecked Sendable {
+    public override init() {
+        super.init()
+    }
+
+    public func reset() {}
+
+    public func setConstantValue(_ value: UnsafeRawPointer, type: MTLDataType, index: Int) {
+        _ = (value, type, index)
+    }
+
+    public func setConstantValue(_ value: UnsafeRawPointer, type: MTLDataType, withName name: String) {
+        _ = (value, type, name)
+    }
+}
+
+open class MTLFunctionDescriptor: NSObject, @unchecked Sendable {
+    public var name: String?
+    public var specializedName: String?
+    public var constantValues: MTLFunctionConstantValues?
+    public var options: MTLFunctionOptions = []
+    public var binaryArchives: [any MTLBinaryArchive]?
+
+    public override init() {
+        super.init()
+    }
+
+    public class func functionDescriptor() -> MTLFunctionDescriptor {
+        MTLFunctionDescriptor()
+    }
+}
+
+open class MTLIndirectCommandBufferDescriptor: NSObject, @unchecked Sendable {
+    public var commandTypes: MTLIndirectCommandType = []
+    public var inheritBuffers: Bool = false
+    public var inheritPipelineState: Bool = false
+    public var inheritCullMode: Bool = false
+    public var inheritDepthBias: Bool = false
+    public var inheritDepthClipMode: Bool = false
+    public var inheritDepthStencilState: Bool = false
+    public var inheritFrontFacingWinding: Bool = false
+    public var inheritTriangleFillMode: Bool = false
+    public var maxVertexBufferBindCount: Int = 0
+    public var maxFragmentBufferBindCount: Int = 0
+    public var maxKernelBufferBindCount: Int = 0
+    public var maxKernelThreadgroupMemoryBindCount: Int = 0
+    public var maxObjectBufferBindCount: Int = 0
+    public var maxMeshBufferBindCount: Int = 0
+    public var maxObjectThreadgroupMemoryBindCount: Int = 0
+    public var supportRayTracing: Bool = false
+    public var supportDynamicAttributeStride: Bool = false
+    public var supportColorAttachmentMapping: Bool = false
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLIntersectionFunctionTableDescriptor: NSObject, @unchecked Sendable {
+    public var functionCount: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLVisibleFunctionTableDescriptor: NSObject, @unchecked Sendable {
+    public var functionCount: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLIntersectionFunctionDescriptor: MTLFunctionDescriptor, @unchecked Sendable {}
+
+open class MTLLinkedFunctions: NSObject, @unchecked Sendable {
+    public var functions: [any MTLFunction]?
+    public var binaryFunctions: [any MTLFunction]?
+    public var groups: [String: [any MTLFunction]]?
+    public var privateFunctions: [any MTLFunction]?
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLStageInputOutputDescriptor: NSObject, @unchecked Sendable {
+    public override init() {
+        super.init()
+    }
+
+    public func reset() {}
+}
+
+open class MTLFunctionConstant: NSObject, @unchecked Sendable {
+    public var name: String = ""
+    public var type: MTLDataType = .none
+    public var index: Int = 0
+    public var required: Bool = false
+}
+
+open class MTLAttribute: NSObject, @unchecked Sendable {
+    public var name: String = ""
+    public var attributeIndex: Int = 0
+    public var attributeType: MTLDataType = .none
+    public var isActive: Bool = false
+    public var isPatchControlPointData: Bool = false
+    public var isPatchData: Bool = false
+}
+
+open class MTLVertexAttribute: NSObject, @unchecked Sendable {
+    public var name: String = ""
+    public var attributeIndex: Int = 0
+    public var attributeType: MTLDataType = .none
+    public var isActive: Bool = false
+    public var isPatchControlPointData: Bool = false
+    public var isPatchData: Bool = false
+}
+
+open class MTLFunctionReflection: NSObject, @unchecked Sendable {}
+
+open class MTLRenderPipelineReflection: NSObject, @unchecked Sendable {}
+
+open class MTLComputePipelineReflection: NSObject, @unchecked Sendable {}
+
+open class MTLLogicalToPhysicalColorAttachmentMap: NSObject, @unchecked Sendable {}
+
+open class MTLRenderPipelineFunctionsDescriptor: NSObject, @unchecked Sendable {}
+
+public typealias MTLAutoreleasedComputePipelineReflection = MTLComputePipelineReflection
+public typealias MTLAutoreleasedRenderPipelineReflection = MTLRenderPipelineReflection
+public typealias MTLAutoreleasedArgument = MTLArgument
+
+open class MTLArgument: NSObject, @unchecked Sendable {
+    public var name: String = ""
+    public var type: MTLArgumentType = .buffer
+    public var access: MTLBindingAccess = .readOnly
+    public var index: Int = 0
+    public var isActive: Bool = false
 }

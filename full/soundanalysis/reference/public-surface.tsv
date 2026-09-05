@@ -1,0 +1,78 @@
+precise	kind	title	path	declaration
+c:@E@SNErrorCode	swift.enum	SNError.Code	SNError.Code	enum Code
+c:@E@SNErrorCode@SNErrorCodeInvalidFile	swift.enum.case	SNError.Code.invalidFile	SNError.Code.invalidFile	case invalidFile
+c:@E@SNErrorCode@SNErrorCodeInvalidFormat	swift.enum.case	SNError.Code.invalidFormat	SNError.Code.invalidFormat	case invalidFormat
+c:@E@SNErrorCode@SNErrorCodeInvalidModel	swift.enum.case	SNError.Code.invalidModel	SNError.Code.invalidModel	case invalidModel
+c:@E@SNErrorCode@SNErrorCodeOperationFailed	swift.enum.case	SNError.Code.operationFailed	SNError.Code.operationFailed	case operationFailed
+c:@E@SNErrorCode@SNErrorCodeUnknownError	swift.enum.case	SNError.Code.unknownError	SNError.Code.unknownError	case unknownError
+c:@SNClassifierIdentifierVersion1	swift.type.property	version1	SNClassifierIdentifier.version1	static let version1: SNClassifierIdentifier
+c:@SNErrorDomain	swift.var	SNErrorDomain	SNErrorDomain	let SNErrorDomain: String
+c:@T@SNClassifierIdentifier	swift.struct	SNClassifierIdentifier	SNClassifierIdentifier	struct SNClassifierIdentifier
+c:objc(cs)SNAudioFileAnalyzer	swift.class	SNAudioFileAnalyzer	SNAudioFileAnalyzer	class SNAudioFileAnalyzer
+c:objc(cs)SNAudioFileAnalyzer(im)addRequest:withObserver:error:	swift.method	add(_:withObserver:)	SNAudioFileAnalyzer.add(_:withObserver:)	func add(_ request: any SNRequest, withObserver observer: any SNResultsObserving) throws
+c:objc(cs)SNAudioFileAnalyzer(im)analyze	swift.method	analyze()	SNAudioFileAnalyzer.analyze()	func analyze()
+c:objc(cs)SNAudioFileAnalyzer(im)analyzeWithCompletionHandler:	swift.method	analyze(completionHandler:)	SNAudioFileAnalyzer.analyze(completionHandler:)	func analyze(completionHandler: @escaping (Bool) -> Void)
+c:objc(cs)SNAudioFileAnalyzer(im)cancelAnalysis	swift.method	cancelAnalysis()	SNAudioFileAnalyzer.cancelAnalysis()	func cancelAnalysis()
+c:objc(cs)SNAudioFileAnalyzer(im)initWithURL:error:	swift.init	init(url:)	SNAudioFileAnalyzer.init(url:)	init(url: URL) throws
+c:objc(cs)SNAudioFileAnalyzer(im)initWithURL:error:::SYNTHESIZED::c:objc(cs)SNAudioFileAnalyzer	swift.init	init(URL:)	SNAudioFileAnalyzer.init(URL:)	init(URL url: URL) throws
+c:objc(cs)SNAudioFileAnalyzer(im)removeAllRequests	swift.method	removeAllRequests()	SNAudioFileAnalyzer.removeAllRequests()	func removeAllRequests()
+c:objc(cs)SNAudioFileAnalyzer(im)removeRequest:	swift.method	remove(_:)	SNAudioFileAnalyzer.remove(_:)	func remove(_ request: any SNRequest)
+c:objc(cs)SNAudioStreamAnalyzer	swift.class	SNAudioStreamAnalyzer	SNAudioStreamAnalyzer	class SNAudioStreamAnalyzer
+c:objc(cs)SNAudioStreamAnalyzer(im)addRequest:withObserver:error:	swift.method	add(_:withObserver:)	SNAudioStreamAnalyzer.add(_:withObserver:)	func add(_ request: any SNRequest, withObserver observer: any SNResultsObserving) throws
+c:objc(cs)SNAudioStreamAnalyzer(im)analyzeAudioBuffer:atAudioFramePosition:	swift.method	analyze(_:atAudioFramePosition:)	SNAudioStreamAnalyzer.analyze(_:atAudioFramePosition:)	func analyze(_ audioBuffer: AVAudioBuffer, atAudioFramePosition audioFramePosition: AVAudioFramePosition)
+c:objc(cs)SNAudioStreamAnalyzer(im)completeAnalysis	swift.method	completeAnalysis()	SNAudioStreamAnalyzer.completeAnalysis()	func completeAnalysis()
+c:objc(cs)SNAudioStreamAnalyzer(im)initWithFormat:	swift.init	init(format:)	SNAudioStreamAnalyzer.init(format:)	init(format: AVAudioFormat)
+c:objc(cs)SNAudioStreamAnalyzer(im)removeAllRequests	swift.method	removeAllRequests()	SNAudioStreamAnalyzer.removeAllRequests()	func removeAllRequests()
+c:objc(cs)SNAudioStreamAnalyzer(im)removeRequest:	swift.method	remove(_:)	SNAudioStreamAnalyzer.remove(_:)	func remove(_ request: any SNRequest)
+c:objc(cs)SNClassification	swift.class	SNClassification	SNClassification	class SNClassification
+c:objc(cs)SNClassification(py)confidence	swift.property	confidence	SNClassification.confidence	var confidence: Double { get }
+c:objc(cs)SNClassification(py)identifier	swift.property	identifier	SNClassification.identifier	var identifier: String { get }
+c:objc(cs)SNClassificationResult	swift.class	SNClassificationResult	SNClassificationResult	class SNClassificationResult
+c:objc(cs)SNClassificationResult(im)classificationForIdentifier:	swift.method	classification(forIdentifier:)	SNClassificationResult.classification(forIdentifier:)	func classification(forIdentifier identifier: String) -> SNClassification?
+c:objc(cs)SNClassificationResult(py)classifications	swift.property	classifications	SNClassificationResult.classifications	var classifications: [SNClassification] { get }
+c:objc(cs)SNClassificationResult(py)timeRange	swift.property	timeRange	SNClassificationResult.timeRange	var timeRange: CMTimeRange { get }
+c:objc(cs)SNClassifySoundRequest	swift.class	SNClassifySoundRequest	SNClassifySoundRequest	class SNClassifySoundRequest
+c:objc(cs)SNClassifySoundRequest(im)initWithClassifierIdentifier:error:	swift.init	init(classifierIdentifier:)	SNClassifySoundRequest.init(classifierIdentifier:)	init(classifierIdentifier: SNClassifierIdentifier) throws
+c:objc(cs)SNClassifySoundRequest(im)initWithMLModel:error:	swift.init	init(mlModel:)	SNClassifySoundRequest.init(mlModel:)	init(mlModel: MLModel) throws
+c:objc(cs)SNClassifySoundRequest(im)initWithMLModel:error:::SYNTHESIZED::c:objc(cs)SNClassifySoundRequest	swift.init	init(MLModel:)	SNClassifySoundRequest.init(MLModel:)	init(MLModel mlModel: MLModel) throws
+c:objc(cs)SNClassifySoundRequest(py)knownClassifications	swift.property	knownClassifications	SNClassifySoundRequest.knownClassifications	var knownClassifications: [String] { get }
+c:objc(cs)SNClassifySoundRequest(py)overlapFactor	swift.property	overlapFactor	SNClassifySoundRequest.overlapFactor	var overlapFactor: Double { get set }
+c:objc(cs)SNClassifySoundRequest(py)windowDuration	swift.property	windowDuration	SNClassifySoundRequest.windowDuration	var windowDuration: CMTime { get set }
+c:objc(pl)SNRequest	swift.protocol	SNRequest	SNRequest	protocol SNRequest : NSObjectProtocol
+c:objc(pl)SNResult	swift.protocol	SNResult	SNResult	protocol SNResult : NSObjectProtocol
+c:objc(pl)SNResultsObserving	swift.protocol	SNResultsObserving	SNResultsObserving	protocol SNResultsObserving : NSObjectProtocol
+c:objc(pl)SNResultsObserving(im)request:didFailWithError:	swift.method	request(_:didFailWithError:)	SNResultsObserving.request(_:didFailWithError:)	optional func request(_ request: any SNRequest, didFailWithError error: any Error)
+c:objc(pl)SNResultsObserving(im)request:didProduceResult:	swift.method	request(_:didProduce:)	SNResultsObserving.request(_:didProduce:)	func request(_ request: any SNRequest, didProduce result: any SNResult)
+c:objc(pl)SNResultsObserving(im)requestDidComplete:	swift.method	requestDidComplete(_:)	SNResultsObserving.requestDidComplete(_:)	optional func requestDidComplete(_ request: any SNRequest)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SNErrorCode	swift.type.property	errorDomain	SNError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	errorUserInfo	SNError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	errorCode	SNError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SNErrorCode	swift.func.op	~=(_:_:)	SNError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	errorUserInfo	SNError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SNErrorCode	swift.func.op	==(_:_:)	SNError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	code	SNError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SNErrorCode	swift.method	hash(into:)	SNError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	userInfo	SNError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	errorCode	SNError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	hashValue	SNError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SNErrorCode	swift.init	init(_:userInfo:)	SNError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:13SoundAnalysis24SNTimeDurationConstraintO	swift.enum	SNTimeDurationConstraint	SNTimeDurationConstraint	enum SNTimeDurationConstraint
+s:13SoundAnalysis24SNTimeDurationConstraintO13durationRangeyACSo06CMTimeG0acACmF	swift.enum.case	SNTimeDurationConstraint.durationRange(_:)	SNTimeDurationConstraint.durationRange(_:)	case durationRange(CMTimeRange)
+s:13SoundAnalysis24SNTimeDurationConstraintO19enumeratedDurationsyACSaySo6CMTimeaGcACmF	swift.enum.case	SNTimeDurationConstraint.enumeratedDurations(_:)	SNTimeDurationConstraint.enumeratedDurations(_:)	case enumeratedDurations([CMTime])
+s:SC11SNErrorCodeLeV	swift.struct	SNError	SNError	struct SNError
+s:SC11SNErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	SNError.errorDomain	static var errorDomain: String { get }
+s:SC11SNErrorCodeLeV11invalidFileSoAAVvpZ	swift.type.property	invalidFile	SNError.invalidFile	static var invalidFile: SNError.Code { get }
+s:SC11SNErrorCodeLeV12invalidModelSoAAVvpZ	swift.type.property	invalidModel	SNError.invalidModel	static var invalidModel: SNError.Code { get }
+s:SC11SNErrorCodeLeV12unknownErrorSoAAVvpZ	swift.type.property	unknownError	SNError.unknownError	static var unknownError: SNError.Code { get }
+s:SC11SNErrorCodeLeV13invalidFormatSoAAVvpZ	swift.type.property	invalidFormat	SNError.invalidFormat	static var invalidFormat: SNError.Code { get }
+s:SC11SNErrorCodeLeV15operationFailedSoAAVvpZ	swift.type.property	operationFailed	SNError.operationFailed	static var operationFailed: SNError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SNErrorCode	swift.func.op	!=(_:_:)	SNError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SNClassifierIdentifier	swift.func.op	!=(_:_:)	SNClassifierIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	hashValue	SNError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SNErrorCode	swift.method	hash(into:)	SNError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11SNErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SNError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So22SNClassifierIdentifiera8rawValueABSS_tcfc	swift.init	init(rawValue:)	SNClassifierIdentifier.init(rawValue:)	init(rawValue: String)
+s:So22SNClassifySoundRequestC0B8AnalysisE24windowDurationConstraintAC06SNTimefG0Ovp	swift.property	windowDurationConstraint	SNClassifySoundRequest.windowDurationConstraint	@nonobjc var windowDurationConstraint: SNTimeDurationConstraint { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SNClassifierIdentifier	swift.property	hashValue	SNClassifierIdentifier.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SNClassifierIdentifier	swift.method	hash(into:)	SNClassifierIdentifier.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SNErrorCode	swift.property	localizedDescription	SNError.localizedDescription	var localizedDescription: String { get }

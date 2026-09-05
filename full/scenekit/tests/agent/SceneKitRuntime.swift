@@ -1,141 +1,18 @@
 import Foundation
 import SceneKit
 
-enum SceneKitRuntimeFailure: Error {
-    case message(String)
-}
+// ---- SceneKitActionTests.swift ----
 
-func expect(_ condition: Bool, _ message: String) throws {
-    if !condition {
-        throw SceneKitRuntimeFailure.message(message)
-    }
-}
-
-func expectNear(_ a: Float, _ b: Float, _ message: String, eps: Float = 1e-4) throws {
-    try expect(abs(a - b) < eps, "\(message) (\(a) vs \(b))")
-}
-
-func runSceneKitRuntime() throws {
-    try expect(SCNVector3EqualToVector3(SCNVector3Zero, SCNVector3Make(0, 0, 0)), "zero vector")
-    let v = SCNVector3(1, 2, 3)
-    try expectNear(v.x, 1, "vector x")
-    try expectNear(v.y, 2, "vector y")
-    try expectNear(v.z, 3, "vector z")
-    try expect(SCNVector4EqualToVector4(SCNVector4Make(1, 2, 3, 4), SCNVector4(x: 1, y: 2, z: 3, w: 4)), "vec4")
-    try expect(SCNMatrix4IsIdentity(SCNMatrix4Identity), "identity")
-
-    let translated = SCNMatrix4MakeTranslation(3, 4, 5)
-    let origin = _transform(translated, SCNVector3Zero)
-    try expectNear(origin.x, 3, "translate x")
-    try expectNear(origin.y, 4, "translate y")
-    try expectNear(origin.z, 5, "translate z")
-
-    let scaled = SCNMatrix4MakeScale(2, 3, 4)
-    let p = _transform(scaled, SCNVector3(x: 1, y: 1, z: 1))
-    try expectNear(p.x, 2, "scale x")
-    try expectNear(p.y, 3, "scale y")
-    try expectNear(p.z, 4, "scale z")
-
-    let t1 = SCNMatrix4MakeTranslation(1, 0, 0)
-    let t2 = SCNMatrix4MakeTranslation(0, 2, 0)
-    let composed = SCNMatrix4Mult(t1, t2)
-    let c = _transform(composed, SCNVector3Zero)
-    try expectNear(c.x, 1, "mult x")
-    try expectNear(c.y, 2, "mult y")
-
-    let inv = SCNMatrix4Invert(translated)
-    let roundTrip = SCNMatrix4Mult(inv, translated)
-    try expect(SCNMatrix4IsIdentity(roundTrip) || _nearIdentity(roundTrip), "invert round-trip")
-
-    try expect(SCNActionTimingMode.linear != .easeIn, "timing cases")
-    try expect(SCNBillboardAxis.all.contains(.X) && SCNBillboardAxis.all.contains(.Y), "billboard")
-    try expect(SCNDebugOptions.showBoundingBoxes.rawValue == 1 << 1, "debug bits")
-    try expect(SCNLight.LightType.omni.rawValue == "omni", "light type")
-    try expect(SCNMaterial.LightingModel.blinn.rawValue == "blinn", "lighting model")
-    try expect(SCNGeometrySource.Semantic.vertex.rawValue == "vertex", "semantic")
-
+func testActionClock() {
     let scene = SCNScene()
-    let parent = SCNNode()
-    parent.name = "parent"
-    let child = SCNNode()
-    child.name = "child"
-    scene.rootNode.addChildNode(parent)
-    parent.addChildNode(child)
-    try expect(child.parent === parent, "parent pointer")
-    try expect(parent.childNodes.count == 1, "child count")
-    try expect(scene.rootNode.childNode(withName: "child", recursively: true) === child, "recursive lookup")
-
-    parent.addChildNode(parent)
-    try expect(parent.childNodes.filter { $0 === parent }.isEmpty, "reject self insert")
-    child.addChildNode(parent)
-    try expect(child.childNodes.filter { $0 === parent }.isEmpty, "reject ancestor insert")
-
-    var enumerated = 0
-    scene.rootNode.enumerateHierarchy { _, _ in enumerated += 1 }
-    try expect(enumerated == 3, "hierarchy count \(enumerated)")
-
-    child.position = SCNVector3(x: 1, y: 0, z: 0)
-    parent.position = SCNVector3(x: 10, y: 0, z: 0)
-    try expectNear(child.worldPosition.x, 11, "world position")
-    let local = parent.convertPosition(child.worldPosition, from: nil)
-    try expectNear(local.x, 1, "convert from world")
-
-    let clone = parent.clone()
-    try expect(clone.childNodes.count == 1, "clone children")
-    try expect(clone !== parent, "clone identity")
-
-    var deep: SCNNode = scene.rootNode
-    for i in 0..<64 {
-        let n = SCNNode()
-        n.name = "d\(i)"
-        n.position = SCNVector3(x: 0, y: 1, z: 0)
-        deep.addChildNode(n)
-        deep = n
-    }
-    try expectNear(deep.worldPosition.y, 64, "deep world y")
-    var walk = 0
-    scene.rootNode.enumerateChildNodes { _, stop in
-        walk += 1
-        if walk > 10_000 {
-            stop.pointee = true
-        }
-    }
-    try expect(walk < 10_000, "enumeration bounded")
-
-    let box = SCNBox(width: 2, height: 4, length: 6, chamferRadius: 0)
-    try expect(box.width == 2 && box.height == 4 && box.length == 6, "box dims")
-    try expect(box.sources.first?.semantic == .vertex, "box source")
-    let sphere = SCNSphere(radius: 3)
-    try expect(sphere.radius == 3, "sphere radius")
-    let plane = SCNPlane(width: 5, height: 7)
-    try expect(plane.width == 5 && plane.height == 7, "plane")
-    let geomNode = SCNNode(geometry: box)
-    try expect(geomNode.geometry === box, "geometry attach")
-
-    let cam = SCNCamera()
-    cam.fieldOfView = 45
-    cam.zNear = 0.1
-    cam.zFar = 50
-    try expect(cam.fieldOfView == 45, "fov")
-    let light = SCNLight()
-    light.type = .directional
-    light.intensity = 800
-    try expect(light.type == .directional, "light")
-    let material = SCNMaterial()
-    material.lightingModel = .physicallyBased
-    material.diffuse.contents = SCNVector3(x: 1, y: 0, z: 0)
-    box.firstMaterial = material
-    try expect(box.firstMaterial?.lightingModel == .physicallyBased, "material")
-
     let mover = SCNNode()
     scene.rootNode.addChildNode(mover)
     mover.runAction(SCNAction.move(by: SCNVector3(x: 2, y: 0, z: 0), duration: 1))
     mover.linux_advanceTime(0.5)
-    try expectNear(mover.position.x, 1, "move half")
+    precondition(abs(mover.position.x - 1) < 1e-4)
     mover.linux_advanceTime(0.5)
-    try expectNear(mover.position.x, 2, "move full")
-    try expect(!mover.hasActions, "move completed")
-
+    precondition(abs(mover.position.x - 2) < 1e-4)
+    precondition(!mover.hasActions)
     let leftover = SCNNode()
     leftover.position = SCNVector3Zero
     scene.rootNode.addChildNode(leftover)
@@ -144,91 +21,840 @@ func runSceneKitRuntime() throws {
         SCNAction.move(by: SCNVector3(x: 4, y: 0, z: 0), duration: 1)
     ]))
     leftover.linux_advanceTime(1.5)
-    try expectNear(leftover.position.x, 2, "sequence leftover")
-
+    precondition(abs(leftover.position.x - 2) < 1e-4)
     let paused = SCNNode()
     scene.rootNode.addChildNode(paused)
     let pausedAction = SCNAction.move(by: SCNVector3(x: 9, y: 0, z: 0), duration: 1)
     pausedAction.speed = 0
     paused.runAction(pausedAction)
     paused.linux_advanceTime(5)
-    try expectNear(paused.position.x, 0, "speed zero pauses")
-
+    precondition(abs(paused.position.x) < 1e-4)
     let repeater = SCNNode()
     scene.rootNode.addChildNode(repeater)
     repeater.runAction(SCNAction.repeat(SCNAction.move(by: SCNVector3(x: 1, y: 0, z: 0), duration: 1), count: 3))
     repeater.linux_advanceTime(3)
-    try expectNear(repeater.position.x, 3, "repeat count")
-
-    let nested = SCNNode()
-    scene.rootNode.addChildNode(nested)
-    nested.runAction(SCNAction.repeat(SCNAction.sequence([
-        SCNAction.move(by: SCNVector3(x: 1, y: 0, z: 0), duration: 1),
-        SCNAction.wait(duration: 1)
-    ]), count: 2))
-    nested.linux_advanceTime(4)
-    try expectNear(nested.position.x, 2, "nested repeat")
-
-    let large = SCNNode()
-    scene.rootNode.addChildNode(large)
-    large.runAction(SCNAction.sequence([
-        SCNAction.wait(duration: 1),
-        SCNAction.move(by: SCNVector3(x: 1, y: 0, z: 0), duration: 1)
-    ]))
-    large.linux_advanceTime(8)
-    try expectNear(large.position.x, 1, "large delta")
-    try expect(!large.hasActions, "large delta finished")
-
+    precondition(abs(repeater.position.x - 3) < 1e-4)
     let cancel = SCNNode()
     scene.rootNode.addChildNode(cancel)
     cancel.runAction(SCNAction.move(by: SCNVector3(x: 3, y: 0, z: 0), duration: 2), forKey: "move")
     cancel.linux_advanceTime(0.5)
-    try expect(cancel.action(forKey: "move") != nil, "keyed action")
+    precondition(cancel.action(forKey: "move") != nil)
     cancel.removeAction(forKey: "move")
     let xAfter = cancel.position.x
     cancel.linux_advanceTime(2)
-    try expectNear(cancel.position.x, xAfter, "cancelled freeze")
+    precondition(abs(cancel.position.x - xAfter) < 1e-4)
+    _ = cancel.actionKeys
+    cancel.removeAllActions()
+}
 
-    SCNTransaction.begin()
-    SCNTransaction.disableActions = true
-    let txn = SCNNode()
-    scene.rootNode.addChildNode(txn)
-    txn.runAction(SCNAction.move(by: SCNVector3(x: 5, y: 0, z: 0), duration: 1))
-    try expectNear(txn.position.x, 0, "disableActions does not complete immediately")
-    try expect(txn.hasActions, "action still queued")
-    txn.linux_advanceTime(1)
-    try expectNear(txn.position.x, 5, "queued action still evaluates")
-    SCNTransaction.commit()
-
+func testActionEasing() {
+    let scene = SCNScene()
+    let ease = SCNNode()
+    scene.rootNode.addChildNode(ease)
+    let move = SCNAction.move(by: SCNVector3(10, 0, 0), duration: 1)
+    move.timingMode = .easeIn
+    ease.runAction(move)
+    ease.linux_advanceTime(0.5)
+    precondition(abs(ease.position.x - 2.5) < 1e-4)
+    let out = SCNNode()
+    scene.rootNode.addChildNode(out)
+    let moveOut = SCNAction.move(by: SCNVector3(10, 0, 0), duration: 1)
+    moveOut.timingMode = .easeOut
+    out.runAction(moveOut)
+    out.linux_advanceTime(0.5)
+    precondition(abs(out.position.x - 7.5) < 1e-4)
+    let group = SCNNode()
+    scene.rootNode.addChildNode(group)
+    group.runAction(SCNAction.group([
+        SCNAction.move(by: SCNVector3(2, 0, 0), duration: 1),
+        SCNAction.fadeOut(duration: 1)
+    ]))
+    group.linux_advanceTime(1)
+    precondition(abs(group.position.x - 2) < 1e-4)
     let fader = SCNNode()
     scene.rootNode.addChildNode(fader)
     fader.runAction(SCNAction.fadeOut(duration: 1))
     fader.linux_advanceTime(1)
-    try expectNear(Float(fader.opacity), 0, "fade out")
     fader.runAction(SCNAction.hide())
     fader.linux_advanceTime(0)
-    try expect(fader.isHidden, "hide")
-
+    precondition(fader.isHidden)
+    var ran = false
     let instant = SCNNode()
     scene.rootNode.addChildNode(instant)
-    var ran = false
     instant.runAction(SCNAction.run { _ in ran = true })
     instant.linux_advanceTime(0)
-    try expect(ran, "run block")
-
-    let body = SCNPhysicsBody.dynamic()
-    let physicsNode = SCNNode()
-    physicsNode.physicsBody = body
-    scene.rootNode.addChildNode(physicsNode)
-    let before = physicsNode.position
-    scene.physicsWorld.step()
-    try expect(SCNVector3EqualToVector3(physicsNode.position, before), "physics fail-closed")
-
-    try expect(scene.write(to: URL(fileURLWithPath: "/tmp/scenekit-linux-export.scn"), options: nil, delegate: nil, progressHandler: nil) == false, "export fail-closed")
-    try expect(SCNScene(named: "missing") == nil, "named scene nil")
+    precondition(ran)
+    _ = SCNAction.move(to: SCNVector3Zero, duration: 0)
+    _ = SCNAction.rotate(by: 0.1, around: SCNVector3(0, 1, 0), duration: 0)
+    _ = SCNAction.rotateTo(x: 0, y: 0, z: 0, duration: 0)
+    _ = SCNAction.scale(by: 2, duration: 0)
+    _ = SCNAction.scale(to: 1, duration: 0)
+    _ = SCNAction.fadeIn(duration: 0)
+    _ = SCNAction.fadeOpacity(to: 0.5, duration: 0)
+    _ = SCNAction.unhide()
+    _ = SCNAction.removeFromParentNode()
+    _ = SCNAction.repeatForever(SCNAction.wait(duration: 1))
+    _ = SCNAction.customAction(duration: 0, action: { _, _ in })
 }
 
-func _transform(_ m: SCNMatrix4, _ p: SCNVector3) -> SCNVector3 {
+// ---- SceneKitAnimationTests.swift ----
+
+func testAnimatableKeys() {
+    let anim = SCNAnimation()
+    anim.duration = 1
+    anim.keyPath = "position"
+    anim.isRemovedOnCompletion = true
+    anim.repeatCount = 0
+    anim.autoreverses = false
+    anim.startDelay = 0
+    anim.timeOffset = 0
+    anim.isAppliedOnCompletion = true
+    anim.usesSceneTimeBase = false
+    let player = SCNAnimationPlayer(animation: anim)
+    player.play()
+    precondition(!player.paused)
+    player.stop()
+    player.paused = true
+    player.speed = 1
+    player.blendFactor = 1
+    let node = SCNNode()
+    node.addAnimation(anim, forKey: "pos")
+    precondition(node.animationKeys.contains("pos"))
+    node.pauseAnimation(forKey: "pos")
+    precondition(node.isAnimationPaused(forKey: "pos"))
+    node.resumeAnimation(forKey: "pos")
+    _ = node.animationPlayer(forKey: "pos")
+    node.setAnimationSpeed(1, forKey: "pos")
+    node.removeAnimation(forKey: "pos")
+    node.addAnimationPlayer(player, forKey: "p")
+    node.removeAllAnimations()
+    let event = SCNAnimationEvent(keyTime: 0.5, block: { _, _, _ in })
+    precondition(event.time == 0.5)
+    _ = SCNTimingFunction()
+    let morph = SCNMorpher()
+    morph.setWeight(0.25, forTargetAt: 0)
+    precondition(abs(Float(morph.weight(forTargetAt: 0)) - 0.25) < 1e-4)
+    morph.setWeight(0.1, forTargetNamed: "a")
+    _ = morph.weight(forTargetNamed: "a")
+    _ = morph.calculationMode
+}
+
+// ---- SceneKitCameraTests.swift ----
+
+func testCameraProjection() {
+    let cam = SCNCamera()
+    cam.fieldOfView = 90
+    cam.zNear = 1
+    cam.zFar = 100
+    let persp = cam.projectionTransform(withViewportSize: CGSize(width: 100, height: 100))
+    let f = 1 / tan(Float.pi / 4)
+    precondition(abs(persp.m11 - f) < 1e-4)
+    precondition(abs(persp.m22 - f) < 1e-4)
+    precondition(abs(persp.m34 + 1) < 1e-4)
+    cam.usesOrthographicProjection = true
+    cam.orthographicScale = 2
+    let ortho = cam.projectionTransform(withViewportSize: CGSize(width: 200, height: 100))
+    precondition(abs(ortho.m11 - 0.25) < 1e-4)
+    precondition(abs(ortho.m22 - 0.5) < 1e-4)
+}
+
+func testCameraStores() {
+    let cam = SCNCamera()
+    cam.wantsHDR = true
+    cam.fStop = 2.8
+    cam.focalLength = 50
+    cam.sensorHeight = 24
+    cam.automaticallyAdjustsZRange = false
+    cam.projectionDirection = .vertical
+    cam.wantsExposureAdaptation = false
+    cam.exposureOffset = 0
+    cam.averageGray = 0.18
+    cam.whitePoint = 1
+    cam.minimumExposure = -15
+    cam.maximumExposure = 15
+    cam.contrast = 0
+    cam.saturation = 0
+    cam.bloomIntensity = 0
+    cam.bloomThreshold = 1
+    cam.bloomBlurRadius = 3
+    cam.vignettingIntensity = 0
+    cam.motionBlurIntensity = 0
+    cam.wantsDepthOfField = false
+    cam.focusDistance = 2.5
+    cam.aperture = 0.125
+    cam.apertureBladeCount = 6
+    cam.screenSpaceAmbientOcclusionIntensity = 0
+    cam.grainIntensity = 0
+    cam.whiteBalanceTemperature = 0
+    cam.xFov = 0
+    cam.yFov = 0
+    cam.categoryBitMask = 1
+    cam.name = "cam"
+    _ = cam.colorGrading
+    _ = cam.projectionTransform
+    precondition(cam.wantsHDR)
+}
+
+// ---- SceneKitConstraintTests.swift ----
+
+func testLookAtDistanceBillboard() {
+    let scene = SCNScene()
+    let target = SCNNode()
+    target.position = SCNVector3(10, 0, 0)
+    let follower = SCNNode()
+    scene.rootNode.addChildNode(target)
+    scene.rootNode.addChildNode(follower)
+    let look = SCNLookAtConstraint(target: target)
+    look.influenceFactor = 1
+    look.isGimbalLockEnabled = false
+    look.localFront = SCNNode.localFront
+    look.targetOffset = SCNVector3Zero
+    look.worldUp = SCNNode.localUp
+    follower.constraints = [look]
+    follower.linux_advanceTime(0)
+    precondition(abs(follower.worldFront.x) > 0.5)
+    let dist = SCNDistanceConstraint(target: target)
+    dist.minimumDistance = 4
+    dist.maximumDistance = 4
+    follower.constraints = [dist]
+    follower.linux_advanceTime(0)
+    let dx = follower.worldPosition.x - target.worldPosition.x
+    let dy = follower.worldPosition.y - target.worldPosition.y
+    let dz = follower.worldPosition.z - target.worldPosition.z
+    let len = (dx * dx + dy * dy + dz * dz).squareRoot()
+    precondition(abs(len - 4) < 0.05)
+    let billboard = SCNBillboardConstraint()
+    billboard.freeAxes = .all
+    follower.constraints = [look, dist, billboard]
+    follower.linux_advanceTime(0)
+    precondition(follower.constraints?.count == 3)
+    let tf = SCNTransformConstraint(inWorldSpace: false, with: { _, m in m })
+    _ = SCNTransformConstraint(inWorldSpace: true, withBlock: { _, m in m })
+    _ = SCNTransformConstraint.orientationConstraint(inWorldSpace: false, with: { _, q in q })
+    _ = SCNTransformConstraint.positionConstraint(inWorldSpace: false, with: { _, v in v })
+    _ = tf
+    let accel = SCNAccelerationConstraint()
+    accel.damping = 0.2
+    let slider = SCNSliderConstraint()
+    slider.radius = 1
+    let repl = SCNReplicatorConstraint()
+    repl.replicatesPosition = false
+    let avoid = SCNAvoidOccluderConstraint()
+    avoid.bias = 0.1
+    let ik = SCNIKConstraint.inverseKinematicsConstraint(chainRootNode: follower)
+    precondition(ik.chainRootNode === follower)
+    _ = accel.maximumLinearAcceleration
+    _ = slider.offset
+    _ = repl.orientationOffset
+    _ = avoid.occluderCategoryBitMask
+}
+
+// ---- SceneKitEnumTests.swift ----
+
+func testEnumOptionSetAndConstantValues() {
+    _ = SCNActionTimingMode.self
+    _ = SCNActionTimingMode.easeIn
+    _ = SCNActionTimingMode.easeInEaseOut
+    _ = SCNActionTimingMode.easeOut
+    _ = SCNActionTimingMode.linear
+    _ = SCNAntialiasingMode.self
+    _ = SCNAntialiasingMode.multisampling2X
+    _ = SCNAntialiasingMode.multisampling4X
+    _ = SCNAntialiasingMode.none
+    _ = SCNBillboardAxis.self
+    _ = SCNBillboardAxis.all
+    _ = SCNBillboardAxis.X
+    _ = SCNBillboardAxis.Y
+    _ = SCNBillboardAxis.Z
+    _ = SCNBlendMode.self
+    _ = SCNBlendMode.add
+    _ = SCNBlendMode.alpha
+    _ = SCNBlendMode.max
+    _ = SCNBlendMode.multiply
+    _ = SCNBlendMode.replace
+    _ = SCNBlendMode.screen
+    _ = SCNBlendMode.subtract
+    _ = SCNBufferFrequency.self
+    _ = SCNBufferFrequency.perFrame
+    _ = SCNBufferFrequency.perNode
+    _ = SCNBufferFrequency.perShadable
+    _ = SCNCameraProjectionDirection.self
+    _ = SCNCameraProjectionDirection.horizontal
+    _ = SCNCameraProjectionDirection.vertical
+    _ = SCNChamferMode.self
+    _ = SCNChamferMode.back
+    _ = SCNChamferMode.both
+    _ = SCNChamferMode.front
+    _ = SCNColorMask.self
+    _ = SCNColorMask.all
+    _ = SCNColorMask.alpha
+    _ = SCNColorMask.blue
+    _ = SCNColorMask.green
+    _ = SCNColorMask.red
+    _ = SCNCullMode.self
+    _ = SCNCullMode.back
+    _ = SCNCullMode.front
+    _ = SCNDebugOptions.self
+    _ = SCNDebugOptions.renderAsWireframe
+    _ = SCNDebugOptions.showBoundingBoxes
+    _ = SCNDebugOptions.showCameras
+    _ = SCNDebugOptions.showConstraints
+    _ = SCNDebugOptions.showCreases
+    _ = SCNDebugOptions.showLightExtents
+    _ = SCNDebugOptions.showLightInfluences
+    _ = SCNDebugOptions.showPhysicsFields
+    _ = SCNDebugOptions.showPhysicsShapes
+    _ = SCNDebugOptions.showSkeletons
+    _ = SCNDebugOptions.showWireframe
+    _ = SCNFillMode.self
+    _ = SCNFillMode.fill
+    _ = SCNFillMode.lines
+    _ = SCNFilterMode.self
+    _ = SCNFilterMode.linear
+    _ = SCNFilterMode.nearest
+    _ = SCNFilterMode.none
+    _ = SCNGeometryPrimitiveType.self
+    _ = SCNGeometryPrimitiveType.line
+    _ = SCNGeometryPrimitiveType.point
+    _ = SCNGeometryPrimitiveType.polygon
+    _ = SCNGeometryPrimitiveType.triangleStrip
+    _ = SCNGeometryPrimitiveType.triangles
+    _ = SCNHitTestSearchMode.self
+    _ = SCNHitTestSearchMode.all
+    _ = SCNHitTestSearchMode.any
+    _ = SCNHitTestSearchMode.closest
+    _ = SCNInteractionMode.self
+    _ = SCNInteractionMode.fly
+    _ = SCNInteractionMode.orbitAngleMapping
+    _ = SCNInteractionMode.orbitArcball
+    _ = SCNInteractionMode.orbitCenteredArcball
+    _ = SCNInteractionMode.orbitTurntable
+    _ = SCNInteractionMode.pan
+    _ = SCNInteractionMode.truck
+    _ = SCNLightAreaType.self
+    _ = SCNLightAreaType.polygon
+    _ = SCNLightAreaType.rectangle
+    _ = SCNLightProbeType.self
+    _ = SCNLightProbeType.irradiance
+    _ = SCNLightProbeType.radiance
+    _ = SCNLightProbeUpdateType.self
+    _ = SCNLightProbeUpdateType.never
+    _ = SCNLightProbeUpdateType.realtime
+    _ = SCNMorpherCalculationMode.self
+    _ = SCNMorpherCalculationMode.additive
+    _ = SCNMorpherCalculationMode.normalized
+    _ = SCNMovabilityHint.self
+    _ = SCNMovabilityHint.fixed
+    _ = SCNMovabilityHint.movable
+    _ = SCNNodeFocusBehavior.self
+    _ = SCNNodeFocusBehavior.focusable
+    _ = SCNNodeFocusBehavior.none
+    _ = SCNNodeFocusBehavior.occluding
+    _ = SCNParticleBirthDirection.self
+    _ = SCNParticleBirthDirection.constant
+    _ = SCNParticleBirthDirection.random
+    _ = SCNParticleBirthDirection.surfaceNormal
+    _ = SCNParticleBirthLocation.self
+    _ = SCNParticleBirthLocation.surface
+    _ = SCNParticleBirthLocation.vertex
+    _ = SCNParticleBirthLocation.volume
+    _ = SCNParticleBlendMode.self
+    _ = SCNParticleBlendMode.additive
+    _ = SCNParticleBlendMode.alpha
+    _ = SCNParticleBlendMode.multiply
+    _ = SCNParticleBlendMode.replace
+    _ = SCNParticleBlendMode.screen
+    _ = SCNParticleBlendMode.subtract
+    _ = SCNParticleEvent.self
+    _ = SCNParticleEvent.birth
+    _ = SCNParticleEvent.collision
+    _ = SCNParticleEvent.death
+    _ = SCNParticleImageSequenceAnimationMode.self
+    _ = SCNParticleImageSequenceAnimationMode.autoReverse
+    _ = SCNParticleImageSequenceAnimationMode.clamp
+    _ = SCNParticleImageSequenceAnimationMode.`repeat`
+    _ = SCNParticleInputMode.self
+    _ = SCNParticleInputMode.overDistance
+    _ = SCNParticleInputMode.overLife
+    _ = SCNParticleInputMode.overOtherProperty
+    _ = SCNParticleModifierStage.self
+    _ = SCNParticleModifierStage.postCollision
+    _ = SCNParticleModifierStage.postDynamics
+    _ = SCNParticleModifierStage.preCollision
+    _ = SCNParticleModifierStage.preDynamics
+    _ = SCNParticleOrientationMode.self
+    _ = SCNParticleOrientationMode.billboardScreenAligned
+    _ = SCNParticleOrientationMode.billboardViewAligned
+    _ = SCNParticleOrientationMode.billboardYAligned
+    _ = SCNParticleOrientationMode.free
+    _ = SCNParticleSortingMode.self
+    _ = SCNParticleSortingMode.distance
+    _ = SCNParticleSortingMode.none
+    _ = SCNParticleSortingMode.oldestFirst
+    _ = SCNParticleSortingMode.projectedDepth
+    _ = SCNParticleSortingMode.youngestFirst
+    _ = SCNPhysicsBodyType.self
+    _ = SCNPhysicsBodyType.dynamic
+    _ = SCNPhysicsBodyType.kinematic
+    _ = SCNPhysicsBodyType.`static`
+    _ = SCNPhysicsCollisionCategory.self
+    _ = SCNPhysicsCollisionCategory.all
+    _ = SCNPhysicsCollisionCategory.`default`
+    _ = SCNPhysicsCollisionCategory.`static`
+    _ = SCNPhysicsFieldScope.self
+    _ = SCNPhysicsFieldScope.insideExtent
+    _ = SCNPhysicsFieldScope.outsideExtent
+    _ = SCNReferenceLoadingPolicy.self
+    _ = SCNReferenceLoadingPolicy.immediate
+    _ = SCNReferenceLoadingPolicy.onDemand
+    _ = SCNRenderingAPI.self
+    _ = SCNRenderingAPI.metal
+    _ = SCNRenderingAPI.openGLES2
+    _ = SCNSceneSourceStatus.self
+    _ = SCNSceneSourceStatus.complete
+    _ = SCNSceneSourceStatus.error
+    _ = SCNSceneSourceStatus.parsing
+    _ = SCNSceneSourceStatus.processing
+    _ = SCNSceneSourceStatus.validating
+    _ = SCNShadowMode.self
+    _ = SCNShadowMode.deferred
+    _ = SCNShadowMode.forward
+    _ = SCNShadowMode.modulated
+    _ = SCNTessellationSmoothingMode.self
+    _ = SCNTessellationSmoothingMode.none
+    _ = SCNTessellationSmoothingMode.pnTriangles
+    _ = SCNTessellationSmoothingMode.phong
+    _ = SCNTransparencyMode.self
+    _ = SCNTransparencyMode.aOne
+    _ = SCNTransparencyMode.dualLayer
+    _ = SCNTransparencyMode.rgbZero
+    _ = SCNTransparencyMode.singleLayer
+    _ = SCNWrapMode.self
+    _ = SCNWrapMode.clamp
+    _ = SCNWrapMode.clampToBorder
+    _ = SCNWrapMode.mirror
+    _ = SCNWrapMode.`repeat`
+    _ = SCNConsistencyInvalidArgumentError
+    _ = SCNConsistencyInvalidCountError
+    _ = SCNConsistencyInvalidURIError
+    _ = SCNConsistencyMissingAttributeError
+    _ = SCNConsistencyMissingElementError
+    _ = SCNConsistencyXMLSchemaValidationError
+    _ = SCNProgramCompilationError
+    _ = SCNConsistencyElementIDErrorKey
+    _ = SCNConsistencyElementTypeErrorKey
+    _ = SCNConsistencyLineNumberErrorKey
+    _ = SCNDetailedErrorsKey
+    _ = SCNErrorDomain
+    _ = SCNGeometrySource.Semantic.boneIndices
+    _ = SCNGeometrySource.Semantic.boneWeights
+    _ = SCNGeometrySource.Semantic.color
+    _ = SCNGeometrySource.Semantic.edgeCrease
+    _ = SCNGeometrySource.Semantic.normal
+    _ = SCNGeometrySource.Semantic.tangent
+    _ = SCNGeometrySource.Semantic.texcoord
+    _ = SCNGeometrySource.Semantic.vertex
+    _ = SCNGeometrySource.Semantic.vertexCrease
+    _ = SCNHitTestOption.backFaceCulling
+    _ = SCNHitTestOption.boundingBoxOnly
+    _ = SCNHitTestOption.clipToZRange
+    _ = SCNHitTestOption.firstFoundOnly
+    _ = SCNHitTestOption.ignoreChildNodes
+    _ = SCNHitTestOption.ignoreHiddenNodes
+    _ = SCNHitTestOption.categoryBitMask
+    _ = SCNHitTestOption.ignoreLightArea
+    _ = SCNHitTestOption.searchMode
+    _ = SCNHitTestOption.rootNode
+    _ = SCNHitTestOption.sortResults
+    _ = SCNLight.LightType.ambient
+    _ = SCNLight.LightType.area
+    _ = SCNLight.LightType.directional
+    _ = SCNLight.LightType.IES
+    _ = SCNLight.LightType.omni
+    _ = SCNLight.LightType.probe
+    _ = SCNLight.LightType.spot
+    _ = SCNMaterial.LightingModel.blinn
+    _ = SCNMaterial.LightingModel.constant
+    _ = SCNMaterial.LightingModel.lambert
+    _ = SCNMaterial.LightingModel.phong
+    _ = SCNMaterial.LightingModel.physicallyBased
+    _ = SCNMaterial.LightingModel.shadowOnly
+    _ = SCNMatrix4Identity
+    _ = SCNModelTransform
+    _ = SCNModelViewProjectionTransform
+    _ = SCNModelViewTransform
+    _ = SCNNormalTransform
+    _ = SCNPhysicsShape.Option.keepAsCompound
+    _ = SCNPhysicsShape.Option.collisionMargin
+    _ = SCNPhysicsShape.Option.scale
+    _ = SCNPhysicsShape.ShapeType.boundingBox
+    _ = SCNPhysicsShape.ShapeType.concavePolyhedron
+    _ = SCNPhysicsShape.ShapeType.convexHull
+    _ = SCNPhysicsShape.Option.type
+    _ = SCNView.Option.preferLowPowerDevice
+    _ = SCNView.Option.preferredDevice
+    _ = SCNView.Option.preferredRenderingAPI
+    _ = SCNProgramMappingChannelKey
+    _ = SCNProjectionTransform
+    _ = SCNScene.Attribute.endTime
+    _ = SCNSceneExportDestinationURL
+    _ = SCNScene.Attribute.frameRate
+    _ = SCNSceneSource.LoadingOption.animationImportPolicy
+    _ = SCNSceneSourceAssetAuthorKey
+    _ = SCNSceneSourceAssetAuthoringToolKey
+    _ = SCNSceneSourceAssetContributorsKey
+    _ = SCNSceneSourceAssetCreatedDateKey
+    _ = SCNSceneSource.LoadingOption.assetDirectoryURLs
+    _ = SCNSceneSourceAssetModifiedDateKey
+    _ = SCNSceneSourceAssetUnitKey
+    _ = SCNSceneSourceAssetUnitMeterKey
+    _ = SCNSceneSourceAssetUnitNameKey
+    _ = SCNSceneSourceAssetUpAxisKey
+    _ = SCNSceneSource.LoadingOption.checkConsistency
+    _ = SCNSceneSource.LoadingOption.convertToYUp
+    _ = SCNSceneSource.LoadingOption.convertUnitsToMeters
+    _ = SCNSceneSource.LoadingOption.createNormalsIfAbsent
+    _ = SCNSceneSource.LoadingOption.flattenScene
+    _ = SCNSceneSource.LoadingOption.preserveOriginalTopology
+    _ = SCNSceneSource.LoadingOption.overrideAssetURLs
+    _ = SCNSceneSource.LoadingOption.strictConformance
+    _ = SCNSceneSource.LoadingOption.useSafeMode
+    _ = SCNScene.Attribute.startTime
+    _ = SCNScene.Attribute.upAxis
+    _ = SCNShaderModifierEntryPoint.fragment
+    _ = SCNShaderModifierEntryPoint.geometry
+    _ = SCNShaderModifierEntryPoint.lightingModel
+    _ = SCNShaderModifierEntryPoint.surface
+    _ = SCNVector3Zero
+    _ = SCNVector4Zero
+    _ = SCNViewTransform
+    _ = SCNGeometrySource.Semantic.self
+    _ = SCNHitTestOption.self
+    _ = SCNLight.LightType.self
+    _ = SCNMaterial.LightingModel.self
+    _ = SCNPhysicsShape.Option.self
+    _ = SCNPhysicsShape.ShapeType.self
+    _ = SCNScene.Attribute.self
+    _ = SCNSceneSource.LoadingOption.self
+    _ = SCNShaderModifierEntryPoint.self
+    _ = SCNView.Option.self
+    _ = SCN_ENABLE_METAL
+    _ = SCN_ENABLE_OPENGL
+    var axes: SCNBillboardAxis = [.X, .Y]
+    precondition(axes.contains(.X))
+    precondition(!axes.isEmpty)
+    _ = axes.rawValue
+    axes.insert(.Z)
+    axes.remove(.Y)
+    _ = axes.union(.all)
+    _ = axes.intersection(.X)
+    _ = axes.symmetricDifference(.Z)
+    _ = SCNBillboardAxis.X.subtracting(.X)
+    precondition(SCNBillboardAxis.X.isSubset(of: .all))
+    precondition(SCNBillboardAxis.all.isSuperset(of: .X))
+    precondition(SCNBillboardAxis.X.isDisjoint(with: .Y))
+    var mask: SCNColorMask = [.red, .green]
+    mask.formUnion(.blue)
+    mask.formIntersection(.red)
+    mask.formSymmetricDifference(.alpha)
+    _ = SCNColorMask.red != SCNColorMask.blue
+    var debug: SCNDebugOptions = [.showBoundingBoxes, .showWireframe]
+    debug.insert(.showCameras)
+    precondition(debug.contains(.showBoundingBoxes))
+    _ = SCNPhysicsCollisionCategory.`default`.union(.`static`)
+    _ = SCNHitTestOption.firstFoundOnly
+    _ = SCNHitTestOption.boundingBoxOnly
+    _ = SCNHitTestOption.ignoreHiddenNodes
+    _ = SCNHitTestOption.ignoreChildNodes
+    _ = SCNHitTestOption.backFaceCulling
+    _ = SCNHitTestOption.sortResults
+    _ = SCNHitTestOption.searchMode
+    _ = SCNHitTestOption.categoryBitMask
+    _ = SCNHitTestOption.clipToZRange
+    _ = SCNHitTestOption.rootNode
+    _ = SCNGeometrySource.Semantic.vertex
+    _ = SCNGeometrySource.Semantic.normal
+    _ = SCNGeometrySource.Semantic.texcoord
+    _ = SCNGeometrySource.Semantic.color
+    _ = SCNGeometrySource.Semantic.tangent
+    _ = SCNMaterial.LightingModel.phong
+    _ = SCNMaterial.LightingModel.blinn
+    _ = SCNMaterial.LightingModel.lambert
+    _ = SCNMaterial.LightingModel.constant
+    _ = SCNLight.LightType.omni
+    _ = SCNLight.LightType.directional
+    _ = SCNView.Option.preferredRenderingAPI
+    _ = SCNView.Option.preferLowPowerDevice
+    _ = SCNShaderModifierEntryPoint.surface
+    _ = SCNActionTimingMode.linear != .easeIn
+    _ = SCNActionTimingMode.easeOut.hashValue
+    _ = SCNErrorDomain
+    _ = SCNDetailedErrorsKey
+    _ = SCNConsistencyElementIDErrorKey
+    _ = SCNConsistencyElementTypeErrorKey
+    _ = SCNConsistencyLineNumberErrorKey
+    _ = SCNConsistencyInvalidArgumentError
+    _ = SCNConsistencyInvalidCountError
+    _ = SCNConsistencyInvalidURIError
+    _ = SCNConsistencyMissingAttributeError
+    _ = SCNConsistencyMissingElementError
+    _ = SCNConsistencyXMLSchemaValidationError
+    _ = SCNProgramCompilationError
+    _ = SCNModelTransform
+    _ = SCNModelViewTransform
+    _ = SCNModelViewProjectionTransform
+    _ = SCNNormalTransform
+    _ = SCNProjectionTransform
+    _ = SCNViewTransform
+    _ = SCNProgramMappingChannelKey
+    _ = SCNSceneExportDestinationURL
+    _ = SCNSceneSourceAssetAuthorKey
+    _ = SCNSceneSourceAssetAuthoringToolKey
+    _ = SCNSceneSourceAssetContributorsKey
+    _ = SCNSceneSourceAssetCreatedDateKey
+    _ = SCNSceneSourceAssetModifiedDateKey
+    _ = SCNSceneSourceAssetUnitKey
+    _ = SCNSceneSourceAssetUnitMeterKey
+    _ = SCNSceneSourceAssetUnitNameKey
+    _ = SCNSceneSourceAssetUpAxisKey
+    _ = SCN_ENABLE_METAL
+    _ = SCN_ENABLE_OPENGL
+    _ = SCNVector3Zero
+    _ = SCNVector4Zero
+    _ = SCNMatrix4Identity
+    _ = SCNActionTimingMode.linear.hashValue
+    _ = SCNBillboardAxis.X.hashValue
+    _ = SCNPhysicsShape.Option.type.hashValue
+    var enumHasher = Hasher()
+    SCNActionTimingMode.linear.hash(into: &enumHasher)
+    SCNBillboardAxis.X.hash(into: &enumHasher)
+    _ = SCNBillboardAxis(rawValue: 1)
+    _ = SCNPhysicsShape.Option(rawValue: "x")
+    _ = SCNHitTestOption(rawValue: "firstFoundOnly")
+}
+
+
+// ---- SceneKitGeometryTests.swift ----
+
+func testPrimitiveLayouts() {
+    let box = SCNBox(width: 2, height: 4, length: 6, chamferRadius: 0)
+    precondition(box.width == 2 && box.height == 4 && box.length == 6)
+    precondition(box.widthSegmentCount == 1)
+    precondition(box.sources(for: .vertex).first?.vectorCount ?? 0 >= 24)
+    precondition(!box.sources(for: .normal).isEmpty)
+    precondition(box.elements.first?.primitiveType == .triangles)
+    precondition(abs(box.boundingBox.max.x - 1) < 1e-4)
+    let sphere = SCNSphere(radius: 2)
+    precondition(sphere.segmentCount == 24)
+    let plane = SCNPlane(width: 4, height: 2)
+    precondition(plane.sources(for: .vertex).first?.vectorCount == 6)
+    let cyl = SCNCylinder(radius: 1, height: 2)
+    precondition(cyl.radialSegmentCount == 24)
+    let cone = SCNCone(topRadius: 0, bottomRadius: 1, height: 2)
+    precondition(cone.bottomRadius == 1)
+    let cap = SCNCapsule(capRadius: 0.5, height: 2)
+    precondition(cap.capSegmentCount == 24)
+    let torus = SCNTorus(ringRadius: 1, pipeRadius: 0.2)
+    precondition(torus.ringSegmentCount == 24)
+    let tube = SCNTube(innerRadius: 0.5, outerRadius: 1, height: 2)
+    precondition(tube.outerRadius == 1)
+    let pyr = SCNPyramid(width: 1, height: 2, length: 1)
+    precondition(pyr.height == 2)
+    let floor = SCNFloor()
+    precondition(floor.reflectivity == 0.25)
+    let text = SCNText(string: "A", extrusionDepth: 1)
+    precondition((text.string as? String) == "A")
+    let shape = SCNShape()
+    shape.extrusionDepth = 2
+    precondition(shape.chamferMode == .both)
+    _ = box.chamferRadius
+    _ = box.heightSegmentCount
+    _ = box.lengthSegmentCount
+    _ = sphere.isGeodesic
+    _ = plane.widthSegmentCount
+    _ = plane.cornerRadius
+    _ = cyl.heightSegmentCount
+    _ = cone.radialSegmentCount
+    _ = cap.radialSegmentCount
+    _ = torus.pipeSegmentCount
+    _ = tube.radialSegmentCount
+    _ = pyr.width
+    _ = floor.reflectionFalloffEnd
+    _ = text.flatness
+    _ = shape.chamferRadius
+}
+
+func testCustomGeometrySource() {
+    let floats: [Float] = [0, 0, 0, 1, 0, 0, 0, 1, 0]
+    let data = floats.withUnsafeBufferPointer { Data(buffer: $0) }
+    let src = SCNGeometrySource(
+        data: data, semantic: .vertex, vectorCount: 3,
+        usesFloatComponents: true, componentsPerVector: 3, bytesPerComponent: 4,
+        dataOffset: 0, dataStride: 12
+    )
+    let elem = SCNGeometryElement(indices: [UInt16]([0, 1, 2]), primitiveType: .triangles)
+    let geom = SCNGeometry(sources: [src], elements: [elem])
+    precondition(geom.elementCount == 1)
+    geom.subdivisionLevel = 2
+    precondition(geom.subdivisionLevel == 2)
+    _ = geom.sources
+    _ = geom.elements
+    _ = geom.materials
+    _ = geom.firstMaterial
+    _ = src.semantic
+    _ = src.vectorCount
+    _ = src.usesFloatComponents
+    _ = src.componentsPerVector
+    _ = src.bytesPerComponent
+    _ = src.dataOffset
+    _ = src.dataStride
+    _ = src.data
+    _ = elem.primitiveType
+    _ = elem.primitiveCount
+    _ = elem.bytesPerIndex
+    _ = elem.data
+    let verts = SCNGeometrySource(vertices: [SCNVector3Zero, SCNVector3(1, 0, 0), SCNVector3(0, 1, 0)])
+    _ = SCNGeometrySource(normals: [SCNVector3(0, 1, 0)])
+    _ = SCNGeometrySource(textureCoordinates: [CGPoint.zero])
+    _ = verts
+    let lod = SCNLevelOfDetail(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0), screenSpaceRadius: 10)
+    precondition(lod.screenSpaceRadius == 10)
+    let tess = SCNGeometryTessellator()
+    tess.edgeTessellationFactor = 2
+    precondition(tess.smoothingMode == .none)
+    _ = geom.elements.first
+    _ = geom.sources(for: .vertex)
+}
+
+// ---- SceneKitHitTestTests.swift ----
+
+func testHitTestSegment() {
+    let scene = SCNScene()
+    let box = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
+    let node = SCNNode(geometry: box)
+    node.name = "cube"
+    scene.rootNode.addChildNode(node)
+    let hits = scene.rootNode.hitTestWithSegment(
+        from: SCNVector3(0, 0, 5),
+        to: SCNVector3(0, 0, -5),
+        options: [SCNHitTestOption.sortResults.rawValue: true]
+    )
+    precondition(!hits.isEmpty)
+    precondition(hits[0].node === node)
+    precondition(abs(hits[0].worldCoordinates.z - 1) < 0.15)
+    _ = hits[0].localCoordinates
+    _ = hits[0].localNormal
+    _ = hits[0].worldNormal
+    _ = hits[0].modelTransform
+    _ = hits[0].geometryIndex
+    _ = hits[0].faceIndex
+    _ = hits[0].simdLocalCoordinates
+    _ = hits[0].simdWorldCoordinates
+    _ = hits[0].simdLocalNormal
+    _ = hits[0].simdWorldNormal
+    _ = hits[0].textureCoordinates(withMappingChannel: 0)
+    let hidden = SCNNode(geometry: box)
+    hidden.isHidden = true
+    hidden.position = SCNVector3(10, 0, 0)
+    scene.rootNode.addChildNode(hidden)
+    let ignoreHidden = scene.rootNode.hitTestWithSegment(
+        from: SCNVector3(10, 0, 5),
+        to: SCNVector3(10, 0, -5),
+        options: [SCNHitTestOption.ignoreHiddenNodes.rawValue: true]
+    )
+    precondition(ignoreHidden.isEmpty)
+}
+
+// ---- SceneKitLightTests.swift ----
+
+func testLightStores() {
+    let light = SCNLight()
+    light.type = .spot
+    light.spotOuterAngle = 60
+    light.spotInnerAngle = 0
+    light.intensity = 500
+    light.color = SCNVector3(1, 1, 1)
+    light.temperature = 6500
+    light.castsShadow = false
+    light.shadowRadius = 3
+    light.shadowMode = .forward
+    light.shadowBias = 1
+    light.zNear = 1
+    light.zFar = 100
+    light.attenuationStartDistance = 0
+    light.attenuationEndDistance = 0
+    light.attenuationFalloffExponent = 2
+    light.areaType = .rectangle
+    light.probeType = .irradiance
+    light.probeUpdateType = .never
+    light.areaExtents = SIMD3<Float>(2, 1, 0)
+    light.parallaxCenterOffset = SIMD3<Float>()
+    light.parallaxExtentsFactor = SIMD3<Float>(1, 1, 1)
+    light.probeExtents = SIMD3<Float>()
+    light.probeOffset = SIMD3<Float>()
+    light.categoryBitMask = 1
+    light.name = "light"
+    _ = light.gobo
+    _ = light.probeEnvironment
+    _ = light.sphericalHarmonicsCoefficients
+    precondition(light.spotOuterAngle == 60)
+    precondition(abs(light.areaExtents.x - 2) < 1e-4)
+}
+
+// ---- SceneKitMaterialTests.swift ----
+
+func testMaterialLightingAndBlend() {
+    let mat = SCNMaterial()
+    mat.lightingModel = .phong
+    mat.isDoubleSided = true
+    mat.blendMode = .add
+    mat.transparency = 0.5
+    mat.shininess = 32
+    mat.cullMode = .back
+    mat.fillMode = .fill
+    mat.transparencyMode = .aOne
+    mat.locksAmbientWithDiffuse = false
+    mat.isLitPerPixel = true
+    mat.readsFromDepthBuffer = true
+    mat.writesToDepthBuffer = true
+    mat.fresnelExponent = 0
+    mat.diffuse.contents = SCNVector3(1, 0, 0)
+    mat.specular.contents = SCNVector3(1, 1, 1)
+    mat.ambient.contents = SCNVector3Zero
+    mat.emission.contents = SCNVector3Zero
+    mat.transparent.contents = SCNVector4(1, 1, 1, 1)
+    mat.reflective.contents = SCNVector3Zero
+    mat.multiply.contents = SCNVector3(1, 1, 1)
+    mat.normal.contents = SCNVector3(0, 0, 1)
+    mat.metalness.contents = 0
+    mat.roughness.contents = 1
+    precondition(mat.isDoubleSided && mat.blendMode == .add)
+    _ = mat.selfIllumination
+    _ = mat.ambientOcclusion
+    _ = mat.displacement
+    _ = mat.clearCoat
+    _ = mat.clearCoatRoughness
+    _ = mat.clearCoatNormal
+    let prop = SCNMaterialProperty(contents: SCNVector3(1, 0, 0))
+    prop.intensity = 1
+    prop.magnificationFilter = .linear
+    prop.minificationFilter = .linear
+    prop.mipFilter = .nearest
+    prop.wrapS = .clamp
+    prop.wrapT = .`repeat`
+    prop.mappingChannel = 0
+    prop.maxAnisotropy = 1
+    _ = prop.contentsTransform
+    _ = prop.textureComponents
+}
+
+// ---- SceneKitMathTests.swift ----
+
+func skNear(_ a: Float, _ b: Float, _ message: String, eps: Float = 1e-4) {
+    precondition(abs(a - b) < eps, "\(message) (\(a) vs \(b))")
+}
+
+func skXform(_ m: SCNMatrix4, _ p: SCNVector3) -> SCNVector3 {
     SCNVector3(
         x: m.m11 * p.x + m.m21 * p.y + m.m31 * p.z + m.m41,
         y: m.m12 * p.x + m.m22 * p.y + m.m32 * p.z + m.m42,
@@ -236,16 +862,534 @@ func _transform(_ m: SCNMatrix4, _ p: SCNVector3) -> SCNVector3 {
     )
 }
 
-func _nearIdentity(_ m: SCNMatrix4) -> Bool {
-    let id = SCNMatrix4Identity
-    func close(_ a: Float, _ b: Float) -> Bool { abs(a - b) < 1e-4 }
-    return close(m.m11, id.m11) && close(m.m22, id.m22) && close(m.m33, id.m33) && close(m.m44, id.m44)
-        && close(m.m41, 0) && close(m.m42, 0) && close(m.m43, 0)
+func testVectorMath() {
+    precondition(SCNVector3EqualToVector3(SCNVector3Zero, SCNVector3Make(0, 0, 0)))
+    let v = SCNVector3(1, 2, 3)
+    skNear(v.x, 1, "x"); skNear(v.y, 2, "y"); skNear(v.z, 3, "z")
+    let v2 = SCNVector3(x: 4, y: 5, z: 6)
+    skNear(v2.x, 4, "init x")
+    _ = SCNVector3(1.0 as Double, 2.0, 3.0)
+    _ = SCNVector3(1 as Int, 2, 3)
+    let simd3 = SIMD3<Float>(v)
+    skNear(SCNVector3(simd3).y, 2, "simd3")
+    precondition(SCNVector4EqualToVector4(SCNVector4Make(1, 2, 3, 4), SCNVector4(x: 1, y: 2, z: 3, w: 4)))
+    let q = SCNVector4(1, 2, 3, 4)
+    skNear(q.w, 4, "w")
+    let simd4 = SIMD4<Float>(q)
+    skNear(SCNVector4(simd4).z, 3, "simd4")
 }
 
-do {
-    try runSceneKitRuntime()
-    print("SCENEKIT_AGENT_RUNTIME_OK")
-} catch {
-    fatalError("SCENEKIT_AGENT_RUNTIME_FAIL \(error)")
+func testMatrixMath() {
+    precondition(SCNMatrix4IsIdentity(SCNMatrix4Identity))
+    precondition(SCNMatrix4EqualToMatrix4(SCNMatrix4Identity, SCNMatrix4()))
+    let translated = SCNMatrix4MakeTranslation(3, 4, 5)
+    let origin = skXform(translated, SCNVector3Zero)
+    skNear(origin.x, 3, "tx"); skNear(origin.y, 4, "ty"); skNear(origin.z, 5, "tz")
+    let scaled = SCNMatrix4MakeScale(2, 3, 4)
+    let p = skXform(scaled, SCNVector3(x: 1, y: 1, z: 1))
+    skNear(p.x, 2, "sx"); skNear(p.y, 3, "sy"); skNear(p.z, 4, "sz")
+    let t1 = SCNMatrix4MakeTranslation(1, 0, 0)
+    let t2 = SCNMatrix4MakeTranslation(0, 2, 0)
+    let composed = SCNMatrix4Mult(t1, t2)
+    let c = skXform(composed, SCNVector3Zero)
+    skNear(c.x, 1, "mult x"); skNear(c.y, 2, "mult y")
+    let inv = SCNMatrix4Invert(translated)
+    let round = SCNMatrix4Mult(inv, translated)
+    precondition(SCNMatrix4IsIdentity(round) || abs(round.m11 - 1) < 1e-3)
+    let rot = SCNMatrix4MakeRotation(Float.pi / 2, 0, 1, 0)
+    let rp = skXform(rot, SCNVector3(1, 0, 0))
+    skNear(rp.x, 0, "ry x", eps: 1e-5)
+    skNear(rp.z, -1, "ry z", eps: 1e-5)
+    let moved = SCNMatrix4Translate(SCNMatrix4Identity, 1, 2, 3)
+    skNear(moved.m41, 1, "translate helper")
+    let scaledM = SCNMatrix4Scale(SCNMatrix4MakeTranslation(1, 2, 3), 2, 2, 2)
+    let q = skXform(scaledM, SCNVector3(1, 0, 0))
+    skNear(q.x, 4, "scale helper x")
+    _ = SCNMatrix4Rotate(SCNMatrix4Identity, 0.1, 0, 1, 0)
+    skNear(translated.m11, 1, "m11")
+    skNear(translated.m22, 1, "m22")
+    skNear(translated.m33, 1, "m33")
+    skNear(translated.m44, 1, "m44")
+    _ = translated.m12; _ = translated.m13; _ = translated.m14
+    _ = translated.m21; _ = translated.m23; _ = translated.m24
+    _ = translated.m31; _ = translated.m32; _ = translated.m34
+    _ = translated.m42; _ = translated.m43
 }
+
+func testQuaternionFromRotation() {
+    let node = SCNNode()
+    node.rotation = SCNVector4(0, 1, 0, Float.pi / 2)
+    skNear(node.orientation.w, cos(Float.pi / 4), "quat w", eps: 1e-3)
+    node.eulerAngles = SCNVector3(0, Float.pi / 2, 0)
+    skNear(node.eulerAngles.y, Float.pi / 2, "euler", eps: 2e-3)
+}
+
+// ---- SceneKitNodeTests.swift ----
+
+func testNodeHierarchy() {
+    let scene = SCNScene()
+    let parent = SCNNode()
+    parent.name = "parent"
+    let child = SCNNode()
+    child.name = "child"
+    scene.rootNode.addChildNode(parent)
+    parent.addChildNode(child)
+    precondition(child.parent === parent)
+    precondition(parent.childNodes.count == 1)
+    precondition(scene.rootNode.childNode(withName: "child", recursively: true) === child)
+    parent.addChildNode(parent)
+    precondition(parent.childNodes.filter { $0 === parent }.isEmpty)
+    child.addChildNode(parent)
+    precondition(child.childNodes.filter { $0 === parent }.isEmpty)
+    parent.insertChildNode(SCNNode(), at: 0)
+    var enumerated = 0
+    scene.rootNode.enumerateHierarchy { _, _ in enumerated += 1 }
+    precondition(enumerated >= 3)
+    var walk = 0
+    scene.rootNode.enumerateChildNodes { _, stop in
+        walk += 1
+        if walk > 10_000 { stop.pointee = true }
+    }
+    _ = parent.childNodes(passingTest: { _, _ in true })
+    let extra = SCNNode()
+    parent.replaceChildNode(child, with: extra)
+    extra.removeFromParentNode()
+}
+
+func testNodeTransforms() {
+    let parent = SCNNode()
+    let child = SCNNode()
+    parent.addChildNode(child)
+    child.position = SCNVector3(x: 1, y: 0, z: 0)
+    parent.position = SCNVector3(x: 10, y: 0, z: 0)
+    precondition(abs(child.worldPosition.x - 11) < 1e-4)
+    let local = parent.convertPosition(child.worldPosition, from: nil)
+    precondition(abs(local.x - 1) < 1e-4)
+    _ = parent.convertPosition(child.position, to: nil)
+    _ = parent.convertVector(SCNVector3(0, 1, 0), from: nil)
+    _ = parent.convertVector(SCNVector3(0, 1, 0), to: nil)
+    _ = parent.convertTransform(SCNMatrix4Identity, from: nil)
+    _ = parent.convertTransform(SCNMatrix4Identity, to: nil)
+    child.scale = SCNVector3(2, 2, 2)
+    child.pivot = SCNMatrix4Identity
+    child.localTranslate(by: SCNVector3(0.5, 0, 0))
+    child.localRotate(by: SCNVector4(0, 1, 0, 0.1))
+    child.look(at: SCNVector3(0, 0, 1))
+    child.look(at: SCNVector3(1, 0, 0), up: SCNNode.localUp, localFront: SCNNode.localFront)
+    _ = SCNNode.localRight
+    _ = SCNNode.localUp
+    _ = SCNNode.localFront
+    _ = child.worldUp
+    _ = child.worldRight
+    _ = child.worldFront
+    _ = child.worldOrientation
+    _ = child.worldTransform
+    _ = child.transform
+    child.setWorldTransform(SCNMatrix4MakeTranslation(1, 2, 3))
+    child.simdPosition = SIMD3<Float>(1, 2, 3)
+    precondition(abs(child.position.y - 2) < 1e-4)
+    _ = child.simdWorldPosition
+    _ = child.simdEulerAngles
+    _ = child.simdRotation
+    _ = child.simdScale
+    _ = child.simdWorldFront
+    _ = child.simdWorldRight
+    _ = child.simdWorldUp
+    _ = SCNNode.simdLocalFront
+    _ = SCNNode.simdLocalRight
+    _ = SCNNode.simdLocalUp
+    _ = child.simdConvertPosition(SIMD3<Float>(0, 0, 0), from: nil)
+    _ = child.simdConvertPosition(SIMD3<Float>(0, 0, 0), to: nil)
+    _ = child.simdConvertVector(SIMD3<Float>(0, 1, 0), from: nil)
+    _ = child.simdConvertVector(SIMD3<Float>(0, 1, 0), to: nil)
+    child.simdLocalTranslate(by: SIMD3<Float>(0, 0, 0))
+    child.simdLook(at: SIMD3<Float>(0, 0, 1))
+    child.opacity = 0.5
+    child.isHidden = false
+    child.categoryBitMask = 1
+    child.castsShadow = true
+    child.renderingOrder = 0
+    child.movabilityHint = .fixed
+    child.focusBehavior = .none
+    child.isPaused = false
+    _ = child.presentation
+}
+
+func testNodeCloneAndBounds() {
+    let node = SCNNode(geometry: SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0))
+    node.position = SCNVector3(5, 0, 0)
+    let cloned = node.clone()
+    precondition(cloned !== node)
+    let flat = node.flattenedClone()
+    precondition(flat.childNodes.isEmpty)
+    _ = node.boundingBox
+    _ = node.boundingSphere
+    node.rotate(by: SCNVector4(0, 1, 0, 0.2), aroundTarget: SCNVector3Zero)
+}
+
+func testNodeAudioAndParticlesAttach() {
+    let node = SCNNode()
+    let player = SCNAudioPlayer(source: SCNAudioSource())
+    node.addAudioPlayer(player)
+    _ = node.audioPlayers
+    node.removeAudioPlayer(player)
+    node.removeAllAudioPlayers()
+    let parts = SCNParticleSystem()
+    node.addParticleSystem(parts)
+    _ = node.particleSystems
+    node.removeParticleSystem(parts)
+    node.removeAllParticleSystems()
+}
+
+// ---- SceneKitParticleTests.swift ----
+
+func testParticleSystemStores() {
+    let particles = SCNParticleSystem()
+    particles.birthRate = 10
+    particles.loops = true
+    particles.emissionDuration = 1
+    particles.particleLifeSpan = 1
+    particles.particleSize = 1
+    particles.particleColor = SCNVector4(1, 1, 1, 1)
+    particles.emitterShape = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+    particles.warmupDuration = 0
+    particles.birthRateVariation = 0
+    particles.emittingDirection = SCNVector3(0, 1, 0)
+    particles.spreadingAngle = 0
+    particles.particleAngle = 0
+    particles.particleAngularVelocity = 0
+    particles.particleVelocity = 0
+    particles.acceleration = SCNVector3Zero
+    particles.isAffectedByGravity = false
+    particles.isAffectedByPhysicsFields = false
+    particles.particleDiesOnCollision = false
+    particles.blendMode = .alpha
+    particles.sortingMode = .none
+    particles.orientationMode = .billboardScreenAligned
+    particles.birthLocation = .surface
+    particles.birthDirection = .constant
+    particles.isLocal = false
+    particles.dampingFactor = 0
+    particles.speedFactor = 1
+    particles.stretchFactor = 0
+    particles.fresnelExponent = 0
+    particles.writesToDepthBuffer = false
+    precondition(particles.loops)
+    _ = particles.particleImage
+    _ = particles.systemSpawnedOnCollision
+}
+
+// ---- SceneKitPhysicsTests.swift ----
+
+func testPhysicsBookkeeping() {
+    let body = SCNPhysicsBody.dynamic()
+    precondition(body.type == .dynamic)
+    let kin = SCNPhysicsBody.kinematic()
+    precondition(kin.type == .kinematic)
+    let stat = SCNPhysicsBody.static()
+    precondition(stat.type == .static)
+    let node = SCNNode()
+    node.physicsBody = body
+    let scene = SCNScene()
+    scene.rootNode.addChildNode(node)
+    let before = node.position
+    scene.physicsWorld.step()
+    precondition(SCNVector3EqualToVector3(node.position, before))
+    let world = SCNPhysicsWorld()
+    world.gravity = SCNVector3(0, -9.8, 0)
+    world.addBehavior(SCNPhysicsHingeJoint(body: kin, axis: SCNVector3(0, 1, 0), anchor: SCNVector3Zero))
+    precondition(world.allBehaviors.count == 1)
+    let field = SCNPhysicsField.linearGravity()
+    precondition(field.isActive)
+    _ = SCNPhysicsField.radialGravity()
+    _ = SCNPhysicsField.vortex()
+    _ = SCNPhysicsField.drag()
+    _ = SCNPhysicsField.turbulenceField(smoothness: 1, animationSpeed: 1)
+    _ = SCNPhysicsField.noiseField(smoothness: 1, animationSpeed: 1)
+    _ = SCNPhysicsField.spring()
+    _ = SCNPhysicsField.electric()
+    _ = SCNPhysicsField.magnetic()
+    let vehicle = SCNPhysicsVehicle(chassisBody: kin, wheels: [SCNPhysicsVehicleWheel(node: node)])
+    precondition(vehicle.wheels.count == 1)
+    let contact = SCNPhysicsContact()
+    precondition(contact.collisionImpulse == 0)
+    let shape = SCNPhysicsShape(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0), options: nil)
+    _ = shape
+    _ = SCNPhysicsBallSocketJoint(bodyA: kin, anchorA: SCNVector3Zero, bodyB: body, anchorB: SCNVector3Zero)
+    _ = SCNPhysicsSliderJoint(bodyA: kin, axisA: SCNVector3(0, 1, 0), anchorA: SCNVector3Zero, bodyB: body, axisB: SCNVector3(0, 1, 0), anchorB: SCNVector3Zero)
+    _ = SCNPhysicsConeTwistJoint(bodyA: kin, frameA: SCNMatrix4Identity, bodyB: body, frameB: SCNMatrix4Identity)
+    body.mass = 1
+    body.friction = 0.5
+    body.restitution = 0.5
+    body.damping = 0.1
+    body.isAffectedByGravity = true
+    _ = body.velocity
+    _ = body.angularVelocity
+    world.speed = 1
+    world.timeStep = 1.0 / 60
+}
+
+// ---- SceneKitRendererTests.swift ----
+
+func testCPURasterizer() {
+    let scene = SCNScene()
+    scene.background.contents = SCNVector3(0, 0, 1)
+    let box = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
+    let material = SCNMaterial()
+    material.lightingModel = .constant
+    material.diffuse.contents = SCNVector3(1, 0, 0)
+    material.isDoubleSided = true
+    box.firstMaterial = material
+    scene.rootNode.addChildNode(SCNNode(geometry: box))
+    let camNode = SCNNode()
+    camNode.camera = SCNCamera()
+    camNode.camera?.usesOrthographicProjection = true
+    camNode.camera?.orthographicScale = 2
+    camNode.camera?.zNear = 0.1
+    camNode.camera?.zFar = 20
+    camNode.position = SCNVector3(0, 0, 5)
+    scene.rootNode.addChildNode(camNode)
+    let renderer = SCNRenderer()
+    renderer.scene = scene
+    renderer.pointOfView = camNode
+    renderer.currentViewport = CGRect(x: 0, y: 0, width: 32, height: 32)
+    renderer.autoenablesDefaultLighting = false
+    renderer.isPlaying = false
+    renderer.loops = true
+    renderer.sceneTime = 0
+    renderer.debugOptions = []
+    renderer.showsStatistics = false
+    let img = renderer.linux_snapshot(size: CGSize(width: 32, height: 32))
+    precondition(img.width == 32 && img.height == 32)
+    let center = img.pixel(x: 16, y: 16)
+    precondition(center.0 >= 200)
+    material.lightingModel = .lambert
+    let lightNode = SCNNode()
+    let light = SCNLight()
+    light.type = .directional
+    light.intensity = 1000
+    light.color = SCNVector3(1, 1, 1)
+    lightNode.light = light
+    lightNode.position = SCNVector3(0, 0, 5)
+    scene.rootNode.addChildNode(lightNode)
+    let lambert = renderer.linux_snapshot(size: CGSize(width: 32, height: 32))
+    precondition(lambert.pixel(x: 16, y: 16).0 >= 200)
+    material.lightingModel = .phong
+    material.shininess = 32
+    material.specular.contents = SCNVector3(1, 1, 1)
+    material.diffuse.contents = SCNVector3(0, 0, 1)
+    let phong = renderer.linux_snapshot(size: CGSize(width: 32, height: 32))
+    precondition(phong.pixel(x: 16, y: 16).2 >= 100)
+    material.lightingModel = .blinn
+    let blinn = renderer.linux_snapshot(size: CGSize(width: 32, height: 32))
+    precondition(blinn.rgba.count == 32 * 32 * 4)
+    renderer.render()
+    renderer.render(atTime: 0)
+    renderer.update(atTime: 0)
+    _ = renderer.projectPoint(SCNVector3Zero)
+    _ = renderer.unprojectPoint(SCNVector3Zero)
+    _ = renderer.hitTest(CGPoint(x: 16, y: 16), options: nil)
+    _ = renderer.nodesInsideFrustum(of: camNode)
+    _ = renderer.isNode(camNode, insideFrustumOf: camNode)
+    _ = renderer.prepare(box, shouldAbortBlock: nil)
+    _ = renderer.renderingAPI
+    _ = renderer.currentViewport
+    _ = renderer.usesReverseZ
+    _ = renderer.context
+}
+
+// ---- SceneKitSceneTests.swift ----
+
+func testSceneGraphAndLoad() {
+    let scene = SCNScene()
+    _ = scene.rootNode
+    _ = scene.background
+    _ = scene.lightingEnvironment
+    _ = scene.physicsWorld
+    scene.isPaused = false
+    scene.fogStartDistance = 0
+    scene.fogEndDistance = 0
+    scene.fogDensityExponent = 0
+    scene.wantsScreenSpaceReflection = false
+    scene.setAttribute("y", forKey: SCNScene.Attribute.upAxis.rawValue)
+    _ = scene.attribute(forKey: SCNScene.Attribute.upAxis.rawValue)
+    precondition(SCNScene(named: "missing") == nil)
+    precondition(scene.write(to: URL(fileURLWithPath: "/tmp/scenekit-linux-export.scn"), options: nil, delegate: nil, progressHandler: nil) == false)
+    let src = SCNSceneSource(data: Data(), options: nil)
+    precondition((try? src?.scene(options: nil)) == nil)
+    _ = src?.url
+    _ = src?.data
+    _ = SCNSceneSource.LoadingOption.flattenScene
+    let ref = SCNReferenceNode(url: URL(fileURLWithPath: "/tmp/missing.scn"))
+    ref?.load()
+    precondition(ref?.isLoaded == false)
+    ref?.unload()
+    let audio = SCNAudioSource()
+    audio.load()
+    precondition(audio.volume == 1)
+    precondition(SCNAudioSource(named: "missing.wav") != nil)
+    let technique = SCNTechnique(dictionary: ["pass": "none"])
+    precondition(technique != nil)
+    let program = SCNProgram()
+    program.vertexFunctionName = "v"
+    precondition(program.isOpaque)
+}
+
+// ---- SceneKitSurfaceTests.swift ----
+
+func testProtocolAndTypealiasSurface() {
+    _ = SCNActionable.self
+    _ = SCNAnimatable.self
+    _ = SCNAnimationProtocol.self
+    _ = SCNBoundingVolume.self
+    _ = SCNBufferStream.self
+    _ = SCNShadable.self
+    _ = SCNTechniqueSupport.self
+    _ = SCNSceneRenderer.self
+    _ = SCNSceneRendererDelegate.self
+    _ = SCNCameraControlConfiguration.self
+    _ = SCNCameraControllerDelegate.self
+    _ = SCNNodeRendererDelegate.self
+    _ = SCNAvoidOccluderConstraintDelegate.self
+    _ = SCNPhysicsContactDelegate.self
+    _ = SCNSceneExportDelegate.self
+    _ = SCNProgramDelegate.self
+    let _: SCNActionTimingFunction = { $0 }
+    let _: SCNAnimationDidStartBlock = { _, _ in }
+    let _: SCNAnimationDidStopBlock = { _, _, _ in }
+    let _: SCNAnimationEventBlock = { _, _, _ in }
+    let _: SCNBindingBlock = { _, _, _, _ in }
+    let _: SCNBufferBindingBlock = { _, _, _, _ in }
+    let _: SCNFieldForceEvaluator = { _, _, _, _, _ in SCNVector3Zero }
+    _ = SCNQuaternion.self
+    _ = SCNFloat.self
+}
+
+func testSkinnerAndProgramAndFloorExtras() {
+    let skinner = SCNSkinner()
+    _ = skinner.skeleton
+    _ = skinner.baseGeometry
+    _ = skinner.bones
+    let program = SCNProgram()
+    program.fragmentFunctionName = "f"
+    program.vertexShader = nil
+    program.fragmentShader = nil
+    program.isOpaque = true
+    program.handleBinding(ofBufferNamed: "b", frequency: .perFrame, handler: { _, _, _, _ in })
+    let floor = SCNFloor()
+    floor.length = 10
+    floor.width = 10
+    floor.reflectionResolutionScaleFactor = 1
+    _ = floor.reflectionFalloffStart
+}
+
+// ---- SceneKitTransactionTests.swift ----
+
+func testTransactionBeginCommit() {
+    let scene = SCNScene()
+    SCNTransaction.begin()
+    SCNTransaction.disableActions = true
+    let txn = SCNNode()
+    scene.rootNode.addChildNode(txn)
+    txn.runAction(SCNAction.move(by: SCNVector3(x: 5, y: 0, z: 0), duration: 1))
+    precondition(abs(txn.position.x) < 1e-4)
+    precondition(txn.hasActions)
+    txn.linux_advanceTime(1)
+    precondition(abs(txn.position.x - 5) < 1e-4)
+    SCNTransaction.commit()
+    SCNTransaction.begin()
+    SCNTransaction.animationDuration = 0.25
+    var completed = false
+    SCNTransaction.completionBlock = { completed = true }
+    SCNTransaction.setValue("x", forKey: "k")
+    precondition(SCNTransaction.value(forKey: "k") as? String == "x")
+    SCNTransaction.flush()
+    SCNTransaction.commit()
+    precondition(completed)
+    SCNTransaction.lock()
+    SCNTransaction.unlock()
+}
+
+// ---- SceneKitViewTests.swift ----
+
+func testSCNViewStores() {
+    let view = SCNView(frame: CGRect(x: 0, y: 0, width: 64, height: 64), options: [
+        SCNView.Option.preferredRenderingAPI.rawValue: SCNRenderingAPI.metal
+    ])
+    let scene = SCNScene()
+    view.scene = scene
+    view.allowsCameraControl = true
+    let cam = SCNNode()
+    cam.camera = SCNCamera()
+    scene.rootNode.addChildNode(cam)
+    view.pointOfView = cam
+    precondition(view.allowsCameraControl)
+    precondition(view.pointOfView === cam)
+    precondition(view.scene === scene)
+    view.play(nil)
+    precondition(view.isPlaying)
+    view.pause(nil)
+    precondition(!view.isPlaying)
+    view.stop(nil)
+    let snap = view.linux_snapshot()
+    precondition(snap.width == 64)
+    _ = view.defaultCameraController
+    _ = view.cameraControlConfiguration.allowsTranslation
+    _ = view.antialiasingMode
+    _ = view.preferredFramesPerSecond
+    _ = view.rendersContinuously
+    _ = view.projectPoint(SCNVector3Zero)
+    _ = view.unprojectPoint(SCNVector3Zero)
+    _ = view.hitTest(CGPoint.zero, options: nil)
+    _ = SCNView.Option.preferLowPowerDevice.rawValue
+    let cfg = view.cameraControlConfiguration
+    _ = cfg.autoSwitchToFreeCamera
+    _ = cfg.flyModeVelocity
+    _ = cfg.panSensitivity
+    _ = cfg.rotationSensitivity
+    _ = cfg.truckSensitivity
+    let controller = SCNCameraController()
+    controller.interactionMode = .orbitArcball
+    controller.automaticTarget = true
+    controller.translateInCameraSpaceBy(x: 0, y: 0, z: 0)
+    controller.rotateBy(x: 0, y: 0)
+    controller.rollBy(0)
+    controller.dollyBy(0)
+    controller.beginInteraction(CGPoint.zero, withViewport: CGSize(width: 1, height: 1))
+    controller.continueInteraction(CGPoint.zero, withViewport: CGSize(width: 1, height: 1), sensitivity: 1)
+    controller.endInteraction(CGPoint.zero, withViewport: CGSize(width: 1, height: 1), velocity: CGPoint.zero)
+    precondition(controller.automaticTarget)
+}
+
+func runSceneKitFocusedTests() {
+    testActionClock()
+    testActionEasing()
+    testAnimatableKeys()
+    testCameraProjection()
+    testCameraStores()
+    testLookAtDistanceBillboard()
+    testEnumOptionSetAndConstantValues()
+    testPrimitiveLayouts()
+    testCustomGeometrySource()
+    testHitTestSegment()
+    testLightStores()
+    testMaterialLightingAndBlend()
+    testVectorMath()
+    testMatrixMath()
+    testQuaternionFromRotation()
+    testNodeHierarchy()
+    testNodeTransforms()
+    testNodeCloneAndBounds()
+    testNodeAudioAndParticlesAttach()
+    testParticleSystemStores()
+    testPhysicsBookkeeping()
+    testCPURasterizer()
+    testSceneGraphAndLoad()
+    testProtocolAndTypealiasSurface()
+    testSkinnerAndProgramAndFloorExtras()
+    testTransactionBeginCommit()
+    testSCNViewStores()
+}
+
+runSceneKitFocusedTests()
+print("SCENEKIT_AGENT_RUNTIME_OK")

@@ -1,6 +1,13 @@
 import Foundation
 
-open class CVPixelBufferPool: @unchecked Sendable {
+open class CVPixelBufferPool: Hashable, @unchecked Sendable {
+    public static func == (lhs: CVPixelBufferPool, rhs: CVPixelBufferPool) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
     let lock = NSLock()
     let poolAttributes: NSDictionary
     let pixelBufferAttributes: NSDictionary

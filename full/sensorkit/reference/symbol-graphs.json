@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 3,
+  "duplicateOccurrenceCount": 3,
+  "duplicateRelationshipOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SensorKit.symbols.json",
+      "relationshipCount": 1222,
+      "sha256": "987b56df8a29b92181d3fecf60da0017dc6d54728385bd5db7f1e7b2a2b7a628",
+      "symbolCount": 703
+    },
+    {
+      "path": "reference/symbol-graphs/SensorKit@Foundation.symbols.json",
+      "relationshipCount": 5,
+      "sha256": "66a24be53c80daa459ffe31dc89d478af41de7594ecb7d7999024c6a0fe84f79",
+      "symbolCount": 5
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SensorKit",
+  "relationshipCount": 1227,
+  "relationshipMultisetSHA256": "9fbec750c0007f7ebe489b63d998afbe342e068f368d721f347192da136c7ba3",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 705,
+  "symbolMultisetSHA256": "61e6c58a646bf63c7e19ba7cadcfdfa499005f30a4cdb8fa5f6d3d3703f35d28",
+  "target": "arm64-apple-ios26.0"
+}

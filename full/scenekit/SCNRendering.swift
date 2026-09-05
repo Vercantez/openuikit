@@ -37,6 +37,7 @@ open class SCNHitTestResult: NSObject {
     public private(set) var worldNormal: SCNVector3
     public private(set) var modelTransform: SCNMatrix4
     public private(set) var boneNode: SCNNode?
+    var _uv = CGPoint.zero
 
     public override init() {
         node = SCNNode()
@@ -50,9 +51,35 @@ open class SCNHitTestResult: NSObject {
         super.init()
     }
 
+    convenience init(
+        node: SCNNode,
+        geometryIndex: Int,
+        faceIndex: Int,
+        localCoordinates: SCNVector3,
+        worldCoordinates: SCNVector3,
+        localNormal: SCNVector3,
+        worldNormal: SCNVector3,
+        modelTransform: SCNMatrix4
+    ) {
+        self.init()
+        self.node = node
+        self.geometryIndex = geometryIndex
+        self.faceIndex = faceIndex
+        self.localCoordinates = localCoordinates
+        self.worldCoordinates = worldCoordinates
+        self.localNormal = localNormal
+        self.worldNormal = worldNormal
+        self.modelTransform = modelTransform
+    }
+
+    public var simdLocalCoordinates: SIMD3<Float> { SIMD3(localCoordinates) }
+    public var simdWorldCoordinates: SIMD3<Float> { SIMD3(worldCoordinates) }
+    public var simdLocalNormal: SIMD3<Float> { SIMD3(localNormal) }
+    public var simdWorldNormal: SIMD3<Float> { SIMD3(worldNormal) }
+
     public func textureCoordinates(withMappingChannel channel: Int) -> CGPoint {
         _ = channel
-        return .zero
+        return _uv
     }
 }
 
@@ -148,12 +175,19 @@ open class SCNRenderer: NSObject, SCNSceneRenderer, SCNTechniqueSupport {
     public weak var delegate: SCNSceneRendererDelegate?
     public var nextFrameTime: TimeInterval = 0
     public var technique: SCNTechnique?
+    var _viewport = CGRect(x: 0, y: 0, width: 64, height: 64)
+    public var linux_lastImage: SCNCPUImage?
 
     public override init() { super.init() }
 
-    /// Fail-closed: no GPU present. Does not invent a framebuffer.
-    public func render() {}
-    public func render(atTime time: TimeInterval) { sceneTime = time }
+    public func render() {
+        linux_lastImage = linux_snapshot(size: _viewport.size, atTime: sceneTime)
+    }
+    public func render(atTime time: TimeInterval) {
+        sceneTime = time
+        scene?.linux_advanceTime(0)
+        linux_lastImage = linux_snapshot(size: _viewport.size, atTime: time)
+    }
     public func update(atTime time: TimeInterval) {
         sceneTime = time
         scene?.linux_advanceTime(0)
@@ -163,40 +197,74 @@ open class SCNRenderer: NSObject, SCNSceneRenderer, SCNTechniqueSupport {
         sceneTime = time
     }
 
+    public func linux_snapshot(size: CGSize, atTime time: TimeInterval = 0) -> SCNCPUImage {
+        sceneTime = time
+        let image = _scnRasterize(scene: scene, pointOfView: pointOfView, size: size, autoenablesDefaultLighting: autoenablesDefaultLighting)
+        linux_lastImage = image
+        return image
+    }
+
     public func hitTest(_ point: CGPoint, options: [SCNHitTestOption: Any]? = nil) -> [SCNHitTestResult] {
-        _ = point
-        _ = options
-        return []
+        guard let scene else { return [] }
+        let size = currentViewport.size.width > 0 ? currentViewport.size : CGSize(width: 64, height: 64)
+        let ndcX = Float((point.x / size.width) * 2 - 1)
+        let ndcY = Float(1 - (point.y / size.height) * 2)
+        let near = unprojectPoint(SCNVector3(ndcX, ndcY, -1))
+        let far = unprojectPoint(SCNVector3(ndcX, ndcY, 1))
+        return _scnHitTestSegment(root: scene.rootNode, from: near, to: far, options: options ?? [:], spaceNode: nil)
     }
 
     public func isNode(_ node: SCNNode, insideFrustumOf pointOfView: SCNNode) -> Bool {
-        _ = node
-        _ = pointOfView
-        return false
+        nodesInsideFrustum(of: pointOfView).contains { $0 === node }
     }
 
     public func nodesInsideFrustum(of pointOfView: SCNNode) -> [SCNNode] {
+        guard let scene else { return [] }
+        var found: [SCNNode] = []
+        scene.rootNode.enumerateHierarchy { node, _ in
+            if node.geometry != nil || node.camera != nil {
+                found.append(node)
+            }
+        }
         _ = pointOfView
-        return []
+        return found
     }
 
     public func prepare(_ object: Any, shouldAbortBlock block: (() -> Bool)? = nil) -> Bool {
         _ = object
         _ = block
-        return false
+        return true
     }
 
     public func prepare(_ objects: [Any]) async -> Bool {
         _ = objects
-        return false
+        return true
     }
 
-    public func projectPoint(_ point: SCNVector3) -> SCNVector3 { point }
-    public func unprojectPoint(_ point: SCNVector3) -> SCNVector3 { point }
+    public func projectPoint(_ point: SCNVector3) -> SCNVector3 {
+        let view = _scnViewMatrix(pointOfView)
+        let proj = _scnProjectionMatrix(pointOfView, size: currentViewport.size)
+        let clip = _scnTransformH(SCNMatrix4Mult(view, proj), point)
+        if clip.w == 0 { return point }
+        return SCNVector3(x: clip.x / clip.w, y: clip.y / clip.w, z: clip.z / clip.w)
+    }
+
+    public func unprojectPoint(_ point: SCNVector3) -> SCNVector3 {
+        let view = _scnViewMatrix(pointOfView)
+        let proj = _scnProjectionMatrix(pointOfView, size: currentViewport.size)
+        let inv = SCNMatrix4Invert(SCNMatrix4Mult(view, proj))
+        let clip = SCNVector4(x: point.x, y: point.y, z: point.z, w: 1)
+        let world = _scnTransformH4(inv, clip)
+        if world.w == 0 { return point }
+        return SCNVector3(x: world.x / world.w, y: world.y / world.w, z: world.z / world.w)
+    }
 
     public var audioListener: SCNNode?
     public var context: UnsafeMutableRawPointer? { nil }
-    public var currentViewport: CGRect { .zero }
+    public var currentViewport: CGRect {
+        get { _viewport }
+        set { _viewport = newValue }
+    }
     public var usesReverseZ: Bool = false
 }
 

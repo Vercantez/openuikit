@@ -1,0 +1,202 @@
+precise	kind	title	path	declaration
+s:7Symbols12SymbolEffectP	swift.protocol	SymbolEffect	SymbolEffect	protocol SymbolEffect : Hashable, Sendable
+s:7Symbols12SymbolEffectP13configurationAA0bC13ConfigurationVvp	swift.property	configuration	SymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols12SymbolEffectPA2A013VariableColorbC0VRszrlE08variableE0AEvpZ	swift.type.property	variableColor	SymbolEffect.variableColor	static var variableColor: VariableColorSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A013VariableColorbC0VRszrlE08variableE0AEvpZ::SYNTHESIZED::s:7Symbols25VariableColorSymbolEffectV	swift.type.property	variableColor	VariableColorSymbolEffect.variableColor	static var variableColor: VariableColorSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A05PulsebC0VRszrlE5pulseAEvpZ	swift.type.property	pulse	SymbolEffect.pulse	static var pulse: PulseSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A05PulsebC0VRszrlE5pulseAEvpZ::SYNTHESIZED::s:7Symbols17PulseSymbolEffectV	swift.type.property	pulse	PulseSymbolEffect.pulse	static var pulse: PulseSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A05ScalebC0VRszrlE5scaleAEvpZ	swift.type.property	scale	SymbolEffect.scale	static var scale: ScaleSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A05ScalebC0VRszrlE5scaleAEvpZ::SYNTHESIZED::s:7Symbols17ScaleSymbolEffectV	swift.type.property	scale	ScaleSymbolEffect.scale	static var scale: ScaleSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06AppearbC0VRszrlE6appearAEvpZ	swift.type.property	appear	SymbolEffect.appear	static var appear: AppearSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06AppearbC0VRszrlE6appearAEvpZ::SYNTHESIZED::s:7Symbols18AppearSymbolEffectV	swift.type.property	appear	AppearSymbolEffect.appear	static var appear: AppearSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06BouncebC0VRszrlE6bounceAEvpZ	swift.type.property	bounce	SymbolEffect.bounce	static var bounce: BounceSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06BouncebC0VRszrlE6bounceAEvpZ::SYNTHESIZED::s:7Symbols18BounceSymbolEffectV	swift.type.property	bounce	BounceSymbolEffect.bounce	static var bounce: BounceSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06DrawOnbC0VRszrlE04drawE0AEvpZ	swift.type.property	drawOn	SymbolEffect.drawOn	static var drawOn: DrawOnSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06DrawOnbC0VRszrlE04drawE0AEvpZ::SYNTHESIZED::s:7Symbols18DrawOnSymbolEffectV	swift.type.property	drawOn	DrawOnSymbolEffect.drawOn	static var drawOn: DrawOnSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06RotatebC0VRszrlE6rotateAEvpZ	swift.type.property	rotate	SymbolEffect.rotate	static var rotate: RotateSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06RotatebC0VRszrlE6rotateAEvpZ::SYNTHESIZED::s:7Symbols18RotateSymbolEffectV	swift.type.property	rotate	RotateSymbolEffect.rotate	static var rotate: RotateSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06WigglebC0VRszrlE6wiggleAEvpZ	swift.type.property	wiggle	SymbolEffect.wiggle	static var wiggle: WiggleSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A06WigglebC0VRszrlE6wiggleAEvpZ::SYNTHESIZED::s:7Symbols18WiggleSymbolEffectV	swift.type.property	wiggle	WiggleSymbolEffect.wiggle	static var wiggle: WiggleSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A07BreathebC0VRszrlE7breatheAEvpZ	swift.type.property	breathe	SymbolEffect.breathe	static var breathe: BreatheSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A07BreathebC0VRszrlE7breatheAEvpZ::SYNTHESIZED::s:7Symbols19BreatheSymbolEffectV	swift.type.property	breathe	BreatheSymbolEffect.breathe	static var breathe: BreatheSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A07DrawOffbC0VRszrlE04drawE0AEvpZ	swift.type.property	drawOff	SymbolEffect.drawOff	static var drawOff: DrawOffSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A07DrawOffbC0VRszrlE04drawE0AEvpZ::SYNTHESIZED::s:7Symbols19DrawOffSymbolEffectV	swift.type.property	drawOff	DrawOffSymbolEffect.drawOff	static var drawOff: DrawOffSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A07ReplacebC0VRszrlE7replaceAEvpZ	swift.type.property	replace	SymbolEffect.replace	static var replace: ReplaceSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A07ReplacebC0VRszrlE7replaceAEvpZ::SYNTHESIZED::s:7Symbols19ReplaceSymbolEffectV	swift.type.property	replace	ReplaceSymbolEffect.replace	static var replace: ReplaceSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A09AutomaticbC0VRszrlE9automaticAEvpZ	swift.type.property	automatic	SymbolEffect.automatic	static var automatic: AutomaticSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A09AutomaticbC0VRszrlE9automaticAEvpZ::SYNTHESIZED::s:7Symbols21AutomaticSymbolEffectV	swift.type.property	automatic	AutomaticSymbolEffect.automatic	static var automatic: AutomaticSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A09DisappearbC0VRszrlE9disappearAEvpZ	swift.type.property	disappear	SymbolEffect.disappear	static var disappear: DisappearSymbolEffect { get }
+s:7Symbols12SymbolEffectPA2A09DisappearbC0VRszrlE9disappearAEvpZ::SYNTHESIZED::s:7Symbols21DisappearSymbolEffectV	swift.type.property	disappear	DisappearSymbolEffect.disappear	static var disappear: DisappearSymbolEffect { get }
+s:7Symbols17PulseSymbolEffectV	swift.struct	PulseSymbolEffect	PulseSymbolEffect	struct PulseSymbolEffect
+s:7Symbols17PulseSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	PulseSymbolEffect.wholeSymbol	var wholeSymbol: PulseSymbolEffect { get }
+s:7Symbols17PulseSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	PulseSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols17PulseSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PulseSymbolEffect.==(_:_:)	static func == (a: PulseSymbolEffect, b: PulseSymbolEffect) -> Bool
+s:7Symbols17PulseSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PulseSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols17PulseSymbolEffectV7byLayerACvp	swift.property	byLayer	PulseSymbolEffect.byLayer	var byLayer: PulseSymbolEffect { get }
+s:7Symbols17PulseSymbolEffectV9hashValueSivp	swift.property	hashValue	PulseSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols17ScaleSymbolEffectV	swift.struct	ScaleSymbolEffect	ScaleSymbolEffect	struct ScaleSymbolEffect
+s:7Symbols17ScaleSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	ScaleSymbolEffect.wholeSymbol	var wholeSymbol: ScaleSymbolEffect { get }
+s:7Symbols17ScaleSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	ScaleSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols17ScaleSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ScaleSymbolEffect.==(_:_:)	static func == (a: ScaleSymbolEffect, b: ScaleSymbolEffect) -> Bool
+s:7Symbols17ScaleSymbolEffectV2upACvp	swift.property	up	ScaleSymbolEffect.up	var up: ScaleSymbolEffect { get }
+s:7Symbols17ScaleSymbolEffectV4downACvp	swift.property	down	ScaleSymbolEffect.down	var down: ScaleSymbolEffect { get }
+s:7Symbols17ScaleSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ScaleSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols17ScaleSymbolEffectV7byLayerACvp	swift.property	byLayer	ScaleSymbolEffect.byLayer	var byLayer: ScaleSymbolEffect { get }
+s:7Symbols17ScaleSymbolEffectV9hashValueSivp	swift.property	hashValue	ScaleSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols18AppearSymbolEffectV	swift.struct	AppearSymbolEffect	AppearSymbolEffect	struct AppearSymbolEffect
+s:7Symbols18AppearSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	AppearSymbolEffect.wholeSymbol	var wholeSymbol: AppearSymbolEffect { get }
+s:7Symbols18AppearSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	AppearSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols18AppearSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AppearSymbolEffect.==(_:_:)	static func == (a: AppearSymbolEffect, b: AppearSymbolEffect) -> Bool
+s:7Symbols18AppearSymbolEffectV2upACvp	swift.property	up	AppearSymbolEffect.up	var up: AppearSymbolEffect { get }
+s:7Symbols18AppearSymbolEffectV4downACvp	swift.property	down	AppearSymbolEffect.down	var down: AppearSymbolEffect { get }
+s:7Symbols18AppearSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AppearSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols18AppearSymbolEffectV7byLayerACvp	swift.property	byLayer	AppearSymbolEffect.byLayer	var byLayer: AppearSymbolEffect { get }
+s:7Symbols18AppearSymbolEffectV9hashValueSivp	swift.property	hashValue	AppearSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols18BounceSymbolEffectV	swift.struct	BounceSymbolEffect	BounceSymbolEffect	struct BounceSymbolEffect
+s:7Symbols18BounceSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	BounceSymbolEffect.wholeSymbol	var wholeSymbol: BounceSymbolEffect { get }
+s:7Symbols18BounceSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	BounceSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols18BounceSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	BounceSymbolEffect.==(_:_:)	static func == (a: BounceSymbolEffect, b: BounceSymbolEffect) -> Bool
+s:7Symbols18BounceSymbolEffectV2upACvp	swift.property	up	BounceSymbolEffect.up	var up: BounceSymbolEffect { get }
+s:7Symbols18BounceSymbolEffectV4downACvp	swift.property	down	BounceSymbolEffect.down	var down: BounceSymbolEffect { get }
+s:7Symbols18BounceSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	BounceSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols18BounceSymbolEffectV7byLayerACvp	swift.property	byLayer	BounceSymbolEffect.byLayer	var byLayer: BounceSymbolEffect { get }
+s:7Symbols18BounceSymbolEffectV9hashValueSivp	swift.property	hashValue	BounceSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols18DrawOnSymbolEffectV	swift.struct	DrawOnSymbolEffect	DrawOnSymbolEffect	struct DrawOnSymbolEffect
+s:7Symbols18DrawOnSymbolEffectV05wholeD0ACvp	swift.property	wholeSymbol	DrawOnSymbolEffect.wholeSymbol	var wholeSymbol: DrawOnSymbolEffect { get }
+s:7Symbols18DrawOnSymbolEffectV12individuallyACvp	swift.property	individually	DrawOnSymbolEffect.individually	var individually: DrawOnSymbolEffect { get }
+s:7Symbols18DrawOnSymbolEffectV13configurationAA0dE13ConfigurationVvp	swift.property	configuration	DrawOnSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols18DrawOnSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	DrawOnSymbolEffect.==(_:_:)	static func == (a: DrawOnSymbolEffect, b: DrawOnSymbolEffect) -> Bool
+s:7Symbols18DrawOnSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	DrawOnSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols18DrawOnSymbolEffectV7byLayerACvp	swift.property	byLayer	DrawOnSymbolEffect.byLayer	var byLayer: DrawOnSymbolEffect { get }
+s:7Symbols18DrawOnSymbolEffectV9hashValueSivp	swift.property	hashValue	DrawOnSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols18RotateSymbolEffectV	swift.struct	RotateSymbolEffect	RotateSymbolEffect	struct RotateSymbolEffect
+s:7Symbols18RotateSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	RotateSymbolEffect.wholeSymbol	var wholeSymbol: RotateSymbolEffect { get }
+s:7Symbols18RotateSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	RotateSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols18RotateSymbolEffectV16counterClockwiseACvp	swift.property	counterClockwise	RotateSymbolEffect.counterClockwise	var counterClockwise: RotateSymbolEffect { get }
+s:7Symbols18RotateSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	RotateSymbolEffect.==(_:_:)	static func == (a: RotateSymbolEffect, b: RotateSymbolEffect) -> Bool
+s:7Symbols18RotateSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	RotateSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols18RotateSymbolEffectV7byLayerACvp	swift.property	byLayer	RotateSymbolEffect.byLayer	var byLayer: RotateSymbolEffect { get }
+s:7Symbols18RotateSymbolEffectV9clockwiseACvp	swift.property	clockwise	RotateSymbolEffect.clockwise	var clockwise: RotateSymbolEffect { get }
+s:7Symbols18RotateSymbolEffectV9hashValueSivp	swift.property	hashValue	RotateSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols18WiggleSymbolEffectV	swift.struct	WiggleSymbolEffect	WiggleSymbolEffect	struct WiggleSymbolEffect
+s:7Symbols18WiggleSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	WiggleSymbolEffect.wholeSymbol	var wholeSymbol: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	WiggleSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols18WiggleSymbolEffectV16counterClockwiseACvp	swift.property	counterClockwise	WiggleSymbolEffect.counterClockwise	var counterClockwise: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WiggleSymbolEffect.==(_:_:)	static func == (a: WiggleSymbolEffect, b: WiggleSymbolEffect) -> Bool
+s:7Symbols18WiggleSymbolEffectV2upACvp	swift.property	up	WiggleSymbolEffect.up	var up: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV4downACvp	swift.property	down	WiggleSymbolEffect.down	var down: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WiggleSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols18WiggleSymbolEffectV4leftACvp	swift.property	left	WiggleSymbolEffect.left	var left: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV5rightACvp	swift.property	right	WiggleSymbolEffect.right	var right: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV6custom5angleACSd_tF	swift.method	custom(angle:)	WiggleSymbolEffect.custom(angle:)	func custom(angle: Double) -> WiggleSymbolEffect
+s:7Symbols18WiggleSymbolEffectV7byLayerACvp	swift.property	byLayer	WiggleSymbolEffect.byLayer	var byLayer: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV7forwardACvp	swift.property	forward	WiggleSymbolEffect.forward	var forward: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV8backwardACvp	swift.property	backward	WiggleSymbolEffect.backward	var backward: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV9clockwiseACvp	swift.property	clockwise	WiggleSymbolEffect.clockwise	var clockwise: WiggleSymbolEffect { get }
+s:7Symbols18WiggleSymbolEffectV9hashValueSivp	swift.property	hashValue	WiggleSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols19BreatheSymbolEffectV	swift.struct	BreatheSymbolEffect	BreatheSymbolEffect	struct BreatheSymbolEffect
+s:7Symbols19BreatheSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	BreatheSymbolEffect.wholeSymbol	var wholeSymbol: BreatheSymbolEffect { get }
+s:7Symbols19BreatheSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	BreatheSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols19BreatheSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	BreatheSymbolEffect.==(_:_:)	static func == (a: BreatheSymbolEffect, b: BreatheSymbolEffect) -> Bool
+s:7Symbols19BreatheSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	BreatheSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols19BreatheSymbolEffectV5plainACvp	swift.property	plain	BreatheSymbolEffect.plain	var plain: BreatheSymbolEffect { get }
+s:7Symbols19BreatheSymbolEffectV5pulseACvp	swift.property	pulse	BreatheSymbolEffect.pulse	var pulse: BreatheSymbolEffect { get }
+s:7Symbols19BreatheSymbolEffectV7byLayerACvp	swift.property	byLayer	BreatheSymbolEffect.byLayer	var byLayer: BreatheSymbolEffect { get }
+s:7Symbols19BreatheSymbolEffectV9hashValueSivp	swift.property	hashValue	BreatheSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols19DrawOffSymbolEffectV	swift.struct	DrawOffSymbolEffect	DrawOffSymbolEffect	struct DrawOffSymbolEffect
+s:7Symbols19DrawOffSymbolEffectV05wholeD0ACvp	swift.property	wholeSymbol	DrawOffSymbolEffect.wholeSymbol	var wholeSymbol: DrawOffSymbolEffect { get }
+s:7Symbols19DrawOffSymbolEffectV11nonReversedACvp	swift.property	nonReversed	DrawOffSymbolEffect.nonReversed	var nonReversed: DrawOffSymbolEffect { get }
+s:7Symbols19DrawOffSymbolEffectV12individuallyACvp	swift.property	individually	DrawOffSymbolEffect.individually	var individually: DrawOffSymbolEffect { get }
+s:7Symbols19DrawOffSymbolEffectV13configurationAA0dE13ConfigurationVvp	swift.property	configuration	DrawOffSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols19DrawOffSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	DrawOffSymbolEffect.==(_:_:)	static func == (a: DrawOffSymbolEffect, b: DrawOffSymbolEffect) -> Bool
+s:7Symbols19DrawOffSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	DrawOffSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols19DrawOffSymbolEffectV7byLayerACvp	swift.property	byLayer	DrawOffSymbolEffect.byLayer	var byLayer: DrawOffSymbolEffect { get }
+s:7Symbols19DrawOffSymbolEffectV8reversedACvp	swift.property	reversed	DrawOffSymbolEffect.reversed	var reversed: DrawOffSymbolEffect { get }
+s:7Symbols19DrawOffSymbolEffectV9hashValueSivp	swift.property	hashValue	DrawOffSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols19ReplaceSymbolEffectV	swift.struct	ReplaceSymbolEffect	ReplaceSymbolEffect	struct ReplaceSymbolEffect
+s:7Symbols19ReplaceSymbolEffectV05MagicB0V	swift.struct	ReplaceSymbolEffect.MagicReplace	ReplaceSymbolEffect.MagicReplace	struct MagicReplace
+s:7Symbols19ReplaceSymbolEffectV05MagicB0V13configurationAA0cD13ConfigurationVvp	swift.property	configuration	ReplaceSymbolEffect.MagicReplace.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols19ReplaceSymbolEffectV05MagicB0V2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ReplaceSymbolEffect.MagicReplace.==(_:_:)	static func == (a: ReplaceSymbolEffect.MagicReplace, b: ReplaceSymbolEffect.MagicReplace) -> Bool
+s:7Symbols19ReplaceSymbolEffectV05MagicB0V4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ReplaceSymbolEffect.MagicReplace.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols19ReplaceSymbolEffectV05MagicB0V9hashValueSivp	swift.property	hashValue	ReplaceSymbolEffect.MagicReplace.hashValue	var hashValue: Int { get }
+s:7Symbols19ReplaceSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	ReplaceSymbolEffect.wholeSymbol	var wholeSymbol: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	ReplaceSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols19ReplaceSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ReplaceSymbolEffect.==(_:_:)	static func == (a: ReplaceSymbolEffect, b: ReplaceSymbolEffect) -> Bool
+s:7Symbols19ReplaceSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ReplaceSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols19ReplaceSymbolEffectV4upUpACvp	swift.property	upUp	ReplaceSymbolEffect.upUp	var upUp: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV4upUpACvpZ	swift.type.property	upUp	ReplaceSymbolEffect.upUp	static var upUp: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV5magic8fallbackAC05MagicB0VAC_tF	swift.method	magic(fallback:)	ReplaceSymbolEffect.magic(fallback:)	func magic(fallback: ReplaceSymbolEffect) -> ReplaceSymbolEffect.MagicReplace
+s:7Symbols19ReplaceSymbolEffectV5offUpACvp	swift.property	offUp	ReplaceSymbolEffect.offUp	var offUp: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV5offUpACvpZ	swift.type.property	offUp	ReplaceSymbolEffect.offUp	static var offUp: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV6downUpACvp	swift.property	downUp	ReplaceSymbolEffect.downUp	var downUp: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV6downUpACvpZ	swift.type.property	downUp	ReplaceSymbolEffect.downUp	static var downUp: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV7byLayerACvp	swift.property	byLayer	ReplaceSymbolEffect.byLayer	var byLayer: ReplaceSymbolEffect { get }
+s:7Symbols19ReplaceSymbolEffectV9hashValueSivp	swift.property	hashValue	ReplaceSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols19SymbolEffectOptionsV	swift.struct	SymbolEffectOptions	SymbolEffectOptions	struct SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV12nonRepeatingACvp	swift.property	nonRepeating	SymbolEffectOptions.nonRepeating	var nonRepeating: SymbolEffectOptions { get }
+s:7Symbols19SymbolEffectOptionsV12nonRepeatingACvpZ	swift.type.property	nonRepeating	SymbolEffectOptions.nonRepeating	static var nonRepeating: SymbolEffectOptions { get }
+s:7Symbols19SymbolEffectOptionsV14RepeatBehaviorV	swift.struct	SymbolEffectOptions.RepeatBehavior	SymbolEffectOptions.RepeatBehavior	struct RepeatBehavior
+s:7Symbols19SymbolEffectOptionsV14RepeatBehaviorV10continuousAEvpZ	swift.type.property	continuous	SymbolEffectOptions.RepeatBehavior.continuous	static var continuous: SymbolEffectOptions.RepeatBehavior { get }
+s:7Symbols19SymbolEffectOptionsV14RepeatBehaviorV8periodicAEvpZ	swift.type.property	periodic	SymbolEffectOptions.RepeatBehavior.periodic	static var periodic: SymbolEffectOptions.RepeatBehavior { get }
+s:7Symbols19SymbolEffectOptionsV14RepeatBehaviorV8periodic_5delayAESiSg_SdSgtFZ	swift.type.method	periodic(_:delay:)	SymbolEffectOptions.RepeatBehavior.periodic(_:delay:)	static func periodic(_ count: Int? = nil, delay: Double? = nil) -> SymbolEffectOptions.RepeatBehavior
+s:7Symbols19SymbolEffectOptionsV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	SymbolEffectOptions.==(_:_:)	static func == (a: SymbolEffectOptions, b: SymbolEffectOptions) -> Bool
+s:7Symbols19SymbolEffectOptionsV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SymbolEffectOptions.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols19SymbolEffectOptionsV5speedyACSdF	swift.method	speed(_:)	SymbolEffectOptions.speed(_:)	func speed(_ speed: Double) -> SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV5speedyACSdFZ	swift.type.method	speed(_:)	SymbolEffectOptions.speed(_:)	static func speed(_ speed: Double) -> SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV6repeatyA2C14RepeatBehaviorVF	swift.method	repeat(_:)	SymbolEffectOptions.repeat(_:)	func `repeat`(_ behavior: SymbolEffectOptions.RepeatBehavior) -> SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV6repeatyA2C14RepeatBehaviorVFZ	swift.type.method	repeat(_:)	SymbolEffectOptions.repeat(_:)	static func `repeat`(_ behavior: SymbolEffectOptions.RepeatBehavior) -> SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV6repeatyACSiSgF	swift.method	repeat(_:)	SymbolEffectOptions.repeat(_:)	func `repeat`(_ count: Int?) -> SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV6repeatyACSiSgFZ	swift.type.method	repeat(_:)	SymbolEffectOptions.repeat(_:)	static func `repeat`(_ count: Int?) -> SymbolEffectOptions
+s:7Symbols19SymbolEffectOptionsV7defaultACvpZ	swift.type.property	default	SymbolEffectOptions.default	static var `default`: SymbolEffectOptions { get }
+s:7Symbols19SymbolEffectOptionsV9hashValueSivp	swift.property	hashValue	SymbolEffectOptions.hashValue	var hashValue: Int { get }
+s:7Symbols19SymbolEffectOptionsV9repeatingACvp	swift.property	repeating	SymbolEffectOptions.repeating	var repeating: SymbolEffectOptions { get }
+s:7Symbols19SymbolEffectOptionsV9repeatingACvpZ	swift.type.property	repeating	SymbolEffectOptions.repeating	static var repeating: SymbolEffectOptions { get }
+s:7Symbols20DiscreteSymbolEffectP	swift.protocol	DiscreteSymbolEffect	DiscreteSymbolEffect	protocol DiscreteSymbolEffect
+s:7Symbols21AutomaticSymbolEffectV	swift.struct	AutomaticSymbolEffect	AutomaticSymbolEffect	struct AutomaticSymbolEffect
+s:7Symbols21AutomaticSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	AutomaticSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols21AutomaticSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AutomaticSymbolEffect.==(_:_:)	static func == (a: AutomaticSymbolEffect, b: AutomaticSymbolEffect) -> Bool
+s:7Symbols21AutomaticSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AutomaticSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols21AutomaticSymbolEffectV9hashValueSivp	swift.property	hashValue	AutomaticSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols21DisappearSymbolEffectV	swift.struct	DisappearSymbolEffect	DisappearSymbolEffect	struct DisappearSymbolEffect
+s:7Symbols21DisappearSymbolEffectV05wholeC0ACvp	swift.property	wholeSymbol	DisappearSymbolEffect.wholeSymbol	var wholeSymbol: DisappearSymbolEffect { get }
+s:7Symbols21DisappearSymbolEffectV13configurationAA0cD13ConfigurationVvp	swift.property	configuration	DisappearSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols21DisappearSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	DisappearSymbolEffect.==(_:_:)	static func == (a: DisappearSymbolEffect, b: DisappearSymbolEffect) -> Bool
+s:7Symbols21DisappearSymbolEffectV2upACvp	swift.property	up	DisappearSymbolEffect.up	var up: DisappearSymbolEffect { get }
+s:7Symbols21DisappearSymbolEffectV4downACvp	swift.property	down	DisappearSymbolEffect.down	var down: DisappearSymbolEffect { get }
+s:7Symbols21DisappearSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	DisappearSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols21DisappearSymbolEffectV7byLayerACvp	swift.property	byLayer	DisappearSymbolEffect.byLayer	var byLayer: DisappearSymbolEffect { get }
+s:7Symbols21DisappearSymbolEffectV9hashValueSivp	swift.property	hashValue	DisappearSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols22IndefiniteSymbolEffectP	swift.protocol	IndefiniteSymbolEffect	IndefiniteSymbolEffect	protocol IndefiniteSymbolEffect
+s:7Symbols22TransitionSymbolEffectP	swift.protocol	TransitionSymbolEffect	TransitionSymbolEffect	protocol TransitionSymbolEffect
+s:7Symbols25SymbolEffectConfigurationV	swift.struct	SymbolEffectConfiguration	SymbolEffectConfiguration	struct SymbolEffectConfiguration
+s:7Symbols25SymbolEffectConfigurationV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	SymbolEffectConfiguration.==(_:_:)	static func == (a: SymbolEffectConfiguration, b: SymbolEffectConfiguration) -> Bool
+s:7Symbols25SymbolEffectConfigurationV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SymbolEffectConfiguration.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols25SymbolEffectConfigurationV9hashValueSivp	swift.property	hashValue	SymbolEffectConfiguration.hashValue	var hashValue: Int { get }
+s:7Symbols25VariableColorSymbolEffectV	swift.struct	VariableColorSymbolEffect	VariableColorSymbolEffect	struct VariableColorSymbolEffect
+s:7Symbols25VariableColorSymbolEffectV10cumulativeACvp	swift.property	cumulative	VariableColorSymbolEffect.cumulative	var cumulative: VariableColorSymbolEffect { get }
+s:7Symbols25VariableColorSymbolEffectV12nonReversingACvp	swift.property	nonReversing	VariableColorSymbolEffect.nonReversing	var nonReversing: VariableColorSymbolEffect { get }
+s:7Symbols25VariableColorSymbolEffectV13configurationAA0dE13ConfigurationVvp	swift.property	configuration	VariableColorSymbolEffect.configuration	var configuration: SymbolEffectConfiguration { get }
+s:7Symbols25VariableColorSymbolEffectV17dimInactiveLayersACvp	swift.property	dimInactiveLayers	VariableColorSymbolEffect.dimInactiveLayers	var dimInactiveLayers: VariableColorSymbolEffect { get }
+s:7Symbols25VariableColorSymbolEffectV18hideInactiveLayersACvp	swift.property	hideInactiveLayers	VariableColorSymbolEffect.hideInactiveLayers	var hideInactiveLayers: VariableColorSymbolEffect { get }
+s:7Symbols25VariableColorSymbolEffectV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	VariableColorSymbolEffect.==(_:_:)	static func == (a: VariableColorSymbolEffect, b: VariableColorSymbolEffect) -> Bool
+s:7Symbols25VariableColorSymbolEffectV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	VariableColorSymbolEffect.hash(into:)	func hash(into hasher: inout Hasher)
+s:7Symbols25VariableColorSymbolEffectV9hashValueSivp	swift.property	hashValue	VariableColorSymbolEffect.hashValue	var hashValue: Int { get }
+s:7Symbols25VariableColorSymbolEffectV9iterativeACvp	swift.property	iterative	VariableColorSymbolEffect.iterative	var iterative: VariableColorSymbolEffect { get }
+s:7Symbols25VariableColorSymbolEffectV9reversingACvp	swift.property	reversing	VariableColorSymbolEffect.reversing	var reversing: VariableColorSymbolEffect { get }
+s:7Symbols29ContentTransitionSymbolEffectP	swift.protocol	ContentTransitionSymbolEffect	ContentTransitionSymbolEffect	protocol ContentTransitionSymbolEffect
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols17PulseSymbolEffectV	swift.func.op	!=(_:_:)	PulseSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols17ScaleSymbolEffectV	swift.func.op	!=(_:_:)	ScaleSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols18AppearSymbolEffectV	swift.func.op	!=(_:_:)	AppearSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols18BounceSymbolEffectV	swift.func.op	!=(_:_:)	BounceSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols18DrawOnSymbolEffectV	swift.func.op	!=(_:_:)	DrawOnSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols18RotateSymbolEffectV	swift.func.op	!=(_:_:)	RotateSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols18WiggleSymbolEffectV	swift.func.op	!=(_:_:)	WiggleSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols19BreatheSymbolEffectV	swift.func.op	!=(_:_:)	BreatheSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols19DrawOffSymbolEffectV	swift.func.op	!=(_:_:)	DrawOffSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols19ReplaceSymbolEffectV	swift.func.op	!=(_:_:)	ReplaceSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols19ReplaceSymbolEffectV05MagicB0V	swift.func.op	!=(_:_:)	ReplaceSymbolEffect.MagicReplace.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols19SymbolEffectOptionsV	swift.func.op	!=(_:_:)	SymbolEffectOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols21AutomaticSymbolEffectV	swift.func.op	!=(_:_:)	AutomaticSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols21DisappearSymbolEffectV	swift.func.op	!=(_:_:)	DisappearSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols25SymbolEffectConfigurationV	swift.func.op	!=(_:_:)	SymbolEffectConfiguration.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Symbols25VariableColorSymbolEffectV	swift.func.op	!=(_:_:)	VariableColorSymbolEffect.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool

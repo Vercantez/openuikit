@@ -10,6 +10,8 @@ func expect(_ condition: Bool, _ message: String) {
     if !condition { fail(message) }
 }
 
+final class RuntimeProbeMTLDevice: MTLDevice {}
+
 expect(kCVReturnSuccess == 0, "success is 0")
 expect(kCVReturnInvalidArgument == -6661, "invalid argument code")
 expect(kCVReturnUnsupported == -6663, "unsupported code")
@@ -193,6 +195,46 @@ do {
 let readonly = CVReadOnlyPixelBuffer(overlay)
 expect(readonly.withUnsafeBackingIOSurfaceIfPresent { _ in 1 } == nil, "no surface")
 expect(CGSize(readonly.size) == CGSize(width: 4, height: 4), "cgsize conversion")
+
+var metalCache: CVMetalBufferCache?
+expect(
+    CVMetalBufferCacheCreate(nil, nil, RuntimeProbeMTLDevice(), &metalCache)
+        == kCVReturnUnsupported,
+    "metal buffer cache create unsupported"
+)
+expect(metalCache == nil, "metal buffer cache remains nil")
+expect(CVMetalBufferGetBuffer(buffer) == nil, "no MTLBuffer wrap")
+var metalTextureCache: CVMetalTextureCache?
+expect(
+    CVMetalTextureCacheCreate(nil, nil, RuntimeProbeMTLDevice(), nil, &metalTextureCache)
+        == kCVReturnUnsupported,
+    "metal texture cache create unsupported"
+)
+var metalTexture: CVMetalTexture?
+expect(
+    CVMetalTextureCacheCreateTextureFromImage(
+        nil,
+        CVMetalTextureCache(),
+        buffer,
+        nil,
+        MTLPixelFormat(rawValue: 80),
+        16,
+        8,
+        0,
+        &metalTexture
+    ) == kCVReturnUnsupported,
+    "metal texture from image unsupported"
+)
+expect(CVMetalTextureGetTexture(buffer) == nil, "no MTLTexture wrap")
+var glesCache: CVOpenGLESTextureCache?
+expect(
+    CVOpenGLESTextureCacheCreate(nil, nil, EAGLContext(), nil, &glesCache)
+        == kCVReturnUnsupported,
+    "opengles cache create unsupported"
+)
+expect(CVOpenGLESTextureGetName(buffer) == 0, "no GL name")
+expect(CVOpenGLESTextureGetTarget(buffer) == 0, "no GL target")
+expect(CVEAGLContext.self == EAGLContext.self, "EAGL alias")
 
 let registry = CVPixelFormatDescription.Registry.shared
 registry.register(

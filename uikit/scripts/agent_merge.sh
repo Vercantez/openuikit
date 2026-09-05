@@ -247,6 +247,13 @@ for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
     for cap in s["captures"]:
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
+        if score == 0.0:
+            # 0.000 is not a fidelity score: a missing frame or a size mismatch
+            # (landscape keyboard-up frames once rendered portrait-sized and sat on
+            # the board as 0.00). Refuse it by name, board value or not.
+            if name in os.environ.get("ALLOW_DROP", "").split(): print(f"   {name}: 0.000 RENDER FAILED but ALLOWED (ALLOW_DROP)")
+            else: bad.append(f"{name} RENDER FAILED (0.000: missing frame or size mismatch, was {row['score']:.3f})")
+            continue
         if row["status"] == "pass" and score < row["threshold"]:
             # ALLOW_DROP also covers a passing row that a probe change turns honest
             # (both sides omitted an element before): named in the merge, never silent.

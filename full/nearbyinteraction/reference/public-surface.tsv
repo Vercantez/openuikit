@@ -1,0 +1,159 @@
+precise	kind	title	path	declaration
+c:@E@NIDLTDOACoordinatesType	swift.enum	NIDLTDOACoordinatesType	NIDLTDOACoordinatesType	enum NIDLTDOACoordinatesType
+c:@E@NIDLTDOACoordinatesType@NIDLTDOACoordinatesTypeGeodetic	swift.enum.case	NIDLTDOACoordinatesType.geodetic	NIDLTDOACoordinatesType.geodetic	case geodetic
+c:@E@NIDLTDOACoordinatesType@NIDLTDOACoordinatesTypeRelative	swift.enum.case	NIDLTDOACoordinatesType.relative	NIDLTDOACoordinatesType.relative	case relative
+c:@E@NIDLTDOAMeasurementType	swift.enum	NIDLTDOAMeasurementType	NIDLTDOAMeasurementType	enum NIDLTDOAMeasurementType
+c:@E@NIDLTDOAMeasurementType@NIDLTDOAMeasurementTypeFinal	swift.enum.case	NIDLTDOAMeasurementType.final	NIDLTDOAMeasurementType.final	case final
+c:@E@NIDLTDOAMeasurementType@NIDLTDOAMeasurementTypePoll	swift.enum.case	NIDLTDOAMeasurementType.poll	NIDLTDOAMeasurementType.poll	case poll
+c:@E@NIDLTDOAMeasurementType@NIDLTDOAMeasurementTypeResponse	swift.enum.case	NIDLTDOAMeasurementType.response	NIDLTDOAMeasurementType.response	case response
+c:@E@NIErrorCode	swift.enum	NIError.Code	NIError.Code	enum Code
+c:@E@NIErrorCode@NIErrorCodeAccessoryPeerDeviceUnavailable	swift.enum.case	NIError.Code.accessoryPeerDeviceUnavailable	NIError.Code.accessoryPeerDeviceUnavailable	case accessoryPeerDeviceUnavailable
+c:@E@NIErrorCode@NIErrorCodeActiveExtendedDistanceSessionsLimitExceeded	swift.enum.case	NIError.Code.activeExtendedDistanceSessionsLimitExceeded	NIError.Code.activeExtendedDistanceSessionsLimitExceeded	case activeExtendedDistanceSessionsLimitExceeded
+c:@E@NIErrorCode@NIErrorCodeActiveSessionsLimitExceeded	swift.enum.case	NIError.Code.activeSessionsLimitExceeded	NIError.Code.activeSessionsLimitExceeded	case activeSessionsLimitExceeded
+c:@E@NIErrorCode@NIErrorCodeIncompatiblePeerDevice	swift.enum.case	NIError.Code.incompatiblePeerDevice	NIError.Code.incompatiblePeerDevice	case incompatiblePeerDevice
+c:@E@NIErrorCode@NIErrorCodeInvalidARConfiguration	swift.enum.case	NIError.Code.invalidARConfiguration	NIError.Code.invalidARConfiguration	case invalidARConfiguration
+c:@E@NIErrorCode@NIErrorCodeInvalidConfiguration	swift.enum.case	NIError.Code.invalidConfiguration	NIError.Code.invalidConfiguration	case invalidConfiguration
+c:@E@NIErrorCode@NIErrorCodeResourceUsageTimeout	swift.enum.case	NIError.Code.resourceUsageTimeout	NIError.Code.resourceUsageTimeout	case resourceUsageTimeout
+c:@E@NIErrorCode@NIErrorCodeSessionFailed	swift.enum.case	NIError.Code.sessionFailed	NIError.Code.sessionFailed	case sessionFailed
+c:@E@NIErrorCode@NIErrorCodeUnsupportedPlatform	swift.enum.case	NIError.Code.unsupportedPlatform	NIError.Code.unsupportedPlatform	case unsupportedPlatform
+c:@E@NIErrorCode@NIErrorCodeUserDidNotAllow	swift.enum.case	NIError.Code.userDidNotAllow	NIError.Code.userDidNotAllow	case userDidNotAllow
+c:@E@NINearbyObjectRemovalReason	swift.enum	NINearbyObject.RemovalReason	NINearbyObject.RemovalReason	enum RemovalReason
+c:@E@NINearbyObjectRemovalReason@NINearbyObjectRemovalReasonPeerEnded	swift.enum.case	NINearbyObject.RemovalReason.peerEnded	NINearbyObject.RemovalReason.peerEnded	case peerEnded
+c:@E@NINearbyObjectRemovalReason@NINearbyObjectRemovalReasonTimeout	swift.enum.case	NINearbyObject.RemovalReason.timeout	NINearbyObject.RemovalReason.timeout	case timeout
+c:@E@NINearbyObjectVerticalDirectionEstimate	swift.enum	NINearbyObject.VerticalDirectionEstimate	NINearbyObject.VerticalDirectionEstimate	enum VerticalDirectionEstimate
+c:@E@NINearbyObjectVerticalDirectionEstimate@NINearbyObjectVerticalDirectionEstimateAbove	swift.enum.case	NINearbyObject.VerticalDirectionEstimate.above	NINearbyObject.VerticalDirectionEstimate.above	case above
+c:@E@NINearbyObjectVerticalDirectionEstimate@NINearbyObjectVerticalDirectionEstimateAboveOrBelow	swift.enum.case	NINearbyObject.VerticalDirectionEstimate.aboveOrBelow	NINearbyObject.VerticalDirectionEstimate.aboveOrBelow	case aboveOrBelow
+c:@E@NINearbyObjectVerticalDirectionEstimate@NINearbyObjectVerticalDirectionEstimateBelow	swift.enum.case	NINearbyObject.VerticalDirectionEstimate.below	NINearbyObject.VerticalDirectionEstimate.below	case below
+c:@E@NINearbyObjectVerticalDirectionEstimate@NINearbyObjectVerticalDirectionEstimateSame	swift.enum.case	NINearbyObject.VerticalDirectionEstimate.same	NINearbyObject.VerticalDirectionEstimate.same	case same
+c:@E@NINearbyObjectVerticalDirectionEstimate@NINearbyObjectVerticalDirectionEstimateUnknown	swift.enum.case	NINearbyObject.VerticalDirectionEstimate.unknown	NINearbyObject.VerticalDirectionEstimate.unknown	case unknown
+c:@NIErrorDomain	swift.var	NIErrorDomain	NIErrorDomain	let NIErrorDomain: String
+c:objc(cs)NIAlgorithmConvergence	swift.class	NIAlgorithmConvergence	NIAlgorithmConvergence	class NIAlgorithmConvergence
+c:objc(cs)NIConfiguration	swift.class	NIConfiguration	NIConfiguration	class NIConfiguration
+c:objc(cs)NIDLTDOAConfiguration	swift.class	NIDLTDOAConfiguration	NIDLTDOAConfiguration	class NIDLTDOAConfiguration
+c:objc(cs)NIDLTDOAConfiguration(im)initWithNetworkIdentifier:	swift.init	init(networkIdentifier:)	NIDLTDOAConfiguration.init(networkIdentifier:)	init(networkIdentifier: Int)
+c:objc(cs)NIDLTDOAConfiguration(py)networkIdentifier	swift.property	networkIdentifier	NIDLTDOAConfiguration.networkIdentifier	var networkIdentifier: Int { get set }
+c:objc(cs)NIDLTDOAMeasurement	swift.class	NIDLTDOAMeasurement	NIDLTDOAMeasurement	class NIDLTDOAMeasurement
+c:objc(cs)NIDLTDOAMeasurement(py)address	swift.property	address	NIDLTDOAMeasurement.address	var address: Int { get }
+c:objc(cs)NIDLTDOAMeasurement(py)carrierFrequencyOffset	swift.property	carrierFrequencyOffset	NIDLTDOAMeasurement.carrierFrequencyOffset	var carrierFrequencyOffset: Double { get }
+c:objc(cs)NIDLTDOAMeasurement(py)coordinates	swift.property	coordinates	NIDLTDOAMeasurement.coordinates	var coordinates: simd_double3 { get }
+c:objc(cs)NIDLTDOAMeasurement(py)coordinatesType	swift.property	coordinatesType	NIDLTDOAMeasurement.coordinatesType	var coordinatesType: NIDLTDOACoordinatesType { get }
+c:objc(cs)NIDLTDOAMeasurement(py)measurementType	swift.property	measurementType	NIDLTDOAMeasurement.measurementType	var measurementType: NIDLTDOAMeasurementType { get }
+c:objc(cs)NIDLTDOAMeasurement(py)receiveTime	swift.property	receiveTime	NIDLTDOAMeasurement.receiveTime	var receiveTime: Double { get }
+c:objc(cs)NIDLTDOAMeasurement(py)signalStrength	swift.property	signalStrength	NIDLTDOAMeasurement.signalStrength	var signalStrength: Double { get }
+c:objc(cs)NIDLTDOAMeasurement(py)transmitTime	swift.property	transmitTime	NIDLTDOAMeasurement.transmitTime	var transmitTime: Double { get }
+c:objc(cs)NIDiscoveryToken	swift.class	NIDiscoveryToken	NIDiscoveryToken	class NIDiscoveryToken
+c:objc(cs)NIDiscoveryToken(py)deviceCapabilities	swift.property	deviceCapabilities	NIDiscoveryToken.deviceCapabilities	@NSCopying var deviceCapabilities: any NIDeviceCapability { get }
+c:objc(cs)NINearbyAccessoryConfiguration	swift.class	NINearbyAccessoryConfiguration	NINearbyAccessoryConfiguration	class NINearbyAccessoryConfiguration
+c:objc(cs)NINearbyAccessoryConfiguration(im)initWithAccessoryData:bluetoothPeerIdentifier:error:	swift.init	init(accessoryData:bluetoothPeerIdentifier:)	NINearbyAccessoryConfiguration.init(accessoryData:bluetoothPeerIdentifier:)	init(accessoryData: Data, bluetoothPeerIdentifier identifier: UUID) throws
+c:objc(cs)NINearbyAccessoryConfiguration(im)initWithData:error:	swift.init	init(data:)	NINearbyAccessoryConfiguration.init(data:)	init(data: Data) throws
+c:objc(cs)NINearbyAccessoryConfiguration(py)accessoryDiscoveryToken	swift.property	accessoryDiscoveryToken	NINearbyAccessoryConfiguration.accessoryDiscoveryToken	@NSCopying var accessoryDiscoveryToken: NIDiscoveryToken { get }
+c:objc(cs)NINearbyAccessoryConfiguration(py)cameraAssistanceEnabled	swift.property	isCameraAssistanceEnabled	NINearbyAccessoryConfiguration.isCameraAssistanceEnabled	var isCameraAssistanceEnabled: Bool { get set }
+c:objc(cs)NINearbyObject	swift.class	NINearbyObject	NINearbyObject	class NINearbyObject
+c:objc(cs)NINearbyObject(py)discoveryToken	swift.property	discoveryToken	NINearbyObject.discoveryToken	@NSCopying var discoveryToken: NIDiscoveryToken { get }
+c:objc(cs)NINearbyObject(py)verticalDirectionEstimate	swift.property	verticalDirectionEstimate	NINearbyObject.verticalDirectionEstimate	var verticalDirectionEstimate: NINearbyObject.VerticalDirectionEstimate { get }
+c:objc(cs)NINearbyPeerConfiguration	swift.class	NINearbyPeerConfiguration	NINearbyPeerConfiguration	class NINearbyPeerConfiguration
+c:objc(cs)NINearbyPeerConfiguration(im)initWithPeerToken:	swift.init	init(peerToken:)	NINearbyPeerConfiguration.init(peerToken:)	init(peerToken: NIDiscoveryToken)
+c:objc(cs)NINearbyPeerConfiguration(py)cameraAssistanceEnabled	swift.property	isCameraAssistanceEnabled	NINearbyPeerConfiguration.isCameraAssistanceEnabled	var isCameraAssistanceEnabled: Bool { get set }
+c:objc(cs)NINearbyPeerConfiguration(py)extendedDistanceMeasurementEnabled	swift.property	isExtendedDistanceMeasurementEnabled	NINearbyPeerConfiguration.isExtendedDistanceMeasurementEnabled	var isExtendedDistanceMeasurementEnabled: Bool { get set }
+c:objc(cs)NINearbyPeerConfiguration(py)peerDiscoveryToken	swift.property	peerDiscoveryToken	NINearbyPeerConfiguration.peerDiscoveryToken	@NSCopying var peerDiscoveryToken: NIDiscoveryToken { get }
+c:objc(cs)NISession	swift.class	NISession	NISession	class NISession
+c:objc(cs)NISession(cpy)deviceCapabilities	swift.type.property	deviceCapabilities	NISession.deviceCapabilities	class var deviceCapabilities: any NIDeviceCapability { get }
+c:objc(cs)NISession(cpy)supported	swift.type.property	isSupported	NISession.isSupported	class var isSupported: Bool { get }
+c:objc(cs)NISession(im)invalidate	swift.method	invalidate()	NISession.invalidate()	func invalidate()
+c:objc(cs)NISession(im)pause	swift.method	pause()	NISession.pause()	func pause()
+c:objc(cs)NISession(im)runWithConfiguration:	swift.method	run(_:)	NISession.run(_:)	func run(_ configuration: NIConfiguration)
+c:objc(cs)NISession(im)setARSession:	swift.method	setARSession(_:)	NISession.setARSession(_:)	func setARSession(_ session: ARSession)
+c:objc(cs)NISession(py)configuration	swift.property	configuration	NISession.configuration	@NSCopying var configuration: NIConfiguration? { get }
+c:objc(cs)NISession(py)delegate	swift.property	delegate	NISession.delegate	weak var delegate: (any NISessionDelegate)? { get set }
+c:objc(cs)NISession(py)delegateQueue	swift.property	delegateQueue	NISession.delegateQueue	var delegateQueue: dispatch_queue_t? { get set }
+c:objc(cs)NISession(py)discoveryToken	swift.property	discoveryToken	NISession.discoveryToken	@NSCopying var discoveryToken: NIDiscoveryToken? { get }
+c:objc(pl)NIDeviceCapability	swift.protocol	NIDeviceCapability	NIDeviceCapability	protocol NIDeviceCapability
+c:objc(pl)NIDeviceCapability(py)supportsCameraAssistance	swift.property	supportsCameraAssistance	NIDeviceCapability.supportsCameraAssistance	var supportsCameraAssistance: Bool { get }
+c:objc(pl)NIDeviceCapability(py)supportsDLTDOAMeasurement	swift.property	supportsDLTDOAMeasurement	NIDeviceCapability.supportsDLTDOAMeasurement	var supportsDLTDOAMeasurement: Bool { get }
+c:objc(pl)NIDeviceCapability(py)supportsDirectionMeasurement	swift.property	supportsDirectionMeasurement	NIDeviceCapability.supportsDirectionMeasurement	var supportsDirectionMeasurement: Bool { get }
+c:objc(pl)NIDeviceCapability(py)supportsExtendedDistanceMeasurement	swift.property	supportsExtendedDistanceMeasurement	NIDeviceCapability.supportsExtendedDistanceMeasurement	var supportsExtendedDistanceMeasurement: Bool { get }
+c:objc(pl)NIDeviceCapability(py)supportsPreciseDistanceMeasurement	swift.property	supportsPreciseDistanceMeasurement	NIDeviceCapability.supportsPreciseDistanceMeasurement	var supportsPreciseDistanceMeasurement: Bool { get }
+c:objc(pl)NISessionDelegate	swift.protocol	NISessionDelegate	NISessionDelegate	protocol NISessionDelegate : NSObjectProtocol
+c:objc(pl)NISessionDelegate(im)session:didGenerateShareableConfigurationData:forObject:	swift.method	session(_:didGenerateShareableConfigurationData:for:)	NISessionDelegate.session(_:didGenerateShareableConfigurationData:for:)	optional func session(_ session: NISession, didGenerateShareableConfigurationData shareableConfigurationData: Data, for object: NINearbyObject)
+c:objc(pl)NISessionDelegate(im)session:didInvalidateWithError:	swift.method	session(_:didInvalidateWith:)	NISessionDelegate.session(_:didInvalidateWith:)	optional func session(_ session: NISession, didInvalidateWith error: any Error)
+c:objc(pl)NISessionDelegate(im)session:didRemoveNearbyObjects:withReason:	swift.method	session(_:didRemove:reason:)	NISessionDelegate.session(_:didRemove:reason:)	optional func session(_ session: NISession, didRemove nearbyObjects: [NINearbyObject], reason: NINearbyObject.RemovalReason)
+c:objc(pl)NISessionDelegate(im)session:didUpdateAlgorithmConvergence:forObject:	swift.method	session(_:didUpdateAlgorithmConvergence:for:)	NISessionDelegate.session(_:didUpdateAlgorithmConvergence:for:)	optional func session(_ session: NISession, didUpdateAlgorithmConvergence convergence: NIAlgorithmConvergence, for object: NINearbyObject?)
+c:objc(pl)NISessionDelegate(im)session:didUpdateDLTDOAMeasurements:	swift.method	session(_:didUpdateDLTDOA:)	NISessionDelegate.session(_:didUpdateDLTDOA:)	optional func session(_ session: NISession, didUpdateDLTDOA measurements: [NIDLTDOAMeasurement])
+c:objc(pl)NISessionDelegate(im)session:didUpdateNearbyObjects:	swift.method	session(_:didUpdate:)	NISessionDelegate.session(_:didUpdate:)	optional func session(_ session: NISession, didUpdate nearbyObjects: [NINearbyObject])
+c:objc(pl)NISessionDelegate(im)sessionDidStartRunning:	swift.method	sessionDidStartRunning(_:)	NISessionDelegate.sessionDidStartRunning(_:)	optional func sessionDidStartRunning(_ session: NISession)
+c:objc(pl)NISessionDelegate(im)sessionSuspensionEnded:	swift.method	sessionSuspensionEnded(_:)	NISessionDelegate.sessionSuspensionEnded(_:)	optional func sessionSuspensionEnded(_ session: NISession)
+c:objc(pl)NISessionDelegate(im)sessionWasSuspended:	swift.method	sessionWasSuspended(_:)	NISessionDelegate.sessionWasSuspended(_:)	optional func sessionWasSuspended(_ session: NISession)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NIAlgorithmConvergence	swift.init	init(coder:)	NIAlgorithmConvergence.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NIConfiguration	swift.init	init(coder:)	NIConfiguration.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NIDLTDOAMeasurement	swift.init	init(coder:)	NIDLTDOAMeasurement.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NIDiscoveryToken	swift.init	init(coder:)	NIDiscoveryToken.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NINearbyObject	swift.init	init(coder:)	NINearbyObject.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@NIErrorCode	swift.type.property	errorDomain	NIError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	errorUserInfo	NIError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	errorCode	NIError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@NIErrorCode	swift.func.op	~=(_:_:)	NIError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	errorUserInfo	NIError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@NIErrorCode	swift.func.op	==(_:_:)	NIError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	code	NIError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NIErrorCode	swift.method	hash(into:)	NIError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	userInfo	NIError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	errorCode	NIError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	hashValue	NIError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@NIErrorCode	swift.init	init(_:userInfo:)	NIError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO	swift.enum	NIAlgorithmConvergenceStatus	NIAlgorithmConvergenceStatus	enum NIAlgorithmConvergenceStatus
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO12notConvergedyACSayAC6ReasonVGcACmF	swift.enum.case	NIAlgorithmConvergenceStatus.notConverged(_:)	NIAlgorithmConvergenceStatus.notConverged(_:)	case notConverged([NIAlgorithmConvergenceStatus.Reason])
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	NIAlgorithmConvergenceStatus.==(_:_:)	static func == (lhs: NIAlgorithmConvergenceStatus, rhs: NIAlgorithmConvergenceStatus) -> Bool
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV	swift.struct	NIAlgorithmConvergenceStatus.Reason	NIAlgorithmConvergenceStatus.Reason	struct Reason
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientLightingAEvpZ	swift.type.property	insufficientLighting	NIAlgorithmConvergenceStatus.Reason.insufficientLighting	static let insufficientLighting: NIAlgorithmConvergenceStatus.Reason
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientMovementAEvpZ	swift.type.property	insufficientMovement	NIAlgorithmConvergenceStatus.Reason.insufficientMovement	static let insufficientMovement: NIAlgorithmConvergenceStatus.Reason
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20localizedDescriptionSSSgvp	swift.property	localizedDescription	NIAlgorithmConvergenceStatus.Reason.localizedDescription	var localizedDescription: String? { get }
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV25insufficientVerticalSweepAEvpZ	swift.type.property	insufficientVerticalSweep	NIAlgorithmConvergenceStatus.Reason.insufficientVerticalSweep	static let insufficientVerticalSweep: NIAlgorithmConvergenceStatus.Reason
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV26insufficientSignalStrengthAEvpZ	swift.type.property	insufficientSignalStrength	NIAlgorithmConvergenceStatus.Reason.insufficientSignalStrength	static let insufficientSignalStrength: NIAlgorithmConvergenceStatus.Reason
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV27insufficientHorizontalSweepAEvpZ	swift.type.property	insufficientHorizontalSweep	NIAlgorithmConvergenceStatus.Reason.insufficientHorizontalSweep	static let insufficientHorizontalSweep: NIAlgorithmConvergenceStatus.Reason
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8RawValuea	swift.typealias	NIAlgorithmConvergenceStatus.Reason.RawValue	NIAlgorithmConvergenceStatus.Reason.RawValue	typealias RawValue = String
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueAESS_tcfc	swift.init	init(rawValue:)	NIAlgorithmConvergenceStatus.Reason.init(rawValue:)	init(rawValue: String)
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvp	swift.property	rawValue	NIAlgorithmConvergenceStatus.Reason.rawValue	var rawValue: String
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO7unknownyA2CmF	swift.enum.case	NIAlgorithmConvergenceStatus.unknown	NIAlgorithmConvergenceStatus.unknown	case unknown
+s:17NearbyInteraction28NIAlgorithmConvergenceStatusO9convergedyA2CmF	swift.enum.case	NIAlgorithmConvergenceStatus.converged	NIAlgorithmConvergenceStatus.converged	case converged
+s:SC11NIErrorCodeLeV	swift.struct	NIError	NIError	struct NIError
+s:SC11NIErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	NIError.errorDomain	static var errorDomain: String { get }
+s:SC11NIErrorCodeLeV13sessionFailedSoAAVvpZ	swift.type.property	sessionFailed	NIError.sessionFailed	static var sessionFailed: NIError.Code { get }
+s:SC11NIErrorCodeLeV15userDidNotAllowSoAAVvpZ	swift.type.property	userDidNotAllow	NIError.userDidNotAllow	static var userDidNotAllow: NIError.Code { get }
+s:SC11NIErrorCodeLeV19unsupportedPlatformSoAAVvpZ	swift.type.property	unsupportedPlatform	NIError.unsupportedPlatform	static var unsupportedPlatform: NIError.Code { get }
+s:SC11NIErrorCodeLeV20invalidConfigurationSoAAVvpZ	swift.type.property	invalidConfiguration	NIError.invalidConfiguration	static var invalidConfiguration: NIError.Code { get }
+s:SC11NIErrorCodeLeV20resourceUsageTimeoutSoAAVvpZ	swift.type.property	resourceUsageTimeout	NIError.resourceUsageTimeout	static var resourceUsageTimeout: NIError.Code { get }
+s:SC11NIErrorCodeLeV22incompatiblePeerDeviceSoAAVvpZ	swift.type.property	incompatiblePeerDevice	NIError.incompatiblePeerDevice	static var incompatiblePeerDevice: NIError.Code { get }
+s:SC11NIErrorCodeLeV22invalidARConfigurationSoAAVvpZ	swift.type.property	invalidARConfiguration	NIError.invalidARConfiguration	static var invalidARConfiguration: NIError.Code { get }
+s:SC11NIErrorCodeLeV27activeSessionsLimitExceededSoAAVvpZ	swift.type.property	activeSessionsLimitExceeded	NIError.activeSessionsLimitExceeded	static var activeSessionsLimitExceeded: NIError.Code { get }
+s:SC11NIErrorCodeLeV30accessoryPeerDeviceUnavailableSoAAVvpZ	swift.type.property	accessoryPeerDeviceUnavailable	NIError.accessoryPeerDeviceUnavailable	static var accessoryPeerDeviceUnavailable: NIError.Code { get }
+s:SC11NIErrorCodeLeV43activeExtendedDistanceSessionsLimitExceededSoAAVvpZ	swift.type.property	activeExtendedDistanceSessionsLimitExceeded	NIError.activeExtendedDistanceSessionsLimitExceeded	static var activeExtendedDistanceSessionsLimitExceeded: NIError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NIDLTDOACoordinatesType	swift.func.op	!=(_:_:)	NIDLTDOACoordinatesType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NIDLTDOAMeasurementType	swift.func.op	!=(_:_:)	NIDLTDOAMeasurementType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NIErrorCode	swift.func.op	!=(_:_:)	NIError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NINearbyObjectRemovalReason	swift.func.op	!=(_:_:)	NINearbyObject.RemovalReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NINearbyObjectVerticalDirectionEstimate	swift.func.op	!=(_:_:)	NINearbyObject.VerticalDirectionEstimate.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:17NearbyInteraction28NIAlgorithmConvergenceStatusO	swift.func.op	!=(_:_:)	NIAlgorithmConvergenceStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV	swift.func.op	!=(_:_:)	NIAlgorithmConvergenceStatus.Reason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NIDLTDOACoordinatesType	swift.property	hashValue	NIDLTDOACoordinatesType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NIDLTDOAMeasurementType	swift.property	hashValue	NIDLTDOAMeasurementType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	hashValue	NIError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NINearbyObjectRemovalReason	swift.property	hashValue	NINearbyObject.RemovalReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NINearbyObjectVerticalDirectionEstimate	swift.property	hashValue	NINearbyObject.VerticalDirectionEstimate.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV	swift.property	hashValue	NIAlgorithmConvergenceStatus.Reason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NIDLTDOACoordinatesType	swift.method	hash(into:)	NIDLTDOACoordinatesType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NIDLTDOAMeasurementType	swift.method	hash(into:)	NIDLTDOAMeasurementType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NIErrorCode	swift.method	hash(into:)	NIError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NINearbyObjectRemovalReason	swift.method	hash(into:)	NINearbyObject.RemovalReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NINearbyObjectVerticalDirectionEstimate	swift.method	hash(into:)	NINearbyObject.VerticalDirectionEstimate.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV	swift.method	hash(into:)	NIAlgorithmConvergenceStatus.Reason.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11NIErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NIError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14NINearbyObjectC17NearbyInteractionE15horizontalAngleSfSgvp	swift.property	horizontalAngle	NINearbyObject.horizontalAngle	var horizontalAngle: Float? { get }
+s:So14NINearbyObjectC17NearbyInteractionE8distanceSfSgvp	swift.property	distance	NINearbyObject.distance	var distance: Float? { get }
+s:So14NINearbyObjectC17NearbyInteractionE9directions5SIMD3VySfGSgvp	swift.property	direction	NINearbyObject.direction	var direction: simd_float3? { get }
+s:So22NIAlgorithmConvergenceC17NearbyInteractionE6statusAC0aB6StatusOvp	swift.property	status	NIAlgorithmConvergence.status	var status: NIAlgorithmConvergenceStatus { get }
+s:So23NIDLTDOACoordinatesTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NIDLTDOACoordinatesType.init(rawValue:)	init?(rawValue: Int)
+s:So23NIDLTDOAMeasurementTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NIDLTDOAMeasurementType.init(rawValue:)	init?(rawValue: Int)
+s:So27NINearbyObjectRemovalReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NINearbyObject.RemovalReason.init(rawValue:)	init?(rawValue: Int)
+s:So39NINearbyObjectVerticalDirectionEstimateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NINearbyObject.VerticalDirectionEstimate.init(rawValue:)	init?(rawValue: Int)
+s:So9NISessionC17NearbyInteractionE14worldTransform3forSo13simd_float4x4aSgSo14NINearbyObjectC_tF	swift.method	worldTransform(for:)	NISession.worldTransform(for:)	func worldTransform(for object: NINearbyObject) -> simd_float4x4?
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@NIErrorCode	swift.property	localizedDescription	NIError.localizedDescription	var localizedDescription: String { get }

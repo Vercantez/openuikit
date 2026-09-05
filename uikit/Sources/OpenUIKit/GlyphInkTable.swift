@@ -93,6 +93,18 @@ public enum GlyphInkTable {
     /// MEASURED and reverted: it DIFF'd `realapp_focus_settings_light`
     /// and `realapp_hackers_feed_light` (font fallback → harvested);
     /// guest realapp is scale 2.
+    /// Docker `linux_realapp_verify` (corelibs, no SFNS, scale 2) then
+    /// `OPENUIKIT_IOS_INK_MISS: I|system-regular|13|light|F0.25|8364`
+    /// after 12 PNGs (Ledger is 13th). Scalar 8364 is euro U+20AC.
+    /// MEASURED Mac INK_LOG of all 14 screens: empty (Apple de_DE
+    /// currency sits at harvested F0.0/F0.5/F0.75). Linux corelibs
+    /// placed `€` at F0.25 in the footnote (`4,50 €` on
+    /// `LedgerTableCell.subtitleLabel`, `.preferredFont(.footnote)`).
+    /// Harvest remaining 13 pt regular euro phases light+dark × 8
+    /// (F0.0…F0.875) on SE 2x / iOS 26.1 (`OpenUIKit-2x-corelibs-ink`),
+    /// 16/16, skipped []; overlap with the prior 3 euro keys **3/3
+    /// identical**. Table **8786 → 8799**. 3x euro F0.0 light+dark
+    /// on iPhone 16 (2/2) → glyph_ink_ios_3x **848 → 850**.
     private static var iosEntries: [String: JSONValue]? = {
         guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
               let e = json["entries"]?.objectValue else { return nil }

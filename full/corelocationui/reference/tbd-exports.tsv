@@ -1,0 +1,10 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI (for architecture arm64):	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_CoreLocationUIVersionNumber	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_CoreLocationUIVersionString	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_OBJC_CLASS_$_CLLocationButton	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_OBJC_CLASS_$_CLLocationButtonDrawing	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_OBJC_CLASS_$_CLLocationButtonTag	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_OBJC_METACLASS_$_CLLocationButton	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_OBJC_METACLASS_$_CLLocationButtonDrawing	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd
+_OBJC_METACLASS_$_CLLocationButtonTag	System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI.tbd

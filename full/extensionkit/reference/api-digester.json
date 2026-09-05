@@ -1,0 +1,3608 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "ExtensionKit.EXHostViewController",
+        "printedName": "ExtensionKit.EXHostViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "ExtensionKit.EXAppExtensionBrowserViewController",
+        "printedName": "ExtensionKit.EXAppExtensionBrowserViewController"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExtensionKit",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppExtensionSceneConfiguration",
+                "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Content"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Configuration"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Configuration?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content, Configuration where Content : ExtensionKit.AppExtensionScene, Configuration : ExtensionFoundation.AppExtensionConfiguration>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12ExtensionKit03AppA18SceneConfigurationV_13configurationACxyXA_q_SgtcAA0caD0Rz0A10Foundation0caE0R_r0_lufc",
+            "moduleName": "ExtensionKit",
+            "name": "init",
+            "printedName": "init(_:configuration:)",
+            "usr": "s:12ExtensionKit03AppA18SceneConfigurationV_13configurationACxyXA_q_SgtcAA0caD0Rz0A10Foundation0caE0R_r0_lufc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppExtensionSceneConfiguration",
+                "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Content"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content where Content : ExtensionKit.AppExtensionScene>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12ExtensionKit03AppA18SceneConfigurationVyACxyXAcAA0caD0Rzlufc",
+            "moduleName": "ExtensionKit",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:12ExtensionKit03AppA18SceneConfigurationVyACxyXAcAA0caD0Rzlufc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSXPCConnection",
+                "printedName": "Foundation.NSXPCConnection",
+                "usr": "c:objc(cs)NSXPCConnection"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA18SceneConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF",
+            "moduleName": "ExtensionKit",
+            "name": "accept",
+            "printedName": "accept(connection:)",
+            "usr": "s:12ExtensionKit03AppA18SceneConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.0",
+        "intro_tvOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s12ExtensionKit03AppA18SceneConfigurationV",
+        "moduleName": "ExtensionKit",
+        "name": "AppExtensionSceneConfiguration",
+        "printedName": "AppExtensionSceneConfiguration",
+        "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+      },
+      {
+        "children": [
+          {
+            "declKind": "AssociatedType",
+            "kind": "AssociatedType",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP4BodyQa",
+            "moduleName": "ExtensionKit",
+            "name": "Body",
+            "printedName": "Body",
+            "protocolReq": true,
+            "usr": "s:12ExtensionKit03AppA5SceneP4BodyQa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DependentMember",
+                    "printedName": "Self.Body"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ExtensionKit.AppExtensionScene>",
+                "kind": "Accessor",
+                "mangledName": "$s12ExtensionKit03AppA5SceneP4body4BodyQzvg",
+                "moduleName": "ExtensionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:12ExtensionKit03AppA5SceneP4body4BodyQzvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DependentMember",
+                "printedName": "Self.Body"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP4body4BodyQzvp",
+            "moduleName": "ExtensionKit",
+            "name": "body",
+            "printedName": "body",
+            "protocolReq": true,
+            "usr": "s:12ExtensionKit03AppA5SceneP4body4BodyQzvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self.Body : ExtensionKit.AppExtensionScene>",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.0",
+        "intro_tvOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s12ExtensionKit03AppA5SceneP",
+        "moduleName": "ExtensionKit",
+        "name": "AppExtensionScene",
+        "printedName": "AppExtensionScene",
+        "usr": "s:12ExtensionKit03AppA5SceneP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PrimitiveAppExtensionScene",
+                "printedName": "ExtensionKit.PrimitiveAppExtensionScene",
+                "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Content"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSXPCConnection",
+                    "printedName": "Foundation.NSXPCConnection",
+                    "usr": "c:objc(cs)NSXPCConnection"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Foundation.NSXPCConnection) -> Swift.Bool"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV2id7content12onConnectionACSS_xycSbSo15NSXPCConnectionCctc7SwiftUI4ViewRzlufc",
+            "moduleName": "ExtensionKit",
+            "name": "init",
+            "printedName": "init(id:content:onConnection:)",
+            "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV2id7content12onConnectionACSS_xycSbSo15NSXPCConnectionCctc7SwiftUI4ViewRzlufc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Never",
+                    "printedName": "Swift.Never",
+                    "usr": "s:s5NeverO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV4bodys5NeverOvg",
+                "moduleName": "ExtensionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV4bodys5NeverOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Never",
+                "printedName": "Swift.Never",
+                "usr": "s:s5NeverO"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV4bodys5NeverOvp",
+            "moduleName": "ExtensionKit",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV4bodys5NeverOvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Never",
+                "printedName": "Swift.Never",
+                "usr": "s:s5NeverO"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13.0",
+            "intro_iOS": "16.0",
+            "intro_tvOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV4Bodya",
+            "moduleName": "ExtensionKit",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV4Bodya"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV16debugDescriptionSSvg",
+                "moduleName": "ExtensionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV16debugDescriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV16debugDescriptionSSvp",
+            "moduleName": "ExtensionKit",
+            "name": "debugDescription",
+            "printedName": "debugDescription",
+            "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV16debugDescriptionSSvp"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "ExtensionKit.PrimitiveAppExtensionScene.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.0",
+        "intro_tvOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s12ExtensionKit012PrimitiveAppA5SceneV",
+        "moduleName": "ExtensionKit",
+        "name": "PrimitiveAppExtensionScene",
+        "printedName": "PrimitiveAppExtensionScene",
+        "usr": "s:12ExtensionKit012PrimitiveAppA5SceneV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "Content"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Content where Content : ExtensionKit.AppExtensionScene>",
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrxAA0caD0RzlFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrxAA0caD0RzlFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_tAA0caD0RzAaER_r0_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_tAA0caD0RzAaER_r0_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_tAA0caD0RzAaER_AaER0_r1_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_tAA0caD0RzAaER_AaER0_r1_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_tAA0caD0RzAaER_AaER0_AaER1_r2_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_tAA0caD0RzAaER_AaER0_AaER1_r2_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C4"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3, C4 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene, C4 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_tAA0caD0RzAaER_AaER0_AaER1_AaER2_r3_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_tAA0caD0RzAaER_AaER0_AaER1_AaER2_r3_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C4"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C5"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3, C4, C5 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene, C4 : ExtensionKit.AppExtensionScene, C5 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_r4_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_r4_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C4"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C5"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C6"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3, C4, C5, C6 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene, C4 : ExtensionKit.AppExtensionScene, C5 : ExtensionKit.AppExtensionScene, C6 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_r5_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_r5_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C4"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C5"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C6"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C7"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3, C4, C5, C6, C7 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene, C4 : ExtensionKit.AppExtensionScene, C5 : ExtensionKit.AppExtensionScene, C6 : ExtensionKit.AppExtensionScene, C7 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_q5_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_AaER5_r6_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_q5_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_AaER5_r6_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C4"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C5"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C6"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C7"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C8"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3, C4, C5, C6, C7, C8 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene, C4 : ExtensionKit.AppExtensionScene, C5 : ExtensionKit.AppExtensionScene, C6 : ExtensionKit.AppExtensionScene, C7 : ExtensionKit.AppExtensionScene, C8 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_q5_q6_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_AaER5_AaER6_r7_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:_:_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_q5_q6_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_AaER5_AaER6_r7_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C1"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C2"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C3"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C4"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C5"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C6"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C7"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C8"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "C9"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "AlwaysEmitIntoClient",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9 where C0 : ExtensionKit.AppExtensionScene, C1 : ExtensionKit.AppExtensionScene, C2 : ExtensionKit.AppExtensionScene, C3 : ExtensionKit.AppExtensionScene, C4 : ExtensionKit.AppExtensionScene, C5 : ExtensionKit.AppExtensionScene, C6 : ExtensionKit.AppExtensionScene, C7 : ExtensionKit.AppExtensionScene, C8 : ExtensionKit.AppExtensionScene, C9 : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_q5_q6_q7_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_AaER5_AaER6_AaER7_r8_lFZ",
+            "moduleName": "ExtensionKit",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:_:_:_:_:_:_:_:_:)",
+            "static": true,
+            "usr": "s:12ExtensionKit03AppA12SceneBuilderV10buildBlockyQrx_q_q0_q1_q2_q3_q4_q5_q6_q7_tAA0caD0RzAaER_AaER0_AaER1_AaER2_AaER3_AaER4_AaER5_AaER6_AaER7_r8_lFZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "ResultBuilder",
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.0",
+        "intro_tvOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s12ExtensionKit03AppA12SceneBuilderV",
+        "moduleName": "ExtensionKit",
+        "name": "AppExtensionSceneBuilder",
+        "printedName": "AppExtensionSceneBuilder",
+        "usr": "s:12ExtensionKit03AppA12SceneBuilderV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionIdentity",
+                        "printedName": "ExtensionFoundation.AppExtensionIdentity",
+                        "usr": "s:19ExtensionFoundation03AppA8IdentityV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD00D10Foundation03AppD8IdentityVvg",
+                    "moduleName": "ExtensionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD00D10Foundation03AppD8IdentityVvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionIdentity",
+                        "printedName": "ExtensionFoundation.AppExtensionIdentity",
+                        "usr": "s:19ExtensionFoundation03AppA8IdentityV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD00D10Foundation03AppD8IdentityVvs",
+                    "moduleName": "ExtensionKit",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD00D10Foundation03AppD8IdentityVvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionIdentity",
+                    "printedName": "ExtensionFoundation.AppExtensionIdentity",
+                    "usr": "s:19ExtensionFoundation03AppA8IdentityV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD00D10Foundation03AppD8IdentityVvp",
+                "moduleName": "ExtensionKit",
+                "name": "appExtension",
+                "printedName": "appExtension",
+                "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD00D10Foundation03AppD8IdentityVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV7sceneIDSSvg",
+                    "moduleName": "ExtensionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV7sceneIDSSvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV7sceneIDSSvs",
+                    "moduleName": "ExtensionKit",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV7sceneIDSSvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV7sceneIDSSvp",
+                "moduleName": "ExtensionKit",
+                "name": "sceneID",
+                "printedName": "sceneID",
+                "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV7sceneIDSSvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Configuration",
+                    "printedName": "ExtensionKit.EXHostViewController.Configuration",
+                    "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionIdentity",
+                    "printedName": "ExtensionFoundation.AppExtensionIdentity",
+                    "usr": "s:19ExtensionFoundation03AppA8IdentityV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD07sceneIDAE0D10Foundation03AppD8IdentityV_SStcfc",
+                "moduleName": "ExtensionKit",
+                "name": "init",
+                "printedName": "init(appExtension:sceneID:)",
+                "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV03appD07sceneIDAE0D10Foundation03AppD8IdentityV_SStcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_Macosx": "13.0",
+            "intro_iOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13ConfigurationV",
+            "moduleName": "ExtensionKit",
+            "name": "Configuration",
+            "printedName": "Configuration",
+            "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Configuration",
+                        "printedName": "ExtensionKit.EXHostViewController.Configuration",
+                        "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ExtensionKit.EXHostViewController.Configuration?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13configurationAbCE13ConfigurationVSgvg",
+                "moduleName": "ExtensionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So20EXHostViewControllerC12ExtensionKitE13configurationAbCE13ConfigurationVSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Configuration",
+                        "printedName": "ExtensionKit.EXHostViewController.Configuration",
+                        "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ExtensionKit.EXHostViewController.Configuration?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13configurationAbCE13ConfigurationVSgvs",
+                "moduleName": "ExtensionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So20EXHostViewControllerC12ExtensionKitE13configurationAbCE13ConfigurationVSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Configuration",
+                    "printedName": "ExtensionKit.EXHostViewController.Configuration",
+                    "usr": "s:So20EXHostViewControllerC12ExtensionKitE13ConfigurationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ExtensionKit.EXHostViewController.Configuration?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "13.0",
+            "intro_iOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo20EXHostViewControllerC12ExtensionKitE13configurationAbCE13ConfigurationVSgvp",
+            "moduleName": "ExtensionKit",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:So20EXHostViewControllerC12ExtensionKitE13configurationAbCE13ConfigurationVSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIContentContainer",
+            "printedName": "UIContentContainer",
+            "usr": "c:objc(pl)UIContentContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSExtensionRequestHandling",
+            "printedName": "NSExtensionRequestHandling",
+            "usr": "c:objc(pl)NSExtensionRequestHandling"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIStateRestoring",
+            "printedName": "UIStateRestoring",
+            "usr": "c:objc(pl)UIStateRestoring"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "26.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ExtensionKit",
+        "name": "EXHostViewController",
+        "objc_name": "EXHostViewController",
+        "printedName": "EXHostViewController",
+        "superclassNames": [
+          "UIKit.UIViewController",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIViewController",
+        "usr": "c:objc(cs)EXHostViewController"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ExtensionFoundation.AppExtension, Self.Configuration == ExtensionKit.AppExtensionSceneConfiguration>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s19ExtensionFoundation03AppA0P0A3KitAD0cA18SceneConfigurationV0F0RtzrlE4mainyyKFZ",
+            "moduleName": "ExtensionKit",
+            "name": "main",
+            "printedName": "main()",
+            "static": true,
+            "throwing": true,
+            "usr": "s:19ExtensionFoundation03AppA0P0A3KitAD0cA18SceneConfigurationV0F0RtzrlE4mainyyKFZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self.Configuration : ExtensionFoundation.AppExtensionConfiguration>",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.0",
+        "intro_tvOS": "16.0",
+        "intro_watchOS": "9.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s19ExtensionFoundation03AppA0P",
+        "moduleName": "ExtensionFoundation",
+        "name": "AppExtension",
+        "printedName": "AppExtension",
+        "usr": "s:19ExtensionFoundation03AppA0P"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Never",
+                    "printedName": "Swift.Never",
+                    "usr": "s:s5NeverO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$ss5NeverO12ExtensionKitE4bodyABvg",
+                "moduleName": "ExtensionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:s5NeverO12ExtensionKitE4bodyABvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Never",
+                "printedName": "Swift.Never",
+                "usr": "s:s5NeverO"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$ss5NeverO12ExtensionKitE4bodyABvp",
+            "moduleName": "ExtensionKit",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:s5NeverO12ExtensionKitE4bodyABvp"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss15BitwiseCopyableP",
+            "name": "BitwiseCopyable",
+            "printedName": "BitwiseCopyable",
+            "usr": "s:s15BitwiseCopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSL",
+            "name": "Comparable",
+            "printedName": "Comparable",
+            "usr": "s:SL"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "Swift.Never.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Compared",
+                    "printedName": "Swift.Never.Compared"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Compared",
+                "printedName": "Compared"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14SortComparatorP",
+            "name": "SortComparator",
+            "printedName": "SortComparator",
+            "usr": "s:10Foundation14SortComparatorP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Item",
+                    "printedName": "Swift.Never.Item"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Item",
+                "printedName": "Item"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s16CoreTransferable22TransferRepresentationP",
+            "name": "TransferRepresentation",
+            "printedName": "TransferRepresentation",
+            "usr": "s:16CoreTransferable22TransferRepresentationP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Representation",
+                    "printedName": "Swift.Never.Representation"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Representation",
+                "printedName": "Representation"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s16CoreTransferable0B0P",
+            "name": "Transferable",
+            "printedName": "Transferable",
+            "usr": "s:16CoreTransferable0B0P"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI17CustomHoverEffectP",
+            "name": "CustomHoverEffect",
+            "printedName": "CustomHoverEffect",
+            "usr": "s:7SwiftUI17CustomHoverEffectP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Value",
+                    "printedName": "Swift.Never.Value"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Value",
+                "printedName": "Value"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI9KeyframesP",
+            "name": "Keyframes",
+            "printedName": "Keyframes",
+            "usr": "s:7SwiftUI9KeyframesP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Resolved",
+                    "printedName": "Swift.Never.Resolved"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Resolved",
+                "printedName": "Resolved"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI10ShapeStyleP",
+            "name": "ShapeStyle",
+            "printedName": "ShapeStyle",
+            "usr": "s:7SwiftUI10ShapeStyleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Value",
+                    "printedName": "Swift.Never.Value"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Value",
+                "printedName": "Value"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI7GestureP",
+            "name": "Gesture",
+            "printedName": "Gesture",
+            "usr": "s:7SwiftUI7GestureP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "AncestorCoordinateSpace",
+                    "printedName": "Swift.Never.AncestorCoordinateSpace"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "AncestorCoordinateSpace",
+                "printedName": "AncestorCoordinateSpace"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7Spatial17CoordinateSpace3DP",
+            "name": "CoordinateSpace3D",
+            "printedName": "CoordinateSpace3D",
+            "usr": "s:7Spatial17CoordinateSpace3DP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s7Spatial22CoordinateSpace3DFloatP",
+            "name": "CoordinateSpace3DFloat",
+            "printedName": "CoordinateSpace3DFloat",
+            "usr": "s:7Spatial22CoordinateSpace3DFloatP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI25AccessibilityRotorContentP",
+            "name": "AccessibilityRotorContent",
+            "printedName": "AccessibilityRotorContent",
+            "usr": "s:7SwiftUI25AccessibilityRotorContentP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI14ToolbarContentP",
+            "name": "ToolbarContent",
+            "printedName": "ToolbarContent",
+            "usr": "s:7SwiftUI14ToolbarContentP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI26CustomizableToolbarContentP",
+            "name": "CustomizableToolbarContent",
+            "printedName": "CustomizableToolbarContent",
+            "usr": "s:7SwiftUI26CustomizableToolbarContentP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI26ControlWidgetConfigurationP",
+            "name": "ControlWidgetConfiguration",
+            "printedName": "ControlWidgetConfiguration",
+            "usr": "s:7SwiftUI26ControlWidgetConfigurationP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TableRowValue",
+                    "printedName": "Swift.Never.TableRowValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "TableRowValue",
+                "printedName": "TableRowValue"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TableColumnSortComparator",
+                    "printedName": "Swift.Never.TableColumnSortComparator"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "TableColumnSortComparator",
+                "printedName": "TableColumnSortComparator"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TableColumnBody",
+                    "printedName": "Swift.Never.TableColumnBody"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "TableColumnBody",
+                "printedName": "TableColumnBody"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI18TableColumnContentP",
+            "name": "TableColumnContent",
+            "printedName": "TableColumnContent",
+            "usr": "s:7SwiftUI18TableColumnContentP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI5SceneP",
+            "name": "Scene",
+            "printedName": "Scene",
+            "usr": "s:7SwiftUI5SceneP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI19WidgetConfigurationP",
+            "name": "WidgetConfiguration",
+            "printedName": "WidgetConfiguration",
+            "usr": "s:7SwiftUI19WidgetConfigurationP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI21ControlWidgetTemplateP",
+            "name": "ControlWidgetTemplate",
+            "printedName": "ControlWidgetTemplate",
+            "usr": "s:7SwiftUI21ControlWidgetTemplateP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TableRowValue",
+                    "printedName": "Swift.Never.TableRowValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "TableRowValue",
+                "printedName": "TableRowValue"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TableRowBody",
+                    "printedName": "Swift.Never.TableRowBody"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "TableRowBody",
+                "printedName": "TableRowBody"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI15TableRowContentP",
+            "name": "TableRowContent",
+            "printedName": "TableRowContent",
+            "usr": "s:7SwiftUI15TableRowContentP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Never.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI8CommandsP",
+            "name": "Commands",
+            "printedName": "Commands",
+            "usr": "s:7SwiftUI8CommandsP"
+          }
+        ],
+        "declAttributes": [
+          "Frozen"
+        ],
+        "declKind": "Enum",
+        "isEnumExhaustive": true,
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$ss5NeverO",
+        "moduleName": "Swift",
+        "name": "Never",
+        "printedName": "Never",
+        "usr": "s:s5NeverO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Never",
+                    "printedName": "Swift.Never",
+                    "usr": "s:s5NeverO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Element where Element : ExtensionKit.AppExtensionScene>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSa12ExtensionKitAA03AppA5SceneRzlE4bodys5NeverOvg",
+                "moduleName": "ExtensionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:Sa12ExtensionKitAA03AppA5SceneRzlE4bodys5NeverOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Never",
+                "printedName": "Swift.Never",
+                "usr": "s:s5NeverO"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSa12ExtensionKitAA03AppA5SceneRzlE4bodys5NeverOvp",
+            "moduleName": "ExtensionKit",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:Sa12ExtensionKitAA03AppA5SceneRzlE4bodys5NeverOvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Never",
+                "printedName": "Swift.Never",
+                "usr": "s:s5NeverO"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Element where Element : ExtensionKit.AppExtensionScene>",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSa12ExtensionKitAA03AppA5SceneRzlE4Bodya",
+            "moduleName": "ExtensionKit",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:Sa12ExtensionKitAA03AppA5SceneRzlE4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "Swift.Array<Element>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Index",
+                    "printedName": "Swift.Array<Element>.Index"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "ArraySlice",
+                        "printedName": "Swift.ArraySlice<Element>",
+                        "usr": "s:s10ArraySliceV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "SubSequence",
+                    "printedName": "Swift.Array<Element>.SubSequence"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.Int>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Indices",
+                    "printedName": "Swift.Array<Element>.Indices"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSk",
+            "name": "RandomAccessCollection",
+            "printedName": "RandomAccessCollection",
+            "usr": "s:Sk"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "Element"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Element",
+                    "printedName": "Swift.Array<Element>.Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Index",
+                    "printedName": "Swift.Array<Element>.Index"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "ArraySlice",
+                        "printedName": "Swift.ArraySlice<Element>",
+                        "usr": "s:s10ArraySliceV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "SubSequence",
+                    "printedName": "Swift.Array<Element>.SubSequence"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSM",
+            "name": "MutableCollection",
+            "printedName": "MutableCollection",
+            "usr": "s:SM"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Index",
+                    "printedName": "Swift.Array<Element>.Index"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "ArraySlice",
+                        "printedName": "Swift.ArraySlice<Element>",
+                        "usr": "s:s10ArraySliceV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "SubSequence",
+                    "printedName": "Swift.Array<Element>.SubSequence"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.Int>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Indices",
+                    "printedName": "Swift.Array<Element>.Indices"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSK",
+            "name": "BidirectionalCollection",
+            "printedName": "BidirectionalCollection",
+            "usr": "s:SK"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Index",
+                    "printedName": "Swift.Array<Element>.Index"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "GenericTypeParam",
+                                "printedName": "Element"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[Element]",
+                            "usr": "s:Sa"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "IndexingIterator",
+                        "printedName": "Swift.IndexingIterator<[Element]>",
+                        "usr": "s:s16IndexingIteratorV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Iterator",
+                    "printedName": "Swift.Array<Element>.Iterator"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "ArraySlice",
+                        "printedName": "Swift.ArraySlice<Element>",
+                        "usr": "s:s10ArraySliceV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "SubSequence",
+                    "printedName": "Swift.Array<Element>.SubSequence"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Range",
+                        "printedName": "Swift.Range<Swift.Int>",
+                        "usr": "s:Sn"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Indices",
+                    "printedName": "Swift.Array<Element>.Indices"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSl",
+            "name": "Collection",
+            "printedName": "Collection",
+            "usr": "s:Sl"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "GenericTypeParam",
+                                "printedName": "Element"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[Element]",
+                            "usr": "s:Sa"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "IndexingIterator",
+                        "printedName": "Swift.IndexingIterator<[Element]>",
+                        "usr": "s:s16IndexingIteratorV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Iterator",
+                    "printedName": "Swift.Array<Element>.Iterator"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sST",
+            "name": "Sequence",
+            "printedName": "Sequence",
+            "usr": "s:ST"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "Element"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ArrayLiteralElement",
+                    "printedName": "Swift.Array<Element>.ArrayLiteralElement"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ArrayLiteralElement",
+                "printedName": "ArrayLiteralElement"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss25ExpressibleByArrayLiteralP",
+            "name": "ExpressibleByArrayLiteral",
+            "printedName": "ExpressibleByArrayLiteral",
+            "usr": "s:s25ExpressibleByArrayLiteralP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "ArraySlice",
+                        "printedName": "Swift.ArraySlice<Element>",
+                        "usr": "s:s10ArraySliceV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "SubSequence",
+                    "printedName": "Swift.Array<Element>.SubSequence"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSm",
+            "name": "RangeReplaceableCollection",
+            "printedName": "RangeReplaceableCollection",
+            "usr": "s:Sm"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss17CustomReflectableP",
+            "name": "CustomReflectable",
+            "printedName": "CustomReflectable",
+            "usr": "s:s17CustomReflectableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "UInt8",
+                                "printedName": "Swift.UInt8",
+                                "usr": "s:s5UInt8V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[Swift.UInt8]",
+                            "usr": "s:Sa"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "CollectionOfOne",
+                        "printedName": "Swift.CollectionOfOne<[Swift.UInt8]>",
+                        "usr": "s:s15CollectionOfOneV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Regions",
+                    "printedName": "Swift.Array<Element>.Regions"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Regions",
+                "printedName": "Regions"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation12DataProtocolP",
+            "name": "DataProtocol",
+            "printedName": "DataProtocol",
+            "usr": "s:10Foundation12DataProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation19MutableDataProtocolP",
+            "name": "MutableDataProtocol",
+            "printedName": "MutableDataProtocol",
+            "usr": "s:10Foundation19MutableDataProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation15ContiguousBytesP",
+            "name": "ContiguousBytes",
+            "printedName": "ContiguousBytes",
+            "usr": "s:10Foundation15ContiguousBytesP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DependentMember",
+                        "printedName": "Element.EncodingConfiguration"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "EncodingConfiguration",
+                    "printedName": "Swift.Array<Element>.EncodingConfiguration"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "EncodingConfiguration",
+                "printedName": "EncodingConfiguration"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation26EncodableWithConfigurationP",
+            "name": "EncodableWithConfiguration",
+            "printedName": "EncodableWithConfiguration",
+            "usr": "s:10Foundation26EncodableWithConfigurationP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DependentMember",
+                        "printedName": "Element.DecodingConfiguration"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "DecodingConfiguration",
+                    "printedName": "Swift.Array<Element>.DecodingConfiguration"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "DecodingConfiguration",
+                "printedName": "DecodingConfiguration"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation26DecodableWithConfigurationP",
+            "name": "DecodableWithConfiguration",
+            "printedName": "DecodableWithConfiguration",
+            "usr": "s:10Foundation26DecodableWithConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          }
+        ],
+        "declAttributes": [
+          "EagerMove",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Element>",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$sSa",
+        "moduleName": "Swift",
+        "name": "Array",
+        "printedName": "Array",
+        "usr": "s:Sa"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ExtensionKit",
+    "printedName": "ExtensionKit"
+  }
+}

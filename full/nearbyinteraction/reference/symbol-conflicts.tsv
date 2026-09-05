@@ -1,0 +1,3 @@
+precise	payloadSHA256	graphPath	ownershipTier	occurrenceCount	canonicalSelection	kind	title	symbolPath	declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NIErrorCode	3931401e3087ddc71844e044b9a291c6fed490943a21f7b30f5293d9cf511b4c	reference/symbol-graphs/NearbyInteraction.symbols.json	0	1	1	swift.func.op	!=(_:_:)	NIError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NIErrorCode	85ca8eeb6761f6985b9f4d52cf732d118c5fdd5eb3ac6d9f91de3b017cb71ee1	reference/symbol-graphs/NearbyInteraction.symbols.json	0	1	0	swift.func.op	!=(_:_:)	NIError.Code.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool

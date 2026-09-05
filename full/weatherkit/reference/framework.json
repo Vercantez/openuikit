@@ -1,0 +1,81 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 632,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(50% of exact public symbols)"
+  },
+  "dependencies": [
+    "CoreLocation",
+    "Foundation"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "weatherkit_guest_sources.txt",
+  "lane": "medium-full",
+  "module": "WeatherKit",
+  "moduleLocation": {
+    "kind": "framework",
+    "reason": "public iPhoneOS framework bundle is present at System/Library/Frameworks/WeatherKit.framework",
+    "sdkRelativePath": "System/Library/Frameworks/WeatherKit.framework"
+  },
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 622,
+    "apiCrosswalkImportNameCount": 0,
+    "apiCrosswalkUnmatchedCount": 642,
+    "apiDeclarationNodeCount": 1081,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 4253,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 1081,
+    "arm64TBDExportCount": 4481,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/WeatherKit.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e56ee6e70b5464f6e1d76679652d670222bf6200daf198d2f4c6aea67d7421e6",
+    "rawSDKInputCount": 2,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "9886b735d5e2b00afa289a79aaf7dc753316f639fdd129788ba12d1eea9e48a2",
+    "symbolGraphSymbolMultisetSHA256": "d5abfde09c4ff87c9cd7227c4bc22019dffd839c8acf80709b50b9a619c359af",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 1594,
+  "risks": [
+    "network",
+    "fail-closed"
+  ],
+  "roadmap": "none (operator override)",
+  "runtimeMarker": "WEATHERKIT_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "weatherkit",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 1264,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

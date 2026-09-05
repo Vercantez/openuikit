@@ -1,0 +1,12 @@
+module	slug	lane	priority	risks	dependencies
+Accelerate	accelerate	medium-full	100	ui,fail-closed	Foundation
+CallKit	callkit	medium-full	100	telephony,audio,host-service	AVFoundation,Foundation
+VisionKit	visionkit	medium-full	100	camera,document-scan,ui	Foundation,UIKit,Vision
+MetricKit	metrickit	medium-full	100	telemetry,os-service,fail-closed	Foundation
+NaturalLanguage	naturallanguage	medium-full	100	ui,fail-closed	Foundation
+MultipeerConnectivity	multipeerconnectivity	leaf-full	100	network,discovery,privacy	Foundation,UIKit
+CoreAudioTypes	coreaudiotypes	medium-full	100	audio,c-abi,struct-layout	CoreFoundation
+SafariServices	safariservices	medium-full	100	ui,fail-closed	Foundation
+CoreMotion	coremotion	medium-full	100	sensors,privacy,host-driven	Foundation
+CoreVideo	corevideo	large-partitioned	100	c-abi,pixel-buffers,graphics,ownership	CoreFoundation,IOSurface,Metal
+WatchConnectivity	watchconnectivity	leaf-full	100	device-service,host-driven,callbacks	Foundation
