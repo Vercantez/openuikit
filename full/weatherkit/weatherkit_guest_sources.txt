@@ -1,0 +1,7 @@
+full/weatherkit/WeatherAttribution.swift
+full/weatherkit/WeatherCollections.swift
+full/weatherkit/WeatherEnums.swift
+full/weatherkit/WeatherError.swift
+full/weatherkit/WeatherKit.swift
+full/weatherkit/WeatherTimeline.swift
+full/weatherkit/WeatherValues.swift
