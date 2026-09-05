@@ -11,7 +11,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class LayoutTieBreakTests: XCTestCase {
     struct GoldenView: Decodable { let tag: String; let frame: [Double]; let intrinsic: [Double] }
     struct GoldenScenario: Decodable { let name: String; let views: [GoldenView] }

@@ -6,7 +6,9 @@ import Foundation
 import XCTest
 import UIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NotificationSourceCompatibilityTests: XCTestCase {
     func testLiteralUIKitPublishesTheIntendedIdentities() {
         XCTAssertTrue(Notification.self == Foundation.Notification.self)

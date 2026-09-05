@@ -3,9 +3,15 @@
 // members remain open to downstream application modules.
 
 import XCTest
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SemanticOverrideView: UIView {
     override var semanticContentAttribute: UISemanticContentAttribute {
         get { super.semanticContentAttribute }
@@ -31,14 +37,18 @@ private final class SemanticOverrideView: UIView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class AlignmentOverrideControl: UIControl {
     override var effectiveContentHorizontalAlignment: ContentHorizontalAlignment {
         super.effectiveContentHorizontalAlignment
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LegacyOverrideButton: UIButton {
     override var contentEdgeInsets: UIEdgeInsets {
         get { super.contentEdgeInsets }
@@ -70,7 +80,9 @@ private final class LegacyOverrideButton: UIButton {
 /// declarations in a normally importing target catches both a public
 /// `required` regression and any internal constructor leaking through
 /// inheritance into application subclasses.
+#if !os(Linux)
 @MainActor
+#endif
 private class OrdinaryInitializerCollectionCell: UICollectionViewCell {
     static var initializerEvents: [String] = []
     let initializerMarker: Int
@@ -92,13 +104,17 @@ private class OrdinaryInitializerCollectionCell: UICollectionViewCell {
 
 /// A leaf with no initializer must inherit the ordinary override and remain
 /// dynamically constructible when its own metatype is registered.
+#if !os(Linux)
 @MainActor
+#endif
 private final class InheritedInitializerCollectionCell:
     OrdinaryInitializerCollectionCell {}
 
 /// Adding an unrelated designated initializer is valid UIKit source. It must
 /// not acquire an unnameable required constructor from OpenUIKit internals.
+#if !os(Linux)
 @MainActor
+#endif
 private final class ExtraDesignatedCollectionCell: UICollectionViewCell {
     let token: Int
 
@@ -113,7 +129,9 @@ private final class ExtraDesignatedCollectionCell: UICollectionViewCell {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private class OrdinaryInitializerSupplementaryView: UICollectionReusableView {
     static var initializerCalls = 0
     let initializerMarker: Int
@@ -130,11 +148,15 @@ private class OrdinaryInitializerSupplementaryView: UICollectionReusableView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class InheritedInitializerSupplementaryView:
     OrdinaryInitializerSupplementaryView {}
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ExtraDesignatedSupplementaryView: UICollectionReusableView {
     let token: Int
 
@@ -149,7 +171,9 @@ private final class ExtraDesignatedSupplementaryView: UICollectionReusableView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIKitSubclassSurfaceTests: XCTestCase {
     func testNormallyImportedMembersRemainOverridable() {
         let view = SemanticOverrideView()

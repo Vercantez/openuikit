@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # hillclimb.sh [max-agents] — one round of the fidelity hill-climb:
 #
 #   1. score:  fresh iOS suite capture (scripts/ios_suite.sh), real-app
@@ -21,30 +21,35 @@
 #   scripts/hillclimb.sh 3
 #   SKIP_CAPTURE=1 scripts/hillclimb.sh 3     # reuse the last suite goldens
 #   PICK_ONLY=1 scripts/hillclimb.sh          # score + write tasks, no launch
+#
+# Portable bash (Linux trial 2026-09-05). Capture still shells out to the
+# remaining zsh simulator probes; SKIP_CAPTURE=1 is the Linux replay path.
 set -e
-setopt null_glob
 cd "$(dirname "$0")/.."
 MAXA=${1:-3}
 MODELS=(cursor-grok-4.6-high)   # every local agent: Grok 4.6 High (not fast)
 
 echo "==> score"
-if [[ -z "${SKIP_CAPTURE:-}" ]]; then
-  zsh scripts/ios_suite.sh /tmp/ios_suite > /tmp/ios_suite.flow.log 2>&1 || echo "WARNING: ios_suite.sh rc=$? (see /tmp/ios_suite.flow.log)"
+if [ -z "${SKIP_CAPTURE:-}" ]; then
+  bash scripts/ios_suite.sh /tmp/ios_suite > /tmp/ios_suite.flow.log 2>&1 || echo "WARNING: ios_suite.sh rc=$? (see /tmp/ios_suite.flow.log)"
   # Every conformance app is recaptured in THIS run: the board once scored
   # /tmp/conformance-* reports left by earlier agent runs (false green #440).
-  for app in Sources/ConformanceApps/*(/:t); do
+  for _appdir in Sources/ConformanceApps/*/; do
+    [ -d "$_appdir" ] || continue
+    app=$(basename "$_appdir")
+    [ -f "$_appdir/${app}App.swift" ] && [ -f "$_appdir/script.json" ] || continue
     echo "==> conformance $app"
-    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app $app > /tmp/hc-conformance-$app.flow.log 2>&1 \
+    bash scripts/conformance_flow.sh /tmp/hc-conformance-$app $app > /tmp/hc-conformance-$app.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app rc=$? (see /tmp/hc-conformance-$app.flow.log)"
     echo "==> conformance $app --ipad"
-    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-ipad $app --ipad > /tmp/hc-conformance-$app-ipad.flow.log 2>&1 \
+    bash scripts/conformance_flow.sh /tmp/hc-conformance-$app-ipad $app --ipad > /tmp/hc-conformance-$app-ipad.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --ipad rc=$? (see /tmp/hc-conformance-$app-ipad.flow.log)"
     echo "==> conformance $app dark"
-    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-dark $app --dark > /tmp/hc-conformance-$app-dark.flow.log 2>&1 \
+    bash scripts/conformance_flow.sh /tmp/hc-conformance-$app-dark $app --dark > /tmp/hc-conformance-$app-dark.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --dark rc=$? (see /tmp/hc-conformance-$app-dark.flow.log)"
   done
 else
-  SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
+  SKIP_CAPTURE=1 bash scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
 fi
 swift build -c release --product openrender >/dev/null
 rm -rf /tmp/hc_gate /tmp/hc_app
@@ -56,13 +61,15 @@ OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender real
 conf=()
 # The round captures into its OWN dirs: /tmp/conformance-<App> belongs to the
 # agents (their flows overwrite it mid-round).
-for app in Sources/ConformanceApps/*(/:t); do
-  [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app)
-  [[ -d /tmp/hc-conformance-$app-ipad ]] && conf+=(/tmp/hc-conformance-$app-ipad)
-  [[ -d /tmp/hc-conformance-$app-dark ]] && conf+=(/tmp/hc-conformance-$app-dark)
+for _appdir in Sources/ConformanceApps/*/; do
+  [ -d "$_appdir" ] || continue
+  app=$(basename "$_appdir")
+  [ -d /tmp/hc-conformance-$app ] && conf+=(/tmp/hc-conformance-$app)
+  [ -d /tmp/hc-conformance-$app-ipad ] && conf+=(/tmp/hc-conformance-$app-ipad)
+  [ -d /tmp/hc-conformance-$app-dark ] && conf+=(/tmp/hc-conformance-$app-dark)
 done
 confargs=()
-(( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")
+if [ ${#conf[@]} -gt 0 ]; then confargs=(--conformance "${conf[@]}"); fi
 python3 scripts/scoreboard.py --suite /tmp/ios_suite --realapp-out /tmp/hc_app --gate-out /tmp/hc_gate \
   "${confargs[@]}" --write | tail -25
 
@@ -101,6 +108,6 @@ open(tasks_path, "w").write("\n".join(lines) + "\n")
 print("\n".join(lines[1:]) or "nothing to climb")
 PY
 [[ -n "${PICK_ONLY:-}" ]] && exit 0
-if (( $(grep -vc '^#' "$TASKS") == 0 )); then echo "nothing to launch"; exit 0; fi
+if [ "$(grep -vc '^#' "$TASKS")" -eq 0 ]; then echo "nothing to launch"; exit 0; fi
 echo "==> launch"
 exec zsh scripts/agent_fanout.sh "$TASKS" "$MAXA"

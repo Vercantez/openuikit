@@ -5,7 +5,9 @@ import CoreGraphics
 #endif
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIImageCompatibilityTests: XCTestCase {
     func testEmptyInitializerHasZeroSize() {
         let image = UIImage()

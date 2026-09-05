@@ -6,7 +6,9 @@ import XCTest
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
+#if !os(Linux)
 @MainActor
+#endif
 final class RenderPassTests: XCTestCase {
 
     // MARK: helpers
@@ -285,7 +287,9 @@ final class RenderPassTests: XCTestCase {
 
     // MARK: drawContent ordering
 
+    #if !os(Linux)
     @MainActor
+    #endif
     private final class ContentView: UIView {
         override func drawContent(in canvas: Canvas, bounds: CGRect) {
             // Deliberately larger than bounds to verify masksToBounds clips

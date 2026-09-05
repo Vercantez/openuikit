@@ -1,6 +1,14 @@
 import XCTest
+#if os(Linux)
+@preconcurrency @testable import OpenUIKit
+#else
 @testable import OpenUIKit
+#endif
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
 
 private struct NavigationPathFixture: View {
     let path: Binding<NavigationPath>
@@ -48,7 +56,9 @@ private struct SplitFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ApplicationShellRecorder {
     var dismissals = 0
     var phases: [(ScrollPhase, ScrollPhase, CGPoint)] = []
@@ -107,7 +117,9 @@ private struct NavigationDisappearFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUINavigationTests: XCTestCase {
     override func setUp() {
         super.setUp()

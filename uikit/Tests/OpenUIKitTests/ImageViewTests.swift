@@ -14,7 +14,9 @@ private func solidBitmap(width: Int, height: Int, r: UInt8, g: UInt8, b: UInt8, 
     return bmp
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ImageViewTests: XCTestCase {
 
     // MARK: UIImage

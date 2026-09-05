@@ -11,7 +11,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIRefreshControlTests: XCTestCase {
 
     private func makeScrollView() -> (UIScrollView, UIRefreshControl) {
@@ -111,7 +113,9 @@ final class UIRefreshControlTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIRefreshControlIOSCutTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
 
@@ -227,7 +231,9 @@ final class UIRefreshControlIOSCutTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UISearchBarTests: XCTestCase {
 
     /// Measured: (width, 44) at every height.
@@ -293,7 +299,9 @@ final class UISearchBarTests: XCTestCase {
     }
 
     func testDelegateHearsTextChanges() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class D: UISearchBarDelegate {
             var seen: [String] = []
             func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -323,7 +331,9 @@ final class UISearchBarTests: XCTestCase {
 /// and `searchbar_text_clear` on the iPhone 16 at 3x, plus the /tmp geometry,
 /// fill and dark probes — see the `UISearchBar.swift` header). The class
 /// above pins the Catalyst cut; this one pins the iOS cut.
+#if !os(Linux)
 @MainActor
+#endif
 final class UISearchBarIOSCutTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     private var savedBounds: CGRect!
@@ -431,7 +441,9 @@ final class UISearchBarIOSCutTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIStepperTests: XCTestCase {
 
     /// Measured intrinsic size and UIKit's documented defaults, both read off

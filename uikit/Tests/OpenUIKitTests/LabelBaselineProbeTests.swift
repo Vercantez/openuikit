@@ -2,7 +2,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class LabelBaselineProbeTests: XCTestCase {
 
     func testProbeBaseline() throws {

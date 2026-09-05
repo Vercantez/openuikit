@@ -51,7 +51,10 @@ private final class FocusAutocompleteTextInputExcerpt: UITextField {
 
     // BEGIN EXACT FOCUS L172-178
     /// Removes the autocomplete-highlighted. Returns true if a completion was actually removed
-    @objc @discardableResult fileprivate func removeCompletion() -> Bool {
+#if canImport(ObjectiveC)
+    @objc
+#endif
+    @discardableResult fileprivate func removeCompletion() -> Bool {
         let hasActiveCompletion = isSelectionActive
         autocompleteTextLabel?.removeFromSuperview()
         autocompleteTextLabel = nil
@@ -107,7 +110,9 @@ private final class FocusAutocompleteTextInputExcerpt: UITextField {
     func setCursorHiddenForTest(_ hidden: Bool) { hideCursor = hidden }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CaretMathTests: XCTestCase {
     let font = UIFont.systemFont(ofSize: 17)
 
@@ -154,7 +159,9 @@ final class CaretMathTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class FirstResponderTests: XCTestCase {
     func makeWindowWithField() -> (UIWindow, UITextField) {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -215,7 +222,9 @@ final class FirstResponderTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class KeyboardAvoidanceInsetTests: XCTestCase {
     /// Forms t1200 vs t200, iPhone SE 2x, iOS 26.1: focusing a UITextField
     /// inside a table raises `adjustedContentInset.bottom` 0 → 260, while
@@ -241,7 +250,9 @@ final class KeyboardAvoidanceInsetTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextFieldEditingTests: XCTestCase {
     var w: UIWindow!
     var tf: UITextField!
@@ -370,7 +381,9 @@ final class TextFieldEditingTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextFieldSelectionTests: XCTestCase {
     final class Delegate: UITextFieldDelegate {
         var changes: [NSRange] = []
@@ -656,7 +669,9 @@ final class TextFieldSelectionTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextViewEditingTests: XCTestCase {
     var w: UIWindow!
     var tv: UITextView!

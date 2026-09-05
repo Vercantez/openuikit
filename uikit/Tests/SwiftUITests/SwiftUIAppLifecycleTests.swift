@@ -1,8 +1,18 @@
 import XCTest
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LifecycleApplicationDelegate: NSObject, UIApplicationDelegate {
     static weak var latest: LifecycleApplicationDelegate?
     static var callbacks: [String] = []
@@ -30,7 +40,9 @@ private final class LifecycleApplicationDelegate: NSObject, UIApplicationDelegat
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private struct LifecycleRoot: View {
     let title: String
 
@@ -39,10 +51,14 @@ private struct LifecycleRoot: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private struct LifecycleApplication: App {
+#if !os(Linux)
     @UIApplicationDelegateAdaptor(LifecycleApplicationDelegate.self)
     private var delegate
+#endif
 
     var body: some Scene {
         WindowGroup("Primary") {
@@ -54,7 +70,9 @@ private struct LifecycleApplication: App {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private struct ConditionalSceneFixture: Scene {
     let primary: Bool
 
@@ -70,12 +88,16 @@ private struct ConditionalSceneFixture: Scene {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private enum IncomingURLRecorder {
     static var values: [URL] = []
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private struct IncomingURLApplication: App {
     var body: some Scene {
         WindowGroup("URL Handler") {
@@ -85,7 +107,9 @@ private struct IncomingURLApplication: App {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUIAppLifecycleTests: XCTestCase {
     func testDefaultAppMainWitnessExistsWithoutGeneratedEntryPoint() {
         // Referencing (rather than invoking) the inherited witness proves an
@@ -138,6 +162,7 @@ final class SwiftUIAppLifecycleTests: XCTestCase {
         )
     }
 
+#if !os(Linux)
     func testLaunchInstallsDelegateAndHostsEveryWindowGroupInOpenUIKit() throws {
         LifecycleApplicationDelegate.latest = nil
         LifecycleApplicationDelegate.callbacks = []
@@ -192,6 +217,7 @@ final class SwiftUIAppLifecycleTests: XCTestCase {
             ["Secondary lifecycle root"]
         )
     }
+#endif
 
     func testSessionDeliversIncomingURLsToRetainedViewHandlers() throws {
         IncomingURLRecorder.values = []

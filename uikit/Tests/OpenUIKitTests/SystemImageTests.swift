@@ -2,7 +2,9 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SystemImageTests: XCTestCase {
     private var savedImageScale: CGFloat = 2
     private var savedBackend: RenderBackend = .quartz

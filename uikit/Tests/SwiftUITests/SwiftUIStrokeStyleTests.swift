@@ -1,6 +1,14 @@
 import XCTest
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
 
 final class SwiftUIStrokeStyleTests: XCTestCase {
     func testAppleShapedDefaults() {

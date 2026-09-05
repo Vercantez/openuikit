@@ -10,7 +10,9 @@ import XCTest
 /// afterwards. Calling it with no arguments proves UIView's distinct
 /// convenience initializer is inherited after both designated paths are
 /// implemented, which is the compiler corner Focus exercises.
+#if !os(Linux)
 @MainActor
+#endif
 private final class CoderCompatibleView: UIView {
     private(set) var commonInitCount = 0
     private(set) var installedSubview: UIView?
@@ -34,7 +36,9 @@ private final class CoderCompatibleView: UIView {
 }
 
 final class UIViewCoderCompatibilityTests: XCTestCase {
+    #if !os(Linux)
     @MainActor
+    #endif
     func testCoderPathStartsWithZeroFrameDefaults() throws {
         let view = try XCTUnwrap(UIView(coder: NSCoder()))
 
@@ -51,7 +55,9 @@ final class UIViewCoderCompatibilityTests: XCTestCase {
         XCTAssertTrue(type(of: decoder) === Foundation.NSCoder.self)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testUIKitNonfailableCoderSignaturesStayNonfailable() {
         let indicator: UIActivityIndicatorView = UIActivityIndicatorView(coder: NSCoder())
         let stack: UIStackView = UIStackView(coder: NSCoder())
@@ -63,7 +69,9 @@ final class UIViewCoderCompatibilityTests: XCTestCase {
         XCTAssertTrue(stack.arrangedSubviews.isEmpty)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testFoundationNSCoderSubclassCanRunCommonSetup() throws {
         let view = try XCTUnwrap(CoderCompatibleView(coder: NSCoder()))
 
@@ -73,7 +81,9 @@ final class UIViewCoderCompatibilityTests: XCTestCase {
         XCTAssertTrue(view.subviews.first === view.installedSubview)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testFrameInitializerStillPreservesItsFrameAndRunsSetupOnce() {
         let frame = CGRect(x: 2, y: 3, width: 40, height: 50)
         let view = CoderCompatibleView(frame: frame)
@@ -83,7 +93,9 @@ final class UIViewCoderCompatibilityTests: XCTestCase {
         XCTAssertEqual(view.subviews.count, 1)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testFocusShapedSubclassInheritsZeroArgumentConvenienceInitializer() {
         let view = CoderCompatibleView()
 
@@ -93,7 +105,9 @@ final class UIViewCoderCompatibilityTests: XCTestCase {
         XCTAssertTrue(view.subviews.first === view.installedSubview)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testZeroArgumentInitializerRoutesAndCompatibilityDefaults() throws {
         let button = UIButton()
         let indicator = UIActivityIndicatorView()
@@ -137,7 +151,9 @@ final class UIViewCoderCompatibilityTests: XCTestCase {
                        CGRect(x: 0, y: 0, width: 0, height: 4))
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testSpecializedInitializerAPIsRemainDistinct() {
         let button = UIButton(type: .system)
         let indicator = UIActivityIndicatorView(style: .large)

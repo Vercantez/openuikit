@@ -1,7 +1,15 @@
 import XCTest
 import Symbols
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
+#if os(Linux)
+@preconcurrency @testable import OpenUIKit
+#else
 @testable import OpenUIKit
+#endif
 
 final class SwiftUISymbolEffectTests: XCTestCase {
     func testEffectValuesPreserveDirectionLayerAndMode() {

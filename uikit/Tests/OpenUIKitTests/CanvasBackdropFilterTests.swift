@@ -19,7 +19,9 @@ private struct Pixel: Equatable {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CanvasBackdropFilterTests: XCTestCase {
     private var savedBackend = CanvasBackendSelection.current
 
@@ -49,12 +51,21 @@ final class CanvasBackdropFilterTests: XCTestCase {
         bitmap.pixels[offset + 3] = value.3
     }
 
+    #if os(Linux)
     private func forEachBackend(_ body: (RenderBackend) -> Void) {
         for backend in [RenderBackend.swift, .quartz] {
             CanvasBackendSelection.current = backend
             body(backend)
         }
     }
+    #else
+    private func forEachBackend(_ body: @MainActor (RenderBackend) -> Void) {
+        for backend in [RenderBackend.swift, .quartz] {
+            CanvasBackendSelection.current = backend
+            body(backend)
+        }
+    }
+    #endif
 
     func testCheckerBlurHasExactDeterministicKernel() {
         forEachBackend { backend in
@@ -110,7 +121,10 @@ final class CanvasBackdropFilterTests: XCTestCase {
 
     func testOpaqueVariableMaskIsExactlyUniformFastPath() throws {
         forEachBackend { backend in
-            @MainActor func fixture() -> Bitmap {
+            #if !os(Linux)
+            @MainActor
+            #endif
+            func fixture() -> Bitmap {
                 let bitmap = Bitmap(width: 17, height: 7)
                 for y in 0..<7 { for x in 0..<17 {
                     setPixel(bitmap, x: x, y: y,
@@ -157,7 +171,10 @@ final class CanvasBackdropFilterTests: XCTestCase {
 
     func testBoundedMultiPassBlurMatchesFullSurfaceSamplesInsideTarget() {
         forEachBackend { backend in
-            @MainActor func fixture() -> Bitmap {
+            #if !os(Linux)
+            @MainActor
+            #endif
+            func fixture() -> Bitmap {
                 let bitmap = Bitmap(width: 13, height: 9)
                 for y in 0..<9 { for x in 0..<13 {
                     setPixel(bitmap, x: x, y: y,

@@ -7,7 +7,9 @@ import Foundation
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ViewHierarchyLifecycleProbe: UIView {
     var events: [String] = []
 
@@ -28,7 +30,9 @@ private final class ViewHierarchyLifecycleProbe: UIView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ViewGeometryTests: XCTestCase {
 
     func testHierarchyCallbacksDeliverRealWindowTransitionsToWholeSubtree() {

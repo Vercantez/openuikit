@@ -18,7 +18,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class DynamicTypeTests: XCTestCase {
 
     override func setUp() {
@@ -239,7 +241,9 @@ final class DynamicTypeTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SheetDetentTests: XCTestCase {
 
     /// Present a sheet on a 393x852 container with the measured window safe
@@ -487,7 +491,9 @@ final class SheetDetentTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ScrollViewLayoutGuideTests: XCTestCase {
 
     /// Constraints against `contentLayoutGuide` are what drive `contentSize`
@@ -558,7 +564,9 @@ final class ScrollViewLayoutGuideTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ViewCompatTests: XCTestCase {
 
     /// Real UIKit's views are NSObjects, so app code writes `a != b` freely.

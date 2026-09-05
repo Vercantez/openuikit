@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIEnvironmentCompatTests: XCTestCase {
     private final class WindowDelegate: UIResponder, UIApplicationDelegate {
         var window: UIWindow?

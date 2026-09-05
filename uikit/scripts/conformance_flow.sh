@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # conformance_flow.sh <workdir> <app> [--dark] — the whole conformance-app
 # loop for one app, in one command (docs/HILLCLIMB.md, docs/ORACLE_FLOW.md).
 #
@@ -30,8 +30,10 @@
 # Light names stay `t200` so existing goldens do not move.
 #
 # SIM_DEVICE_SUFFIX gives the run its own simulator devices.
+#
+# Portable bash (Linux trial 2026-09-05): SKIP_CAPTURE=1 is the Linux-side
+# replay (openhost + compare.py). Capture still calls the zsh simulator probe.
 set -e
-setopt null_glob
 cd "$(dirname "$0")/.."
 OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
 APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
@@ -46,14 +48,17 @@ for arg in "$@"; do
   esac
 done
 SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
-[[ -f "$SCRIPT" ]] || { echo "no such conformance app: $SCRIPT" >&2; exit 2 }
+if [ ! -f "$SCRIPT" ]; then
+  echo "no such conformance app: $SCRIPT" >&2
+  exit 2
+fi
 mkdir -p "$OUT/golden" "$OUT/ours" "$OUT/report"
 export CONFPROBE_STYLE=$STYLE
 export OPENUIKIT_APP_STYLE=$STYLE
 
-if [[ -z "${SKIP_CAPTURE:-}" ]]; then
+if [ -z "${SKIP_CAPTURE:-}" ]; then
   echo "==> real iOS replay ($OUT/golden) style=$STYLE ipad=$IPAD"
-  if [[ $IPAD -eq 1 ]]; then
+  if [ "$IPAD" -eq 1 ]; then
     zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" --ipad | tail -1
   else
     zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
@@ -63,9 +68,8 @@ fi
 echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE"
 swift build -c release --product openhost >/dev/null
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
-typeset -a HOST_ARGS
 HOST_ARGS=(--app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours")
-if [[ $IPAD -eq 1 ]]; then HOST_ARGS+=(--ipad); fi
+if [ "$IPAD" -eq 1 ]; then HOST_ARGS+=(--ipad); fi
 ./.build/release/openhost "${HOST_ARGS[@]}" \
   | tail -1
 
@@ -74,7 +78,7 @@ echo "==> compare"
 # "app" field is <App>-ipad so the scoreboard can register both rounds;
 # dark captures keep the app name and carry the `.dark` capture suffix.
 SUMMARY_APP="$APPNAME"
-if [[ $IPAD -eq 1 ]]; then SUMMARY_APP="${APPNAME}-ipad"; fi
+if [ "$IPAD" -eq 1 ]; then SUMMARY_APP="${APPNAME}-ipad"; fi
 python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" "$SUMMARY_APP" <<'PY'
 import json, os, shutil, sys
 sys.path.insert(0, os.path.join(os.getcwd(), "Tools/compare"))

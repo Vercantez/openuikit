@@ -6,7 +6,9 @@ import XCTest
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 private typealias CGColor = OpenUIKit.CGColor
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ShadowGradientTests: XCTestCase {
 
     private var savedBackend: RenderBackend = CanvasBackendSelection.current

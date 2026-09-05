@@ -6,7 +6,9 @@ import XCTest
 
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
+#if !os(Linux)
 @MainActor
+#endif
 final class LayerBridgeTests: XCTestCase {
 
     private var savedCompositor: RenderCompositor!
