@@ -31,7 +31,7 @@ Top-5 implemented evidence:
 | 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
 | 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
 | 2 | 3.4% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
-| 1 | 1.7% | 44 other focused tests, one identifier each (e.g. `ContactsUIOverlayTests.swift#testMutableContactId`) |
+| 1 | 1.7% | 42 other focused tests, one identifier each (e.g. `ContactsUIOverlayTests.swift#testMutableContactId`) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
