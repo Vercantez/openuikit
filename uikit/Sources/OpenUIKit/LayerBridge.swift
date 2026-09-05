@@ -26,6 +26,12 @@
 //     (CA hides it) — the compositor also guards.
 //   - UIGradientView -> QZGradientLayer with the raw resolved stops
 //     (quartz interpolates in CA's Generic-RGB space itself).
+//   - iOS 26 liquid-glass chrome (`_UIGlassMaterial`, the RenderPass
+//     equivalent of a QZLayerSetGlassModel node) destination-samples.
+//     Hierarchies that set `_usesIOSGlass` take
+//     `containsRenderPassOnlyEffect` and skip this bridge, matching the
+//     UIVisualEffectView backdrop-filter fallback. CQuartz has no
+//     destination-sampling filter node yet.
 //   - View custom content (label glyphs, images, control chrome): each
 //     content-bearing view's drawContent is rendered into a transparent
 //     offscreen Canvas at device scale (the EXISTING content path — glyph

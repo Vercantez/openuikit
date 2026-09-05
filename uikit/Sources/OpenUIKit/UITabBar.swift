@@ -6,9 +6,9 @@
 //   - The bar OWNS the bottom 72 pt of its controller's view and is
 //     otherwise transparent (content shows through around the platter).
 //   - Floating platter: height 62 pt, 10 pt bottom margin, width
-//     n·85.75 + 16.75 for n items (274 pt at n = 3), centered; near-white
-//     glass #FDFDFE with a soft drop shadow (no blur backdrop — the
-//     platter is opaque enough that the golden shows flat color).
+//     n·85.75 + 16.75 for n items (274 pt at n = 3), centered. iOS-cut
+//     light uses `_UIGlassMaterial` (σ=2.25, α=222/255 over the content).
+//     Catalyst and dark iOS keep the measured flats (249 light / 19 dark).
 //   - Selected item: #EBEBEC capsule (height 53.5, item pitch + 7.75 wide,
 //     4.25 pt vertical inset in the platter) behind icon + title, both
 //     drawn in the bar's tint (measured default tint (52, 124, 238) — NOT
@@ -231,9 +231,14 @@ public final class UITabBar: UIView {
                 // selected button background clusters at (53,53,53).
                 return UIColor(red: 53 / 255, green: 53 / 255, blue: 53 / 255, alpha: 1)
             }
-            return isIOS
-                ? UIColor(red: 230 / 255, green: 230 / 255, blue: 230 / 255, alpha: 1)
-                : UIColor(red: 235 / 255, green: 235 / 255, blue: 236 / 255, alpha: 1)
+            if isIOS {
+                // Black overlay on `_UIGlassMaterial`. MEASURED
+                // glass_tabbar_se_white selected capsule 253→235: 18/253.
+                // Over black: pred 204 vs meas 198 (residual 6) — reported,
+                // not a third unknown.
+                return UIColor(white: 0, alpha: _UIGlassMaterial.capsuleOverlayAlpha)
+            }
+            return UIColor(red: 235 / 255, green: 235 / 255, blue: 236 / 255, alpha: 1)
         })
     }
     static var unselectedColor: UIColor {
@@ -296,12 +301,15 @@ public final class UITabBar: UIView {
 
     private func configureChrome() {
         isOpaque = false
+        platter.isOpaque = false
+        platter._usesIOSGlass = true
         platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
         platter.layer.cornerRadius = UITabBar.platterHeight / 2
         platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
         platter.layer.shadowOpacity = UITabBar.shadowOpacity
         platter.layer.shadowRadius = UITabBar.shadowRadius
         platter.layer.shadowOffset = UITabBar.shadowOffset
+        capsule.isOpaque = false
         capsule.backgroundColor = UITabBar.capsuleColor.resolvedColor(with: traitCollection)
         capsule.layer.cornerRadius = UITabBar.capsuleHeight / 2
         addSubview(platter)
