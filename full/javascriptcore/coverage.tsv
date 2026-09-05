@@ -1,358 +1,358 @@
 precise	status	evidence	notes
-c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@E@JSRelationCondition@kJSRelationConditionEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@E@JSRelationCondition@kJSRelationConditionGreaterThan	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@E@JSRelationCondition@kJSRelationConditionLessThan	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@E@JSRelationCondition@kJSRelationConditionUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeBigInt	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeNull	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeSymbol	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSType@kJSTypeUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeArrayBuffer	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt8Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeNone	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@Ea@kJSClassAttributeNone@kJSClassAttributeNoAutomaticPrototype	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@Ea@kJSClassAttributeNone@kJSClassAttributeNone	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontDelete	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontEnum	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeNone	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeReadOnly	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSBigIntCreateWithDouble	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSBigIntCreateWithInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSBigIntCreateWithString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSBigIntCreateWithUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSCheckScriptSyntax	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSClassCreate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSClassRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSClassRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGetGlobalContext	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGetGlobalObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGetGroup	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGroupCreate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGroupRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGroupRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSEvaluateScript	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGarbageCollect	implemented	tests/agent/JavaScriptCoreRuntime.swift	inert collector invoked; no heap reclamation is claimed
-c:@F@JSGlobalContextCopyName	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextCreate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextCreateInGroup	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextIsInspectable	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextSetInspectable	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextSetName	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectCallAsConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectCallAsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectCopyPropertyNames	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectDeleteProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectDeletePropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetArrayBufferByteLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetArrayBufferBytesPtr	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetPrivate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetPropertyAtIndex	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetPropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetPrototype	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetTypedArrayBuffer	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetTypedArrayByteLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetTypedArrayByteOffset	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetTypedArrayBytesPtr	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetTypedArrayLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectHasProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectHasPropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectIsConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectIsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMake	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeDeferredPromise	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeError	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeFunctionWithCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeRegExp	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeTypedArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeTypedArrayWithArrayBuffer	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeTypedArrayWithArrayBufferAndOffset	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectSetPrivate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectSetProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectSetPropertyAtIndex	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectSetPropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectSetPrototype	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSPropertyNameAccumulatorAddName	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSPropertyNameArrayGetCount	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSPropertyNameArrayGetNameAtIndex	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSPropertyNameArrayRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSPropertyNameArrayRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringCopyCFString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringCreateWithCFString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringCreateWithCharacters	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringCreateWithUTF8CString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringGetCharactersPtr	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringGetLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringGetMaximumUTF8CStringSize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringGetUTF8CString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringIsEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringIsEqualToUTF8CString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueCompare	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueCompareDouble	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueCompareInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueCompareUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueCreateJSONString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueGetType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueGetTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsBigInt	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsInstanceOfConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsNull	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsObjectOfClass	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsStrictEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsSymbol	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeFromJSONString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeNull	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeSymbol	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueMakeUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueProtect	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToInt32	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToStringCopy	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToUInt32	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueToUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueUnprotect	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@JSPropertyDescriptorConfigurableKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@JSPropertyDescriptorEnumerableKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@JSPropertyDescriptorGetKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@JSPropertyDescriptorSetKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@JSPropertyDescriptorValueKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@JSPropertyDescriptorWritableKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@attributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@callAsConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@callAsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@className	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@convertToType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@deleteProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@finalize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@getProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@getPropertyNames	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@hasInstance	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@hasProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@initialize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@parentClass	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@setProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@staticFunctions	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@staticValues	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@version	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticFunction@FI@attributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticFunction@FI@callAsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticFunction@FI@name	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticValue@FI@attributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticValue@FI@getProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticValue@FI@name	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticValue@FI@setProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSChar	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSClassAttributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSClassRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSContextGroupRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSContextRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSGlobalContextRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectCallAsConstructorCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectCallAsFunctionCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectConvertToTypeCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectDeletePropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectFinalizeCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectGetPropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectGetPropertyNamesCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectHasInstanceCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectHasPropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectInitializeCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectSetPropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSPropertyAttributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSPropertyNameAccumulatorRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSPropertyNameArrayRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSStringRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSTypedArrayBytesDeallocator	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSValueProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSValueRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@kJSClassDefinitionEmpty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@macro@JSC_OBJC_API_ENABLED	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(cm)contextWithJSGlobalContextRef:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(cm)currentArguments	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(cm)currentCallee	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(cm)currentContext	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(cm)currentThis	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(im)evaluateScript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(im)evaluateScript:withSourceURL:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(im)init	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(im)initWithVirtualMachine:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(im)objectForKeyedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(im)setObject:forKeyedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)JSGlobalContextRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)exception	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)exceptionHandler	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)globalObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)inspectable	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)name	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSContext(py)virtualMachine	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSManagedValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSManagedValue(cm)managedValueWithValue:andOwner:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSManagedValue(im)initWithValue:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSManagedValue(py)value	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithBool:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithBool:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithDouble:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithInt32:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithJSValueRef:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewArrayInContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewArrayInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewObjectInContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewObjectInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNullInContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNullInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithObject:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithObject:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithPoint:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithRange:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithRect:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithSize:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithUInt32:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithUInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithUndefinedInContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithUndefinedInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)callWithArguments:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)compareDouble:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)compareInt64:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)compareJSValue:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)compareUInt64:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)constructWithArguments:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)defineProperty:descriptor:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)deleteProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)hasProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)invokeMethod:withArguments:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)isEqualToObject:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)isInstanceOf:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)objectAtIndexedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)objectForKeyedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)setValue:atIndex:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)setValue:forProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toBool	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toDictionary	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toDouble	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toInt32	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toObjectOfClass:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toPoint	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toRange	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toRect	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toSize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toUInt32	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)valueAtIndex:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)valueForProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)JSValueRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)context	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isBigInt	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isNull	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isSymbol	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSVirtualMachine	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSVirtualMachine(im)addManagedReference:withOwner:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSVirtualMachine(im)init	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSVirtualMachine(im)removeManagedReference:withOwner:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(pl)JSExport	implemented	tests/agent/JavaScriptCoreRuntime.swift	marker protocol exercised; Swift class export is a listed gap; host functions use setObject closures
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So13JSStaticValueaABycfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSStaticFunctionaABycfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSTypedArrayTypea8rawValues6UInt32Vvp	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSTypedArrayTypeayABs6UInt32Vcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So17JSClassDefinitionaABycfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So6JSTypea8rawValueABs6UInt32V_tcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So6JSTypea8rawValues6UInt32Vvp	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So6JSTypeayABs6UInt32Vcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@E@JSRelationCondition	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+c:@E@JSRelationCondition@kJSRelationConditionEqual	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+c:@E@JSRelationCondition@kJSRelationConditionGreaterThan	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+c:@E@JSRelationCondition@kJSRelationConditionLessThan	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+c:@E@JSRelationCondition@kJSRelationConditionUndefined	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+c:@EA@JSType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeBigInt	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeBoolean	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeNull	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeNumber	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeObject	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeString	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeSymbol	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSType@kJSTypeUndefined	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeArrayBuffer	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt8Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeNone	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8Array	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+c:@Ea@kJSClassAttributeNone@kJSClassAttributeNoAutomaticPrototype	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSClassAttributes	exercised by the named family test
+c:@Ea@kJSClassAttributeNone@kJSClassAttributeNone	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSClassAttributes	exercised by the named family test
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontDelete	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSPropertyAttributes	exercised by the named family test
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontEnum	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSPropertyAttributes	exercised by the named family test
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeNone	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSPropertyAttributes	exercised by the named family test
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeReadOnly	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSPropertyAttributes	exercised by the named family test
+c:@F@JSBigIntCreateWithDouble	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSBigIntCreateWithInt64	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSBigIntCreateWithString	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSBigIntCreateWithUInt64	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSCheckScriptSyntax	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSClassCreate	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@F@JSClassRelease	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@F@JSClassRetain	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@F@JSContextGetGlobalContext	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSContextGetGlobalObject	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSContextGetGroup	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSContextGroupCreate	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSContextGroupRelease	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSContextGroupRetain	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSEvaluateScript	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGarbageCollect	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	inert collector invoked; no heap reclamation is claimed
+c:@F@JSGlobalContextCopyName	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextCreate	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextCreateInGroup	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextIsInspectable	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextRelease	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextRetain	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextSetInspectable	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSGlobalContextSetName	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@F@JSObjectCallAsConstructor	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectCallAsFunction	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectCopyPropertyNames	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectDeleteProperty	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectDeletePropertyForKey	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectGetArrayBufferByteLength	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectGetArrayBufferBytesPtr	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectGetPrivate	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectGetProperty	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectGetPropertyAtIndex	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectGetPropertyForKey	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectGetPrototype	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectGetTypedArrayBuffer	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectGetTypedArrayByteLength	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectGetTypedArrayByteOffset	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectGetTypedArrayBytesPtr	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectGetTypedArrayLength	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectHasProperty	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectHasPropertyForKey	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectIsConstructor	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectIsFunction	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectMake	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectMakeArray	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectMakeConstructor	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectMakeDate	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectMakeDeferredPromise	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectMakeError	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectMakeFunction	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectMakeFunctionWithCallback	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSObjectMakeRegExp	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectMakeTypedArray	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectMakeTypedArrayWithArrayBuffer	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectMakeTypedArrayWithArrayBufferAndOffset	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSObjectSetPrivate	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectSetProperty	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectSetPropertyAtIndex	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectSetPropertyForKey	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSObjectSetPrototype	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSPropertyNameAccumulatorAddName	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSPropertyNameArrayGetCount	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSPropertyNameArrayGetNameAtIndex	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSPropertyNameArrayRelease	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSPropertyNameArrayRetain	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@F@JSStringCopyCFString	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringCreateWithCFString	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringCreateWithCharacters	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringCreateWithUTF8CString	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringGetCharactersPtr	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringGetLength	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringGetMaximumUTF8CStringSize	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringGetUTF8CString	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringIsEqual	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringIsEqualToUTF8CString	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringRelease	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSStringRetain	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@F@JSValueCompare	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueCompareDouble	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueCompareInt64	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueCompareUInt64	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueCreateJSONString	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueGetType	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueGetTypedArrayType	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@F@JSValueIsArray	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsBigInt	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsBoolean	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsDate	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsEqual	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsInstanceOfConstructor	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSFunctionAndConstructorCAPI	exercised by the named family test
+c:@F@JSValueIsNull	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsNumber	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsObject	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsObjectOfClass	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsStrictEqual	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsString	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsSymbol	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueIsUndefined	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeBoolean	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeFromJSONString	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeNull	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeNumber	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeString	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeSymbol	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueMakeUndefined	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueProtect	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToBoolean	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToInt32	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToInt64	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToNumber	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToObject	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToStringCopy	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToUInt32	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueToUInt64	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@F@JSValueUnprotect	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@JSPropertyDescriptorConfigurableKey	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSPropertyDescriptorKeys	exercised by the named family test
+c:@JSPropertyDescriptorEnumerableKey	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSPropertyDescriptorKeys	exercised by the named family test
+c:@JSPropertyDescriptorGetKey	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSPropertyDescriptorKeys	exercised by the named family test
+c:@JSPropertyDescriptorSetKey	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSPropertyDescriptorKeys	exercised by the named family test
+c:@JSPropertyDescriptorValueKey	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSPropertyDescriptorKeys	exercised by the named family test
+c:@JSPropertyDescriptorWritableKey	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSPropertyDescriptorKeys	exercised by the named family test
+c:@SA@JSClassDefinition	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@attributes	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@callAsConstructor	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@callAsFunction	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@className	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@convertToType	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@deleteProperty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@finalize	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@getProperty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@getPropertyNames	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@hasInstance	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@hasProperty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@initialize	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@parentClass	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@setProperty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@staticFunctions	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@staticValues	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSClassDefinition@FI@version	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticFunction	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticFunction@FI@attributes	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticFunction@FI@callAsFunction	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticFunction@FI@name	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticValue	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticValue@FI@attributes	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticValue@FI@getProperty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticValue@FI@name	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@SA@JSStaticValue@FI@setProperty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSChar	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@T@JSClassAttributes	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSClassRef	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSContextGroupRef	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@T@JSContextRef	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@T@JSGlobalContextRef	implemented	test:full/javascriptcore/tests/agent/JSCContextCAPITests.swift#testJSContextCAPI	JSGarbageCollect is invoked and remains inert
+c:@T@JSObjectCallAsConstructorCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectCallAsFunctionCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectConvertToTypeCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectDeletePropertyCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectFinalizeCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectGetPropertyCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectGetPropertyNamesCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectHasInstanceCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectHasPropertyCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectInitializeCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSObjectRef	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@T@JSObjectSetPropertyCallback	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@T@JSPropertyAttributes	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@T@JSPropertyNameAccumulatorRef	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@T@JSPropertyNameArrayRef	implemented	test:full/javascriptcore/tests/agent/JSCObjectCAPITests.swift#testJSObjectCAPI	deferred promise is an object; no microtask queue
+c:@T@JSStringRef	implemented	test:full/javascriptcore/tests/agent/JSCStringTests.swift#testJSStringAPI	exercised by the named family test
+c:@T@JSTypedArrayBytesDeallocator	implemented	test:full/javascriptcore/tests/agent/JSCTypedArrayTests.swift#testJSTypedArrayAPI	exercised by the named family test
+c:@T@JSValueProperty	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@T@JSValueRef	implemented	test:full/javascriptcore/tests/agent/JSCValueCAPITests.swift#testJSValueCAPI	exercised by the named family test
+c:@kJSClassDefinitionEmpty	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+c:@macro@JSC_OBJC_API_ENABLED	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+c:objc(cs)JSContext	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(cm)contextWithJSGlobalContextRef:	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(cm)currentArguments	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextCurrentTLS	exercised by the named family test
+c:objc(cs)JSContext(cm)currentCallee	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextCurrentTLS	exercised by the named family test
+c:objc(cs)JSContext(cm)currentContext	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextCurrentTLS	exercised by the named family test
+c:objc(cs)JSContext(cm)currentThis	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextCurrentTLS	exercised by the named family test
+c:objc(cs)JSContext(im)evaluateScript:	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextEvaluate	exercised by the named family test
+c:objc(cs)JSContext(im)evaluateScript:withSourceURL:	implemented	test:full/javascriptcore/tests/agent/JSInterpreterTests.swift#testJSInterpreterSubset	exercised by the named family test
+c:objc(cs)JSContext(im)init	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(im)initWithVirtualMachine:	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(im)objectForKeyedSubscript:	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextGlobalObject	exercised by the named family test
+c:objc(cs)JSContext(im)setObject:forKeyedSubscript:	implemented	test:full/javascriptcore/tests/agent/JSClosureTests.swift#testJSClosureBridging	host closures via setObject; not JSExport class export
+c:objc(cs)JSContext(py)JSGlobalContextRef	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(py)exception	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextException	exercised by the named family test
+c:objc(cs)JSContext(py)exceptionHandler	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextException	exercised by the named family test
+c:objc(cs)JSContext(py)globalObject	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextGlobalObject	exercised by the named family test
+c:objc(cs)JSContext(py)inspectable	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(py)name	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSContext(py)virtualMachine	implemented	test:full/javascriptcore/tests/agent/JSContextTests.swift#testJSContextNameAndInspectable	isInspectable stores a boolean; no Web Inspector backend
+c:objc(cs)JSManagedValue	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSManagedValue	exercised by the named family test
+c:objc(cs)JSManagedValue(cm)managedValueWithValue:andOwner:	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSManagedValue	exercised by the named family test
+c:objc(cs)JSManagedValue(im)initWithValue:	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSManagedValue	exercised by the named family test
+c:objc(cs)JSManagedValue(py)value	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSManagedValue	exercised by the named family test
+c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithBool:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithBool:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithDouble:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithInt32:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithJSValueRef:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewArrayInContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewArrayInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewObjectInContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewObjectInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNullInContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithNullInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithObject:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithObject:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithPoint:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithRange:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithRect:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithSize:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithUInt32:inContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithUInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithUndefinedInContext:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(cm)valueWithUndefinedInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueConstruction	promise constructors settle synchronously; no job queue
+c:objc(cs)JSValue(im)callWithArguments:	implemented	test:full/javascriptcore/tests/agent/JSValueCallTests.swift#testJSValueCall	exercised by the named family test
+c:objc(cs)JSValue(im)compareDouble:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)compareInt64:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)compareJSValue:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)compareUInt64:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)constructWithArguments:	implemented	test:full/javascriptcore/tests/agent/JSValueCallTests.swift#testJSValueConstruct	exercised by the named family test
+c:objc(cs)JSValue(im)defineProperty:descriptor:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueDefineProperty	exercised by the named family test
+c:objc(cs)JSValue(im)deleteProperty:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueDeleteProperty	exercised by the named family test
+c:objc(cs)JSValue(im)hasProperty:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueProperties	exercised by the named family test
+c:objc(cs)JSValue(im)invokeMethod:withArguments:	implemented	test:full/javascriptcore/tests/agent/JSValueCallTests.swift#testJSValueInvokeMethod	exercised by the named family test
+c:objc(cs)JSValue(im)isEqualToObject:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)isInstanceOf:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueCompare	exercised by the named family test
+c:objc(cs)JSValue(im)objectAtIndexedSubscript:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueSubscripts	exercised by the named family test
+c:objc(cs)JSValue(im)objectForKeyedSubscript:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueSubscripts	exercised by the named family test
+c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueSubscripts	exercised by the named family test
+c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueSubscripts	exercised by the named family test
+c:objc(cs)JSValue(im)setValue:atIndex:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueSubscripts	exercised by the named family test
+c:objc(cs)JSValue(im)setValue:forProperty:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueProperties	exercised by the named family test
+c:objc(cs)JSValue(im)toArray	implemented	test:full/javascriptcore/tests/agent/JSValueConversionTests.swift#testJSValueDeepArrayConversion	nested array/object conversion both directions
+c:objc(cs)JSValue(im)toBool	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toDate	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toDictionary	implemented	test:full/javascriptcore/tests/agent/JSValueConversionTests.swift#testJSValueDeepDictionaryConversion	nested dictionary conversion both directions
+c:objc(cs)JSValue(im)toDouble	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toInt32	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toInt64	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toNumber	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toObject	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toObjectOfClass:	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toPoint	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toRange	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toRect	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toSize	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toString	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toUInt32	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)toUInt64	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueToCoercions	every JSValue to*() coercion on the overlay
+c:objc(cs)JSValue(im)valueAtIndex:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueSubscripts	exercised by the named family test
+c:objc(cs)JSValue(im)valueForProperty:	implemented	test:full/javascriptcore/tests/agent/JSValuePropertyTests.swift#testJSValueProperties	exercised by the named family test
+c:objc(cs)JSValue(py)JSValueRef	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)context	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isArray	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isBigInt	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isBoolean	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isDate	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isNull	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isNumber	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isObject	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isString	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isSymbol	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSValue(py)isUndefined	implemented	test:full/javascriptcore/tests/agent/JSValueConstructionTests.swift#testJSValueTypeQueries	exercised by the named family test
+c:objc(cs)JSVirtualMachine	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSVirtualMachine	exercised by the named family test
+c:objc(cs)JSVirtualMachine(im)addManagedReference:withOwner:	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSVirtualMachine	exercised by the named family test
+c:objc(cs)JSVirtualMachine(im)init	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSVirtualMachine	exercised by the named family test
+c:objc(cs)JSVirtualMachine(im)removeManagedReference:withOwner:	implemented	test:full/javascriptcore/tests/agent/JSVirtualMachineTests.swift#testJSVirtualMachine	exercised by the named family test
+c:objc(pl)JSExport	implemented	test:full/javascriptcore/tests/agent/JSExportTests.swift#testJSExportMarker	empty JSExport marker; Swift class export is a listed gap
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+s:So13JSStaticValueaABycfc	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+s:So16JSStaticFunctionaABycfc	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+s:So16JSTypedArrayTypea8rawValues6UInt32Vvp	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+s:So16JSTypedArrayTypeayABs6UInt32Vcfc	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypedArrayTypeConstants	exercised by the named family test
+s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+s:So17JSClassDefinitionaABycfc	implemented	test:full/javascriptcore/tests/agent/JSClassTests.swift#testJSClassDispatch	JSClass callback tables and static value/function sentinels
+s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSRelationCondition	exercised by the named family test
+s:So6JSTypea8rawValueABs6UInt32V_tcfc	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+s:So6JSTypea8rawValues6UInt32Vvp	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test
+s:So6JSTypeayABs6UInt32Vcfc	implemented	test:full/javascriptcore/tests/agent/JSTypesTests.swift#testJSTypeConstants	exercised by the named family test

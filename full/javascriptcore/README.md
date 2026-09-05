@@ -6,9 +6,9 @@ iPhoneOS 26.1 symbol graph. Isolated `test_host.sh` success is not Apple JSC
 parity and is not an integrated guest-package claim.
 
 SDK depth (wave 2): 357/357 precise IDs `implemented`, 0 deferred. The
-runtime probe in `tests/agent/JavaScriptCoreRuntime.swift` exercises the C
-overlay, the ObjC-shaped Swift types, JSClass callback dispatch, and the
-embedded ECMAScript subset interpreter.
+sealed host probe is `tests/agent/JavaScriptCoreRuntime.swift`; family
+tests live under `tests/agent/*Tests.swift` and are cited from
+`coverage.tsv`.
 
 ## What is real
 
@@ -83,3 +83,39 @@ See `coverage.tsv`. Wave-1 starting point was 240 implemented / 115 declared
 / 2 deferred. Wave-2 is 357 implemented / 0 deferred. Open questions that
 need an Apple-oracle probe remain in `oracle-questions.tsv` (GC reclamation,
 Apple JSExport class export, inspector backend, Promise job queue, C ABI).
+
+## Depth pass 2026-09
+
+Second SDK-depth pass on `origin/agent/fw-javascriptcore`. Central review
+refused wave 2 because every `implemented` row cited the file
+`tests/agent/JavaScriptCoreRuntime.swift` rather than a focused test.
+
+This pass keeps the interpreter and the fail-closed ECMAScript gaps
+above. It splits behavioral checks into family tests and recites each of
+the 357 precise IDs as
+`test:full/javascriptcore/tests/agent/<File>Tests.swift#testName`:
+
+- `JSContextTests` — `evaluateScript`, exceptions, `globalObject`, TLS
+  `current*`, name / inspectable / VM wrapping
+- `JSValueConstructionTests` — every `JSValue` constructor plus every
+  `to*()` coercion, type queries, and `compare` / `isEqual`
+- `JSValueCallTests` — `call`, `construct`, `invokeMethod`
+- `JSValuePropertyTests` — properties, subscripts, `defineProperty`,
+  `deleteProperty`, descriptor keys
+- `JSValueConversionTests` — nested dictionary and array conversion
+- `JSClosureTests` — `() -> Any`, `(Any) -> Any`, `(Any, Any) -> Any`,
+  `(Any, Any, Any) -> Any`, `([Any]) -> Any`
+- `JSVirtualMachineTests` — `JSVirtualMachine` / `JSManagedValue`
+- C overlay / JSClass / typed-array / interpreter-subset files cover the
+  remaining identifiers
+
+The sealed `test_host.sh` still compiles only
+`JavaScriptCoreRuntime.swift`, so that file defines the same `test*`
+functions and invokes them before printing
+`JAVASCRIPTCORE_AGENT_RUNTIME_OK`. Family files exist so the ledger can
+name the test that exercises each row.
+
+`testJSUnsupportedECMAScriptGaps` is an extra probe (no unique public
+precise ID): `class`, `async`/`await`, `yield`, regexp literals, arrow
+functions, template literals, and `import`/`export` all throw
+`SyntaxError` instead of succeeding as undefined.
