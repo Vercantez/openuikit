@@ -79,13 +79,44 @@ Wave-1 was fail-closed: every `request` threw `.unsupported` and sequences
 completed empty. This depth pass replaces that with the process-local
 registry above.
 
-Coverage: 320 exact IDs, 298 `implemented`, 17 `deferred`
-(`AlertConfiguration` / `LocalizedStringResource`), 5 `not-applicable`.
-The isolated host cannot compile `AlertConfiguration`, so 300 `implemented`
-and a fully nondeferred table are blocked on guest Foundation rather than on
-registry work. SwiftUI `ActivityConfiguration` / `DynamicIsland` /
-`LiveActivityIntent` are not in this seed's public surface; they belong to
-WidgetKit / AppIntents.
+The first registry revision at `fe1738b` marked **298** identifiers
+`implemented`, **17** `deferred`, and **5** `not-applicable`, but every
+implemented evidence path was `tests/agent/ActivityKitRuntime.swift` (a file
+path, not `test:full/activitykit/tests/agent/<File>Tests.swift#testName`).
+Central merge refused that ledger.
+
+This coverage repair keeps the registry and rewrites the ledger:
+
+| | implemented | declared | deferred | not-applicable | nondeferred |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before (`fe1738b`) | 298 | 0 | 17 | 5 | 298 |
+| After | 244 | 54 | 17 | 5 | 298 |
+
+`implemented` rows now cite a real top-level `func test*()` that exercises
+that identifier. Enum members share table-driven value tests
+(`testActivityStateCases`, `testActivityStyleCases`). Request error cases
+are 1:1 with the throw path that produces them. Synthesized
+`AsyncSequence` overloads that would hang on an infinite stream (or that
+this host does not call) are `declared` with
+`source:full/activitykit/ActivityKit.swift#<SequenceType>`.
+`AlertConfiguration` stays deferred on guest Foundation.
+
+Top-5 implemented evidence (244 rows). No non-enum test exceeds 3.3%
+(40% cap would be 98 rows):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 8 | 3.3% | `ActivitySequenceTests.swift#testActivityStateUpdatesIteration` |
+| 8 | 3.3% | `ActivitySequenceTests.swift#testActivityUpdatesIteration` |
+| 8 | 3.3% | `ActivitySequenceTests.swift#testContentUpdatesIteration` |
+| 8 | 3.3% | `ActivitySequenceTests.swift#testPushTokenUpdatesIteration` |
+| 8 | 3.3% | `ActivitySequenceTests.swift#testContentStateUpdatesIteration` |
+
+The isolated host cannot compile `AlertConfiguration`, so 300
+`implemented` and a fully nondeferred table remain blocked on guest
+Foundation rather than on registry work. SwiftUI `ActivityConfiguration` /
+`DynamicIsland` / `LiveActivityIntent` are not in this seed's public
+surface; they belong to WidgetKit / AppIntents.
 
 Host SPI (`@_spi(OpenUIKitHost)` `OpenUIKitActivityKitTesting`) resets the
 registry, writes enablement flags, freezes the clock, and assigns a test
