@@ -131,7 +131,55 @@ finds Darwin `socket`). If guest `dlsym("socket")` is nil, `start()`
 fails and `loopbackItem` still calls `URLSession.data(for:)` against
 `http://127.0.0.1:1/quote` so the session is exercised.
 
-Attempt 3: *(pending)*
+Attempt 3 (`4284aa2d`): **`build_full rc=0`**, **`TBD_CHECK_OK`**,
+**`difftest rc=0`**, **`GATE_B_PASS`**, then `GUEST_REALAPP_RC=133`
+**`GUEST_REALAPP_SCREENS=12`**:
+
+```
+Fatal error: OPENUIKIT_IOS_INK_MISS: I|system-semibold|18|light|F0.0|83
+```
+
+Guest `realapp` is scale 2; `scratch/fonts` has no SFNS so a miss with
+`glyphFont == nil` is fatal. Scalar 83 is `'S'`. `glyph_ink_ios.json` had
+**no 18 pt keys** (sizes 10–15, 17, 19…).
+
+MEASURED this Mac, `openrender realapp` scale 2 iOS cut with a temporary
+label dump: Ledger's own strings are **17 semibold / 13 regular / 17
+regular** (header ISO8601, merchants, `Sep 4, 2026`, amounts). The 18 pt
+semibold run is Pocket Casts `SimpleActionView`
+`UIFont.font(ofSize: 18, weight: .semibold, scalingWith: .headline)` —
+`"Select Episodes"` starts with S at F0.0. `OPENUIKIT_INK_LOG` of all 13
+screens named **69** `system-semibold|18` keys (those picker letters,
+light+dark, F0.0/F0.5). History/settings/iPad pickers print them;
+xxxl/ax1/xs do not (scaled off 18); Ledger's own render does not.
+
+Guest wrote 12 PNGs, so those picker labels were not drawn on the first
+12 screens (sheet present is guest-fragile) and the 13th hit the leftover
+18 pt S. Two in-scope fixes:
+
+1. `runRealApp` drops prior `realAppRetained` windows before the next
+   screen so a leftover picker cannot be sampled.
+2. Harvest the 69 keys on `OpenUIKit-2x-guest-trial2` / iOS 26.1
+   (`SIM_DEVICE=2x` inkprobe, 69/69, skipped []). Table **6152 → 6221**.
+   Catalyst still uses `glyph_ink.json`, not this file.
+
+Attempt 4: *(pending this push)*
+
+## What ran on Apple Foundation (this Mac), still unproven on the guest
+
+Until attempt 4's layout/log, treat these as **Apple-side** facts:
+
+| API | Apple Mac (openhost / openrender) | Guest (box) |
+|---|---|---|
+| `NumberFormatter` en_US / de_DE | `$4.50` / `4,50\u00a0€` | pending attempt 4 |
+| `DateFormatter` `.medium` | `Sep 4, 2026` | pending |
+| `ISO8601DateFormatter` | `2026-09-04T10:30:00Z` | pending |
+| `DateComponentsFormatter` | `2h 15m` | pending |
+| `JSONSerialization` + `UserDefaults` | header `json ok` | pending |
+| `NSRegularExpression` | t4000 `Coff` → 1 row | not in first-screen render |
+| `URLSession.data(for:)` loopback | `Loopback FX $12.50` · fx | `dlsym("socket")` may be nil; session still called on `:1` |
+| BSD `socket` by name | links on Apple | **undefined** on guest tbd (attempt 2) |
+| `dlsym("socket")` | finds Darwin | pending attempt 4 |
 
 ## x86 cycle
 

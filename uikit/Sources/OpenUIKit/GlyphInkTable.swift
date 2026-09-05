@@ -68,6 +68,14 @@ public enum GlyphInkTable {
     /// relative to round(2 * (top + (labelHeight - lineHeight) / 2 +
     /// ascender)), which UILabel's iOS path reproduces. Selected under the
     /// iOS font cut; absent, the Catalyst tables serve as before.
+    ///
+    /// 18 pt semibold (69 keys): MEASURED guest 4284aa2d
+    /// `OPENUIKIT_IOS_INK_MISS: I|system-semibold|18|light|F0.0|83` after 12
+    /// realapp PNGs. OPENUIKIT_INK_LOG of the 13 screens named those keys as
+    /// SimpleActionView picker rows (`UIFont.font(ofSize: 18, weight:
+    /// .semibold, scalingWith: .headline)` — "Select Episodes" S). Harvest
+    /// `SIM_DEVICE=2x` `OpenUIKit-2x-guest-trial2` / iOS 26.1, 69/69,
+    /// skipped []. Table 6152 → 6221. Ledger itself dumps 17/13 only.
     private static var iosEntries: [String: JSONValue]? = {
         guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
               let e = json["entries"]?.objectValue else { return nil }
