@@ -72,3 +72,15 @@ func mxJSONBool(_ value: Any?, equals expected: Bool) -> Bool {
 func mxMeasurementDict(_ value: Any?) -> [String: Any]? {
     value as? [String: Any]
 }
+
+func mxNestedDict(_ value: Any?) -> [AnyHashable: Any]? {
+    value as? [AnyHashable: Any]
+}
+
+func mxNestedDictArray(_ value: Any?) -> [[AnyHashable: Any]]? {
+    value as? [[AnyHashable: Any]]
+}
+
+func mxAsString(_ value: Any?) -> String? {
+    value as? String
+}

@@ -14,7 +14,7 @@ func testMetricJSONRepresentation() {
     let dict = cpu.dictionaryRepresentation()
     let cpuTime = mxMeasurementDict(dict["cumulativeCPUTime"])
     mxRequire(mxJSONNumber(cpuTime?["value"], equals: 5), "testMetricJSONRepresentation: cpu time")
-    mxRequire((cpuTime?["unit"] as? String) == "s", "testMetricJSONRepresentation: cpu unit")
+    mxRequire(mxAsString(cpuTime?["unit"]) == "s", "testMetricJSONRepresentation: cpu unit")
     let parsed = mxJSONObject(cpu.jsonRepresentation(), "testMetricJSONRepresentation: cpu json")
     let parsedTime = mxMeasurementDict(parsed["cumulativeCPUTime"])
     mxRequire(mxJSONNumber(parsedTime?["value"], equals: 5), "testMetricJSONRepresentation: json cpu time")
@@ -39,10 +39,10 @@ func testMetricPayloadJSONRepresentation() {
     )
     mxRequire(mxJSONNumber(dict["timeStampBegin"], equals: 10), "testMetricPayloadJSONRepresentation: begin")
     mxRequire(mxJSONNumber(dict["timeStampEnd"], equals: 20), "testMetricPayloadJSONRepresentation: end")
-    let cpu = dict["cpuMetrics"] as? [AnyHashable: Any]
+    let cpu = mxNestedDict(dict["cpuMetrics"])
     mxRequire(cpu != nil, "testMetricPayloadJSONRepresentation: cpu nested")
-    let meta = dict["metaData"] as? [AnyHashable: Any]
-    mxRequire((meta?["bundleIdentifier"] as? String) == "payload.app", "testMetricPayloadJSONRepresentation: meta")
+    let meta = mxNestedDict(dict["metaData"])
+    mxRequire(mxAsString(meta?["bundleIdentifier"]) == "payload.app", "testMetricPayloadJSONRepresentation: meta")
 
     let parsed = mxJSONObject(payload.jsonRepresentation(), "testMetricPayloadJSONRepresentation: json")
     mxRequire((parsed["latestApplicationVersion"] as? String) == "9", "testMetricPayloadJSONRepresentation: json version")
@@ -58,7 +58,7 @@ func testDiagnosticPayloadJSONRepresentation() {
     let dict = payload.dictionaryRepresentation()
     mxRequire(mxJSONNumber(dict["timeStampBegin"], equals: 3), "testDiagnosticPayloadJSONRepresentation: begin")
     mxRequire(mxJSONNumber(dict["timeStampEnd"], equals: 4), "testDiagnosticPayloadJSONRepresentation: end")
-    let hangs = dict["hangDiagnostics"] as? [[AnyHashable: Any]]
+    let hangs = mxNestedDictArray(dict["hangDiagnostics"])
     mxRequire(hangs?.count == 1, "testDiagnosticPayloadJSONRepresentation: hang count")
     let hangDuration = mxMeasurementDict(hangs?.first?["hangDuration"])
     mxRequire(mxJSONNumber(hangDuration?["value"], equals: 5), "testDiagnosticPayloadJSONRepresentation: hang value")
@@ -68,7 +68,7 @@ func testDiagnosticPayloadJSONRepresentation() {
 }
 
 func testDiagnosticJSONRepresentation() {
-    let meta = MXMetaData(bundleIdentifier: "diag.app", pid: 7)
+    let meta = MXMetaData(pid: 7, bundleIdentifier: "diag.app")
     let record = MXSignpostRecord(name: "frame", isInterval: false)
     let diagnostic = MXDiagnostic(
         applicationVersion: "1.0",
@@ -77,10 +77,10 @@ func testDiagnosticJSONRepresentation() {
     )
     let dict = diagnostic.dictionaryRepresentation()
     mxRequire((dict["applicationVersion"] as? String) == "1.0", "testDiagnosticJSONRepresentation: version")
-    let nestedMeta = dict["metaData"] as? [AnyHashable: Any]
-    mxRequire((nestedMeta?["bundleIdentifier"] as? String) == "diag.app", "testDiagnosticJSONRepresentation: meta")
-    let signposts = dict["signpostData"] as? [[AnyHashable: Any]]
-    mxRequire((signposts?.first?["name"] as? String) == "frame", "testDiagnosticJSONRepresentation: signpost")
+    let nestedMeta = mxNestedDict(dict["metaData"])
+    mxRequire(mxAsString(nestedMeta?["bundleIdentifier"]) == "diag.app", "testDiagnosticJSONRepresentation: meta")
+    let signposts = mxNestedDictArray(dict["signpostData"])
+    mxRequire(mxAsString(signposts?.first?["name"]) == "frame", "testDiagnosticJSONRepresentation: signpost")
 
     let parsed = mxJSONObject(diagnostic.jsonRepresentation(), "testDiagnosticJSONRepresentation: json")
     mxRequire((parsed["applicationVersion"] as? String) == "1.0", "testDiagnosticJSONRepresentation: json version")
