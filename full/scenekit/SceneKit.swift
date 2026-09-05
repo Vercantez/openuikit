@@ -41,6 +41,7 @@ public let SCN_ENABLE_METAL: Int32 = 0
 public let SCN_ENABLE_OPENGL: Int32 = 0
 
 public typealias SCNActionTimingFunction = (Float) -> Float
+public typealias SCNFloat = Float
 public typealias SCNQuaternion = SCNVector4
 public typealias SCNAnimationDidStartBlock = (SCNAnimation, any SCNAnimatable) -> Void
 public typealias SCNAnimationDidStopBlock = (SCNAnimation, any SCNAnimatable, Bool) -> Void
@@ -447,17 +448,69 @@ public protocol SCNTechniqueSupport: NSObjectProtocol {
     var technique: SCNTechnique? { get set }
 }
 
-public protocol SCNProgramDelegate: NSObjectProtocol {}
-public protocol SCNPhysicsContactDelegate: NSObjectProtocol {}
+public protocol SCNProgramDelegate: NSObjectProtocol {
+    func program(_ program: SCNProgram, handleError error: any Error)
+}
+
+public extension SCNProgramDelegate {
+    func program(_ program: SCNProgram, handleError error: any Error) {}
+}
+
+public protocol SCNPhysicsContactDelegate: NSObjectProtocol {
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact)
+    func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact)
+    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact)
+}
+
+public extension SCNPhysicsContactDelegate {
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {}
+    func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {}
+    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {}
+}
+
 public protocol SCNSceneExportDelegate: NSObjectProtocol {}
-public protocol SCNSceneRendererDelegate: NSObjectProtocol {}
-public protocol SCNNodeRendererDelegate: NSObjectProtocol {}
+
+public protocol SCNSceneRendererDelegate: NSObjectProtocol {
+    func renderer(_ renderer: any SCNSceneRenderer, updateAtTime time: TimeInterval)
+    func renderer(_ renderer: any SCNSceneRenderer, didApplyAnimationsAtTime time: TimeInterval)
+    func renderer(_ renderer: any SCNSceneRenderer, didApplyConstraintsAtTime time: TimeInterval)
+    func renderer(_ renderer: any SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval)
+    func renderer(_ renderer: any SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval)
+    func renderer(_ renderer: any SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval)
+}
+
+public extension SCNSceneRendererDelegate {
+    func renderer(_ renderer: any SCNSceneRenderer, updateAtTime time: TimeInterval) {}
+    func renderer(_ renderer: any SCNSceneRenderer, didApplyAnimationsAtTime time: TimeInterval) {}
+    func renderer(_ renderer: any SCNSceneRenderer, didApplyConstraintsAtTime time: TimeInterval) {}
+    func renderer(_ renderer: any SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {}
+    func renderer(_ renderer: any SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {}
+    func renderer(_ renderer: any SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {}
+}
+
+public protocol SCNNodeRendererDelegate: NSObjectProtocol {
+    func renderNode(_ node: SCNNode, renderer: SCNRenderer, arguments: [String: Any])
+}
+
+public extension SCNNodeRendererDelegate {
+    func renderNode(_ node: SCNNode, renderer: SCNRenderer, arguments: [String: Any]) {}
+}
+
 public protocol SCNCameraControllerDelegate: NSObjectProtocol {
     func cameraInertiaDidEnd(for cameraController: SCNCameraController)
     func cameraInertiaWillStart(for cameraController: SCNCameraController)
 }
+
 public protocol SCNAvoidOccluderConstraintDelegate: NSObjectProtocol {
     func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, didAvoidOccluder occluder: SCNNode, for node: SCNNode)
     func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, shouldAvoidOccluder occluder: SCNNode, for node: SCNNode) -> Bool
 }
-public protocol SCNCameraControlConfiguration: NSObjectProtocol {}
+
+public protocol SCNCameraControlConfiguration: NSObjectProtocol {
+    var allowsTranslation: Bool { get set }
+    var autoSwitchToFreeCamera: Bool { get set }
+    var flyModeVelocity: CGFloat { get set }
+    var panSensitivity: CGFloat { get set }
+    var rotationSensitivity: CGFloat { get set }
+    var truckSensitivity: CGFloat { get set }
+}
