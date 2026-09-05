@@ -1,0 +1,8 @@
+full/classkit/CLSActivity.swift
+full/classkit/CLSContext.swift
+full/classkit/CLSDataStore.swift
+full/classkit/CLSError.swift
+full/classkit/CLSObject.swift
+full/classkit/CLSProgressReportingCapability.swift
+full/classkit/CLSTypes.swift
+full/classkit/ClassKit.swift
