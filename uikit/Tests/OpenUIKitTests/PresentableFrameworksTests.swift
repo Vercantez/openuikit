@@ -73,6 +73,9 @@ final class PresentableFrameworksTests: XCTestCase {
         XCTAssertEqual(dismiss?.frame, CGRect(x: 16, y: 8, width: 44, height: 44))
         XCTAssertEqual(back?.frame, CGRect(x: 16, y: 603, width: 48, height: 48))
         XCTAssertEqual(capsule?.frame, CGRect(x: 375 - 16 - 174, y: 603, width: 174, height: 48))
+        XCTAssertEqual(safari.view.backgroundColor, UIColor.systemBackground)
+        let pageMenu = tagged(safari.view, 1004)
+        XCTAssertEqual(pageMenu?.frame, CGRect(x: 375 - 16 - 44, y: 8, width: 44, height: 44))
     }
 
     func testSafariChromeUsesSafeAreaOnNotchedPhone() {
@@ -86,6 +89,29 @@ final class PresentableFrameworksTests: XCTestCase {
         // y = SA.top + 8 = 67; toolbar y = 852 − max(16, 34−16) − 48 = 786.
         XCTAssertEqual(dismiss?.frame.origin, CGPoint(x: 16, y: 67))
         XCTAssertEqual(back?.frame.origin.y, 786)
+    }
+
+    func testSafariCompactHeightPutsToolbarOnTopRow() {
+        // MEASURED Present t1200.landscape, iPhone SE 2x / iOS 26.1:
+        // window 667×375, capsule fill [520, 4, 130, 42], page-menu [117, 4, 42, 42].
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        window.rootViewController = SFSafariViewController(url: URL(string: "http://127.0.0.1/")!)
+        window.makeKeyAndVisible()
+        let safari = window.rootViewController as! SFSafariViewController
+        safari.view.layoutIfNeeded()
+        XCTAssertEqual(safari.traitCollection.verticalSizeClass, .compact)
+        let capsule = tagged(safari.view, 1003)
+        let pageMenu = tagged(safari.view, 1004)
+        let back = tagged(safari.view, 1002)
+        XCTAssertEqual(capsule?.frame, CGRect(x: 667 - 16 - 130, y: 8, width: 130, height: 44))
+        XCTAssertEqual(pageMenu?.frame, CGRect(x: 16 + 44 + 57, y: 8, width: 44, height: 44))
+        XCTAssertEqual(back?.frame.origin.y, 8)
+        let compactFill = capsule?.backgroundColor?.resolvedCGColor(
+            with: UITraitCollection(userInterfaceStyle: .light))
+        XCTAssertEqual(compactFill?.red ?? 0, 198 / 255, accuracy: 0.002)
+        XCTAssertEqual(compactFill?.green ?? 0, 198 / 255, accuracy: 0.002)
+        XCTAssertEqual(compactFill?.blue ?? 0, 198 / 255, accuracy: 0.002)
     }
 
     func testSafariCatalystCutDoesNotPaintChrome() {
@@ -148,6 +174,27 @@ final class PresentableFrameworksTests: XCTestCase {
         XCTAssertEqual(title?.frame, CGRect(x: 16, y: 8, width: 269, height: 18))
         XCTAssertEqual(host?.text, "example.com")
         XCTAssertEqual(host?.frame, CGRect(x: 16, y: 28, width: 269, height: 16))
+
+        let light = card.backgroundColor!.resolvedCGColor(
+            with: UITraitCollection(userInterfaceStyle: .light))
+        XCTAssertEqual(light.red, 233 / 255, accuracy: 0.002)
+        XCTAssertEqual(light.green, 233 / 255, accuracy: 0.002)
+        XCTAssertEqual(light.blue, 235 / 255, accuracy: 0.002)
+    }
+
+    func testLinkViewPlainCardDarkFillMatchesPresentDark() {
+        // MEASURED Present t200.dark card interior, iPhone SE 2x / iOS 26.1:
+        // (38, 38, 41) = secondarySystemFill over black.
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let metadata = LPLinkMetadata()
+        metadata.title = "Example Article"
+        metadata.url = URL(string: "https://example.com/article")
+        let card = LPLinkView(metadata: metadata)
+        let dark = card.backgroundColor!.resolvedCGColor(
+            with: UITraitCollection(userInterfaceStyle: .dark))
+        XCTAssertEqual(dark.red, 38 / 255, accuracy: 0.002)
+        XCTAssertEqual(dark.green, 38 / 255, accuracy: 0.002)
+        XCTAssertEqual(dark.blue, 41 / 255, accuracy: 0.002)
     }
 
     func testMetadataProviderFailsClosed() async {

@@ -12,17 +12,21 @@
 //   SFContentBlockerState.isEnabled, SFAuthenticationSession.start()
 //
 // GAPS (fail closed, listed):
-//   - Address field: unobserved when http://127.0.0.1/ fails to load
-//     (PresentProbe safari, SE 2x + iPhone 16 3x). OPEN.
 //   - preferredBarTintColor / preferredControlTintColor / ActivityButton:
 //     not in the corpus; not painted.
-//   - .close / .cancel glyphs: unmeasured (element-ios / Pocket Casts set
-//     the style; only .done = checkmark was on the PNG). xmark is used.
 //   - Reading List never persists; content-blocker never enables; auth
 //     session never starts (no Safari service).
 //   - Glass on the remote `_UISceneHostingView` platters: geometry is
 //     painted with `_UIBarMetrics.platterFill`; the iOS 26 glass mix is
 //     OPEN (same class as docs/KNOWN_GAPS.md bar glass).
+//   - Loading progress under the address (blue left cap) is clock-
+//     dependent across captures; not painted.
+//   - Failed-load body copy ("Safari can't open the page…") lives in
+//     the remote scene. Present t1200.dark paints it at
+//     [54, 181.5, 267.5, 34.5] ink (133,133,133); light t1200 LTR and
+//     iPad y=150–250 are all 255; RTL/ax1/xxxl/landscape light show it.
+//     No single visibility rule; a guessed string dropped t1200.dark
+//     95.279 → 94.781. OPEN.
 import UIKit
 
 // MARK: - Content blocker
@@ -174,7 +178,9 @@ open class SFSafariViewController: UIViewController {
     private let initialURL: URL
     private var dismissPlatter: _SFPlatterView?
     private var backPlatter: _SFPlatterView?
+    private var pageMenuPlatter: _SFPlatterView?
     private var trailingCapsule: UIView?
+    private var addressLabel: UILabel?
 
     public convenience init(url: URL) {
         self.init(url: url, configuration: Configuration())
@@ -192,9 +198,18 @@ open class SFSafariViewController: UIViewController {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        guard OpenUIKitRuntime.systemFontCut == .iOS else { return }
-        installIOSChrome()
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            // MEASURED Present t1200 / t1200.dark, iPhone SE 2x / iOS 26.1:
+            // page fill is systemBackground (light 255 / dark 0). Catalyst
+            // stays white so fixture goldens do not move.
+            view.backgroundColor = .systemBackground
+            // MEASURED Present t1200.rtl: dismiss X stays at leading x=16,
+            // address "127.0.0.1" stays centred; chrome does not mirror.
+            view.semanticContentAttribute = .forceLeftToRight
+            installIOSChrome()
+        } else {
+            view.backgroundColor = .white
+        }
     }
 
     open override func viewDidLayoutSubviews() {
@@ -211,8 +226,31 @@ open class SFSafariViewController: UIViewController {
 
         let back = _SFPlatterView(symbolName: "chevron.backward")
         back.tag = 1002
+        // MEASURED Present t1200.dark back chevron: dimmed (no history).
+        // tertiaryLabel over platterFill (25,25,25), not .label white.
+        back.symbolTint = .tertiaryLabel
         view.addSubview(back)
         backPlatter = back
+
+        // MEASURED Present t1200.dark / .rtl / .ax1 / .landscape trailing-top
+        // 44 pt circle, x = W − 16 − 44. Glyph is harvested `doc.text`
+        // (rounded rect + two lines = page menu). Light t1200 LTR has no
+        // ink there (all-255 centre/trailing-top); other axes do.
+        let pageMenu = _SFPlatterView(symbolName: "doc.text")
+        pageMenu.tag = 1004
+        view.addSubview(pageMenu)
+        pageMenuPlatter = pageMenu
+
+        let address = UILabel()
+        address.tag = 1005
+        address.textAlignment = .center
+        address.textColor = .label
+        address.numberOfLines = 1
+        // MEASURED Present t1200.dark / .rtl / .ax1 address ink: "127.0.0.1"
+        // (URL.host). Light t1200 LTR centre band is all 255 — listed OPEN.
+        address.text = initialURL.host ?? initialURL.absoluteString
+        view.addSubview(address)
+        addressLabel = address
 
         let capsule = UIView()
         capsule.tag = 1003
@@ -221,7 +259,9 @@ open class SFSafariViewController: UIViewController {
         let names = ["square.and.arrow.up", "arrow.clockwise", "safari"]
         for name in names {
             let icon = UIImageView(image: UIImage(systemName: name))
-            icon.tintColor = .label
+            // MEASURED Present t1200.dark capsule: share + safari are .label
+            // (white); reload is dimmed (no document yet).
+            icon.tintColor = name == "arrow.clockwise" ? .tertiaryLabel : .label
             icon.contentMode = .center
             capsule.addSubview(icon)
         }
@@ -234,31 +274,69 @@ open class SFSafariViewController: UIViewController {
         let sa = view.safeAreaInsets
         let bounds = view.bounds
         let side = _UIBarMetrics.sideMargin
-        let navH = _UIBarMetrics.platterHeight
-        let toolH = _UIBarMetrics.toolbarPlatterHeight
+        let compact = traitCollection.verticalSizeClass == .compact
+        let (navH, toolH, capW) = safariPlatterSizes(compact: compact)
 
-        // MEASURED PresentProbe safari PNG + dump, iOS 26.1:
-        // dismiss checkmark in a 44 pt circle, origin (16, SA.top + 8).
-        // SE hidden status bar: SA.top 0 → y=8. iPhone 16: SA.top 59 → y=67;
-        // platter centre x ≈ 37.8 = 16+22.
-        dismissPlatter?.frame = CGRect(x: side, y: sa.top + 8, width: navH, height: navH)
+        // MEASURED Present t1200 family, iPhone SE 2x / iOS 26.1:
+        // dismiss X in a 44 pt circle, origin (16, SA.top + 8). Same
+        // leading edge in RTL (t1200.rtl X bbox [29.5, 16.5, 17, 17]).
+        let navY = sa.top + 8
+        dismissPlatter?.frame = CGRect(x: side, y: navY, width: navH, height: navH)
         dismissPlatter?.layer.cornerRadius = navH / 2
 
-        // MEASURED same captures: back chevron in a 48 pt circle.
-        // y = H − max(16, SA.bottom − 16) − 48.
-        // SE SA.bottom 0 → y=603. iPhone 16 SA.bottom 34 → y=786
-        // (centre ≈ 809).
-        let bottomMargin = max(16, sa.bottom - 16)
-        let toolY = bounds.height - bottomMargin - toolH
-        backPlatter?.frame = CGRect(x: side, y: toolY, width: toolH, height: toolH)
-        backPlatter?.layer.cornerRadius = toolH / 2
+        // MEASURED Present t1200.landscape page-menu fill [117, 4, 42, 42]
+        // = 16 + 44 + 57. Portrait / regular-height: trailing (W − 16 − 44).
+        let pageMenuX = compact
+            ? side + navH + 57
+            : bounds.width - side - navH
+        pageMenuPlatter?.frame = CGRect(
+            x: pageMenuX, y: navY, width: navH, height: navH)
+        pageMenuPlatter?.layer.cornerRadius = navH / 2
 
-        // MEASURED iPhone 16 3x PNG: trailing share+reload+compass capsule
-        // height 48, trailing margin 16, width 174 pt (peak 174.33).
-        let capW: CGFloat = 174
+        let addressX = compact ? pageMenuX + navH : side + navH
+        let addressRight = compact
+            ? bounds.width - side - capW
+            : bounds.width - side - navH
+        addressLabel?.frame = CGRect(
+            x: addressX, y: navY,
+            width: max(0, addressRight - addressX), height: navH)
+        addressLabel?.font = safariAddressFont()
+        addressLabel?.isUserInteractionEnabled = false
+
+        // MEASURED Present t1200.landscape (window 667×375, vclass compact):
+        // no bottom toolbar. Back + share capsule sit on the top row
+        // (capsule fill bbox [520, 4, 130, 42], trailing 16 → width 130).
+        // Portrait: back y = H − max(16, SA.bottom − 16) − toolH
+        // (SE 603 / 48; iPhone 16 786).
+        let toolY: CGFloat
+        let backX: CGFloat
+        if compact {
+            toolY = navY
+            backX = side + navH + _UIBarMetrics.gap
+            backPlatter?.showsPlatter = false
+        } else {
+            let bottomMargin = max(16, sa.bottom - 16)
+            toolY = bounds.height - bottomMargin - toolH
+            backX = side
+            backPlatter?.showsPlatter = true
+        }
+        backPlatter?.frame = CGRect(x: backX, y: toolY, width: toolH, height: toolH)
+
         trailingCapsule?.frame = CGRect(
             x: bounds.width - side - capW, y: toolY, width: capW, height: toolH)
         trailingCapsule?.layer.cornerRadius = toolH / 2
+        // MEASURED Present t1200.landscape page-menu + capsule interiors
+        // (198, 198, 198) over white, bbox [117, 4, 42, 42] / [520, 4, 130, 42].
+        // Portrait platters stay `_UIBarMetrics.platterFill`. Dark compact is
+        // unmeasured (no Present.dark.landscape capture).
+        if compact, traitCollection.userInterfaceStyle != .dark {
+            let compactFill = UIColor(red: 198 / 255, green: 198 / 255, blue: 198 / 255, alpha: 1)
+            trailingCapsule?.backgroundColor = compactFill
+            pageMenuPlatter?.backgroundColor = compactFill
+        } else {
+            trailingCapsule?.backgroundColor = _UIBarMetrics.platterFill
+            pageMenuPlatter?.backgroundColor = _UIBarMetrics.platterFill
+        }
         if let capsule = trailingCapsule {
             let slot = capW / CGFloat(max(1, capsule.subviews.count))
             for (i, sub) in capsule.subviews.enumerated() {
@@ -267,16 +345,53 @@ open class SFSafariViewController: UIViewController {
         }
     }
 
+    /// MEASURED Present t1200.ax1 vs t1200.xxxl, iPhone SE 2x / iOS 26.1:
+    /// dismiss glass, X bbox and address ink bbox are identical, so every
+    /// category above extraExtraLarge caps there (tighter than nav-bar
+    /// `iOSBarCapped`, which leaves xxxl uncapped).
+    private func safariCappedCategory() -> UIContentSizeCategory {
+        let cat = traitCollection.preferredContentSizeCategory
+        if cat.isAccessibilityCategory || cat == .extraExtraExtraLarge {
+            return .extraExtraLarge
+        }
+        return cat
+    }
+
+    private func safariPlatterSizes(compact: Bool) -> (CGFloat, CGFloat, CGFloat) {
+        let cap = UITraitCollection(preferredContentSizeCategory: safariCappedCategory())
+        let metrics = UIFontMetrics(forTextStyle: .body)
+        let navH = metrics.scaledValue(for: _UIBarMetrics.platterHeight, compatibleWith: cap)
+        if compact {
+            // MEASURED Present t1200.landscape capsule fill width 130
+            // (= 667 − 16 − 521). Height shares the 44 pt dismiss row.
+            return (navH, navH, 130)
+        }
+        let toolH = metrics.scaledValue(
+            for: _UIBarMetrics.toolbarPlatterHeight, compatibleWith: cap)
+        return (navH, toolH, 174)
+    }
+
+    private func safariAddressFont() -> UIFont {
+        let cap = UITraitCollection(preferredContentSizeCategory: safariCappedCategory())
+        // MEASURED Present t1200.dark address glyph bbox h=13 at y=12.5
+        // (footnote 13 semibold). ax1 bbox h=15 after the extraExtraLarge cap.
+        let size = UIFontMetrics(forTextStyle: .footnote)
+            .scaledValue(for: 13, compatibleWith: cap)
+        return .systemFont(ofSize: size, weight: .semibold)
+    }
+
     private func handleDismiss() {
         delegate?.safariViewControllerDidFinish(self)
         dismiss(animated: true, completion: nil)
     }
 
     private static func symbolName(for style: DismissButtonStyle) -> String {
-        switch style {
-        case .done: return "checkmark"
-        case .close, .cancel: return "xmark"
-        }
+        // MEASURED Present t1200 / t1200.dark / t1200.ax1 / t1200.rtl,
+        // iPhone SE 2x / iOS 26.1: default `.done` paints `xmark`, not
+        // checkmark (light dismiss ink bbox [29.5, 16.5, 17, 17]; dark
+        // X in the 44 pt platter at (16, 8)).
+        _ = style
+        return "xmark"
     }
 }
 
@@ -286,6 +401,15 @@ open class SFSafariViewController: UIViewController {
 final class _SFPlatterView: UIView {
     var symbolName: String {
         didSet { imageView.image = UIImage(systemName: symbolName) }
+    }
+    var symbolTint: UIColor = .label {
+        didSet { imageView.tintColor = symbolTint }
+    }
+    var showsPlatter = true {
+        didSet {
+            backgroundColor = showsPlatter ? _UIBarMetrics.platterFill : .clear
+            setNeedsLayout()
+        }
     }
     var onTap: (() -> Void)?
     private let imageView = UIImageView()
@@ -308,6 +432,6 @@ final class _SFPlatterView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         imageView.frame = bounds
-        layer.cornerRadius = bounds.height / 2
+        layer.cornerRadius = showsPlatter ? bounds.height / 2 : 0
     }
 }
