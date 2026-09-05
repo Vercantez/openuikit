@@ -1,6 +1,6 @@
 #!/bin/zsh
-# conformance_flow.sh <workdir> <app> — the whole conformance-app loop for one
-# app, in one command (docs/HILLCLIMB.md, docs/ORACLE_FLOW.md).
+# conformance_flow.sh <workdir> <app> [--dark] — the whole conformance-app
+# loop for one app, in one command (docs/HILLCLIMB.md, docs/ORACLE_FLOW.md).
 #
 #   1. replay the app's script.json with REAL UIKit on the iOS 26 simulator
 #      (scripts/conformance_probe_sim.sh) into <workdir>/golden;
@@ -11,47 +11,67 @@
 #      premultiplied and straight are the same bytes) plus an absolute-frame
 #      layout diff, and write
 #        <workdir>/report/<t>/{sheet,diff,golden,ours}.png + report.txt
-#        <workdir>/summary.json  {app, captures: [{name, score, blob,
+#        <workdir>/summary.json  {app, style, captures: [{name, score, blob,
 #                                                  layout_issues}]}
 #      which scripts/scoreboard.py reads with --conformance <workdir>.
 #
 #   scripts/conformance_flow.sh /tmp/conf NavFlow
+#   scripts/conformance_flow.sh /tmp/conf-dark NavFlow --dark
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
+#
+# `--dark` (or a `"style": "dark"` field in script.json) pins
+# `overrideUserInterfaceStyle = .dark` on the window before the first
+# capture on both sides and suffixes capture names `.dark` (`t200.dark`).
+# Light names stay `t200` so existing goldens do not move.
 #
 # SIM_DEVICE_SUFFIX gives the run its own simulator devices.
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-OUT=${1:?usage: conformance_flow.sh <workdir> <app>}
-APPNAME=${2:?usage: conformance_flow.sh <workdir> <app>}
+OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--dark]}
+APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--dark]}
+shift 2
+STYLE=light
+for arg in "$@"; do
+  case $arg in
+    --dark) STYLE=dark ;;
+    *) echo "usage: conformance_flow.sh <workdir> <app> [--dark]" >&2; exit 2 ;;
+  esac
+done
 SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
 [[ -f "$SCRIPT" ]] || { echo "no such conformance app: $SCRIPT" >&2; exit 2 }
 mkdir -p "$OUT/golden" "$OUT/ours" "$OUT/report"
+export CONFPROBE_STYLE=$STYLE
+export OPENUIKIT_APP_STYLE=$STYLE
 
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
-  echo "==> real iOS replay ($OUT/golden)"
+  echo "==> real iOS replay ($OUT/golden) style=$STYLE"
   zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
 fi
 
-echo "==> OpenUIKit replay, iOS cut ($OUT/ours)"
+echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE"
 swift build -c release --product openhost >/dev/null
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
 ./.build/release/openhost --app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours" \
   | tail -1
 
 echo "==> compare"
-python3 - "$OUT" "$APPNAME" "$SCRIPT" <<'PY'
+python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" <<'PY'
 import json, os, shutil, sys
 sys.path.insert(0, os.path.join(os.getcwd(), "Tools/compare"))
 import compare                                   # the suite's own pixel gate
 from PIL import Image, ImageChops
 
-out, app, script_path = sys.argv[1], sys.argv[2], sys.argv[3]
+out, app, script_path, cli_style = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 script = json.load(open(script_path))
+# CLI --dark / CONFPROBE_STYLE wins over the script field (same as both
+# probes): a light script.json can still drive a dark timeline.
+style = "dark" if (cli_style == "dark" or script.get("style") == "dark") else "light"
 scale = None
 
 def suffix(t):
-    return compare.capture_suffix(t)
+    s = compare.capture_suffix(t)
+    return s + ".dark" if style == "dark" else s
 
 def abs_rows(dump):
     """(text, abs-frame) for every view the two trees can be matched on.
@@ -156,10 +176,10 @@ for t in script["captures"]:
     captures.append(entry)
     print(lines[0])
 
-summary = {"app": app, "captures": captures}
+summary = {"app": app, "style": style, "captures": captures}
 json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
-print(f"\n{app}: {len(captures)} capture(s), worst {min(scores):.3f}, "
+print(f"\n{app} ({style}): {len(captures)} capture(s), worst {min(scores):.3f}, "
       f"mean {sum(scores) / len(scores):.3f}")
 PY
 echo "reports: $OUT/report/<t>/{sheet,diff,golden,ours}.png + report.txt; $OUT/summary.json"

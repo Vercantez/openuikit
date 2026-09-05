@@ -323,7 +323,8 @@ public enum UIRenderer {
                 c.drawShadow(of: path)
                 c.restore()
             }
-            _UIGlassMaterial.apply(in: c, path: path, bounds: bounds)
+            _UIGlassMaterial.apply(in: c, path: path, bounds: bounds,
+                                   dark: v.traitCollection.userInterfaceStyle == .dark)
             backgroundDrawn = true
         } else if let bg = v.backgroundColor {
             let color = bg.resolvedCGColor(with: v.traitCollection)

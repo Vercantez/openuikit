@@ -106,4 +106,25 @@ public enum ConformanceClock {
     public static func time(of frame: Int) -> Double {
         Double(frame) / Double(hz)
     }
+
+    /// Frame-file suffix. Light stays `t200` so existing goldens keep their
+    /// names; dark appends `.dark` (`t200.dark`) so a dark timeline of the
+    /// same app does not collide on the scoreboard (`NavFlow:t200` vs
+    /// `NavFlow:t200.dark`).
+    public static func captureSuffix(for t: Double, style: String = "light") -> String {
+        var ms = "\(Int((t * 1000).rounded()))"
+        while ms.count < 3 { ms = "0" + ms }
+        if style == "dark" { return "t" + ms + ".dark" }
+        return "t" + ms
+    }
+
+    /// Style a replay should use. `CONFPROBE_STYLE` / `OPENUIKIT_APP_STYLE`
+    /// (set by `conformance_flow.sh --dark`) wins so a light `script.json`
+    /// can still drive a dark timeline; otherwise the script's `style`
+    /// field; otherwise light. Equality only — no `String.contains`.
+    public static func resolvedStyle(script: String, environment: String?) -> String {
+        if let environment, environment == "dark" { return "dark" }
+        if script == "dark" { return "dark" }
+        return "light"
+    }
 }
