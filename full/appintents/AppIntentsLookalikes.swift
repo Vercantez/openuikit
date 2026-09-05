@@ -35,7 +35,21 @@ open class NSUserActivity: NSObject, @unchecked Sendable {
 public protocol CustomLocalizedStringResourceConvertible {
     var localizedStringResource: LocalizedStringResource { get }
 }
+
+extension LocalizedStringResource {
+    init(_ string: String) {
+        self.init(stringLiteral: string)
+    }
+}
 #endif
+
+func appIntentsString(_ resource: LocalizedStringResource) -> String {
+#if canImport(Darwin)
+    return "\(resource)"
+#else
+    return resource.key
+#endif
+}
 
 // MARK: - SwiftUI lookalikes (isolated host has no SwiftUI module)
 
@@ -217,6 +231,4 @@ open class CLPlacemark: NSObject, @unchecked Sendable {
 
 // MARK: - ExtensionKit lookalike used only in AppIntentsExtension
 
-#if !canImport(ExtensionFoundation) && !canImport(ExtensionKit)
 public protocol AppExtension {}
-#endif
