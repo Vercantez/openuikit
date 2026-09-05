@@ -857,6 +857,18 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             right -= w
             v.frame = CGRect(x: right, y: y, width: w, height: h)
         }
+        // MEASURED NavFlow t200.rtl / TableEditor t200.rtl, iPhone SE 2x /
+        // iOS 26.1: leftBarButtonItems are the leading group (Filter at
+        // abs.x 31.703, Edit at 31.74 — physical left = trailing). Mirror
+        // the LTR packing about the bar width; shared platters follow.
+        if _layoutIsRTL {
+            let span = bounds.width
+            for v in leftItemViews + rightItemViews {
+                var f = v.frame
+                f.origin.x = span - f.maxX
+                v.frame = f
+            }
+        }
         // iOS 26: runs of adjacent image-only items share one platter.
         let shared = _UIBarItemLayout.sharedPlatterFrames(leftItemViews)
             + _UIBarItemLayout.sharedPlatterFrames(rightItemViews)
@@ -915,9 +927,24 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         guard !leftItemViews.isEmpty || !rightItemViews.isEmpty || backButton != nil else {
             return centered
         }
+        let clearance = UINavigationBar.titleGroupClearance
+        if _layoutIsRTL {
+            let leadInner = bounds.width
+                - (_UIBarMetrics.sideMargin + backButtonWidth
+                   + _UIBarItemLayout.naturalWidth(leftItemViews))
+            let trailW = _UIBarItemLayout.naturalWidth(rightItemViews)
+            let trailOuter = trailW == 0 ? 0 : _UIBarMetrics.sideMargin + trailW
+            if centered - width / 2 >= trailOuter + clearance,
+               centered + width / 2 <= leadInner - clearance {
+                return centered
+            }
+            let leadingIsEmpty = backButton == nil
+                && !leftItemViews.contains { !$0.item._isSpace }
+            return (leadingIsEmpty ? leadInner : leadInner - _UIBarMetrics.gap)
+                - width / 2
+        }
         let lead = leadingGroupMaxX
         let trail = trailingGroupMinX
-        let clearance = UINavigationBar.titleGroupClearance
         if centered - width / 2 >= lead + clearance,
            centered + width / 2 <= trail - clearance {
             return centered
@@ -963,7 +990,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
                        dx: CGFloat = 0) {
         let s = b.sizeThatFits(bounds.size)
         b.bounds = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-        b.center = CGPoint(x: s.width / 2 + dx, y: contentMidY)
+        // MEASURED NavFlow t3000.rtl, iPhone SE 2x / iOS 26.1: the back
+        // control sits on the leading (right) edge. `dx` is the LTR
+        // transition slide and is left unflipped (unmeasured in RTL).
+        let cx = _layoutIsRTL ? bounds.width - s.width / 2 + dx : s.width / 2 + dx
+        b.center = CGPoint(x: cx, y: contentMidY)
         b.alpha = alpha
     }
 
@@ -1185,11 +1216,18 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Where `label` sits as the large title for a collapse distance of `d`.
     func largeTitleFrame(for label: UILabel, collapsedBy d: CGFloat) -> CGRect {
-        CGRect(x: UINavigationBar.largeTitleX,
-               y: UINavigationBar.largeTitleLabelY - d,
-               width: Swift.min(label.intrinsicContentSize.width,
-                                bounds.width - 2 * UINavigationBar.largeTitleX),
-               height: UINavigationBar.largeTitleLabelHeight)
+        let w = Swift.min(label.intrinsicContentSize.width,
+                           bounds.width - 2 * UINavigationBar.largeTitleX)
+        // MEASURED NavFlow t200.rtl / TableEditor t200.rtl, iPhone SE 2x /
+        // iOS 26.1: "Library" abs.x 247.5 = 375 − 16 − 111.5; "Reminders"
+        // 189 = 375 − 16 − 170.
+        let x = _layoutIsRTL
+            ? bounds.width - UINavigationBar.largeTitleX - w
+            : UINavigationBar.largeTitleX
+        return CGRect(x: x,
+                        y: UINavigationBar.largeTitleLabelY - d,
+                        width: w,
+                        height: UINavigationBar.largeTitleLabelHeight)
     }
 
     func configureLargeTitleAppearance() {

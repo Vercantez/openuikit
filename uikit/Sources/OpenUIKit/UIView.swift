@@ -763,6 +763,16 @@ open class UIView: UIResponder, CALayerDelegate {
         super.init()
         if !UIView._constructingAppearanceProxy {
             _tintColor = UIView._appearanceProxy?._tintColor
+            // MEASURED /tmp/rtlprobe, iPhone SE 2x / iOS 26.1:
+            // `UIView.appearance().semanticContentAttribute = .forceRightToLeft`
+            // stamps every subsequently constructed UIView (74/76 views
+            // dump `uiDir=rtl`). Window-only assignment stamps the window
+            // (1/76) and does not propagate — `effectiveUserInterfaceLayoutDirection`
+            // of an unspecified child stays LTR (UIButtonTests).
+            if let proxy = UIView._appearanceProxy,
+               proxy._semanticContentAttribute != .unspecified {
+                _semanticContentAttribute = proxy._semanticContentAttribute
+            }
         }
         self.frame = frame
     }
@@ -1041,6 +1051,13 @@ open class UIView: UIResponder, CALayerDelegate {
     /// each unspecified view resolves against an LTR application fallback.
     open var effectiveUserInterfaceLayoutDirection: UIUserInterfaceLayoutDirection {
         type(of: self).userInterfaceLayoutDirection(for: semanticContentAttribute)
+    }
+
+    /// Whether this view arranges its own content right-to-left.
+    /// Unspecified still resolves LTR (UIButtonTests: a child of an RTL
+    /// parent does not inherit).
+    var _layoutIsRTL: Bool {
+        effectiveUserInterfaceLayoutDirection == .rightToLeft
     }
 
     open var traitCollection: UITraitCollection {
