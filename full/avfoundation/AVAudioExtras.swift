@@ -129,6 +129,47 @@ extension AVAudioSession {
     public func setMode(_ mode: Mode) throws {
         AVAudioSession.extrasLock.withLock { AVAudioSession.storedMode = mode }
     }
+
+    func portablePostRouteChange(
+        reason: RouteChangeReason,
+        previousRoute: AVAudioSessionRouteDescription
+    ) {
+        NotificationCenter.default.post(
+            name: AVAudioSession.routeChangeNotification,
+            object: self,
+            userInfo: [
+                AVAudioSessionRouteChangeReasonKey: NSNumber(value: reason.rawValue),
+                AVAudioSessionRouteChangePreviousRouteKey: previousRoute,
+            ]
+        )
+    }
+
+    /// Linux has no audio interruption source. This posts the documented
+    /// `userInfo` keys so observers can be tested the way Apple documents
+    /// (`AVAudioSessionInterruptionTypeKey`, and on `.ended`
+    /// `AVAudioSessionInterruptionOptionKey`). Began deactivates the session
+    /// (Apple: the session is no longer active).
+    /// https://developer.apple.com/documentation/avfaudio/avaudiosession/interruptionnotification
+    @_spi(OpenUIKitHost)
+    public func _portablePostInterruption(
+        type: InterruptionType,
+        options: InterruptionOptions = []
+    ) {
+        if type == .began {
+            try? setActive(false)
+        }
+        var info: [AnyHashable: Any] = [
+            AVAudioSessionInterruptionTypeKey: NSNumber(value: type.rawValue)
+        ]
+        if type == .ended {
+            info[AVAudioSessionInterruptionOptionKey] = NSNumber(value: options.rawValue)
+        }
+        NotificationCenter.default.post(
+            name: AVAudioSession.interruptionNotification,
+            object: self,
+            userInfo: info
+        )
+    }
 }
 
 // MARK: - AVAudioPlayer / AVAudioRecorder (silent clock; no PCM output)

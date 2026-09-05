@@ -335,8 +335,9 @@ open class AVPlayer: NSObject, @unchecked Sendable {
     }
 
     public func play() {
-        // iOS 16+: play() applies defaultRate (Apple AVPlayer.play()).
-        // Measured testAVPlayerStatusAndTimeControl: defaultRate 1 → rate 1.
+        // Apple AVPlayer.play(): begin playback at defaultRate (initial 1.0).
+        // https://developer.apple.com/documentation/avfoundation/avplayer/play()
+        // Measured testPlayerVolumeMuteAndPolicy: defaultRate 1.5 → play() rate 1.5.
         let url = playbackEngine.lock.withLock { () -> URL? in
             let playRate = playbackEngine.defaultRate == 0 ? 1 : playbackEngine.defaultRate
             playbackEngine.setRate(playRate)
@@ -445,9 +446,24 @@ open class AVAudioSession: NSObject, @unchecked Sendable {
         _ category: Category,
         options: CategoryOptions = []
     ) throws {
+        let previousCategory = self.category
+        let previousRoute = currentRoute
         stateLock.withLock {
             storedCategory = category
             storedCategoryOptions = options
+        }
+        // Apple AVAudioSession.RouteChangeReason.categoryChange: posted when
+        // the session category changes. userInfo carries
+        // AVAudioSessionRouteChangeReasonKey and
+        // AVAudioSessionRouteChangePreviousRouteKey
+        // (https://developer.apple.com/documentation/avfaudio/avaudiosession/routechangenotification).
+        // Measured testAVAudioSessionNoHardwareRoute: currentRoute stays empty
+        // (no hardware); a category change posts reason.rawValue == 3.
+        if previousCategory != category {
+            portablePostRouteChange(
+                reason: .categoryChange,
+                previousRoute: previousRoute
+            )
         }
     }
 

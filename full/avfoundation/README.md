@@ -41,10 +41,16 @@ CoreGraphics, and CoreImage types used in signatures are host lookalikes behind
   returns false. `devices()` is empty. `lockForConfiguration()` throws
   `mediaServiceUnavailable`. `AVCaptureSession.startRunning()` leaves
   `isRunning` false.
-- Portable `AVAudioSession` category/mode/active state is process-local. Linux
-  has no audio hardware: `currentRoute` is empty and `outputVolume` is 0.
-  `AVAudioPlayer` / `AVAudioRecorder` use the same silent clock; no PCM is
-  emitted. `AVSpeechSynthesizer.speak` returns false.
+- Portable `AVAudioSession` category/mode/options/active state is
+  process-local. Linux has no audio hardware: `currentRoute` is empty and
+  `outputVolume` is 0. Changing `category` posts
+  `AVAudioSession.routeChangeNotification` with documented userInfo keys
+  `AVAudioSessionRouteChangeReasonKey` (`.categoryChange` = 3) and
+  `AVAudioSessionRouteChangePreviousRouteKey`. Interruptions are not
+  synthesized; a host SPI posts the documented
+  `AVAudioSessionInterruptionTypeKey` / `AVAudioSessionInterruptionOptionKey`
+  payload. `AVAudioPlayer` uses a silent clock; `AVSpeechSynthesizer.speak`
+  returns false.
 - `AVPlayerAudiovisualBackgroundPlaybackPolicy` raw values are automatic=1,
   pauses=2, continuesIfPossible=3.
 
@@ -77,3 +83,8 @@ declaration, not Apple C-string ABI.
 See `oracle-questions.tsv` for Darwin probes. Run
 `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+Coverage is a review index, not a percentage slogan. `implemented` rows cite a
+focused test of that identifier. Enum/option-set members may share one
+table-driven raw-value test. Touching a property without asserting it is
+`declared`.

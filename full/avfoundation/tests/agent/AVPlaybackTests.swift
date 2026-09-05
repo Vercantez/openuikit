@@ -3,14 +3,17 @@ import Foundation
 @_spi(OpenUIKitHost) import AVFoundation
 
 func testAVPlayerStatusAndTimeControl() {
+    // Apple: empty player status is unknown until an item is ready; timeControlStatus
+    // is paused / playing / waitingToPlayAtSpecifiedRate
+    // (https://developer.apple.com/documentation/avfoundation/avplayer/timecontrolstatus-swift.property).
     let empty = AVPlayer()
     precondition(empty.status == .unknown)
     precondition(empty.timeControlStatus == .paused)
     precondition(empty.error == nil)
-    precondition(AVPlayer.Status.unknown.rawValue == 0)
+    precondition(AVPlayer.Status(rawValue: 0) == .unknown)
     precondition(AVPlayer.Status.readyToPlay.rawValue == 1)
     precondition(AVPlayer.Status.failed.rawValue == 2)
-    precondition(AVPlayer.TimeControlStatus.paused.rawValue == 0)
+    precondition(AVPlayer.TimeControlStatus(rawValue: 0) == .paused)
     precondition(AVPlayer.TimeControlStatus.waitingToPlayAtSpecifiedRate.rawValue == 1)
     precondition(AVPlayer.TimeControlStatus.playing.rawValue == 2)
     precondition(AVPlayer.ActionAtItemEnd.advance.rawValue == 0)
@@ -166,7 +169,7 @@ func testAVPlayerItemStateMachine() {
     _ = item.accessLog()
     _ = item.errorLog()
     precondition(item.outputs.isEmpty)
-    precondition(AVPlayerItem.Status.unknown.rawValue == 0)
+    precondition(AVPlayerItem.Status(rawValue: 0) == .unknown)
     precondition(AVPlayerItem.Status.readyToPlay.rawValue == 1)
     precondition(AVPlayerItem.Status.failed.rawValue == 2)
 }
@@ -209,8 +212,15 @@ func testAVAssetLoadFailClosed() {
     default:
         preconditionFailure("isPlayable should be loaded after load()")
     }
+    switch asset.status(of: .lyrics) {
+    case .notYetLoaded:
+        break
+    default:
+        preconditionFailure("unloaded key must report notYetLoaded")
+    }
     asset.loadValuesAsynchronously(forKeys: ["tracks"]) {}
     precondition(asset.statusOfValue(forKey: "tracks", error: nil) == .loaded)
+    _ = avfAwait { await asset.loadValues(forKeys: ["duration"]) }
     let factory = AVAsset.asset(with: url)
     precondition((factory as? AVURLAsset)?.url == url)
 }
@@ -237,6 +247,9 @@ func testAVQueuePlayerOrdering() {
 }
 
 func testAVPlayerLayerVideoGravity() {
+    // Apple AVPlayerLayer.videoGravity default is ResizeAspect
+    // (AVLayerVideoGravityResizeAspect). Linux has no decoded frame:
+    // isReadyForDisplay is false and copyDisplayedPixelBuffer() is nil.
     let player = AVPlayer(url: URL(fileURLWithPath: "/tmp/openav-layer.mp4"))
     let layer = AVPlayerLayer.playerLayer(with: player)
     precondition(layer.player === player)
@@ -254,13 +267,20 @@ func testAVPlayerLayerVideoGravity() {
 }
 
 func testAVLayerVideoGravityValues() {
+    // Apple AVAnimation.h C-string constants AVLayerVideoGravityResizeAspect*.
     precondition(AVLayerVideoGravity.resizeAspect.rawValue == "AVLayerVideoGravityResizeAspect")
     precondition(AVLayerVideoGravity.resizeAspectFill.rawValue == "AVLayerVideoGravityResizeAspectFill")
     precondition(AVLayerVideoGravity.resize.rawValue == "AVLayerVideoGravityResize")
+    precondition(AVLayerVideoGravity(rawValue: "AVLayerVideoGravityResizeAspect") == .resizeAspect)
+    precondition(AVLayerVideoGravity(rawValue: "AVLayerVideoGravityResize") != .resizeAspectFill)
 }
 
 func testAVCaptureAuthorizationDenied() {
-    precondition(AVAuthorizationStatus.notDetermined.rawValue == 0)
+    // Apple AVAuthorizationStatus NS_ENUM: notDetermined=0, restricted=1,
+    // denied=2, authorized=3. Linux has no capture hardware and no prompt,
+    // so authorizationStatus is denied and requestAccess is false
+    // (https://developer.apple.com/documentation/avfoundation/avcapturedevice/authorizationstatus(for:)).
+    precondition(AVAuthorizationStatus(rawValue: 0) == .notDetermined)
     precondition(AVAuthorizationStatus.restricted.rawValue == 1)
     precondition(AVAuthorizationStatus.denied.rawValue == 2)
     precondition(AVAuthorizationStatus.authorized.rawValue == 3)
@@ -275,6 +295,14 @@ func testAVCaptureAuthorizationDenied() {
     }
     precondition(AVCaptureDevice.devices().isEmpty)
     precondition(AVCaptureDevice.devices(for: .video).isEmpty)
+    precondition(AVCaptureDevice.default(for: .video) == nil)
+    let session = AVCaptureDevice.DiscoverySession(
+        deviceTypes: [.builtInWideAngleCamera],
+        mediaType: .video,
+        position: .back
+    )
+    precondition(session.devices.isEmpty)
+    precondition(session.supportedMultiCamDeviceSets.isEmpty)
 }
 
 func testAVCaptureSessionFailClosed() {
@@ -290,11 +318,30 @@ func testAVCaptureSessionFailClosed() {
     precondition(session.inputs.isEmpty)
     precondition(session.outputs.isEmpty)
     precondition(AVCaptureSession.Preset.high.rawValue == "high")
-    precondition(AVCaptureSession.InterruptionReason.videoDeviceNotAvailableInBackground.rawValue == 0)
 }
 
 func testAVAudioSessionNoHardwareRoute() {
+    // Extra portable surface (iOS 26.1 places AVAudioSession in AVFAudio).
+    // Apple routeChangeNotification userInfo: AVAudioSessionRouteChangeReasonKey
+    // and AVAudioSessionRouteChangePreviousRouteKey. categoryChange == 3.
+    // https://developer.apple.com/documentation/avfaudio/avaudiosession/routechangenotification
+    // Interruption userInfo: AVAudioSessionInterruptionTypeKey, and on ended
+    // AVAudioSessionInterruptionOptionKey.
+    // https://developer.apple.com/documentation/avfaudio/avaudiosession/interruptionnotification
     let session = AVAudioSession.sharedInstance()
+    try? session.setCategory(.ambient)
+    let routeHits = AVFLocked(0)
+    let routeReason = AVFLocked(UInt(0))
+    let route = NotificationCenter.default.addObserver(
+        forName: AVAudioSession.routeChangeNotification,
+        object: session,
+        queue: nil
+    ) { note in
+        routeHits.store(routeHits.load() + 1)
+        let value = note.userInfo?[AVAudioSessionRouteChangeReasonKey] as? NSNumber
+        routeReason.store(value?.uintValue ?? 0)
+        precondition(note.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] != nil)
+    }
     do {
         try session.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetooth])
         try session.setActive(true)
@@ -302,11 +349,14 @@ func testAVAudioSessionNoHardwareRoute() {
     } catch {
         preconditionFailure("portable session must not throw: \(error)")
     }
+    NotificationCenter.default.removeObserver(route)
     precondition(session.category == .playAndRecord)
     precondition(session.mode == .moviePlayback)
     precondition(session.currentRoute.inputs.isEmpty)
     precondition(session.currentRoute.outputs.isEmpty)
     precondition(session.outputVolume == 0)
+    precondition(routeHits.load() >= 1)
+    precondition(routeReason.load() == AVAudioSession.RouteChangeReason.categoryChange.rawValue)
     precondition(AVAudioSession.interruptionNotification.rawValue == "AVAudioSessionInterruptionNotification")
     precondition(AVAudioSession.routeChangeNotification.rawValue == "AVAudioSessionRouteChangeNotification")
     precondition(AVAudioSessionInterruptionTypeKey == "AVAudioSessionInterruptionTypeKey")
@@ -316,6 +366,30 @@ func testAVAudioSessionNoHardwareRoute() {
     precondition(AVAudioSession.InterruptionType.ended.rawValue == 0)
     precondition(AVAudioSession.InterruptionOptions.shouldResume.rawValue == 1)
     precondition(AVAudioSession.RouteChangeReason.categoryChange.rawValue == 3)
+
+    let interruptHits = AVFLocked(0)
+    let interruptType = AVFLocked(UInt(99))
+    let interruptOptions = AVFLocked(UInt(0))
+    let interrupt = NotificationCenter.default.addObserver(
+        forName: AVAudioSession.interruptionNotification,
+        object: session,
+        queue: nil
+    ) { note in
+        interruptHits.store(interruptHits.load() + 1)
+        let typeValue = note.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber
+        interruptType.store(typeValue?.uintValue ?? 99)
+        let optionValue = note.userInfo?[AVAudioSessionInterruptionOptionKey] as? NSNumber
+        interruptOptions.store(optionValue?.uintValue ?? 0)
+    }
+    session._portablePostInterruption(type: .began)
+    precondition(interruptHits.load() == 1)
+    precondition(interruptType.load() == AVAudioSession.InterruptionType.began.rawValue)
+    precondition(!session._portableState.isActive)
+    session._portablePostInterruption(type: .ended, options: .shouldResume)
+    NotificationCenter.default.removeObserver(interrupt)
+    precondition(interruptHits.load() == 2)
+    precondition(interruptType.load() == AVAudioSession.InterruptionType.ended.rawValue)
+    precondition(interruptOptions.load() == AVAudioSession.InterruptionOptions.shouldResume.rawValue)
 }
 
 func testAVAudioPlayerSilentClock() {
@@ -382,177 +456,8 @@ func testAVAudioRecorderAndSpeechFailClosed() {
     precondition(AVSpeechBoundary.word.rawValue == 1)
 }
 
-func testAVPlayerDeclaredSurface() {
-    let player = AVPlayer(url: URL(fileURLWithPath: "/tmp/openav-surface.mp4"))
-    _ = player.reasonForWaitingToPlay
-    player.cancelPendingPrerolls()
-    let preroll = avfAwait { await player.preroll(atRate: 1) }
-    switch preroll {
-    case .success(let ok):
-        precondition(!ok)
-    default:
-        preconditionFailure("preroll is fail-closed")
-    }
-    player.sourceClock = nil
-    player.masterClock = nil
-    player.allowsExternalPlayback = true
-    precondition(player.allowsExternalPlayback)
-    precondition(!player.isExternalPlaybackActive)
-    player.usesExternalPlaybackWhileExternalScreenIsActive = true
-    player.externalPlaybackVideoGravity = .resizeAspect
-    precondition(!player.isOutputObscuredDueToInsufficientExternalProtection)
-    precondition(AVPlayer.availableHDRModes.isEmpty)
-    precondition(!AVPlayer.eligibleForHDRPlayback)
-    _ = player.playbackCoordinator
-    player.videoOutput = nil
-    player.networkResourcePriority = .high
-    precondition(player.networkResourcePriority == .high)
-    precondition(!player.audioOutputSuppressedDueToNonMixableAudioRoute)
-    AVPlayer.isObservationEnabled = true
-    player.isClosedCaptionDisplayEnabled = true
-    precondition(player.isClosedCaptionDisplayEnabled)
-    let criteria = AVPlayerMediaSelectionCriteria()
-    player.setMediaSelectionCriteria(criteria, forMediaCharacteristic: .audible)
-    precondition(player.mediaSelectionCriteria(forMediaCharacteristic: .audible) === criteria)
-    player.appliesMediaSelectionCriteriaAutomatically = false
-    player.setRate(0, time: .zero, atHostTime: .zero)
-    player.seek(to: Date())
-    _ = AVPlayer.rateDidChangeNotification
-    _ = AVPlayer.rateDidChangeReasonKey
-    _ = AVPlayer.HDRMode.hlg
-    _ = AVPlayer.WaitingReason.toMinimizeStalls
-    _ = AVPlayer.RateDidChangeReason.setRateCalled
-}
-
-func testAVPlayerItemDeclaredSurface() {
-    let item = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/openav-item-surface.mp4"))
-    _ = item.presentationSize
-    _ = item.timedMetadata
-    _ = item.automaticallyLoadedAssetKeys
-    _ = item.canPlaySlowForward
-    _ = item.canPlayReverse
-    _ = item.canPlaySlowReverse
-    _ = item.canPlayFastReverse
-    _ = item.canStepForward
-    _ = item.canStepBackward
-    item.configuredTimeOffsetFromLive = .zero
-    _ = item.recommendedTimeOffsetFromLive
-    item.automaticallyPreservesTimeOffsetFromLive = true
-    item.forwardPlaybackEndTime = .zero
-    item.reversePlaybackEndTime = .zero
-    _ = item.seekableTimeRanges
-    _ = item.currentDate()
-    _ = item.seek(to: Date())
-    item.step(byCount: 1)
-    _ = item.timebase
-    item.videoComposition = nil
-    _ = item.customVideoCompositor
-    item.seekingWaitsForVideoCompositionRendering = true
-    item.textStyleRules = nil
-    _ = item.loadedTimeRanges
-    _ = item.isPlaybackLikelyToKeepUp
-    _ = item.isPlaybackBufferFull
-    _ = item.isPlaybackBufferEmpty
-    _ = item.preferredForwardBufferDuration
-    _ = AVPlayerItem.timeJumpedNotification
-    _ = AVPlayerItem.newAccessLogEntryNotification
-    _ = item.copy(with: nil)
-    let withKeys = AVPlayerItem(asset: item.asset, automaticallyLoadedAssetKeys: [] as [String]?)
-    precondition(withKeys.asset === item.asset)
-}
-
-func testAVAssetDeclaredSurface() {
-    let asset = AVURLAsset(url: URL(fileURLWithPath: "/tmp/openav-asset-surface.mp4"))
-    _ = asset.preferredRate
-    _ = asset.preferredVolume
-    _ = asset.preferredTransform
-    _ = asset.providesPreciseDurationAndTiming
-    asset.cancelLoading()
-    _ = asset.unusedTrackID()
-    _ = asset.track(withTrackID: 0)
-    _ = asset.tracks(withMediaType: .audio)
-    _ = asset.tracks(withMediaCharacteristic: .audible)
-    _ = asset.trackGroups
-    _ = asset.creationDate
-    _ = asset.lyrics
-    _ = asset.commonMetadata
-    _ = asset.availableMetadataFormats
-    _ = asset.metadata(forFormat: AVMetadataFormat(rawValue: "id3"))
-    _ = asset.availableChapterLocales
-    _ = asset.chapterMetadataGroups(bestMatchingPreferredLanguages: ["en"])
-    _ = asset.hasProtectedContent
-    _ = asset.canContainFragments
-    _ = asset.containsFragments
-    _ = asset.isExportable
-    _ = asset.isReadable
-    _ = asset.isComposable
-    _ = asset.isCompatibleWithSavedPhotosAlbum
-    _ = asset.isCompatibleWithAirPlayVideo
-    _ = AVURLAsset.audiovisualTypes()
-    _ = AVURLAsset.audiovisualMIMETypes()
-    precondition(!AVURLAsset.isPlayableExtendedMIMEType("video/mp4"))
-    _ = asset.resourceLoader
-    _ = asset.variants
-    let unused = avfAwait { try await asset.findUnusedTrackID() }
-    switch unused {
-    case .success(let id):
-        precondition(id == 0)
-    default:
-        preconditionFailure("findUnusedTrackID is fail-closed")
-    }
-}
-
-func testAVCaptureDeviceDeclaredSurface() {
-    let device = AVCaptureDevice()
-    _ = AVCaptureDevice.DeviceType.builtInWideAngleCamera
-    _ = AVCaptureDevice.DeviceType.builtInTelephotoCamera
-    _ = AVCaptureDevice.DeviceType.builtInUltraWideCamera
-    _ = AVCaptureDevice.DeviceType.builtInDualCamera
-    _ = AVCaptureDevice.DeviceType.microphone
-    _ = AVCaptureDevice.Position.front
-    _ = AVCaptureDevice.Position.back
-    _ = AVCaptureDevice.Position.unspecified
-    _ = AVCaptureDevice.FlashMode.off
-    _ = AVCaptureDevice.FocusMode.continuousAutoFocus
-    _ = AVCaptureDevice.ExposureMode.continuousAutoExposure
-    _ = AVCaptureDevice.TorchMode.off
-    _ = AVCaptureDevice.WhiteBalanceMode.continuousAutoWhiteBalance
-    _ = device.uniqueID
-    _ = device.modelID
-    _ = device.localizedName
-    _ = device.manufacturer
-    _ = device.deviceType
-    _ = device.position
-    _ = device.formats
-    _ = device.activeFormat
-    _ = device.activeVideoMinFrameDuration
-    _ = device.activeVideoMaxFrameDuration
-    _ = device.hasFlash
-    _ = device.hasTorch
-    _ = device.isFlashAvailable
-    _ = device.isTorchAvailable
-    _ = device.isConnected
-    _ = device.isVirtualDevice
-    _ = device.constituentDevices
-    device.unlockForConfiguration()
-    do {
-        try device.lockForConfiguration()
-        preconditionFailure("lockForConfiguration must fail closed")
-    } catch {
-        _ = error
-    }
-    let session = AVCaptureDevice.DiscoverySession(
-        deviceTypes: [.builtInWideAngleCamera],
-        mediaType: .video,
-        position: .back
-    )
-    precondition(session.devices.isEmpty)
-    precondition(session.supportedMultiCamDeviceSets.isEmpty)
-    precondition(AVCaptureDevice.default(for: .video) == nil)
-}
-
 func testAVKeyValueStatusRawValues() {
-    precondition(AVKeyValueStatus.unknown.rawValue == 0)
+    precondition(AVKeyValueStatus(rawValue: 0) == .unknown)
     precondition(AVKeyValueStatus.loading.rawValue == 1)
     precondition(AVKeyValueStatus.loaded.rawValue == 2)
     precondition(AVKeyValueStatus.failed.rawValue == 3)

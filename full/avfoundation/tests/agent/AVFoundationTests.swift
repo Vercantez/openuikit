@@ -76,6 +76,12 @@ func testPlayerVolumeMuteAndPolicy() {
     precondition(player.preventsDisplaySleepDuringVideoPlayback)
     player.preventsDisplaySleepDuringVideoPlayback = false
     precondition(!player.preventsDisplaySleepDuringVideoPlayback)
+    // Apple AVPlayer.play(): begins playback at defaultRate (initial 1.0).
+    // https://developer.apple.com/documentation/avfoundation/avplayer/play()
+    player.play()
+    precondition(player.rate == 1.5)
+    player.pause()
+    precondition(player.rate == 0)
 }
 
 func testPlayerReplaceCurrentItem() {
@@ -298,6 +304,7 @@ func testURLAssetAndPlayerItemInit() {
     precondition(item.url == url)
     let fromURL = AVPlayerItem(url: url)
     precondition(fromURL.url == url)
+    precondition(!AVURLAsset.isPlayableExtendedMIMEType("video/mp4"))
 }
 
 func testImageGeneratorFailClosed() {
