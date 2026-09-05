@@ -25,8 +25,9 @@ GLKit therefore does **not** define module-local `EAGLContext`,
 
 What compiles and is tested here is the target-owned CPU math
 (`GLKVector*`, `GLKMatrix*`, `GLKQuaternion*`, `GLKMatrixStack`), enumerations,
-CPU-side effect property storage, and fail-closed texture-loader completions
-that do not name missing dependency types. Coverage for every API that names a
+CPU-side effect property storage, `NSStringFromGLK*` formatters, identifier-
+as-string constants, and fail-closed texture-loader completions that do not
+name missing dependency types. Coverage for every API that names a
 dependency nominal type is `deferred`.
 
 `GLKView : UIKit.UIView`, `GLKViewController : UIKit.UIViewController`,
@@ -37,23 +38,51 @@ run can compile them against actual `-I`/`-L` dependency dylibs.
 ## Fail-closed / not claimed
 
 - No EAGL drawable, shader `prepareToDraw`, or GPU texture/mesh upload is
-  fabricated.
+  fabricated. `prepareToDraw` / `GLKSkyboxEffect.draw` are inert CPU no-ops.
 - `GLKView.snapshot` does not return an empty `UIImage`; the method is omitted
   on this host and fail-closes with `fatalError` when compiled against UIKit
   (pixel readback is unimplemented).
 - Texture-loader completions are dispatched off the caller, onto the provided
   queue, and invoked exactly once. A nil queue uses a host global queue; that
-  default is not claimed as Apple's.
+  default is not claimed as Apple's. Sync and async file/data/URL/name/cube
+  overloads throw or complete with `GLKTextureLoaderError.invalidEAGLContext`
+  (raw value 17).
 - Option-key, error-domain, and `NSStringFromGLK*` payloads compile as
   identifier-as-string / local formatters and are **not** claimed to match
-  Apple's binary constants.
+  Apple's binary constants. Tests assert this port's strings, not Apple's.
 - Effect property **defaults** (light colors, `useConstantColor`, fog, material)
   are unobserved and are not invented from OpenGL ES 1.1 folklore. Assigned
   values round-trip.
-- `GLKMatrix4Invert` of the identity is tested. Singular-matrix payloads stay
-  an oracle question.
+- `GLKMatrix4Invert` of the identity and of a diagonal scale is tested.
+  Singular-matrix payloads stay an oracle question.
 - `GLKVertexAttributeParametersFromModelIO` is not compiled here (needs
   ModelIO) and does not invent a packed-format mapping.
+
+## Depth pass 2026-09
+
+Corpus: `reference/corpus-summary.json` records one Telegram-iOS hit
+(`RMIntroViewController.h`). `scratch/ladder-corpus` is not present in this
+VM, so ranking used the pinned summary plus the public math/effect/texture
+surface those intro views typically call.
+
+| | before | after |
+|---|---:|---:|
+| implemented | 209 | 491 |
+| declared | 282 | 0 |
+| deferred | 59 | 59 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Focused `tests/agent/*Tests.swift` count: 62 unique `test*` functions.
+Every `implemented` row cites `test:full/glkit/tests/agent/<File>Tests.swift#testName`.
+
+Top-5 evidence distribution (implemented rows → test):
+
+1. `testGLKTextureLoaderErrorCodes` — 45 (error-code / enum-member table; allowed to share)
+2. `testGLKEffectMaterialFogTexture` — 23
+3. `testGLKMatrixStackTransforms` — 16
+4. `testGLKEffectLights` — 16
+5. `testGLKTextureLoaderErrorBridging` — 15
 
 ## Future EC2 probe
 

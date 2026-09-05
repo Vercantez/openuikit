@@ -1,367 +1,367 @@
 precise	status	evidence	notes
-c:@E@GLKFogMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKFogMode@GLKFogModeExp	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKFogMode@GLKFogModeExp2	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKFogMode@GLKFogModeLinear	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKLightingType	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKLightingType@GLKLightingTypePerPixel	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKLightingType@GLKLightingTypePerVertex	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureEnvMode@GLKTextureEnvModeDecal	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureEnvMode@GLKTextureEnvModeModulate	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureEnvMode@GLKTextureEnvModeReplace	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNonPremultiplied	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNone	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStatePremultiplied	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginBottomLeft	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginTopLeft	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginUnknown	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorAlphaPremultiplicationFailure	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCompressedTextureUpload	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCubeMapInvalidNumFiles	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorDataPreprocessingFailure	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorFileOrURLNotFound	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorIncompatibleFormatSRGB	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidCGImage	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidEAGLContext	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidNSData	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorMipmapUnsupported	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorPVRAtlasUnsupported	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorReorientationFailure	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUncompressedTextureUpload	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownFileType	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownPathType	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedBitDepth	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedCubeMapDimensions	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedOrientation	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedPVRFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedTextureTarget	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureTarget	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureTarget@GLKTextureTarget2D	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureTarget@GLKTextureTargetCt	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKTextureTarget@GLKTextureTargetCubeMap	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKVertexAttrib	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKVertexAttrib@GLKVertexAttribColor	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKVertexAttrib@GLKVertexAttribNormal	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKVertexAttrib@GLKVertexAttribPosition	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord0	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord1	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGB565	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGBA8888	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatSRGBA8888	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat16	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat24	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormatNone	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisample4X	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisampleNone	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormat8	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormatNone	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Enum cases, inequality, hashing, and rawValue inits exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMathDegreesToRadians	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMathDegreesToRadians exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMathProject	declared	GLKMatrixMath.swift	GLKMathProject compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMathRadiansToDegrees	declared	GLKMatrixMath.swift	GLKMathRadiansToDegrees compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMathUnproject	declared	GLKMatrixMath.swift	GLKMathUnproject compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Add	declared	GLKMatrixMath.swift	GLKMatrix3Add compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3GetColumn	declared	GLKMatrixMath.swift	GLKMatrix3GetColumn compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3GetMatrix2	declared	GLKMatrixMath.swift	GLKMatrix3GetMatrix2 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3GetRow	declared	GLKMatrixMath.swift	GLKMatrix3GetRow compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Invert	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix3Invert exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3InvertAndTranspose	declared	GLKMatrixMath.swift	GLKMatrix3InvertAndTranspose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Make	declared	GLKMatrixMath.swift	GLKMatrix3Make compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeAndTranspose	declared	GLKMatrixMath.swift	GLKMatrix3MakeAndTranspose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeRotation	declared	GLKMatrixMath.swift	GLKMatrix3MakeRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeScale	declared	GLKMatrixMath.swift	GLKMatrix3MakeScale compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeWithArray	declared	GLKMatrixMath.swift	GLKMatrix3MakeWithArray compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeWithArrayAndTranspose	declared	GLKMatrixMath.swift	GLKMatrix3MakeWithArrayAndTranspose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeWithColumns	declared	GLKMatrixMath.swift	GLKMatrix3MakeWithColumns compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeWithQuaternion	declared	GLKMatrixMath.swift	GLKMatrix3MakeWithQuaternion compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeWithRows	declared	GLKMatrixMath.swift	GLKMatrix3MakeWithRows compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeXRotation	declared	GLKMatrixMath.swift	GLKMatrix3MakeXRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeYRotation	declared	GLKMatrixMath.swift	GLKMatrix3MakeYRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MakeZRotation	declared	GLKMatrixMath.swift	GLKMatrix3MakeZRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Multiply	declared	GLKMatrixMath.swift	GLKMatrix3Multiply compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MultiplyVector3	declared	GLKMatrixMath.swift	GLKMatrix3MultiplyVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3MultiplyVector3Array	declared	GLKMatrixMath.swift	GLKMatrix3MultiplyVector3Array compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Rotate	declared	GLKMatrixMath.swift	GLKMatrix3Rotate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3RotateWithVector3	declared	GLKMatrixMath.swift	GLKMatrix3RotateWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3RotateWithVector4	declared	GLKMatrixMath.swift	GLKMatrix3RotateWithVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3RotateX	declared	GLKMatrixMath.swift	GLKMatrix3RotateX compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3RotateY	declared	GLKMatrixMath.swift	GLKMatrix3RotateY compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3RotateZ	declared	GLKMatrixMath.swift	GLKMatrix3RotateZ compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Scale	declared	GLKMatrixMath.swift	GLKMatrix3Scale compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3ScaleWithVector3	declared	GLKMatrixMath.swift	GLKMatrix3ScaleWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3ScaleWithVector4	declared	GLKMatrixMath.swift	GLKMatrix3ScaleWithVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3SetColumn	declared	GLKMatrixMath.swift	GLKMatrix3SetColumn compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3SetRow	declared	GLKMatrixMath.swift	GLKMatrix3SetRow compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Subtract	declared	GLKMatrixMath.swift	GLKMatrix3Subtract compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix3Transpose	declared	GLKMatrixMath.swift	GLKMatrix3Transpose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Add	declared	GLKMatrixMath.swift	GLKMatrix4Add compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4GetColumn	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4GetColumn exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4GetMatrix2	declared	GLKMatrixMath.swift	GLKMatrix4GetMatrix2 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4GetMatrix3	declared	GLKMatrixMath.swift	GLKMatrix4GetMatrix3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4GetRow	declared	GLKMatrixMath.swift	GLKMatrix4GetRow compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Invert	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4Invert exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4InvertAndTranspose	declared	GLKMatrixMath.swift	GLKMatrix4InvertAndTranspose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Make	declared	GLKMatrixMath.swift	GLKMatrix4Make compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeAndTranspose	declared	GLKMatrixMath.swift	GLKMatrix4MakeAndTranspose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeFrustum	declared	GLKMatrixMath.swift	GLKMatrix4MakeFrustum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeLookAt	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4MakeLookAt exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeOrtho	declared	GLKMatrixMath.swift	GLKMatrix4MakeOrtho compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakePerspective	declared	GLKMatrixMath.swift	GLKMatrix4MakePerspective compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeRotation	declared	GLKMatrixMath.swift	GLKMatrix4MakeRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeScale	declared	GLKMatrixMath.swift	GLKMatrix4MakeScale compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeTranslation	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4MakeTranslation exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeWithArray	declared	GLKMatrixMath.swift	GLKMatrix4MakeWithArray compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeWithArrayAndTranspose	declared	GLKMatrixMath.swift	GLKMatrix4MakeWithArrayAndTranspose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeWithColumns	declared	GLKMatrixMath.swift	GLKMatrix4MakeWithColumns compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeWithQuaternion	declared	GLKMatrixMath.swift	GLKMatrix4MakeWithQuaternion compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeWithRows	declared	GLKMatrixMath.swift	GLKMatrix4MakeWithRows compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeXRotation	declared	GLKMatrixMath.swift	GLKMatrix4MakeXRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeYRotation	declared	GLKMatrixMath.swift	GLKMatrix4MakeYRotation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MakeZRotation	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4MakeZRotation exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Multiply	declared	GLKMatrixMath.swift	GLKMatrix4Multiply compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyAndProjectVector3	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4MultiplyAndProjectVector3 exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyAndProjectVector3Array	declared	GLKMatrixMath.swift	GLKMatrix4MultiplyAndProjectVector3Array compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyVector3	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4MultiplyVector3 exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyVector3Array	declared	GLKMatrixMath.swift	GLKMatrix4MultiplyVector3Array compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyVector3ArrayWithTranslation	declared	GLKMatrixMath.swift	GLKMatrix4MultiplyVector3ArrayWithTranslation compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyVector3WithTranslation	implemented	GLKMatrixMath.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4MultiplyVector3WithTranslation exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyVector4	declared	GLKMatrixMath.swift	GLKMatrix4MultiplyVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4MultiplyVector4Array	declared	GLKMatrixMath.swift	GLKMatrix4MultiplyVector4Array compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Rotate	declared	GLKMatrixMath.swift	GLKMatrix4Rotate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4RotateWithVector3	declared	GLKMatrixMath.swift	GLKMatrix4RotateWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4RotateWithVector4	declared	GLKMatrixMath.swift	GLKMatrix4RotateWithVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4RotateX	declared	GLKMatrixMath.swift	GLKMatrix4RotateX compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4RotateY	declared	GLKMatrixMath.swift	GLKMatrix4RotateY compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4RotateZ	declared	GLKMatrixMath.swift	GLKMatrix4RotateZ compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Scale	declared	GLKMatrixMath.swift	GLKMatrix4Scale compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4ScaleWithVector3	declared	GLKMatrixMath.swift	GLKMatrix4ScaleWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4ScaleWithVector4	declared	GLKMatrixMath.swift	GLKMatrix4ScaleWithVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4SetColumn	declared	GLKMatrixMath.swift	GLKMatrix4SetColumn compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4SetRow	declared	GLKMatrixMath.swift	GLKMatrix4SetRow compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Subtract	declared	GLKMatrixMath.swift	GLKMatrix4Subtract compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Translate	declared	GLKMatrixMath.swift	GLKMatrix4Translate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4TranslateWithVector3	declared	GLKMatrixMath.swift	GLKMatrix4TranslateWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4TranslateWithVector4	declared	GLKMatrixMath.swift	GLKMatrix4TranslateWithVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrix4Transpose	declared	GLKMatrixMath.swift	GLKMatrix4Transpose compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackCreate	declared	GLKMatrixStack.swift	GLKMatrixStackCreate compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix2	declared	GLKMatrixStack.swift	GLKMatrixStackGetMatrix2 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix3	declared	GLKMatrixStack.swift	GLKMatrixStackGetMatrix3 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix3Inverse	declared	GLKMatrixStack.swift	GLKMatrixStackGetMatrix3Inverse compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix3InverseTranspose	declared	GLKMatrixStack.swift	GLKMatrixStackGetMatrix3InverseTranspose compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix4	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStackGetMatrix4 exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix4Inverse	declared	GLKMatrixStack.swift	GLKMatrixStackGetMatrix4Inverse compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetMatrix4InverseTranspose	declared	GLKMatrixStack.swift	GLKMatrixStackGetMatrix4InverseTranspose compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackGetTypeID	declared	GLKMatrixStack.swift	GLKMatrixStackGetTypeID compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackLoadMatrix4	declared	GLKMatrixStack.swift	GLKMatrixStackLoadMatrix4 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackMultiplyMatrix4	declared	GLKMatrixStack.swift	GLKMatrixStackMultiplyMatrix4 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackMultiplyMatrixStack	declared	GLKMatrixStack.swift	GLKMatrixStackMultiplyMatrixStack compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackPop	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStackPop exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackPush	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStackPush exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackRotate	declared	GLKMatrixStack.swift	GLKMatrixStackRotate compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackRotateWithVector3	declared	GLKMatrixStack.swift	GLKMatrixStackRotateWithVector3 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackRotateWithVector4	declared	GLKMatrixStack.swift	GLKMatrixStackRotateWithVector4 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackRotateX	declared	GLKMatrixStack.swift	GLKMatrixStackRotateX compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackRotateY	declared	GLKMatrixStack.swift	GLKMatrixStackRotateY compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackRotateZ	declared	GLKMatrixStack.swift	GLKMatrixStackRotateZ compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackScale	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStackScale exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackScaleWithVector3	declared	GLKMatrixStack.swift	GLKMatrixStackScaleWithVector3 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackScaleWithVector4	declared	GLKMatrixStack.swift	GLKMatrixStackScaleWithVector4 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackSize	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStackSize exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackTranslate	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStackTranslate exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackTranslateWithVector3	declared	GLKMatrixStack.swift	GLKMatrixStackTranslateWithVector3 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKMatrixStackTranslateWithVector4	declared	GLKMatrixStack.swift	GLKMatrixStackTranslateWithVector4 compiles; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionAdd	declared	GLKQuaternionMath.swift	GLKQuaternionAdd compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionAngle	declared	GLKQuaternionMath.swift	GLKQuaternionAngle compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionAxis	declared	GLKQuaternionMath.swift	GLKQuaternionAxis compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionConjugate	declared	GLKQuaternionMath.swift	GLKQuaternionConjugate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionInvert	declared	GLKQuaternionMath.swift	GLKQuaternionInvert compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionLength	declared	GLKQuaternionMath.swift	GLKQuaternionLength compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMake	declared	GLKQuaternionMath.swift	GLKQuaternionMake compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMakeWithAngleAndAxis	implemented	GLKQuaternionMath.swift;tests/agent/GLKitRuntime.swift	GLKQuaternionMakeWithAngleAndAxis exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMakeWithAngleAndVector3Axis	declared	GLKQuaternionMath.swift	GLKQuaternionMakeWithAngleAndVector3Axis compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMakeWithArray	declared	GLKQuaternionMath.swift	GLKQuaternionMakeWithArray compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMakeWithMatrix3	declared	GLKQuaternionMath.swift	GLKQuaternionMakeWithMatrix3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMakeWithMatrix4	declared	GLKQuaternionMath.swift	GLKQuaternionMakeWithMatrix4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMakeWithVector3	declared	GLKQuaternionMath.swift	GLKQuaternionMakeWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionMultiply	declared	GLKQuaternionMath.swift	GLKQuaternionMultiply compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionNormalize	declared	GLKQuaternionMath.swift	GLKQuaternionNormalize compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionRotateVector3	implemented	GLKQuaternionMath.swift;tests/agent/GLKitRuntime.swift	GLKQuaternionRotateVector3 exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionRotateVector3Array	declared	GLKQuaternionMath.swift	GLKQuaternionRotateVector3Array compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionRotateVector4	declared	GLKQuaternionMath.swift	GLKQuaternionRotateVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionRotateVector4Array	declared	GLKQuaternionMath.swift	GLKQuaternionRotateVector4Array compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionSlerp	declared	GLKQuaternionMath.swift	GLKQuaternionSlerp compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKQuaternionSubtract	declared	GLKQuaternionMath.swift	GLKQuaternionSubtract compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Add	declared	GLKVectorMath.swift	GLKVector2Add compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AddScalar	declared	GLKVectorMath.swift	GLKVector2AddScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AllEqualToScalar	declared	GLKVectorMath.swift	GLKVector2AllEqualToScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AllEqualToVector2	declared	GLKVectorMath.swift	GLKVector2AllEqualToVector2 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AllGreaterThanOrEqualToScalar	declared	GLKVectorMath.swift	GLKVector2AllGreaterThanOrEqualToScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AllGreaterThanOrEqualToVector2	declared	GLKVectorMath.swift	GLKVector2AllGreaterThanOrEqualToVector2 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AllGreaterThanScalar	declared	GLKVectorMath.swift	GLKVector2AllGreaterThanScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2AllGreaterThanVector2	declared	GLKVectorMath.swift	GLKVector2AllGreaterThanVector2 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Distance	declared	GLKVectorMath.swift	GLKVector2Distance compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Divide	declared	GLKVectorMath.swift	GLKVector2Divide compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2DivideScalar	declared	GLKVectorMath.swift	GLKVector2DivideScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2DotProduct	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector2DotProduct exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Length	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector2Length exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Lerp	declared	GLKVectorMath.swift	GLKVector2Lerp compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Make	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector2Make exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2MakeWithArray	declared	GLKVectorMath.swift	GLKVector2MakeWithArray compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Maximum	declared	GLKVectorMath.swift	GLKVector2Maximum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Minimum	declared	GLKVectorMath.swift	GLKVector2Minimum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Multiply	declared	GLKVectorMath.swift	GLKVector2Multiply compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2MultiplyScalar	declared	GLKVectorMath.swift	GLKVector2MultiplyScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Negate	declared	GLKVectorMath.swift	GLKVector2Negate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Normalize	declared	GLKVectorMath.swift	GLKVector2Normalize compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Project	declared	GLKVectorMath.swift	GLKVector2Project compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2Subtract	declared	GLKVectorMath.swift	GLKVector2Subtract compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector2SubtractScalar	declared	GLKVectorMath.swift	GLKVector2SubtractScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Add	declared	GLKVectorMath.swift	GLKVector3Add compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AddScalar	declared	GLKVectorMath.swift	GLKVector3AddScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AllEqualToScalar	declared	GLKVectorMath.swift	GLKVector3AllEqualToScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AllEqualToVector3	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector3AllEqualToVector3 exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AllGreaterThanOrEqualToScalar	declared	GLKVectorMath.swift	GLKVector3AllGreaterThanOrEqualToScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AllGreaterThanOrEqualToVector3	declared	GLKVectorMath.swift	GLKVector3AllGreaterThanOrEqualToVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AllGreaterThanScalar	declared	GLKVectorMath.swift	GLKVector3AllGreaterThanScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3AllGreaterThanVector3	declared	GLKVectorMath.swift	GLKVector3AllGreaterThanVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3CrossProduct	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector3CrossProduct exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Distance	declared	GLKVectorMath.swift	GLKVector3Distance compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Divide	declared	GLKVectorMath.swift	GLKVector3Divide compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3DivideScalar	declared	GLKVectorMath.swift	GLKVector3DivideScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3DotProduct	declared	GLKVectorMath.swift	GLKVector3DotProduct compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Length	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector3Length exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Lerp	declared	GLKVectorMath.swift	GLKVector3Lerp compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Make	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector3Make exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3MakeWithArray	declared	GLKVectorMath.swift	GLKVector3MakeWithArray compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Maximum	declared	GLKVectorMath.swift	GLKVector3Maximum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Minimum	declared	GLKVectorMath.swift	GLKVector3Minimum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Multiply	declared	GLKVectorMath.swift	GLKVector3Multiply compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3MultiplyScalar	declared	GLKVectorMath.swift	GLKVector3MultiplyScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Negate	declared	GLKVectorMath.swift	GLKVector3Negate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Normalize	declared	GLKVectorMath.swift	GLKVector3Normalize compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Project	declared	GLKVectorMath.swift	GLKVector3Project compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3Subtract	declared	GLKVectorMath.swift	GLKVector3Subtract compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector3SubtractScalar	declared	GLKVectorMath.swift	GLKVector3SubtractScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Add	declared	GLKVectorMath.swift	GLKVector4Add compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AddScalar	declared	GLKVectorMath.swift	GLKVector4AddScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AllEqualToScalar	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector4AllEqualToScalar exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AllEqualToVector4	declared	GLKVectorMath.swift	GLKVector4AllEqualToVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AllGreaterThanOrEqualToScalar	declared	GLKVectorMath.swift	GLKVector4AllGreaterThanOrEqualToScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AllGreaterThanOrEqualToVector4	declared	GLKVectorMath.swift	GLKVector4AllGreaterThanOrEqualToVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AllGreaterThanScalar	declared	GLKVectorMath.swift	GLKVector4AllGreaterThanScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4AllGreaterThanVector4	declared	GLKVectorMath.swift	GLKVector4AllGreaterThanVector4 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4CrossProduct	declared	GLKVectorMath.swift	GLKVector4CrossProduct compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Distance	declared	GLKVectorMath.swift	GLKVector4Distance compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Divide	declared	GLKVectorMath.swift	GLKVector4Divide compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4DivideScalar	declared	GLKVectorMath.swift	GLKVector4DivideScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4DotProduct	declared	GLKVectorMath.swift	GLKVector4DotProduct compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Length	declared	GLKVectorMath.swift	GLKVector4Length compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Lerp	declared	GLKVectorMath.swift	GLKVector4Lerp compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Make	implemented	GLKVectorMath.swift;tests/agent/GLKitRuntime.swift	GLKVector4Make exercised by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4MakeWithArray	declared	GLKVectorMath.swift	GLKVector4MakeWithArray compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4MakeWithVector3	declared	GLKVectorMath.swift	GLKVector4MakeWithVector3 compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Maximum	declared	GLKVectorMath.swift	GLKVector4Maximum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Minimum	declared	GLKVectorMath.swift	GLKVector4Minimum compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Multiply	declared	GLKVectorMath.swift	GLKVector4Multiply compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4MultiplyScalar	declared	GLKVectorMath.swift	GLKVector4MultiplyScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Negate	declared	GLKVectorMath.swift	GLKVector4Negate compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Normalize	declared	GLKVectorMath.swift	GLKVector4Normalize compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Project	declared	GLKVectorMath.swift	GLKVector4Project compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4Subtract	declared	GLKVectorMath.swift	GLKVector4Subtract compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
-c:@F@GLKVector4SubtractScalar	declared	GLKVectorMath.swift	GLKVector4SubtractScalar compiles matching public inline headers; not called by tests/agent/GLKitRuntime.swift
+c:@E@GLKFogMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+c:@E@GLKFogMode@GLKFogModeExp	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+c:@E@GLKFogMode@GLKFogModeExp2	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+c:@E@GLKFogMode@GLKFogModeLinear	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+c:@E@GLKLightingType	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+c:@E@GLKLightingType@GLKLightingTypePerPixel	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+c:@E@GLKLightingType@GLKLightingTypePerVertex	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+c:@E@GLKTextureEnvMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeDecal	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeModulate	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeReplace	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoAlphaState	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNonPremultiplied	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNone	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStatePremultiplied	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoOrigin	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginBottomLeft	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginTopLeft	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginUnknown	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorAlphaPremultiplicationFailure	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCompressedTextureUpload	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCubeMapInvalidNumFiles	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorDataPreprocessingFailure	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorFileOrURLNotFound	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorIncompatibleFormatSRGB	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidCGImage	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidEAGLContext	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidNSData	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorMipmapUnsupported	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorPVRAtlasUnsupported	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorReorientationFailure	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUncompressedTextureUpload	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownFileType	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownPathType	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedBitDepth	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedCubeMapDimensions	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedOrientation	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedPVRFormat	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedTextureTarget	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+c:@E@GLKTextureTarget	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+c:@E@GLKTextureTarget@GLKTextureTarget2D	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+c:@E@GLKTextureTarget@GLKTextureTargetCt	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+c:@E@GLKTextureTarget@GLKTextureTargetCubeMap	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+c:@E@GLKVertexAttrib	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+c:@E@GLKVertexAttrib@GLKVertexAttribColor	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+c:@E@GLKVertexAttrib@GLKVertexAttribNormal	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+c:@E@GLKVertexAttrib@GLKVertexAttribPosition	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord0	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord1	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableColorFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGB565	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGBA8888	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatSRGBA8888	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableDepthFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat16	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat24	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormatNone	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableMultisample	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisample4X	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisampleNone	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableStencilFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormat8	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormatNone	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+c:@F@GLKMathDegreesToRadians	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMathAngleConversion	Exercised by the cited focused agent test.
+c:@F@GLKMathProject	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMathProjectUnproject	Exercised by the cited focused agent test.
+c:@F@GLKMathRadiansToDegrees	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMathAngleConversion	Exercised by the cited focused agent test.
+c:@F@GLKMathUnproject	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMathProjectUnproject	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Add	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3GetColumn	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3GetMatrix2	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3GetRow	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Invert	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Invert	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3InvertAndTranspose	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Invert	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Make	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeAndTranspose	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeRotation	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeScale	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeWithArray	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeWithArrayAndTranspose	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeWithColumns	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeWithQuaternion	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeWithRows	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeXRotation	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeYRotation	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MakeZRotation	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Multiply	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MultiplyVector3	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3MultiplyVector3Array	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Rotate	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3RotateWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3RotateWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3RotateX	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3RotateY	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3RotateZ	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Scale	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3ScaleWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3ScaleWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3MultiplyAndTransform	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3SetColumn	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3SetRow	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Subtract	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix3Transpose	implemented	test:full/glkit/tests/agent/GLKMatrix3Tests.swift#testGLKMatrix3Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Add	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4GetColumn	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4GetMatrix2	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4GetMatrix3	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4GetRow	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Invert	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Invert	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4InvertAndTranspose	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Invert	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Make	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeAndTranspose	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeFrustum	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeLookAt	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeOrtho	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakePerspective	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeRotation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeScale	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeTranslation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeWithArray	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeWithArrayAndTranspose	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeWithColumns	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeWithQuaternion	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeWithRows	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeXRotation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeYRotation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MakeZRotation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Make	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Multiply	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyAndProjectVector3	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyAndProjectVector3Array	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4VectorArrays	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyVector3	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyVector3Array	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4VectorArrays	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyVector3ArrayWithTranslation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4VectorArrays	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyVector3WithTranslation	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyVector4	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Projection	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4MultiplyVector4Array	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4VectorArrays	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Rotate	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4RotateWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4RotateWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4RotateX	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4RotateY	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4RotateZ	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Scale	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4ScaleWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4ScaleWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4SetColumn	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4SetRow	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Subtract	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Translate	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4TranslateWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4TranslateWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4TranslateScaleRotate	Exercised by the cited focused agent test.
+c:@F@GLKMatrix4Transpose	implemented	test:full/glkit/tests/agent/GLKMatrix4Tests.swift#testGLKMatrix4Accessors	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackCreate	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix2	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackInverses	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix3	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackInverses	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix3Inverse	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackInverses	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix3InverseTranspose	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackInverses	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix4	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackIdentity	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix4Inverse	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetMatrix4InverseTranspose	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackGetTypeID	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackLoadMatrix4	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackIdentity	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackMultiplyMatrix4	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackMultiplyMatrixStack	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackPop	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackPush	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackRotate	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackRotateWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackRotateWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackRotateX	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackRotateY	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackRotateZ	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackScale	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackScaleWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackScaleWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackSize	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackTranslate	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackTranslateWithVector3	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKMatrixStackTranslateWithVector4	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackTransforms	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionAdd	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionAngle	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionRotation	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionAxis	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionRotation	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionConjugate	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionInvert	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionLength	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMake	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMakeWithAngleAndAxis	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMakeWithAngleAndVector3Axis	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMakeWithArray	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMakeWithMatrix3	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMakeWithMatrix4	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMakeWithVector3	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionMake	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionMultiply	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionNormalize	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionRotateVector3	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionRotation	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionRotateVector3Array	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionRotation	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionRotateVector4	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionRotation	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionRotateVector4Array	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionRotation	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionSlerp	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionSlerp	Exercised by the cited focused agent test.
+c:@F@GLKQuaternionSubtract	implemented	test:full/glkit/tests/agent/GLKQuaternionTests.swift#testGLKQuaternionAlgebra	Exercised by the cited focused agent test.
+c:@F@GLKVector2Add	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2AddScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2AllEqualToScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector2AllEqualToVector2	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector2AllGreaterThanOrEqualToScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector2AllGreaterThanOrEqualToVector2	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector2AllGreaterThanScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector2AllGreaterThanVector2	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector2Distance	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector2Divide	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2DivideScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2DotProduct	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector2Length	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector2Lerp	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector2Make	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Make	Exercised by the cited focused agent test.
+c:@F@GLKVector2MakeWithArray	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Make	Exercised by the cited focused agent test.
+c:@F@GLKVector2Maximum	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2Minimum	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2Multiply	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2MultiplyScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2Negate	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2Normalize	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector2Project	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector2Subtract	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector2SubtractScalar	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3Add	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3AddScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3AllEqualToScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector3AllEqualToVector3	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector3AllGreaterThanOrEqualToScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector3AllGreaterThanOrEqualToVector3	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector3AllGreaterThanScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector3AllGreaterThanVector3	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector3CrossProduct	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Distance	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Divide	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3DivideScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3DotProduct	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Length	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Lerp	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Make	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Make	Exercised by the cited focused agent test.
+c:@F@GLKVector3MakeWithArray	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Make	Exercised by the cited focused agent test.
+c:@F@GLKVector3Maximum	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3Minimum	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3Multiply	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3MultiplyScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3Negate	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3Normalize	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Project	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector3Subtract	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector3SubtractScalar	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4Add	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4AddScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4AllEqualToScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector4AllEqualToVector4	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector4AllGreaterThanOrEqualToScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector4AllGreaterThanOrEqualToVector4	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector4AllGreaterThanScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector4AllGreaterThanVector4	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Comparisons	Exercised by the cited focused agent test.
+c:@F@GLKVector4CrossProduct	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Distance	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Divide	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4DivideScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4DotProduct	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Length	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Lerp	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Make	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Make	Exercised by the cited focused agent test.
+c:@F@GLKVector4MakeWithArray	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Make	Exercised by the cited focused agent test.
+c:@F@GLKVector4MakeWithVector3	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Make	Exercised by the cited focused agent test.
+c:@F@GLKVector4Maximum	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4Minimum	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4Multiply	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4MultiplyScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4Negate	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4Normalize	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Project	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Geometry	Exercised by the cited focused agent test.
+c:@F@GLKVector4Subtract	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
+c:@F@GLKVector4SubtractScalar	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Arithmetic	Exercised by the cited focused agent test.
 c:@F@GLKVertexAttributeParametersFromModelIO	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-c:@F@NSStringFromGLKMatrix2	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@F@NSStringFromGLKMatrix3	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@F@NSStringFromGLKMatrix4	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@F@NSStringFromGLKQuaternion	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@F@NSStringFromGLKVector2	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@F@NSStringFromGLKVector3	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@F@NSStringFromGLKVector4	declared	GLKit.swift	Compiles; Apple NSString format payload is unobserved
-c:@GLKMatrix3Identity	implemented	GLKit.swift;tests/agent/GLKitRuntime.swift	GLKMatrix3Identity exercised by tests/agent/GLKitRuntime.swift
-c:@GLKMatrix4Identity	implemented	GLKit.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4Identity exercised by tests/agent/GLKitRuntime.swift
-c:@GLKQuaternionIdentity	implemented	GLKit.swift;tests/agent/GLKitRuntime.swift	GLKQuaternionIdentity exercised by tests/agent/GLKitRuntime.swift
-c:@GLKTextureLoaderApplyPremultiplication	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderErrorDomain	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderErrorKey	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderGLErrorKey	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderGenerateMipmaps	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderGrayscaleAsAlpha	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderOriginBottomLeft	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@GLKTextureLoaderSRGB	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@T@GLKEffectPropertyPrvPtr	declared	GLKit.swift	OpaquePointer alias compiles; private-pointer payload is unobserved
-c:@T@GLKMatrix2	declared	GLKMathTypes.swift	GLKMatrix2 compiles; not used by tests/agent/GLKitRuntime.swift
-c:@T@GLKMatrix3	implemented	GLKMathTypes.swift;tests/agent/GLKitRuntime.swift	GLKMatrix3 values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKMatrix4	implemented	GLKMathTypes.swift;tests/agent/GLKitRuntime.swift	GLKMatrix4 values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKMatrixStackRef	implemented	GLKMatrixStack.swift;tests/agent/GLKitRuntime.swift	GLKMatrixStack values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKQuaternion	implemented	GLKMathTypes.swift;tests/agent/GLKitRuntime.swift	GLKQuaternion values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKTextureLoaderCallback	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	Callback type exercised by fail-closed completion in tests/agent/GLKitRuntime.swift
-c:@T@GLKVector2	implemented	GLKMathTypes.swift;tests/agent/GLKitRuntime.swift	GLKVector2 values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKVector3	implemented	GLKMathTypes.swift;tests/agent/GLKitRuntime.swift	GLKVector3 values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKVector4	implemented	GLKMathTypes.swift;tests/agent/GLKitRuntime.swift	GLKVector4 values exercised by tests/agent/GLKitRuntime.swift
-c:@T@GLKVertexAttributeParameters	declared	GLKMathTypes.swift	GLKVertexAttributeParameters compiles; not used by tests/agent/GLKitRuntime.swift
-c:@kGLKModelErrorDomain	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:@kGLKModelErrorKey	declared	GLKit.swift	Identifier-as-string constant; Apple binary payload is unobserved
-c:objc(cs)GLKBaseEffect	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(im)prepareToDraw	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)colorMaterialEnabled	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)constantColor	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)fog	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)label	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)light0	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)light1	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)light2	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)lightModelAmbientColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)lightModelTwoSided	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)lightingType	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)material	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)texture2d0	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)texture2d1	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)textureOrder	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKBaseEffect(py)transform	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKBaseEffect(py)useConstantColor	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectProperty	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyFog	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyFog(py)color	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyFog(py)density	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyFog(py)enabled	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyFog(py)end	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyFog(py)mode	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyFog(py)start	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)ambientColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)constantAttenuation	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)diffuseColor	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyLight(py)enabled	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyLight(py)linearAttenuation	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)position	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyLight(py)quadraticAttenuation	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)specularColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)spotCutoff	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)spotDirection	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)spotExponent	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyLight(py)transform	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyMaterial	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyMaterial(py)ambientColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyMaterial(py)diffuseColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyMaterial(py)emissiveColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyMaterial(py)shininess	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyMaterial(py)specularColor	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyTexture	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyTexture(py)enabled	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyTexture(py)envMode	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyTexture(py)name	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKEffectPropertyTexture(py)target	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyTransform	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyTransform(py)modelviewMatrix	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyTransform(py)normalMatrix	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKEffectPropertyTransform(py)projectionMatrix	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
+c:@F@NSStringFromGLKMatrix2	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKMatrices	Exercised by the cited focused agent test.
+c:@F@NSStringFromGLKMatrix3	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKMatrices	Exercised by the cited focused agent test.
+c:@F@NSStringFromGLKMatrix4	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKMatrices	Exercised by the cited focused agent test.
+c:@F@NSStringFromGLKQuaternion	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKVectors	Exercised by the cited focused agent test.
+c:@F@NSStringFromGLKVector2	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKVectors	Exercised by the cited focused agent test.
+c:@F@NSStringFromGLKVector3	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKVectors	Exercised by the cited focused agent test.
+c:@F@NSStringFromGLKVector4	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKVectors	Exercised by the cited focused agent test.
+c:@GLKMatrix3Identity	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKIdentityConstants	Exercised by the cited focused agent test.
+c:@GLKMatrix4Identity	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKIdentityConstants	Exercised by the cited focused agent test.
+c:@GLKQuaternionIdentity	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKIdentityConstants	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderApplyPremultiplication	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderErrorDomain	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderErrorKey	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderGLErrorKey	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderGenerateMipmaps	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderGrayscaleAsAlpha	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderOriginBottomLeft	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@GLKTextureLoaderSRGB	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderOptionKeys	Exercised by the cited focused agent test.
+c:@T@GLKEffectPropertyPrvPtr	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKEffectPropertyPrvPtr	Exercised by the cited focused agent test.
+c:@T@GLKMatrix2	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testNSStringFromGLKMatrices	Exercised by the cited focused agent test.
+c:@T@GLKMatrix3	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKIdentityConstants	Exercised by the cited focused agent test.
+c:@T@GLKMatrix4	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKIdentityConstants	Exercised by the cited focused agent test.
+c:@T@GLKMatrixStackRef	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+c:@T@GLKQuaternion	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKIdentityConstants	Exercised by the cited focused agent test.
+c:@T@GLKTextureLoaderCallback	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:@T@GLKVector2	implemented	test:full/glkit/tests/agent/GLKVector2Tests.swift#testGLKVector2Make	Exercised by the cited focused agent test.
+c:@T@GLKVector3	implemented	test:full/glkit/tests/agent/GLKVector3Tests.swift#testGLKVector3Make	Exercised by the cited focused agent test.
+c:@T@GLKVector4	implemented	test:full/glkit/tests/agent/GLKVector4Tests.swift#testGLKVector4Make	Exercised by the cited focused agent test.
+c:@T@GLKVertexAttributeParameters	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKVertexAttributeParameters	Exercised by the cited focused agent test.
+c:@kGLKModelErrorDomain	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKModelErrorConstants	Exercised by the cited focused agent test.
+c:@kGLKModelErrorKey	implemented	test:full/glkit/tests/agent/GLKStringAndTypeTests.swift#testGLKModelErrorConstants	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(im)prepareToDraw	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKNamedEffectPrepareToDraw	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)colorMaterialEnabled	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)constantColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)fog	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)label	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)light0	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)light1	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)light2	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)lightModelAmbientColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)lightModelTwoSided	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)lightingType	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)material	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)texture2d0	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)texture2d1	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)textureOrder	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)transform	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKBaseEffect(py)useConstantColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectProperty	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog(py)color	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog(py)density	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog(py)enabled	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog(py)end	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog(py)mode	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyFog(py)start	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)ambientColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)constantAttenuation	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)diffuseColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)enabled	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)linearAttenuation	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)position	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)quadraticAttenuation	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)specularColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)spotCutoff	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)spotDirection	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)spotExponent	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyLight(py)transform	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectLights	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyMaterial	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyMaterial(py)ambientColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyMaterial(py)diffuseColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyMaterial(py)emissiveColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyMaterial(py)shininess	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyMaterial(py)specularColor	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTexture	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTexture(py)enabled	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTexture(py)envMode	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTexture(py)name	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTexture(py)target	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKEffectMaterialFogTexture	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTransform	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTransform(py)modelviewMatrix	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTransform(py)normalMatrix	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
+c:objc(cs)GLKEffectPropertyTransform(py)projectionMatrix	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKBaseEffectStorage	Exercised by the cited focused agent test.
 c:objc(cs)GLKMesh	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKMesh(cm)newMeshesFromAsset:sourceMeshes:error:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKMesh(im)initWithMesh:error:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
@@ -378,20 +378,20 @@ c:objc(cs)GLKMeshBuffer(py)length	deferred		Blocked: guest OpenGLES/UIKit/CoreGr
 c:objc(cs)GLKMeshBuffer(py)offset	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKMeshBuffer(py)type	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKMeshBufferAllocator	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-c:objc(cs)GLKReflectionMapEffect	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKReflectionMapEffect(im)prepareToDraw	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKReflectionMapEffect(py)matrix	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKReflectionMapEffect(py)textureCubeMap	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKSkyboxEffect	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKSkyboxEffect(im)draw	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKSkyboxEffect(im)prepareToDraw	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKSkyboxEffect(py)center	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKSkyboxEffect(py)label	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKSkyboxEffect(py)textureCubeMap	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKSkyboxEffect(py)transform	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(cs)GLKSkyboxEffect(py)xSize	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKSkyboxEffect(py)ySize	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKSkyboxEffect(py)zSize	implemented	GLKEffects.swift;tests/agent/GLKitRuntime.swift	CPU property storage round-trip in tests/agent/GLKitRuntime.swift
+c:objc(cs)GLKReflectionMapEffect	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKReflectionMapEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKReflectionMapEffect(im)prepareToDraw	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKReflectionMapEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKReflectionMapEffect(py)matrix	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKReflectionMapEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKReflectionMapEffect(py)textureCubeMap	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKReflectionMapEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(im)draw	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(im)prepareToDraw	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)center	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)label	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)textureCubeMap	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)transform	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)xSize	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)ySize	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
+c:objc(cs)GLKSkyboxEffect(py)zSize	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKSkyboxEffect	Exercised by the cited focused agent test.
 c:objc(cs)GLKSubmesh	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKSubmesh(py)elementBuffer	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKSubmesh(py)elementCount	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
@@ -399,35 +399,35 @@ c:objc(cs)GLKSubmesh(py)mesh	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphic
 c:objc(cs)GLKSubmesh(py)mode	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKSubmesh(py)name	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKSubmesh(py)type	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-c:objc(cs)GLKTextureInfo	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)alphaState	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)arrayLength	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)containsMipmaps	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)depth	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)height	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)mimapLevelCount	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)name	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)target	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)textureOrigin	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureInfo(py)width	declared	GLKTexture.swift	Class compiles; no successful GPU texture is vended on this host
-c:objc(cs)GLKTextureLoader	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoader constructs on this host; sharegroup init is deferred until OpenGLES
-c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFile:options:error:	declared	GLKTexture.swift	Fail-closed throw compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFiles:options:error:	declared	GLKTexture.swift	Fail-closed throw compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfURL:options:error:	declared	GLKTexture.swift	Fail-closed throw compiles; this overload is not called by tests/agent/GLKitRuntime.swift
+c:objc(cs)GLKTextureInfo	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)alphaState	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)arrayLength	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)containsMipmaps	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)depth	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)height	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)mimapLevelCount	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)name	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)target	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)textureOrigin	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureInfo(py)width	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureInfoEmpty	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFile:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderCubeMapFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFiles:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderCubeMapFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfURL:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderCubeMapFailClosed	Exercised by the cited focused agent test.
 c:objc(cs)GLKTextureLoader(cm)textureWithCGImage:options:error:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfData:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	Fail-closed throw exercised by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfFile:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	Fail-closed throw exercised by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfURL:options:error:	declared	GLKTexture.swift	Fail-closed throw compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(cm)textureWithName:scaleFactor:bundle:options:error:	declared	GLKTexture.swift	Fail-closed throw compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFile:options:queue:completionHandler:	declared	GLKTexture.swift	Fail-closed completion compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFiles:options:queue:completionHandler:	declared	GLKTexture.swift	Fail-closed completion compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfURL:options:queue:completionHandler:	declared	GLKTexture.swift	Fail-closed completion compiles; this overload is not called by tests/agent/GLKitRuntime.swift
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfData:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderSyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfFile:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderSyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfURL:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderSyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(cm)textureWithName:scaleFactor:bundle:options:error:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderSyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFile:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFiles:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfURL:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
 c:objc(cs)GLKTextureLoader(im)initWithSharegroup:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKTextureLoader(im)textureWithCGImage:options:queue:completionHandler:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-c:objc(cs)GLKTextureLoader(im)textureWithContentsOfData:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	Fail-closed completion delivered exactly once, non-inline, on the caller-provided queue; tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(im)textureWithContentsOfFile:options:queue:completionHandler:	declared	GLKTexture.swift	Fail-closed completion compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(im)textureWithContentsOfURL:options:queue:completionHandler:	declared	GLKTexture.swift	Fail-closed completion compiles; this overload is not called by tests/agent/GLKitRuntime.swift
-c:objc(cs)GLKTextureLoader(im)textureWithName:scaleFactor:bundle:options:queue:completionHandler:	declared	GLKTexture.swift	Fail-closed completion compiles; this overload is not called by tests/agent/GLKitRuntime.swift
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfData:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfFile:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfURL:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
+c:objc(cs)GLKTextureLoader(im)textureWithName:scaleFactor:bundle:options:queue:completionHandler:	implemented	test:full/glkit/tests/agent/GLKTextureLoaderTests.swift#testGLKTextureLoaderAsyncFailClosed	Exercised by the cited focused agent test.
 c:objc(cs)GLKView	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKView(im)bindDrawable	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKView(im)deleteDrawable	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
@@ -455,97 +455,97 @@ c:objc(cs)GLKViewController(py)timeSinceFirstResume	deferred		Blocked: guest Ope
 c:objc(cs)GLKViewController(py)timeSinceLastDraw	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKViewController(py)timeSinceLastResume	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(cs)GLKViewController(py)timeSinceLastUpdate	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-c:objc(pl)GLKNamedEffect	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
-c:objc(pl)GLKNamedEffect(im)prepareToDraw	declared	GLKEffects.swift	Compiles as CPU storage; Apple default values and GPU prepareToDraw are unobserved
+c:objc(pl)GLKNamedEffect	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKNamedEffectPrepareToDraw	Exercised by the cited focused agent test.
+c:objc(pl)GLKNamedEffect(im)prepareToDraw	implemented	test:full/glkit/tests/agent/GLKEffectTests.swift#testGLKNamedEffectPrepareToDraw	Exercised by the cited focused agent test.
 c:objc(pl)GLKViewControllerDelegate	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(pl)GLKViewControllerDelegate(im)glkViewController:willPause:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(pl)GLKViewControllerDelegate(im)glkViewControllerUpdate:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(pl)GLKViewDelegate	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
 c:objc(pl)GLKViewDelegate(im)glkView:drawInRect:	deferred		Blocked: guest OpenGLES/UIKit/CoreGraphics/ModelIO modules are not importable here; GLKit does not define lookalike dependency types
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; Apple error-domain payload is unobserved
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; error userInfo payload is unobserved
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	error.code / errorCode exercised by tests/agent/GLKitRuntime.swift
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; pattern-match helper is not called by tests/agent/GLKitRuntime.swift
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; error userInfo payload is unobserved
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; GLKTextureLoaderError instance equality is not asserted by tests/agent/GLKitRuntime.swift
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	error.code / errorCode exercised by tests/agent/GLKitRuntime.swift
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; GLKTextureLoaderError instance hashing is not asserted by tests/agent/GLKitRuntime.swift
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; error userInfo payload is unobserved
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	error.code / errorCode exercised by tests/agent/GLKitRuntime.swift
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; GLKTextureLoaderError instance hashing is not asserted by tests/agent/GLKitRuntime.swift
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError(code) constructed in tests/agent/GLKitRuntime.swift
-s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	declared	GLKMatrixStack.swift	NSObject hash/equality compile; CFObject witnesses are not asserted by tests/agent/GLKitRuntime.swift
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@GLKMatrixStackRef	declared	GLKMatrixStack.swift	NSObject hash/equality compile; CFObject witnesses are not asserted by tests/agent/GLKitRuntime.swift
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@GLKMatrixStackRef	declared	GLKMatrixStack.swift	NSObject hash/equality compile; CFObject witnesses are not asserted by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV11errorDomainSSvpZ	declared	GLKEnums.swift	Compiles; Apple error-domain payload is unobserved
-s:SC21GLKTextureLoaderErrorLeV13invalidNSDataSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV14invalidCGImageSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV15unknownFileTypeSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV15unknownPathTypeSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV17fileOrURLNotFoundSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV17mipmapUnsupportedSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV18invalidEAGLContextSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV19pvrAtlasUnsupportedSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV19unsupportedBitDepthSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV20reorientationFailureSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV20unsupportedPVRFormatSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV22cubeMapInvalidNumFilesSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV22incompatibleFormatSRGBSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV22unsupportedOrientationSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV23compressedTextureUploadSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV24dataPreprocessingFailureSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV24unsupportedTextureTargetSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV25uncompressedTextureUploadSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV28unsupportedCubeMapDimensionsSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SC21GLKTextureLoaderErrorLeV29alphaPremultiplicationFailureSoAAVvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	GLKTextureLoaderError.Code raw values 0-19 exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKFogMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKLightingType	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; != on GLKTextureLoaderError.Code is not called by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Equatable != exercised by tests/agent/GLKitRuntime.swift
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	declared	GLKMatrixStack.swift	NSObject hash/equality compile; CFObject witnesses are not asserted by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKFogMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKLightingType	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKFogMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKLightingType	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	Hashable witnesses exercised by tests/agent/GLKitRuntime.swift
-s:So10GLKFogModeV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So15GLKLightingTypeV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So15GLKVertexAttribV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So16GLKTextureTargetV8rawValueABSgs6UInt32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So17GLKTextureEnvModeV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So20GLKTextureInfoOriginV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So21GLKTextureLoaderErrorV8rawValueABSgs6UInt32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So24GLKTextureInfoAlphaStateV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So26GLKViewDrawableColorFormatV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So26GLKViewDrawableDepthFormatV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So26GLKViewDrawableMultisampleV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:So28GLKViewDrawableStencilFormatV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	rawValue inits exercised by tests/agent/GLKitRuntime.swift
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	declared	GLKEnums.swift	Compiles; localizedDescription is not asserted by tests/agent/GLKitRuntime.swift
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV11errorDomainSSvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV13invalidNSDataSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV14invalidCGImageSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV15unknownFileTypeSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV15unknownPathTypeSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV17fileOrURLNotFoundSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV17mipmapUnsupportedSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV18invalidEAGLContextSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV19pvrAtlasUnsupportedSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV19unsupportedBitDepthSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV20reorientationFailureSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV20unsupportedPVRFormatSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV22cubeMapInvalidNumFilesSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV22incompatibleFormatSRGBSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV22unsupportedOrientationSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV23compressedTextureUploadSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV24dataPreprocessingFailureSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV24unsupportedTextureTargetSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV25uncompressedTextureUploadSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV28unsupportedCubeMapDimensionsSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SC21GLKTextureLoaderErrorLeV29alphaPremultiplicationFailureSoAAVvpZ	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKFogMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKLightingType	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	test:full/glkit/tests/agent/GLKMatrixStackTests.swift#testGLKMatrixStackCreatePushPop	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKFogMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKLightingType	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKFogMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKLightingType	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+s:So10GLKFogModeV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKFogMode	Exercised by the cited focused agent test.
+s:So15GLKLightingTypeV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKLightingType	Exercised by the cited focused agent test.
+s:So15GLKVertexAttribV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKVertexAttrib	Exercised by the cited focused agent test.
+s:So16GLKTextureTargetV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureTarget	Exercised by the cited focused agent test.
+s:So17GLKTextureEnvModeV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureEnvMode	Exercised by the cited focused agent test.
+s:So20GLKTextureInfoOriginV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoOrigin	Exercised by the cited focused agent test.
+s:So21GLKTextureLoaderErrorV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorCodes	Exercised by the cited focused agent test.
+s:So24GLKTextureInfoAlphaStateV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKTextureInfoAlphaState	Exercised by the cited focused agent test.
+s:So26GLKViewDrawableColorFormatV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableColorFormat	Exercised by the cited focused agent test.
+s:So26GLKViewDrawableDepthFormatV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableDepthFormat	Exercised by the cited focused agent test.
+s:So26GLKViewDrawableMultisampleV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableMultisample	Exercised by the cited focused agent test.
+s:So28GLKViewDrawableStencilFormatV8rawValueABSgs5Int32V_tcfc	implemented	test:full/glkit/tests/agent/GLKitEnumTests.swift#testGLKViewDrawableStencilFormat	Exercised by the cited focused agent test.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	test:full/glkit/tests/agent/GLKitTextureLoaderErrorTests.swift#testGLKTextureLoaderErrorBridging	Exercised by the cited focused agent test.
