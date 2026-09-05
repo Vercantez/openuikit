@@ -94,3 +94,44 @@ except Combine `objectWillChange` on `NSManagedObject` and the FRC
 
 See `oracle-questions.tsv` for Apple-oracle probes that must land before any
 of those paths can claim success.
+
+## Depth pass 2026-09
+
+Second-pass work on `origin/agent/fw-coredata`. The in-memory store, fail-closed
+SQLite/CloudKit/history/momd/migration boundaries, and 1215/88/6/10 coverage
+mix are unchanged. What changed is the **ledger citation rule**: every
+`implemented` row now points at the focused runtime test that exercises that
+family, instead of one file-level blob.
+
+Focused tests in `tests/agent/CoreDataRuntime.swift`:
+
+| Family | Test |
+| --- | --- |
+| model construction | `testModelConstruction` |
+| entity / attribute / relationship descriptions | `testEntityAttributeRelationshipDescriptions` |
+| context insert / save / fetch | `testContextInsertSaveFetch` |
+| faulting | `testFaulting` |
+| predicates by operator | `testPredicatesByOperator` (`==`, `!=`, `<`, `>`, `>=`, `<=`, `CONTAINS`, `BEGINSWITH`, `ENDSWITH`, `IN`, `AND`, `OR`, `NOT`) |
+| sort / limit / result types | `testSortLimitResultTypes` |
+| FRC sections and change notifications | `testFRCSectionsAndChangeNotifications` |
+| batch requests | `testBatchRequests` (count, objectIDs, statusOnly) |
+| merge policies | `testMergePolicies` |
+| error codes | `testErrorCodes` |
+
+Queue, snapshot, child-isolation, store-registry, fail-closed, and constant-catalog
+tests from the first pass remain and are cited for those rows.
+
+Isolated-gate markers from this host:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```
+
+Unresolved behavioral questions stay in `oracle-questions.tsv` (SQLite schema
+errors, compiled `.momd` layout, lightweight migration, `perform(schedule:)`
+reentrancy, CloudKit entitlement errors, `NSCoreDataVersionNumber` on iOS 26.1,
+committed-snapshot nil boxing, child-save instance identity, FRC first-fetch
+callback order).
