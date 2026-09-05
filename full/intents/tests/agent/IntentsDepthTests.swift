@@ -313,7 +313,7 @@ func testINMessagePropertiesAndCoding() {
     precondition(restoredMeta.title == "Title")
 }
 
-func testIntentSubclassPropertiesAndResponses() {
+func testSearchForMessagesIntentAndResponse() {
     let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
     let person = INPerson(
         personHandle: handle,
@@ -351,7 +351,19 @@ func testIntentSubclassPropertiesAndResponses() {
     precondition(searchResponse.userActivity?.activityType == "com.openuikit.intents.search")
     let restoredResponse = depthArchiveRoundTrip(searchResponse)
     precondition(restoredResponse.userActivity?.activityType == "com.openuikit.intents.search")
+}
 
+func testSendMessageIntentAndResponse() {
+    let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
+    let person = INPerson(
+        personHandle: handle,
+        nameComponents: nil,
+        displayName: "Ada",
+        image: nil,
+        contactIdentifier: nil,
+        customIdentifier: nil
+    )
+    let spoken = INSpeakableString(spokenPhrase: "Team")
     let send = INSendMessageIntent(
         recipients: [person],
         outgoingMessageType: .outgoingMessageText,
@@ -370,7 +382,18 @@ func testIntentSubclassPropertiesAndResponses() {
     precondition(send.outgoingMessageType == .outgoingMessageText)
     let sendResponse = INSendMessageIntentResponse(code: .failure, userActivity: nil)
     precondition(sendResponse.code == .failure)
+}
 
+func testStartCallIntentAndResponse() {
+    let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
+    let person = INPerson(
+        personHandle: handle,
+        nameComponents: nil,
+        displayName: "Ada",
+        image: nil,
+        contactIdentifier: nil,
+        customIdentifier: nil
+    )
     let start = INStartCallIntent(
         callRecordFilter: nil,
         callRecordToCallBack: nil,
@@ -383,12 +406,13 @@ func testIntentSubclassPropertiesAndResponses() {
     precondition(start.audioRoute == .speakerphoneAudioRoute)
     precondition(start.destinationType == .normal)
     precondition(start.callCapability == .audioCall)
+    let activity = NSUserActivity(activityType: "com.openuikit.intents.start")
     let startResponse = INStartCallIntentResponse(code: .continueInApp, userActivity: activity)
     precondition(startResponse.code == .continueInApp)
     precondition(startResponse.userActivity === activity)
 }
 
-func testCarPowerAndRideFailClosed() {
+func testCarPowerIntentDefaults() {
     let carName = INSpeakableString(spokenPhrase: "Red")
     let carIntent = INGetCarPowerLevelStatusIntent(carName: carName)
     precondition(carIntent.carName?.spokenPhrase == "Red")
@@ -402,7 +426,9 @@ func testCarPowerAndRideFailClosed() {
     precondition(carResponse.chargePercentRemaining == 0.4)
     precondition(carResponse.fuelPercentRemaining == 0.2)
     precondition(carResponse.charging == false)
+}
 
+func testRideIntentDefaultsAndCompletionStatus() {
     let rideStatus = INGetRideStatusIntent()
     let rideResponse = INGetRideStatusIntentResponse(code: .failure, userActivity: nil)
     precondition(rideResponse.code == .failure)
@@ -410,19 +436,14 @@ func testCarPowerAndRideFailClosed() {
     status.rideIdentifier = "ride-1"
     rideResponse.rideStatus = status
     precondition(rideResponse.rideStatus?.rideIdentifier == "ride-1")
-    let restoredStatus = depthArchiveRoundTrip(status)
-    precondition(restoredStatus.rideIdentifier == "ride-1")
-
-    let listResponse = INListRideOptionsIntentResponse(code: .failure, userActivity: nil)
-    precondition(listResponse.code == .failure)
-    let option = INRideOption(name: "Pool", estimatedPickupDate: Date(timeIntervalSince1970: 0))
-    precondition(option.name == "Pool")
-    precondition(depthArchiveRoundTrip(option).name == "Pool")
     let statusPhase = INRideStatus()
     statusPhase.phase = .unknown
     precondition(statusPhase.phase == .unknown)
+    let listResponse = INListRideOptionsIntentResponse(code: .failure, userActivity: nil)
+    precondition(listResponse.code == .failure)
+    _ = INListRideOptionsIntent()
     let request = INRequestRideIntent()
-    request.rideOptionName = carName
+    request.rideOptionName = INSpeakableString(spokenPhrase: "Red")
     precondition(request.rideOptionName?.spokenPhrase == "Red")
     let requestResponse = INRequestRideIntentResponse(code: .failure, userActivity: nil)
     precondition(requestResponse.code == .failure)
@@ -431,12 +452,10 @@ func testCarPowerAndRideFailClosed() {
     precondition(!completed.isCanceled)
     let canceled = INRideCompletionStatus.canceledByService()
     precondition(canceled.isCanceled)
-    let restoredCompletion = depthArchiveRoundTrip(completed)
-    precondition(restoredCompletion.isCompleted)
     _ = rideStatus
 }
 
-func testHostDispatcherRoutesHandlers() {
+func testSendMessageHandlerDispatch() {
     let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
     let person = INPerson(
         personHandle: handle,
@@ -462,7 +481,9 @@ func testHostDispatcherRoutesHandlers() {
     let resolved = INHostIntentDispatcher.resolve(send, handler: sendHandler)
     precondition(resolved.contains { $0.outcome == .success })
     precondition(resolved.contains { $0.outcome == .notRequired })
+}
 
+func testSearchForMessagesHandlerDispatch() {
     let search = INSearchForMessagesIntent()
     let searchHandler = DepthSearchHandler()
     let searchHandled = INHostIntentDispatcher.handle(search, handler: searchHandler) as? INSearchForMessagesIntentResponse
@@ -472,7 +493,18 @@ func testHostDispatcherRoutesHandlers() {
     let searchResolved = INHostIntentDispatcher.resolve(search, handler: searchHandler)
     precondition(searchResolved.contains { $0.outcome == .success })
     precondition(searchResolved.contains { $0.outcome == .needsValue })
+}
 
+func testStartCallHandlerDispatch() {
+    let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
+    let person = INPerson(
+        personHandle: handle,
+        nameComponents: nil,
+        displayName: "Ada",
+        image: nil,
+        contactIdentifier: nil,
+        customIdentifier: nil
+    )
     let start = INStartCallIntent(
         audioRoute: .unknown,
         destinationType: .unknown,
@@ -487,7 +519,9 @@ func testHostDispatcherRoutesHandlers() {
     precondition(startConfirmed?.code == .ready)
     let startResolved = INHostIntentDispatcher.resolve(start, handler: startHandler)
     precondition(startResolved.count == 2)
+}
 
+func testCarPowerHandlerDispatch() {
     let carIntent = INGetCarPowerLevelStatusIntent()
     let carHandler = DepthCarPowerHandler()
     let carHandled = INHostIntentDispatcher.handle(carIntent, handler: carHandler) as? INGetCarPowerLevelStatusIntentResponse
@@ -497,21 +531,27 @@ func testHostDispatcherRoutesHandlers() {
     precondition(carConfirmed?.code == .ready)
     let carResolved = INHostIntentDispatcher.resolve(carIntent, handler: carHandler)
     precondition(carResolved.first?.outcome == .needsValue)
+}
 
+func testRideStatusHandlerDispatch() {
     let rideIntent = INGetRideStatusIntent()
     let rideHandler = DepthRideStatusHandler()
     let rideHandled = INHostIntentDispatcher.handle(rideIntent, handler: rideHandler) as? INGetRideStatusIntentResponse
     precondition(rideHandled?.code == .failure)
     let rideConfirmed = INHostIntentDispatcher.confirm(rideIntent, handler: rideHandler) as? INGetRideStatusIntentResponse
     precondition(rideConfirmed?.code == .ready)
+}
 
+func testListRideOptionsHandlerDispatch() {
     let listIntent = INListRideOptionsIntent()
     let listHandler = DepthListRideHandler()
     let listHandled = INHostIntentDispatcher.handle(listIntent, handler: listHandler) as? INListRideOptionsIntentResponse
     precondition(listHandled?.code == .failure)
     let listConfirmed = INHostIntentDispatcher.confirm(listIntent, handler: listHandler) as? INListRideOptionsIntentResponse
     precondition(listConfirmed?.code == .ready)
+}
 
+func testRequestRideHandlerDispatch() {
     let requestIntent = INRequestRideIntent()
     let requestHandler = DepthRequestRideHandler()
     let requestHandled = INHostIntentDispatcher.handle(requestIntent, handler: requestHandler) as? INRequestRideIntentResponse
@@ -521,7 +561,27 @@ func testHostDispatcherRoutesHandlers() {
     let requestResolved = INHostIntentDispatcher.resolve(requestIntent, handler: requestHandler)
     precondition(requestResolved.contains { $0.outcome == .needsValue })
     precondition(requestResolved.contains { $0.outcome == .notRequired })
+}
 
+func testExtensionIntentHandlerProviding() {
+    let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
+    let person = INPerson(
+        personHandle: handle,
+        nameComponents: nil,
+        displayName: "Ada",
+        image: nil,
+        contactIdentifier: nil,
+        customIdentifier: nil
+    )
+    let send = INSendMessageIntent(
+        recipients: [person],
+        content: "Hello",
+        speakableGroupName: nil,
+        conversationIdentifier: "c1",
+        serviceName: "iMessage",
+        sender: person
+    )
+    let sendHandler = DepthSendHandler()
     let extensionPoint = INExtension()
     extensionPoint.hostHandler = sendHandler
     let routed = extensionPoint.handler(for: send)
@@ -530,6 +590,183 @@ func testHostDispatcherRoutesHandlers() {
     precondition((fallback.handler(for: send) as AnyObject?) === fallback)
     let provider: any INIntentHandlerProviding = fallback
     precondition((provider.handler(for: send) as AnyObject?) === fallback)
+}
+
+func testTravelValueCoding() {
+    let airline = INAirline(name: "OpenAir", iataCode: "OA", icaoCode: "OAI")
+    precondition(depthArchiveRoundTrip(airline).name == "OpenAir")
+    let airport = INAirport(name: "SFO", iataCode: "SFO", icaoCode: "KSFO")
+    precondition(depthArchiveRoundTrip(airport).iataCode == "SFO")
+    let gate = INAirportGate(airport: airport, terminal: "2", gate: "G1")
+    precondition(depthArchiveRoundTrip(gate).gate == "G1")
+    _ = depthArchiveRoundTrip(INBoatTrip())
+    precondition(INBoatTrip.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INBusTrip())
+    precondition(INBusTrip.supportsSecureCoding)
+    let flight = INFlight()
+    flight.flightNumber = "OA1"
+    precondition(depthArchiveRoundTrip(flight).flightNumber == "OA1")
+    let train = INTrainTrip()
+    train.trainNumber = "1"
+    precondition(depthArchiveRoundTrip(train).trainNumber == "1")
+    let seat = INSeat(seatSection: "A", seatRow: "1", seatNumber: "2", seatingType: "window")
+    precondition(depthArchiveRoundTrip(seat).seatNumber == "2")
+    _ = depthArchiveRoundTrip(INTicketedEvent())
+    precondition(INTicketedEvent.supportsSecureCoding)
+}
+
+func testPaymentValueCoding() {
+    _ = depthArchiveRoundTrip(INBalanceAmount())
+    precondition(INBalanceAmount.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INBillDetails())
+    precondition(INBillDetails.supportsSecureCoding)
+    let payee = INBillPayee()
+    payee.accountNumber = "123"
+    precondition(depthArchiveRoundTrip(payee).accountNumber == "123")
+    let amount = INCurrencyAmount(amount: NSDecimalNumber(value: 5), currencyCode: "USD")
+    precondition(depthArchiveRoundTrip(amount).currencyCode == "USD")
+    _ = depthArchiveRoundTrip(INPaymentAccount())
+    precondition(INPaymentAccount.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INPaymentAmount())
+    precondition(INPaymentAmount.supportsSecureCoding)
+    let method = INPaymentMethod(type: .unknown, name: "Card", identificationHint: "hint", icon: nil)
+    precondition(depthArchiveRoundTrip(method).name == "Card")
+    _ = depthArchiveRoundTrip(INPaymentRecord())
+    precondition(INPaymentRecord.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INPriceRange())
+    precondition(INPriceRange.supportsSecureCoding)
+}
+
+func testCallAndCarValueCoding() {
+    let group = INCallGroup(groupName: "Team", groupId: "g1")
+    precondition(depthArchiveRoundTrip(group).groupId == "g1")
+    let record = INCallRecord(identifier: "call-1")
+    precondition(depthArchiveRoundTrip(record).identifier == "call-1")
+    _ = depthArchiveRoundTrip(INCallRecordFilter(participants: nil, callTypes: [], callCapability: .unknown))
+    precondition(INCallRecordFilter.supportsSecureCoding)
+    let car = INCar()
+    car.make = "Open"
+    precondition(depthArchiveRoundTrip(car).make == "Open")
+    let head = INCarHeadUnit(bluetoothIdentifier: "bt", iAP2Identifier: "iap")
+    let restoredHead = depthArchiveRoundTrip(head)
+    precondition(restoredHead.bluetoothIdentifier == "bt")
+    precondition(restoredHead.iAP2Identifier == "iap")
+    precondition(INCarHeadUnit.supportsSecureCoding)
+}
+
+func testNotesAndTasksValueCoding() {
+    let content = INNoteContent()
+    _ = depthArchiveRoundTrip(content)
+    precondition(INNoteContent.supportsSecureCoding)
+    let note = INNote(
+        title: INSpeakableString(spokenPhrase: "todo"),
+        contents: [content],
+        groupName: nil,
+        createdDateComponents: nil,
+        modifiedDateComponents: nil,
+        identifier: "n1"
+    )
+    precondition(depthArchiveRoundTrip(note).identifier == "n1")
+    precondition(INNote.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INTask())
+    precondition(INTask.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INTaskList())
+    precondition(INTaskList.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INRecurrenceRule())
+    precondition(INRecurrenceRule.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INTemporalEventTrigger())
+    precondition(INTemporalEventTrigger.supportsSecureCoding)
+    _ = depthArchiveRoundTrip(INSpatialEventTrigger())
+    precondition(INSpatialEventTrigger.supportsSecureCoding)
+}
+
+func testRestaurantReservationValueCoding() {
+    let rental = INRentalCar(rentalCompanyName: "Open", type: "sedan", make: "X", model: "Y", rentalCarDescription: "d")
+    precondition(depthArchiveRoundTrip(rental).rentalCompanyName == "Open")
+    let reservation = INReservation()
+    reservation.reservationNumber = "r1"
+    precondition(depthArchiveRoundTrip(reservation).reservationNumber == "r1")
+    _ = depthArchiveRoundTrip(INReservationAction())
+    precondition(INReservationAction.supportsSecureCoding)
+    let restaurant = INRestaurant()
+    restaurant.name = "Cafe"
+    precondition(depthArchiveRoundTrip(restaurant).name == "Cafe")
+    _ = depthArchiveRoundTrip(INRestaurantGuestDisplayPreferences())
+    precondition(INRestaurantGuestDisplayPreferences.supportsSecureCoding)
+    let offer = INRestaurantOffer()
+    offer.offerTitleText = "Deal"
+    precondition(depthArchiveRoundTrip(offer).offerTitleText == "Deal")
+    let booking = INRestaurantReservationBooking()
+    booking.bookingDescription = "book"
+    precondition(depthArchiveRoundTrip(booking).bookingDescription == "book")
+}
+
+func testRideValueCoding() {
+    let option = INRideOption(name: "Pool", estimatedPickupDate: Date(timeIntervalSince1970: 0))
+    precondition(option.name == "Pool")
+    precondition(depthArchiveRoundTrip(option).name == "Pool")
+    _ = depthArchiveRoundTrip(INRideFareLineItem())
+    precondition(INRideFareLineItem.supportsSecureCoding)
+    let party = INRidePartySizeOption()
+    party.sizeDescription = "2"
+    precondition(depthArchiveRoundTrip(party).sizeDescription == "2")
+    let vehicle = INRideVehicle()
+    vehicle.model = "Car"
+    precondition(depthArchiveRoundTrip(vehicle).model == "Car")
+    let status = INRideStatus()
+    status.rideIdentifier = "ride-code"
+    precondition(depthArchiveRoundTrip(status).rideIdentifier == "ride-code")
+    let completed = INRideCompletionStatus.completed()
+    precondition(depthArchiveRoundTrip(completed).isCompleted)
+}
+
+func testFileAndCardTemplateCoding() {
+    let card = INDefaultCardTemplate(title: "Library")
+    precondition(depthArchiveRoundTrip(card).title == "Library")
+    let file = INFile(data: Data([0x01]), filename: "a.bin", typeIdentifier: "public.data")
+    precondition(depthArchiveRoundTrip(file).filename == "a.bin")
+}
+
+func testMiscSecureCodingValues() {
+    var start = DateComponents()
+    start.year = 2026
+    var end = DateComponents()
+    end.year = 2027
+    let range = INDateComponentsRange(start: start, end: end)
+    precondition(depthArchiveRoundTrip(range).startDateComponents?.year == 2026)
+    let focus = INFocusStatus(isFocused: false)
+    precondition(depthArchiveRoundTrip(focus).isFocused == false)
+    _ = depthArchiveRoundTrip(INIntentDonationMetadata())
+    precondition(INIntentDonationMetadata.supportsSecureCoding)
+    let response = INIntentResponse()
+    _ = depthArchiveRoundTrip(response)
+    precondition(INIntentResponse.supportsSecureCoding)
+    let mediaSearch = INMediaSearch(mediaName: "Song")
+    precondition(depthArchiveRoundTrip(mediaSearch).mediaName == "Song")
+    let object = INObject(identifier: "id", display: "Ada")
+    precondition(depthArchiveRoundTrip(object).displayString == "Ada")
+    let collection = INObjectCollection(items: [object])
+    precondition(collection.items.count == 1)
+    precondition(INObjectCollection<INObject>.supportsSecureCoding)
+    let section = INObjectSection(title: "A", items: [object])
+    precondition(section.title == "A")
+    precondition(INObjectSection<INObject>.supportsSecureCoding)
+    let parameter = INParameter(for: INIntent.self, keyPath: "identifier")
+    precondition(depthArchiveRoundTrip(parameter).parameterKeyPath == "identifier")
+    let handle = INPersonHandle(value: "a@b.c", type: .emailAddress, label: .work)
+    precondition(depthArchiveRoundTrip(handle).value == "a@b.c")
+    _ = depthArchiveRoundTrip(INRelevanceProvider())
+    precondition(INRelevanceProvider.supportsSecureCoding)
+    let sticker = INSticker(type: .emoji, emoji: "⭐")
+    precondition(depthArchiveRoundTrip(sticker).emoji == "⭐")
+    let terms = INTermsAndConditions(
+        localizedTermsAndConditionsText: "terms",
+        privacyPolicyURL: nil,
+        termsAndConditionsURL: nil
+    )
+    precondition(depthArchiveRoundTrip(terms).localizedTermsAndConditionsText == "terms")
+    _ = depthArchiveRoundTrip(INUserContext())
+    precondition(INUserContext.supportsSecureCoding)
 }
 
 func testInteractionHostStoreDateInterval() {
@@ -574,156 +811,17 @@ func testShortcutAndVoiceCenterFailClosed() {
     let restoredVoice = depthArchiveRoundTrip(installed)
     precondition(restoredVoice.invocationPhrase == "Erase")
     precondition(INVoiceShortcut.supportsSecureCoding)
+    let relevant = INRelevantShortcut(shortcut: shortcut)
+    relevant.widgetKind = "W"
+    precondition(depthArchiveRoundTrip(relevant).widgetKind == "W")
     var storeError: Error? = NSError(domain: "unset", code: 1)
     INRelevantShortcutStore.default.setRelevantShortcuts(
-        [INRelevantShortcut(shortcut: shortcut)]
+        [relevant]
     ) { storeError = $0 }
     precondition(storeError == nil)
     precondition(INRelevantShortcutStore.default.storedShortcuts.count == 1)
     INRelevantShortcutStore.default.setRelevantShortcuts([]) { storeError = $0 }
     precondition(INRelevantShortcutStore.default.storedShortcuts.isEmpty)
-}
-
-func testNSCodingRoundTrips() {
-    let airline = INAirline(name: "OpenAir", iataCode: "OA", icaoCode: "OAI")
-    precondition(depthArchiveRoundTrip(airline).name == "OpenAir")
-    let airport = INAirport(name: "SFO", iataCode: "SFO", icaoCode: "KSFO")
-    precondition(depthArchiveRoundTrip(airport).iataCode == "SFO")
-    let gate = INAirportGate(airport: airport, terminal: "2", gate: "G1")
-    precondition(depthArchiveRoundTrip(gate).gate == "G1")
-    _ = depthArchiveRoundTrip(INBalanceAmount())
-    precondition(INBalanceAmount.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INBillDetails())
-    precondition(INBillDetails.supportsSecureCoding)
-    let payee = INBillPayee()
-    payee.accountNumber = "123"
-    precondition(depthArchiveRoundTrip(payee).accountNumber == "123")
-    _ = depthArchiveRoundTrip(INBoatTrip())
-    precondition(INBoatTrip.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INBusTrip())
-    precondition(INBusTrip.supportsSecureCoding)
-    let group = INCallGroup(groupName: "Team", groupId: "g1")
-    precondition(depthArchiveRoundTrip(group).groupId == "g1")
-    let record = INCallRecord(identifier: "call-1")
-    precondition(depthArchiveRoundTrip(record).identifier == "call-1")
-    _ = depthArchiveRoundTrip(INCallRecordFilter(participants: nil, callTypes: [], callCapability: .unknown))
-    precondition(INCallRecordFilter.supportsSecureCoding)
-    let car = INCar()
-    car.make = "Open"
-    precondition(depthArchiveRoundTrip(car).make == "Open")
-    let head = INCar.HeadUnit(bluetoothIdentifier: "bt", iAP2Identifier: "iap")
-    let restoredHead = depthArchiveRoundTrip(head)
-    precondition(restoredHead.bluetoothIdentifier == "bt")
-    precondition(restoredHead.iAP2Identifier == "iap")
-    let amount = INCurrencyAmount(amount: NSDecimalNumber(value: 5), currencyCode: "USD")
-    precondition(depthArchiveRoundTrip(amount).currencyCode == "USD")
-    var start = DateComponents()
-    start.year = 2026
-    var end = DateComponents()
-    end.year = 2027
-    let range = INDateComponentsRange(start: start, end: end)
-    precondition(depthArchiveRoundTrip(range).startDateComponents?.year == 2026)
-    let card = INDefaultCardTemplate(title: "Library")
-    precondition(depthArchiveRoundTrip(card).title == "Library")
-    let file = INFile(data: Data([0x01]), filename: "a.bin", typeIdentifier: "public.data")
-    precondition(depthArchiveRoundTrip(file).filename == "a.bin")
-    let flight = INFlight()
-    flight.flightNumber = "OA1"
-    precondition(depthArchiveRoundTrip(flight).flightNumber == "OA1")
-    let focus = INFocusStatus(isFocused: false)
-    precondition(depthArchiveRoundTrip(focus).isFocused == false)
-    _ = depthArchiveRoundTrip(INIntentDonationMetadata())
-    precondition(INIntentDonationMetadata.supportsSecureCoding)
-    let response = INIntentResponse()
-    _ = depthArchiveRoundTrip(response)
-    precondition(INIntentResponse.supportsSecureCoding)
-    let mediaSearch = INMediaSearch(mediaName: "Song")
-    precondition(depthArchiveRoundTrip(mediaSearch).mediaName == "Song")
-    let object = INObject(identifier: "id", display: "Ada")
-    precondition(depthArchiveRoundTrip(object).displayString == "Ada")
-    let collection = INObjectCollection(items: [object])
-    precondition(collection.items.count == 1)
-    precondition(INObjectCollection<INObject>.supportsSecureCoding)
-    let section = INObjectSection(title: "A", items: [object])
-    precondition(section.title == "A")
-    precondition(INObjectSection<INObject>.supportsSecureCoding)
-    let parameter = INParameter(for: INIntent.self, keyPath: "identifier")
-    precondition(depthArchiveRoundTrip(parameter).parameterKeyPath == "identifier")
-    _ = depthArchiveRoundTrip(INPaymentAccount())
-    precondition(INPaymentAccount.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INPaymentAmount())
-    precondition(INPaymentAmount.supportsSecureCoding)
-    let method = INPaymentMethod(type: .unknown, name: "Card", identificationHint: "hint", icon: nil)
-    precondition(depthArchiveRoundTrip(method).name == "Card")
-    _ = depthArchiveRoundTrip(INPaymentRecord())
-    precondition(INPaymentRecord.supportsSecureCoding)
-    let handle = INPersonHandle(value: "a@b.c", type: .emailAddress, label: .work)
-    precondition(depthArchiveRoundTrip(handle).value == "a@b.c")
-    let option = INRideOption(name: "Pool", estimatedPickupDate: Date(timeIntervalSince1970: 0))
-    precondition(depthArchiveRoundTrip(option).name == "Pool")
-    _ = depthArchiveRoundTrip(INPriceRange())
-    precondition(INPriceRange.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INRecurrenceRule())
-    precondition(INRecurrenceRule.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INRelevanceProvider())
-    precondition(INRelevanceProvider.supportsSecureCoding)
-    let shortcut = INShortcut(intent: INIntent())
-    let relevant = INRelevantShortcut(shortcut: shortcut)
-    relevant.widgetKind = "W"
-    precondition(depthArchiveRoundTrip(relevant).widgetKind == "W")
-    let rental = INRentalCar(rentalCompanyName: "Open", type: "sedan", make: "X", model: "Y", rentalCarDescription: "d")
-    precondition(depthArchiveRoundTrip(rental).rentalCompanyName == "Open")
-    let reservation = INReservation()
-    reservation.reservationNumber = "r1"
-    precondition(depthArchiveRoundTrip(reservation).reservationNumber == "r1")
-    _ = depthArchiveRoundTrip(INReservationAction())
-    precondition(INReservationAction.supportsSecureCoding)
-    let restaurant = INRestaurant()
-    restaurant.name = "Cafe"
-    precondition(depthArchiveRoundTrip(restaurant).name == "Cafe")
-    _ = depthArchiveRoundTrip(INRestaurantGuestDisplayPreferences())
-    precondition(INRestaurantGuestDisplayPreferences.supportsSecureCoding)
-    let offer = INRestaurantOffer()
-    offer.offerTitleText = "Deal"
-    precondition(depthArchiveRoundTrip(offer).offerTitleText == "Deal")
-    let booking = INRestaurantReservationBooking()
-    booking.bookingDescription = "book"
-    precondition(depthArchiveRoundTrip(booking).bookingDescription == "book")
-    _ = depthArchiveRoundTrip(INRideFareLineItem())
-    precondition(INRideFareLineItem.supportsSecureCoding)
-    let party = INRidePartySizeOption()
-    party.sizeDescription = "2"
-    precondition(depthArchiveRoundTrip(party).sizeDescription == "2")
-    let vehicle = INRideVehicle()
-    vehicle.model = "Car"
-    precondition(depthArchiveRoundTrip(vehicle).model == "Car")
-    let seat = INSeat(seatSection: "A", seatRow: "1", seatNumber: "2", seatingType: "window")
-    precondition(depthArchiveRoundTrip(seat).seatNumber == "2")
-    _ = depthArchiveRoundTrip(INSpatialEventTrigger())
-    precondition(INSpatialEventTrigger.supportsSecureCoding)
-    let sticker = INSticker(type: .emoji, emoji: "⭐")
-    precondition(depthArchiveRoundTrip(sticker).emoji == "⭐")
-    _ = depthArchiveRoundTrip(INTask())
-    precondition(INTask.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INTaskList())
-    precondition(INTaskList.supportsSecureCoding)
-    _ = depthArchiveRoundTrip(INTemporalEventTrigger())
-    precondition(INTemporalEventTrigger.supportsSecureCoding)
-    let terms = INTermsAndConditions(
-        localizedTermsAndConditionsText: "terms",
-        privacyPolicyURL: nil,
-        termsAndConditionsURL: nil
-    )
-    precondition(depthArchiveRoundTrip(terms).localizedTermsAndConditionsText == "terms")
-    _ = depthArchiveRoundTrip(INTicketedEvent())
-    precondition(INTicketedEvent.supportsSecureCoding)
-    let train = INTrainTrip()
-    train.trainNumber = "1"
-    precondition(depthArchiveRoundTrip(train).trainNumber == "1")
-    _ = depthArchiveRoundTrip(INUserContext())
-    precondition(INUserContext.supportsSecureCoding)
-    let voice = INVoiceShortcut(invocationPhrase: "Erase", shortcut: shortcut)
-    precondition(depthArchiveRoundTrip(voice).invocationPhrase == "Erase")
 }
 
 func testPreferencesAndSiriAuthorizationFailClosed() {

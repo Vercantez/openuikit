@@ -20,13 +20,13 @@ runtime and is packaged as `IntentsUI.swiftmodule` plus
 Wave-5 schema v2 coverage lives in `coverage.tsv`. Before this lane there was
 no coverage file (0 implemented / 0 declared / 0 deferred of 4160 public IDs).
 The first-pass census was 1507 implemented / 1873 declared / 780
-deferred. After the wave-8 depth pass it is 1798 implemented / 1585
-declared / 777 deferred. The in-process donation, voice-shortcut, relevant-shortcut,
-resolution, person/image/media/call-record, Siri-denied, and identifier-constant
-slice is `implemented` with `tests/agent/*Tests.swift`; the remaining compiling
-surface is `declared`; Apple Siri services, CoreLocation/Contacts/EventKit/
-CGColor/NSExtensionContext members, and the Swift `INShortcut` enum overlay are
-`deferred`.
+deferred. After the wave-8 depth pass plus coverage-ledger repair it is
+1800 implemented / 1583 declared / 777 deferred. The in-process donation,
+voice-shortcut, relevant-shortcut, resolution, person/image/media/call-record,
+Siri-denied, and identifier-constant slice is `implemented` with
+`tests/agent/*Tests.swift`; the remaining compiling surface is `declared`;
+Apple Siri services, CoreLocation/Contacts/EventKit/CGColor/NSExtensionContext
+members, and the Swift `INShortcut` enum overlay are `deferred`.
 
 Siri authorization stays fail-closed at `.denied`. Focus stays `.restricted`.
 Generated handler protocols default to needs-value / empty / failure responses
@@ -117,25 +117,37 @@ source or generated custom-intent source.
 
 Second behavioral pass on the existing first-pass tree. Before: **1507
 implemented / 1873 declared / 780 deferred / 0 unavailable / 0
-not-applicable**. After: **1798 implemented / 1585 declared / 777
-deferred / 0 unavailable / 0 not-applicable**. Nondeferred (3383) stays
-above the medium-full floor of 2080.
+not-applicable**. After the depth runtime plus coverage-ledger repair:
+**1800 implemented / 1583 declared / 777 deferred / 0 unavailable / 0
+not-applicable**. Nondeferred (3383) stays above the medium-full floor of
+2080. The +2 implemented rows versus the previous 1798 census are
+`INNote`'s convenience init and `identifier` property, now actually
+constructed and asserted in `testNotesAndTasksValueCoding`.
 
-Top-5 implemented evidence distribution after this pass:
+Top-5 implemented evidence distribution after the ledger repair:
 
 | Citations | Evidence |
 | ---: | --- |
 | 1106 | `IntentsSurfaceTests.swift#testEnumRawValues` |
-| 146 | `IntentsDepthTests.swift#testNSCodingRoundTrips` |
-| 80 | `IntentsTests.swift#testOptionSetFamilies` |
-| 64 | `IntentsTests.swift#testIntentErrorCodesCatalog` |
-| 38 | `IntentsTests.swift#testPersonRelationshipAndWorkoutIdentifiers` |
+| 80 | `IntentsSurfaceTests.swift#testOptionSetFamilies` |
+| 64 | `IntentsSurfaceTests.swift#testIntentErrorCodesCatalog` |
+| 38 | `IntentsSurfaceTests.swift#testPersonRelationshipAndWorkoutIdentifiers` |
+| 28 | `IntentsDepthTests.swift#testTravelValueCoding` |
 
-`testEnumRawValues` is the table-driven imported-enum raw-value test
-(allowed to be shared). `testNSCodingRoundTrips` covers the generated
-NSSecureCoding family and is 21% of the remaining implemented rows
-(under the 40% bulk-relabel bound). No SwiftUI cross-import overlay rows
-exist in this census.
+`testEnumRawValues`, option-set families, the error-code catalog, intent
+identifier constants, and person/workout identifier strings are the
+allowed shared table-driven value tests. The previous bulk
+`testNSCodingRoundTrips` (146 citations) is split into travel, payment,
+call/car, notes/tasks, restaurant/reservation, ride, file/card, and misc
+coding tests; mixed dispatcher/intent/car-ride tests are split the same
+way. The largest remaining non-table test is 28/486 (5.8%), under the
+40% bulk-relabel bound. No SwiftUI cross-import overlay rows exist in
+this census.
+
+Linux keyed archives use the top-level `INCarHeadUnit` class (Apple's
+nested `INCar.HeadUnit` spelling is a typealias). Generic
+`INObjectCollection` / `INObjectSection` still only check construction
+and `supportsSecureCoding`; they are not archived as root objects.
 
 This pass keeps the first-pass sources and tests and adds:
 
