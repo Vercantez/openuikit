@@ -1,0 +1,10 @@
+full/coremidi/CoreMIDI.swift
+full/coremidi/MIDICI.swift
+full/coremidi/MIDIEvents.swift
+full/coremidi/MIDIMessages.swift
+full/coremidi/MIDINetwork.swift
+full/coremidi/MIDIPackets.swift
+full/coremidi/MIDIServices.swift
+full/coremidi/MIDIThru.swift
+full/coremidi/MIDITypes.swift
+full/coremidi/MIDIUMP.swift
