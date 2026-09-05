@@ -96,6 +96,10 @@ open class PHLivePhotoView: NSObject {
         return UIImage()
     }
 
+    /// Fail-closed: no Live Photo engine. `playbackStyle` is accepted and
+    /// discarded; `delegate` is not invoked. Apple's willBegin/didEnd timing
+    /// with a nil `livePhoto` is unobserved (oracle-questions.tsv).
+    /// https://developer.apple.com/documentation/photosui/phlivephotoview
     open func startPlayback(with playbackStyle: PHLivePhotoViewPlaybackStyle) {
         _ = playbackStyle
     }

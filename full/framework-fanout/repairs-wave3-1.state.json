@@ -1,0 +1,132 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-r3-repair-1",
+    "maxActive": 16,
+    "maxRuns": 8
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "activitykit": {
+      "agentId": "bc-bdc72171-5985-5d2c-b81d-52b84135f4c7",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:04:22Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/92",
+      "expectedPriorHead": "fe1738b572ddc8677dbb2c0d9ae9d14e26a9787e",
+      "idempotencyKey": "c8b99974-181b-5885-b63a-edad647b55e2",
+      "launchStatus": "SENT",
+      "module": "ActivityKit",
+      "promptBytes": 1369,
+      "promptSha256": "c400d7a4d4715d756ecdcde75a838aa24d8f42b914662f9149e249adcf9a14c4",
+      "runId": "run-80ac852b-242f-4039-a05b-1d3294382798",
+      "runStatus": "error",
+      "slug": "activitykit"
+    },
+    "arkit": {
+      "agentId": "bc-ecbbace9-f5cf-53e5-9120-95df18f727ba",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:04:30Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/91",
+      "expectedPriorHead": "814bb21e0d947a1f5b01ba972e09b6f5d32b0fda",
+      "idempotencyKey": "e5732318-602b-5d7e-8736-9a2b094ac344",
+      "launchStatus": "SENT",
+      "module": "ARKit",
+      "promptBytes": 1333,
+      "promptSha256": "174bb25a8c8c4afffed66c3cc5a04c66b3f5691e73506408138f839d8bee2390",
+      "runId": "run-056428cd-e9f5-4a08-a31b-427e74af276a",
+      "runStatus": "running",
+      "slug": "arkit"
+    },
+    "avfaudio": {
+      "agentId": "bc-2fa99e17-1788-547d-b568-d2e2662515cd",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/93",
+      "expectedPriorHead": "c620a7c9d21ab34deaf88a85ea3478c561b80eed",
+      "idempotencyKey": "ce7a16e7-b93b-599c-89f7-bf455264a1a0",
+      "launchStatus": "PENDING",
+      "module": "AVFAudio",
+      "promptBytes": 1352,
+      "promptSha256": "f1a7ef1b46a0581f10553a89cbdce5bbc40daea0d5aad76cdc4b63a3504104f7",
+      "slug": "avfaudio"
+    },
+    "carplay": {
+      "agentId": "bc-11212748-23b8-581d-a533-8fc8fd2de32c",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:03:51Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/88",
+      "expectedPriorHead": "448e66face0b12b76ec8291b8a51285a2406c70d",
+      "idempotencyKey": "eb60ee1d-47dc-500d-8bec-91b718183453",
+      "launchStatus": "SENT",
+      "module": "CarPlay",
+      "promptBytes": 1345,
+      "promptSha256": "3687a5079fb94df9af06c60e30aba61c3535d42c4b6b82c978a32a4935df665e",
+      "runId": "run-8d90d212-5169-49fa-b441-ed5e76e65728",
+      "runStatus": "running",
+      "slug": "carplay"
+    },
+    "cfnetwork": {
+      "agentId": "bc-15d4f6c1-ddb9-5207-8633-0c61f248b3a8",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:04:02Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/84",
+      "expectedPriorHead": "f7fb4b02fe1378579b4198d0d020c5a479997acc",
+      "idempotencyKey": "ca928d41-57d2-504c-b851-6091f6f8aceb",
+      "launchStatus": "SENT",
+      "module": "CFNetwork",
+      "promptBytes": 1357,
+      "promptSha256": "33333cef8a1611e49369666a357c7556e8ba21fe7d848042f4f9e76dab463c10",
+      "runId": "run-e6646e73-84b1-4667-836e-8d38957f58cb",
+      "runStatus": "error",
+      "slug": "cfnetwork"
+    },
+    "contacts": {
+      "agentId": "bc-d96fdcb1-2395-50dd-8f40-ebf35d897593",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:04:08Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/86",
+      "expectedPriorHead": "fd739cddb32fce19d79f70f814d79067bb5736c5",
+      "idempotencyKey": "ecf69563-306c-5e20-b2e0-df88cfbf7357",
+      "launchStatus": "SENT",
+      "module": "Contacts",
+      "promptBytes": 1395,
+      "promptSha256": "a76521881df20a51884f1fed88078bc755ea2751626b4893d4b001b0e75d6890",
+      "runId": "run-881dbd17-b885-40ae-8955-41ef28c88251",
+      "runStatus": "running",
+      "slug": "contacts"
+    },
+    "contactsui": {
+      "agentId": "bc-8d2149f8-76fa-58bb-bef4-4b150927ee12",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:04:12Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/87",
+      "expectedPriorHead": "1a44131136e4f3c45836661f4e99e5d0f0f1c736",
+      "idempotencyKey": "73fa48b7-c6ae-5c1d-b7ce-57b60e69f7e9",
+      "launchStatus": "SENT",
+      "module": "ContactsUI",
+      "promptBytes": 1403,
+      "promptSha256": "2a38d858b1ad758f7cc59d23753417f096c80bb27a41aa727ca38d07c2a16592",
+      "runId": "run-5d8ae4d7-66c4-4c49-92fc-11304651cc59",
+      "runStatus": "running",
+      "slug": "contactsui"
+    },
+    "corebluetooth": {
+      "agentId": "bc-1f592f1b-8e73-5f4e-b996-e65953f46ea3",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T20:04:17Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/83",
+      "expectedPriorHead": "841090f48976a8bf2b7ba2020e1043f4744a10ab",
+      "idempotencyKey": "23b0f19e-8d86-57e0-bfcb-b193aed0e4eb",
+      "launchStatus": "SENT",
+      "module": "CoreBluetooth",
+      "promptBytes": 1381,
+      "promptSha256": "2f024692921c820d869c53e9ef7d8f89770a7d521cf54cdd58f1617fab57ea34",
+      "runId": "run-97de50f2-3495-4102-9565-e5fd388068fd",
+      "runStatus": "running",
+      "slug": "corebluetooth"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

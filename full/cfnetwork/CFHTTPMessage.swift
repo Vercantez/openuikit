@@ -26,13 +26,15 @@ public func CFHTTPMessageCreateRequest(
     _ httpVersion: CFString
 ) -> Unmanaged<CFHTTPMessage> {
     _ = alloc
+    let target = cfRequestURI(from: url)
     return cfRetain(
         CFHTTPMessage(
             isRequestMessage: true,
             headerComplete: true,
             httpVersion: swiftString(httpVersion),
             method: swiftString(requestMethod),
-            url: url
+            url: url,
+            requestTarget: target
         )
     )
 }
@@ -74,12 +76,15 @@ public func CFHTTPMessageCreateCopy(
         httpVersion: message.httpVersion,
         method: message.method,
         url: message.url,
+        requestTarget: message.requestTarget,
         statusCode: message.statusCode,
         statusReason: message.statusReason
     )
     copy.headers = message.headers
     copy.body = message.body.map(cfDataCopy)
     copy.parseBuffer = message.parseBuffer
+    copy.cachedHeaderBytes = message.cachedHeaderBytes
+    copy.headersDirty = message.headersDirty
     return cfRetain(copy)
 }
 
@@ -148,6 +153,8 @@ public func CFHTTPMessageSetHeaderFieldValue(
     if let value {
         message.headers.append((name: name, value: swiftString(value)))
     }
+    message.headersDirty = true
+    message.cachedHeaderBytes = nil
 }
 
 public func CFHTTPMessageCopyHeaderFieldValue(
@@ -196,24 +203,15 @@ public func CFHTTPMessageCopySerializedMessage(
     message.lock.lock()
     defer { message.lock.unlock() }
     guard message.headerComplete else { return nil }
-    var lines: [String] = []
-    if message.isRequestMessage {
-        let method = message.method ?? "GET"
-        let uri: String
-        if let url = message.url {
-            uri = cfRequestURI(from: url)
-        } else {
-            uri = "/"
-        }
-        lines.append("\(method) \(uri) \(message.httpVersion)")
+    let headerBytes: [UInt8]
+    if !message.headersDirty, let cached = message.cachedHeaderBytes {
+        headerBytes = cached
     } else {
-        let reason = message.statusReason ?? CFHTTPMessage.defaultReason(for: message.statusCode)
-        lines.append("\(message.httpVersion) \(message.statusCode) \(reason)")
+        headerBytes = cfSerializeHTTPHeaders(message)
+        message.cachedHeaderBytes = headerBytes
+        message.headersDirty = false
     }
-    for header in message.headers {
-        lines.append("\(header.name): \(header.value)")
-    }
-    var bytes = Array((lines.joined(separator: "\r\n") + "\r\n\r\n").utf8)
+    var bytes = headerBytes
     if let body = message.body {
         bytes.append(contentsOf: cfDataBytes(body))
     }
@@ -229,19 +227,19 @@ public func CFHTTPMessageAppendBytes(
     message.lock.lock()
     defer { message.lock.unlock() }
     if numBytes > 0 {
-        message.parseBuffer.append(contentsOf: UnsafeBufferPointer(start: newBytes, count: Int(numBytes)))
+        message.parseBuffer.append(
+            contentsOf: UnsafeBufferPointer(start: newBytes, count: Int(numBytes))
+        )
     }
     if message.headerComplete {
         if numBytes > 0 {
-            let extra = cfDataFromBytes(
-                Array(UnsafeBufferPointer(start: newBytes, count: Int(numBytes)))
-            )
+            let extra = Array(UnsafeBufferPointer(start: newBytes, count: Int(numBytes)))
             if let existing = message.body {
                 var combined = cfDataBytes(existing)
-                combined.append(contentsOf: cfDataBytes(extra))
+                combined.append(contentsOf: extra)
                 message.body = cfDataFromBytes(combined)
             } else {
-                message.body = extra
+                message.body = cfDataFromBytes(extra)
             }
         }
         return true
@@ -255,6 +253,8 @@ public func CFHTTPMessageAppendBytes(
         return false
     }
     message.headerComplete = true
+    message.cachedHeaderBytes = headerBytes
+    message.headersDirty = false
     message.parseBuffer = []
     if !bodyBytes.isEmpty {
         message.body = cfDataFromBytes(bodyBytes)
@@ -271,25 +271,45 @@ public func CFHTTPMessageAddAuthentication(
     _ forProxy: Bool
 ) -> Bool {
     let scheme: String
+    let parsedAuth: CFHTTPAuthentication?
     if let authenticationScheme {
         scheme = swiftString(authenticationScheme)
+        if let authenticationFailureResponse {
+            parsedAuth = CFHTTPAuthenticationCreateFromResponse(nil, authenticationFailureResponse)
+                .takeRetainedValue()
+        } else {
+            parsedAuth = nil
+        }
     } else if let authenticationFailureResponse {
         let auth = CFHTTPAuthenticationCreateFromResponse(nil, authenticationFailureResponse)
             .takeRetainedValue()
+        parsedAuth = auth
         auth.lock.lock()
         scheme = auth.scheme
         auth.lock.unlock()
     } else {
         scheme = "Basic"
+        parsedAuth = nil
     }
-    guard scheme.compare("Basic", options: [.caseInsensitive, .literal]) == .orderedSame else {
-        return false
+    if scheme.compare("Basic", options: [.caseInsensitive, .literal]) == .orderedSame {
+        let token = Data("\(swiftString(username)):\(swiftString(password))".utf8)
+            .base64EncodedString()
+        let headerName = forProxy ? "Proxy-Authorization" : "Authorization"
+        CFHTTPMessageSetHeaderFieldValue(request, cfString(headerName), cfString("Basic \(token)"))
+        return true
     }
-    let token = Data("\(swiftString(username)):\(swiftString(password))".utf8)
-        .base64EncodedString()
-    let headerName = forProxy ? "Proxy-Authorization" : "Authorization"
-    CFHTTPMessageSetHeaderFieldValue(request, cfString(headerName), cfString("Basic \(token)"))
-    return true
+    if scheme.compare("Digest", options: [.caseInsensitive, .literal]) == .orderedSame {
+        guard let auth = parsedAuth else { return false }
+        return cfApplyDigestAuthorization(
+            request,
+            auth: auth,
+            username: swiftString(username),
+            password: swiftString(password),
+            forProxy: forProxy,
+            error: nil
+        )
+    }
+    return false
 }
 
 public func CFHTTPMessageApplyCredentials(
@@ -311,15 +331,7 @@ public func CFHTTPMessageApplyCredentials(
         )
         return false
     }
-    guard scheme.compare("Basic", options: [.caseInsensitive, .literal]) == .orderedSame else {
-        cfWriteStreamError(
-            error,
-            domain: kCFStreamErrorDomainHTTP,
-            code: CFStreamErrorHTTPAuthentication.typeUnsupported.rawValue
-        )
-        return false
-    }
-    guard let username, let password else {
+    guard let username else {
         cfWriteStreamError(
             error,
             domain: kCFStreamErrorDomainHTTP,
@@ -327,14 +339,40 @@ public func CFHTTPMessageApplyCredentials(
         )
         return false
     }
-    return CFHTTPMessageAddAuthentication(
-        request,
-        nil,
-        username,
-        password,
-        kCFHTTPAuthenticationSchemeBasic,
-        false
+    guard let password else {
+        cfWriteStreamError(
+            error,
+            domain: kCFStreamErrorDomainHTTP,
+            code: CFStreamErrorHTTPAuthentication.badPassword.rawValue
+        )
+        return false
+    }
+    if scheme.compare("Basic", options: [.caseInsensitive, .literal]) == .orderedSame {
+        return CFHTTPMessageAddAuthentication(
+            request,
+            nil,
+            username,
+            password,
+            kCFHTTPAuthenticationSchemeBasic,
+            false
+        )
+    }
+    if scheme.compare("Digest", options: [.caseInsensitive, .literal]) == .orderedSame {
+        return cfApplyDigestAuthorization(
+            request,
+            auth: auth,
+            username: swiftString(username),
+            password: swiftString(password),
+            forProxy: false,
+            error: error
+        )
+    }
+    cfWriteStreamError(
+        error,
+        domain: kCFStreamErrorDomainHTTP,
+        code: CFStreamErrorHTTPAuthentication.typeUnsupported.rawValue
     )
+    return false
 }
 
 public func CFHTTPMessageApplyCredentialDictionary(
@@ -351,7 +389,7 @@ public func CFHTTPMessageApplyCredentialDictionary(
         dict,
         Unmanaged.passUnretained(kCFHTTPAuthenticationPassword).toOpaque()
     )
-    guard let usernamePointer, let passwordPointer else {
+    guard let usernamePointer else {
         cfWriteStreamError(
             error,
             domain: kCFStreamErrorDomainHTTP,
@@ -359,9 +397,25 @@ public func CFHTTPMessageApplyCredentialDictionary(
         )
         return false
     }
-    let username = Unmanaged<CFString>.fromOpaque(usernamePointer).takeUnretainedValue()
-    let password = Unmanaged<CFString>.fromOpaque(passwordPointer).takeUnretainedValue()
+    guard let passwordPointer else {
+        cfWriteStreamError(
+            error,
+            domain: kCFStreamErrorDomainHTTP,
+            code: CFStreamErrorHTTPAuthentication.badPassword.rawValue
+        )
+        return false
+    }
+    let username = cfStringFromDictionaryValue(usernamePointer)
+    let password = cfStringFromDictionaryValue(passwordPointer)
     return CFHTTPMessageApplyCredentials(request, auth, username, password, error)
+}
+
+func cfStringFromDictionaryValue(_ pointer: UnsafeRawPointer) -> CFString {
+    let object = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+    if let text = object as? String {
+        return cfString(text)
+    }
+    return Unmanaged<CFString>.fromOpaque(pointer).takeUnretainedValue()
 }
 
 extension CFHTTPMessage {
@@ -384,16 +438,55 @@ extension CFHTTPMessage {
     }
 }
 
+func cfHTTPMessageRequestTarget(_ message: CFHTTPMessage) -> String {
+    if let requestTarget = message.requestTarget, !requestTarget.isEmpty {
+        return requestTarget
+    }
+    if let url = message.url {
+        return cfRequestURI(from: url)
+    }
+    return "/"
+}
+
+private func cfSerializeHTTPHeaders(_ message: CFHTTPMessage) -> [UInt8] {
+    var lines: [String] = []
+    if message.isRequestMessage {
+        let method = message.method ?? "GET"
+        let uri = cfHTTPMessageRequestTarget(message)
+        lines.append("\(method) \(uri) \(message.httpVersion)")
+    } else {
+        let reason = message.statusReason ?? CFHTTPMessage.defaultReason(for: message.statusCode)
+        lines.append("\(message.httpVersion) \(message.statusCode) \(reason)")
+    }
+    for header in message.headers {
+        lines.append("\(header.name): \(header.value)")
+    }
+    return Array((lines.joined(separator: "\r\n") + "\r\n\r\n").utf8)
+}
+
 private func cfFindHeaderTerminator(_ buffer: [UInt8]) -> Int? {
-    guard buffer.count >= 4 else { return nil }
-    for index in 0...(buffer.count - 4) {
-        if buffer[index] == 13,
-           buffer[index + 1] == 10,
-           buffer[index + 2] == 13,
-           buffer[index + 3] == 10
-        {
-            return index + 4
+    if let crlf = cfFindSequence(buffer, [13, 10, 13, 10]) {
+        return crlf + 4
+    }
+    if let lf = cfFindSequence(buffer, [10, 10]) {
+        return lf + 2
+    }
+    return nil
+}
+
+private func cfFindSequence(_ buffer: [UInt8], _ needle: [UInt8]) -> Int? {
+    guard buffer.count >= needle.count else { return nil }
+    let last = buffer.count - needle.count
+    if last < 0 { return nil }
+    for index in 0...last {
+        var matched = true
+        for offset in 0..<needle.count {
+            if buffer[index + offset] != needle[offset] {
+                matched = false
+                break
+            }
         }
+        if matched { return index }
     }
     return nil
 }
@@ -401,31 +494,54 @@ private func cfFindHeaderTerminator(_ buffer: [UInt8]) -> Int? {
 private func cfParseHTTPHeaders(_ bytes: [UInt8], into message: CFHTTPMessage) -> Bool {
     guard let text = String(bytes: bytes, encoding: .utf8) else { return false }
     let normalized = text.replacingOccurrences(of: "\r\n", with: "\n")
-        .trimmingCharacters(in: CharacterSet(charactersIn: "\n"))
-    let lines = normalized.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
-    guard let start = lines.first, !start.isEmpty else { return false }
-    let parts = start.split(separator: " ", maxSplits: 2, omittingEmptySubsequences: false)
+        .replacingOccurrences(of: "\r", with: "\n")
+    var rawLines = normalized.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+    while rawLines.last == "" {
+        rawLines.removeLast()
+        if rawLines.isEmpty { break }
+    }
+    guard let start = rawLines.first, !start.isEmpty else { return false }
+    var unfolded: [String] = []
+    for line in rawLines {
+        if line.first == " " || line.first == "\t" {
+            guard let last = unfolded.indices.last else { return false }
+            let folded = line.drop(while: { $0 == " " || $0 == "\t" })
+            unfolded[last] += " " + folded
+        } else {
+            unfolded.append(line)
+        }
+    }
+    guard let startLine = unfolded.first, !startLine.isEmpty else { return false }
+    let parts = startLine.split(separator: " ", maxSplits: 2, omittingEmptySubsequences: false)
         .map(String.init)
     guard parts.count >= 2 else { return false }
     if parts[0].hasPrefix("HTTP/") {
         message.isRequestMessage = false
         message.httpVersion = parts[0]
-        message.statusCode = CFIndex(parts[1]) ?? 0
-        message.statusReason = parts.count > 2 ? parts[2] : CFHTTPMessage.defaultReason(
-            for: message.statusCode
-        )
+        guard let code = CFIndex(parts[1]) else { return false }
+        message.statusCode = code
+        message.statusReason = parts.count > 2 ? parts[2] : ""
     } else {
         message.isRequestMessage = true
         message.method = parts[0]
         message.httpVersion = parts.count > 2 ? parts[2] : "HTTP/1.1"
         let uri = parts[1]
-        message.url = cfURLFromString(uri) ?? cfURLFromString("http://localhost\(uri.hasPrefix("/") ? uri : "/" + uri)")
+        message.requestTarget = uri
+        if uri.hasPrefix("http://") || uri.hasPrefix("https://") {
+            message.url = cfURLFromString(uri)
+        } else if uri == "*" {
+            message.url = cfURLFromString("http://localhost/")
+        } else {
+            let absolute = uri.hasPrefix("/") ? uri : "/" + uri
+            message.url = cfURLFromString("http://localhost\(absolute)")
+        }
     }
     message.headers = []
-    for line in lines.dropFirst() {
+    for line in unfolded.dropFirst() {
         if line.isEmpty { continue }
         guard let separator = line.firstIndex(of: ":") else { return false }
         let name = String(line[..<separator]).trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { return false }
         let value = String(line[line.index(after: separator)...]).trimmingCharacters(in: .whitespaces)
         message.headers.append((name: name, value: value))
     }

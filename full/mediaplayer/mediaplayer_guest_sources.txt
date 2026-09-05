@@ -1,7 +1,10 @@
 full/mediaplayer/MPConstants.swift
 full/mediaplayer/MPEnums.swift
+full/mediaplayer/MPHostTypes.swift
 full/mediaplayer/MPMedia.swift
+full/mediaplayer/MPMediaPicker.swift
 full/mediaplayer/MPPlayableContent.swift
 full/mediaplayer/MPPlayback.swift
 full/mediaplayer/MPRemoteCommand.swift
+full/mediaplayer/MPVolumeView.swift
 full/mediaplayer/MediaPlayer.swift

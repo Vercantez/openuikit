@@ -4,8 +4,9 @@ import FoundationModels
 /// Schema-v2 sealed acceptance compiles `tests/agent/*Tests.swift` and the
 /// generated load-smoke runner. This file records the portable runtime
 /// contract those tests exercise: generated-content round trips, fail-closed
-/// SystemLanguageModel availability, and fail-closed LanguageModelSession
-/// inference. It does not print; the sealed runner emits the marker.
+/// SystemLanguageModel availability unless the Linux stand-in is installed,
+/// and LanguageModelSession inference. It does not print; the sealed runner
+/// emits the marker.
 func foundationModelsRuntimeProbe() {
     precondition(SystemLanguageModel.default.isAvailable == false)
     precondition(

@@ -1,3 +1,6 @@
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
 import Foundation
 
 /// `_PassKit_SwiftUI` overlay types. They compile as inert `View` values on

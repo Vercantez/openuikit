@@ -295,5 +295,11 @@ final class GlyphInkTableTests: XCTestCase {
                                               dark: false, tag: "F0.75",
                                               scalar: Unicode.Scalar(UInt32(36))!,
                                               scale: 2))
+        // MEASURED arm64 f75875cc: Focus home 12 pt regular k at F0.25
+        // ("0 trackers blocked so far", ShareTrackersViewController).
+        XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-regular", sizeKey: 12,
+                                              dark: false, tag: "F0.25",
+                                              scalar: Unicode.Scalar(UInt32(107))!,
+                                              scale: 2))
     }
 }

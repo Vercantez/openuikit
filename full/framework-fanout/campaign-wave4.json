@@ -1,0 +1,63 @@
+{
+  "campaign": {
+    "activeBuildId": "bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87",
+    "environmentMarker": "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+    "id": "ios26.1-fwdepth-r4",
+    "startingSha": "5cc42895aa4277d0ed2103050b64be03fe813c3e"
+  },
+  "defaults": {
+    "autoCreatePR": true,
+    "createRatePerMinute": 12,
+    "effort": "high",
+    "fast": false,
+    "maxActive": 24,
+    "maxRepairRuns": 2,
+    "modelId": "grok-4.6",
+    "skipReviewerRequest": true,
+    "timeoutMinutes": 60
+  },
+  "frameworks": [
+    {
+      "agentName": "Port CoreImage to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/coreimage/*.swift",
+        "full/coreimage/coreimage_guest_sources.txt",
+        "full/coreimage/README.md",
+        "full/coreimage/coverage.tsv",
+        "full/coreimage/oracle-questions.tsv",
+        "full/coreimage/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=CoreImage lane=medium-full symbols=855",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "COREIMAGE_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=CoreImage dylib=libCoreImage.dylib"
+      ],
+      "gate": "bash full/coreimage/tests/acceptance/test_host.sh",
+      "immutableDigest": "262e683314ca08f1f52eb898573414763ebb897a3f40bc186c1e0d4e086e3161",
+      "lane": "medium-full",
+      "module": "CoreImage",
+      "ownedPaths": [
+        "full/coreimage/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "ui",
+        "fail-closed"
+      ],
+      "slug": "coreimage",
+      "symbolCount": 855,
+      "taskPath": "full/coreimage/FANOUT_TASK.md",
+      "prompt": "Implement the CoreImage framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/coreimage/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwdepth-r4\n  - expected starting commit: 5cc42895aa4277d0ed2103050b64be03fe813c3e\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: CoreImage\n  - lane: medium-full\n  - immutable input digest: 262e683314ca08f1f52eb898573414763ebb897a3f40bc186c1e0d4e086e3161\n  - known symbol count: 855\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/coreimage/**\n\nEditable paths:\n  - full/coreimage/*.swift\n  - full/coreimage/coreimage_guest_sources.txt\n  - full/coreimage/README.md\n  - full/coreimage/coverage.tsv\n  - full/coreimage/oracle-questions.tsv\n  - full/coreimage/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - ui\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/coreimage/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=CoreImage lane=medium-full symbols=855\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - COREIMAGE_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=CoreImage dylib=libCoreImage.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nDEPTH PASS (authoritative task for this run; the FANOUT_TASK.md seed contract still governs file forms, statuses and the sealed gate):\nSDK DEPTH for `CoreImage` in full/coreimage/, SECOND PASS, based on `origin/agent/fw-coreimage` (git fetch origin agent/fw-coreimage; it exists in this repository). The operator REFUSED the first pass on evidence concentration: 213 of 510 non-table `implemented` rows cite ONE test (`tests/agent/CoreImageTests.swift#testCIDeclaredSurface`) \u2014 a bulk relabel. EVIDENCE FORM/RULE: every `implemented` row cites `test:full/coreimage/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument test that exercises THAT identifier; a file path, a description, a 'declared surface' or 'identity' test is not evidence; enum/option-set members and C k\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused. Reclassify bulk-cited rows to `declared` (evidence `source:full/coreimage/<file>.swift#Symbol`) unless you write a behavioural test, then spend the pass on real behaviour: CIImage (init variants, extent arithmetic, cropped/transformed/applyingFilter/composited), CIContext createCGImage/pngRepresentation/jpegRepresentation on a CPU pipeline with documented working-space rules, CIFilter(name:) for the corpus filters (CIGaussianBlur, CIColorControls, CISepiaTone, CIPhotoEffect*, CIColorMatrix, CIExposureAdjust, CIVibrance, CIHueAdjust, CICrop, CIAffineTransform, CISourceOverCompositing, CIQRCodeGenerator per ISO 18004 with tests against known codewords, CICode128BarcodeGenerator) with kCIInput* keys and attributes dictionaries exact, CIFilterBuiltins properties, CIColor/CIVector value semantics, CIKernel/CIDetector fail closed (no Metal / no ML) with listed gaps; every filter's math cites Apple's documented formula and has a pixel test against a hand-computed raster. Run `bash full/coreimage/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK; report in full/coreimage/README.md under 'Depth pass 2026-09' (implemented before/after + top-5 evidence distribution); push as agent/fw-coreimage2 and open the pull request the campaign expects."
+    }
+  ],
+  "repository": {
+    "startingRef": "experiment/cursor-framework-fanout-wave3-seed-20260912",
+    "url": "https://github.com/Vercantez/openuikit-linux-platform"
+  },
+  "schema": 1
+}

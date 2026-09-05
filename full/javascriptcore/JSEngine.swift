@@ -1,5 +1,8 @@
 import CoreFoundation
 import Foundation
+#if os(Linux)
+import Glibc
+#endif
 
 class JSCRetainable: NSObject {
     var retainCountValue: Int = 1
@@ -38,16 +41,66 @@ struct JSCProperty {
     var setter: JSCValue?
 }
 
+struct JSCCopiedStaticValue {
+    var name: String
+    var getProperty: JSObjectGetPropertyCallback?
+    var setProperty: JSObjectSetPropertyCallback?
+    var attributes: JSPropertyAttributes
+}
+
+struct JSCCopiedStaticFunction {
+    var name: String
+    var callAsFunction: JSObjectCallAsFunctionCallback?
+    var attributes: JSPropertyAttributes
+}
+
 final class JSCClass: JSCRetainable {
     var definition: JSClassDefinition
     var parent: JSCClass?
-    var className: String
+    var jsClassName: String
+    var staticValues: [JSCCopiedStaticValue] = []
+    var staticFunctions: [JSCCopiedStaticFunction] = []
 
     init(definition: JSClassDefinition, parent: JSCClass?, className: String) {
         self.definition = definition
         self.parent = parent
-        self.className = className
+        self.jsClassName = className
         super.init()
+        if let table = definition.staticValues {
+            var index = 0
+            while true {
+                let entry = table.advanced(by: index).pointee
+                guard let namePtr = entry.name else { break }
+                let name = String(cString: namePtr)
+                if name.isEmpty { break }
+                staticValues.append(
+                    JSCCopiedStaticValue(
+                        name: name,
+                        getProperty: entry.getProperty,
+                        setProperty: entry.setProperty,
+                        attributes: entry.attributes
+                    )
+                )
+                index += 1
+            }
+        }
+        if let table = definition.staticFunctions {
+            var index = 0
+            while true {
+                let entry = table.advanced(by: index).pointee
+                guard let namePtr = entry.name else { break }
+                let name = String(cString: namePtr)
+                if name.isEmpty { break }
+                staticFunctions.append(
+                    JSCCopiedStaticFunction(
+                        name: name,
+                        callAsFunction: entry.callAsFunction,
+                        attributes: entry.attributes
+                    )
+                )
+                index += 1
+            }
+        }
     }
 }
 
@@ -148,8 +201,12 @@ final class JSCValue: JSCRetainable {
         let value = JSCValue(primitive: .null, context: context)
         value.primitive = .null
         value.object = object
-        if object.prototype == nil, let proto = context.objectPrototype, object !== proto.object {
-            object.prototype = proto
+        if object.prototype == nil {
+            if object.kind == .array, let proto = context.arrayPrototype, object !== proto.object {
+                object.prototype = proto
+            } else if let proto = context.objectPrototype, object !== proto.object {
+                object.prototype = proto
+            }
         }
         return value
     }
@@ -251,6 +308,8 @@ final class JSCContext: JSCRetainable {
     let group: JSCGroup
     var global: JSCValue!
     var objectPrototype: JSCValue?
+    var arrayPrototype: JSCValue?
+    var stringPrototype: JSCValue?
     var name: String = ""
     var inspectable = false
     weak var overlay: JSContext?
@@ -317,14 +376,9 @@ final class JSCContext: JSCRetainable {
         setProperty(json, "stringify", stringify, enumerable: true)
         setGlobal("JSON", json)
 
-        let math = JSCValue.object(JSCObject(kind: .ordinary), context: self)
-        setProperty(math, "PI", JSCValue(primitive: .number(Double.pi), context: self), enumerable: true)
-        let absFn = makeNativeFunction("abs") { [weak self] args, _, _ in
-            guard let self else { return JSCValue(primitive: .undefined, context: nil) }
-            return JSCValue(primitive: .number(abs(self.toNumber(args.first ?? JSCValue(primitive: .undefined, context: self)))), context: self)
-        }
-        setProperty(math, "abs", absFn, enumerable: true)
-        setGlobal("Math", math)
+        installMathBuiltins()
+        installStringBuiltins()
+        installArrayBuiltins(arrayCtor: arrayCtor)
 
         setGlobal("undefined", JSCValue(primitive: .undefined, context: self))
         setGlobal("NaN", JSCValue(primitive: .number(Double.nan), context: self))
@@ -339,6 +393,249 @@ final class JSCContext: JSCRetainable {
         setProperty(objectProto, "toString", toString, enumerable: false)
         global.object?.prototype = objectProto
         setProperty(objectCtor, "prototype", objectProto, enumerable: false)
+        stringPrototype?.object?.prototype = objectProto
+        arrayPrototype?.object?.prototype = objectProto
+    }
+
+    func numberValue(_ value: Double) -> JSCValue {
+        JSCValue(primitive: .number(value), context: self)
+    }
+
+    func stringValue(_ value: String) -> JSCValue {
+        JSCValue(primitive: .string(value), context: self)
+    }
+
+    func booleanValue(_ value: Bool) -> JSCValue {
+        JSCValue(primitive: .boolean(value), context: self)
+    }
+
+    func undefinedValue() -> JSCValue {
+        JSCValue(primitive: .undefined, context: self)
+    }
+
+    func installMathBuiltins() {
+        let math = JSCValue.object(JSCObject(kind: .ordinary), context: self)
+        setProperty(math, "PI", numberValue(Double.pi), enumerable: true)
+        setProperty(math, "E", numberValue(2.718281828459045), enumerable: true)
+        func math1(_ name: String, _ body: @escaping (Double) -> Double) {
+            setProperty(math, name, makeNativeFunction(name) { [weak self] args, _, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                return self.numberValue(body(self.toNumber(args.first ?? self.undefinedValue())))
+            }, enumerable: true)
+        }
+        math1("abs", abs)
+        math1("floor") { $0.rounded(.down) }
+        math1("ceil") { $0.rounded(.up) }
+        math1("round") { $0.rounded() }
+        math1("sqrt") { $0.squareRoot() }
+        math1("sin") { sin($0) }
+        math1("cos") { cos($0) }
+        math1("tan") { tan($0) }
+        math1("log") { log($0) }
+        math1("exp") { exp($0) }
+        setProperty(math, "max", makeNativeFunction("max") { [weak self] args, _, _ in
+            guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+            let numbers = args.map { self.toNumber($0) }
+            return self.numberValue(numbers.max() ?? -Double.infinity)
+        }, enumerable: true)
+        setProperty(math, "min", makeNativeFunction("min") { [weak self] args, _, _ in
+            guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+            let numbers = args.map { self.toNumber($0) }
+            return self.numberValue(numbers.min() ?? Double.infinity)
+        }, enumerable: true)
+        setProperty(math, "pow", makeNativeFunction("pow") { [weak self] args, _, _ in
+            guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+            let base = self.toNumber(args.first ?? self.undefinedValue())
+            let exp = args.count > 1 ? self.toNumber(args[1]) : Double.nan
+            return self.numberValue(pow(base, exp))
+        }, enumerable: true)
+        setGlobal("Math", math)
+    }
+
+    func installStringBuiltins() {
+        let proto = JSCValue.object(JSCObject(kind: .ordinary), context: self)
+        stringPrototype = proto
+        func method(_ name: String, _ body: @escaping (JSCContext, String, [JSCValue]) throws -> JSCValue) {
+            setProperty(proto, name, makeNativeFunction(name) { [weak self] args, thisArg, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                return try body(self, self.toString(thisArg), args)
+            }, enumerable: false)
+        }
+        method("charAt") { ctx, text, args in
+            let index = Int(ctx.toNumber(args.first ?? ctx.undefinedValue()))
+            let units = Array(text.utf16)
+            if index < 0 || index >= units.count {
+                return ctx.stringValue("")
+            }
+            return ctx.stringValue(String(decoding: [units[index]], as: UTF16.self))
+        }
+        method("charCodeAt") { ctx, text, args in
+            let index = Int(ctx.toNumber(args.first ?? ctx.undefinedValue()))
+            let units = Array(text.utf16)
+            if index < 0 || index >= units.count {
+                return ctx.numberValue(Double.nan)
+            }
+            return ctx.numberValue(Double(units[index]))
+        }
+        method("substring") { ctx, text, args in
+            let units = Array(text.utf16)
+            var start = max(Int(ctx.toNumber(args.first ?? ctx.numberValue(0))), 0)
+            var end = args.count > 1 ? Int(ctx.toNumber(args[1])) : units.count
+            start = min(start, units.count)
+            end = min(max(end, 0), units.count)
+            if start > end { swap(&start, &end) }
+            return ctx.stringValue(String(decoding: units[start..<end], as: UTF16.self))
+        }
+        method("slice") { ctx, text, args in
+            let units = Array(text.utf16)
+            func idx(_ raw: Int) -> Int {
+                if raw < 0 { return max(units.count + raw, 0) }
+                return min(raw, units.count)
+            }
+            let start = idx(Int(ctx.toNumber(args.first ?? ctx.numberValue(0))))
+            let end = args.count > 1 ? idx(Int(ctx.toNumber(args[1]))) : units.count
+            if start >= end { return ctx.stringValue("") }
+            return ctx.stringValue(String(decoding: units[start..<end], as: UTF16.self))
+        }
+        method("indexOf") { ctx, text, args in
+            let needle = ctx.toString(args.first ?? ctx.stringValue(""))
+            let from = args.count > 1 ? max(Int(ctx.toNumber(args[1])), 0) : 0
+            if let found = jscIndexOf(haystack: text, needle: needle, from: from) {
+                return ctx.numberValue(Double(found))
+            }
+            return ctx.numberValue(-1)
+        }
+        method("toLowerCase") { ctx, text, _ in ctx.stringValue(text.lowercased()) }
+        method("toUpperCase") { ctx, text, _ in ctx.stringValue(text.uppercased()) }
+        method("concat") { ctx, text, args in
+            var result = text
+            for arg in args { result += ctx.toString(arg) }
+            return ctx.stringValue(result)
+        }
+        method("trim") { ctx, text, _ in
+            ctx.stringValue(text.trimmingCharacters(in: .whitespacesAndNewlines))
+        }
+        method("split") { ctx, text, args in
+            let separator = args.first.map { ctx.toString($0) } ?? ""
+            let parts = jscSplit(text, separator: separator)
+            return ctx.makeArray(parts.map { ctx.stringValue($0) })
+        }
+        let stringCtor = makeNativeFunction("String") { [weak self] args, _, _ in
+            guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+            return self.stringValue(args.first.map { self.toString($0) } ?? "")
+        }
+        setProperty(stringCtor, "prototype", proto, enumerable: false)
+        setGlobal("String", stringCtor)
+    }
+
+    func installArrayBuiltins(arrayCtor: JSCValue) {
+        let proto = JSCValue.object(JSCObject(kind: .ordinary), context: self)
+        arrayPrototype = proto
+        func method(_ name: String, _ body: @escaping (JSCContext, JSCValue, [JSCValue]) throws -> JSCValue) {
+            setProperty(proto, name, makeNativeFunction(name) { [weak self] args, thisArg, _ in
+                guard let self else { return JSCValue(primitive: .undefined, context: nil) }
+                return try body(self, thisArg, args)
+            }, enumerable: false)
+        }
+        method("push") { ctx, thisArg, args in
+            var length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            for arg in args {
+                ctx.setProperty(thisArg, String(length), arg, enumerable: true)
+                length += 1
+            }
+            let value = ctx.numberValue(Double(length))
+            ctx.setProperty(thisArg, "length", value, enumerable: false)
+            return value
+        }
+        method("pop") { ctx, thisArg, _ in
+            var length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            if length <= 0 { return ctx.undefinedValue() }
+            length -= 1
+            let value = ctx.getProperty(thisArg, String(length))
+            _ = ctx.deleteProperty(thisArg, String(length))
+            ctx.setProperty(thisArg, "length", ctx.numberValue(Double(length)), enumerable: false)
+            return value
+        }
+        method("shift") { ctx, thisArg, _ in
+            let length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            if length <= 0 { return ctx.undefinedValue() }
+            let first = ctx.getProperty(thisArg, "0")
+            if length > 1 {
+                for index in 0..<(length - 1) {
+                    ctx.setProperty(thisArg, String(index), ctx.getProperty(thisArg, String(index + 1)), enumerable: true)
+                }
+            }
+            _ = ctx.deleteProperty(thisArg, String(length - 1))
+            ctx.setProperty(thisArg, "length", ctx.numberValue(Double(length - 1)), enumerable: false)
+            return first
+        }
+        method("unshift") { ctx, thisArg, args in
+            let length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            let added = args.count
+            if added > 0 && length > 0 {
+                for index in stride(from: length - 1, through: 0, by: -1) {
+                    ctx.setProperty(thisArg, String(index + added), ctx.getProperty(thisArg, String(index)), enumerable: true)
+                }
+            }
+            for (offset, arg) in args.enumerated() {
+                ctx.setProperty(thisArg, String(offset), arg, enumerable: true)
+            }
+            let value = ctx.numberValue(Double(length + added))
+            ctx.setProperty(thisArg, "length", value, enumerable: false)
+            return value
+        }
+        method("slice") { ctx, thisArg, args in
+            let length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            func idx(_ raw: Int) -> Int {
+                if raw < 0 { return max(length + raw, 0) }
+                return min(raw, length)
+            }
+            let start = idx(Int(ctx.toNumber(args.first ?? ctx.numberValue(0))))
+            let end = args.count > 1 ? idx(Int(ctx.toNumber(args[1]))) : length
+            var items: [JSCValue] = []
+            if start < end {
+                for index in start..<end {
+                    items.append(ctx.getProperty(thisArg, String(index)))
+                }
+            }
+            return ctx.makeArray(items)
+        }
+        method("concat") { ctx, thisArg, args in
+            var items: [JSCValue] = []
+            func appendValue(_ value: JSCValue) {
+                if value.object?.kind == .array {
+                    let length = Int(ctx.toNumber(ctx.getProperty(value, "length")))
+                    for index in 0..<max(length, 0) {
+                        items.append(ctx.getProperty(value, String(index)))
+                    }
+                } else {
+                    items.append(value)
+                }
+            }
+            appendValue(thisArg)
+            for arg in args { appendValue(arg) }
+            return ctx.makeArray(items)
+        }
+        method("join") { ctx, thisArg, args in
+            let separator = args.first.map { ctx.toString($0) } ?? ","
+            let length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            let parts = (0..<max(length, 0)).map { ctx.toString(ctx.getProperty(thisArg, String($0))) }
+            return ctx.stringValue(jscJoin(parts, separator: separator))
+        }
+        method("indexOf") { ctx, thisArg, args in
+            let needle = args.first ?? ctx.undefinedValue()
+            let length = Int(ctx.toNumber(ctx.getProperty(thisArg, "length")))
+            let from = args.count > 1 ? max(Int(ctx.toNumber(args[1])), 0) : 0
+            if from < length {
+                for index in from..<length {
+                    if JSCInterpreter(context: ctx, environment: JSCEnvironment(parent: nil)).strictEqual(ctx.getProperty(thisArg, String(index)), needle) {
+                        return ctx.numberValue(Double(index))
+                    }
+                }
+            }
+            return ctx.numberValue(-1)
+        }
+        setProperty(arrayCtor, "prototype", proto, enumerable: false)
     }
 
     func setGlobal(_ name: String, _ value: JSCValue) {
@@ -360,16 +657,29 @@ final class JSCContext: JSCRetainable {
         return value
     }
 
-    func makeError(_ message: String) -> JSCValue {
+    func makeError(_ message: String, name: String = "Error", line: Int32 = 0, column: Int32 = 0) -> JSCValue {
         let object = JSCObject(kind: .error)
         let value = JSCValue.object(object, context: self)
-        setProperty(value, "message", JSCValue(primitive: .string(message), context: self), enumerable: true)
-        setProperty(value, "name", JSCValue(primitive: .string("Error"), context: self), enumerable: true)
+        setProperty(value, "message", stringValue(message), enumerable: true)
+        setProperty(value, "name", stringValue(name), enumerable: true)
+        setProperty(value, "line", numberValue(Double(line)), enumerable: true)
+        setProperty(value, "column", numberValue(Double(column)), enumerable: true)
         return value
     }
 
     func setProperty(_ objectValue: JSCValue, _ name: String, _ value: JSCValue, enumerable: Bool, writable: Bool = true, configurable: Bool = true) {
         guard let object = objectValue.object else { return }
+        if let existing = object.properties[name], !existing.writable {
+            return
+        }
+        if let jsClass = object.jsClass, let callback = classSetProperty(jsClass) {
+            let nameRef = jscPointer(JSCString(name))
+            defer { jscRelease(nameRef) }
+            var exception: JSValueRef?
+            if callback(jscPointer(self), jscPointer(objectValue), nameRef, jscPointer(value), &exception) {
+                return
+            }
+        }
         object.properties[name] = JSCProperty(
             value: value,
             writable: writable,
@@ -379,6 +689,14 @@ final class JSCContext: JSCRetainable {
     }
 
     func getProperty(_ objectValue: JSCValue, _ name: String) -> JSCValue {
+        if objectValue.object == nil, case .string(let text) = objectValue.primitive {
+            if name == "length" {
+                return numberValue(Double(text.utf16.count))
+            }
+            if let proto = stringPrototype {
+                return getProperty(proto, name)
+            }
+        }
         var current: JSCValue? = objectValue
         while let object = current?.object {
             if name == "__proto__" {
@@ -386,12 +704,12 @@ final class JSCContext: JSCRetainable {
             }
             if let property = object.properties[name] {
                 if let getter = property.getter {
-                    return (try? call(getter, this: objectValue, arguments: [])) ?? JSCValue(primitive: .undefined, context: self)
+                    return (try? call(getter, this: objectValue, arguments: [])) ?? undefinedValue()
                 }
                 return property.value
             }
             if let jsClass = object.jsClass {
-                if let callback = jsClass.definition.getProperty ?? jsClass.parent?.definition.getProperty {
+                if let callback = classGetProperty(jsClass) {
                     let ctxRef = jscPointer(self)
                     let objRef = jscPointer(objectValue)
                     let nameRef = jscPointer(JSCString(name))
@@ -401,26 +719,140 @@ final class JSCContext: JSCRetainable {
                         if let exception, let thrown = jscValue(exception) {
                             self.exception = thrown
                         }
-                        return jscValue(result) ?? JSCValue(primitive: .undefined, context: self)
+                        return jscValue(result) ?? undefinedValue()
                     }
+                }
+                if let staticValue = lookupStaticValue(jsClass, name: name), let getter = staticValue.getProperty {
+                    let ctxRef = jscPointer(self)
+                    let objRef = jscPointer(objectValue)
+                    let nameRef = jscPointer(JSCString(name))
+                    defer { jscRelease(nameRef) }
+                    var exception: JSValueRef?
+                    if let result = getter(ctxRef, objRef, nameRef, &exception) {
+                        return jscValue(result) ?? undefinedValue()
+                    }
+                }
+                if let staticFn = lookupStaticFunction(jsClass, name: name) {
+                    return staticFn
                 }
             }
             current = object.prototype
         }
-        return JSCValue(primitive: .undefined, context: self)
+        return undefinedValue()
     }
 
     func hasProperty(_ objectValue: JSCValue, _ name: String) -> Bool {
+        if objectValue.object == nil, case .string = objectValue.primitive {
+            if name == "length" { return true }
+            if let proto = stringPrototype { return hasProperty(proto, name) }
+        }
         var current: JSCValue? = objectValue
         while let object = current?.object {
             if object.properties[name] != nil { return true }
+            if let jsClass = object.jsClass {
+                if let callback = classHasProperty(jsClass) {
+                    let nameRef = jscPointer(JSCString(name))
+                    defer { jscRelease(nameRef) }
+                    if callback(jscPointer(self), jscPointer(objectValue), nameRef) {
+                        return true
+                    }
+                }
+                if lookupStaticValue(jsClass, name: name) != nil { return true }
+                if lookupStaticFunction(jsClass, name: name) != nil { return true }
+            }
             current = object.prototype
         }
         return false
     }
 
+    func classGetProperty(_ jsClass: JSCClass) -> JSObjectGetPropertyCallback? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let value = jsClass.definition.getProperty { return value }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func classHasProperty(_ jsClass: JSCClass) -> JSObjectHasPropertyCallback? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let value = jsClass.definition.hasProperty { return value }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func classSetProperty(_ jsClass: JSCClass) -> JSObjectSetPropertyCallback? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let value = jsClass.definition.setProperty { return value }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func classDeleteProperty(_ jsClass: JSCClass) -> JSObjectDeletePropertyCallback? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let value = jsClass.definition.deleteProperty { return value }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func classGetPropertyNames(_ jsClass: JSCClass) -> JSObjectGetPropertyNamesCallback? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let value = jsClass.definition.getPropertyNames { return value }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func classConvertToType(_ jsClass: JSCClass) -> JSObjectConvertToTypeCallback? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let value = jsClass.definition.convertToType { return value }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func lookupStaticValue(_ jsClass: JSCClass, name: String) -> JSCCopiedStaticValue? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let entry = jsClass.staticValues.first(where: { $0.name == name }) {
+                return entry
+            }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
+    func lookupStaticFunction(_ jsClass: JSCClass, name: String) -> JSCValue? {
+        var current: JSCClass? = jsClass
+        while let jsClass = current {
+            if let entry = jsClass.staticFunctions.first(where: { $0.name == name }) {
+                let object = JSCObject(kind: .function)
+                object.functionCallback = entry.callAsFunction
+                let value = JSCValue.object(object, context: self)
+                setProperty(value, "name", stringValue(entry.name), enumerable: false)
+                return value
+            }
+            current = jsClass.parent
+        }
+        return nil
+    }
+
     func deleteProperty(_ objectValue: JSCValue, _ name: String) -> Bool {
         guard let object = objectValue.object else { return false }
+        if let jsClass = object.jsClass, let callback = classDeleteProperty(jsClass) {
+            let nameRef = jscPointer(JSCString(name))
+            defer { jscRelease(nameRef) }
+            var exception: JSValueRef?
+            return callback(jscPointer(self), jscPointer(objectValue), nameRef, &exception)
+        }
         guard let property = object.properties[name] else { return true }
         guard property.configurable else { return false }
         object.properties.removeValue(forKey: name)
@@ -429,9 +861,16 @@ final class JSCContext: JSCRetainable {
 
     func propertyNames(_ objectValue: JSCValue) -> [String] {
         guard let object = objectValue.object else { return [] }
-        return object.properties.compactMap { key, property in
+        var names = object.properties.compactMap { key, property in
             property.enumerable ? key : nil
-        }.sorted()
+        }
+        if let jsClass = object.jsClass, let callback = classGetPropertyNames(jsClass) {
+            let accumulator = JSCNameArray(names)
+            callback(jscPointer(self), jscPointer(objectValue), jscPointer(accumulator))
+            names = accumulator.names.map(\.string)
+            jscRelease(jscPointer(accumulator))
+        }
+        return names.sorted()
     }
 
     func toBoolean(_ value: JSCValue) -> Bool {
@@ -449,7 +888,17 @@ final class JSCContext: JSCRetainable {
     }
 
     func toNumber(_ value: JSCValue) -> Double {
-        if value.object != nil {
+        if let object = value.object {
+            if object.kind == .date {
+                return (object.date ?? Date()).timeIntervalSince1970 * 1000
+            }
+            if let jsClass = object.jsClass, let callback = classConvertToType(jsClass) {
+                var exception: JSValueRef?
+                if let converted = callback(jscPointer(self), jscPointer(value), kJSTypeNumber, &exception),
+                   let jsValue = jscValue(converted), jsValue.object == nil {
+                    return toNumber(jsValue)
+                }
+            }
             return Double.nan
         }
         switch value.primitive {
@@ -457,7 +906,10 @@ final class JSCContext: JSCRetainable {
         case .null: return 0
         case .boolean(let flag): return flag ? 1 : 0
         case .number(let number): return number
-        case .string(let string): return Double(string.trimmingCharacters(in: .whitespacesAndNewlines)) ?? Double.nan
+        case .string(let string):
+            let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty { return 0 }
+            return Double(trimmed) ?? Double.nan
         case .symbol: return Double.nan
         case .bigInt(let text): return Double(text) ?? Double.nan
         }
@@ -528,7 +980,7 @@ final class JSCContext: JSCRetainable {
             let result = host(overlay, bridged)
             return overlay.engineValue(from: result)
         }
-        if let callback = object.functionCallback {
+        if let callback = object.functionCallback ?? object.jsClass?.definition.callAsFunction ?? object.jsClass?.parent?.definition.callAsFunction {
             let ctxRef = jscPointer(self)
             let objectRef = jscPointer(function)
             let thisRef = jscPointer(this)
@@ -563,7 +1015,7 @@ final class JSCContext: JSCRetainable {
     func construct(_ function: JSCValue, arguments: [JSCValue]) throws -> JSCValue {
         let created = JSCValue.object(JSCObject(kind: .ordinary), context: self)
         created.object?.prototype = getProperty(function, "prototype")
-        if let object = function.object, let callback = object.constructorCallback {
+        if let object = function.object, let callback = object.constructorCallback ?? object.jsClass?.definition.callAsConstructor ?? object.jsClass?.parent?.definition.callAsConstructor {
             let ctxRef = jscPointer(self)
             let refs = arguments.map { jscPointer($0) as JSValueRef? }
             var exception: JSValueRef?
@@ -696,20 +1148,26 @@ final class JSCContext: JSCRetainable {
     func evaluate(_ script: String, this: JSCValue?, sourceURL: String?, startingLine: Int32) -> JSCValue {
         exception = nil
         do {
-            let program = try JSCParser(source: script).parseProgram()
+            let program = try JSCParser(source: script, startingLine: max(startingLine, 1)).parseProgram()
             let env = JSCEnvironment(parent: nil)
             env.define("this", this ?? global)
             let interpreter = JSCInterpreter(context: self, environment: env, thisValue: this ?? global)
             try interpreter.run(program)
-            return interpreter.returnValue ?? JSCValue(primitive: .undefined, context: self)
+            return interpreter.returnValue ?? undefinedValue()
         } catch let thrown as JSCThrown {
             exception = thrown.value
-            return JSCValue(primitive: .undefined, context: self)
+            return undefinedValue()
         } catch let thrown as JSCReturn {
-            return thrown.value ?? JSCValue(primitive: .undefined, context: self)
+            return thrown.value ?? undefinedValue()
+        } catch let parseError as JSCParseError {
+            exception = makeError(parseError.description, name: "SyntaxError", line: parseError.line, column: parseError.column)
+            if let sourceURL {
+                setProperty(exception!, "sourceURL", stringValue(sourceURL), enumerable: true)
+            }
+            return undefinedValue()
         } catch {
             exception = makeError(String(describing: error))
-            return JSCValue(primitive: .undefined, context: self)
+            return undefinedValue()
         }
     }
 
@@ -718,8 +1176,11 @@ final class JSCContext: JSCRetainable {
         do {
             _ = try JSCParser(source: script).parseProgram()
             return true
+        } catch let parseError as JSCParseError {
+            exception = makeError(parseError.description, name: "SyntaxError", line: parseError.line, column: parseError.column)
+            return false
         } catch {
-            exception = makeError(String(describing: error))
+            exception = makeError(String(describing: error), name: "SyntaxError")
             return false
         }
     }
@@ -756,6 +1217,7 @@ indirect enum JSCStmt {
     case varDecl(String, String, JSCExpr?)
     case ifStmt(JSCExpr, JSCStmt, JSCStmt?)
     case whileStmt(JSCExpr, JSCStmt)
+    case forStmt(JSCStmt, JSCExpr?, JSCExpr?, JSCStmt)
     case returnStmt(JSCExpr?)
     case throwStmt(JSCExpr)
     case functionDecl(String, [String], [JSCStmt])
@@ -773,9 +1235,15 @@ enum JSCToken: Equatable {
 final class JSCLexer {
     let source: [Character]
     var index = 0
+    var line: Int32 = 1
+    var column: Int32 = 1
+    var tokenLine: Int32 = 1
+    var tokenColumn: Int32 = 1
 
-    init(source: String) {
+    init(source: String, startingLine: Int32 = 1) {
         self.source = Array(source)
+        self.line = max(startingLine, 1)
+        self.column = 1
     }
 
     func peek() -> Character? {
@@ -786,6 +1254,12 @@ final class JSCLexer {
         guard index < source.count else { return nil }
         let character = source[index]
         index += 1
+        if character == "\n" {
+            line += 1
+            column = 1
+        } else {
+            column += 1
+        }
         return character
     }
 
@@ -816,7 +1290,12 @@ final class JSCLexer {
 
     func next() throws -> JSCToken {
         skip()
+        tokenLine = line
+        tokenColumn = column
         guard let character = peek() else { return .eof }
+        if character == "`" {
+            throw JSCParseError("template literals are not supported", line: line, column: column)
+        }
         if character.isLetter || character == "_" || character == "$" {
             var text = ""
             while let next = peek(), next.isLetter || next.isNumber || next == "_" || next == "$" {
@@ -830,7 +1309,9 @@ final class JSCLexer {
                 if (next == "+" || next == "-") && text.last != "e" && text.last != "E" { break }
                 text.append(advance()!)
             }
-            guard let value = Double(text) else { throw JSCParseError("invalid number \(text)") }
+            guard let value = Double(text) else {
+                throw JSCParseError("invalid number \(text)", line: tokenLine, column: tokenColumn)
+            }
             return .number(value)
         }
         if character == "\"" || character == "'" {
@@ -856,10 +1337,10 @@ final class JSCLexer {
             _ = advance()
             return .string(text)
         }
-        let two: [String] = ["===", "!==", "&&", "||", "==", "!=", "<=", ">=", "++", "--"]
+        let puncts: [String] = ["===", "!==", "=>", "&&", "||", "==", "!=", "<=", ">=", "++", "--", "+=", "-=", "*=", "/=", "%="]
         let remaining = String(source[index...])
-        for op in two where remaining.hasPrefix(op) {
-            index += op.count
+        for op in puncts where remaining.hasPrefix(op) {
+            for _ in 0..<op.count { _ = advance() }
             return .punct(op)
         }
         _ = advance()
@@ -869,20 +1350,37 @@ final class JSCLexer {
 
 struct JSCParseError: Error, CustomStringConvertible {
     var description: String
-    init(_ description: String) { self.description = description }
+    var line: Int32
+    var column: Int32
+    init(_ description: String, line: Int32 = 1, column: Int32 = 1) {
+        self.description = description
+        self.line = line
+        self.column = column
+    }
 }
 
 final class JSCParser {
     var tokens: [JSCToken] = []
+    var lines: [Int32] = []
+    var columns: [Int32] = []
     var index = 0
 
-    init(source: String) throws {
-        let lexer = JSCLexer(source: source)
+    init(source: String, startingLine: Int32 = 1) throws {
+        let lexer = JSCLexer(source: source, startingLine: startingLine)
         while true {
             let token = try lexer.next()
             tokens.append(token)
+            lines.append(lexer.tokenLine)
+            columns.append(lexer.tokenColumn)
             if token == .eof { break }
         }
+    }
+
+    var line: Int32 { index < lines.count ? lines[index] : (lines.last ?? 1) }
+    var column: Int32 { index < columns.count ? columns[index] : (columns.last ?? 1) }
+
+    func fail(_ message: String) -> JSCParseError {
+        JSCParseError(message, line: line, column: column)
     }
 
     func peek() -> JSCToken { tokens[index] }
@@ -909,6 +1407,23 @@ final class JSCParser {
         return false
     }
 
+    func rejectUnsupportedIdent() throws {
+        if case .ident(let ident) = peek() {
+            switch ident {
+            case "class":
+                throw fail("class declarations are not supported")
+            case "async", "await":
+                throw fail("async/await is not supported")
+            case "yield":
+                throw fail("generators are not supported")
+            case "import", "export":
+                throw fail("modules are not supported")
+            default:
+                break
+            }
+        }
+    }
+
     func parseProgram() throws -> [JSCStmt] {
         var statements: [JSCStmt] = []
         while peek() != .eof {
@@ -919,10 +1434,11 @@ final class JSCParser {
     }
 
     func parseStatement() throws -> JSCStmt {
+        try rejectUnsupportedIdent()
         if match("{") {
             var statements: [JSCStmt] = []
             while !match("}") {
-                if peek() == .eof { throw JSCParseError("unterminated block") }
+                if peek() == .eof { throw fail("unterminated block") }
                 statements.append(try parseStatement())
             }
             return .block(statements)
@@ -942,6 +1458,30 @@ final class JSCParser {
             try expect(")")
             return .whileStmt(test, try parseStatement())
         }
+        if matchIdent("for") {
+            try expect("(")
+            var initStmt: JSCStmt = .empty
+            if !match(";") {
+                if case .ident(let keyword) = peek(), keyword == "var" || keyword == "let" || keyword == "const" {
+                    initStmt = try parseStatement()
+                } else {
+                    let expr = try parseExpression()
+                    try expect(";")
+                    initStmt = .expr(expr)
+                }
+            }
+            var test: JSCExpr?
+            if !match(";") {
+                test = try parseExpression()
+                try expect(";")
+            }
+            var update: JSCExpr?
+            if !match(")") {
+                update = try parseExpression()
+                try expect(")")
+            }
+            return .forStmt(initStmt, test, update, try parseStatement())
+        }
         if matchIdent("return") {
             if match(";") { return .returnStmt(nil) }
             let value = try parseExpression()
@@ -954,13 +1494,13 @@ final class JSCParser {
             return .throwStmt(value)
         }
         if matchIdent("function") {
-            guard case .ident(let name) = advance() else { throw JSCParseError("function name") }
+            guard case .ident(let name) = advance() else { throw fail("function name") }
             let (params, body) = try parseFunctionRest()
             return .functionDecl(name, params, body)
         }
-        if case .ident(let keyword) = peek(), ["var", "let", "const"].contains(keyword) {
+        if case .ident(let keyword) = peek(), keyword == "var" || keyword == "let" || keyword == "const" {
             _ = advance()
-            guard case .ident(let name) = advance() else { throw JSCParseError("binding name") }
+            guard case .ident(let name) = advance() else { throw fail("binding name") }
             var expr: JSCExpr?
             if match("=") { expr = try parseExpression() }
             _ = match(";")
@@ -976,7 +1516,7 @@ final class JSCParser {
         var params: [String] = []
         if !match(")") {
             while true {
-                guard case .ident(let name) = advance() else { throw JSCParseError("parameter") }
+                guard case .ident(let name) = advance() else { throw fail("parameter") }
                 params.append(name)
                 if match(")") { break }
                 try expect(",")
@@ -985,22 +1525,29 @@ final class JSCParser {
         try expect("{")
         var body: [JSCStmt] = []
         while !match("}") {
-            if peek() == .eof { throw JSCParseError("unterminated function") }
+            if peek() == .eof { throw fail("unterminated function") }
             body.append(try parseStatement())
         }
         return (params, body)
     }
 
     func expect(_ punct: String) throws {
-        guard match(punct) else { throw JSCParseError("expected \(punct)") }
+        guard match(punct) else { throw fail("expected \(punct)") }
     }
 
     func parseExpression() throws -> JSCExpr { try parseAssignment() }
 
     func parseAssignment() throws -> JSCExpr {
         let left = try parseConditional()
+        if match("=>") { throw fail("arrow functions are not supported") }
         if match("=") {
             return .assign(left, try parseAssignment())
+        }
+        for compound in ["+=", "-=", "*=", "/=", "%="] {
+            if match(compound) {
+                let op = String(compound.dropLast())
+                return .assign(left, .binary(op, left, try parseAssignment()))
+            }
         }
         return left
     }
@@ -1018,7 +1565,22 @@ final class JSCParser {
     func parseOr() throws -> JSCExpr { try parseBinary(["||"], parseAnd) }
     func parseAnd() throws -> JSCExpr { try parseBinary(["&&"], parseEquality) }
     func parseEquality() throws -> JSCExpr { try parseBinary(["===", "!==", "==", "!="], parseRelation) }
-    func parseRelation() throws -> JSCExpr { try parseBinary(["<=", ">=", "<", ">"], parseAdd) }
+    func parseRelation() throws -> JSCExpr {
+        var expr = try parseAdd()
+        while true {
+            if case .punct(let op) = peek(), op == "<=" || op == ">=" || op == "<" || op == ">" {
+                _ = advance()
+                expr = .binary(op, expr, try parseAdd())
+                continue
+            }
+            if matchIdent("instanceof") {
+                expr = .binary("instanceof", expr, try parseAdd())
+                continue
+            }
+            break
+        }
+        return expr
+    }
     func parseAdd() throws -> JSCExpr { try parseBinary(["+", "-"], parseMul) }
     func parseMul() throws -> JSCExpr { try parseBinary(["*", "/", "%"], parseUnary) }
 
@@ -1032,6 +1594,7 @@ final class JSCParser {
     }
 
     func parseUnary() throws -> JSCExpr {
+        try rejectUnsupportedIdent()
         if matchIdent("typeof") { return .unary("typeof", try parseUnary()) }
         if matchIdent("new") {
             let callee = try parseMember()
@@ -1042,6 +1605,8 @@ final class JSCParser {
         if match("!") { return .unary("!", try parseUnary()) }
         if match("-") { return .unary("-", try parseUnary()) }
         if match("+") { return .unary("+", try parseUnary()) }
+        if match("++") { return .unary("++", try parseUnary()) }
+        if match("--") { return .unary("--", try parseUnary()) }
         return try parseMember()
     }
 
@@ -1049,7 +1614,7 @@ final class JSCParser {
         var expr = try parsePrimary()
         while true {
             if match(".") {
-                guard case .ident(let name) = advance() else { throw JSCParseError("member") }
+                guard case .ident(let name) = advance() else { throw fail("member") }
                 expr = .member(expr, name)
                 continue
             }
@@ -1061,6 +1626,14 @@ final class JSCParser {
             }
             if match("(") {
                 expr = .call(expr, try parseArgList())
+                continue
+            }
+            if match("++") {
+                expr = .unary("++post", expr)
+                continue
+            }
+            if match("--") {
+                expr = .unary("--post", expr)
                 continue
             }
             break
@@ -1079,6 +1652,10 @@ final class JSCParser {
     }
 
     func parsePrimary() throws -> JSCExpr {
+        try rejectUnsupportedIdent()
+        if case .punct("/") = peek() {
+            throw fail("regular expression literals are not supported")
+        }
         switch peek() {
         case .number(let value):
             _ = advance()
@@ -1135,9 +1712,9 @@ final class JSCParser {
                     case .string(let string):
                         _ = advance(); key = string
                     case .number(let number):
-                        _ = advance(); key = String(number)
+                        _ = advance(); key = String(Int(number))
                     default:
-                        throw JSCParseError("object key")
+                        throw fail("object key")
                     }
                     try expect(":")
                     pairs.append((key, try parseExpression()))
@@ -1147,7 +1724,7 @@ final class JSCParser {
             }
             return .object(pairs)
         }
-        throw JSCParseError("unexpected token \(peek())")
+        throw fail("unexpected token \(peek())")
     }
 }
 
@@ -1182,7 +1759,9 @@ final class JSCInterpreter {
         case .varDecl(_, let name, let expr):
             let value = try expr.map { try eval($0) } ?? JSCValue(primitive: .undefined, context: context)
             environment.define(name, value)
-            context.setProperty(context.global, name, value, enumerable: true)
+            if environment.parent == nil {
+                context.setProperty(context.global, name, value, enumerable: true)
+            }
         case .ifStmt(let test, let consequent, let alternate):
             if context.toBoolean(try eval(test)) {
                 try exec(consequent)
@@ -1196,6 +1775,18 @@ final class JSCInterpreter {
                 if hops > 100_000 { throw JSCThrown(value: context.makeError("infinite loop")) }
                 try exec(body)
             }
+        case .forStmt(let initStmt, let test, let update, let body):
+            try exec(initStmt)
+            var hops = 0
+            while true {
+                if let test, !context.toBoolean(try eval(test)) { break }
+                hops += 1
+                if hops > 100_000 { throw JSCThrown(value: context.makeError("infinite loop")) }
+                try exec(body)
+                if let update {
+                    _ = try eval(update)
+                }
+            }
         case .returnStmt(let expr):
             throw JSCReturn(value: try expr.map { try eval($0) })
         case .throwStmt(let expr):
@@ -1203,7 +1794,9 @@ final class JSCInterpreter {
         case .functionDecl(let name, let params, let body):
             let fn = makeFunction(name: name, params: params, body: body)
             environment.define(name, fn)
-            context.setProperty(context.global, name, fn, enumerable: true)
+            if environment.parent == nil {
+                context.setProperty(context.global, name, fn, enumerable: true)
+            }
         case .empty:
             break
         }
@@ -1237,6 +1830,16 @@ final class JSCInterpreter {
             case "!": return JSCValue(primitive: .boolean(!context.toBoolean(value)), context: context)
             case "-": return JSCValue(primitive: .number(-context.toNumber(value)), context: context)
             case "+": return JSCValue(primitive: .number(context.toNumber(value)), context: context)
+            case "++", "--":
+                let delta: Double = op == "++" ? 1 : -1
+                let next = JSCValue(primitive: .number(context.toNumber(value) + delta), context: context)
+                try applyAssign(valueExpr, next)
+                return next
+            case "++post", "--post":
+                let delta: Double = op == "++post" ? 1 : -1
+                let next = JSCValue(primitive: .number(context.toNumber(value) + delta), context: context)
+                try applyAssign(valueExpr, next)
+                return value
             case "typeof":
                 if value.object != nil {
                     if value.object?.kind == .function || value.object?.kind == .constructor {
@@ -1288,28 +1891,16 @@ final class JSCInterpreter {
             case ">": return JSCValue(primitive: .boolean(context.toNumber(left) > context.toNumber(right)), context: context)
             case "<=": return JSCValue(primitive: .boolean(context.toNumber(left) <= context.toNumber(right)), context: context)
             case ">=": return JSCValue(primitive: .boolean(context.toNumber(left) >= context.toNumber(right)), context: context)
+            case "instanceof":
+                return JSCValue(
+                    primitive: .boolean(JSValueIsInstanceOfConstructor(jscPointer(context), jscPointer(left), jscPointer(right), nil)),
+                    context: context
+                )
             default: return JSCValue(primitive: .undefined, context: context)
             }
         case .assign(let leftExpr, let rightExpr):
             let value = try eval(rightExpr)
-            switch leftExpr {
-            case .ident(let name):
-                if !environment.set(name, value) {
-                    environment.define(name, value)
-                    context.setProperty(context.global, name, value, enumerable: true)
-                } else if context.hasProperty(context.global, name) {
-                    context.setProperty(context.global, name, value, enumerable: true)
-                }
-            case .member(let objectExpr, let name):
-                let object = try eval(objectExpr)
-                context.setProperty(object, name, value, enumerable: true)
-            case .index(let objectExpr, let indexExpr):
-                let object = try eval(objectExpr)
-                let name = context.toString(try eval(indexExpr))
-                context.setProperty(object, name, value, enumerable: true)
-            default:
-                throw JSCThrown(value: context.makeError("invalid assignment"))
-            }
+            try applyAssign(leftExpr, value)
             return value
         case .member(let objectExpr, let name):
             return context.getProperty(try eval(objectExpr), name)
@@ -1343,6 +1934,27 @@ final class JSCInterpreter {
             return makeFunction(name: name, params: params, body: body)
         case .cond(let test, let consequent, let alternate):
             return context.toBoolean(try eval(test)) ? try eval(consequent) : try eval(alternate)
+        }
+    }
+
+    func applyAssign(_ leftExpr: JSCExpr, _ value: JSCValue) throws {
+        switch leftExpr {
+        case .ident(let name):
+            if !environment.set(name, value) {
+                environment.define(name, value)
+                context.setProperty(context.global, name, value, enumerable: true)
+            } else if context.hasProperty(context.global, name) {
+                context.setProperty(context.global, name, value, enumerable: true)
+            }
+        case .member(let objectExpr, let name):
+            let object = try eval(objectExpr)
+            context.setProperty(object, name, value, enumerable: true)
+        case .index(let objectExpr, let indexExpr):
+            let object = try eval(objectExpr)
+            let name = context.toString(try eval(indexExpr))
+            context.setProperty(object, name, value, enumerable: true)
+        default:
+            throw JSCThrown(value: context.makeError("invalid assignment"))
         }
     }
 
@@ -1432,6 +2044,11 @@ func jscRelease(_ pointer: OpaquePointer?) {
     guard let pointer else { return }
     let box = Unmanaged<JSCRetainable>.fromOpaque(UnsafeRawPointer(pointer)).takeUnretainedValue()
     box.retainCountValue -= 1
+    if box.retainCountValue == 0, let value = box as? JSCValue {
+        if let finalize = value.object?.jsClass?.definition.finalize {
+            finalize(pointer)
+        }
+    }
     Unmanaged<JSCRetainable>.fromOpaque(UnsafeRawPointer(pointer)).release()
 }
 
@@ -1448,4 +2065,53 @@ func typedArrayBytesPerElement(_ type: JSTypedArrayType) -> Int {
     default:
         return 1
     }
+}
+
+func jscIndexOf(haystack: String, needle: String, from: Int) -> Int? {
+    let hay = Array(haystack.utf16)
+    let need = Array(needle.utf16)
+    if from > hay.count { return nil }
+    if need.isEmpty { return min(from, hay.count) }
+    if need.count > hay.count { return nil }
+    let start = max(from, 0)
+    if start + need.count > hay.count { return nil }
+    for index in start...(hay.count - need.count) {
+        var matched = true
+        for offset in 0..<need.count {
+            if hay[index + offset] != need[offset] {
+                matched = false
+                break
+            }
+        }
+        if matched { return index }
+    }
+    return nil
+}
+
+func jscSplit(_ text: String, separator: String) -> [String] {
+    if separator.isEmpty {
+        return Array(text.utf16).map { String(decoding: [$0], as: UTF16.self) }
+    }
+    var parts: [String] = []
+    var cursor = 0
+    while let found = jscIndexOf(haystack: text, needle: separator, from: cursor) {
+        let units = Array(text.utf16)
+        parts.append(String(decoding: units[cursor..<found], as: UTF16.self))
+        cursor = found + Array(separator.utf16).count
+    }
+    let units = Array(text.utf16)
+    if cursor <= units.count {
+        parts.append(String(decoding: units[cursor..<units.count], as: UTF16.self))
+    }
+    return parts
+}
+
+func jscJoin(_ parts: [String], separator: String) -> String {
+    guard let first = parts.first else { return "" }
+    var result = first
+    for index in 1..<parts.count {
+        result += separator
+        result += parts[index]
+    }
+    return result
 }

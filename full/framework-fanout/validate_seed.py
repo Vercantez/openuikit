@@ -746,9 +746,13 @@ class Validator:
             doc = json.loads(lineage_path.read_text(encoding="utf-8"))
         except (InvalidSeed, OSError, ValueError):
             return False
-        if not isinstance(doc, dict) or doc.get("path") != relative:
+        if not isinstance(doc, dict):
             return False
-        entries = [e for e in doc.get("lineage", []) if isinstance(e, dict)]
+        if doc.get("path") == relative:
+            raw = doc.get("lineage", [])
+        else:
+            raw = doc.get("generators", {}).get(relative, {}).get("lineage", [])
+        entries = [e for e in raw if isinstance(e, dict)]
         digests = [e.get("sha256") for e in entries]
         if expected not in digests or actual not in digests:
             return False
@@ -1778,7 +1782,13 @@ class Validator:
             )
         except InvalidSeed:
             source_digest = None
-        if source_digest is not None and source_generator["sha256"] != source_digest:
+        if (
+            source_digest is not None
+            and source_generator["sha256"] != source_digest
+            and not self._generator_lineage_accepts(
+                BASE_V2_GENERATOR_PATH, source_generator["sha256"], source_digest
+            )
+        ):
             self.error("symbol-graph scope source generator digest differs")
 
         graph_manifest = self._read_json("reference/symbol-graphs.json")

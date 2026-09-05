@@ -81,6 +81,18 @@ public enum GlyphInkTable {
     /// Guest 77ccad18 then `I|system-regular|13|light|F0.75|36` (`$`,
     /// Ledger USD at footnote size). ASCII 33–126 at 13 pt regular
     /// light+dark × 8 phases, 943/943 → **7533**.
+    /// Arm64 `f75875cc` then `I|system-regular|12|light|F0.25|107`
+    /// (scalar `k`) on the 14th screen. MEASURED Focus home
+    /// `ShareTrackersViewController` `UIFont.footnote12` string
+    /// `"0 trackers blocked so far"` (FocusShims.swift). Harvest ASCII
+    /// 33–126 at 12 pt regular, light+dark × 8 phases (F0.0…F0.875),
+    /// SE 2x / iOS 26.1 (`OpenUIKit-2x-focus-home-ink`), 1504/1504,
+    /// skipped []; overlap with the prior 251 12 pt keys **251/251
+    /// identical**. Table **7533 → 8786**. 3x 12 pt regular ASCII
+    /// (188/188 on iPhone 16, `SIMCTL_CHILD_INK_SCALE=3`) was
+    /// MEASURED and reverted: it DIFF'd `realapp_focus_settings_light`
+    /// and `realapp_hackers_feed_light` (font fallback → harvested);
+    /// guest realapp is scale 2.
     private static var iosEntries: [String: JSONValue]? = {
         guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
               let e = json["entries"]?.objectValue else { return nil }

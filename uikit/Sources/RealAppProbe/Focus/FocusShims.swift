@@ -63,6 +63,14 @@ struct UIConstants {
         static let settingsVerticalOffset: CGFloat = 8
         static let settingsHorizontalOffset: CGFloat = 20
         static let settingsCellLeftInset: CGFloat = 20
+        static let browserToolbarHeight: CGFloat = 44
+        static let urlBarMargin: CGFloat = 10
+        static let textLogoOffset: CGFloat = -10 - browserToolbarHeight / 2
+        static let textLogoOffsetSmallDevice: CGFloat = 10 - browserToolbarHeight / 4
+        static let textLogoMargin: CGFloat = 44
+        static let tipViewHeight: CGFloat = 148
+        static let tipViewBottomOffset: CGFloat = 6
+        static let iPhoneSEHeight: CGFloat = 568
     }
 
     struct strings {
@@ -110,6 +118,7 @@ struct UIConstants {
         static let addToSiri = "Add to Siri"
         static let Edit = "Edit"
         static let add = "Add"
+        static let share = "Share"
     }
 }
 
@@ -285,13 +294,117 @@ class NimbusInterface {
     func resetTelemetryIdentifiers() {}
 }
 
-enum TipManager {
+class TipManager {
     static var siriEraseTip = true
     static var biometricTip = true
+
+    struct Tip: Equatable {
+        let identifier: String
+        static func == (lhs: Tip, rhs: Tip) -> Bool {
+            lhs.identifier == rhs.identifier
+        }
+    }
+
+    init() {}
+
+    func shareTrackersDescription() -> String {
+        // TipManager.shareTrackersTipDescription at a2832521 with 0 blocked.
+        "0 trackers blocked so far"
+    }
 }
 
 enum SearchSuggestionsPromptView {
     static let respondedToSearchSuggestionsPrompt = "SearchSuggestionPrompt"
+}
+
+class HomeViewToolbar: UIView {
+    // Replaces Blockzilla/UIComponents/HomeViewToolbar.swift. Upstream pins
+    // a UIStackView with SnapKit (urlBarMargin 10, height browserToolbarHeight
+    // 44, bottom to safeArea). SnapKit is a listed ingest blocker; Auto Layout
+    // here uses those same UIConstants.layout numbers.
+    private let stackView = UIStackView()
+
+    init() {
+        super.init(frame: .zero)
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addArrangedSubview(UIView())
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: UIConstants.layout.urlBarMargin),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -UIConstants.layout.urlBarMargin),
+            stackView.heightAnchor.constraint(equalToConstant: UIConstants.layout.browserToolbarHeight),
+            stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+        ])
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+class TipsPageViewController: UIViewController {
+    // Replaces Blockzilla/Pro Tips/TipsPageViewController.swift for the home
+    // capture. HomeViewController.refreshTipsDisplay always installs
+    // `.showEmpty(ShareTrackersViewController)`; the UIPageViewController
+    // `.showTips` branch is not driven.
+    enum State {
+        case showTips
+        case showEmpty(controller: UIViewController)
+    }
+
+    init(tipManager: TipManager,
+         tipTapped: @escaping (TipManager.Tip) -> Void,
+         tapOutsideAction: @escaping () -> Void) {
+        _ = (tipManager, tipTapped, tapOutsideAction)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    func setupPageController(with state: State) {
+        switch state {
+        case .showTips:
+            break
+        case .showEmpty(let controller):
+            install(controller, on: view)
+        }
+    }
+}
+
+class ShareTrackersViewController: UIViewController {
+    // Replaces Blockzilla/Pro Tips/ShareTrackersViewController.swift. The
+    // upstream file uses DesignSystem fonts/images, `#selector(shareTapped)`,
+    // and contentEdgeInsets. The home capture shows the tracker title string
+    // HomeViewController passes through; Share itself is not driven.
+    private let trackerTitle: String
+    private let shareTap: (UIButton) -> Void
+
+    init(trackerTitle: String, shareTap: @escaping (UIButton) -> Void) {
+        self.trackerTitle = trackerTitle
+        self.shareTap = shareTap
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = trackerTitle
+        label.font = .footnote12
+        label.textColor = .secondaryText
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        view.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            label.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
+        ])
+        _ = shareTap
+    }
 }
 
 class BrowserViewController: UIViewController {

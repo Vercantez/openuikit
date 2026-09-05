@@ -1,6 +1,7 @@
 import Foundation
 
-/// Bonjour / application-service browser. Linux never claims discovered peers.
+/// Bonjour / application-service browser. Linux has no mDNS responder; start
+/// fails closed with POSIX EOPNOTSUPP and never fabricates peers.
 public final class NWBrowser: @unchecked Sendable, CustomDebugStringConvertible {
     public enum Descriptor: Hashable, Sendable {
         case bonjour(type: String, domain: String?)
@@ -72,8 +73,9 @@ public final class NWBrowser: @unchecked Sendable, CustomDebugStringConvertible 
     public func start(queue: DispatchQueue) {
         self.queue = queue
         guard state == .setup else { return }
-        state = .failed(.unsupported)
-        stateUpdateHandler?(.failed(.unsupported))
+        // Listed gap: no Bonjour/mDNS on Linux. Fail closed; empty change set.
+        state = .failed(.posix(.EOPNOTSUPP))
+        stateUpdateHandler?(.failed(.posix(.EOPNOTSUPP)))
         browseResultsChangedHandler?([], [])
     }
 

@@ -47,16 +47,18 @@ extension ActivityContent: Sendable where State: Sendable {}
 
 /// When the system should remove a Live Activity that ended.
 ///
-/// Linux never presents Live Activity UI, so these values are recorded only as
-/// request/end arguments. They do not dismiss a system surface.
+/// Linux never presents Live Activity UI. These values still drive
+/// process-local `.ended` → `.dismissed` transitions against the host clock:
+/// `.default` dismisses four hours after end, `.immediate` dismisses at end,
+/// and `.after(date)` dismisses at `min(date, end + 4h)`.
 public struct ActivityUIDismissalPolicy: Equatable, Sendable {
-    private enum Kind: Equatable, Sendable {
+    enum Kind: Equatable, Sendable {
         case `default`
         case immediate
         case after(Date)
     }
 
-    private let kind: Kind
+    let kind: Kind
 
     private init(kind: Kind) {
         self.kind = kind
@@ -72,15 +74,15 @@ public struct ActivityUIDismissalPolicy: Equatable, Sendable {
 
 /// Push configuration for ActivityKit content updates.
 ///
-/// Linux has no ActivityKit push or broadcast-channel service. Tokens and
-/// channels are recorded as values only; they never register with APNs.
+/// Linux has no ActivityKit push or broadcast-channel service. Tokens stay
+/// `nil` unless a host test hook assigns one. Channel names are recorded only.
 public struct PushType: Equatable {
-    private enum Kind: Equatable {
+    enum Kind: Equatable {
         case token
         case channel(String)
     }
 
-    private let kind: Kind
+    let kind: Kind
 
     private init(kind: Kind) {
         self.kind = kind
@@ -216,29 +218,32 @@ public enum ActivityAuthorizationError: Error, Hashable, Sendable,
 
 /// Authorization state for Live Activities and frequent push updates.
 ///
-/// Linux has no Live Activity daemon, entitlement check, or Settings toggle.
-/// Both flags are therefore `false`, and the enablement sequences emit that
-/// current value once, then finish. They never later emit `true`.
+/// `areActivitiesEnabled` and `frequentPushesEnabled` read a process-local
+/// stored setting. Linux has no Settings app or entitlement daemon; host tests
+/// write the flags. Enablement sequences emit the current value, then later
+/// changes, and do not finish on their own.
 public final class ActivityAuthorizationInfo {
     public struct ActivityEnablementUpdates: AsyncSequence {
         public typealias Element = Bool
         public typealias AsyncIterator = Iterator
 
-        let current: Bool
-
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = Bool
-            var remaining: Bool?
+            private let pump: OpenUIKitAsyncPump<Bool>
+
+            public init() {
+                pump = OpenUIKitAsyncPump(
+                    stream: OpenUIKitActivityKitHost.activityEnablementFanout.makeStream()
+                )
+            }
 
             public mutating func next() async -> Bool? {
-                guard let value = remaining else { return nil }
-                remaining = nil
-                return value
+                await pump.next()
             }
         }
 
         public func makeAsyncIterator() -> Iterator {
-            Iterator(remaining: current)
+            Iterator()
         }
     }
 
@@ -246,44 +251,57 @@ public final class ActivityAuthorizationInfo {
         public typealias Element = Bool
         public typealias AsyncIterator = Iterator
 
-        let current: Bool
-
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = Bool
-            var remaining: Bool?
+            private let pump: OpenUIKitAsyncPump<Bool>
+
+            public init() {
+                pump = OpenUIKitAsyncPump(
+                    stream: OpenUIKitActivityKitHost.frequentPushEnablementFanout.makeStream()
+                )
+            }
 
             public mutating func next() async -> Bool? {
-                guard let value = remaining else { return nil }
-                remaining = nil
-                return value
+                await pump.next()
             }
         }
 
         public func makeAsyncIterator() -> Iterator {
-            Iterator(remaining: current)
+            Iterator()
         }
     }
 
-    public final var areActivitiesEnabled: Bool { false }
-    public final var frequentPushesEnabled: Bool { false }
+    public final var areActivitiesEnabled: Bool {
+        OpenUIKitActivityKitHost.lock.lock()
+        let value = OpenUIKitActivityKitHost.areActivitiesEnabled
+        OpenUIKitActivityKitHost.lock.unlock()
+        return value
+    }
+
+    public final var frequentPushesEnabled: Bool {
+        OpenUIKitActivityKitHost.lock.lock()
+        let value = OpenUIKitActivityKitHost.frequentPushesEnabled
+        OpenUIKitActivityKitHost.lock.unlock()
+        return value
+    }
+
     public final let activityEnablementUpdates: ActivityEnablementUpdates
     public final let frequentPushEnablementUpdates: FrequentPushEnablementUpdates
 
     public init() {
-        activityEnablementUpdates = ActivityEnablementUpdates(current: false)
-        frequentPushEnablementUpdates = FrequentPushEnablementUpdates(current: false)
+        activityEnablementUpdates = ActivityEnablementUpdates()
+        frequentPushEnablementUpdates = FrequentPushEnablementUpdates()
     }
 }
 
 /// The object you use to start, update, and end a Live Activity.
 ///
-/// Linux has no Live Activity UI, WidgetKit extension host, or ActivityKit
-/// push service. `request` always throws ``ActivityAuthorizationError/unsupported``.
-/// `activities` is empty, push tokens are `nil`, and static update sequences
-/// complete without values. Instance `update`/`end` APIs are declared so the
-/// class matches the public surface; they are unreachable until a future host
-/// can construct an activity without claiming Apple presentation.
-public class Activity<Attributes: ActivityAttributes>: Identifiable {
+/// Linux provides a process-local registry: `request` can succeed, up to eight
+/// non-dismissed activities may exist, and `update`/`end` transition
+/// `activityState` against an injectable clock. There is no Live Activity UI,
+/// WidgetKit extension host, or APNs. `pushToken` stays `nil` unless a host
+/// test hook assigns bytes.
+public class Activity<Attributes: ActivityAttributes>: Identifiable, @unchecked Sendable {
     public typealias ID = String
     public typealias ContentState = Attributes.ContentState
 
@@ -291,104 +309,223 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         public typealias Element = Activity<Attributes>
         public typealias AsyncIterator = Iterator
 
+        let makeStream: () -> AsyncStream<Activity<Attributes>>
+
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = Activity<Attributes>
+            private let pump: OpenUIKitAsyncPump<Activity<Attributes>>
 
-            public func next() async -> Activity<Attributes>? { nil }
+            init(stream: AsyncStream<Activity<Attributes>>) {
+                pump = OpenUIKitAsyncPump(stream: stream)
+            }
+
+            public func next() async -> Activity<Attributes>? {
+                await pump.next()
+            }
         }
 
-        public func makeAsyncIterator() -> Iterator { Iterator() }
+        public func makeAsyncIterator() -> Iterator {
+            Iterator(stream: makeStream())
+        }
     }
 
     public struct ActivityStateUpdates: AsyncSequence {
         public typealias Element = ActivityState
         public typealias AsyncIterator = Iterator
 
+        let makeStream: () -> AsyncStream<ActivityState>
+
         public struct Iterator: AsyncIteratorProtocol, Sendable {
             public typealias Element = ActivityState
+            private let pump: OpenUIKitAsyncPump<ActivityState>
 
-            public func next() async -> ActivityState? { nil }
+            init(stream: AsyncStream<ActivityState>) {
+                pump = OpenUIKitAsyncPump(stream: stream)
+            }
+
+            public func next() async -> ActivityState? {
+                await pump.next()
+            }
         }
 
-        public func makeAsyncIterator() -> Iterator { Iterator() }
+        public func makeAsyncIterator() -> Iterator {
+            Iterator(stream: makeStream())
+        }
     }
 
     public struct ContentUpdates: AsyncSequence {
         public typealias Element = ActivityContent<Activity<Attributes>.ContentState>
         public typealias AsyncIterator = Iterator
 
+        let makeStream: () -> AsyncStream<ActivityContent<Activity<Attributes>.ContentState>>
+
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = ActivityContent<Activity<Attributes>.ContentState>
+            private let pump: OpenUIKitAsyncPump<
+                ActivityContent<Activity<Attributes>.ContentState>
+            >
+
+            init(
+                stream: AsyncStream<ActivityContent<Activity<Attributes>.ContentState>>
+            ) {
+                pump = OpenUIKitAsyncPump(stream: stream)
+            }
 
             public func next() async -> ActivityContent<Activity<Attributes>.ContentState>? {
-                nil
+                await pump.next()
             }
         }
 
-        public func makeAsyncIterator() -> Iterator { Iterator() }
+        public func makeAsyncIterator() -> Iterator {
+            Iterator(stream: makeStream())
+        }
     }
 
     public struct ContentStateUpdates: AsyncSequence {
         public typealias Element = Activity<Attributes>.ContentState
         public typealias AsyncIterator = Iterator
 
+        let makeStream: () -> AsyncStream<Activity<Attributes>.ContentState>
+
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = Activity<Attributes>.ContentState
+            private let pump: OpenUIKitAsyncPump<Activity<Attributes>.ContentState>
 
-            public func next() async -> Activity<Attributes>.ContentState? { nil }
+            init(stream: AsyncStream<Activity<Attributes>.ContentState>) {
+                pump = OpenUIKitAsyncPump(stream: stream)
+            }
+
+            public func next() async -> Activity<Attributes>.ContentState? {
+                await pump.next()
+            }
         }
 
-        public func makeAsyncIterator() -> Iterator { Iterator() }
+        public func makeAsyncIterator() -> Iterator {
+            Iterator(stream: makeStream())
+        }
     }
 
     public struct PushTokenUpdates: AsyncSequence {
         public typealias Element = Data
         public typealias AsyncIterator = Iterator
 
+        let makeStream: () -> AsyncStream<Data>
+
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = Data
+            private let pump: OpenUIKitAsyncPump<Data>
 
-            public func next() async -> Data? { nil }
+            init(stream: AsyncStream<Data>) {
+                pump = OpenUIKitAsyncPump(stream: stream)
+            }
+
+            public func next() async -> Data? {
+                await pump.next()
+            }
         }
 
-        public func makeAsyncIterator() -> Iterator { Iterator() }
+        public func makeAsyncIterator() -> Iterator {
+            Iterator(stream: makeStream())
+        }
+    }
+
+    private static var typeStore: ActivityTypeStore<Attributes> {
+        ActivityStoreRegistry.store(for: Attributes.self)
     }
 
     public let id: String
     public let attributes: Attributes
 
+    private let stateLock = NSLock()
     private var storedContent: ActivityContent<ContentState>
     private var storedActivityState: ActivityState
+    private var storedPushToken: Data?
+    private var startedAt: Date
+    private var endedAt: Date?
+    private var dismissAt: Date?
+    private var lastTimestamp: Date
+    private var invalidated = false
 
-    public var content: ActivityContent<ContentState> { storedContent }
-    public var contentState: ContentState { storedContent.state }
-    public var activityState: ActivityState { storedActivityState }
-    public var pushToken: Data? { nil }
+    private let contentFanout = OpenUIKitFanout<ActivityContent<ContentState>>(replay: .log)
+    private let contentStateFanout = OpenUIKitFanout<ContentState>(replay: .log)
+    private let activityStateFanout = OpenUIKitFanout<ActivityState>(replay: .log)
+    private let pushTokenFanout = OpenUIKitFanout<Data>(replay: .log)
 
-    public var contentUpdates: ContentUpdates { ContentUpdates() }
-    public var contentStateUpdates: ContentStateUpdates { ContentStateUpdates() }
-    public var activityStateUpdates: ActivityStateUpdates { ActivityStateUpdates() }
-    public var pushTokenUpdates: PushTokenUpdates { PushTokenUpdates() }
+    public var content: ActivityContent<ContentState> {
+        _ = openUIKitRefreshLifecycle(now: OpenUIKitActivityKitHost.now)
+        stateLock.lock()
+        let value = storedContent
+        stateLock.unlock()
+        return value
+    }
 
-    public static var activities: [Activity<Attributes>] { [] }
-    public static var activityUpdates: ActivityUpdates { ActivityUpdates() }
+    public var contentState: ContentState { content.state }
+
+    public var activityState: ActivityState {
+        openUIKitRefreshLifecycle(now: OpenUIKitActivityKitHost.now)
+    }
+
+    public var pushToken: Data? {
+        stateLock.lock()
+        let value = storedPushToken
+        stateLock.unlock()
+        return value
+    }
+
+    public var contentUpdates: ContentUpdates {
+        ContentUpdates(makeStream: { [contentFanout] in contentFanout.makeStream() })
+    }
+
+    public var contentStateUpdates: ContentStateUpdates {
+        ContentStateUpdates(makeStream: { [contentStateFanout] in
+            contentStateFanout.makeStream()
+        })
+    }
+
+    public var activityStateUpdates: ActivityStateUpdates {
+        ActivityStateUpdates(makeStream: { [activityStateFanout] in
+            activityStateFanout.makeStream()
+        })
+    }
+
+    public var pushTokenUpdates: PushTokenUpdates {
+        PushTokenUpdates(makeStream: { [pushTokenFanout] in pushTokenFanout.makeStream() })
+    }
+
+    public static var activities: [Activity<Attributes>] {
+        typeStore.snapshot()
+    }
+
+    public static var activityUpdates: ActivityUpdates {
+        ActivityUpdates(makeStream: { typeStore.activityFanout.makeStream() })
+    }
+
     public static var pushToStartToken: Data? { nil }
-    public static var pushToStartTokenUpdates: PushTokenUpdates { PushTokenUpdates() }
+
+    public static var pushToStartTokenUpdates: PushTokenUpdates {
+        PushTokenUpdates {
+            let (stream, continuation) = AsyncStream<Data>.makeStream()
+            continuation.finish()
+            return stream
+        }
+    }
 
     private init(
         id: String,
         attributes: Attributes,
         content: ActivityContent<ContentState>,
-        activityState: ActivityState
+        activityState: ActivityState,
+        startedAt: Date
     ) {
         self.id = id
         self.attributes = attributes
         self.storedContent = content
         self.storedActivityState = activityState
-    }
-
-    private static func unsupportedRequest() throws -> Activity<Attributes> {
-        throw ActivityAuthorizationError.unsupported
+        self.startedAt = startedAt
+        self.lastTimestamp = startedAt
+        contentFanout.yield(content)
+        contentStateFanout.yield(content.state)
+        activityStateFanout.yield(activityState)
     }
 
     public static func request(
@@ -396,8 +533,13 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         contentState: Activity<Attributes>.ContentState,
         pushType: PushType? = nil
     ) throws -> Activity<Attributes> {
-        _ = (attributes, contentState, pushType)
-        return try unsupportedRequest()
+        try request(
+            attributes: attributes,
+            content: ActivityContent(state: contentState, staleDate: nil),
+            pushType: pushType,
+            style: .standard,
+            id: nil
+        )
     }
 
     public static func request(
@@ -405,8 +547,13 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         content: ActivityContent<Activity<Attributes>.ContentState>,
         pushType: PushType? = nil
     ) throws -> Activity<Attributes> {
-        _ = (attributes, content, pushType)
-        return try unsupportedRequest()
+        try request(
+            attributes: attributes,
+            content: content,
+            pushType: pushType,
+            style: .standard,
+            id: nil
+        )
     }
 
     public static func request(
@@ -415,8 +562,13 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         pushType: PushType? = nil,
         style: ActivityStyle
     ) throws -> Activity<Attributes> {
-        _ = (attributes, content, pushType, style)
-        return try unsupportedRequest()
+        try request(
+            attributes: attributes,
+            content: content,
+            pushType: pushType,
+            style: style,
+            id: nil
+        )
     }
 
 #if OPENUIKIT_GUEST
@@ -428,8 +580,14 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         alertConfiguration: AlertConfiguration,
         start: Date
     ) throws -> Activity<Attributes> {
-        _ = (attributes, content, pushType, style, alertConfiguration, start)
-        return try unsupportedRequest()
+        _ = (alertConfiguration, start)
+        return try request(
+            attributes: attributes,
+            content: content,
+            pushType: pushType,
+            style: style,
+            id: nil
+        )
     }
 
     public static func request(
@@ -440,30 +598,116 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         alertConfiguration: AlertConfiguration,
         startDate: Date
     ) throws -> Activity<Attributes> {
-        _ = (attributes, content, pushType, style, alertConfiguration, startDate)
-        return try unsupportedRequest()
+        _ = (alertConfiguration, startDate)
+        return try request(
+            attributes: attributes,
+            content: content,
+            pushType: pushType,
+            style: style,
+            id: nil
+        )
     }
 #endif
 
+    static func request(
+        attributes: Attributes,
+        content: ActivityContent<Activity<Attributes>.ContentState>,
+        pushType: PushType?,
+        style: ActivityStyle,
+        id requestedID: String?
+    ) throws -> Activity<Attributes> {
+        _ = style
+        if let channel = pushType?.openUIKitChannelName, channel.isEmpty {
+            throw ActivityAuthorizationError.malformedActivityIdentifier
+        }
+        try OpenUIKitActivityKitHost.preflightRequest(id: requestedID)
+        let payload = try OpenUIKitActivityKitHost.encodePayload(
+            attributes: attributes,
+            state: content.state
+        )
+        let startedAt = OpenUIKitActivityKitHost.now
+        let resolvedContent = ActivityContent(
+            state: payload.state,
+            staleDate: content.staleDate,
+            relevanceScore: content.relevanceScore
+        )
+        var initialState = ActivityState.active
+        if let staleDate = resolvedContent.staleDate, staleDate <= startedAt {
+            initialState = .stale
+        }
+        let activity = Activity(
+            id: requestedID ?? UUID().uuidString,
+            attributes: payload.attributes,
+            content: resolvedContent,
+            activityState: initialState,
+            startedAt: startedAt
+        )
+        OpenUIKitActivityKitHost.register(activity)
+        typeStore.append(activity)
+        return activity
+    }
+
+    @_spi(OpenUIKitHost)
+    public static func openUIKitHostRequest(
+        attributes: Attributes,
+        content: ActivityContent<Activity<Attributes>.ContentState>,
+        pushType: PushType? = nil,
+        style: ActivityStyle = .standard,
+        id: String
+    ) throws -> Activity<Attributes> {
+        try request(
+            attributes: attributes,
+            content: content,
+            pushType: pushType,
+            style: style,
+            id: id
+        )
+    }
+
     private func applyContentUpdate(
-        _ content: ActivityContent<ContentState>
+        _ content: ActivityContent<ContentState>,
+        timestamp: Date
     ) {
+        stateLock.lock()
+        if invalidated || storedActivityState == .ended || storedActivityState == .dismissed {
+            stateLock.unlock()
+            return
+        }
+        if timestamp < lastTimestamp {
+            stateLock.unlock()
+            return
+        }
+        lastTimestamp = timestamp
         storedContent = content
-        if storedActivityState == .pending {
+        let previous = storedActivityState
+        if let staleDate = content.staleDate, staleDate <= timestamp {
+            storedActivityState = .stale
+        } else if storedActivityState == .pending || storedActivityState == .stale {
             storedActivityState = .active
+        }
+        let nextState = storedActivityState
+        stateLock.unlock()
+        contentFanout.yield(content)
+        contentStateFanout.yield(content.state)
+        if nextState != previous {
+            activityStateFanout.yield(nextState)
         }
     }
 
     public func update(using contentState: Activity<Attributes>.ContentState) async {
-        applyContentUpdate(
-            ActivityContent(state: contentState, staleDate: storedContent.staleDate)
+        await update(
+            ActivityContent(
+                state: contentState,
+                staleDate: storedStaleDate,
+                relevanceScore: storedRelevanceScore
+            )
         )
     }
 
     public func update(
         _ content: ActivityContent<Activity<Attributes>.ContentState>
     ) async {
-        applyContentUpdate(content)
+        applyContentUpdate(content, timestamp: OpenUIKitActivityKitHost.now)
     }
 
 #if OPENUIKIT_GUEST
@@ -479,7 +723,7 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         _ content: ActivityContent<Activity<Attributes>.ContentState>,
         alertConfiguration: AlertConfiguration? = nil
     ) async {
-        await update(content, alertConfiguration: alertConfiguration, timestamp: Date())
+        await update(content, alertConfiguration: alertConfiguration, timestamp: OpenUIKitActivityKitHost.now)
     }
 
     public func update(
@@ -487,8 +731,8 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         alertConfiguration: AlertConfiguration? = nil,
         timestamp: Date
     ) async {
-        _ = (alertConfiguration, timestamp)
-        applyContentUpdate(content)
+        _ = alertConfiguration
+        applyContentUpdate(content, timestamp: timestamp)
     }
 #endif
 
@@ -500,8 +744,8 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         if let contentState {
             content = ActivityContent(
                 state: contentState,
-                staleDate: storedContent.staleDate,
-                relevanceScore: storedContent.relevanceScore
+                staleDate: storedStaleDate,
+                relevanceScore: storedRelevanceScore
             )
         } else {
             content = nil
@@ -513,7 +757,11 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         _ content: ActivityContent<Activity<Attributes>.ContentState>?,
         dismissalPolicy: ActivityUIDismissalPolicy = .default
     ) async {
-        await end(content, dismissalPolicy: dismissalPolicy, timestamp: Date())
+        await end(
+            content,
+            dismissalPolicy: dismissalPolicy,
+            timestamp: OpenUIKitActivityKitHost.now
+        )
     }
 
     public func end(
@@ -521,10 +769,120 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         dismissalPolicy: ActivityUIDismissalPolicy = .default,
         timestamp: Date
     ) async {
-        _ = (dismissalPolicy, timestamp)
+        applyEnd(content, dismissalPolicy: dismissalPolicy, timestamp: timestamp)
+    }
+
+    private func applyEnd(
+        _ content: ActivityContent<ContentState>?,
+        dismissalPolicy: ActivityUIDismissalPolicy,
+        timestamp: Date
+    ) {
+        stateLock.lock()
+        if invalidated || storedActivityState == .dismissed {
+            stateLock.unlock()
+            return
+        }
+        if timestamp < lastTimestamp {
+            stateLock.unlock()
+            return
+        }
+        lastTimestamp = timestamp
         if let content {
             storedContent = content
         }
-        storedActivityState = .ended
+        let previous = storedActivityState
+        endedAt = timestamp
+        let dismissalDate = dismissalPolicy.openUIKitDismissalDate(endedAt: timestamp)
+        dismissAt = dismissalDate
+        if timestamp >= dismissalDate {
+            storedActivityState = .dismissed
+        } else {
+            storedActivityState = .ended
+        }
+        let nextState = storedActivityState
+        let newContent = storedContent
+        let didUpdateContent = content != nil
+        stateLock.unlock()
+        if didUpdateContent {
+            contentFanout.yield(newContent)
+            contentStateFanout.yield(newContent.state)
+        }
+        if nextState != previous {
+            activityStateFanout.yield(nextState)
+        }
+    }
+
+    private var storedStaleDate: Date? {
+        stateLock.lock()
+        let value = storedContent.staleDate
+        stateLock.unlock()
+        return value
+    }
+
+    private var storedRelevanceScore: Double {
+        stateLock.lock()
+        let value = storedContent.relevanceScore
+        stateLock.unlock()
+        return value
+    }
+
+    @discardableResult
+    func openUIKitRefreshLifecycle(now: Date) -> ActivityState {
+        stateLock.lock()
+        if invalidated {
+            let value = storedActivityState
+            stateLock.unlock()
+            return value
+        }
+        let previous = storedActivityState
+        if storedActivityState == .active || storedActivityState == .stale || storedActivityState == .pending {
+            if now.timeIntervalSince(startedAt) >= OpenUIKitActivityKitHost.maximumActiveInterval {
+                endedAt = startedAt.addingTimeInterval(OpenUIKitActivityKitHost.maximumActiveInterval)
+                dismissAt = endedAt!.addingTimeInterval(OpenUIKitActivityKitHost.defaultDismissalInterval)
+                storedActivityState = .ended
+            } else if let staleDate = storedContent.staleDate, now >= staleDate {
+                storedActivityState = .stale
+            }
+        }
+        if storedActivityState == .ended, let dismissAt, now >= dismissAt {
+            storedActivityState = .dismissed
+        }
+        let next = storedActivityState
+        stateLock.unlock()
+        if next != previous {
+            activityStateFanout.yield(next)
+        }
+        return next
+    }
+}
+
+extension Activity: OpenUIKitLiveActivityHandle {
+    var openUIKitHostID: String { id }
+
+    var openUIKitHostCountsTowardCap: Bool {
+        openUIKitRefreshLifecycle(now: OpenUIKitActivityKitHost.now) != .dismissed
+    }
+
+    func openUIKitHostRefreshLifecycle(now: Date) {
+        _ = openUIKitRefreshLifecycle(now: now)
+    }
+
+    func openUIKitHostSetPushToken(_ data: Data?) {
+        stateLock.lock()
+        storedPushToken = data
+        stateLock.unlock()
+        if let data {
+            pushTokenFanout.yield(data)
+        }
+    }
+
+    func openUIKitHostInvalidate() {
+        stateLock.lock()
+        invalidated = true
+        stateLock.unlock()
+        contentFanout.finish()
+        contentStateFanout.finish()
+        activityStateFanout.finish()
+        pushTokenFanout.finish()
     }
 }

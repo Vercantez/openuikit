@@ -63,6 +63,8 @@ private func cfParseFTPListLine(_ line: String) -> CFMutableDictionary? {
     cfDictionarySet(dictionary, key: kCFFTPResourceOwner, value: cfString(owner))
     cfDictionarySet(dictionary, key: kCFFTPResourceGroup, value: cfString(group))
     cfDictionarySet(dictionary, key: kCFFTPResourceMode, value: cfString(modeText))
+    let dateText = "\(tokens[5]) \(tokens[6]) \(tokens[7])"
+    cfDictionarySet(dictionary, key: kCFFTPResourceModDate, value: cfString(dateText))
     if let linkTarget {
         cfDictionarySet(dictionary, key: kCFFTPResourceLink, value: cfString(linkTarget))
     }

@@ -261,4 +261,7 @@ public let kJSClassDefinitionEmpty = JSClassDefinition()
 /// Linux ships the Swift JSContext/JSValue overlay, matching the iPhoneOS graph.
 public var JSC_OBJC_API_ENABLED: Int32 { 1 }
 
+/// Marker protocol matching Apple's empty `JSExport`. Swift classes are not
+/// exported onto `JSContext.globalObject` on this port (no ObjC JSExport
+/// runtime). Host functions use `JSContext.setObject` with a Swift closure.
 public protocol JSExport {}

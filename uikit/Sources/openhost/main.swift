@@ -91,6 +91,9 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
   pocketcasts a REAL app screen — UNMODIFIED source from
             Automattic/pocket-casts-ios (the options-picker sheet), compiled
             against OpenUIKit (docs/REAL_APP_TEST.md)
+  focus     Firefox Focus browser home — UNMODIFIED HomeViewController from
+            mozilla-mobile/focus-ios a2832521. Script:
+            Sources/RealAppProbe/Focus/script.json
 \(ConformanceApps.usageLines)
 """
 

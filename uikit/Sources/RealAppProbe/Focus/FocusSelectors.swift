@@ -25,3 +25,12 @@ extension SettingsViewController: SelectorDispatching {
         Self.actions.perform(name, on: self, with: sender)
     }
 }
+
+extension HomeViewController: SelectorDispatching {
+    static let actions: ActionTable<HomeViewController> = [
+        .action("rotated", HomeViewController.rotated),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}

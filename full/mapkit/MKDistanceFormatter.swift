@@ -1,4 +1,13 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public final class MKDistanceFormatter: NSObject {
     public enum Units: UInt, Sendable, Equatable, Hashable {
@@ -47,19 +56,21 @@ public final class MKDistanceFormatter: NSObject {
         let numberPart = trimmed.split { !$0.isNumber && $0 != "." && $0 != "-" && $0 != "+" }
             .first
             .flatMap { Double($0) } ?? 0
-        if trimmed.contains("km") || trimmed.contains("kilometer") {
+        if mk_containsToken(trimmed, "km") || mk_containsToken(trimmed, "kilometer") {
             return numberPart * 1000
         }
-        if trimmed.contains("mi") || trimmed.contains("mile") {
+        if mk_containsToken(trimmed, "mi") || mk_containsToken(trimmed, "mile") {
             return numberPart * 1609.344
         }
-        if trimmed.contains("yd") || trimmed.contains("yard") {
+        if mk_containsToken(trimmed, "yd") || mk_containsToken(trimmed, "yard") {
             return numberPart * 0.9144
         }
-        if trimmed.contains("ft") || trimmed.contains("feet") || trimmed.contains("foot") {
+        if mk_containsToken(trimmed, "ft") || mk_containsToken(trimmed, "feet")
+            || mk_containsToken(trimmed, "foot")
+        {
             return numberPart * 0.3048
         }
-        if trimmed.contains("m") || trimmed.contains("meter") {
+        if mk_containsToken(trimmed, "m") || mk_containsToken(trimmed, "meter") {
             return numberPart
         }
         return 0
@@ -67,8 +78,12 @@ public final class MKDistanceFormatter: NSObject {
 
     private func resolvedUnits() -> Units {
         if units != .default { return units }
-        let usesMetric = locale?.usesMetricSystem ?? true
-        return usesMetric ? .metric : .imperial
+        // Darwin deprecates `Locale.usesMetricSystem` (macOS 13+).
+        // `measurementSystem` is the replacement (Foundation, macOS 13 / Swift 6).
+        if let locale, locale.measurementSystem == .us {
+            return .imperial
+        }
+        return .metric
     }
 
     private func formatNumber(_ value: Double) -> String {

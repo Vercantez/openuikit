@@ -8,51 +8,66 @@ package; that integration is a later central-review step.
 
 ## What is real
 
-- The in-process portable keychain (`SecItemAdd` / `CopyMatching` / `Update` /
-  `Delete`) from the pre-wave-5 lane is unchanged: generic-password CRUD,
-  duplicate detection, match-limit listing, and persistent-ref bytes.
-- `SecRandomCopyBytes` fills buffers from `SystemRandomNumberGenerator`.
+- File-backed encrypted keychain (`SecItemAdd` / `CopyMatching` / `Update` /
+  `Delete`) for `genp` / `inet` / `keys` / `cert` / `idnt`. The store is an
+  AES-256-GCM blob under `OPENUIKIT_KEYCHAIN_PATH` (or Application Support
+  `OpenUIKit/keychain`). Duplicate detection, match-limit listing, return
+  shapes for data / attributes / ref / persistent-ref, and access-group plus
+  `kSecUseDataProtectionKeychain` storage are exercised.
+- `SecAccessControlCreateWithFlags` stores protection + flags. Biometric flags
+  fail closed on CopyMatching/Update/Delete (`errSecAuthFailed`).
+- `SecRandomCopyBytes` fills buffers from `/dev/urandom`.
+- `SecKey` RSA 2048/4096 (PKCS#1, including PKCS#8-wrapped fixtures) and EC
+  P-256/P-384/P-521 (uncompressed X9.63). Sign/verify for PKCS#1 v1.5, PSS,
+  and ECDSA; RSA PKCS1/OAEP encrypt/decrypt. Key generation uses the port's
+  own arithmetic — `full/cryptokit` P-256/P-384/P-521 Signing/KeyAgreement
+  still fail closed, and the isolated host may import Foundation only.
+- `SecCertificateCreateWithData` parses DER X.509 (subject/issuer/serial/
+  validity/SPKI). Invalid DER returns nil. `SecTrustEvaluateWithError` builds
+  a chain to caller-supplied anchors, verifies signatures, checks validity
+  dates, and matches SSL hostnames per RFC 6125. Revocation-require-positive
+  fails closed (no OCSP).
+- `SecPKCS12Import` accepts the unencrypted-bag subset. Fixtures were produced
+  with OpenSSL 3.6.1 on 2026-09-05 (`tests/fixtures/`).
 - `SecCopyErrorMessageString` returns the existing English strings for the
   statuses the original lane handled, plus a generic fallback.
 - OSStatus numeric identities come from the pinned macios `SecStatusCode` /
   `SslStatus` bindings, which themselves cite `SecBase.h` / `SecureTransport.h`.
-  Apple-derived graph IDs win the census; binding values fill the numbers.
-- `SSLCipherSuite` / `tls_ciphersuite_t` raw values are IANA TLS cipher suite
-  identities as published in Apple's SecureTransport overlay.
-- `SSLProtocol`, `tls_protocol_version_t`, `SecPadding`,
-  `SecAccessControlCreateFlags`, `SecKeyOperationType`, and
-  `SecTrustResultType` use documented raw values from those same headers via
-  macios.
-- Known SecItem four-character keys keep the payloads already shipped in
-  `Security.swift`. Additional documented four-character keys are listed in
-  `SecurityItemKeys.swift`.
+- `kSec*` four-character payloads and Apple policy OIDs were read from Apple
+  OSS `SecItemConstants.c` / `SecPolicy.c` (measured 2026-09-05): e.g.
+  `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` is `"aku"`,
+  `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` is `"akpu"`,
+  `kSecAttrSynchronizableAny` is `"syna"`, `kSecAttrKeyTypeRSA` is `"42"`.
 
 ## Fail-closed boundaries
 
-Linux has no Apple keychain daemon, Secure Enclave, certificate trust store,
-TLS stack owned by Security.framework, or shared web-credential agent.
+Linux has no Apple keychain daemon, Secure Enclave, system trust store, TLS
+stack owned by Security.framework, or shared web-credential agent.
 
-- Certificate, key, PKCS#12, trust-evaluation, access-control, and shared
-  web-credential APIs return `errSecUnimplemented`, `nil`, or `false`.
-  `SecTrustEvaluate` additionally writes `.invalid`.
+- ECIES (`eciesEncryption*`) and RSA OAEP+AES-GCM return nil /
+  `errSecUnimplemented`.
+- Trust evaluation without anchors fails closed (no system roots).
+- `kSecRevocationRequirePositiveResponse` fails closed.
+- Shared web-credential APIs invoke their callbacks with an unimplemented
+  CFError and never talk to Apple's password agent.
+- `sec_protocol_*` option/metadata objects are inert. They never negotiate TLS.
 - Code-signing helpers already on the lane (`SecStaticCodeCreateWithPath` and
   friends) remain `errSecNotAvailable`; they are extra relative to the iOS
   public graph and are not coverage rows.
-- `sec_protocol_*` APIs that only need Foundation types exist as inert
-  option/metadata objects. They never negotiate TLS.
 
-## Deferred
+## Dispatch lookalikes
 
-- Every function or typealias whose graph signature mentions `dispatch_queue_t`
-  or `dispatch_data_t` is deferred: Dispatch is not a declared isolated-host
-  dependency, and a module-local lookalike is forbidden.
-- `kSec*` CFString constants without a documented four-character payload are
-  declared with the C name as a process-local identity. That is source
-  compatible, not an Apple-oracle string.
+`dispatch_queue_t` / `dispatch_data_t` are host lookalikes so previously
+deferred graph signatures compile. Async trust evaluation invokes the callback
+synchronously. These are not a second libdispatch; the later EC2 integration
+build uses real Dispatch types from the platform sysroot.
+
+## Open questions
+
 - The pre-wave-5 `errSecInvalidValue` alias (`== errSecParam`) is preserved
   even though macios records `InvalidValue = -67694`. An oracle question asks
   which identity iOS 26.1 actually exports.
 
-Coverage counts for this deliverable: implemented 996,
-declared 275, deferred 18,
+Coverage counts for this deliverable: implemented 1289,
+declared 0, deferred 0,
 unavailable 0.

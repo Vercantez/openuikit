@@ -1,0 +1,2 @@
+module	slug	lane	priority	risks	dependencies
+CoreImage	coreimage	medium-full	100	ui,fail-closed	Foundation

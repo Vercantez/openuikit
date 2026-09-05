@@ -381,7 +381,7 @@ open class UIScrollView: UIView {
             || UIDevice.current.userInterfaceIdiom == .pad) {
             return 312
         }
-        return 260
+        return _UIKeyboardChrome.currentOverlap
     }
 
     var iOSKeyboardAvoidanceBottom: CGFloat {

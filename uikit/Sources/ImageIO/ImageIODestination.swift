@@ -118,7 +118,11 @@ private func imageioJPEGQuality(_ properties: CFDictionary?) -> CGFloat {
     guard let properties else { return 0.9 }
     let ns = properties as NSDictionary
     if let number = ns[kCGImageDestinationLossyCompressionQuality] as? NSNumber {
-        return CGFloat(truncating: number)
+        // Linux 6.2.4 CGFloat has no NSNumber truncating: (Darwin Foundation).
+        // MEASURED uikit-linux swift build --build-tests after merging
+        // linux-xctest onto main's ImageIO: `no exact matches in call to
+        // initializer`. doubleValue is the portable NSNumber path.
+        return CGFloat(number.doubleValue)
     }
     return 0.9
 }

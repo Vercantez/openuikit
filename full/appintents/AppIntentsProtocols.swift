@@ -12,7 +12,13 @@ public protocol AppShortcutOptionsCollectionProtocol {}
 
 public protocol AppShortcutOptionsCollectionSpecification: Sendable {}
 
-public protocol AppIntentsPackage {}
+public protocol AppIntentsPackage {
+    static var includedPackages: [any AppIntentsPackage.Type] { get }
+}
+
+extension AppIntentsPackage {
+    public static var includedPackages: [any AppIntentsPackage.Type] { [] }
+}
 
 public protocol AppIntentsExtension: AppExtension {}
 
@@ -46,7 +52,44 @@ public protocol AudioStartingIntent: SystemIntent {}
 
 public protocol CameraCaptureIntent: SystemIntent {}
 
-public protocol EntityPropertyQuery: EntityQuery {}
+public protocol EntityPropertyQuery: EntityQuery {
+    associatedtype ComparatorMappingType = Never
+    static var properties: EntityQueryProperties<Entity, ComparatorMappingType> { get }
+    static var sortingOptions: EntityQuerySortingOptions<Entity> { get }
+    static var findIntentDescription: IntentDescription? { get }
+    func entities(
+        matching comparators: [ComparatorMappingType],
+        mode: EntityQueryComparatorMode,
+        sortedBy: [EntityQuerySort<Entity>],
+        limit: Int?
+    ) async throws -> [Entity]
+}
+
+extension EntityPropertyQuery {
+    public static var findIntentDescription: IntentDescription? { nil }
+    public static var properties: EntityQueryProperties<Entity, ComparatorMappingType> {
+        EntityQueryProperties()
+    }
+    public static var sortingOptions: EntityQuerySortingOptions<Entity> {
+        EntityQuerySortingOptions()
+    }
+    public func entities(
+        matching comparators: [ComparatorMappingType],
+        mode: EntityQueryComparatorMode,
+        sortedBy: [EntityQuerySort<Entity>],
+        limit: Int?
+    ) async throws -> [Entity] {
+        _ = comparators
+        _ = mode
+        _ = sortedBy
+        _ = limit
+        return try await suggestedEntities()
+    }
+    public typealias QueryProperties = EntityQueryProperties<Entity, ComparatorMappingType>
+    public typealias ComparatorMode = EntityQueryComparatorMode
+    public typealias SortingOptions = EntityQuerySortingOptions<Entity>
+    public typealias Sort = EntityQuerySort
+}
 
 public protocol ResumeWorkoutIntent: SystemIntent {}
 

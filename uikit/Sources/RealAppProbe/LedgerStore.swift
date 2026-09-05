@@ -105,11 +105,23 @@ nonisolated enum LedgerStore {
     /// Guest golden `dcf.abbr.en_US` → `1h 2m 3s` for 1:02:03; 2h15m is
     /// `2h 15m`.
     static func durationString(_ seconds: TimeInterval) -> String {
+        #if canImport(Darwin)
+        // Darwin and the guest's core-package Foundation have the formatter.
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .abbreviated
         formatter.allowedUnits = [.hour, .minute]
         formatter.zeroFormattingBehavior = .dropLeading
         return formatter.string(from: seconds) ?? "—"
+        #else
+        // swift-corelibs-foundation's DateComponentsFormatter traps in init()
+        // (Docker verify 66b: "init() is not supported on this platform").
+        // Same shape as the guest golden dcf.abbr.en_US: hours+minutes,
+        // leading zero unit dropped ("2h 15m", "15m").
+        let total = Int(seconds.rounded(.down))
+        let hours = total / 3600
+        let minutes = (total % 3600) / 60
+        return hours > 0 ? "\(hours)h \(minutes)m" : "\(minutes)m"
+        #endif
     }
 
     /// JSONSerialization round trip through UserDefaults. Returns true when

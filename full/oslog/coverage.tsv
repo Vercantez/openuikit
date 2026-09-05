@@ -32,30 +32,30 @@ c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategory
 c:@E@OSLogMessageComponentArgumentCategory@OSLogMessageComponentArgumentCategoryUndefined	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentArgumentCategory	-
 c:@E@OSLogStoreScope	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStoreScope	-
 c:@E@OSLogStoreScope@OSLogStoreCurrentProcessIdentifier	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStoreScope	-
-c:objc(cs)OSLogEntry	declared	source:full/oslog/OSLog.swift#OSLogEntry	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntry(py)composedMessage	declared	source:full/oslog/OSLog.swift#composedMessage	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntry(py)date	declared	source:full/oslog/OSLog.swift#date	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntry(py)storeCategory	declared	source:full/oslog/OSLog.swift#storeCategory	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntryActivity	declared	source:full/oslog/OSLog.swift#OSLogEntryActivity	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntryActivity(py)parentActivityIdentifier	declared	source:full/oslog/OSLog.swift#parentActivityIdentifier	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntryBoundary	declared	source:full/oslog/OSLog.swift#OSLogEntryBoundary	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntryLog	declared	source:full/oslog/OSLog.swift#OSLogEntryLog	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntryLog(py)level	declared	source:full/oslog/OSLog.swift#level	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntrySignpost	declared	source:full/oslog/OSLog.swift#OSLogEntrySignpost	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntrySignpost(py)signpostIdentifier	declared	source:full/oslog/OSLog.swift#signpostIdentifier	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntrySignpost(py)signpostName	declared	source:full/oslog/OSLog.swift#signpostName	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEntrySignpost(py)signpostType	declared	source:full/oslog/OSLog.swift#signpostType	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogEnumerator	declared	source:full/oslog/OSLog.swift#OSLogEnumerator	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent	declared	source:full/oslog/OSLog.swift#OSLogMessageComponent	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentCategory	declared	source:full/oslog/OSLog.swift#argumentCategory	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentDataValue	declared	source:full/oslog/OSLog.swift#argumentDataValue	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentDoubleValue	declared	source:full/oslog/OSLog.swift#argumentDoubleValue	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentInt64Value	declared	source:full/oslog/OSLog.swift#argumentInt64Value	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentNumberValue	declared	source:full/oslog/OSLog.swift#argumentNumberValue	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentStringValue	declared	source:full/oslog/OSLog.swift#argumentStringValue	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)argumentUInt64Value	declared	source:full/oslog/OSLog.swift#argumentUInt64Value	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)formatSubstring	declared	source:full/oslog/OSLog.swift#formatSubstring	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(cs)OSLogMessageComponent(py)placeholder	declared	source:full/oslog/OSLog.swift#placeholder	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
+c:objc(cs)OSLogEntry	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
+c:objc(cs)OSLogEntry(py)composedMessage	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
+c:objc(cs)OSLogEntry(py)date	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
+c:objc(cs)OSLogEntry(py)storeCategory	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
+c:objc(cs)OSLogEntryActivity	declared	source:full/oslog/OSLog.swift#OSLogEntryActivity	Probe 2 on SE 2x / iOS 26.1: Logger / OSSignposter produced OSLogEntryLog and (in the port) OSLogEntrySignpost; no OSLogEntryActivity row appeared. No public activity API in this seed.
+c:objc(cs)OSLogEntryActivity(py)parentActivityIdentifier	declared	source:full/oslog/OSLog.swift#parentActivityIdentifier	Same as OSLogEntryActivity: no public API produced an activity row on the iOS 26.1 probe.
+c:objc(cs)OSLogEntryBoundary	declared	source:full/oslog/OSLog.swift#OSLogEntryBoundary	Catalog chunk boundaries are unobserved on currentProcessIdentifier (probe 2 classes=OSLogEntryLog only). Linux does not invent archive markers.
+c:objc(cs)OSLogEntryLog	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(cs)OSLogEntryLog(py)level	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(cs)OSLogEntrySignpost	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostFields	-
+c:objc(cs)OSLogEntrySignpost(py)signpostIdentifier	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostFields	-
+c:objc(cs)OSLogEntrySignpost(py)signpostName	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostFields	-
+c:objc(cs)OSLogEntrySignpost(py)signpostType	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostFields	-
+c:objc(cs)OSLogEnumerator	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEnumeratorYieldsEntries	-
+c:objc(cs)OSLogMessageComponent	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentCategory	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentDataValue	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentDoubleValue	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentInt64Value	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentNumberValue	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentStringValue	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)argumentUInt64Value	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)formatSubstring	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(cs)OSLogMessageComponent(py)placeholder	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
 c:objc(cs)OSLogPosition	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStorePosition	-
 c:objc(cs)OSLogStore	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStoreCurrentProcessEmpty	-
 c:objc(cs)OSLogStore(cm)storeWithScope:error:	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStoreCurrentProcessEmpty	-
@@ -64,17 +64,17 @@ c:objc(cs)OSLogStore(cm)storeWithURL:error:::SYNTHESIZED::c:objc(cs)OSLogStore	i
 c:objc(cs)OSLogStore(im)positionWithDate:	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStorePosition	-
 c:objc(cs)OSLogStore(im)positionWithTimeIntervalSinceEnd:	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStorePosition	-
 c:objc(cs)OSLogStore(im)positionWithTimeIntervalSinceLatestBoot:	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogStorePosition	-
-c:objc(pl)OSLogEntryFromProcess	declared	source:full/oslog/OSLog.swift#OSLogEntryFromProcess	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryFromProcess(py)activityIdentifier	declared	source:full/oslog/OSLog.swift#activityIdentifier	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryFromProcess(py)process	declared	source:full/oslog/OSLog.swift#process	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryFromProcess(py)processIdentifier	declared	source:full/oslog/OSLog.swift#processIdentifier	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryFromProcess(py)sender	declared	source:full/oslog/OSLog.swift#sender	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryFromProcess(py)threadIdentifier	declared	source:full/oslog/OSLog.swift#threadIdentifier	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryWithPayload	declared	source:full/oslog/OSLog.swift#OSLogEntryWithPayload	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryWithPayload(py)category	declared	source:full/oslog/OSLog.swift#category	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryWithPayload(py)components	declared	source:full/oslog/OSLog.swift#components	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryWithPayload(py)formatString	declared	source:full/oslog/OSLog.swift#formatString	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
-c:objc(pl)OSLogEntryWithPayload(py)subsystem	declared	source:full/oslog/OSLog.swift#subsystem	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
+c:objc(pl)OSLogEntryFromProcess	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryFromProcess(py)activityIdentifier	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryFromProcess(py)process	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryFromProcess(py)processIdentifier	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryFromProcess(py)sender	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryFromProcess(py)threadIdentifier	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryWithPayload	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryWithPayload(py)category	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
+c:objc(pl)OSLogEntryWithPayload(py)components	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(pl)OSLogEntryWithPayload(py)formatString	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
+c:objc(pl)OSLogEntryWithPayload(py)subsystem	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEntryLogLevel	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogLevel	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEntrySignpostType	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostType	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSLogEntryStoreCategory	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryStoreCategory	-
@@ -101,7 +101,7 @@ s:So21OSLogMessageComponentC0A0E8ArgumentO6signedyAEs5Int64VcAEmF	implemented	te
 s:So21OSLogMessageComponentC0A0E8ArgumentO6stringyAESScAEmF	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentArgument	-
 s:So21OSLogMessageComponentC0A0E8ArgumentO8unsignedyAEs6UInt64VcAEmF	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentArgument	-
 s:So21OSLogMessageComponentC0A0E8ArgumentO9undefinedyA2EmF	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentArgument	-
-s:So21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvp	declared	source:full/oslog/OSLog.swift#argument	Declaration compiles; Linux has no unified-log catalog rows, so this type or member cannot be exercised through public store APIs.
+s:So21OSLogMessageComponentC0A0E8argumentAbCE8ArgumentOvp	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogMessageComponentFromStore	-
 s:So22OSLogEntrySignpostTypeV8rawValueABSgSi_tcfc	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostType	-
 s:So22OSLogEnumeratorOptionsV8rawValueABSu_tcfc	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEnumeratorOptions	-
 s:So23OSLogEntryStoreCategoryV8rawValueABSgSi_tcfc	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryStoreCategory	-

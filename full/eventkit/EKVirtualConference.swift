@@ -73,7 +73,10 @@ open class EKVirtualConferenceProvider: NSObject {
         identifier: EKVirtualConferenceRoomTypeIdentifier
     ) async throws -> EKVirtualConferenceDescriptor {
         _ = identifier
-        await Task.yield()
-        throw EKMakeError(.osNotSupported)
+        return try await withCheckedThrowingContinuation { continuation in
+            EKCallbackDelivery.asynchronously {
+                continuation.resume(throwing: EKMakeError(.osNotSupported))
+            }
+        }
     }
 }

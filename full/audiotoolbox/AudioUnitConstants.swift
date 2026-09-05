@@ -1,3 +1,6 @@
+#if os(Linux)
+import Glibc
+#endif
 import Foundation
 
 public let kAudioUnitManufacturer_Apple: UInt32 = atFourCC("appl")
@@ -83,24 +86,37 @@ public enum AUParameterAutomationEventType: UInt32, Sendable, Hashable {
 
 @_cdecl("AudioUnitInitialize")
 public func AudioUnitInitialize(_ inUnit: AudioUnit?) -> Int32 {
-    guard ATRegistry.shared.lookup(inUnit) != nil else {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
         return kAudioUnitErr_InvalidElement
     }
-    return kAudioUnitErr_FailedInitialization
+    if unit.isRemoteIO {
+        return kAudioUnitErr_FailedInitialization
+    }
+    unit.initialized = true
+    return 0
 }
 
 @_cdecl("AudioUnitUninitialize")
 public func AudioUnitUninitialize(_ inUnit: AudioUnit?) -> Int32 {
-    guard ATRegistry.shared.lookup(inUnit) != nil else {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
         return kAudioUnitErr_InvalidElement
     }
+    unit.initialized = false
     return 0
 }
 
 @_cdecl("AudioOutputUnitStart")
 public func AudioOutputUnitStart(_ ci: AudioUnit?) -> Int32 {
-    _ = ci
-    return kAudioUnitErr_FailedInitialization
+    guard let unit = ATRegistry.shared.lookup(ci, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_FailedInitialization
+    }
+    if unit.isRemoteIO {
+        return kAudioUnitErr_FailedInitialization
+    }
+    if !unit.initialized {
+        return kAudioUnitErr_Uninitialized
+    }
+    return 0
 }
 
 @_cdecl("AudioOutputUnitStop")
@@ -117,8 +133,177 @@ public func AudioUnitReset(
 ) -> Int32 {
     _ = inScope
     _ = inElement
-    guard ATRegistry.shared.lookup(inUnit) != nil else {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
         return kAudioUnitErr_InvalidElement
     }
-    return kAudioUnitErr_Uninitialized
+    if !unit.initialized {
+        return kAudioUnitErr_Uninitialized
+    }
+    return 0
+}
+
+public func AudioUnitGetProperty(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitPropertyID,
+    _ inScope: AudioUnitScope,
+    _ inElement: AudioUnitElement,
+    _ outData: UnsafeMutableRawPointer?,
+    _ ioDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    _ = inElement
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    switch inID {
+    case kAudioUnitProperty_StreamFormat:
+        if let ioDataSize, ioDataSize.pointee < UInt32(atASBDSize) {
+            return kAudioUnitErr_InvalidPropertyValue
+        }
+        ioDataSize?.pointee = UInt32(atASBDSize)
+        let format = inScope == kAudioUnitScope_Input ? unit.inputFormat : unit.outputFormat
+        if let outData { atStoreASBD(format, to: outData) }
+        return 0
+    case kAudioUnitProperty_ElementCount:
+        ioDataSize?.pointee = 4
+        let count = inScope == kAudioUnitScope_Input ? unit.inputCount : unit.outputCount
+        outData?.storeBytes(of: count, as: UInt32.self)
+        return 0
+    case kAudioUnitProperty_SampleRate:
+        ioDataSize?.pointee = 8
+        outData?.storeBytes(of: unit.outputFormat.mSampleRate, as: Float64.self)
+        return 0
+    case kAudioUnitProperty_MaximumFramesPerSlice:
+        ioDataSize?.pointee = 4
+        outData?.storeBytes(of: unit.maximumFrames, as: UInt32.self)
+        return 0
+    case kAudioUnitProperty_LastRenderError:
+        ioDataSize?.pointee = 4
+        outData?.storeBytes(of: unit.lastRenderError, as: Int32.self)
+        return 0
+    default:
+        return kAudioUnitErr_InvalidProperty
+    }
+}
+
+public func AudioUnitSetProperty(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitPropertyID,
+    _ inScope: AudioUnitScope,
+    _ inElement: AudioUnitElement,
+    _ inData: UnsafeRawPointer?,
+    _ inDataSize: UInt32
+) -> Int32 {
+    _ = inElement
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    if unit.initialized && inID == kAudioUnitProperty_StreamFormat {
+        return kAudioUnitErr_Initialized
+    }
+    switch inID {
+    case kAudioUnitProperty_StreamFormat:
+        guard let inData, inDataSize >= UInt32(atASBDSize), var format = atLoadASBD(inData) else {
+            return kAudioUnitErr_FormatNotSupported
+        }
+        if format.mFormatID != atFormatLinearPCM {
+            return kAudioUnitErr_FormatNotSupported
+        }
+        atFillPCMASBD(&format)
+        if inScope == kAudioUnitScope_Input {
+            unit.inputFormat = format
+        } else {
+            unit.outputFormat = format
+        }
+        return 0
+    case kAudioUnitProperty_ElementCount:
+        guard let inData, inDataSize >= 4 else { return kAudioUnitErr_InvalidPropertyValue }
+        let count = inData.loadUnaligned(as: UInt32.self)
+        if inScope == kAudioUnitScope_Input {
+            unit.inputCount = max(1, count)
+        } else {
+            unit.outputCount = max(1, count)
+        }
+        return 0
+    case kAudioUnitProperty_MaximumFramesPerSlice:
+        guard let inData, inDataSize >= 4 else { return kAudioUnitErr_InvalidPropertyValue }
+        unit.maximumFrames = inData.loadUnaligned(as: UInt32.self)
+        return 0
+    default:
+        return kAudioUnitErr_InvalidProperty
+    }
+}
+
+public func AudioUnitGetParameter(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitParameterID,
+    _ inScope: AudioUnitScope,
+    _ inElement: AudioUnitElement,
+    _ outValue: UnsafeMutablePointer<AudioUnitParameterValue>?
+) -> Int32 {
+    _ = inScope
+    _ = inElement
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    outValue?.pointee = unit.parameters[inID] ?? 0
+    return 0
+}
+
+public func AudioUnitSetParameter(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitParameterID,
+    _ inScope: AudioUnitScope,
+    _ inElement: AudioUnitElement,
+    _ inValue: AudioUnitParameterValue,
+    _ inBufferOffsetInFrames: UInt32
+) -> Int32 {
+    _ = inScope
+    _ = inElement
+    _ = inBufferOffsetInFrames
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    unit.parameters[inID] = inValue
+    return 0
+}
+
+public func AudioUnitRender(
+    _ inUnit: AudioUnit?,
+    _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>?,
+    _ inTimeStamp: UnsafeRawPointer?,
+    _ inOutputBusNumber: UInt32,
+    _ inNumberFrames: UInt32,
+    _ ioData: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inTimeStamp
+    _ = inOutputBusNumber
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    if unit.isRemoteIO {
+        unit.lastRenderError = kAudioUnitErr_FailedInitialization
+        return kAudioUnitErr_FailedInitialization
+    }
+    if !unit.initialized {
+        unit.lastRenderError = kAudioUnitErr_Uninitialized
+        return kAudioUnitErr_Uninitialized
+    }
+    if inNumberFrames > unit.maximumFrames {
+        unit.lastRenderError = kAudioUnitErr_TooManyFramesToProcess
+        return kAudioUnitErr_TooManyFramesToProcess
+    }
+    guard let list = atLoadBufferList(ioData), let first = list.buffers.first, let dest = first.data else {
+        unit.lastRenderError = kAudioUnitErr_InvalidParameter
+        return kAudioUnitErr_InvalidParameter
+    }
+    let bytes = Int(inNumberFrames) * Int(max(unit.outputFormat.mBytesPerFrame, 1))
+    let count = min(bytes, Int(first.dataByteSize))
+    memset(dest, 0, count)
+    if unit.isMixer {
+        // Offline mixer with no connected inputs renders silence (sum of empty buses).
+        _ = atMixPCM(inputs: [], dest: unit.outputFormat, output: dest, outputByteCapacity: count)
+    }
+    ioActionFlags?.pointee.insert(.unitRenderAction_OutputIsSilence)
+    unit.lastRenderError = 0
+    return 0
 }

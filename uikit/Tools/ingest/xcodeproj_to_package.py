@@ -324,7 +324,9 @@ LADDER_DEP_CLASS: dict[str, str] = {
 # OpenUIKit Package.swift products an external package can actually depend on.
 # Combine and os are products so an ingested SwiftPM package on Linux can
 # `import Combine` / `import os` (17/20 and 13/20 ladder apps,
-# scratch/ladder-corpus 2026-09-05). Darwin dependents keep the SDK modules
+# scratch/ladder-corpus 2026-09-05, docs/agent_reports/combine-product.md;
+# Focus Blockzilla 15 Combine files at a2832521,
+# docs/agent_reports/focus-e2e.md). Darwin dependents keep the SDK modules
 # via `.product(..., condition: .when(platforms: [.linux]))`.
 PORTED_PRODUCTS = {
     "UIKit": "UIKit",
@@ -336,6 +338,15 @@ PORTED_PRODUCTS = {
     "CoreGraphics": "OpenCoreGraphics",
     "Combine": "Combine",
     "os": "os",
+    # RealAppProbe harness stubs, now products so ingested Focus on Linux
+    # can `import Glean` without a colliding second target (focus-e2e
+    # wave1, docker swift:6.2-noble). Not Mozilla Glean / SDK Intents.
+    "Glean": "Glean",
+    "Intents": "Intents",
+    "IntentsUI": "IntentsUI",
+    "Onboarding": "Onboarding",
+    "Licenses": "Licenses",
+    "DesignSystem": "DesignSystem",
 }
 
 # Toolchain modules that exist on Linux Swift without an OpenUIKit product.
@@ -1553,6 +1564,12 @@ def emit_package_swift(
         '                .product(name: "Symbols", package: "OpenUIKit")',
         '                .product(name: "Combine", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "os", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Glean", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Intents", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "IntentsUI", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Onboarding", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Licenses", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "DesignSystem", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
     ]
     resources_block = ""
     if any(manifest["resources"].values()):

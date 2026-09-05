@@ -78,6 +78,7 @@ public enum DataStoreError: Hashable, Error {
     case preferInMemorySort
     case preferInMemoryFilter
     case unsupportedFeature
+
 }
 
 public enum DataStoreSnapshotCodingKey: CodingKey {

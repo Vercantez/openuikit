@@ -32,6 +32,7 @@ open class CKContainer: NSObject, @unchecked Sendable {
     private static let defaultContainer = CKContainer(defaultMarker: ())
 
     open private(set) var containerIdentifier: String?
+    let simulatedState: CKSimulatedContainerState
     private let privateDatabase: CKDatabase
     private let publicDatabase: CKDatabase
     private let sharedDatabase: CKDatabase
@@ -42,6 +43,7 @@ open class CKContainer: NSObject, @unchecked Sendable {
 
     public init(identifier containerIdentifier: String) {
         self.containerIdentifier = containerIdentifier
+        self.simulatedState = CKSimulatedContainerState(identifier: containerIdentifier)
         self.privateDatabase = CKDatabase(scope: .private)
         self.publicDatabase = CKDatabase(scope: .public)
         self.sharedDatabase = CKDatabase(scope: .shared)
@@ -53,6 +55,7 @@ open class CKContainer: NSObject, @unchecked Sendable {
 
     private init(defaultMarker: Void) {
         self.containerIdentifier = nil
+        self.simulatedState = CKSimulatedContainerState(identifier: nil)
         self.privateDatabase = CKDatabase(scope: .private)
         self.publicDatabase = CKDatabase(scope: .public)
         self.sharedDatabase = CKDatabase(scope: .shared)
@@ -60,6 +63,14 @@ open class CKContainer: NSObject, @unchecked Sendable {
         privateDatabase.attach(container: self)
         publicDatabase.attach(container: self)
         sharedDatabase.attach(container: self)
+    }
+
+    /// Simulated-container network. Not an Apple API. CloudKitRuntime
+    /// networkUnavailable probe: after `true`, save returns CKError.networkUnavailable.
+    public func setSimulatedOffline(_ offline: Bool) {
+        simulatedState.lock.lock()
+        simulatedState.offline = offline
+        simulatedState.lock.unlock()
     }
 
     open var privateCloudDatabase: CKDatabase { privateDatabase }
@@ -82,7 +93,11 @@ open class CKContainer: NSObject, @unchecked Sendable {
     open func accountStatus(
         completionHandler: @escaping (CKAccountStatus, (any Error)?) -> Void
     ) {
-        completionHandler(.couldNotDetermine, CloudKitHost.unsupportedError())
+        CloudKitHost.schedule {
+            // Linux has no iCloud account. Measured: CloudKitRuntime accountStatus
+            // probe expects .noAccount with a nil error.
+            completionHandler(.noAccount, nil)
+        }
     }
 
     open func fetchUserRecordID(

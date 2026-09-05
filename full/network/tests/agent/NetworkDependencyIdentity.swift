@@ -1,7 +1,6 @@
 import Foundation
 import Network
 
-/// EC2 identity probe. Isolated host compile does not consume this file.
 func networkDependencyIdentityProbe() {
     let data = Data([127, 0, 0, 1])
     let address = IPv4Address(data)

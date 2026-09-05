@@ -481,6 +481,11 @@ open class UISearchBar: UIView {
         // captured with no keyboard and the button is there).
         searchTextField.clearButtonMode = .always
         searchTextField._searchBar = self
+        // MEASURED kbstateprobe search_empty, iPhone SE 2x / iOS 26.1:
+        // searchTextField.returnKeyType .search (6), autocorrectionType
+        // .no (1). Tabs t5000 search-return is a blue magnifying glass.
+        searchTextField.returnKeyType = .search
+        searchTextField.autocorrectionType = .no
         // Delegate plumbing (menus cluster): the field's own delegate is a
         // private bridge, so an app's `searchBar.delegate` can never be
         // confused with a UITextFieldDelegate.
