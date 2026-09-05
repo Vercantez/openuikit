@@ -1,0 +1,23 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave9-repair-1",
+    "maxActive": 16,
+    "maxRuns": 1
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "AddressBook",
+      "slug": "addressbook",
+      "agentId": "bc-b694763b-0649-5446-bcb6-058882661833",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/167",
+      "expectedPriorHead": "b805b6bba3da4d54dd6eb5850bf6cec007052134",
+      "prompt": "Continue repairing AddressBook in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at b805b6bba3da:\nFW_MERGE GATE RED (see /tmp/fw_merge_gate-addressbook.log):\n/gate/addressbook-95232/full/addressbook/tests/agent/AddressBookConstantTests.swift:176:16: error: cannot convert value of type 'CFNumber?' to type 'NSNumber' in coercion\n    |                `- error: cannot convert value of type 'CFNumber?' to type 'NSNumber' in coercion\n/gate/addressbook-95232/full/addressbook/tests/agent/AddressBookConstantTests.swift:177:16: error: cannot convert value of type 'CFNumber?' to type 'NSNumber' in coercion\n    |                `- error: cannot convert value of type 'CFNumber?' to type 'NSNumber' in coercion\n\nFix the coverage ledger, not just the code: every `implemented` row in full/addressbook/coverage.tsv must cite evidence of the exact form `test:full/addressbook/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/addressbook/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/addressbook/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}

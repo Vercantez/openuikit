@@ -375,11 +375,12 @@
     "tabulardata": {
       "agentId": "bc-f6fa094f-3253-5e14-9998-10e85915a988",
       "agentName": "Port TabularData to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-f6fa094f-3253-5e14-9998-10e85915a988",
       "branches": [
         {
           "branch": "cursor/port-tabulardata-to-linux-362b",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/164",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -388,10 +389,13 @@
       "launchStatus": "CREATED",
       "module": "TabularData",
       "priority": 100,
+      "resultBytes": 1397,
+      "resultSha256": "79bfc7ec4295018aa433abd88a094c533ded680b941a1a63e1127932f4c0ff63",
       "runCreatedAt": "2026-09-05T21:54:06.944Z",
+      "runDurationMs": 3653767,
       "runId": "run-0067e636-b83b-43be-b8c1-85cf587dae02",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T21:54:08.490Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T22:55:02.045Z"
     },
     "weatherkit": {
       "agentId": "bc-2ca40cf7-5713-57bc-8ff0-4b8cbdda952e",
@@ -429,5 +433,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T22:36:22Z"
+  "updatedAt": "2026-09-05T23:00:53Z"
 }

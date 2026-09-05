@@ -746,7 +746,7 @@
     "vision": {
       "agentId": "bc-6e5ae8bb-d249-5c34-9639-175039106043",
       "agentName": "Port Vision to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-6e5ae8bb-d249-5c34-9639-175039106043",
       "branches": [
         {
@@ -760,13 +760,13 @@
       "launchStatus": "CREATED",
       "module": "Vision",
       "priority": 100,
-      "resultBytes": 2024,
-      "resultSha256": "7aaf0e21fc35a4d1a244d990696bd30a442f5f30ca92ace448edd17c22dac53b",
+      "resultBytes": 908,
+      "resultSha256": "ec557e778af9adeb7e017ac33d6a2af78b84e0d9902a85d66d09f9185f464914",
       "runCreatedAt": "2026-09-05T22:17:50.194Z",
-      "runDurationMs": 1810189,
+      "runDurationMs": 826603,
       "runId": "run-6611c99f-48dd-4fcf-bc9c-6541ea543df1",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T22:17:51.208Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T22:31:37.605Z"
     }
   },
   "model": {
@@ -779,5 +779,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T22:31:34Z"
+  "updatedAt": "2026-09-05T22:59:01Z"
 }
