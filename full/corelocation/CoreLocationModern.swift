@@ -467,29 +467,48 @@ public actor CLMonitor {
   public struct Events: AsyncSequence, Sendable {
     public typealias Element = Event
     public typealias AsyncIterator = Iterator
+    private let monitor: CLMonitor
+
+    fileprivate init(monitor: CLMonitor) {
+      self.monitor = monitor
+    }
 
     public func makeAsyncIterator() -> Iterator {
-      Iterator()
+      Iterator(monitor: monitor)
     }
 
     public struct Iterator: AsyncIteratorProtocol, Sendable {
       public typealias Element = CLMonitor.Events.Element
+      private let monitor: CLMonitor
 
-      /// Linux never invents hardware monitor events.
+      fileprivate init(monitor: CLMonitor) {
+        self.monitor = monitor
+      }
+
+      /// Returns queued host-injected events; nil when the mailbox is empty.
+      /// Linux never invents hardware transitions
+      /// (testMonitorStoresConditionWithoutHardwareEvents,
+      /// testMonitorInjectedGeographicEvents).
       public mutating func next() async throws -> CLMonitor.Events.Element? {
-        nil
+        await monitor.dequeueEvent()
       }
     }
   }
 
-  public let events = Events()
+  public var events: Events { Events(monitor: self) }
   private var records: [String: Record] = [:]
+  private var pendingEvents: [Event] = []
   private let name: String
 
   public var identifiers: [String] { Array(records.keys).sorted() }
 
   public init(_ name: String) async {
     self.name = name
+  }
+
+  func dequeueEvent() -> Event? {
+    guard !pendingEvents.isEmpty else { return nil }
+    return pendingEvents.removeFirst()
   }
 
   public func add(_ condition: any CLCondition, identifier: String) {
@@ -516,5 +535,34 @@ public actor CLMonitor {
 
   public func record(for identifier: String) -> Record? {
     records[identifier]
+  }
+
+  /// Evaluates stored circular conditions against a host location.
+  /// Satisfied when Vincenty distance to the center is ≤ radius
+  /// (testMonitorInjectedGeographicEvents, nyc-london / equator samples
+  /// from testWGS84DistanceAndCircularRegion).
+  @_spi(OpenUIKitHost)
+  public func _portableInject(location: CLLocation) {
+    for identifier in identifiers {
+      guard let record = records[identifier] else { continue }
+      guard let geographic = record.condition as? CircularGeographicCondition else {
+        continue
+      }
+      let center = CLLocation(
+        latitude: geographic.center.latitude,
+        longitude: geographic.center.longitude
+      )
+      let inside = center.distance(from: location) <= geographic.radius
+      let newState: Event.State = inside ? .satisfied : .unsatisfied
+      if newState == record.lastEvent.state { continue }
+      let event = Event(
+        identifier: identifier,
+        refinement: geographic,
+        state: newState,
+        authorizationDenied: false
+      )
+      records[identifier] = Record(condition: record.condition, lastEvent: event)
+      pendingEvents.append(event)
+    }
   }
 }
