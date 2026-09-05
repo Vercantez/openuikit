@@ -1,19 +1,21 @@
-import Foundation
+// CFString keys. Payloads measured 2026-09-05 against Apple ImageIO
+// (macOS 26.1 / ImageIO.framework) via /tmp/imageio-apple-oracle.swift.
+// Nested keys use the short dictionary names Darwin stores (PixelWidth,
+// DateTimeOriginal, {Exif}); option keys keep the C identifier when that
+// is the runtime CFString (kCGImageSourceShouldCache, ThumbnailMaxPixelSize
+// is kCGImageSourceThumbnailMaxPixelSize).
 
-// CFString keys. Payloads that already shipped in ImageIO.swift, plus
-// well-known dictionary wrappers and color-model strings, keep those
-// identities. Remaining keys use the C identifier as a process-local
-// value until an Apple oracle records the Darwin payload.
+import Foundation
 
 public let kCFErrorDomainCGImageMetadata: CFString = "kCFErrorDomainCGImageMetadata"
 
 public let kCGComputeHDRStats: CFString = "kCGComputeHDRStats"
 
-public let kCGImageAnimationDelayTime: CFString = "kCGImageAnimationDelayTime"
+public let kCGImageAnimationDelayTime: CFString = "DelayTime"
 
-public let kCGImageAnimationLoopCount: CFString = "kCGImageAnimationLoopCount"
+public let kCGImageAnimationLoopCount: CFString = "LoopCount"
 
-public let kCGImageAnimationStartIndex: CFString = "kCGImageAnimationStartIndex"
+public let kCGImageAnimationStartIndex: CFString = "StartIndex"
 
 public let kCGImageAuxiliaryDataInfoColorSpace: CFString = "kCGImageAuxiliaryDataInfoColorSpace"
 
@@ -139,17 +141,17 @@ public let kCGImageMetadataShouldExcludeXMP: CFString = "kCGImageMetadataShouldE
 
 public let kCGImageProperty8BIMDictionary: CFString = "{8BIM}"
 
-public let kCGImageProperty8BIMLayerNames: CFString = "kCGImageProperty8BIMLayerNames"
+public let kCGImageProperty8BIMLayerNames: CFString = "LayerNames"
 
-public let kCGImageProperty8BIMVersion: CFString = "kCGImageProperty8BIMVersion"
+public let kCGImageProperty8BIMVersion: CFString = "Version"
 
-public let kCGImagePropertyAPNGCanvasPixelHeight: CFString = "kCGImagePropertyAPNGCanvasPixelHeight"
+public let kCGImagePropertyAPNGCanvasPixelHeight: CFString = "CanvasPixelHeight"
 
-public let kCGImagePropertyAPNGCanvasPixelWidth: CFString = "kCGImagePropertyAPNGCanvasPixelWidth"
+public let kCGImagePropertyAPNGCanvasPixelWidth: CFString = "CanvasPixelWidth"
 
 public let kCGImagePropertyAPNGDelayTime: CFString = "DelayTime"
 
-public let kCGImagePropertyAPNGFrameInfoArray: CFString = "kCGImagePropertyAPNGFrameInfoArray"
+public let kCGImagePropertyAPNGFrameInfoArray: CFString = "FrameInfo"
 
 public let kCGImagePropertyAPNGLoopCount: CFString = "LoopCount"
 
@@ -165,59 +167,59 @@ public let kCGImagePropertyASTCEncoder: CFString = "kCGImagePropertyASTCEncoder"
 
 public let kCGImagePropertyAVISDictionary: CFString = "{AVIS}"
 
-public let kCGImagePropertyAuxiliaryData: CFString = "kCGImagePropertyAuxiliaryData"
+public let kCGImagePropertyAuxiliaryData: CFString = "AuxiliaryData"
 
-public let kCGImagePropertyAuxiliaryDataType: CFString = "kCGImagePropertyAuxiliaryDataType"
+public let kCGImagePropertyAuxiliaryDataType: CFString = "AuxiliaryDataType"
 
 public let kCGImagePropertyBCEncoder: CFString = "kCGImagePropertyBCEncoder"
 
 public let kCGImagePropertyBCFormat: CFString = "kCGImagePropertyBCFormat"
 
-public let kCGImagePropertyBytesPerRow: CFString = "kCGImagePropertyBytesPerRow"
+public let kCGImagePropertyBytesPerRow: CFString = "BytesPerRow"
 
-public let kCGImagePropertyCIFFCameraSerialNumber: CFString = "kCGImagePropertyCIFFCameraSerialNumber"
+public let kCGImagePropertyCIFFCameraSerialNumber: CFString = "CameraSerialNumber"
 
-public let kCGImagePropertyCIFFContinuousDrive: CFString = "kCGImagePropertyCIFFContinuousDrive"
+public let kCGImagePropertyCIFFContinuousDrive: CFString = "ContinuousDrive"
 
-public let kCGImagePropertyCIFFDescription: CFString = "kCGImagePropertyCIFFDescription"
+public let kCGImagePropertyCIFFDescription: CFString = "Description"
 
 public let kCGImagePropertyCIFFDictionary: CFString = "{CIFF}"
 
-public let kCGImagePropertyCIFFFirmware: CFString = "kCGImagePropertyCIFFFirmware"
+public let kCGImagePropertyCIFFFirmware: CFString = "Firmware"
 
-public let kCGImagePropertyCIFFFlashExposureComp: CFString = "kCGImagePropertyCIFFFlashExposureComp"
+public let kCGImagePropertyCIFFFlashExposureComp: CFString = "FlashExposureComp"
 
-public let kCGImagePropertyCIFFFocusMode: CFString = "kCGImagePropertyCIFFFocusMode"
+public let kCGImagePropertyCIFFFocusMode: CFString = "FocusMode"
 
-public let kCGImagePropertyCIFFImageFileName: CFString = "kCGImagePropertyCIFFImageFileName"
+public let kCGImagePropertyCIFFImageFileName: CFString = "ImageFileName"
 
-public let kCGImagePropertyCIFFImageName: CFString = "kCGImagePropertyCIFFImageName"
+public let kCGImagePropertyCIFFImageName: CFString = "ImageName"
 
-public let kCGImagePropertyCIFFImageSerialNumber: CFString = "kCGImagePropertyCIFFImageSerialNumber"
+public let kCGImagePropertyCIFFImageSerialNumber: CFString = "ImageSerialNumber"
 
-public let kCGImagePropertyCIFFLensMaxMM: CFString = "kCGImagePropertyCIFFLensMaxMM"
+public let kCGImagePropertyCIFFLensMaxMM: CFString = "LensMaxMM"
 
-public let kCGImagePropertyCIFFLensMinMM: CFString = "kCGImagePropertyCIFFLensMinMM"
+public let kCGImagePropertyCIFFLensMinMM: CFString = "LensMinMM"
 
-public let kCGImagePropertyCIFFLensModel: CFString = "kCGImagePropertyCIFFLensModel"
+public let kCGImagePropertyCIFFLensModel: CFString = "LensModel"
 
-public let kCGImagePropertyCIFFMeasuredEV: CFString = "kCGImagePropertyCIFFMeasuredEV"
+public let kCGImagePropertyCIFFMeasuredEV: CFString = "MeasuredEV"
 
-public let kCGImagePropertyCIFFMeteringMode: CFString = "kCGImagePropertyCIFFMeteringMode"
+public let kCGImagePropertyCIFFMeteringMode: CFString = "MeteringMode"
 
-public let kCGImagePropertyCIFFOwnerName: CFString = "kCGImagePropertyCIFFOwnerName"
+public let kCGImagePropertyCIFFOwnerName: CFString = "OwnerName"
 
-public let kCGImagePropertyCIFFRecordID: CFString = "kCGImagePropertyCIFFRecordID"
+public let kCGImagePropertyCIFFRecordID: CFString = "RecordID"
 
-public let kCGImagePropertyCIFFReleaseMethod: CFString = "kCGImagePropertyCIFFReleaseMethod"
+public let kCGImagePropertyCIFFReleaseMethod: CFString = "ReleaseMethod"
 
-public let kCGImagePropertyCIFFReleaseTiming: CFString = "kCGImagePropertyCIFFReleaseTiming"
+public let kCGImagePropertyCIFFReleaseTiming: CFString = "ReleaseTiming"
 
-public let kCGImagePropertyCIFFSelfTimingTime: CFString = "kCGImagePropertyCIFFSelfTimingTime"
+public let kCGImagePropertyCIFFSelfTimingTime: CFString = "SelfTimingTime"
 
-public let kCGImagePropertyCIFFShootingMode: CFString = "kCGImagePropertyCIFFShootingMode"
+public let kCGImagePropertyCIFFShootingMode: CFString = "ShootingMode"
 
-public let kCGImagePropertyCIFFWhiteBalanceIndex: CFString = "kCGImagePropertyCIFFWhiteBalanceIndex"
+public let kCGImagePropertyCIFFWhiteBalanceIndex: CFString = "WhiteBalanceIndex"
 
 public let kCGImagePropertyColorModel: CFString = "ColorModel"
 
@@ -229,191 +231,191 @@ public let kCGImagePropertyColorModelLab: CFString = "Lab"
 
 public let kCGImagePropertyColorModelRGB: CFString = "RGB"
 
-public let kCGImagePropertyDNGActiveArea: CFString = "kCGImagePropertyDNGActiveArea"
+public let kCGImagePropertyDNGActiveArea: CFString = "ActiveArea"
 
-public let kCGImagePropertyDNGAnalogBalance: CFString = "kCGImagePropertyDNGAnalogBalance"
+public let kCGImagePropertyDNGAnalogBalance: CFString = "AnalogBalance"
 
-public let kCGImagePropertyDNGAntiAliasStrength: CFString = "kCGImagePropertyDNGAntiAliasStrength"
+public let kCGImagePropertyDNGAntiAliasStrength: CFString = "AntiAliasStrength"
 
-public let kCGImagePropertyDNGAsShotICCProfile: CFString = "kCGImagePropertyDNGAsShotICCProfile"
+public let kCGImagePropertyDNGAsShotICCProfile: CFString = "AsShotICCProfile"
 
-public let kCGImagePropertyDNGAsShotNeutral: CFString = "kCGImagePropertyDNGAsShotNeutral"
+public let kCGImagePropertyDNGAsShotNeutral: CFString = "AsShotNeutral"
 
-public let kCGImagePropertyDNGAsShotPreProfileMatrix: CFString = "kCGImagePropertyDNGAsShotPreProfileMatrix"
+public let kCGImagePropertyDNGAsShotPreProfileMatrix: CFString = "AsShotPreProfileMatrix"
 
-public let kCGImagePropertyDNGAsShotProfileName: CFString = "kCGImagePropertyDNGAsShotProfileName"
+public let kCGImagePropertyDNGAsShotProfileName: CFString = "AsShotProfileName"
 
-public let kCGImagePropertyDNGAsShotWhiteXY: CFString = "kCGImagePropertyDNGAsShotWhiteXY"
+public let kCGImagePropertyDNGAsShotWhiteXY: CFString = "AsShotWhiteXY"
 
-public let kCGImagePropertyDNGBackwardVersion: CFString = "kCGImagePropertyDNGBackwardVersion"
+public let kCGImagePropertyDNGBackwardVersion: CFString = "DNGBackwardVersion"
 
-public let kCGImagePropertyDNGBaselineExposure: CFString = "kCGImagePropertyDNGBaselineExposure"
+public let kCGImagePropertyDNGBaselineExposure: CFString = "BaselineExposure"
 
-public let kCGImagePropertyDNGBaselineExposureOffset: CFString = "kCGImagePropertyDNGBaselineExposureOffset"
+public let kCGImagePropertyDNGBaselineExposureOffset: CFString = "BaselineExposureOffset"
 
-public let kCGImagePropertyDNGBaselineNoise: CFString = "kCGImagePropertyDNGBaselineNoise"
+public let kCGImagePropertyDNGBaselineNoise: CFString = "BaselineNoise"
 
-public let kCGImagePropertyDNGBaselineSharpness: CFString = "kCGImagePropertyDNGBaselineSharpness"
+public let kCGImagePropertyDNGBaselineSharpness: CFString = "BaselineSharpness"
 
-public let kCGImagePropertyDNGBayerGreenSplit: CFString = "kCGImagePropertyDNGBayerGreenSplit"
+public let kCGImagePropertyDNGBayerGreenSplit: CFString = "BayerGreenSplit"
 
-public let kCGImagePropertyDNGBestQualityScale: CFString = "kCGImagePropertyDNGBestQualityScale"
+public let kCGImagePropertyDNGBestQualityScale: CFString = "BestQualityScale"
 
-public let kCGImagePropertyDNGBlackLevel: CFString = "kCGImagePropertyDNGBlackLevel"
+public let kCGImagePropertyDNGBlackLevel: CFString = "BlackLevel"
 
-public let kCGImagePropertyDNGBlackLevelDeltaH: CFString = "kCGImagePropertyDNGBlackLevelDeltaH"
+public let kCGImagePropertyDNGBlackLevelDeltaH: CFString = "BlackLevelDeltaH"
 
-public let kCGImagePropertyDNGBlackLevelDeltaV: CFString = "kCGImagePropertyDNGBlackLevelDeltaV"
+public let kCGImagePropertyDNGBlackLevelDeltaV: CFString = "BlackLevelDeltaV"
 
-public let kCGImagePropertyDNGBlackLevelRepeatDim: CFString = "kCGImagePropertyDNGBlackLevelRepeatDim"
+public let kCGImagePropertyDNGBlackLevelRepeatDim: CFString = "BlackLevelRepeatDim"
 
-public let kCGImagePropertyDNGCFALayout: CFString = "kCGImagePropertyDNGCFALayout"
+public let kCGImagePropertyDNGCFALayout: CFString = "CFALayout"
 
-public let kCGImagePropertyDNGCFAPlaneColor: CFString = "kCGImagePropertyDNGCFAPlaneColor"
+public let kCGImagePropertyDNGCFAPlaneColor: CFString = "CFAPlaneColor"
 
-public let kCGImagePropertyDNGCalibrationIlluminant1: CFString = "kCGImagePropertyDNGCalibrationIlluminant1"
+public let kCGImagePropertyDNGCalibrationIlluminant1: CFString = "CalibrationIlluminant1"
 
-public let kCGImagePropertyDNGCalibrationIlluminant2: CFString = "kCGImagePropertyDNGCalibrationIlluminant2"
+public let kCGImagePropertyDNGCalibrationIlluminant2: CFString = "CalibrationIlluminant2"
 
-public let kCGImagePropertyDNGCameraCalibration1: CFString = "kCGImagePropertyDNGCameraCalibration1"
+public let kCGImagePropertyDNGCameraCalibration1: CFString = "CameraCalibration1"
 
-public let kCGImagePropertyDNGCameraCalibration2: CFString = "kCGImagePropertyDNGCameraCalibration2"
+public let kCGImagePropertyDNGCameraCalibration2: CFString = "CameraCalibration2"
 
-public let kCGImagePropertyDNGCameraCalibrationSignature: CFString = "kCGImagePropertyDNGCameraCalibrationSignature"
+public let kCGImagePropertyDNGCameraCalibrationSignature: CFString = "CameraCalibrationSignature"
 
-public let kCGImagePropertyDNGCameraSerialNumber: CFString = "kCGImagePropertyDNGCameraSerialNumber"
+public let kCGImagePropertyDNGCameraSerialNumber: CFString = "CameraSerialNumber"
 
-public let kCGImagePropertyDNGChromaBlurRadius: CFString = "kCGImagePropertyDNGChromaBlurRadius"
+public let kCGImagePropertyDNGChromaBlurRadius: CFString = "ChromaBlurRadius"
 
-public let kCGImagePropertyDNGColorMatrix1: CFString = "kCGImagePropertyDNGColorMatrix1"
+public let kCGImagePropertyDNGColorMatrix1: CFString = "ColorMatrix1"
 
-public let kCGImagePropertyDNGColorMatrix2: CFString = "kCGImagePropertyDNGColorMatrix2"
+public let kCGImagePropertyDNGColorMatrix2: CFString = "ColorMatrix2"
 
-public let kCGImagePropertyDNGColorimetricReference: CFString = "kCGImagePropertyDNGColorimetricReference"
+public let kCGImagePropertyDNGColorimetricReference: CFString = "ColorimetricReference"
 
-public let kCGImagePropertyDNGCurrentICCProfile: CFString = "kCGImagePropertyDNGCurrentICCProfile"
+public let kCGImagePropertyDNGCurrentICCProfile: CFString = "CurrentICCProfile"
 
-public let kCGImagePropertyDNGCurrentPreProfileMatrix: CFString = "kCGImagePropertyDNGCurrentPreProfileMatrix"
+public let kCGImagePropertyDNGCurrentPreProfileMatrix: CFString = "CurrentPreProfileMatrix"
 
-public let kCGImagePropertyDNGDefaultBlackRender: CFString = "kCGImagePropertyDNGDefaultBlackRender"
+public let kCGImagePropertyDNGDefaultBlackRender: CFString = "DefaultBlackRender"
 
-public let kCGImagePropertyDNGDefaultCropOrigin: CFString = "kCGImagePropertyDNGDefaultCropOrigin"
+public let kCGImagePropertyDNGDefaultCropOrigin: CFString = "DefaultCropOrigin"
 
-public let kCGImagePropertyDNGDefaultCropSize: CFString = "kCGImagePropertyDNGDefaultCropSize"
+public let kCGImagePropertyDNGDefaultCropSize: CFString = "DefaultCropSize"
 
-public let kCGImagePropertyDNGDefaultScale: CFString = "kCGImagePropertyDNGDefaultScale"
+public let kCGImagePropertyDNGDefaultScale: CFString = "DefaultScale"
 
-public let kCGImagePropertyDNGDefaultUserCrop: CFString = "kCGImagePropertyDNGDefaultUserCrop"
+public let kCGImagePropertyDNGDefaultUserCrop: CFString = "DefaultUserCrop"
 
 public let kCGImagePropertyDNGDictionary: CFString = "{DNG}"
 
-public let kCGImagePropertyDNGExtraCameraProfiles: CFString = "kCGImagePropertyDNGExtraCameraProfiles"
+public let kCGImagePropertyDNGExtraCameraProfiles: CFString = "ExtraCameraProfiles"
 
-public let kCGImagePropertyDNGFixVignetteRadial: CFString = "kCGImagePropertyDNGFixVignetteRadial"
+public let kCGImagePropertyDNGFixVignetteRadial: CFString = "FixVignetteRadial"
 
-public let kCGImagePropertyDNGForwardMatrix1: CFString = "kCGImagePropertyDNGForwardMatrix1"
+public let kCGImagePropertyDNGForwardMatrix1: CFString = "ForwardMatrix1"
 
-public let kCGImagePropertyDNGForwardMatrix2: CFString = "kCGImagePropertyDNGForwardMatrix2"
+public let kCGImagePropertyDNGForwardMatrix2: CFString = "ForwardMatrix2"
 
-public let kCGImagePropertyDNGLensInfo: CFString = "kCGImagePropertyDNGLensInfo"
+public let kCGImagePropertyDNGLensInfo: CFString = "LensInfo"
 
-public let kCGImagePropertyDNGLinearResponseLimit: CFString = "kCGImagePropertyDNGLinearResponseLimit"
+public let kCGImagePropertyDNGLinearResponseLimit: CFString = "LinearResponseLimit"
 
-public let kCGImagePropertyDNGLinearizationTable: CFString = "kCGImagePropertyDNGLinearizationTable"
+public let kCGImagePropertyDNGLinearizationTable: CFString = "LinearizationTable"
 
-public let kCGImagePropertyDNGLocalizedCameraModel: CFString = "kCGImagePropertyDNGLocalizedCameraModel"
+public let kCGImagePropertyDNGLocalizedCameraModel: CFString = "LocalizedCameraModel"
 
-public let kCGImagePropertyDNGMakerNoteSafety: CFString = "kCGImagePropertyDNGMakerNoteSafety"
+public let kCGImagePropertyDNGMakerNoteSafety: CFString = "MakerNoteSafety"
 
-public let kCGImagePropertyDNGMaskedAreas: CFString = "kCGImagePropertyDNGMaskedAreas"
+public let kCGImagePropertyDNGMaskedAreas: CFString = "MaskedAreas"
 
-public let kCGImagePropertyDNGNewRawImageDigest: CFString = "kCGImagePropertyDNGNewRawImageDigest"
+public let kCGImagePropertyDNGNewRawImageDigest: CFString = "NewRawImageDigest"
 
-public let kCGImagePropertyDNGNoiseProfile: CFString = "kCGImagePropertyDNGNoiseProfile"
+public let kCGImagePropertyDNGNoiseProfile: CFString = "NoiseProfile"
 
-public let kCGImagePropertyDNGNoiseReductionApplied: CFString = "kCGImagePropertyDNGNoiseReductionApplied"
+public let kCGImagePropertyDNGNoiseReductionApplied: CFString = "NoiseReductionApplied"
 
-public let kCGImagePropertyDNGOpcodeList1: CFString = "kCGImagePropertyDNGOpcodeList1"
+public let kCGImagePropertyDNGOpcodeList1: CFString = "OpcodeList1"
 
-public let kCGImagePropertyDNGOpcodeList2: CFString = "kCGImagePropertyDNGOpcodeList2"
+public let kCGImagePropertyDNGOpcodeList2: CFString = "DNGOpcodeList2"
 
-public let kCGImagePropertyDNGOpcodeList3: CFString = "kCGImagePropertyDNGOpcodeList3"
+public let kCGImagePropertyDNGOpcodeList3: CFString = "DNGOpcodeList3"
 
-public let kCGImagePropertyDNGOriginalBestQualityFinalSize: CFString = "kCGImagePropertyDNGOriginalBestQualityFinalSize"
+public let kCGImagePropertyDNGOriginalBestQualityFinalSize: CFString = "OriginalBestQualityFinalSize"
 
-public let kCGImagePropertyDNGOriginalDefaultCropSize: CFString = "kCGImagePropertyDNGOriginalDefaultCropSize"
+public let kCGImagePropertyDNGOriginalDefaultCropSize: CFString = "OriginalDefaultCropSize"
 
-public let kCGImagePropertyDNGOriginalDefaultFinalSize: CFString = "kCGImagePropertyDNGOriginalDefaultFinalSize"
+public let kCGImagePropertyDNGOriginalDefaultFinalSize: CFString = "OriginalDefaultFinalSize"
 
-public let kCGImagePropertyDNGOriginalRawFileData: CFString = "kCGImagePropertyDNGOriginalRawFileData"
+public let kCGImagePropertyDNGOriginalRawFileData: CFString = "OriginalRawFileData"
 
-public let kCGImagePropertyDNGOriginalRawFileDigest: CFString = "kCGImagePropertyDNGOriginalRawFileDigest"
+public let kCGImagePropertyDNGOriginalRawFileDigest: CFString = "OriginalRawFileDigest"
 
-public let kCGImagePropertyDNGOriginalRawFileName: CFString = "kCGImagePropertyDNGOriginalRawFileName"
+public let kCGImagePropertyDNGOriginalRawFileName: CFString = "OriginalRawFileName"
 
-public let kCGImagePropertyDNGPreviewApplicationName: CFString = "kCGImagePropertyDNGPreviewApplicationName"
+public let kCGImagePropertyDNGPreviewApplicationName: CFString = "PreviewApplicationName"
 
-public let kCGImagePropertyDNGPreviewApplicationVersion: CFString = "kCGImagePropertyDNGPreviewApplicationVersion"
+public let kCGImagePropertyDNGPreviewApplicationVersion: CFString = "PreviewApplicationVersion"
 
-public let kCGImagePropertyDNGPreviewColorSpace: CFString = "kCGImagePropertyDNGPreviewColorSpace"
+public let kCGImagePropertyDNGPreviewColorSpace: CFString = "PreviewColorSpace"
 
-public let kCGImagePropertyDNGPreviewDateTime: CFString = "kCGImagePropertyDNGPreviewDateTime"
+public let kCGImagePropertyDNGPreviewDateTime: CFString = "PreviewDateTime"
 
-public let kCGImagePropertyDNGPreviewSettingsDigest: CFString = "kCGImagePropertyDNGPreviewSettingsDigest"
+public let kCGImagePropertyDNGPreviewSettingsDigest: CFString = "PreviewSettingsDigest"
 
-public let kCGImagePropertyDNGPreviewSettingsName: CFString = "kCGImagePropertyDNGPreviewSettingsName"
+public let kCGImagePropertyDNGPreviewSettingsName: CFString = "PreviewSettingsName"
 
-public let kCGImagePropertyDNGPrivateData: CFString = "kCGImagePropertyDNGPrivateData"
+public let kCGImagePropertyDNGPrivateData: CFString = "DNGPrivateData"
 
-public let kCGImagePropertyDNGProfileCalibrationSignature: CFString = "kCGImagePropertyDNGProfileCalibrationSignature"
+public let kCGImagePropertyDNGProfileCalibrationSignature: CFString = "ProfileCalibrationSignature"
 
-public let kCGImagePropertyDNGProfileCopyright: CFString = "kCGImagePropertyDNGProfileCopyright"
+public let kCGImagePropertyDNGProfileCopyright: CFString = "ProfileCopyright"
 
-public let kCGImagePropertyDNGProfileEmbedPolicy: CFString = "kCGImagePropertyDNGProfileEmbedPolicy"
+public let kCGImagePropertyDNGProfileEmbedPolicy: CFString = "ProfileEmbedPolicy"
 
-public let kCGImagePropertyDNGProfileHueSatMapData1: CFString = "kCGImagePropertyDNGProfileHueSatMapData1"
+public let kCGImagePropertyDNGProfileHueSatMapData1: CFString = "ProfileHueSatMapData1"
 
-public let kCGImagePropertyDNGProfileHueSatMapData2: CFString = "kCGImagePropertyDNGProfileHueSatMapData2"
+public let kCGImagePropertyDNGProfileHueSatMapData2: CFString = "ProfileHueSatMapData2"
 
-public let kCGImagePropertyDNGProfileHueSatMapDims: CFString = "kCGImagePropertyDNGProfileHueSatMapDims"
+public let kCGImagePropertyDNGProfileHueSatMapDims: CFString = "ProfileHueSatMapDims"
 
-public let kCGImagePropertyDNGProfileHueSatMapEncoding: CFString = "kCGImagePropertyDNGProfileHueSatMapEncoding"
+public let kCGImagePropertyDNGProfileHueSatMapEncoding: CFString = "ProfileHueSatMapEncoding"
 
-public let kCGImagePropertyDNGProfileLookTableData: CFString = "kCGImagePropertyDNGProfileLookTableData"
+public let kCGImagePropertyDNGProfileLookTableData: CFString = "ProfileLookTableData"
 
-public let kCGImagePropertyDNGProfileLookTableDims: CFString = "kCGImagePropertyDNGProfileLookTableDims"
+public let kCGImagePropertyDNGProfileLookTableDims: CFString = "ProfileLookTableDims"
 
-public let kCGImagePropertyDNGProfileLookTableEncoding: CFString = "kCGImagePropertyDNGProfileLookTableEncoding"
+public let kCGImagePropertyDNGProfileLookTableEncoding: CFString = "ProfileLookTableEncoding"
 
-public let kCGImagePropertyDNGProfileName: CFString = "kCGImagePropertyDNGProfileName"
+public let kCGImagePropertyDNGProfileName: CFString = "DNGProfileName"
 
-public let kCGImagePropertyDNGProfileToneCurve: CFString = "kCGImagePropertyDNGProfileToneCurve"
+public let kCGImagePropertyDNGProfileToneCurve: CFString = "ProfileToneCurve"
 
-public let kCGImagePropertyDNGRawDataUniqueID: CFString = "kCGImagePropertyDNGRawDataUniqueID"
+public let kCGImagePropertyDNGRawDataUniqueID: CFString = "DNGRawDataUniqueID"
 
-public let kCGImagePropertyDNGRawImageDigest: CFString = "kCGImagePropertyDNGRawImageDigest"
+public let kCGImagePropertyDNGRawImageDigest: CFString = "RawImageDigest"
 
-public let kCGImagePropertyDNGRawToPreviewGain: CFString = "kCGImagePropertyDNGRawToPreviewGain"
+public let kCGImagePropertyDNGRawToPreviewGain: CFString = "RawToPreviewGain"
 
-public let kCGImagePropertyDNGReductionMatrix1: CFString = "kCGImagePropertyDNGReductionMatrix1"
+public let kCGImagePropertyDNGReductionMatrix1: CFString = "ReductionMatrix1"
 
-public let kCGImagePropertyDNGReductionMatrix2: CFString = "kCGImagePropertyDNGReductionMatrix2"
+public let kCGImagePropertyDNGReductionMatrix2: CFString = "ReductionMatrix2"
 
-public let kCGImagePropertyDNGRowInterleaveFactor: CFString = "kCGImagePropertyDNGRowInterleaveFactor"
+public let kCGImagePropertyDNGRowInterleaveFactor: CFString = "RowInterleaveFactor"
 
-public let kCGImagePropertyDNGShadowScale: CFString = "kCGImagePropertyDNGShadowScale"
+public let kCGImagePropertyDNGShadowScale: CFString = "ShadowScale"
 
-public let kCGImagePropertyDNGSubTileBlockSize: CFString = "kCGImagePropertyDNGSubTileBlockSize"
+public let kCGImagePropertyDNGSubTileBlockSize: CFString = "SubTileBlockSize"
 
-public let kCGImagePropertyDNGUniqueCameraModel: CFString = "kCGImagePropertyDNGUniqueCameraModel"
+public let kCGImagePropertyDNGUniqueCameraModel: CFString = "UniqueCameraModel"
 
-public let kCGImagePropertyDNGVersion: CFString = "kCGImagePropertyDNGVersion"
+public let kCGImagePropertyDNGVersion: CFString = "DNGVersion"
 
-public let kCGImagePropertyDNGWarpFisheye: CFString = "kCGImagePropertyDNGWarpFisheye"
+public let kCGImagePropertyDNGWarpFisheye: CFString = "WarpFisheye"
 
-public let kCGImagePropertyDNGWarpRectilinear: CFString = "kCGImagePropertyDNGWarpRectilinear"
+public let kCGImagePropertyDNGWarpRectilinear: CFString = "WarpRectilinear"
 
-public let kCGImagePropertyDNGWhiteLevel: CFString = "kCGImagePropertyDNGWhiteLevel"
+public let kCGImagePropertyDNGWhiteLevel: CFString = "WhiteLevel"
 
 public let kCGImagePropertyDPIHeight: CFString = "DPIHeight"
 
@@ -423,941 +425,941 @@ public let kCGImagePropertyDepth: CFString = "Depth"
 
 public let kCGImagePropertyEncoder: CFString = "kCGImagePropertyEncoder"
 
-public let kCGImagePropertyExifApertureValue: CFString = "kCGImagePropertyExifApertureValue"
+public let kCGImagePropertyExifApertureValue: CFString = "ApertureValue"
 
 public let kCGImagePropertyExifAuxDictionary: CFString = "{ExifAux}"
 
-public let kCGImagePropertyExifAuxFirmware: CFString = "kCGImagePropertyExifAuxFirmware"
+public let kCGImagePropertyExifAuxFirmware: CFString = "Firmware"
 
-public let kCGImagePropertyExifAuxFlashCompensation: CFString = "kCGImagePropertyExifAuxFlashCompensation"
+public let kCGImagePropertyExifAuxFlashCompensation: CFString = "FlashCompensation"
 
-public let kCGImagePropertyExifAuxImageNumber: CFString = "kCGImagePropertyExifAuxImageNumber"
+public let kCGImagePropertyExifAuxImageNumber: CFString = "ImageNumber"
 
-public let kCGImagePropertyExifAuxLensID: CFString = "kCGImagePropertyExifAuxLensID"
+public let kCGImagePropertyExifAuxLensID: CFString = "LensID"
 
-public let kCGImagePropertyExifAuxLensInfo: CFString = "kCGImagePropertyExifAuxLensInfo"
+public let kCGImagePropertyExifAuxLensInfo: CFString = "LensInfo"
 
-public let kCGImagePropertyExifAuxLensModel: CFString = "kCGImagePropertyExifAuxLensModel"
+public let kCGImagePropertyExifAuxLensModel: CFString = "LensModel"
 
-public let kCGImagePropertyExifAuxLensSerialNumber: CFString = "kCGImagePropertyExifAuxLensSerialNumber"
+public let kCGImagePropertyExifAuxLensSerialNumber: CFString = "LensSerialNumber"
 
-public let kCGImagePropertyExifAuxOwnerName: CFString = "kCGImagePropertyExifAuxOwnerName"
+public let kCGImagePropertyExifAuxOwnerName: CFString = "OwnerName"
 
-public let kCGImagePropertyExifAuxSerialNumber: CFString = "kCGImagePropertyExifAuxSerialNumber"
+public let kCGImagePropertyExifAuxSerialNumber: CFString = "SerialNumber"
 
-public let kCGImagePropertyExifBodySerialNumber: CFString = "kCGImagePropertyExifBodySerialNumber"
+public let kCGImagePropertyExifBodySerialNumber: CFString = "BodySerialNumber"
 
-public let kCGImagePropertyExifBrightnessValue: CFString = "kCGImagePropertyExifBrightnessValue"
+public let kCGImagePropertyExifBrightnessValue: CFString = "BrightnessValue"
 
-public let kCGImagePropertyExifCFAPattern: CFString = "kCGImagePropertyExifCFAPattern"
+public let kCGImagePropertyExifCFAPattern: CFString = "CFAPattern"
 
-public let kCGImagePropertyExifCameraOwnerName: CFString = "kCGImagePropertyExifCameraOwnerName"
+public let kCGImagePropertyExifCameraOwnerName: CFString = "CameraOwnerName"
 
-public let kCGImagePropertyExifColorSpace: CFString = "kCGImagePropertyExifColorSpace"
+public let kCGImagePropertyExifColorSpace: CFString = "ColorSpace"
 
-public let kCGImagePropertyExifComponentsConfiguration: CFString = "kCGImagePropertyExifComponentsConfiguration"
+public let kCGImagePropertyExifComponentsConfiguration: CFString = "ComponentsConfiguration"
 
-public let kCGImagePropertyExifCompositeImage: CFString = "kCGImagePropertyExifCompositeImage"
+public let kCGImagePropertyExifCompositeImage: CFString = "CompositeImage"
 
-public let kCGImagePropertyExifCompressedBitsPerPixel: CFString = "kCGImagePropertyExifCompressedBitsPerPixel"
+public let kCGImagePropertyExifCompressedBitsPerPixel: CFString = "CompressedBitsPerPixel"
 
-public let kCGImagePropertyExifContrast: CFString = "kCGImagePropertyExifContrast"
+public let kCGImagePropertyExifContrast: CFString = "Contrast"
 
-public let kCGImagePropertyExifCustomRendered: CFString = "kCGImagePropertyExifCustomRendered"
+public let kCGImagePropertyExifCustomRendered: CFString = "CustomRendered"
 
-public let kCGImagePropertyExifDateTimeDigitized: CFString = "kCGImagePropertyExifDateTimeDigitized"
+public let kCGImagePropertyExifDateTimeDigitized: CFString = "DateTimeDigitized"
 
-public let kCGImagePropertyExifDateTimeOriginal: CFString = "kCGImagePropertyExifDateTimeOriginal"
+public let kCGImagePropertyExifDateTimeOriginal: CFString = "DateTimeOriginal"
 
-public let kCGImagePropertyExifDeviceSettingDescription: CFString = "kCGImagePropertyExifDeviceSettingDescription"
+public let kCGImagePropertyExifDeviceSettingDescription: CFString = "DeviceSettingDescription"
 
 public let kCGImagePropertyExifDictionary: CFString = "{Exif}"
 
-public let kCGImagePropertyExifDigitalZoomRatio: CFString = "kCGImagePropertyExifDigitalZoomRatio"
+public let kCGImagePropertyExifDigitalZoomRatio: CFString = "DigitalZoomRatio"
 
-public let kCGImagePropertyExifExposureBiasValue: CFString = "kCGImagePropertyExifExposureBiasValue"
+public let kCGImagePropertyExifExposureBiasValue: CFString = "ExposureBiasValue"
 
-public let kCGImagePropertyExifExposureIndex: CFString = "kCGImagePropertyExifExposureIndex"
+public let kCGImagePropertyExifExposureIndex: CFString = "ExposureIndex"
 
-public let kCGImagePropertyExifExposureMode: CFString = "kCGImagePropertyExifExposureMode"
+public let kCGImagePropertyExifExposureMode: CFString = "ExposureMode"
 
-public let kCGImagePropertyExifExposureProgram: CFString = "kCGImagePropertyExifExposureProgram"
+public let kCGImagePropertyExifExposureProgram: CFString = "ExposureProgram"
 
-public let kCGImagePropertyExifExposureTime: CFString = "kCGImagePropertyExifExposureTime"
+public let kCGImagePropertyExifExposureTime: CFString = "ExposureTime"
 
-public let kCGImagePropertyExifFNumber: CFString = "kCGImagePropertyExifFNumber"
+public let kCGImagePropertyExifFNumber: CFString = "FNumber"
 
-public let kCGImagePropertyExifFileSource: CFString = "kCGImagePropertyExifFileSource"
+public let kCGImagePropertyExifFileSource: CFString = "FileSource"
 
-public let kCGImagePropertyExifFlash: CFString = "kCGImagePropertyExifFlash"
+public let kCGImagePropertyExifFlash: CFString = "Flash"
 
-public let kCGImagePropertyExifFlashEnergy: CFString = "kCGImagePropertyExifFlashEnergy"
+public let kCGImagePropertyExifFlashEnergy: CFString = "FlashEnergy"
 
-public let kCGImagePropertyExifFlashPixVersion: CFString = "kCGImagePropertyExifFlashPixVersion"
+public let kCGImagePropertyExifFlashPixVersion: CFString = "FlashPixVersion"
 
-public let kCGImagePropertyExifFocalLenIn35mmFilm: CFString = "kCGImagePropertyExifFocalLenIn35mmFilm"
+public let kCGImagePropertyExifFocalLenIn35mmFilm: CFString = "FocalLenIn35mmFilm"
 
-public let kCGImagePropertyExifFocalLength: CFString = "kCGImagePropertyExifFocalLength"
+public let kCGImagePropertyExifFocalLength: CFString = "FocalLength"
 
-public let kCGImagePropertyExifFocalPlaneResolutionUnit: CFString = "kCGImagePropertyExifFocalPlaneResolutionUnit"
+public let kCGImagePropertyExifFocalPlaneResolutionUnit: CFString = "FocalPlaneResolutionUnit"
 
-public let kCGImagePropertyExifFocalPlaneXResolution: CFString = "kCGImagePropertyExifFocalPlaneXResolution"
+public let kCGImagePropertyExifFocalPlaneXResolution: CFString = "FocalPlaneXResolution"
 
-public let kCGImagePropertyExifFocalPlaneYResolution: CFString = "kCGImagePropertyExifFocalPlaneYResolution"
+public let kCGImagePropertyExifFocalPlaneYResolution: CFString = "FocalPlaneYResolution"
 
-public let kCGImagePropertyExifGainControl: CFString = "kCGImagePropertyExifGainControl"
+public let kCGImagePropertyExifGainControl: CFString = "GainControl"
 
-public let kCGImagePropertyExifGamma: CFString = "kCGImagePropertyExifGamma"
+public let kCGImagePropertyExifGamma: CFString = "Gamma"
 
-public let kCGImagePropertyExifISOSpeed: CFString = "kCGImagePropertyExifISOSpeed"
+public let kCGImagePropertyExifISOSpeed: CFString = "ISOSpeed"
 
-public let kCGImagePropertyExifISOSpeedLatitudeyyy: CFString = "kCGImagePropertyExifISOSpeedLatitudeyyy"
+public let kCGImagePropertyExifISOSpeedLatitudeyyy: CFString = "ISOSpeedLatitudeyyy"
 
-public let kCGImagePropertyExifISOSpeedLatitudezzz: CFString = "kCGImagePropertyExifISOSpeedLatitudezzz"
+public let kCGImagePropertyExifISOSpeedLatitudezzz: CFString = "ISOSpeedLatitudezzz"
 
-public let kCGImagePropertyExifISOSpeedRatings: CFString = "kCGImagePropertyExifISOSpeedRatings"
+public let kCGImagePropertyExifISOSpeedRatings: CFString = "ISOSpeedRatings"
 
-public let kCGImagePropertyExifImageUniqueID: CFString = "kCGImagePropertyExifImageUniqueID"
+public let kCGImagePropertyExifImageUniqueID: CFString = "ImageUniqueID"
 
-public let kCGImagePropertyExifLensMake: CFString = "kCGImagePropertyExifLensMake"
+public let kCGImagePropertyExifLensMake: CFString = "LensMake"
 
-public let kCGImagePropertyExifLensModel: CFString = "kCGImagePropertyExifLensModel"
+public let kCGImagePropertyExifLensModel: CFString = "LensModel"
 
-public let kCGImagePropertyExifLensSerialNumber: CFString = "kCGImagePropertyExifLensSerialNumber"
+public let kCGImagePropertyExifLensSerialNumber: CFString = "LensSerialNumber"
 
-public let kCGImagePropertyExifLensSpecification: CFString = "kCGImagePropertyExifLensSpecification"
+public let kCGImagePropertyExifLensSpecification: CFString = "LensSpecification"
 
-public let kCGImagePropertyExifLightSource: CFString = "kCGImagePropertyExifLightSource"
+public let kCGImagePropertyExifLightSource: CFString = "LightSource"
 
-public let kCGImagePropertyExifMakerNote: CFString = "kCGImagePropertyExifMakerNote"
+public let kCGImagePropertyExifMakerNote: CFString = "MakerNote"
 
-public let kCGImagePropertyExifMaxApertureValue: CFString = "kCGImagePropertyExifMaxApertureValue"
+public let kCGImagePropertyExifMaxApertureValue: CFString = "MaxApertureValue"
 
-public let kCGImagePropertyExifMeteringMode: CFString = "kCGImagePropertyExifMeteringMode"
+public let kCGImagePropertyExifMeteringMode: CFString = "MeteringMode"
 
-public let kCGImagePropertyExifOECF: CFString = "kCGImagePropertyExifOECF"
+public let kCGImagePropertyExifOECF: CFString = "OECF"
 
-public let kCGImagePropertyExifOffsetTime: CFString = "kCGImagePropertyExifOffsetTime"
+public let kCGImagePropertyExifOffsetTime: CFString = "OffsetTime"
 
-public let kCGImagePropertyExifOffsetTimeDigitized: CFString = "kCGImagePropertyExifOffsetTimeDigitized"
+public let kCGImagePropertyExifOffsetTimeDigitized: CFString = "OffsetTimeDigitized"
 
-public let kCGImagePropertyExifOffsetTimeOriginal: CFString = "kCGImagePropertyExifOffsetTimeOriginal"
+public let kCGImagePropertyExifOffsetTimeOriginal: CFString = "OffsetTimeOriginal"
 
-public let kCGImagePropertyExifPixelXDimension: CFString = "kCGImagePropertyExifPixelXDimension"
+public let kCGImagePropertyExifPixelXDimension: CFString = "PixelXDimension"
 
-public let kCGImagePropertyExifPixelYDimension: CFString = "kCGImagePropertyExifPixelYDimension"
+public let kCGImagePropertyExifPixelYDimension: CFString = "PixelYDimension"
 
-public let kCGImagePropertyExifRecommendedExposureIndex: CFString = "kCGImagePropertyExifRecommendedExposureIndex"
+public let kCGImagePropertyExifRecommendedExposureIndex: CFString = "RecommendedExposureIndex"
 
-public let kCGImagePropertyExifRelatedSoundFile: CFString = "kCGImagePropertyExifRelatedSoundFile"
+public let kCGImagePropertyExifRelatedSoundFile: CFString = "RelatedSoundFile"
 
-public let kCGImagePropertyExifSaturation: CFString = "kCGImagePropertyExifSaturation"
+public let kCGImagePropertyExifSaturation: CFString = "Saturation"
 
-public let kCGImagePropertyExifSceneCaptureType: CFString = "kCGImagePropertyExifSceneCaptureType"
+public let kCGImagePropertyExifSceneCaptureType: CFString = "SceneCaptureType"
 
-public let kCGImagePropertyExifSceneType: CFString = "kCGImagePropertyExifSceneType"
+public let kCGImagePropertyExifSceneType: CFString = "SceneType"
 
-public let kCGImagePropertyExifSensingMethod: CFString = "kCGImagePropertyExifSensingMethod"
+public let kCGImagePropertyExifSensingMethod: CFString = "SensingMethod"
 
-public let kCGImagePropertyExifSensitivityType: CFString = "kCGImagePropertyExifSensitivityType"
+public let kCGImagePropertyExifSensitivityType: CFString = "SensitivityType"
 
-public let kCGImagePropertyExifSharpness: CFString = "kCGImagePropertyExifSharpness"
+public let kCGImagePropertyExifSharpness: CFString = "Sharpness"
 
-public let kCGImagePropertyExifShutterSpeedValue: CFString = "kCGImagePropertyExifShutterSpeedValue"
+public let kCGImagePropertyExifShutterSpeedValue: CFString = "ShutterSpeedValue"
 
-public let kCGImagePropertyExifSourceExposureTimesOfCompositeImage: CFString = "kCGImagePropertyExifSourceExposureTimesOfCompositeImage"
+public let kCGImagePropertyExifSourceExposureTimesOfCompositeImage: CFString = "SourceExposureTimesOfCompositeImage"
 
-public let kCGImagePropertyExifSourceImageNumberOfCompositeImage: CFString = "kCGImagePropertyExifSourceImageNumberOfCompositeImage"
+public let kCGImagePropertyExifSourceImageNumberOfCompositeImage: CFString = "SourceImageNumberOfCompositeImage"
 
-public let kCGImagePropertyExifSpatialFrequencyResponse: CFString = "kCGImagePropertyExifSpatialFrequencyResponse"
+public let kCGImagePropertyExifSpatialFrequencyResponse: CFString = "SpatialFrequencyResponse"
 
-public let kCGImagePropertyExifSpectralSensitivity: CFString = "kCGImagePropertyExifSpectralSensitivity"
+public let kCGImagePropertyExifSpectralSensitivity: CFString = "SpectralSensitivity"
 
-public let kCGImagePropertyExifStandardOutputSensitivity: CFString = "kCGImagePropertyExifStandardOutputSensitivity"
+public let kCGImagePropertyExifStandardOutputSensitivity: CFString = "StandardOutputSensitivity"
 
-public let kCGImagePropertyExifSubjectArea: CFString = "kCGImagePropertyExifSubjectArea"
+public let kCGImagePropertyExifSubjectArea: CFString = "SubjectArea"
 
-public let kCGImagePropertyExifSubjectDistRange: CFString = "kCGImagePropertyExifSubjectDistRange"
+public let kCGImagePropertyExifSubjectDistRange: CFString = "SubjectDistRange"
 
-public let kCGImagePropertyExifSubjectDistance: CFString = "kCGImagePropertyExifSubjectDistance"
+public let kCGImagePropertyExifSubjectDistance: CFString = "SubjectDistance"
 
-public let kCGImagePropertyExifSubjectLocation: CFString = "kCGImagePropertyExifSubjectLocation"
+public let kCGImagePropertyExifSubjectLocation: CFString = "SubjectLocation"
 
-public let kCGImagePropertyExifSubsecTime: CFString = "kCGImagePropertyExifSubsecTime"
+public let kCGImagePropertyExifSubsecTime: CFString = "SubsecTime"
 
-public let kCGImagePropertyExifSubsecTimeDigitized: CFString = "kCGImagePropertyExifSubsecTimeDigitized"
+public let kCGImagePropertyExifSubsecTimeDigitized: CFString = "SubsecTimeDigitized"
 
-public let kCGImagePropertyExifSubsecTimeOrginal: CFString = "kCGImagePropertyExifSubsecTimeOrginal"
+public let kCGImagePropertyExifSubsecTimeOrginal: CFString = "SubsecTimeOriginal"
 
-public let kCGImagePropertyExifSubsecTimeOriginal: CFString = "kCGImagePropertyExifSubsecTimeOriginal"
+public let kCGImagePropertyExifSubsecTimeOriginal: CFString = "SubsecTimeOriginal"
 
-public let kCGImagePropertyExifUserComment: CFString = "kCGImagePropertyExifUserComment"
+public let kCGImagePropertyExifUserComment: CFString = "UserComment"
 
-public let kCGImagePropertyExifVersion: CFString = "kCGImagePropertyExifVersion"
+public let kCGImagePropertyExifVersion: CFString = "ExifVersion"
 
-public let kCGImagePropertyExifWhiteBalance: CFString = "kCGImagePropertyExifWhiteBalance"
+public let kCGImagePropertyExifWhiteBalance: CFString = "WhiteBalance"
 
 public let kCGImagePropertyFileContentsDictionary: CFString = "{FileContents}"
 
-public let kCGImagePropertyFileSize: CFString = "kCGImagePropertyFileSize"
+public let kCGImagePropertyFileSize: CFString = "FileSize"
 
-public let kCGImagePropertyGIFCanvasPixelHeight: CFString = "kCGImagePropertyGIFCanvasPixelHeight"
+public let kCGImagePropertyGIFCanvasPixelHeight: CFString = "CanvasPixelHeight"
 
-public let kCGImagePropertyGIFCanvasPixelWidth: CFString = "kCGImagePropertyGIFCanvasPixelWidth"
+public let kCGImagePropertyGIFCanvasPixelWidth: CFString = "CanvasPixelWidth"
 
 public let kCGImagePropertyGIFDelayTime: CFString = "DelayTime"
 
 public let kCGImagePropertyGIFDictionary: CFString = "{GIF}"
 
-public let kCGImagePropertyGIFFrameInfoArray: CFString = "kCGImagePropertyGIFFrameInfoArray"
+public let kCGImagePropertyGIFFrameInfoArray: CFString = "FrameInfo"
 
-public let kCGImagePropertyGIFHasGlobalColorMap: CFString = "kCGImagePropertyGIFHasGlobalColorMap"
+public let kCGImagePropertyGIFHasGlobalColorMap: CFString = "HasGlobalColorMap"
 
-public let kCGImagePropertyGIFImageColorMap: CFString = "kCGImagePropertyGIFImageColorMap"
+public let kCGImagePropertyGIFImageColorMap: CFString = "ImageColorMap"
 
 public let kCGImagePropertyGIFLoopCount: CFString = "LoopCount"
 
 public let kCGImagePropertyGIFUnclampedDelayTime: CFString = "UnclampedDelayTime"
 
-public let kCGImagePropertyGPSAltitude: CFString = "kCGImagePropertyGPSAltitude"
+public let kCGImagePropertyGPSAltitude: CFString = "Altitude"
 
-public let kCGImagePropertyGPSAltitudeRef: CFString = "kCGImagePropertyGPSAltitudeRef"
+public let kCGImagePropertyGPSAltitudeRef: CFString = "AltitudeRef"
 
-public let kCGImagePropertyGPSAreaInformation: CFString = "kCGImagePropertyGPSAreaInformation"
+public let kCGImagePropertyGPSAreaInformation: CFString = "AreaInformation"
 
-public let kCGImagePropertyGPSDOP: CFString = "kCGImagePropertyGPSDOP"
+public let kCGImagePropertyGPSDOP: CFString = "DOP"
 
-public let kCGImagePropertyGPSDateStamp: CFString = "kCGImagePropertyGPSDateStamp"
+public let kCGImagePropertyGPSDateStamp: CFString = "DateStamp"
 
-public let kCGImagePropertyGPSDestBearing: CFString = "kCGImagePropertyGPSDestBearing"
+public let kCGImagePropertyGPSDestBearing: CFString = "DestBearing"
 
-public let kCGImagePropertyGPSDestBearingRef: CFString = "kCGImagePropertyGPSDestBearingRef"
+public let kCGImagePropertyGPSDestBearingRef: CFString = "DestBearingRef"
 
-public let kCGImagePropertyGPSDestDistance: CFString = "kCGImagePropertyGPSDestDistance"
+public let kCGImagePropertyGPSDestDistance: CFString = "DestDistance"
 
-public let kCGImagePropertyGPSDestDistanceRef: CFString = "kCGImagePropertyGPSDestDistanceRef"
+public let kCGImagePropertyGPSDestDistanceRef: CFString = "DestDistanceRef"
 
-public let kCGImagePropertyGPSDestLatitude: CFString = "kCGImagePropertyGPSDestLatitude"
+public let kCGImagePropertyGPSDestLatitude: CFString = "DestLatitude"
 
-public let kCGImagePropertyGPSDestLatitudeRef: CFString = "kCGImagePropertyGPSDestLatitudeRef"
+public let kCGImagePropertyGPSDestLatitudeRef: CFString = "DestLatitudeRef"
 
-public let kCGImagePropertyGPSDestLongitude: CFString = "kCGImagePropertyGPSDestLongitude"
+public let kCGImagePropertyGPSDestLongitude: CFString = "DestLongitude"
 
-public let kCGImagePropertyGPSDestLongitudeRef: CFString = "kCGImagePropertyGPSDestLongitudeRef"
+public let kCGImagePropertyGPSDestLongitudeRef: CFString = "DestLongitudeRef"
 
 public let kCGImagePropertyGPSDictionary: CFString = "{GPS}"
 
-public let kCGImagePropertyGPSDifferental: CFString = "kCGImagePropertyGPSDifferental"
+public let kCGImagePropertyGPSDifferental: CFString = "Differential"
 
-public let kCGImagePropertyGPSHPositioningError: CFString = "kCGImagePropertyGPSHPositioningError"
+public let kCGImagePropertyGPSHPositioningError: CFString = "HPositioningError"
 
-public let kCGImagePropertyGPSImgDirection: CFString = "kCGImagePropertyGPSImgDirection"
+public let kCGImagePropertyGPSImgDirection: CFString = "ImgDirection"
 
-public let kCGImagePropertyGPSImgDirectionRef: CFString = "kCGImagePropertyGPSImgDirectionRef"
+public let kCGImagePropertyGPSImgDirectionRef: CFString = "ImgDirectionRef"
 
-public let kCGImagePropertyGPSLatitude: CFString = "kCGImagePropertyGPSLatitude"
+public let kCGImagePropertyGPSLatitude: CFString = "Latitude"
 
-public let kCGImagePropertyGPSLatitudeRef: CFString = "kCGImagePropertyGPSLatitudeRef"
+public let kCGImagePropertyGPSLatitudeRef: CFString = "LatitudeRef"
 
-public let kCGImagePropertyGPSLongitude: CFString = "kCGImagePropertyGPSLongitude"
+public let kCGImagePropertyGPSLongitude: CFString = "Longitude"
 
-public let kCGImagePropertyGPSLongitudeRef: CFString = "kCGImagePropertyGPSLongitudeRef"
+public let kCGImagePropertyGPSLongitudeRef: CFString = "LongitudeRef"
 
-public let kCGImagePropertyGPSMapDatum: CFString = "kCGImagePropertyGPSMapDatum"
+public let kCGImagePropertyGPSMapDatum: CFString = "MapDatum"
 
-public let kCGImagePropertyGPSMeasureMode: CFString = "kCGImagePropertyGPSMeasureMode"
+public let kCGImagePropertyGPSMeasureMode: CFString = "MeasureMode"
 
-public let kCGImagePropertyGPSProcessingMethod: CFString = "kCGImagePropertyGPSProcessingMethod"
+public let kCGImagePropertyGPSProcessingMethod: CFString = "ProcessingMethod"
 
-public let kCGImagePropertyGPSSatellites: CFString = "kCGImagePropertyGPSSatellites"
+public let kCGImagePropertyGPSSatellites: CFString = "Satellites"
 
-public let kCGImagePropertyGPSSpeed: CFString = "kCGImagePropertyGPSSpeed"
+public let kCGImagePropertyGPSSpeed: CFString = "Speed"
 
-public let kCGImagePropertyGPSSpeedRef: CFString = "kCGImagePropertyGPSSpeedRef"
+public let kCGImagePropertyGPSSpeedRef: CFString = "SpeedRef"
 
-public let kCGImagePropertyGPSStatus: CFString = "kCGImagePropertyGPSStatus"
+public let kCGImagePropertyGPSStatus: CFString = "Status"
 
-public let kCGImagePropertyGPSTimeStamp: CFString = "kCGImagePropertyGPSTimeStamp"
+public let kCGImagePropertyGPSTimeStamp: CFString = "TimeStamp"
 
-public let kCGImagePropertyGPSTrack: CFString = "kCGImagePropertyGPSTrack"
+public let kCGImagePropertyGPSTrack: CFString = "Track"
 
-public let kCGImagePropertyGPSTrackRef: CFString = "kCGImagePropertyGPSTrackRef"
+public let kCGImagePropertyGPSTrackRef: CFString = "TrackRef"
 
-public let kCGImagePropertyGPSVersion: CFString = "kCGImagePropertyGPSVersion"
+public let kCGImagePropertyGPSVersion: CFString = "GPSVersion"
 
-public let kCGImagePropertyGroupImageBaseline: CFString = "kCGImagePropertyGroupImageBaseline"
+public let kCGImagePropertyGroupImageBaseline: CFString = "GroupImageBaseline"
 
-public let kCGImagePropertyGroupImageDisparityAdjustment: CFString = "kCGImagePropertyGroupImageDisparityAdjustment"
+public let kCGImagePropertyGroupImageDisparityAdjustment: CFString = "GroupImageDisparityAdjustment"
 
-public let kCGImagePropertyGroupImageIndexLeft: CFString = "kCGImagePropertyGroupImageIndexLeft"
+public let kCGImagePropertyGroupImageIndexLeft: CFString = "GroupImageIndexLeft"
 
-public let kCGImagePropertyGroupImageIndexMonoscopic: CFString = "kCGImagePropertyGroupImageIndexMonoscopic"
+public let kCGImagePropertyGroupImageIndexMonoscopic: CFString = "GroupImageIndexMonoscopic"
 
-public let kCGImagePropertyGroupImageIndexRight: CFString = "kCGImagePropertyGroupImageIndexRight"
+public let kCGImagePropertyGroupImageIndexRight: CFString = "GroupImageIndexRight"
 
-public let kCGImagePropertyGroupImageIsAlternateImage: CFString = "kCGImagePropertyGroupImageIsAlternateImage"
+public let kCGImagePropertyGroupImageIsAlternateImage: CFString = "GroupImageIsAlternateImage"
 
-public let kCGImagePropertyGroupImageIsLeftImage: CFString = "kCGImagePropertyGroupImageIsLeftImage"
+public let kCGImagePropertyGroupImageIsLeftImage: CFString = "GroupImageIsLeftImage"
 
-public let kCGImagePropertyGroupImageIsMonoscopicImage: CFString = "kCGImagePropertyGroupImageIsMonoscopicImage"
+public let kCGImagePropertyGroupImageIsMonoscopicImage: CFString = "GroupImageIsMonoscopicImage"
 
-public let kCGImagePropertyGroupImageIsRightImage: CFString = "kCGImagePropertyGroupImageIsRightImage"
+public let kCGImagePropertyGroupImageIsRightImage: CFString = "GroupImageIsRightImage"
 
-public let kCGImagePropertyGroupImageStereoAggressors: CFString = "kCGImagePropertyGroupImageStereoAggressors"
+public let kCGImagePropertyGroupImageStereoAggressors: CFString = "GroupImageStereoAggressors"
 
-public let kCGImagePropertyGroupImagesAlternate: CFString = "kCGImagePropertyGroupImagesAlternate"
+public let kCGImagePropertyGroupImagesAlternate: CFString = "GroupImages"
 
-public let kCGImagePropertyGroupIndex: CFString = "kCGImagePropertyGroupIndex"
+public let kCGImagePropertyGroupIndex: CFString = "GroupIndex"
 
-public let kCGImagePropertyGroupMonoscopicImageLocation: CFString = "kCGImagePropertyGroupMonoscopicImageLocation"
+public let kCGImagePropertyGroupMonoscopicImageLocation: CFString = "GroupImageIndexMonoscopicImageLocation"
 
-public let kCGImagePropertyGroupType: CFString = "kCGImagePropertyGroupType"
+public let kCGImagePropertyGroupType: CFString = "GroupType"
 
-public let kCGImagePropertyGroupTypeAlternate: CFString = "kCGImagePropertyGroupTypeAlternate"
+public let kCGImagePropertyGroupTypeAlternate: CFString = "Alternate"
 
-public let kCGImagePropertyGroupTypeStereoPair: CFString = "kCGImagePropertyGroupTypeStereoPair"
+public let kCGImagePropertyGroupTypeStereoPair: CFString = "StereoPair"
 
-public let kCGImagePropertyGroups: CFString = "kCGImagePropertyGroups"
+public let kCGImagePropertyGroups: CFString = "{Groups}"
 
-public let kCGImagePropertyHEICSCanvasPixelHeight: CFString = "kCGImagePropertyHEICSCanvasPixelHeight"
+public let kCGImagePropertyHEICSCanvasPixelHeight: CFString = "CanvasPixelHeight"
 
-public let kCGImagePropertyHEICSCanvasPixelWidth: CFString = "kCGImagePropertyHEICSCanvasPixelWidth"
+public let kCGImagePropertyHEICSCanvasPixelWidth: CFString = "CanvasPixelWidth"
 
-public let kCGImagePropertyHEICSDelayTime: CFString = "kCGImagePropertyHEICSDelayTime"
+public let kCGImagePropertyHEICSDelayTime: CFString = "DelayTime"
 
 public let kCGImagePropertyHEICSDictionary: CFString = "{HEICS}"
 
-public let kCGImagePropertyHEICSFrameInfoArray: CFString = "kCGImagePropertyHEICSFrameInfoArray"
+public let kCGImagePropertyHEICSFrameInfoArray: CFString = "FrameInfo"
 
-public let kCGImagePropertyHEICSLoopCount: CFString = "kCGImagePropertyHEICSLoopCount"
+public let kCGImagePropertyHEICSLoopCount: CFString = "LoopCount"
 
-public let kCGImagePropertyHEICSUnclampedDelayTime: CFString = "kCGImagePropertyHEICSUnclampedDelayTime"
+public let kCGImagePropertyHEICSUnclampedDelayTime: CFString = "UnclampedDelayTime"
 
 public let kCGImagePropertyHEIFDictionary: CFString = "{HEIF}"
 
 public let kCGImagePropertyHasAlpha: CFString = "HasAlpha"
 
-public let kCGImagePropertyHeight: CFString = "kCGImagePropertyHeight"
+public let kCGImagePropertyHeight: CFString = "Height"
 
-public let kCGImagePropertyIPTCActionAdvised: CFString = "kCGImagePropertyIPTCActionAdvised"
+public let kCGImagePropertyIPTCActionAdvised: CFString = "ActionAdvised"
 
-public let kCGImagePropertyIPTCByline: CFString = "kCGImagePropertyIPTCByline"
+public let kCGImagePropertyIPTCByline: CFString = "Byline"
 
-public let kCGImagePropertyIPTCBylineTitle: CFString = "kCGImagePropertyIPTCBylineTitle"
+public let kCGImagePropertyIPTCBylineTitle: CFString = "BylineTitle"
 
-public let kCGImagePropertyIPTCCaptionAbstract: CFString = "kCGImagePropertyIPTCCaptionAbstract"
+public let kCGImagePropertyIPTCCaptionAbstract: CFString = "Caption/Abstract"
 
-public let kCGImagePropertyIPTCCategory: CFString = "kCGImagePropertyIPTCCategory"
+public let kCGImagePropertyIPTCCategory: CFString = "Category"
 
-public let kCGImagePropertyIPTCCity: CFString = "kCGImagePropertyIPTCCity"
+public let kCGImagePropertyIPTCCity: CFString = "City"
 
-public let kCGImagePropertyIPTCContact: CFString = "kCGImagePropertyIPTCContact"
+public let kCGImagePropertyIPTCContact: CFString = "Contact"
 
-public let kCGImagePropertyIPTCContactInfoAddress: CFString = "kCGImagePropertyIPTCContactInfoAddress"
+public let kCGImagePropertyIPTCContactInfoAddress: CFString = "CiAdrExtadr"
 
-public let kCGImagePropertyIPTCContactInfoCity: CFString = "kCGImagePropertyIPTCContactInfoCity"
+public let kCGImagePropertyIPTCContactInfoCity: CFString = "CiAdrCity"
 
-public let kCGImagePropertyIPTCContactInfoCountry: CFString = "kCGImagePropertyIPTCContactInfoCountry"
+public let kCGImagePropertyIPTCContactInfoCountry: CFString = "CiAdrCtry"
 
-public let kCGImagePropertyIPTCContactInfoEmails: CFString = "kCGImagePropertyIPTCContactInfoEmails"
+public let kCGImagePropertyIPTCContactInfoEmails: CFString = "CiEmailWork"
 
-public let kCGImagePropertyIPTCContactInfoPhones: CFString = "kCGImagePropertyIPTCContactInfoPhones"
+public let kCGImagePropertyIPTCContactInfoPhones: CFString = "CiTelWork"
 
-public let kCGImagePropertyIPTCContactInfoPostalCode: CFString = "kCGImagePropertyIPTCContactInfoPostalCode"
+public let kCGImagePropertyIPTCContactInfoPostalCode: CFString = "CiAdrPcode"
 
-public let kCGImagePropertyIPTCContactInfoStateProvince: CFString = "kCGImagePropertyIPTCContactInfoStateProvince"
+public let kCGImagePropertyIPTCContactInfoStateProvince: CFString = "CiAdrRegion"
 
-public let kCGImagePropertyIPTCContactInfoWebURLs: CFString = "kCGImagePropertyIPTCContactInfoWebURLs"
+public let kCGImagePropertyIPTCContactInfoWebURLs: CFString = "CiUrlWork"
 
-public let kCGImagePropertyIPTCContentLocationCode: CFString = "kCGImagePropertyIPTCContentLocationCode"
+public let kCGImagePropertyIPTCContentLocationCode: CFString = "ContentLocationCode"
 
-public let kCGImagePropertyIPTCContentLocationName: CFString = "kCGImagePropertyIPTCContentLocationName"
+public let kCGImagePropertyIPTCContentLocationName: CFString = "ContentLocationName"
 
-public let kCGImagePropertyIPTCCopyrightNotice: CFString = "kCGImagePropertyIPTCCopyrightNotice"
+public let kCGImagePropertyIPTCCopyrightNotice: CFString = "CopyrightNotice"
 
-public let kCGImagePropertyIPTCCountryPrimaryLocationCode: CFString = "kCGImagePropertyIPTCCountryPrimaryLocationCode"
+public let kCGImagePropertyIPTCCountryPrimaryLocationCode: CFString = "Country/PrimaryLocationCode"
 
-public let kCGImagePropertyIPTCCountryPrimaryLocationName: CFString = "kCGImagePropertyIPTCCountryPrimaryLocationName"
+public let kCGImagePropertyIPTCCountryPrimaryLocationName: CFString = "Country/PrimaryLocationName"
 
-public let kCGImagePropertyIPTCCreatorContactInfo: CFString = "kCGImagePropertyIPTCCreatorContactInfo"
+public let kCGImagePropertyIPTCCreatorContactInfo: CFString = "CreatorContactInfo"
 
-public let kCGImagePropertyIPTCCredit: CFString = "kCGImagePropertyIPTCCredit"
+public let kCGImagePropertyIPTCCredit: CFString = "Credit"
 
-public let kCGImagePropertyIPTCDateCreated: CFString = "kCGImagePropertyIPTCDateCreated"
+public let kCGImagePropertyIPTCDateCreated: CFString = "DateCreated"
 
 public let kCGImagePropertyIPTCDictionary: CFString = "{IPTC}"
 
-public let kCGImagePropertyIPTCDigitalCreationDate: CFString = "kCGImagePropertyIPTCDigitalCreationDate"
+public let kCGImagePropertyIPTCDigitalCreationDate: CFString = "DigitalCreationDate"
 
-public let kCGImagePropertyIPTCDigitalCreationTime: CFString = "kCGImagePropertyIPTCDigitalCreationTime"
+public let kCGImagePropertyIPTCDigitalCreationTime: CFString = "DigitalCreationTime"
 
-public let kCGImagePropertyIPTCEditStatus: CFString = "kCGImagePropertyIPTCEditStatus"
+public let kCGImagePropertyIPTCEditStatus: CFString = "EditStatus"
 
-public let kCGImagePropertyIPTCEditorialUpdate: CFString = "kCGImagePropertyIPTCEditorialUpdate"
+public let kCGImagePropertyIPTCEditorialUpdate: CFString = "EditorialUpdate"
 
-public let kCGImagePropertyIPTCExpirationDate: CFString = "kCGImagePropertyIPTCExpirationDate"
+public let kCGImagePropertyIPTCExpirationDate: CFString = "ExpirationDate"
 
-public let kCGImagePropertyIPTCExpirationTime: CFString = "kCGImagePropertyIPTCExpirationTime"
+public let kCGImagePropertyIPTCExpirationTime: CFString = "ExpirationTime"
 
-public let kCGImagePropertyIPTCExtAboutCvTerm: CFString = "kCGImagePropertyIPTCExtAboutCvTerm"
+public let kCGImagePropertyIPTCExtAboutCvTerm: CFString = "AboutCvTerm"
 
-public let kCGImagePropertyIPTCExtAboutCvTermCvId: CFString = "kCGImagePropertyIPTCExtAboutCvTermCvId"
+public let kCGImagePropertyIPTCExtAboutCvTermCvId: CFString = "AboutCvTermCvId"
 
-public let kCGImagePropertyIPTCExtAboutCvTermId: CFString = "kCGImagePropertyIPTCExtAboutCvTermId"
+public let kCGImagePropertyIPTCExtAboutCvTermId: CFString = "AboutCvTermId"
 
-public let kCGImagePropertyIPTCExtAboutCvTermName: CFString = "kCGImagePropertyIPTCExtAboutCvTermName"
+public let kCGImagePropertyIPTCExtAboutCvTermName: CFString = "AboutCvTermName"
 
-public let kCGImagePropertyIPTCExtAboutCvTermRefinedAbout: CFString = "kCGImagePropertyIPTCExtAboutCvTermRefinedAbout"
+public let kCGImagePropertyIPTCExtAboutCvTermRefinedAbout: CFString = "AboutCvTermRefinedAbout"
 
-public let kCGImagePropertyIPTCExtAddlModelInfo: CFString = "kCGImagePropertyIPTCExtAddlModelInfo"
+public let kCGImagePropertyIPTCExtAddlModelInfo: CFString = "AddlModelInfo"
 
-public let kCGImagePropertyIPTCExtArtworkCircaDateCreated: CFString = "kCGImagePropertyIPTCExtArtworkCircaDateCreated"
+public let kCGImagePropertyIPTCExtArtworkCircaDateCreated: CFString = "ArtworkCircaDateCreated"
 
-public let kCGImagePropertyIPTCExtArtworkContentDescription: CFString = "kCGImagePropertyIPTCExtArtworkContentDescription"
+public let kCGImagePropertyIPTCExtArtworkContentDescription: CFString = "ArtworkContentDescription"
 
-public let kCGImagePropertyIPTCExtArtworkContributionDescription: CFString = "kCGImagePropertyIPTCExtArtworkContributionDescription"
+public let kCGImagePropertyIPTCExtArtworkContributionDescription: CFString = "ArtworkContributionDescription"
 
-public let kCGImagePropertyIPTCExtArtworkCopyrightNotice: CFString = "kCGImagePropertyIPTCExtArtworkCopyrightNotice"
+public let kCGImagePropertyIPTCExtArtworkCopyrightNotice: CFString = "ArtworkCopyrightNotice"
 
-public let kCGImagePropertyIPTCExtArtworkCopyrightOwnerID: CFString = "kCGImagePropertyIPTCExtArtworkCopyrightOwnerID"
+public let kCGImagePropertyIPTCExtArtworkCopyrightOwnerID: CFString = "ArtworkCopyrightOwnerID"
 
-public let kCGImagePropertyIPTCExtArtworkCopyrightOwnerName: CFString = "kCGImagePropertyIPTCExtArtworkCopyrightOwnerName"
+public let kCGImagePropertyIPTCExtArtworkCopyrightOwnerName: CFString = "ArtworkCopyrightOwnerName"
 
-public let kCGImagePropertyIPTCExtArtworkCreator: CFString = "kCGImagePropertyIPTCExtArtworkCreator"
+public let kCGImagePropertyIPTCExtArtworkCreator: CFString = "ArtworkCreator"
 
-public let kCGImagePropertyIPTCExtArtworkCreatorID: CFString = "kCGImagePropertyIPTCExtArtworkCreatorID"
+public let kCGImagePropertyIPTCExtArtworkCreatorID: CFString = "ArtworkCreatorID"
 
-public let kCGImagePropertyIPTCExtArtworkDateCreated: CFString = "kCGImagePropertyIPTCExtArtworkDateCreated"
+public let kCGImagePropertyIPTCExtArtworkDateCreated: CFString = "ArtworkDateCreated"
 
-public let kCGImagePropertyIPTCExtArtworkLicensorID: CFString = "kCGImagePropertyIPTCExtArtworkLicensorID"
+public let kCGImagePropertyIPTCExtArtworkLicensorID: CFString = "ArtworkLicensorID"
 
-public let kCGImagePropertyIPTCExtArtworkLicensorName: CFString = "kCGImagePropertyIPTCExtArtworkLicensorName"
+public let kCGImagePropertyIPTCExtArtworkLicensorName: CFString = "ArtworkLicensorName"
 
-public let kCGImagePropertyIPTCExtArtworkOrObject: CFString = "kCGImagePropertyIPTCExtArtworkOrObject"
+public let kCGImagePropertyIPTCExtArtworkOrObject: CFString = "ArtworkOrObject"
 
-public let kCGImagePropertyIPTCExtArtworkPhysicalDescription: CFString = "kCGImagePropertyIPTCExtArtworkPhysicalDescription"
+public let kCGImagePropertyIPTCExtArtworkPhysicalDescription: CFString = "ArtworkPhysicalDescription"
 
-public let kCGImagePropertyIPTCExtArtworkSource: CFString = "kCGImagePropertyIPTCExtArtworkSource"
+public let kCGImagePropertyIPTCExtArtworkSource: CFString = "ArtworkSource"
 
-public let kCGImagePropertyIPTCExtArtworkSourceInvURL: CFString = "kCGImagePropertyIPTCExtArtworkSourceInvURL"
+public let kCGImagePropertyIPTCExtArtworkSourceInvURL: CFString = "ArtworkSourceInvURL"
 
-public let kCGImagePropertyIPTCExtArtworkSourceInventoryNo: CFString = "kCGImagePropertyIPTCExtArtworkSourceInventoryNo"
+public let kCGImagePropertyIPTCExtArtworkSourceInventoryNo: CFString = "ArtworkSourceInventoryNo"
 
-public let kCGImagePropertyIPTCExtArtworkStylePeriod: CFString = "kCGImagePropertyIPTCExtArtworkStylePeriod"
+public let kCGImagePropertyIPTCExtArtworkStylePeriod: CFString = "ArtworkStylePeriod"
 
-public let kCGImagePropertyIPTCExtArtworkTitle: CFString = "kCGImagePropertyIPTCExtArtworkTitle"
+public let kCGImagePropertyIPTCExtArtworkTitle: CFString = "ArtworkTitle"
 
-public let kCGImagePropertyIPTCExtAudioBitrate: CFString = "kCGImagePropertyIPTCExtAudioBitrate"
+public let kCGImagePropertyIPTCExtAudioBitrate: CFString = "AudioBitrate"
 
-public let kCGImagePropertyIPTCExtAudioBitrateMode: CFString = "kCGImagePropertyIPTCExtAudioBitrateMode"
+public let kCGImagePropertyIPTCExtAudioBitrateMode: CFString = "AudioBitrateMode"
 
-public let kCGImagePropertyIPTCExtAudioChannelCount: CFString = "kCGImagePropertyIPTCExtAudioChannelCount"
+public let kCGImagePropertyIPTCExtAudioChannelCount: CFString = "AudioChannelCount"
 
-public let kCGImagePropertyIPTCExtCircaDateCreated: CFString = "kCGImagePropertyIPTCExtCircaDateCreated"
+public let kCGImagePropertyIPTCExtCircaDateCreated: CFString = "CircaDateCreated"
 
-public let kCGImagePropertyIPTCExtContainerFormat: CFString = "kCGImagePropertyIPTCExtContainerFormat"
+public let kCGImagePropertyIPTCExtContainerFormat: CFString = "ContainerFormat"
 
-public let kCGImagePropertyIPTCExtContainerFormatIdentifier: CFString = "kCGImagePropertyIPTCExtContainerFormatIdentifier"
+public let kCGImagePropertyIPTCExtContainerFormatIdentifier: CFString = "ContainerFormatIdentifier"
 
-public let kCGImagePropertyIPTCExtContainerFormatName: CFString = "kCGImagePropertyIPTCExtContainerFormatName"
+public let kCGImagePropertyIPTCExtContainerFormatName: CFString = "ContainerFormatName"
 
-public let kCGImagePropertyIPTCExtContributor: CFString = "kCGImagePropertyIPTCExtContributor"
+public let kCGImagePropertyIPTCExtContributor: CFString = "Contributor"
 
-public let kCGImagePropertyIPTCExtContributorIdentifier: CFString = "kCGImagePropertyIPTCExtContributorIdentifier"
+public let kCGImagePropertyIPTCExtContributorIdentifier: CFString = "ContributorIdentifier"
 
-public let kCGImagePropertyIPTCExtContributorName: CFString = "kCGImagePropertyIPTCExtContributorName"
+public let kCGImagePropertyIPTCExtContributorName: CFString = "ContributorName"
 
-public let kCGImagePropertyIPTCExtContributorRole: CFString = "kCGImagePropertyIPTCExtContributorRole"
+public let kCGImagePropertyIPTCExtContributorRole: CFString = "ContributorRole"
 
-public let kCGImagePropertyIPTCExtControlledVocabularyTerm: CFString = "kCGImagePropertyIPTCExtControlledVocabularyTerm"
+public let kCGImagePropertyIPTCExtControlledVocabularyTerm: CFString = "ControlledVocabularyTerm"
 
-public let kCGImagePropertyIPTCExtCopyrightYear: CFString = "kCGImagePropertyIPTCExtCopyrightYear"
+public let kCGImagePropertyIPTCExtCopyrightYear: CFString = "CopyrightYear"
 
-public let kCGImagePropertyIPTCExtCreator: CFString = "kCGImagePropertyIPTCExtCreator"
+public let kCGImagePropertyIPTCExtCreator: CFString = "Creator"
 
-public let kCGImagePropertyIPTCExtCreatorIdentifier: CFString = "kCGImagePropertyIPTCExtCreatorIdentifier"
+public let kCGImagePropertyIPTCExtCreatorIdentifier: CFString = "CreatorIdentifier"
 
-public let kCGImagePropertyIPTCExtCreatorName: CFString = "kCGImagePropertyIPTCExtCreatorName"
+public let kCGImagePropertyIPTCExtCreatorName: CFString = "CreatorName"
 
-public let kCGImagePropertyIPTCExtCreatorRole: CFString = "kCGImagePropertyIPTCExtCreatorRole"
+public let kCGImagePropertyIPTCExtCreatorRole: CFString = "CreatorRole"
 
-public let kCGImagePropertyIPTCExtDataOnScreen: CFString = "kCGImagePropertyIPTCExtDataOnScreen"
+public let kCGImagePropertyIPTCExtDataOnScreen: CFString = "DataOnScreen"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegion: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegion"
+public let kCGImagePropertyIPTCExtDataOnScreenRegion: CFString = "DataOnScreenRegion"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionD: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionD"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionD: CFString = "DataOnScreenRegionD"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionH: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionH"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionH: CFString = "DataOnScreenRegionH"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionText: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionText"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionText: CFString = "DataOnScreenRegionText"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionUnit: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionUnit"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionUnit: CFString = "DataOnScreenRegionUnit"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionW: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionW"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionW: CFString = "DataOnScreenRegionW"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionX: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionX"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionX: CFString = "DataOnScreenRegionX"
 
-public let kCGImagePropertyIPTCExtDataOnScreenRegionY: CFString = "kCGImagePropertyIPTCExtDataOnScreenRegionY"
+public let kCGImagePropertyIPTCExtDataOnScreenRegionY: CFString = "DataOnScreenRegionY"
 
-public let kCGImagePropertyIPTCExtDigitalImageGUID: CFString = "kCGImagePropertyIPTCExtDigitalImageGUID"
+public let kCGImagePropertyIPTCExtDigitalImageGUID: CFString = "DigitalImageGUID"
 
-public let kCGImagePropertyIPTCExtDigitalSourceFileType: CFString = "kCGImagePropertyIPTCExtDigitalSourceFileType"
+public let kCGImagePropertyIPTCExtDigitalSourceFileType: CFString = "DigitalSourceFileType"
 
-public let kCGImagePropertyIPTCExtDigitalSourceType: CFString = "kCGImagePropertyIPTCExtDigitalSourceType"
+public let kCGImagePropertyIPTCExtDigitalSourceType: CFString = "DigitalSourceType"
 
-public let kCGImagePropertyIPTCExtDopesheet: CFString = "kCGImagePropertyIPTCExtDopesheet"
+public let kCGImagePropertyIPTCExtDopesheet: CFString = "Dopesheet"
 
-public let kCGImagePropertyIPTCExtDopesheetLink: CFString = "kCGImagePropertyIPTCExtDopesheetLink"
+public let kCGImagePropertyIPTCExtDopesheetLink: CFString = "DopesheetLink"
 
-public let kCGImagePropertyIPTCExtDopesheetLinkLink: CFString = "kCGImagePropertyIPTCExtDopesheetLinkLink"
+public let kCGImagePropertyIPTCExtDopesheetLinkLink: CFString = "DopesheetLinkLink"
 
-public let kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier: CFString = "kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier"
+public let kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier: CFString = "DopesheetLinkLinkQualifier"
 
-public let kCGImagePropertyIPTCExtEmbdEncRightsExpr: CFString = "kCGImagePropertyIPTCExtEmbdEncRightsExpr"
+public let kCGImagePropertyIPTCExtEmbdEncRightsExpr: CFString = "EmbdEncRightsExpr"
 
-public let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr: CFString = "kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr"
+public let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr: CFString = "EmbeddedEncodedRightsExpr"
 
-public let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID: CFString = "kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID"
+public let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID: CFString = "EmbeddedEncodedRightsExprLangID"
 
-public let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType: CFString = "kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType"
+public let kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType: CFString = "EmbeddedEncodedRightsExprType"
 
-public let kCGImagePropertyIPTCExtEpisode: CFString = "kCGImagePropertyIPTCExtEpisode"
+public let kCGImagePropertyIPTCExtEpisode: CFString = "Episode"
 
-public let kCGImagePropertyIPTCExtEpisodeIdentifier: CFString = "kCGImagePropertyIPTCExtEpisodeIdentifier"
+public let kCGImagePropertyIPTCExtEpisodeIdentifier: CFString = "EpisodeIdentifier"
 
-public let kCGImagePropertyIPTCExtEpisodeName: CFString = "kCGImagePropertyIPTCExtEpisodeName"
+public let kCGImagePropertyIPTCExtEpisodeName: CFString = "EpisodeName"
 
-public let kCGImagePropertyIPTCExtEpisodeNumber: CFString = "kCGImagePropertyIPTCExtEpisodeNumber"
+public let kCGImagePropertyIPTCExtEpisodeNumber: CFString = "EpisodeNumber"
 
-public let kCGImagePropertyIPTCExtEvent: CFString = "kCGImagePropertyIPTCExtEvent"
+public let kCGImagePropertyIPTCExtEvent: CFString = "Event"
 
-public let kCGImagePropertyIPTCExtExternalMetadataLink: CFString = "kCGImagePropertyIPTCExtExternalMetadataLink"
+public let kCGImagePropertyIPTCExtExternalMetadataLink: CFString = "ExternalMetadataLink"
 
-public let kCGImagePropertyIPTCExtFeedIdentifier: CFString = "kCGImagePropertyIPTCExtFeedIdentifier"
+public let kCGImagePropertyIPTCExtFeedIdentifier: CFString = "FeedIdentifier"
 
-public let kCGImagePropertyIPTCExtGenre: CFString = "kCGImagePropertyIPTCExtGenre"
+public let kCGImagePropertyIPTCExtGenre: CFString = "Genre"
 
-public let kCGImagePropertyIPTCExtGenreCvId: CFString = "kCGImagePropertyIPTCExtGenreCvId"
+public let kCGImagePropertyIPTCExtGenreCvId: CFString = "GenreCvId"
 
-public let kCGImagePropertyIPTCExtGenreCvTermId: CFString = "kCGImagePropertyIPTCExtGenreCvTermId"
+public let kCGImagePropertyIPTCExtGenreCvTermId: CFString = "GenreCvTermId"
 
-public let kCGImagePropertyIPTCExtGenreCvTermName: CFString = "kCGImagePropertyIPTCExtGenreCvTermName"
+public let kCGImagePropertyIPTCExtGenreCvTermName: CFString = "GenreCvTermName"
 
-public let kCGImagePropertyIPTCExtGenreCvTermRefinedAbout: CFString = "kCGImagePropertyIPTCExtGenreCvTermRefinedAbout"
+public let kCGImagePropertyIPTCExtGenreCvTermRefinedAbout: CFString = "GenreCvTermRefinedAbout"
 
-public let kCGImagePropertyIPTCExtHeadline: CFString = "kCGImagePropertyIPTCExtHeadline"
+public let kCGImagePropertyIPTCExtHeadline: CFString = "Headline"
 
-public let kCGImagePropertyIPTCExtIPTCLastEdited: CFString = "kCGImagePropertyIPTCExtIPTCLastEdited"
+public let kCGImagePropertyIPTCExtIPTCLastEdited: CFString = "IPTCLastEdited"
 
-public let kCGImagePropertyIPTCExtLinkedEncRightsExpr: CFString = "kCGImagePropertyIPTCExtLinkedEncRightsExpr"
+public let kCGImagePropertyIPTCExtLinkedEncRightsExpr: CFString = "LinkedEncRightsExpr"
 
-public let kCGImagePropertyIPTCExtLinkedEncodedRightsExpr: CFString = "kCGImagePropertyIPTCExtLinkedEncodedRightsExpr"
+public let kCGImagePropertyIPTCExtLinkedEncodedRightsExpr: CFString = "LinkedEncodedRightsExpr"
 
-public let kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID: CFString = "kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID"
+public let kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID: CFString = "LinkedEncodedRightsExprLangID"
 
-public let kCGImagePropertyIPTCExtLinkedEncodedRightsExprType: CFString = "kCGImagePropertyIPTCExtLinkedEncodedRightsExprType"
+public let kCGImagePropertyIPTCExtLinkedEncodedRightsExprType: CFString = "LinkedEncodedRightsExprType"
 
-public let kCGImagePropertyIPTCExtLocationCity: CFString = "kCGImagePropertyIPTCExtLocationCity"
+public let kCGImagePropertyIPTCExtLocationCity: CFString = "City"
 
-public let kCGImagePropertyIPTCExtLocationCountryCode: CFString = "kCGImagePropertyIPTCExtLocationCountryCode"
+public let kCGImagePropertyIPTCExtLocationCountryCode: CFString = "CountryCode"
 
-public let kCGImagePropertyIPTCExtLocationCountryName: CFString = "kCGImagePropertyIPTCExtLocationCountryName"
+public let kCGImagePropertyIPTCExtLocationCountryName: CFString = "CountryName"
 
-public let kCGImagePropertyIPTCExtLocationCreated: CFString = "kCGImagePropertyIPTCExtLocationCreated"
+public let kCGImagePropertyIPTCExtLocationCreated: CFString = "LocationCreated"
 
-public let kCGImagePropertyIPTCExtLocationGPSAltitude: CFString = "kCGImagePropertyIPTCExtLocationGPSAltitude"
+public let kCGImagePropertyIPTCExtLocationGPSAltitude: CFString = "GPSAltitude"
 
-public let kCGImagePropertyIPTCExtLocationGPSLatitude: CFString = "kCGImagePropertyIPTCExtLocationGPSLatitude"
+public let kCGImagePropertyIPTCExtLocationGPSLatitude: CFString = "GPSLatitude"
 
-public let kCGImagePropertyIPTCExtLocationGPSLongitude: CFString = "kCGImagePropertyIPTCExtLocationGPSLongitude"
+public let kCGImagePropertyIPTCExtLocationGPSLongitude: CFString = "GPSLongitude"
 
-public let kCGImagePropertyIPTCExtLocationIdentifier: CFString = "kCGImagePropertyIPTCExtLocationIdentifier"
+public let kCGImagePropertyIPTCExtLocationIdentifier: CFString = "Identifier"
 
-public let kCGImagePropertyIPTCExtLocationLocationId: CFString = "kCGImagePropertyIPTCExtLocationLocationId"
+public let kCGImagePropertyIPTCExtLocationLocationId: CFString = "LocationId"
 
-public let kCGImagePropertyIPTCExtLocationLocationName: CFString = "kCGImagePropertyIPTCExtLocationLocationName"
+public let kCGImagePropertyIPTCExtLocationLocationName: CFString = "LocationName"
 
-public let kCGImagePropertyIPTCExtLocationProvinceState: CFString = "kCGImagePropertyIPTCExtLocationProvinceState"
+public let kCGImagePropertyIPTCExtLocationProvinceState: CFString = "ProvinceState"
 
-public let kCGImagePropertyIPTCExtLocationShown: CFString = "kCGImagePropertyIPTCExtLocationShown"
+public let kCGImagePropertyIPTCExtLocationShown: CFString = "LocationShown"
 
-public let kCGImagePropertyIPTCExtLocationSublocation: CFString = "kCGImagePropertyIPTCExtLocationSublocation"
+public let kCGImagePropertyIPTCExtLocationSublocation: CFString = "Sublocation"
 
-public let kCGImagePropertyIPTCExtLocationWorldRegion: CFString = "kCGImagePropertyIPTCExtLocationWorldRegion"
+public let kCGImagePropertyIPTCExtLocationWorldRegion: CFString = "WorldRegion"
 
-public let kCGImagePropertyIPTCExtMaxAvailHeight: CFString = "kCGImagePropertyIPTCExtMaxAvailHeight"
+public let kCGImagePropertyIPTCExtMaxAvailHeight: CFString = "MaxAvailHeight"
 
-public let kCGImagePropertyIPTCExtMaxAvailWidth: CFString = "kCGImagePropertyIPTCExtMaxAvailWidth"
+public let kCGImagePropertyIPTCExtMaxAvailWidth: CFString = "MaxAvailWidth"
 
-public let kCGImagePropertyIPTCExtModelAge: CFString = "kCGImagePropertyIPTCExtModelAge"
+public let kCGImagePropertyIPTCExtModelAge: CFString = "ModelAge"
 
-public let kCGImagePropertyIPTCExtOrganisationInImageCode: CFString = "kCGImagePropertyIPTCExtOrganisationInImageCode"
+public let kCGImagePropertyIPTCExtOrganisationInImageCode: CFString = "OrganisationInImageCode"
 
-public let kCGImagePropertyIPTCExtOrganisationInImageName: CFString = "kCGImagePropertyIPTCExtOrganisationInImageName"
+public let kCGImagePropertyIPTCExtOrganisationInImageName: CFString = "OrganisationInImageName"
 
-public let kCGImagePropertyIPTCExtPersonHeard: CFString = "kCGImagePropertyIPTCExtPersonHeard"
+public let kCGImagePropertyIPTCExtPersonHeard: CFString = "PersonHeard"
 
-public let kCGImagePropertyIPTCExtPersonHeardIdentifier: CFString = "kCGImagePropertyIPTCExtPersonHeardIdentifier"
+public let kCGImagePropertyIPTCExtPersonHeardIdentifier: CFString = "PersonHeardIdentifier"
 
-public let kCGImagePropertyIPTCExtPersonHeardName: CFString = "kCGImagePropertyIPTCExtPersonHeardName"
+public let kCGImagePropertyIPTCExtPersonHeardName: CFString = "PersonHeardName"
 
-public let kCGImagePropertyIPTCExtPersonInImage: CFString = "kCGImagePropertyIPTCExtPersonInImage"
+public let kCGImagePropertyIPTCExtPersonInImage: CFString = "PersonInImage"
 
-public let kCGImagePropertyIPTCExtPersonInImageCharacteristic: CFString = "kCGImagePropertyIPTCExtPersonInImageCharacteristic"
+public let kCGImagePropertyIPTCExtPersonInImageCharacteristic: CFString = "PersonInImageCharacteristic"
 
-public let kCGImagePropertyIPTCExtPersonInImageCvTermCvId: CFString = "kCGImagePropertyIPTCExtPersonInImageCvTermCvId"
+public let kCGImagePropertyIPTCExtPersonInImageCvTermCvId: CFString = "PersonInImageCvTermCvId"
 
-public let kCGImagePropertyIPTCExtPersonInImageCvTermId: CFString = "kCGImagePropertyIPTCExtPersonInImageCvTermId"
+public let kCGImagePropertyIPTCExtPersonInImageCvTermId: CFString = "PersonInImageCvTermId"
 
-public let kCGImagePropertyIPTCExtPersonInImageCvTermName: CFString = "kCGImagePropertyIPTCExtPersonInImageCvTermName"
+public let kCGImagePropertyIPTCExtPersonInImageCvTermName: CFString = "PersonInImageCvTermName"
 
-public let kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout: CFString = "kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout"
+public let kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout: CFString = "PersonInImageCvTermRefinedAbout"
 
-public let kCGImagePropertyIPTCExtPersonInImageDescription: CFString = "kCGImagePropertyIPTCExtPersonInImageDescription"
+public let kCGImagePropertyIPTCExtPersonInImageDescription: CFString = "PersonInImageDescription"
 
-public let kCGImagePropertyIPTCExtPersonInImageId: CFString = "kCGImagePropertyIPTCExtPersonInImageId"
+public let kCGImagePropertyIPTCExtPersonInImageId: CFString = "PersonInImageId"
 
-public let kCGImagePropertyIPTCExtPersonInImageName: CFString = "kCGImagePropertyIPTCExtPersonInImageName"
+public let kCGImagePropertyIPTCExtPersonInImageName: CFString = "PersonInImageName"
 
-public let kCGImagePropertyIPTCExtPersonInImageWDetails: CFString = "kCGImagePropertyIPTCExtPersonInImageWDetails"
+public let kCGImagePropertyIPTCExtPersonInImageWDetails: CFString = "PersonInImageWDetails"
 
-public let kCGImagePropertyIPTCExtProductInImage: CFString = "kCGImagePropertyIPTCExtProductInImage"
+public let kCGImagePropertyIPTCExtProductInImage: CFString = "ProductInImage"
 
-public let kCGImagePropertyIPTCExtProductInImageDescription: CFString = "kCGImagePropertyIPTCExtProductInImageDescription"
+public let kCGImagePropertyIPTCExtProductInImageDescription: CFString = "ProductInImageDescription"
 
-public let kCGImagePropertyIPTCExtProductInImageGTIN: CFString = "kCGImagePropertyIPTCExtProductInImageGTIN"
+public let kCGImagePropertyIPTCExtProductInImageGTIN: CFString = "ProductInImageGTIN"
 
-public let kCGImagePropertyIPTCExtProductInImageName: CFString = "kCGImagePropertyIPTCExtProductInImageName"
+public let kCGImagePropertyIPTCExtProductInImageName: CFString = "ProductInImageName"
 
-public let kCGImagePropertyIPTCExtPublicationEvent: CFString = "kCGImagePropertyIPTCExtPublicationEvent"
+public let kCGImagePropertyIPTCExtPublicationEvent: CFString = "PublicationEvent"
 
-public let kCGImagePropertyIPTCExtPublicationEventDate: CFString = "kCGImagePropertyIPTCExtPublicationEventDate"
+public let kCGImagePropertyIPTCExtPublicationEventDate: CFString = "PublicationEventDate"
 
-public let kCGImagePropertyIPTCExtPublicationEventIdentifier: CFString = "kCGImagePropertyIPTCExtPublicationEventIdentifier"
+public let kCGImagePropertyIPTCExtPublicationEventIdentifier: CFString = "PublicationEventIdentifier"
 
-public let kCGImagePropertyIPTCExtPublicationEventName: CFString = "kCGImagePropertyIPTCExtPublicationEventName"
+public let kCGImagePropertyIPTCExtPublicationEventName: CFString = "PublicationEventName"
 
-public let kCGImagePropertyIPTCExtRating: CFString = "kCGImagePropertyIPTCExtRating"
+public let kCGImagePropertyIPTCExtRating: CFString = "Rating"
 
-public let kCGImagePropertyIPTCExtRatingRatingRegion: CFString = "kCGImagePropertyIPTCExtRatingRatingRegion"
+public let kCGImagePropertyIPTCExtRatingRatingRegion: CFString = "RatingRatingRegion"
 
-public let kCGImagePropertyIPTCExtRatingRegionCity: CFString = "kCGImagePropertyIPTCExtRatingRegionCity"
+public let kCGImagePropertyIPTCExtRatingRegionCity: CFString = "RatingRegionCity"
 
-public let kCGImagePropertyIPTCExtRatingRegionCountryCode: CFString = "kCGImagePropertyIPTCExtRatingRegionCountryCode"
+public let kCGImagePropertyIPTCExtRatingRegionCountryCode: CFString = "RatingRegionCountryCode"
 
-public let kCGImagePropertyIPTCExtRatingRegionCountryName: CFString = "kCGImagePropertyIPTCExtRatingRegionCountryName"
+public let kCGImagePropertyIPTCExtRatingRegionCountryName: CFString = "RatingRegionCountryName"
 
-public let kCGImagePropertyIPTCExtRatingRegionGPSAltitude: CFString = "kCGImagePropertyIPTCExtRatingRegionGPSAltitude"
+public let kCGImagePropertyIPTCExtRatingRegionGPSAltitude: CFString = "RatingRegionGPSAltitude"
 
-public let kCGImagePropertyIPTCExtRatingRegionGPSLatitude: CFString = "kCGImagePropertyIPTCExtRatingRegionGPSLatitude"
+public let kCGImagePropertyIPTCExtRatingRegionGPSLatitude: CFString = "RatingRegionGPSLatitude"
 
-public let kCGImagePropertyIPTCExtRatingRegionGPSLongitude: CFString = "kCGImagePropertyIPTCExtRatingRegionGPSLongitude"
+public let kCGImagePropertyIPTCExtRatingRegionGPSLongitude: CFString = "RatingRegionGPSLongitude"
 
-public let kCGImagePropertyIPTCExtRatingRegionIdentifier: CFString = "kCGImagePropertyIPTCExtRatingRegionIdentifier"
+public let kCGImagePropertyIPTCExtRatingRegionIdentifier: CFString = "RatingRegionIdentifier"
 
-public let kCGImagePropertyIPTCExtRatingRegionLocationId: CFString = "kCGImagePropertyIPTCExtRatingRegionLocationId"
+public let kCGImagePropertyIPTCExtRatingRegionLocationId: CFString = "RatingRegionLocationId"
 
-public let kCGImagePropertyIPTCExtRatingRegionLocationName: CFString = "kCGImagePropertyIPTCExtRatingRegionLocationName"
+public let kCGImagePropertyIPTCExtRatingRegionLocationName: CFString = "RatingRegionLocationName"
 
-public let kCGImagePropertyIPTCExtRatingRegionProvinceState: CFString = "kCGImagePropertyIPTCExtRatingRegionProvinceState"
+public let kCGImagePropertyIPTCExtRatingRegionProvinceState: CFString = "RatingRegionProvinceState"
 
-public let kCGImagePropertyIPTCExtRatingRegionSublocation: CFString = "kCGImagePropertyIPTCExtRatingRegionSublocation"
+public let kCGImagePropertyIPTCExtRatingRegionSublocation: CFString = "RatingRegionSublocation"
 
-public let kCGImagePropertyIPTCExtRatingRegionWorldRegion: CFString = "kCGImagePropertyIPTCExtRatingRegionWorldRegion"
+public let kCGImagePropertyIPTCExtRatingRegionWorldRegion: CFString = "RatingRegionWorldRegion"
 
-public let kCGImagePropertyIPTCExtRatingScaleMaxValue: CFString = "kCGImagePropertyIPTCExtRatingScaleMaxValue"
+public let kCGImagePropertyIPTCExtRatingScaleMaxValue: CFString = "RatingScaleMaxValue"
 
-public let kCGImagePropertyIPTCExtRatingScaleMinValue: CFString = "kCGImagePropertyIPTCExtRatingScaleMinValue"
+public let kCGImagePropertyIPTCExtRatingScaleMinValue: CFString = "RatingScaleMinValue"
 
-public let kCGImagePropertyIPTCExtRatingSourceLink: CFString = "kCGImagePropertyIPTCExtRatingSourceLink"
+public let kCGImagePropertyIPTCExtRatingSourceLink: CFString = "RatingSourceLink"
 
-public let kCGImagePropertyIPTCExtRatingValue: CFString = "kCGImagePropertyIPTCExtRatingValue"
+public let kCGImagePropertyIPTCExtRatingValue: CFString = "RatingValue"
 
-public let kCGImagePropertyIPTCExtRatingValueLogoLink: CFString = "kCGImagePropertyIPTCExtRatingValueLogoLink"
+public let kCGImagePropertyIPTCExtRatingValueLogoLink: CFString = "RatingValueLogoLink"
 
-public let kCGImagePropertyIPTCExtRegistryEntryRole: CFString = "kCGImagePropertyIPTCExtRegistryEntryRole"
+public let kCGImagePropertyIPTCExtRegistryEntryRole: CFString = "RegistryEntryRole"
 
-public let kCGImagePropertyIPTCExtRegistryID: CFString = "kCGImagePropertyIPTCExtRegistryID"
+public let kCGImagePropertyIPTCExtRegistryID: CFString = "RegistryID"
 
-public let kCGImagePropertyIPTCExtRegistryItemID: CFString = "kCGImagePropertyIPTCExtRegistryItemID"
+public let kCGImagePropertyIPTCExtRegistryItemID: CFString = "RegistryItemID"
 
-public let kCGImagePropertyIPTCExtRegistryOrganisationID: CFString = "kCGImagePropertyIPTCExtRegistryOrganisationID"
+public let kCGImagePropertyIPTCExtRegistryOrganisationID: CFString = "RegistryOrganisationID"
 
-public let kCGImagePropertyIPTCExtReleaseReady: CFString = "kCGImagePropertyIPTCExtReleaseReady"
+public let kCGImagePropertyIPTCExtReleaseReady: CFString = "ReleaseReady"
 
-public let kCGImagePropertyIPTCExtSeason: CFString = "kCGImagePropertyIPTCExtSeason"
+public let kCGImagePropertyIPTCExtSeason: CFString = "Season"
 
-public let kCGImagePropertyIPTCExtSeasonIdentifier: CFString = "kCGImagePropertyIPTCExtSeasonIdentifier"
+public let kCGImagePropertyIPTCExtSeasonIdentifier: CFString = "SeasonIdentifier"
 
-public let kCGImagePropertyIPTCExtSeasonName: CFString = "kCGImagePropertyIPTCExtSeasonName"
+public let kCGImagePropertyIPTCExtSeasonName: CFString = "SeasonName"
 
-public let kCGImagePropertyIPTCExtSeasonNumber: CFString = "kCGImagePropertyIPTCExtSeasonNumber"
+public let kCGImagePropertyIPTCExtSeasonNumber: CFString = "SeasonNumber"
 
-public let kCGImagePropertyIPTCExtSeries: CFString = "kCGImagePropertyIPTCExtSeries"
+public let kCGImagePropertyIPTCExtSeries: CFString = "Series"
 
-public let kCGImagePropertyIPTCExtSeriesIdentifier: CFString = "kCGImagePropertyIPTCExtSeriesIdentifier"
+public let kCGImagePropertyIPTCExtSeriesIdentifier: CFString = "SeriesIdentifier"
 
-public let kCGImagePropertyIPTCExtSeriesName: CFString = "kCGImagePropertyIPTCExtSeriesName"
+public let kCGImagePropertyIPTCExtSeriesName: CFString = "SeriesName"
 
-public let kCGImagePropertyIPTCExtShownEvent: CFString = "kCGImagePropertyIPTCExtShownEvent"
+public let kCGImagePropertyIPTCExtShownEvent: CFString = "ShownEvent"
 
-public let kCGImagePropertyIPTCExtShownEventIdentifier: CFString = "kCGImagePropertyIPTCExtShownEventIdentifier"
+public let kCGImagePropertyIPTCExtShownEventIdentifier: CFString = "ShownEventIdentifier"
 
-public let kCGImagePropertyIPTCExtShownEventName: CFString = "kCGImagePropertyIPTCExtShownEventName"
+public let kCGImagePropertyIPTCExtShownEventName: CFString = "ShownEventName"
 
-public let kCGImagePropertyIPTCExtStorylineIdentifier: CFString = "kCGImagePropertyIPTCExtStorylineIdentifier"
+public let kCGImagePropertyIPTCExtStorylineIdentifier: CFString = "StorylineIdentifier"
 
-public let kCGImagePropertyIPTCExtStreamReady: CFString = "kCGImagePropertyIPTCExtStreamReady"
+public let kCGImagePropertyIPTCExtStreamReady: CFString = "StreamReady"
 
-public let kCGImagePropertyIPTCExtStylePeriod: CFString = "kCGImagePropertyIPTCExtStylePeriod"
+public let kCGImagePropertyIPTCExtStylePeriod: CFString = "StylePeriod"
 
-public let kCGImagePropertyIPTCExtSupplyChainSource: CFString = "kCGImagePropertyIPTCExtSupplyChainSource"
+public let kCGImagePropertyIPTCExtSupplyChainSource: CFString = "SupplyChainSource"
 
-public let kCGImagePropertyIPTCExtSupplyChainSourceIdentifier: CFString = "kCGImagePropertyIPTCExtSupplyChainSourceIdentifier"
+public let kCGImagePropertyIPTCExtSupplyChainSourceIdentifier: CFString = "SupplyChainSourceIdentifier"
 
-public let kCGImagePropertyIPTCExtSupplyChainSourceName: CFString = "kCGImagePropertyIPTCExtSupplyChainSourceName"
+public let kCGImagePropertyIPTCExtSupplyChainSourceName: CFString = "SupplyChainSourceName"
 
-public let kCGImagePropertyIPTCExtTemporalCoverage: CFString = "kCGImagePropertyIPTCExtTemporalCoverage"
+public let kCGImagePropertyIPTCExtTemporalCoverage: CFString = "TemporalCoverage"
 
-public let kCGImagePropertyIPTCExtTemporalCoverageFrom: CFString = "kCGImagePropertyIPTCExtTemporalCoverageFrom"
+public let kCGImagePropertyIPTCExtTemporalCoverageFrom: CFString = "TemporalCoverageFrom"
 
-public let kCGImagePropertyIPTCExtTemporalCoverageTo: CFString = "kCGImagePropertyIPTCExtTemporalCoverageTo"
+public let kCGImagePropertyIPTCExtTemporalCoverageTo: CFString = "TemporalCoverageTo"
 
-public let kCGImagePropertyIPTCExtTranscript: CFString = "kCGImagePropertyIPTCExtTranscript"
+public let kCGImagePropertyIPTCExtTranscript: CFString = "Transcript"
 
-public let kCGImagePropertyIPTCExtTranscriptLink: CFString = "kCGImagePropertyIPTCExtTranscriptLink"
+public let kCGImagePropertyIPTCExtTranscriptLink: CFString = "TranscriptLink"
 
-public let kCGImagePropertyIPTCExtTranscriptLinkLink: CFString = "kCGImagePropertyIPTCExtTranscriptLinkLink"
+public let kCGImagePropertyIPTCExtTranscriptLinkLink: CFString = "TranscriptLinkLink"
 
-public let kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier: CFString = "kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier"
+public let kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier: CFString = "TranscriptLinkLinkQualifier"
 
-public let kCGImagePropertyIPTCExtVideoBitrate: CFString = "kCGImagePropertyIPTCExtVideoBitrate"
+public let kCGImagePropertyIPTCExtVideoBitrate: CFString = "VideoBitrate"
 
-public let kCGImagePropertyIPTCExtVideoBitrateMode: CFString = "kCGImagePropertyIPTCExtVideoBitrateMode"
+public let kCGImagePropertyIPTCExtVideoBitrateMode: CFString = "VideoBitrateMode"
 
-public let kCGImagePropertyIPTCExtVideoDisplayAspectRatio: CFString = "kCGImagePropertyIPTCExtVideoDisplayAspectRatio"
+public let kCGImagePropertyIPTCExtVideoDisplayAspectRatio: CFString = "VideoDisplayAspectRatio"
 
-public let kCGImagePropertyIPTCExtVideoEncodingProfile: CFString = "kCGImagePropertyIPTCExtVideoEncodingProfile"
+public let kCGImagePropertyIPTCExtVideoEncodingProfile: CFString = "VideoEncodingProfile"
 
-public let kCGImagePropertyIPTCExtVideoShotType: CFString = "kCGImagePropertyIPTCExtVideoShotType"
+public let kCGImagePropertyIPTCExtVideoShotType: CFString = "VideoShotType"
 
-public let kCGImagePropertyIPTCExtVideoShotTypeIdentifier: CFString = "kCGImagePropertyIPTCExtVideoShotTypeIdentifier"
+public let kCGImagePropertyIPTCExtVideoShotTypeIdentifier: CFString = "VideoShotTypeIdentifier"
 
-public let kCGImagePropertyIPTCExtVideoShotTypeName: CFString = "kCGImagePropertyIPTCExtVideoShotTypeName"
+public let kCGImagePropertyIPTCExtVideoShotTypeName: CFString = "VideoShotTypeName"
 
-public let kCGImagePropertyIPTCExtVideoStreamsCount: CFString = "kCGImagePropertyIPTCExtVideoStreamsCount"
+public let kCGImagePropertyIPTCExtVideoStreamsCount: CFString = "VideoStreamsCount"
 
-public let kCGImagePropertyIPTCExtVisualColor: CFString = "kCGImagePropertyIPTCExtVisualColor"
+public let kCGImagePropertyIPTCExtVisualColor: CFString = "VisualColor"
 
-public let kCGImagePropertyIPTCExtWorkflowTag: CFString = "kCGImagePropertyIPTCExtWorkflowTag"
+public let kCGImagePropertyIPTCExtWorkflowTag: CFString = "WorkflowTag"
 
-public let kCGImagePropertyIPTCExtWorkflowTagCvId: CFString = "kCGImagePropertyIPTCExtWorkflowTagCvId"
+public let kCGImagePropertyIPTCExtWorkflowTagCvId: CFString = "WorkflowTagCvId"
 
-public let kCGImagePropertyIPTCExtWorkflowTagCvTermId: CFString = "kCGImagePropertyIPTCExtWorkflowTagCvTermId"
+public let kCGImagePropertyIPTCExtWorkflowTagCvTermId: CFString = "WorkflowTagCvTermId"
 
-public let kCGImagePropertyIPTCExtWorkflowTagCvTermName: CFString = "kCGImagePropertyIPTCExtWorkflowTagCvTermName"
+public let kCGImagePropertyIPTCExtWorkflowTagCvTermName: CFString = "WorkflowTagCvTermName"
 
-public let kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout: CFString = "kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout"
+public let kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout: CFString = "WorkflowTagCvTermRefinedAbout"
 
-public let kCGImagePropertyIPTCFixtureIdentifier: CFString = "kCGImagePropertyIPTCFixtureIdentifier"
+public let kCGImagePropertyIPTCFixtureIdentifier: CFString = "FixtureIdentifier"
 
-public let kCGImagePropertyIPTCHeadline: CFString = "kCGImagePropertyIPTCHeadline"
+public let kCGImagePropertyIPTCHeadline: CFString = "Headline"
 
-public let kCGImagePropertyIPTCImageOrientation: CFString = "kCGImagePropertyIPTCImageOrientation"
+public let kCGImagePropertyIPTCImageOrientation: CFString = "ImageOrientation"
 
-public let kCGImagePropertyIPTCImageType: CFString = "kCGImagePropertyIPTCImageType"
+public let kCGImagePropertyIPTCImageType: CFString = "ImageType"
 
-public let kCGImagePropertyIPTCKeywords: CFString = "kCGImagePropertyIPTCKeywords"
+public let kCGImagePropertyIPTCKeywords: CFString = "Keywords"
 
-public let kCGImagePropertyIPTCLanguageIdentifier: CFString = "kCGImagePropertyIPTCLanguageIdentifier"
+public let kCGImagePropertyIPTCLanguageIdentifier: CFString = "LanguageIdentifier"
 
-public let kCGImagePropertyIPTCObjectAttributeReference: CFString = "kCGImagePropertyIPTCObjectAttributeReference"
+public let kCGImagePropertyIPTCObjectAttributeReference: CFString = "ObjectAttributeReference"
 
-public let kCGImagePropertyIPTCObjectCycle: CFString = "kCGImagePropertyIPTCObjectCycle"
+public let kCGImagePropertyIPTCObjectCycle: CFString = "ObjectCycle"
 
-public let kCGImagePropertyIPTCObjectName: CFString = "kCGImagePropertyIPTCObjectName"
+public let kCGImagePropertyIPTCObjectName: CFString = "ObjectName"
 
-public let kCGImagePropertyIPTCObjectTypeReference: CFString = "kCGImagePropertyIPTCObjectTypeReference"
+public let kCGImagePropertyIPTCObjectTypeReference: CFString = "ObjectTypeReference"
 
-public let kCGImagePropertyIPTCOriginalTransmissionReference: CFString = "kCGImagePropertyIPTCOriginalTransmissionReference"
+public let kCGImagePropertyIPTCOriginalTransmissionReference: CFString = "OriginalTransmissionReference"
 
-public let kCGImagePropertyIPTCOriginatingProgram: CFString = "kCGImagePropertyIPTCOriginatingProgram"
+public let kCGImagePropertyIPTCOriginatingProgram: CFString = "OriginatingProgram"
 
-public let kCGImagePropertyIPTCProgramVersion: CFString = "kCGImagePropertyIPTCProgramVersion"
+public let kCGImagePropertyIPTCProgramVersion: CFString = "ProgramVersion"
 
-public let kCGImagePropertyIPTCProvinceState: CFString = "kCGImagePropertyIPTCProvinceState"
+public let kCGImagePropertyIPTCProvinceState: CFString = "Province/State"
 
-public let kCGImagePropertyIPTCReferenceDate: CFString = "kCGImagePropertyIPTCReferenceDate"
+public let kCGImagePropertyIPTCReferenceDate: CFString = "ReferenceDate"
 
-public let kCGImagePropertyIPTCReferenceNumber: CFString = "kCGImagePropertyIPTCReferenceNumber"
+public let kCGImagePropertyIPTCReferenceNumber: CFString = "ReferenceNumber"
 
-public let kCGImagePropertyIPTCReferenceService: CFString = "kCGImagePropertyIPTCReferenceService"
+public let kCGImagePropertyIPTCReferenceService: CFString = "ReferenceService"
 
-public let kCGImagePropertyIPTCReleaseDate: CFString = "kCGImagePropertyIPTCReleaseDate"
+public let kCGImagePropertyIPTCReleaseDate: CFString = "ReleaseDate"
 
-public let kCGImagePropertyIPTCReleaseTime: CFString = "kCGImagePropertyIPTCReleaseTime"
+public let kCGImagePropertyIPTCReleaseTime: CFString = "ReleaseTime"
 
-public let kCGImagePropertyIPTCRightsUsageTerms: CFString = "kCGImagePropertyIPTCRightsUsageTerms"
+public let kCGImagePropertyIPTCRightsUsageTerms: CFString = "UsageTerms"
 
-public let kCGImagePropertyIPTCScene: CFString = "kCGImagePropertyIPTCScene"
+public let kCGImagePropertyIPTCScene: CFString = "Scene"
 
-public let kCGImagePropertyIPTCSource: CFString = "kCGImagePropertyIPTCSource"
+public let kCGImagePropertyIPTCSource: CFString = "Source"
 
-public let kCGImagePropertyIPTCSpecialInstructions: CFString = "kCGImagePropertyIPTCSpecialInstructions"
+public let kCGImagePropertyIPTCSpecialInstructions: CFString = "SpecialInstructions"
 
-public let kCGImagePropertyIPTCStarRating: CFString = "kCGImagePropertyIPTCStarRating"
+public let kCGImagePropertyIPTCStarRating: CFString = "StarRating"
 
-public let kCGImagePropertyIPTCSubLocation: CFString = "kCGImagePropertyIPTCSubLocation"
+public let kCGImagePropertyIPTCSubLocation: CFString = "SubLocation"
 
-public let kCGImagePropertyIPTCSubjectReference: CFString = "kCGImagePropertyIPTCSubjectReference"
+public let kCGImagePropertyIPTCSubjectReference: CFString = "SubjectReference"
 
-public let kCGImagePropertyIPTCSupplementalCategory: CFString = "kCGImagePropertyIPTCSupplementalCategory"
+public let kCGImagePropertyIPTCSupplementalCategory: CFString = "SupplementalCategory"
 
-public let kCGImagePropertyIPTCTimeCreated: CFString = "kCGImagePropertyIPTCTimeCreated"
+public let kCGImagePropertyIPTCTimeCreated: CFString = "TimeCreated"
 
-public let kCGImagePropertyIPTCUrgency: CFString = "kCGImagePropertyIPTCUrgency"
+public let kCGImagePropertyIPTCUrgency: CFString = "Urgency"
 
-public let kCGImagePropertyIPTCWriterEditor: CFString = "kCGImagePropertyIPTCWriterEditor"
+public let kCGImagePropertyIPTCWriterEditor: CFString = "Writer/Editor"
 
-public let kCGImagePropertyImageCount: CFString = "kCGImagePropertyImageCount"
+public let kCGImagePropertyImageCount: CFString = "ImageCount"
 
-public let kCGImagePropertyImageIndex: CFString = "kCGImagePropertyImageIndex"
+public let kCGImagePropertyImageIndex: CFString = "ImageIndex"
 
-public let kCGImagePropertyImages: CFString = "kCGImagePropertyImages"
+public let kCGImagePropertyImages: CFString = "Images"
 
-public let kCGImagePropertyIsFloat: CFString = "kCGImagePropertyIsFloat"
+public let kCGImagePropertyIsFloat: CFString = "IsFloat"
 
-public let kCGImagePropertyIsIndexed: CFString = "kCGImagePropertyIsIndexed"
+public let kCGImagePropertyIsIndexed: CFString = "IsIndexed"
 
-public let kCGImagePropertyJFIFDensityUnit: CFString = "kCGImagePropertyJFIFDensityUnit"
+public let kCGImagePropertyJFIFDensityUnit: CFString = "DensityUnit"
 
 public let kCGImagePropertyJFIFDictionary: CFString = "{JFIF}"
 
 public let kCGImagePropertyJFIFIsProgressive: CFString = "IsProgressive"
 
-public let kCGImagePropertyJFIFVersion: CFString = "kCGImagePropertyJFIFVersion"
+public let kCGImagePropertyJFIFVersion: CFString = "JFIFVersion"
 
-public let kCGImagePropertyJFIFXDensity: CFString = "kCGImagePropertyJFIFXDensity"
+public let kCGImagePropertyJFIFXDensity: CFString = "XDensity"
 
-public let kCGImagePropertyJFIFYDensity: CFString = "kCGImagePropertyJFIFYDensity"
+public let kCGImagePropertyJFIFYDensity: CFString = "YDensity"
 
 public let kCGImagePropertyMakerAppleDictionary: CFString = "{MakerApple}"
 
-public let kCGImagePropertyMakerCanonAspectRatioInfo: CFString = "kCGImagePropertyMakerCanonAspectRatioInfo"
+public let kCGImagePropertyMakerCanonAspectRatioInfo: CFString = "AspectRatioInfo"
 
-public let kCGImagePropertyMakerCanonCameraSerialNumber: CFString = "kCGImagePropertyMakerCanonCameraSerialNumber"
+public let kCGImagePropertyMakerCanonCameraSerialNumber: CFString = "CameraSerialNumber"
 
-public let kCGImagePropertyMakerCanonContinuousDrive: CFString = "kCGImagePropertyMakerCanonContinuousDrive"
+public let kCGImagePropertyMakerCanonContinuousDrive: CFString = "ContinuousDrive"
 
 public let kCGImagePropertyMakerCanonDictionary: CFString = "{MakerCanon}"
 
-public let kCGImagePropertyMakerCanonFirmware: CFString = "kCGImagePropertyMakerCanonFirmware"
+public let kCGImagePropertyMakerCanonFirmware: CFString = "Firmware"
 
-public let kCGImagePropertyMakerCanonFlashExposureComp: CFString = "kCGImagePropertyMakerCanonFlashExposureComp"
+public let kCGImagePropertyMakerCanonFlashExposureComp: CFString = "FlashExposureComp"
 
-public let kCGImagePropertyMakerCanonImageSerialNumber: CFString = "kCGImagePropertyMakerCanonImageSerialNumber"
+public let kCGImagePropertyMakerCanonImageSerialNumber: CFString = "ImageSerialNumber"
 
-public let kCGImagePropertyMakerCanonLensModel: CFString = "kCGImagePropertyMakerCanonLensModel"
+public let kCGImagePropertyMakerCanonLensModel: CFString = "LensModel"
 
-public let kCGImagePropertyMakerCanonOwnerName: CFString = "kCGImagePropertyMakerCanonOwnerName"
+public let kCGImagePropertyMakerCanonOwnerName: CFString = "OwnerName"
 
 public let kCGImagePropertyMakerFujiDictionary: CFString = "{MakerFuji}"
 
 public let kCGImagePropertyMakerMinoltaDictionary: CFString = "{MakerMinolta}"
 
-public let kCGImagePropertyMakerNikonCameraSerialNumber: CFString = "kCGImagePropertyMakerNikonCameraSerialNumber"
+public let kCGImagePropertyMakerNikonCameraSerialNumber: CFString = "CameraSerialNumber"
 
-public let kCGImagePropertyMakerNikonColorMode: CFString = "kCGImagePropertyMakerNikonColorMode"
+public let kCGImagePropertyMakerNikonColorMode: CFString = "ColorMode"
 
 public let kCGImagePropertyMakerNikonDictionary: CFString = "{MakerNikon}"
 
-public let kCGImagePropertyMakerNikonDigitalZoom: CFString = "kCGImagePropertyMakerNikonDigitalZoom"
+public let kCGImagePropertyMakerNikonDigitalZoom: CFString = "DigitalZoom"
 
-public let kCGImagePropertyMakerNikonFlashExposureComp: CFString = "kCGImagePropertyMakerNikonFlashExposureComp"
+public let kCGImagePropertyMakerNikonFlashExposureComp: CFString = "FlashExposureComp"
 
-public let kCGImagePropertyMakerNikonFlashSetting: CFString = "kCGImagePropertyMakerNikonFlashSetting"
+public let kCGImagePropertyMakerNikonFlashSetting: CFString = "FlashSetting"
 
-public let kCGImagePropertyMakerNikonFocusDistance: CFString = "kCGImagePropertyMakerNikonFocusDistance"
+public let kCGImagePropertyMakerNikonFocusDistance: CFString = "FocusDistance"
 
-public let kCGImagePropertyMakerNikonFocusMode: CFString = "kCGImagePropertyMakerNikonFocusMode"
+public let kCGImagePropertyMakerNikonFocusMode: CFString = "FocusMode"
 
-public let kCGImagePropertyMakerNikonISOSelection: CFString = "kCGImagePropertyMakerNikonISOSelection"
+public let kCGImagePropertyMakerNikonISOSelection: CFString = "ISOSelection"
 
-public let kCGImagePropertyMakerNikonISOSetting: CFString = "kCGImagePropertyMakerNikonISOSetting"
+public let kCGImagePropertyMakerNikonISOSetting: CFString = "ISOSetting"
 
-public let kCGImagePropertyMakerNikonImageAdjustment: CFString = "kCGImagePropertyMakerNikonImageAdjustment"
+public let kCGImagePropertyMakerNikonImageAdjustment: CFString = "ImageAdjustment"
 
-public let kCGImagePropertyMakerNikonLensAdapter: CFString = "kCGImagePropertyMakerNikonLensAdapter"
+public let kCGImagePropertyMakerNikonLensAdapter: CFString = "LensAdapter"
 
-public let kCGImagePropertyMakerNikonLensInfo: CFString = "kCGImagePropertyMakerNikonLensInfo"
+public let kCGImagePropertyMakerNikonLensInfo: CFString = "LensInfo"
 
-public let kCGImagePropertyMakerNikonLensType: CFString = "kCGImagePropertyMakerNikonLensType"
+public let kCGImagePropertyMakerNikonLensType: CFString = "LensType"
 
-public let kCGImagePropertyMakerNikonQuality: CFString = "kCGImagePropertyMakerNikonQuality"
+public let kCGImagePropertyMakerNikonQuality: CFString = "Quality"
 
-public let kCGImagePropertyMakerNikonSharpenMode: CFString = "kCGImagePropertyMakerNikonSharpenMode"
+public let kCGImagePropertyMakerNikonSharpenMode: CFString = "SharpenMode"
 
-public let kCGImagePropertyMakerNikonShootingMode: CFString = "kCGImagePropertyMakerNikonShootingMode"
+public let kCGImagePropertyMakerNikonShootingMode: CFString = "ShootingMode"
 
-public let kCGImagePropertyMakerNikonShutterCount: CFString = "kCGImagePropertyMakerNikonShutterCount"
+public let kCGImagePropertyMakerNikonShutterCount: CFString = "ShutterCount"
 
-public let kCGImagePropertyMakerNikonWhiteBalanceMode: CFString = "kCGImagePropertyMakerNikonWhiteBalanceMode"
+public let kCGImagePropertyMakerNikonWhiteBalanceMode: CFString = "WhiteBalanceMode"
 
 public let kCGImagePropertyMakerOlympusDictionary: CFString = "{MakerOlympus}"
 
 public let kCGImagePropertyMakerPentaxDictionary: CFString = "{MakerPentax}"
 
-public let kCGImagePropertyNamedColorSpace: CFString = "kCGImagePropertyNamedColorSpace"
+public let kCGImagePropertyNamedColorSpace: CFString = "NamedColorSpace"
 
-public let kCGImagePropertyOpenEXRAspectRatio: CFString = "kCGImagePropertyOpenEXRAspectRatio"
+public let kCGImagePropertyOpenEXRAspectRatio: CFString = "AspectRatio"
 
-public let kCGImagePropertyOpenEXRCompression: CFString = "kCGImagePropertyOpenEXRCompression"
+public let kCGImagePropertyOpenEXRCompression: CFString = "Compression"
 
-public let kCGImagePropertyOpenEXRDictionary: CFString = "{OpenEXR}"
+public let kCGImagePropertyOpenEXRDictionary: CFString = "{EXR}"
 
 public let kCGImagePropertyOrientation: CFString = "Orientation"
 
-public let kCGImagePropertyPNGAuthor: CFString = "kCGImagePropertyPNGAuthor"
+public let kCGImagePropertyPNGAuthor: CFString = "Author"
 
-public let kCGImagePropertyPNGChromaticities: CFString = "kCGImagePropertyPNGChromaticities"
+public let kCGImagePropertyPNGChromaticities: CFString = "Chromaticities"
 
-public let kCGImagePropertyPNGComment: CFString = "kCGImagePropertyPNGComment"
+public let kCGImagePropertyPNGComment: CFString = "Comment"
 
 public let kCGImagePropertyPNGCompressionFilter: CFString = "kCGImagePropertyPNGCompressionFilter"
 
-public let kCGImagePropertyPNGCopyright: CFString = "kCGImagePropertyPNGCopyright"
+public let kCGImagePropertyPNGCopyright: CFString = "Copyright"
 
-public let kCGImagePropertyPNGCreationTime: CFString = "kCGImagePropertyPNGCreationTime"
+public let kCGImagePropertyPNGCreationTime: CFString = "Creation Time"
 
-public let kCGImagePropertyPNGDescription: CFString = "kCGImagePropertyPNGDescription"
+public let kCGImagePropertyPNGDescription: CFString = "Description"
 
 public let kCGImagePropertyPNGDictionary: CFString = "{PNG}"
 
-public let kCGImagePropertyPNGDisclaimer: CFString = "kCGImagePropertyPNGDisclaimer"
+public let kCGImagePropertyPNGDisclaimer: CFString = "Disclaimer"
 
-public let kCGImagePropertyPNGGamma: CFString = "kCGImagePropertyPNGGamma"
+public let kCGImagePropertyPNGGamma: CFString = "Gamma"
 
-public let kCGImagePropertyPNGInterlaceType: CFString = "kCGImagePropertyPNGInterlaceType"
+public let kCGImagePropertyPNGInterlaceType: CFString = "InterlaceType"
 
-public let kCGImagePropertyPNGModificationTime: CFString = "kCGImagePropertyPNGModificationTime"
+public let kCGImagePropertyPNGModificationTime: CFString = "ModificationTime"
 
-public let kCGImagePropertyPNGPixelsAspectRatio: CFString = "kCGImagePropertyPNGPixelsAspectRatio"
+public let kCGImagePropertyPNGPixelsAspectRatio: CFString = "PixelAspectRatio"
 
-public let kCGImagePropertyPNGSoftware: CFString = "kCGImagePropertyPNGSoftware"
+public let kCGImagePropertyPNGSoftware: CFString = "Software"
 
-public let kCGImagePropertyPNGSource: CFString = "kCGImagePropertyPNGSource"
+public let kCGImagePropertyPNGSource: CFString = "Source"
 
-public let kCGImagePropertyPNGTitle: CFString = "kCGImagePropertyPNGTitle"
+public let kCGImagePropertyPNGTitle: CFString = "Title"
 
 public let kCGImagePropertyPNGTransparency: CFString = "kCGImagePropertyPNGTransparency"
 
-public let kCGImagePropertyPNGWarning: CFString = "kCGImagePropertyPNGWarning"
+public let kCGImagePropertyPNGWarning: CFString = "Warning"
 
-public let kCGImagePropertyPNGXPixelsPerMeter: CFString = "kCGImagePropertyPNGXPixelsPerMeter"
+public let kCGImagePropertyPNGXPixelsPerMeter: CFString = "XPixelsPerMeter"
 
-public let kCGImagePropertyPNGYPixelsPerMeter: CFString = "kCGImagePropertyPNGYPixelsPerMeter"
+public let kCGImagePropertyPNGYPixelsPerMeter: CFString = "YPixelsPerMeter"
 
-public let kCGImagePropertyPNGsRGBIntent: CFString = "kCGImagePropertyPNGsRGBIntent"
+public let kCGImagePropertyPNGsRGBIntent: CFString = "sRGBIntent"
 
 public let kCGImagePropertyPVREncoder: CFString = "kCGImagePropertyPVREncoder"
 
@@ -1367,89 +1369,89 @@ public let kCGImagePropertyPixelHeight: CFString = "PixelHeight"
 
 public let kCGImagePropertyPixelWidth: CFString = "PixelWidth"
 
-public let kCGImagePropertyPrimaryImage: CFString = "kCGImagePropertyPrimaryImage"
+public let kCGImagePropertyPrimaryImage: CFString = "PrimaryImage"
 
 public let kCGImagePropertyProfileName: CFString = "ProfileName"
 
 public let kCGImagePropertyRawDictionary: CFString = "{Raw}"
 
-public let kCGImagePropertyTGACompression: CFString = "kCGImagePropertyTGACompression"
+public let kCGImagePropertyTGACompression: CFString = "Compression"
 
 public let kCGImagePropertyTGADictionary: CFString = "{TGA}"
 
-public let kCGImagePropertyTIFFArtist: CFString = "kCGImagePropertyTIFFArtist"
+public let kCGImagePropertyTIFFArtist: CFString = "Artist"
 
-public let kCGImagePropertyTIFFCompression: CFString = "kCGImagePropertyTIFFCompression"
+public let kCGImagePropertyTIFFCompression: CFString = "Compression"
 
-public let kCGImagePropertyTIFFCopyright: CFString = "kCGImagePropertyTIFFCopyright"
+public let kCGImagePropertyTIFFCopyright: CFString = "Copyright"
 
-public let kCGImagePropertyTIFFDateTime: CFString = "kCGImagePropertyTIFFDateTime"
+public let kCGImagePropertyTIFFDateTime: CFString = "DateTime"
 
 public let kCGImagePropertyTIFFDictionary: CFString = "{TIFF}"
 
-public let kCGImagePropertyTIFFDocumentName: CFString = "kCGImagePropertyTIFFDocumentName"
+public let kCGImagePropertyTIFFDocumentName: CFString = "DocumentName"
 
-public let kCGImagePropertyTIFFHostComputer: CFString = "kCGImagePropertyTIFFHostComputer"
+public let kCGImagePropertyTIFFHostComputer: CFString = "HostComputer"
 
-public let kCGImagePropertyTIFFImageDescription: CFString = "kCGImagePropertyTIFFImageDescription"
+public let kCGImagePropertyTIFFImageDescription: CFString = "ImageDescription"
 
-public let kCGImagePropertyTIFFMake: CFString = "kCGImagePropertyTIFFMake"
+public let kCGImagePropertyTIFFMake: CFString = "Make"
 
-public let kCGImagePropertyTIFFModel: CFString = "kCGImagePropertyTIFFModel"
+public let kCGImagePropertyTIFFModel: CFString = "Model"
 
-public let kCGImagePropertyTIFFOrientation: CFString = "kCGImagePropertyTIFFOrientation"
+public let kCGImagePropertyTIFFOrientation: CFString = "Orientation"
 
-public let kCGImagePropertyTIFFPhotometricInterpretation: CFString = "kCGImagePropertyTIFFPhotometricInterpretation"
+public let kCGImagePropertyTIFFPhotometricInterpretation: CFString = "PhotometricInterpretation"
 
-public let kCGImagePropertyTIFFPrimaryChromaticities: CFString = "kCGImagePropertyTIFFPrimaryChromaticities"
+public let kCGImagePropertyTIFFPrimaryChromaticities: CFString = "PrimaryChromaticities"
 
-public let kCGImagePropertyTIFFResolutionUnit: CFString = "kCGImagePropertyTIFFResolutionUnit"
+public let kCGImagePropertyTIFFResolutionUnit: CFString = "ResolutionUnit"
 
-public let kCGImagePropertyTIFFSoftware: CFString = "kCGImagePropertyTIFFSoftware"
+public let kCGImagePropertyTIFFSoftware: CFString = "Software"
 
-public let kCGImagePropertyTIFFTileLength: CFString = "kCGImagePropertyTIFFTileLength"
+public let kCGImagePropertyTIFFTileLength: CFString = "TileLength"
 
-public let kCGImagePropertyTIFFTileWidth: CFString = "kCGImagePropertyTIFFTileWidth"
+public let kCGImagePropertyTIFFTileWidth: CFString = "TileWidth"
 
-public let kCGImagePropertyTIFFTransferFunction: CFString = "kCGImagePropertyTIFFTransferFunction"
+public let kCGImagePropertyTIFFTransferFunction: CFString = "TransferFunction"
 
-public let kCGImagePropertyTIFFWhitePoint: CFString = "kCGImagePropertyTIFFWhitePoint"
+public let kCGImagePropertyTIFFWhitePoint: CFString = "WhitePoint"
 
-public let kCGImagePropertyTIFFXPosition: CFString = "kCGImagePropertyTIFFXPosition"
+public let kCGImagePropertyTIFFXPosition: CFString = "XPosition"
 
-public let kCGImagePropertyTIFFXResolution: CFString = "kCGImagePropertyTIFFXResolution"
+public let kCGImagePropertyTIFFXResolution: CFString = "XResolution"
 
-public let kCGImagePropertyTIFFYPosition: CFString = "kCGImagePropertyTIFFYPosition"
+public let kCGImagePropertyTIFFYPosition: CFString = "YPosition"
 
-public let kCGImagePropertyTIFFYResolution: CFString = "kCGImagePropertyTIFFYResolution"
+public let kCGImagePropertyTIFFYResolution: CFString = "YResolution"
 
-public let kCGImagePropertyThumbnailImages: CFString = "kCGImagePropertyThumbnailImages"
+public let kCGImagePropertyThumbnailImages: CFString = "ThumbnailImages"
 
-public let kCGImagePropertyWebPCanvasPixelHeight: CFString = "kCGImagePropertyWebPCanvasPixelHeight"
+public let kCGImagePropertyWebPCanvasPixelHeight: CFString = "CanvasPixelHeight"
 
-public let kCGImagePropertyWebPCanvasPixelWidth: CFString = "kCGImagePropertyWebPCanvasPixelWidth"
+public let kCGImagePropertyWebPCanvasPixelWidth: CFString = "CanvasPixelWidth"
 
 public let kCGImagePropertyWebPDelayTime: CFString = "DelayTime"
 
 public let kCGImagePropertyWebPDictionary: CFString = "{WebP}"
 
-public let kCGImagePropertyWebPFrameInfoArray: CFString = "kCGImagePropertyWebPFrameInfoArray"
+public let kCGImagePropertyWebPFrameInfoArray: CFString = "FrameInfo"
 
 public let kCGImagePropertyWebPLoopCount: CFString = "LoopCount"
 
 public let kCGImagePropertyWebPUnclampedDelayTime: CFString = "UnclampedDelayTime"
 
-public let kCGImagePropertyWidth: CFString = "kCGImagePropertyWidth"
+public let kCGImagePropertyWidth: CFString = "Width"
 
 public let kCGImageProviderPreferredTileHeight: CFString = "kCGImageProviderPreferredTileHeight"
 
 public let kCGImageProviderPreferredTileWidth: CFString = "kCGImageProviderPreferredTileWidth"
 
-public let kCGImageSourceCreateThumbnailFromImageAlways: CFString = "CreateThumbnailFromImageAlways"
+public let kCGImageSourceCreateThumbnailFromImageAlways: CFString = "kCGImageSourceCreateThumbnailFromImageAlways"
 
-public let kCGImageSourceCreateThumbnailFromImageIfAbsent: CFString = "CreateThumbnailFromImageIfAbsent"
+public let kCGImageSourceCreateThumbnailFromImageIfAbsent: CFString = "kCGImageSourceCreateThumbnailFromImageIfAbsent"
 
-public let kCGImageSourceCreateThumbnailWithTransform: CFString = "CreateThumbnailWithTransform"
+public let kCGImageSourceCreateThumbnailWithTransform: CFString = "kCGImageSourceCreateThumbnailWithTransform"
 
 public let kCGImageSourceDecodeRequest: CFString = "kCGImageSourceDecodeRequest"
 
@@ -1463,58 +1465,60 @@ public let kCGImageSourceGenerateImageSpecificLumaScaling: CFString = "kCGImageS
 
 public let kCGImageSourceShouldAllowFloat: CFString = "kCGImageSourceShouldAllowFloat"
 
-public let kCGImageSourceShouldCache: CFString = "ShouldCache"
+public let kCGImageSourceShouldCache: CFString = "kCGImageSourceShouldCache"
 
-public let kCGImageSourceShouldCacheImmediately: CFString = "ShouldCacheImmediately"
+public let kCGImageSourceShouldCacheImmediately: CFString = "kCGImageSourceShouldCacheImmediately"
 
 public let kCGImageSourceSubsampleFactor: CFString = "kCGImageSourceSubsampleFactor"
 
-public let kCGImageSourceThumbnailMaxPixelSize: CFString = "ThumbnailMaxPixelSize"
+public let kCGImageSourceThumbnailMaxPixelSize: CFString = "kCGImageSourceThumbnailMaxPixelSize"
 
 public let kCGImageSourceTypeIdentifierHint: CFString = "kCGImageSourceTypeIdentifierHint"
 
-public let kIIOCameraExtrinsics_CoordinateSystemID: CFString = "kIIOCameraExtrinsics_CoordinateSystemID"
+public let kIIOCameraExtrinsics_CoordinateSystemID: CFString = "CoordinateSystemID"
 
-public let kIIOCameraExtrinsics_Position: CFString = "kIIOCameraExtrinsics_Position"
+public let kIIOCameraExtrinsics_Position: CFString = "Position"
 
-public let kIIOCameraExtrinsics_Rotation: CFString = "kIIOCameraExtrinsics_Rotation"
+public let kIIOCameraExtrinsics_Rotation: CFString = "Rotation"
 
-public let kIIOCameraModelType_GenericPinhole: CFString = "kIIOCameraModelType_GenericPinhole"
+public let kIIOCameraModelType_GenericPinhole: CFString = "GenericPinhole"
 
-public let kIIOCameraModelType_SimplifiedPinhole: CFString = "kIIOCameraModelType_SimplifiedPinhole"
+public let kIIOCameraModelType_SimplifiedPinhole: CFString = "SimplifiedPinhole"
 
-public let kIIOCameraModel_Intrinsics: CFString = "kIIOCameraModel_Intrinsics"
+public let kIIOCameraModel_Intrinsics: CFString = "Intrinsics"
 
-public let kIIOCameraModel_ModelType: CFString = "kIIOCameraModel_ModelType"
+public let kIIOCameraModel_ModelType: CFString = "ModelType"
 
-public let kIIOMetadata_CameraExtrinsicsKey: CFString = "kIIOMetadata_CameraExtrinsicsKey"
+public let kIIOMetadata_CameraExtrinsicsKey: CFString = "CameraExtrinsics"
 
-public let kIIOMetadata_CameraModelKey: CFString = "kIIOMetadata_CameraModelKey"
+public let kIIOMetadata_CameraModelKey: CFString = "CameraModel"
 
-public let kIIOMonoscopicImageLocation_Center: CFString = "kIIOMonoscopicImageLocation_Center"
+public let kIIOMonoscopicImageLocation_Center: CFString = "Center"
 
-public let kIIOMonoscopicImageLocation_Left: CFString = "kIIOMonoscopicImageLocation_Left"
+public let kIIOMonoscopicImageLocation_Left: CFString = "Left"
 
-public let kIIOMonoscopicImageLocation_Right: CFString = "kIIOMonoscopicImageLocation_Right"
+public let kIIOMonoscopicImageLocation_Right: CFString = "Right"
 
-public let kIIOMonoscopicImageLocation_Unspecified: CFString = "kIIOMonoscopicImageLocation_Unspecified"
+public let kIIOMonoscopicImageLocation_Unspecified: CFString = "Unspecified"
 
-public let kIIOStereoAggressors_Severity: CFString = "kIIOStereoAggressors_Severity"
+public let kIIOStereoAggressors_Severity: CFString = "Severity"
 
-public let kIIOStereoAggressors_SubTypeURI: CFString = "kIIOStereoAggressors_SubTypeURI"
+public let kIIOStereoAggressors_SubTypeURI: CFString = "SubTypeURI"
 
-public let kIIOStereoAggressors_Type: CFString = "kIIOStereoAggressors_Type"
+public let kIIOStereoAggressors_Type: CFString = "Type"
 
-public let IIO_HAS_IOSURFACE: CFString = "IIO_HAS_IOSURFACE"
+// PNG filter bitmask macros. Measured 2026-09-05 Apple ImageIO:
+// NONE=8 SUB=16 UP=32 AVG=64 PAETH=128 NO_FILTERS=0 IIO_HAS_IOSURFACE=1.
+public let IIO_HAS_IOSURFACE: Int32 = 1
 
-public let IMAGEIO_PNG_FILTER_AVG: CFString = "IMAGEIO_PNG_FILTER_AVG"
+public let IMAGEIO_PNG_FILTER_AVG: Int32 = 64
 
-public let IMAGEIO_PNG_FILTER_NONE: CFString = "IMAGEIO_PNG_FILTER_NONE"
+public let IMAGEIO_PNG_FILTER_NONE: Int32 = 8
 
-public let IMAGEIO_PNG_FILTER_PAETH: CFString = "IMAGEIO_PNG_FILTER_PAETH"
+public let IMAGEIO_PNG_FILTER_PAETH: Int32 = 128
 
-public let IMAGEIO_PNG_FILTER_SUB: CFString = "IMAGEIO_PNG_FILTER_SUB"
+public let IMAGEIO_PNG_FILTER_SUB: Int32 = 16
 
-public let IMAGEIO_PNG_FILTER_UP: CFString = "IMAGEIO_PNG_FILTER_UP"
+public let IMAGEIO_PNG_FILTER_UP: Int32 = 32
 
-public let IMAGEIO_PNG_NO_FILTERS: CFString = "IMAGEIO_PNG_NO_FILTERS"
+public let IMAGEIO_PNG_NO_FILTERS: Int32 = 0

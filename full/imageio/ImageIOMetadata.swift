@@ -113,17 +113,101 @@ public func CGImageMetadataCreateMutableCopy(_ metadata: CGImageMetadata) -> CGM
 }
 
 public func CGImageMetadataCreateFromXMPData(_ data: CFData) -> CGImageMetadata? {
-    _ = data
-    return nil
+    guard let xml = String(data: data, encoding: .utf8), !xml.isEmpty else {
+        return nil
+    }
+    let metadata = CGMutableImageMetadata()
+    var cursor = xml.startIndex
+    while cursor < xml.endIndex {
+        guard xml[cursor] == "<",
+              let gt = imageioFind(xml, ">", from: cursor) else {
+            cursor = xml.index(after: cursor)
+            continue
+        }
+        let tag = String(xml[xml.index(after: cursor)..<gt])
+        if tag.hasPrefix("/") || tag.hasPrefix("?") || tag.hasPrefix("!") {
+            cursor = xml.index(after: gt)
+            continue
+        }
+        if imageioHasPrefix(tag, "rdf:") || imageioHasPrefix(tag, "x:") {
+            cursor = xml.index(after: gt)
+            continue
+        }
+        let name: String
+        if let space = tag.firstIndex(of: " ") {
+            name = String(tag[tag.startIndex..<space])
+        } else {
+            name = tag
+        }
+        if name.isEmpty || name.hasPrefix("/") {
+            cursor = xml.index(after: gt)
+            continue
+        }
+        let close = "</" + name + ">"
+        guard let end = imageioFind(xml, close, from: xml.index(after: gt)) else {
+            cursor = xml.index(after: gt)
+            continue
+        }
+        let inner = String(xml[xml.index(after: gt)..<end])
+        if inner.hasPrefix("<") {
+            cursor = xml.index(after: gt)
+            continue
+        }
+        _ = CGImageMetadataSetValueWithPath(metadata, nil, name, inner)
+        cursor = end
+    }
+    return metadata.tags.isEmpty ? nil : metadata
 }
 
 public func CGImageMetadataCreateXMPData(
     _ metadata: CGImageMetadata,
     _ options: CFDictionary?
 ) -> CFData? {
-    _ = metadata
     _ = options
+    guard !metadata.tags.isEmpty else { return nil }
+    var body = """
+    <x:xmpmeta xmlns:x="adobe:ns:meta/">
+       <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about=""
+    """
+    var seen: [CFString] = []
+    for tag in metadata.tags {
+        let xmlns = tag.xmlns
+        let prefix = tag.prefix ?? ""
+        var already = false
+        for item in seen {
+            if item == prefix { already = true; break }
+        }
+        if !xmlns.isEmpty, !prefix.isEmpty, !already {
+            seen.append(prefix)
+            body += "\n            xmlns:\(prefix)=\"\(xmlns)\""
+        }
+    }
+    body += ">\n"
+    for tag in metadata.tags {
+        let value = "\(tag.value)"
+        body += "         <\(tag.path)>\(value)</\(tag.path)>\n"
+    }
+    body += """
+          </rdf:Description>
+       </rdf:RDF>
+    </x:xmpmeta>
+
+    """
+    return Data(body.utf8)
+}
+
+private func imageioFind(_ haystack: String, _ needle: String, from: String.Index) -> String.Index? {
+    var index = from
+    while index < haystack.endIndex {
+        if haystack[index...].hasPrefix(needle) { return index }
+        index = haystack.index(after: index)
+    }
     return nil
+}
+
+private func imageioHasPrefix(_ value: String, _ prefix: String) -> Bool {
+    value.hasPrefix(prefix)
 }
 
 public func CGImageMetadataCopyTags(_ metadata: CGImageMetadata) -> CFArray? {
