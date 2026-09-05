@@ -295,13 +295,29 @@ open class UIScrollView: UIView {
         set { bounds.origin = newValue }
     }
 
+    /// MEASURED Pager fling, iPhone SE 2x / iOS 26.1, named 60 Hz frames
+    /// (confprobe wait, not a layer seek): `setContentOffset(400, animated:
+    /// true)` from 0: n=0:0 (t3000) n=8:165.5 (t3133) n=16:388 (t3267)
+    /// n=30:400 (t3500). Ease-in-out over 0.3 s, no extra delay. Catalyst
+    /// keeps 0.25.
+    static var animatedContentOffsetDuration: Double {
+        OpenUIKitRuntime.systemFontCut == .iOS ? 0.3 : 0.25
+    }
+
     public func setContentOffset(_ offset: CGPoint, animated: Bool) {
         stopScrollAnimation()
         if animated {
-            UIView.animate(withDuration: 0.25, delay: 0, options: [],
+            UIView.animate(withDuration: UIScrollView.animatedContentOffsetDuration,
+                           delay: 0,
+                           options: [],
                            animations: { self.contentOffset = offset },
                            completion: { [weak self] _ in
                                guard let self else { return }
+                               // CA removes the bounds animation on completion;
+                               // without this a later model change stays pinned
+                               // at `to` (Pager t1200 / t3500, iPhone SE 2x).
+                               self._removeFinishedAnimations(
+                                   at: OpenUIKitRuntime.animationTime)
                                self.delegate?.scrollViewDidEndScrollingAnimation(self)
                            })
         } else {
@@ -386,6 +402,12 @@ open class UIScrollView: UIView {
     public var bounces = true
     public var alwaysBounceVertical = false
     public var alwaysBounceHorizontal = false
+    /// When true, a finger-flick lands on a multiple of `bounds.width`
+    /// (horizontal) / `bounds.height` (vertical). Programmatic
+    /// `setContentOffset(animated:)` still goes to the requested offset;
+    /// the paging snap is the deceleration target. Default false, matching
+    /// UIKit. The curve itself is measured from Pager `fling` (iPhone SE 2x).
+    public var isPagingEnabled = false
     public var showsVerticalScrollIndicator = true
     public var showsHorizontalScrollIndicator = true
 
