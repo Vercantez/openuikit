@@ -4,7 +4,7 @@ open class MLDictionaryConstraint: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public private(set) var keyType: MLFeatureType
 
-    init(keyType: MLFeatureType) {
+    public init(keyType: MLFeatureType) {
         self.keyType = keyType
         super.init()
     }
@@ -18,7 +18,7 @@ open class MLImageSize: NSObject, NSSecureCoding {
     public private(set) var pixelsWide: Int
     public private(set) var pixelsHigh: Int
 
-    init(pixelsWide: Int, pixelsHigh: Int) {
+    public init(pixelsWide: Int, pixelsHigh: Int) {
         self.pixelsWide = pixelsWide
         self.pixelsHigh = pixelsHigh
         super.init()
@@ -35,7 +35,7 @@ open class MLImageSizeConstraint: NSObject, NSSecureCoding {
     public private(set) var pixelsWideRange: NSRange
     public private(set) var pixelsHighRange: NSRange
 
-    init(
+    public init(
         type: MLImageSizeConstraintType,
         enumeratedImageSizes: [MLImageSize] = [],
         pixelsWideRange: NSRange = NSRange(location: 0, length: 0),
@@ -59,7 +59,7 @@ open class MLImageConstraint: NSObject, NSSecureCoding {
     public private(set) var pixelFormatType: UInt32
     public private(set) var sizeConstraint: MLImageSizeConstraint
 
-    init(
+    public init(
         pixelsWide: Int,
         pixelsHigh: Int,
         pixelFormatType: UInt32,
@@ -82,7 +82,7 @@ open class MLMultiArrayShapeConstraint: NSObject, NSSecureCoding {
     public private(set) var enumeratedShapes: [[NSNumber]]
     public private(set) var sizeRangeForDimension: [NSValue]
 
-    init(
+    public init(
         type: MLMultiArrayShapeConstraintType,
         enumeratedShapes: [[NSNumber]] = [],
         sizeRangeForDimension: [NSValue] = []
@@ -103,7 +103,7 @@ open class MLMultiArrayConstraint: NSObject, NSSecureCoding {
     public private(set) var dataType: MLMultiArrayDataType
     public private(set) var shapeConstraint: MLMultiArrayShapeConstraint
 
-    init(shape: [NSNumber], dataType: MLMultiArrayDataType, shapeConstraint: MLMultiArrayShapeConstraint) {
+    public init(shape: [NSNumber], dataType: MLMultiArrayDataType, shapeConstraint: MLMultiArrayShapeConstraint) {
         self.shape = shape
         self.dataType = dataType
         self.shapeConstraint = shapeConstraint
@@ -119,7 +119,7 @@ open class MLSequenceConstraint: NSObject, NSSecureCoding {
     public private(set) var valueDescription: MLFeatureDescription
     public private(set) var countRange: NSRange
 
-    init(valueDescription: MLFeatureDescription, countRange: NSRange) {
+    public init(valueDescription: MLFeatureDescription, countRange: NSRange) {
         self.valueDescription = valueDescription
         self.countRange = countRange
         super.init()
@@ -134,7 +134,7 @@ open class MLStateConstraint: NSObject, NSSecureCoding {
     public private(set) var dataType: MLMultiArrayDataType
     public private(set) var bufferShape: [Int]
 
-    init(dataType: MLMultiArrayDataType, bufferShape: [Int]) {
+    public init(dataType: MLMultiArrayDataType, bufferShape: [Int]) {
         self.dataType = dataType
         self.bufferShape = bufferShape
         super.init()
@@ -150,7 +150,7 @@ open class MLNumericConstraint: NSObject, NSSecureCoding {
     public private(set) var maxNumber: NSNumber
     public private(set) var enumeratedNumbers: Set<NSNumber>?
 
-    init(minNumber: NSNumber, maxNumber: NSNumber, enumeratedNumbers: Set<NSNumber>? = nil) {
+    public init(minNumber: NSNumber, maxNumber: NSNumber, enumeratedNumbers: Set<NSNumber>? = nil) {
         self.minNumber = minNumber
         self.maxNumber = maxNumber
         self.enumeratedNumbers = enumeratedNumbers
@@ -167,7 +167,7 @@ open class MLParameterDescription: NSObject, NSSecureCoding {
     public private(set) var defaultValue: Any
     public private(set) var numericConstraint: MLNumericConstraint?
 
-    init(key: MLParameterKey, defaultValue: Any, numericConstraint: MLNumericConstraint? = nil) {
+    public init(key: MLParameterKey, defaultValue: Any, numericConstraint: MLNumericConstraint? = nil) {
         self.key = key
         self.defaultValue = defaultValue
         self.numericConstraint = numericConstraint
@@ -181,16 +181,16 @@ open class MLParameterDescription: NSObject, NSSecureCoding {
 open class MLFeatureDescription: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
 
-    public private(set) var name: String
-    public private(set) var type: MLFeatureType
-    public private(set) var isOptional: Bool
-    public private(set) var dictionaryConstraint: MLDictionaryConstraint?
-    public private(set) var imageConstraint: MLImageConstraint?
-    public private(set) var multiArrayConstraint: MLMultiArrayConstraint?
-    public private(set) var sequenceConstraint: MLSequenceConstraint?
-    public private(set) var stateConstraint: MLStateConstraint?
+    public internal(set) var name: String
+    public internal(set) var type: MLFeatureType
+    public internal(set) var isOptional: Bool
+    public internal(set) var dictionaryConstraint: MLDictionaryConstraint?
+    public internal(set) var imageConstraint: MLImageConstraint?
+    public internal(set) var multiArrayConstraint: MLMultiArrayConstraint?
+    public internal(set) var sequenceConstraint: MLSequenceConstraint?
+    public internal(set) var stateConstraint: MLStateConstraint?
 
-    init(
+    public init(
         name: String,
         type: MLFeatureType,
         isOptional: Bool = false,
@@ -232,18 +232,18 @@ open class MLFeatureDescription: NSObject, NSSecureCoding {
 open class MLModelDescription: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
 
-    public private(set) var inputDescriptionsByName: [String: MLFeatureDescription]
-    public private(set) var outputDescriptionsByName: [String: MLFeatureDescription]
-    public private(set) var stateDescriptionsByName: [String: MLFeatureDescription]
-    public private(set) var trainingInputDescriptionsByName: [String: MLFeatureDescription]
-    public private(set) var predictedFeatureName: String?
-    public private(set) var predictedProbabilitiesName: String?
-    public private(set) var metadata: [MLModelMetadataKey: Any]
-    public private(set) var classLabels: [Any]?
-    public private(set) var isUpdatable: Bool
-    public private(set) var parameterDescriptionsByKey: [MLParameterKey: MLParameterDescription]
+    public internal(set) var inputDescriptionsByName: [String: MLFeatureDescription]
+    public internal(set) var outputDescriptionsByName: [String: MLFeatureDescription]
+    public internal(set) var stateDescriptionsByName: [String: MLFeatureDescription]
+    public internal(set) var trainingInputDescriptionsByName: [String: MLFeatureDescription]
+    public internal(set) var predictedFeatureName: String?
+    public internal(set) var predictedProbabilitiesName: String?
+    public internal(set) var metadata: [MLModelMetadataKey: Any]
+    public internal(set) var classLabels: [Any]?
+    public internal(set) var isUpdatable: Bool
+    public internal(set) var parameterDescriptionsByKey: [MLParameterKey: MLParameterDescription]
 
-    init(
+    public init(
         inputDescriptionsByName: [String: MLFeatureDescription] = [:],
         outputDescriptionsByName: [String: MLFeatureDescription] = [:],
         stateDescriptionsByName: [String: MLFeatureDescription] = [:],

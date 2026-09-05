@@ -87,7 +87,6 @@ public protocol MLShapedArrayProtocol<Scalar>: ExpressibleByArrayLiteral {
 extension MLShapedArrayProtocol {
     public var scalarCount: Int { coreMLElementCount(shape: shape) }
     public var isScalar: Bool { shape.isEmpty }
-    public var count: Int { shape.first ?? 1 }
 
     public init(bytesNoCopy bytes: UnsafeRawPointer, shape: [Int], deallocator: Data.Deallocator) {
         self.init(
@@ -126,6 +125,7 @@ public struct MLShapedArray<Scalar: MLShapedArrayScalar>: MLShapedArrayProtocol 
     public var startIndex: Int { 0 }
     public var endIndex: Int { count }
     public var indices: Range<Int> { startIndex..<endIndex }
+    public var count: Int { shape.first ?? 1 }
 
     public var scalars: [Scalar] {
         get { storage }
@@ -214,7 +214,7 @@ public struct MLShapedArray<Scalar: MLShapedArrayScalar>: MLShapedArrayProtocol 
         self.shape = shape
         self.strides = coreMLCContiguousStrides(shape: shape)
         let count = coreMLElementCount(shape: shape)
-        let pointer = UnsafeMutablePointer<Scalar>.allocate(capacity: max(count, 1))
+        let pointer = UnsafeMutablePointer<Scalar>.allocate(capacity: Swift.max(count, 1))
         defer { pointer.deallocate() }
         var buffer = UnsafeMutableBufferPointer(start: pointer, count: count)
         try initializer(&buffer, self.strides)
@@ -349,7 +349,7 @@ public struct MLShapedArray<Scalar: MLShapedArrayScalar>: MLShapedArrayProtocol 
 
     public func expandingShape(at axis: Int) -> MLShapedArray<Scalar> {
         var newShape = shape
-        let clamped = axis < 0 ? 0 : min(axis, newShape.count)
+        let clamped = axis < 0 ? 0 : Swift.min(axis, newShape.count)
         newShape.insert(1, at: clamped)
         return reshaped(to: newShape)
     }
@@ -361,6 +361,87 @@ public struct MLShapedArray<Scalar: MLShapedArrayScalar>: MLShapedArrayProtocol 
     public func changingLayout(to bufferLayout: MLShapedArrayBufferLayout) -> MLShapedArray<Scalar> {
         _ = bufferLayout
         return self
+    }
+
+    public init<S>(concatenating shapedArrays: S, alongAxis: Int) where Scalar == S.Element.Scalar, S: Sequence, S.Element: MLShapedArrayProtocol {
+        let arrays = Array(shapedArrays)
+        precondition(!arrays.isEmpty, "concatenating empty MLShapedArray list")
+        let rank = arrays[0].shape.count
+        var axis = alongAxis
+        if axis < 0 { axis += rank }
+        precondition(axis >= 0 && axis < rank)
+        var dims = arrays[0].shape
+        var axisCount = 0
+        var values: [Scalar] = []
+        for array in arrays {
+            precondition(array.shape.count == rank)
+            for (index, dim) in array.shape.enumerated() where index != axis {
+                precondition(dim == dims[index])
+            }
+            axisCount += array.shape[axis]
+            array.withUnsafeShapedBufferPointer { buffer, _, _ in
+                if Scalar.self == S.Element.Scalar.self {
+                    values.append(contentsOf: Array(buffer))
+                }
+            }
+        }
+        dims[axis] = axisCount
+        if axis == 0 {
+            self.init(scalars: values, shape: dims)
+        } else {
+            let concat = MLMultiArray(
+                byConcatenatingMultiArrays: arrays.map { MLMultiArray($0) },
+                alongAxis: axis,
+                dataType: Scalar.multiArrayDataType
+            )
+            self.init(converting: concat)
+        }
+    }
+
+    public func index(after i: Int) -> Int { i + 1 }
+    public func index(before i: Int) -> Int { i - 1 }
+
+    public subscript(bounds: Range<Int>) -> MLShapedArraySlice<Scalar> {
+        get {
+            precondition(bounds.lowerBound >= startIndex && bounds.upperBound <= endIndex)
+            var newShape = shape
+            if newShape.isEmpty {
+                return MLShapedArraySlice(scalars: bounds.isEmpty ? [] : storage, shape: [])
+            }
+            newShape[0] = bounds.count
+            let remainder = Array(shape.dropFirst())
+            let childCount = coreMLElementCount(shape: remainder)
+            let start = bounds.lowerBound * childCount
+            let length = bounds.count * childCount
+            let values = (length == 0 || storage.isEmpty)
+                ? [Scalar]()
+                : Array(storage[start..<(start + length)])
+            return MLShapedArraySlice(scalars: values, shape: newShape)
+        }
+        set {
+            var rows: [MLShapedArraySlice<Scalar>] = []
+            if bounds.lowerBound > 0 {
+                rows.append(contentsOf: (0..<bounds.lowerBound).map { self[$0] })
+            }
+            rows.append(contentsOf: Array(newValue))
+            if bounds.upperBound < count {
+                rows.append(contentsOf: (bounds.upperBound..<count).map { self[$0] })
+            }
+            if rows.isEmpty {
+                var emptyShape = shape
+                if !emptyShape.isEmpty {
+                    emptyShape[0] = 0
+                }
+                self.shape = emptyShape
+                self.strides = coreMLCContiguousStrides(shape: emptyShape)
+                self.storage = []
+                return
+            }
+            let rebuilt = MLShapedArray<Scalar>(concatenating: rows, alongAxis: 0)
+            self.shape = rebuilt.shape
+            self.strides = rebuilt.strides
+            self.storage = rebuilt.scalars
+        }
     }
 
     private func slice(at index: Int) -> MLShapedArraySlice<Scalar> {
@@ -377,6 +458,8 @@ public struct MLShapedArray<Scalar: MLShapedArrayScalar>: MLShapedArrayProtocol 
         zip(indices, strides).reduce(0) { $0 + $1.0 * $1.1 }
     }
 }
+
+extension MLShapedArray: RandomAccessCollection, MutableCollection {}
 
 extension MLShapedArray: Equatable where Scalar: Equatable {
     public static func == (lhs: MLShapedArray<Scalar>, rhs: MLShapedArray<Scalar>) -> Bool {
@@ -420,6 +503,10 @@ public struct MLShapedArraySlice<Scalar: MLShapedArrayScalar>: MLShapedArrayProt
     public var startIndex: Int { 0 }
     public var endIndex: Int { count }
     public var indices: Range<Int> { startIndex..<endIndex }
+    public var count: Int { shape.first ?? 1 }
+    public var description: String {
+        "MLShapedArraySlice<\(Scalar.self)>(shape: \(shape), scalarCount: \(scalarCount))"
+    }
     public var scalars: [Scalar] {
         get { storage }
         set {
@@ -493,7 +580,7 @@ public struct MLShapedArraySlice<Scalar: MLShapedArrayScalar>: MLShapedArrayProt
         self.shape = shape
         self.strides = coreMLCContiguousStrides(shape: shape)
         let count = coreMLElementCount(shape: shape)
-        let pointer = UnsafeMutablePointer<Scalar>.allocate(capacity: max(count, 1))
+        let pointer = UnsafeMutablePointer<Scalar>.allocate(capacity: Swift.max(count, 1))
         defer { pointer.deallocate() }
         var buffer = UnsafeMutableBufferPointer(start: pointer, count: count)
         try initializer(&buffer, self.strides)
@@ -596,7 +683,87 @@ public struct MLShapedArraySlice<Scalar: MLShapedArrayScalar>: MLShapedArrayProt
         _ = bufferLayout
         return self
     }
+
+    public subscript(index: Int) -> MLShapedArraySlice<Scalar> {
+        get { slice(at: index) }
+        set {
+            let existing = slice(at: index)
+            precondition(existing.shape == newValue.shape)
+            let childCount = existing.scalarCount
+            let start = index * childCount
+            for offset in 0..<childCount {
+                storage[start + offset] = newValue.scalars[offset]
+            }
+        }
+    }
+
+    public init<S>(concatenating shapedArrays: S, alongAxis: Int) where Scalar == S.Element.Scalar, S: Sequence, S.Element: MLShapedArrayProtocol {
+        let array = MLShapedArray<Scalar>(concatenating: shapedArrays, alongAxis: alongAxis)
+        self.shape = array.shape
+        self.strides = array.strides
+        self.storage = array.scalars
+    }
+
+    public func index(after i: Int) -> Int { i + 1 }
+    public func index(before i: Int) -> Int { i - 1 }
+
+    public subscript(bounds: Range<Int>) -> MLShapedArraySlice<Scalar> {
+        get {
+            precondition(bounds.lowerBound >= startIndex && bounds.upperBound <= endIndex)
+            var newShape = shape
+            if newShape.isEmpty {
+                return MLShapedArraySlice(scalars: bounds.isEmpty ? [] : storage, shape: [])
+            }
+            newShape[0] = bounds.count
+            let remainder = Array(shape.dropFirst())
+            let childCount = coreMLElementCount(shape: remainder)
+            let start = bounds.lowerBound * childCount
+            let length = bounds.count * childCount
+            let values = (length == 0 || storage.isEmpty)
+                ? [Scalar]()
+                : Array(storage[start..<(start + length)])
+            return MLShapedArraySlice(scalars: values, shape: newShape)
+        }
+        set {
+            replaceSubrange(bounds, with: Array(newValue))
+        }
+    }
+
+    public init() {
+        self.init(scalars: [Scalar](), shape: [0])
+    }
+
+    public mutating func replaceSubrange<C>(
+        _ subrange: Range<Int>,
+        with newElements: C
+    ) where C: Collection, C.Element == MLShapedArraySlice<Scalar> {
+        var rows = (0..<count).map { self[$0] }
+        rows.replaceSubrange(subrange, with: Array(newElements))
+        var newShape = shape
+        if newShape.isEmpty {
+            self = MLShapedArraySlice(scalars: rows.first?.scalars ?? [], shape: [])
+            return
+        }
+        newShape[0] = rows.count
+        var values: [Scalar] = []
+        for row in rows {
+            values.append(contentsOf: row.scalars)
+        }
+        self = MLShapedArraySlice(scalars: values, shape: newShape)
+    }
+
+    private func slice(at index: Int) -> MLShapedArraySlice<Scalar> {
+        if shape.isEmpty {
+            return MLShapedArraySlice(scalars: storage, shape: [])
+        }
+        let remainder = Array(shape.dropFirst())
+        let childCount = coreMLElementCount(shape: remainder)
+        let start = index * childCount
+        return MLShapedArraySlice(scalars: Array(storage[start..<(start + childCount)]), shape: remainder)
+    }
 }
+
+extension MLShapedArraySlice: RandomAccessCollection, MutableCollection, RangeReplaceableCollection {}
 
 extension MLShapedArraySlice: Equatable where Scalar: Equatable {
     public static func == (lhs: MLShapedArraySlice<Scalar>, rhs: MLShapedArraySlice<Scalar>) -> Bool {
@@ -688,6 +855,22 @@ public struct MLTensor: Sendable, CustomStringConvertible {
         reshaped(to: [scalarCount])
     }
 
+    public init(concatenating tensors: some Collection<MLTensor>, alongAxis axis: Int = 0) {
+        let items = Array(tensors)
+        precondition(!items.isEmpty)
+        var shape = items[0].shape
+        var axisCount = 0
+        var data = Data()
+        let normalized = axis < 0 ? axis + shape.count : axis
+        for tensor in items {
+            precondition(tensor.shape.count == shape.count)
+            axisCount += tensor.shape[normalized]
+            data.append(tensor.storage)
+        }
+        shape[normalized] = axisCount
+        self.init(shape: shape, data: data, scalarType: items[0].scalarType)
+    }
+
     public func shapedArray<Scalar>(
         of scalarType: Scalar.Type
     ) async -> MLShapedArray<Scalar> where Scalar: MLShapedArrayScalar, Scalar: MLTensorScalar {
@@ -702,14 +885,29 @@ public enum MLModelStructure: Sendable {
             public let type: String
             public let inputNames: [String]
             public let outputNames: [String]
+
+            public init(name: String, type: String, inputNames: [String], outputNames: [String]) {
+                self.name = name
+                self.type = type
+                self.inputNames = inputNames
+                self.outputNames = outputNames
+            }
         }
 
         public let layers: [Layer]
+
+        public init(layers: [Layer]) {
+            self.layers = layers
+        }
     }
 
     public struct Program: Sendable {
-        public struct ValueType: Sendable {}
-        public struct Value: Sendable {}
+        public struct ValueType: Sendable {
+            public init() {}
+        }
+        public struct Value: Sendable {
+            public init() {}
+        }
         public enum Binding: Sendable {
             case name(String)
             case value(Value)
@@ -717,32 +915,73 @@ public enum MLModelStructure: Sendable {
         public struct NamedValueType: Sendable {
             public let name: String
             public let type: ValueType
+
+            public init(name: String, type: ValueType) {
+                self.name = name
+                self.type = type
+            }
         }
         public struct Argument: Sendable {
             public let bindings: [Binding]
+
+            public init(bindings: [Binding]) {
+                self.bindings = bindings
+            }
         }
         public struct Operation: Sendable {
             public let operatorName: String
             public let inputs: [String: Argument]
             public let outputs: [NamedValueType]
             public let blocks: [Block]
+
+            public init(
+                operatorName: String,
+                inputs: [String: Argument],
+                outputs: [NamedValueType],
+                blocks: [Block]
+            ) {
+                self.operatorName = operatorName
+                self.inputs = inputs
+                self.outputs = outputs
+                self.blocks = blocks
+            }
         }
         public struct Block: Sendable {
             public let inputs: [NamedValueType]
-            public let outputs: [String]
+            public let outputNames: [String]
             public let operations: [Operation]
+
+            public init(inputs: [NamedValueType], outputs: [String], operations: [Operation]) {
+                self.inputs = inputs
+                self.outputNames = outputs
+                self.operations = operations
+            }
         }
         public struct Function: Sendable {
             public let inputs: [NamedValueType]
             public let block: Block
+
+            public init(inputs: [NamedValueType], block: Block) {
+                self.inputs = inputs
+                self.block = block
+            }
         }
 
         public let functions: [String: Function]
+
+        public init(functions: [String: Function]) {
+            self.functions = functions
+        }
     }
 
     public struct Pipeline: Sendable {
         public let subModelNames: [String]
         public let subModels: [MLModelStructure]
+
+        public init(subModelNames: [String], subModels: [MLModelStructure]) {
+            self.subModelNames = subModelNames
+            self.subModels = subModels
+        }
     }
 
     case neuralNetwork(NeuralNetwork)
@@ -765,15 +1004,24 @@ public final class MLComputePlan {
     public struct DeviceUsage {
         public let preferred: MLComputeDevice
         public let supported: [MLComputeDevice]
+
+        public init(preferred: MLComputeDevice, supported: [MLComputeDevice]) {
+            self.preferred = preferred
+            self.supported = supported
+        }
     }
 
     public struct Cost: Sendable {
         public let weight: Double
+
+        public init(weight: Double) {
+            self.weight = weight
+        }
     }
 
     public let modelStructure: MLModelStructure
 
-    init(modelStructure: MLModelStructure) {
+    public init(modelStructure: MLModelStructure) {
         self.modelStructure = modelStructure
     }
 

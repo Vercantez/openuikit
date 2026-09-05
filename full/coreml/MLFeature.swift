@@ -196,6 +196,34 @@ open class MLFeatureValue: NSObject, NSSecureCoding {
         }
         return MLShapedArray(multiArray)
     }
+
+    /// Image conversion requires CoreGraphics / ImageIO, which this isolated
+    /// compile does not import. Fail closed instead of inventing pixel buffers.
+    public convenience init(
+        imageAtURL url: URL,
+        constraint: MLImageConstraint,
+        options: [MLFeatureValue.ImageOption: Any]? = nil
+    ) throws {
+        _ = (url, constraint, options)
+        throw coreMLError(
+            .featureType,
+            "MLFeatureValue image conversion requires CoreGraphics/ImageIO, which are not linked."
+        )
+    }
+
+    public convenience init(
+        imageAtURL url: URL,
+        pixelsWide: Int,
+        pixelsHigh: Int,
+        pixelFormatType: UInt32,
+        options: [MLFeatureValue.ImageOption: Any]? = nil
+    ) throws {
+        _ = (url, pixelsWide, pixelsHigh, pixelFormatType, options)
+        throw coreMLError(
+            .featureType,
+            "MLFeatureValue image conversion requires CoreGraphics/ImageIO, which are not linked."
+        )
+    }
 }
 
 open class MLSequence: NSObject, NSSecureCoding {
