@@ -808,6 +808,7 @@ public extension PKAddSecureElementPassViewControllerDelegate {
 public protocol PKIdentityDocumentDescriptor: AnyObject {
     func addElements(_ elements: [PKIdentityElement], intentToStore: PKIdentityIntentToStore)
     func intentToStore(element: PKIdentityElement) -> PKIdentityIntentToStore?
+    var elements: [PKIdentityElement] { get }
 }
 
 public extension PKIdentityDocumentDescriptor {
@@ -818,6 +819,7 @@ public extension PKIdentityDocumentDescriptor {
         _ = element
         return nil
     }
+    var elements: [PKIdentityElement] { [] }
 }
 
 public protocol PKIssuerProvisioningExtensionAuthorizationProviding: AnyObject {

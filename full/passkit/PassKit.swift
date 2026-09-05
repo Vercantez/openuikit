@@ -65,8 +65,10 @@ open class PKPass: PKObject, @unchecked Sendable {
 
     public init(data: Data) throws {
         // Stored ZIP + pass.json keys from Apple's Wallet Package Format.
-        // Signature bytes are ignored; CMS verification is unobserved
-        // (oracle-questions.tsv). Deflated archives throw invalidDataError.
+        // `manifest.json` SHA-1s are checked when present. A PKCS#7
+        // `signature` is fail-closed (`invalidSignature`); CMS/WWDR is
+        // unobserved (oracle-questions.tsv). Deflated archives throw
+        // invalidDataError.
         let manifest = try PassKitPassArchive.parse(data)
         serialNumber = manifest.serialNumber
         passTypeIdentifier = manifest.passTypeIdentifier
@@ -122,6 +124,28 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         case backgroundAddPasses = 0
     }
 
+    /// In-process barcode pass store. Not Apple Wallet: `isPassLibraryAvailable()`
+    /// stays `false` (no Secure Element / entitlement). `add`/`remove`/`contains`
+    /// / `passes(of:)` operate on this host table.
+    private static let hostStoreLock = NSLock()
+    private static var hostPasses: [String: PKPass] = [:]
+
+    private static func hostKey(for pass: PKPass) -> String? {
+        hostKey(passTypeIdentifier: pass.passTypeIdentifier, serialNumber: pass.serialNumber)
+    }
+
+    private static func hostKey(passTypeIdentifier: String, serialNumber: String) -> String? {
+        guard !passTypeIdentifier.isEmpty, !serialNumber.isEmpty else { return nil }
+        return passTypeIdentifier + "\u{1e}" + serialNumber
+    }
+
+    @discardableResult
+    private static func withHostStore<T>(_ body: (inout [String: PKPass]) -> T) -> T {
+        hostStoreLock.lock()
+        defer { hostStoreLock.unlock() }
+        return body(&hostPasses)
+    }
+
     public var remoteSecureElementPasses: [PKSecureElementPass] { [] }
     public var isSecureElementPassActivationAvailable: Bool { false }
 
@@ -129,6 +153,7 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         super.init()
     }
 
+    /// Apple Wallet / Secure Element is not available on this isolated host.
     public static func isPassLibraryAvailable() -> Bool { false }
     public static func isPaymentPassActivationAvailable() -> Bool { false }
     public static func isSuppressingAutomaticPassPresentation() -> Bool { false }
@@ -147,15 +172,20 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
     }
 
     public func containsPass(_ pass: PKPass) -> Bool {
-        _ = pass
-        return false
+        guard let key = Self.hostKey(for: pass) else { return false }
+        return Self.withHostStore { $0[key] != nil }
     }
 
-    public func passes() -> [PKPass] { [] }
+    public func passes() -> [PKPass] {
+        Self.withHostStore { Array($0.values) }
+    }
 
     public func passes(of passType: PKPassType) -> [PKPass] {
-        _ = passType
-        return []
+        let all = passes()
+        if passType == .any {
+            return all
+        }
+        return all.filter { $0.passType == passType }
     }
 
     public func passes(withReaderIdentifier readerIdentifier: String) -> Set<PKSecureElementPass> {
@@ -167,30 +197,50 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         withPassTypeIdentifier identifier: String,
         serialNumber: String
     ) -> PKPass? {
-        _ = (identifier, serialNumber)
-        return nil
+        guard let key = Self.hostKey(passTypeIdentifier: identifier, serialNumber: serialNumber) else {
+            return nil
+        }
+        return Self.withHostStore { $0[key] }
+    }
+
+    private func addPassesToHostStore(_ passes: [PKPass]) -> PKPassLibraryAddPassesStatus {
+        var added = 0
+        Self.withHostStore { store in
+            for pass in passes {
+                guard let key = Self.hostKey(for: pass) else { continue }
+                store[key] = pass
+                added += 1
+            }
+        }
+        // Empty / identity-less payloads match the first-pass cancelled add.
+        return added == 0 ? .didCancelAddPasses : .didAddPasses
     }
 
     public func addPasses(
         _ passes: [PKPass],
         withCompletionHandler completion: ((PKPassLibraryAddPassesStatus) -> Void)? = nil
     ) {
-        _ = passes
-        // Linux has no Wallet entitlement. Status matches a cancelled add;
-        // throwing APIs on this type use PKPassKitError.notEntitledError.
-        completion?(.didCancelAddPasses)
+        completion?(addPassesToHostStore(passes))
     }
 
     public func addPasses(_ passes: [PKPass]) async -> PKPassLibraryAddPassesStatus {
-        _ = passes
-        return .didCancelAddPasses
+        addPassesToHostStore(passes)
     }
 
-    public func removePass(_ pass: PKPass) { _ = pass }
+    public func removePass(_ pass: PKPass) {
+        guard let key = Self.hostKey(for: pass) else { return }
+        Self.withHostStore { store in
+            store.removeValue(forKey: key)
+        }
+    }
 
     public func replacePass(with pass: PKPass) -> Bool {
-        _ = pass
-        return false
+        guard let key = Self.hostKey(for: pass) else { return false }
+        return Self.withHostStore { store in
+            guard store[key] != nil else { return false }
+            store[key] = pass
+            return true
+        }
     }
 
     public func canAddFelicaPass() -> Bool { false }
@@ -803,7 +853,6 @@ open class PKPaymentAuthorizationViewController: UIViewController, @unchecked Se
     }
 }
 
-@MainActor
 public protocol PKPaymentAuthorizationControllerDelegate: AnyObject {
     func paymentAuthorizationControllerDidFinish(
         _ controller: PKPaymentAuthorizationController
@@ -936,6 +985,10 @@ public extension PKPaymentAuthorizationControllerDelegate {
 public final class PKPaymentAuthorizationController {
     public weak var delegate: (any PKPaymentAuthorizationControllerDelegate)?
     public let paymentRequest: PKPaymentRequest
+    /// Documented PKPaymentRequest field issues found at `present`. Empty when
+    /// the request matches Apple's required-field rules; presentation still
+    /// fails closed because this host has no Apple Pay network.
+    public private(set) var linuxHostValidationIssues: [PassKitPaymentRequestIssue] = []
 
     public init(paymentRequest: PKPaymentRequest) {
         self.paymentRequest = paymentRequest
@@ -970,7 +1023,10 @@ public final class PKPaymentAuthorizationController {
     }
 
     public func present(completion: ((Bool) -> Void)? = nil) {
+        linuxHostValidationIssues = PassKitPaymentRequestValidation.issues(for: paymentRequest)
         completion?(false)
+        // No payment sheet: finish synchronously so callers need no run loop.
+        delegate?.paymentAuthorizationControllerDidFinish(self)
     }
 
     public func dismiss(completion: (() -> Void)? = nil) {

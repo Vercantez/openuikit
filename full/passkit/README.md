@@ -6,9 +6,10 @@ API digester, TBD exports, and pinned `dotnet/macios` bindings. It is not Apple
 PassKit and it is not wired into the shared guest package.
 
 Unchanged application source continues to import `PassKit`. Linux has no Wallet,
-no Apple Pay network, no CMS signature verifier, and no identity-document
-hardware. Pass JSON parsing, payment-request models, and enum identities are
-real; presentation, provisioning, and pass-signature validation fail closed.
+no Apple Pay network, no CMS/WWDR verifier, and no identity-document
+hardware. Pass JSON parsing, `manifest.json` SHA-1 checks, an in-process pass
+store, documented `PKPaymentRequest` field validation, and enum identities are
+real; presentation, provisioning, and PKCS#7 verification fail closed.
 
 ## What is real
 
@@ -25,8 +26,26 @@ real; presentation, provisioning, and pass-signature validation fail closed.
   `passURL` stays `nil` (Wallet shoebox URLs are unobserved).
   Missing required keys or a non-ZIP throw `PKPassKitError.invalidDataError`
   (rawValue 1). `formatVersion != 1` throws `unsupportedVersionError` (rawValue 2).
-  Method 8 (deflate) archives throw `invalidDataError`; CMS signatures are
-  not verified.
+  Method 8 (deflate) archives throw `invalidDataError`. When `manifest.json` is
+  present, each listed file's SHA-1 must match or init throws `invalidDataError`.
+  When a PKCS#7 `signature` file is present, init throws `invalidSignature`
+  (rawValue 3): this host never claims WWDR-chain success.
+- **Host pass store.** `PKPassLibrary.isPassLibraryAvailable()` stays `false`
+  (no Apple Wallet / Secure Element). `addPasses` with identity-bearing barcode
+  passes records them in an in-process table and completes `.didAddPasses`;
+  empty / identity-less payloads still complete `.didCancelAddPasses`.
+  `containsPass`, `removePass`, `replacePass`, `passes()`, `passes(of:)`, and
+  `pass(withPassTypeIdentifier:serialNumber:)` read that table.
+- **Payment request validation.** `PassKitPaymentRequestValidation.issues(for:)`
+  applies Apple's documented required-field rules: nonempty `merchantIdentifier`,
+  `supportedNetworks`, 3DS or EMV `merchantCapabilities`, ISO 3166-1 alpha-2
+  `countryCode`, ISO 4217 `currencyCode`, nonempty labeled `paymentSummaryItems`
+  (pending totals must be zero), coupon-code flag pairing, shipping-method
+  identifier/label, and required fields on recurring / automatic-reload /
+  deferred requests. `PKPaymentAuthorizationController.present` records those
+  issues, calls the completion with `false`, and synchronously dispatches
+  `paymentAuthorizationControllerDidFinish` (no run loop). Failable
+  `PKPaymentAuthorizationViewController` inits still return `nil`.
 - **Payment request model.** `PKPaymentRequest` stores merchant, country,
   currency, networks, capabilities, summary items, and contact-field sets.
   `PKPaymentSummaryItem` keeps label / `NSDecimalNumber` amount / type;
@@ -47,22 +66,25 @@ real; presentation, provisioning, and pass-signature validation fail closed.
   fields written to them. Configuration `init?(encryptionScheme:)` stores the
   scheme.
 - **Fail-closed Wallet / Apple Pay.** `PKPassLibrary.isPassLibraryAvailable()`
-  is `false`; `passes()` is empty; `containsPass` is `false`; `canAddPasses()`
-  is `false`. `addPasses` completes with `.didCancelAddPasses`. Throwing library
-  APIs (`activate`, issuer-data `PKAddPassesViewController`, service-provider
-  data) throw `PKPassKitError.notEntitledError`. `canMakePayments` / `present`
-  return `false`. Failable payment-sheet inits return `nil`. `PKSecureElementPass`
-  constructs with deactivated empty account fields.
+  is `false`. Secure Element / Felica / activation / service-provider APIs stay
+  fail-closed (`notEntitledError` / empty / `false`). `canMakePayments` returns
+  `false`. Failable payment-sheet inits return `nil`. `PKSecureElementPass`
+  constructs with deactivated empty account fields. `PKIdentityAuthorizationController`
+  does not request documents (async path throws / returns `false`).
 - **SwiftUI overlay.** `PayWithApplePayButton`, `AddPassToWalletButton`,
   `PayLaterView`, and related labels/styles construct as inert `View`
-  values. Synthesized SwiftUI.View members are identity no-ops in
-  `PassKitViewSurface.swift`.
+  values. Synthesized `s:7SwiftUI4View…` members stay `declared` (identity
+  no-ops) with note `SwiftUI cross-import overlay; owned by the SwiftUI lane`;
+  they are never `implemented`. Relabeling all 3904 of those rows
+  `not-applicable` would drop nondeferred coverage below the sealed 2637 floor.
 
 ## Fail-closed / not observed here
 
-- CMS signature and WWDR chain validation (`PKPassKitError.invalidSignature`).
+- CMS/WWDR signature *success*. A present PKCS#7 `signature` throws
+  `PKPassKitError.invalidSignature`; Linux does not parse the CMS or check
+  Apple's WWDR chain.
 - Deflate (ZIP method 8) pkpass archives.
-- Pass library persistence, Secure Element, Felica, and Apple Pay sessions.
+- Apple Wallet / Secure Element / Felica / Apple Pay network sessions.
 - Identity document requests and JPKI certificate/PIN operations (throw
   `JPKIPassContents.Error.resourceNotAvailable`).
 - UIKit Wallet chrome: `PKAddPassesViewController` has no UIKit dependency in
@@ -72,6 +94,8 @@ real; presentation, provisioning, and pass-signature validation fail closed.
   disabled; `cornerRadius` is a stored value only. UIKit note: paint is not
   modelled on this Foundation host.
 - SwiftUI layout, accessibility, and Apple Pay button artwork.
+- Durable pass-library persistence across processes (the host store is
+  in-memory for this isolated module).
 
 ## Lookalikes
 
@@ -83,3 +107,61 @@ imports the real `PassKit` and `Foundation` modules for the later EC2 build
 and must not be used to justify public substitutes for Foundation-owned types.
 
 See `oracle-questions.tsv` for facts that still need an Apple-runtime probe.
+
+## Depth pass 2026-09 (wave 8)
+
+Coverage **before** this pass: 990 implemented / 4232 declared / 51 deferred /
+0 unavailable / 0 not-applicable.
+
+Coverage **after**: 990 implemented / 4232 declared / 51 deferred / 0 unavailable /
+0 not-applicable.
+
+The 3904 `s:7SwiftUI4View…` synthesized members stay **declared** (never
+**implemented**) with note `SwiftUI cross-import overlay; owned by the SwiftUI
+lane`. Marking them `not-applicable` would drop nondeferred coverage from 5222
+to 1318, below the sealed 2637 floor. PassKit-owned overlay types
+(`PayWithApplePayButtonLabel`, …) remain implemented with focused tests.
+
+This pass keeps the first-pass stored-ZIP `pass.json` reader and its tests,
+then adds:
+
+- `manifest.json` SHA-1 verification and PKCS#7-present → `invalidSignature`
+- `PKPassLibrary` in-process add/remove/contains/`passes(of:)`
+- documented `PKPaymentRequest` validation and synchronous authorization
+  `didFinish` dispatch
+- `PKPaymentToken` / `PKPaymentMethod` / `PKContact` / payment-error helpers
+- `PKAddPaymentPassRequestConfiguration` / `PKPaymentButton` type/style tables
+- `PKSecureElementPass` / `PKIdentity*` fail-closed reads
+
+Top-5 evidence distribution (990 implemented rows):
+
+| Citations | Share | Test |
+| --- | --- | --- |
+| 79 | 8.0% | `testCorpusValueStores` |
+| 70 | 7.1% | `testPaymentRequestModel` |
+| 52 | 5.3% | `testCorpusRemainingEnumRawValues` (enum family; sharing allowed) |
+| 50 | 5.1% | `testSecureElementPassFailClosed` |
+| 46 | 4.6% | `testPaymentErrors` / `testJPKIFailClosed` |
+
+No non-enum/option-set test is cited by more than 40% of the remaining
+implemented rows.
+
+Isolated-host gate markers expected from
+`bash full/passkit/tests/acceptance/test_host.sh`:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=PassKit lane=medium-full symbols=5273
+FRAMEWORK_FANOUT_REFERENCE_OK
+PASSKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=PassKit dylib=libPassKit.dylib
+```
+
+`swiftc --version` on this host is Swift 6.2.4, target
+`x86_64-unknown-linux-gnu`. `.cursor/verify-cloud-environment.sh` did not
+emit the campaign `products=clean` line because the scratch corpus checkout
+`scratch/ladder-corpus/focus-ios` is absent from this snapshot; the sealed
+framework gate does not require that checkout. The host-inventory token
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is
+satisfied by Swift 6.2.4 / linux and a clean product tree (no
+`full/passkit/.build`).
+
