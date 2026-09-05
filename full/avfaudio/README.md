@@ -96,16 +96,15 @@ Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. T
 
 `bash full/avfaudio/tests/acceptance/test_host.sh` (Linux host, no docker). Agent runtime covers format/settings, PCM layout, time extrapolation, WAV/CAF/AIFF, converter PCM/SRC/channelMap, mixer pan/gain, engine manual render mix, speech/sampler fail-closed, and a depth catalog of ≥900 symbols.
 
-Expected markers:
+Actual sealed host gate (`bash full/avfaudio/tests/acceptance/test_host.sh`, 2026-09-05, Swift 6.2.4 `x86_64-unknown-linux-gnu`):
 
 ```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_REFERENCE_OK
 AVFAUDIO_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFAudio dylib=libAVFAudio.dylib
 ```
 
-The environment attestation script may fail in this snapshot (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build id differs from the campaign seed). The sealed host gate itself does not print the environment line; do not weaken or skip it.
+Campaign also asked for `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`. That line is printed by `.cursor/verify-cloud-environment.sh`, not the sealed gate. This snapshot fails attestation (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Swift 6.2.4 linux is present. The sealed gate was not weakened.
 
 ### Unresolved behavioral questions (central review)
 
