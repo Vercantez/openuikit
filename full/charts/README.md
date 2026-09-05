@@ -149,6 +149,87 @@ Selection, scroll, gestures, 3D/RealityKit, and live SwiftUI layout
 timing remain fail-closed. `ChartProxy` without installed scales still
 returns `nil` positions.
 
+## Depth pass 2026-09 (wave 8)
+
+Second SDK-depth pass. The first-pass DATA→GEOMETRY layer and its tests
+stay in place. This pass adds the plot-space layout engine, vectorized
+plot content, and an honest fail-closed 3D/scroll boundary.
+
+Before this pass (first-pass coverage after the merge-refusal repair):
+
+| status | first pass |
+| --- | ---: |
+| implemented | 341 |
+| declared | 7996 |
+| deferred | 673 |
+| not-applicable | 464 |
+
+After this pass:
+
+| status | wave 8 |
+| --- | ---: |
+| implemented | 689 |
+| declared | 6845 |
+| deferred | 660 |
+| not-applicable | 1280 |
+
+Nondeferred (`implemented` + `declared`) is 7534, above the 4737 floor.
+All 272 `VectorizedChartContent` census rows are `implemented` with
+per-method tests that call the identifier on every conforming plot
+type. SwiftUI `View` overlay re-exports (`s:7SwiftUI4View…`) are
+`not-applicable` with the note `SwiftUI cross-import overlay; owned by
+the SwiftUI lane` — never `implemented`.
+
+Top-5 implemented evidence after this pass:
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 45 | 6.5% | `ChartsWave8Tests.swift#testVectorizedAccessibilityLabel` |
+| 45 | 6.5% | `ChartsWave8Tests.swift#testVectorizedAccessibilityValue` |
+| 38 | 5.5% | `ChartsTests.swift#testPrimitivePlottable` |
+| 30 | 4.4% | `ChartsWave8Tests.swift#testVectorizedSymbolSizeKeyPath` |
+| 30 | 4.4% | `ChartsWave8Tests.swift#testVectorizedAccessibilityHiddenAndIdentifier` |
+
+No single non-catalog test exceeds 40% of implemented rows.
+
+### Public surface added in this pass
+
+- `ChartScale.symbolLog` shares log10 mapping with `.log`. Domain
+  `1...1000`, range `0...90`, value `10` maps to pixel `30`. Automatic
+  domain inference uses recorded X/Y extrema; linear nice-ing keeps
+  the 1-2-5×10^n rule (`0.2...9.7` → nice domain `0...10`).
+- `Chart(content:)` / `Chart(data:id:content:)` plus `ForEach` collect
+  `ChartPlotRecord`s. `ChartProxy.position(forX:)` / `position(forY:)` /
+  `value(atX:)` / `plotAreaSize` / `plotFrame` invert the resolved scales
+  for a host-supplied plot rect. Geometry tests use a fixed 100×40
+  plot (3-bar fixture remains 90×60).
+- Mark inits: `BarMark` series and interval overloads; `LineMark` /
+  `PointMark` / `AreaMark` / `RectangleMark` / `RuleMark` / `SectorMark`
+  place through `ChartLayout` against those scales.
+- `AxisMarks` / `AxisMarkValues.automatic` / `stride` / `values` produce
+  tick pixels via `ChartAxisLayout.tickPositions`. `chartXAxis` /
+  `chartYAxis` visibility stores `.hidden` / `.visible`.
+- Resolved mark attributes: `foregroundStyle`, `symbol`,
+  `interpolationMethod`, `lineStyle`, and `annotation(position:alignment:)`.
+- `chartScrollableAxes` / `chartScrollPosition` / `chartXSelection` retain
+  host models only. Gesture delivery, hit-testing, and UIKit/SwiftUI
+  scroll timing stay fail-closed.
+- `VectorizedChartContent` (272 rows) plus `BarPlot` / `LinePlot` /
+  `AreaPlot` / `PointPlot` / `RulePlot` / `RectanglePlot` / `SectorPlot`
+  data inits. Protocol modifiers use Apple KeyPath / `PlottableProjection`
+  signatures. `Chart3D` / `SurfacePlot` / extra `SurfaceMark` are empty
+  fail-closed types (no RealityKit renderer).
+
+### Fail-closed (wave 8)
+
+- 3D pose/camera/surface rendering is not a renderer.
+- Scroll and selection bindings store values; they do not pan or
+  hit-test a plot.
+- Vectorized KeyPath modifiers stamp attributes; they do not re-scan
+  the original collection after construction.
+- SwiftUI overlay modifiers remain identity stubs or Chart-local
+  storage; they are not claimed as Apple `View` overlay behavior.
+
 ## Wave-6 deliverable gate
 
 ```sh
