@@ -85,6 +85,9 @@ public enum RealAppScreen {
         /// wrapped in a UINavigationController as BrowserViewController
         /// `showSettings` does.
         case focusSettings
+        /// mozilla-mobile/focus-ios Blockzilla/HomeViewController.swift at
+        /// a2832521 — the browser-home overlay (wordmark + tips).
+        case focusHome
         /// weiran/Hackers Features/Feed FeedView.swift at 83016de — the
         /// main post list, wrapped in a UINavigationController as the app's
         /// NavigationStack chrome.
@@ -141,9 +144,11 @@ public enum RealAppScreen {
         }
     }
 
-    // Thirteen screens on every route. The 13th is Ledger's first screen
+    // Fourteen screens on every route. The 13th is Ledger's first screen
     // (guest-trial): formatter / JSON / regex / loopback URLSession row.
     // Guest glob is RealAppProbe/*.swift (LedgerStore / List / Screens).
+    // The 14th is Focus home last (focus-e2e): a guest 2x ink miss on home
+    // must not drop the screens before it.
     public static let screens: [Screen] = [
         Screen(name: "realapp_history_light", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,
@@ -183,7 +188,7 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ] + focusScreenTable + hackersScreenTable + ledgerScreenTable
+    ] + focusScreenTable + hackersScreenTable + ledgerScreenTable + focusHomeTable
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
@@ -265,6 +270,8 @@ public enum RealAppScreen {
         case .storage:          return makeStorageScreen(theme: theme)
         case .focusSettings:
             return makeFocusSettingsScreen()
+        case .focusHome:
+            return makeFocusHomeScreen()
         case .hackersFeed:
             return makeHackersFeedScreen()
         case .ledger:

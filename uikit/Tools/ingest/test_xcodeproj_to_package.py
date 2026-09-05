@@ -149,6 +149,10 @@ class MiniAppFixtureTests(unittest.TestCase):
                 '.product(name: "os", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
                 text,
             )
+            self.assertIn(
+                '.product(name: "Glean", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
             self.assertIn("-default-isolation", text)
             self.assertTrue((out / "Sources" / "MiniApp" / "MiniApp" / "AppDelegate.swift").is_file())
             self.assertTrue((out / "Sources" / "MiniApp" / "Resources" / "Assets.xcassets").is_dir())
