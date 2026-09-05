@@ -16,7 +16,7 @@ The current isolated host gate compiles AVFAudio without those modules on the se
   only valid frames, and expose the first `AudioBuffer` byte capacity as
   `frameCapacity`; compressed-buffer copies have the base `AVAudioBuffer`
   dynamic type. These observable details are checked against iOS 26.1.
-- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `connect` replaces the existing edge for `(destination, inputBus)`. `start()`, manual rendering, and offline render **throw** and do not set `isRunning` or produce buffers.
+- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `connect` replaces the existing edge for `(destination, inputBus)`. Hardware `start()` throws and leaves `isRunning` false. Manual rendering (`enableManualRenderingMode` + `start` + `renderOffline`) mixes scheduled PCM offline.
 - **Session preferences.** `setCategory` stores category/mode/options. Activation, port override, and hardware configuration **throw**. Record permission is delivered **asynchronously**, exactly once, on `AVFAudio.callback`.
 - **Player / recorder / converter / sequencer.** `AVAudioPlayer` throwing URL initializers use throwing I/O. Empty or garbage payloads throw; only a narrowly validated 16-bit linear PCM WAVE construct. Play, record, convert, and sequencer start stay fail-closed.
 - **Speech.** Utterance text is stored. `speak` does not set `isSpeaking`. Personal-voice authorization is `.unsupported`, delivered asynchronously on the callback queue.
@@ -26,7 +26,7 @@ The current isolated host gate compiles AVFAudio without those modules on the se
 | Surface | Linux behavior |
 | --- | --- |
 | Hardware playback / capture | `play()` / `record()` return false |
-| Engine I/O and render | `start` / manual render throw; `isRunning` stays false |
+| Hardware engine I/O | `start()` without manual mode throws; `isRunning` stays false |
 | Session activation / hardware | `setActive` and preferred hardware APIs throw |
 | Apple speech voices | Empty catalog; no PCM is synthesized |
 | Personal Voice | `.unsupported`, async callback |
@@ -65,3 +65,66 @@ Run the immutable host gate:
 ```sh
 bash tests/acceptance/test_host.sh
 ```
+
+## Depth pass 2026-09
+
+Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. This pass implements the value/state-machine core **without audio hardware**. Families `AVAudioFormat`, `AVAudioPCMBuffer`, `AVAudioTime`, `AVAudioFile`, `AVAudioEngine` (manual rendering), and `AVAudioConverter` are nondeferred except C-ABI `canImport` APIs (`AudioStreamBasicDescription`, `AudioBufferList`, `AudioTimeStamp`, `AVAudioSourceNode`/`SinkNode`, `manualRenderingBlock`, MIDI event-list connect, `AUAudioUnit` wrappers).
+
+Coverage ledger repair (merge refused `c620a7c9` because implemented rows cited a file path, not `test:…#testName`):
+
+| | implemented | declared | deferred | unavailable |
+| --- | ---: | ---: | ---: | ---: |
+| Before (`c620a7c9`) | 1558 | 0 | 79 | 1 |
+| After (this revision) | 1515 | 63 | 59 | 1 |
+
+Every `implemented` row now cites `test:full/avfaudio/tests/agent/<File>Tests.swift#testName` naming a real top-level `func testName()`. Rows without a focused test are `declared` with `source:full/avfaudio/<file>.swift#Symbol`. Option-set SetAlgebra on `AVMusicSequenceLoadOptions` moved from deferred to implemented because `testAVFAudioOptionSets` exercises it.
+
+Top-5 implemented evidence (1515 rows; no non-table test exceeds 40%):
+
+| rows | % | evidence |
+| ---: | ---: | --- |
+| 343 | 22.6% | `AVFAudioEnumTests.swift#testAVFAudioEnumCases` (table-driven enums/cases/`!=`) |
+| 186 | 12.3% | `AVFAudioOptionSetTests.swift#testAVFAudioOptionSets` (table-driven option-set members/algebra) |
+| 154 | 10.2% | `AVAudioMIDITests.swift#testAVAudioMIDISequencer` |
+| 131 | 8.6% | `AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications` |
+| 111 | 7.3% | `AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed` |
+
+### Public surface (Linux-backed)
+
+- **AVAudioFormat.** `init(standardFormatWithSampleRate:channels:)`, `init(commonFormat:sampleRate:channels:interleaved:)`, `init(settings:)`. Settings keys: `AVFormatIDKey` (`1819304813` / `'lpcm'`), `AVSampleRateKey`, `AVNumberOfChannelsKey`, `AVLinearPCMBitDepthKey`, `AVLinearPCMIsBigEndianKey` (`false`), `AVLinearPCMIsFloatKey`, `AVLinearPCMIsNonInterleaved`, optional `AVChannelLayoutKey`. `isStandard` is non-interleaved float32. `init(streamDescription:)` remains `canImport(CoreAudioTypes)`.
+- **AVAudioPCMBuffer.** `frameCapacity`/`frameLength`, planar and interleaved `floatChannelData`/`int16ChannelData`/`int32ChannelData` (interleaved channel `n` is offset by `n * bytesPerSample`, matching Apple), `stride`. Copy retains Apple's first-`AudioBuffer` **byte** `frameCapacity` quirk.
+- **AVAudioTime.** Host/sample validity, `extrapolateTime(fromAnchor:)`, `hostTime(forSeconds:)` / `seconds(forHostTime:)` via `clock_gettime(CLOCK_MONOTONIC)` nanoseconds (`1e9` ticks/s). Mach-absolute-time numer/denom is not claimed.
+- **AVAudioFile.** WAV (RIFF PCM 16/32 and IEEE float) read/write; CAF PCM (`desc` 36-byte little-endian, `lpcm`, channels at +28, bits at +32) read/write; AIFF PCM **read** (IEEE80 sample rate). `length` / `framePosition` / `fileFormat` / `processingFormat`. `framePosition` clamps to `length`; writers update `length` before `framePosition`.
+- **AVAudioEngine graph.** Attach/connect/disconnect/start/stop/reset. Hardware `start()` stays fail-closed. `enableManualRenderingMode` succeeds; `start()` in manual mode sets `isRunning`; `renderOffline` walks player → EQ `globalGain` → mixer, mixes scheduled PCM, applies mixer `outputVolume`, posts `.AVAudioEngineConfigurationChange`. `disableManualRenderingMode` is nonthrowing and stops the engine (Apple's method does not throw).
+- **AVAudioConverter.** PCM int/float, channel map, stereo downmix, linear sample-rate interpolation (documented gap vs Apple's resampler). Compressed formats throw.
+- **AVAudioMixerNode / AVAudioPlayerNode / AVAudioUnitEQ.** Software mix/gain/pan on PCM in manual rendering. Constant-gain pan: `pan == 0` leaves both channels at 1.0; `pan == -1` left=1 right=0.
+
+### Fail-closed boundaries
+
+| Surface | Linux behavior |
+| --- | --- |
+| Hardware engine I/O | `start()` without manual mode throws a host-unavailable `NSError`; `isRunning` stays false |
+| Compressed converters / files | `AVAudioConverter` and `AVAudioFile` throw `AVFAudioError.hostUnavailable` |
+| `AVAudioUnitSampler` | `loadSoundBankInstrument` / `loadAudioFiles` throw; `startNote` is a no-op |
+| `AVSpeechSynthesizer` | Empty voice catalog; `speak` does not set `isSpeaking` |
+| `AVAudioSession` activation / hardware | `setActive` and preferred hardware APIs throw (session types remain in this module; not duplicated into AVFoundation) |
+| `AVAudioEngine.manualRenderingBlock` | Compiled only with CoreAudioTypes |
+| ASBD / AudioBufferList / AudioTimeStamp | Compiled only with CoreAudioTypes; isolated host does not claim the round trip |
+
+### Tests and markers
+
+`bash full/avfaudio/tests/acceptance/test_host.sh` (Linux host, no docker). Focused `tests/agent/*Tests.swift` functions cover format/settings, PCM layout, time extrapolation, WAV/CAF/AIFF, converter PCM/SRC/channelMap, mixer pan/gain, engine manual render, speech/sampler fail-closed, plus table-driven enums/option-sets/constants. `AVFAudioRuntime.swift` concatenates those tests for the schema-v1 sealed runner and prints `AVFAUDIO_AGENT_RUNTIME_OK`.
+
+Actual sealed host gate (`bash full/avfaudio/tests/acceptance/test_host.sh`, 2026-09-05, Swift 6.2.4 `x86_64-unknown-linux-gnu`):
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFAUDIO_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFAudio dylib=libAVFAudio.dylib
+```
+
+Campaign also asked for `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`. That line is printed by `.cursor/verify-cloud-environment.sh`, not the sealed gate. This snapshot fails attestation (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Swift 6.2.4 linux is present. The sealed gate was not weakened.
+
+### Unresolved behavioral questions (central review)
+
+See `oracle-questions.tsv`: linear SRC vs Apple resampler; CAF `desc` 36 vs 32; constant-gain pan vs constant-power; sampler `loadSoundBankInstrument` host-unavailable vs empty bank; ASBD round-trip only when CoreAudioTypes is imported; AVAudioSession ownership vs AVFoundation.

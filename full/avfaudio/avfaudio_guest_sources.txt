@@ -1,8 +1,10 @@
 full/avfaudio/AVAudioApplication.swift
+full/avfaudio/AVAudioContainers.swift
 full/avfaudio/AVAudioEngine.swift
 full/avfaudio/AVAudioEnums.swift
 full/avfaudio/AVAudioFormat.swift
 full/avfaudio/AVAudioIO.swift
+full/avfaudio/AVAudioPCM.swift
 full/avfaudio/AVAudioSession.swift
 full/avfaudio/AVAudioUnits.swift
 full/avfaudio/AVFAudio.swift

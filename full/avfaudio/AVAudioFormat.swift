@@ -81,14 +81,20 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
     }
 
     public var settings: [String: Any] {
-        [
+        var dictionary: [String: Any] = [
+            AVFormatIDKey: NSNumber(value: avfaudioLinearPCMFormatID),
             AVSampleRateKey: sampleRate,
-            AVNumberOfChannelsKey: channelCount,
+            AVNumberOfChannelsKey: NSNumber(value: channelCount),
+            AVLinearPCMBitDepthKey: bitDepth,
+            AVLinearPCMIsBigEndianKey: false,
             AVLinearPCMIsFloatKey: commonFormat == .pcmFormatFloat32
                 || commonFormat == .pcmFormatFloat64,
             AVLinearPCMIsNonInterleaved: !isInterleaved,
-            AVLinearPCMBitDepthKey: bitDepth,
         ]
+        if let channelLayout {
+            dictionary[AVChannelLayoutKey] = NSNumber(value: channelLayout.layoutTag)
+        }
+        return dictionary
     }
 
     var bitDepth: Int {
@@ -169,9 +175,14 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         let depth = (settings[AVLinearPCMBitDepthKey] as? Int)
             ?? (settings[AVLinearPCMBitDepthKey] as? NSNumber)?.intValue
             ?? 32
+        let formatID = (settings[AVFormatIDKey] as? UInt32)
+            ?? (settings[AVFormatIDKey] as? NSNumber)?.uint32Value
+            ?? avfaudioLinearPCMFormatID
         guard rate > 0, channels > 0 else { return nil }
         let format: AVAudioCommonFormat
-        if isFloat && depth >= 64 {
+        if formatID != avfaudioLinearPCMFormatID {
+            format = .otherFormat
+        } else if isFloat && depth >= 64 {
             format = .pcmFormatFloat64
         } else if isFloat {
             format = .pcmFormatFloat32
@@ -476,7 +487,7 @@ public final class AVAudioPCMBuffer: AVAudioBuffer {
         let planeBytes = format.isInterleaved ? byteCount : max(bytesPerSample * frames, 1)
         for index in 0..<max(channelCount, 1) {
             if format.isInterleaved {
-                channelPointers[index] = storage
+                channelPointers[index] = storage.advanced(by: index * max(bytesPerSample, 1))
             } else {
                 channelPointers[index] = storage.advanced(by: index * planeBytes)
             }
@@ -511,7 +522,9 @@ public final class AVAudioPCMBuffer: AVAudioBuffer {
         guard bufferCount == expectedBuffers else { return nil }
         var planes: [UnsafeMutableRawPointer] = []
         if format.isInterleaved {
-            planes = Array(repeating: data, count: max(Int(format.channelCount), 1))
+            planes = (0..<max(Int(format.channelCount), 1)).map { index in
+                data.advanced(by: index * format.bytesPerSample)
+            }
         } else {
             planes.reserveCapacity(expectedBuffers)
             for index in 0..<expectedBuffers {
