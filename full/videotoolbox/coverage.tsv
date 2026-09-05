@@ -1,483 +1,483 @@
 precise	status	evidence	notes
-c:@F@VTCompressionSessionBeginPass	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionCompleteFrames	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionEncodeFrame	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionEncodeMultiImageFrame	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTCompressionSessionEncodeMultiImageFrameWithOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTCompressionSessionEndPass	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionGetPixelBufferPool	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionGetTimeRangesForNextPass	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCompressionSessionPrepareToEncodeFrames	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCopyRAWProcessorExtensionProperties	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTCopySupportedPropertyDictionaryForEncoder	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCopyVideoDecoderExtensionProperties	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTCopyVideoEncoderList	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTCreateCGImageFromCVPixelBuffer	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTDecompressionSessionCanAcceptFormatDescription	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTDecompressionSessionCopyBlackPixelBuffer	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTDecompressionSessionDecodeFrame	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionDecodeFrameWithOptions	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionDecodeFrameWithOptionsAndOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionDecodeFrameWithOutputHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionFinishDelayedFrames	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTDecompressionSessionSetMultiImageCallback	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTDecompressionSessionWaitForAsynchronousFrames	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTFrameSiloAddSampleBuffer	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTFrameSiloCallFunctionForEachSampleBuffer	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTFrameSiloCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTFrameSiloGetProgressOfCurrentPass	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTFrameSiloSetTimeRangesForNextPass	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTHDRPerFrameMetadataGenerationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTHDRPerFrameMetadataGenerationSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTHDRPerFrameMetadataGenerationSessionInvalidate	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTIsHardwareDecodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTIsStereoMVHEVCDecodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTIsStereoMVHEVCEncodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTMotionEstimationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTMotionEstimationSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTMotionEstimationSessionInvalidate	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTMultiPassStorageClose	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTMultiPassStorageCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTPixelRotationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTPixelRotationSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTPixelRotationSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTPixelRotationSessionRotateImage	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTPixelTransferSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTPixelTransferSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTPixelTransferSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTPixelTransferSessionTransferImage	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTRAWProcessingSessionCompleteFrames	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionCopyProcessingParameters	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTRAWProcessingSessionGetTypeID	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionInvalidate	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionProcessFrame	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionSetParameterChangedHander	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionSetParameterChangedHandler	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRAWProcessingSessionSetProcessingParameters	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRegisterProfessionalVideoWorkflowVideoDecoders	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRegisterProfessionalVideoWorkflowVideoEncoders	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTRegisterSupplementalVideoDecoderIfAvailable	declared	VideoToolbox.swift	compiles as a fail-closed entry; not separately exercised
-c:@F@VTSessionCopyProperty	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTSessionCopySerializableProperties	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTSessionCopySupportedPropertyDictionary	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTSessionSetProperties	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@F@VTSessionSetProperty	implemented	tests/agent/VideoToolboxRuntime.swift	fail-closed or software-session behavior exercised by the runtime probe
-c:@S@VTCompressionSessionOptionFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTCompressionSessionOptionFlags@beginFinalPass	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTCompressionSessionOptionFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTCompressionSessionOptionFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags@doNotOutputFrame	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags@enableAsynchronousDecompression	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags@enableTemporalProcessing	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags@oneXRealTimePlayback	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeFrameFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@frameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@frameInterrupted	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@imageBufferModifiable	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTDecodeInfoFlags@skippedLeadingFrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTEncodeInfoFlags	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTEncodeInfoFlags@asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTEncodeInfoFlags@frameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTEncodeInfoFlags@init	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@S@VTEncodeInfoFlags@rawValue	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTAllocationFailedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTAlphaChannelMode_PremultipliedAlpha	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTAlphaChannelMode_StraightAlpha	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCameraCalibrationExtrinsicOriginSource_StereoCameraSystemBaseline	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCameraCalibrationLensAlgorithmKind_ParametricLens	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCameraCalibrationLensDomain_Color	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCameraCalibrationLensRole_Left	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCameraCalibrationLensRole_Mono	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCameraCalibrationLensRole_Right	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTColorCorrectionImageRotationFailedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTColorCorrectionPixelTransferFailedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTColorSyncTransformConvertFailedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTCompressionPreset_Balanced	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPreset_HighQuality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPreset_HighSpeed	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPreset_VideoConferencing	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_ExtrinsicOrientationQuaternion	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_ExtrinsicOriginSource	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrix	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrixProjectionOffset	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrixReferenceDimensions	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensAlgorithmKind	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensDistortions	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensDomain	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensFrameAdjustmentsPolynomialX	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensFrameAdjustmentsPolynomialY	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensIdentifier	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_LensRole	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyCameraCalibrationKey_RadialAngleLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_AllowFrameReordering	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_AllowOpenGOP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_AllowTemporalCompression	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_AlphaChannelMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_AspectRatio16x9	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_AverageBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_BaseLayerBitRateFraction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_BaseLayerFrameRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_BaseLayerFrameRateFraction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_CalculateMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
-c:@kVTCompressionPropertyKey_CameraCalibrationDataLensCollection	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_CleanAperture	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ColorPrimaries	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ConstantBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ContentLightLevelInfo	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_DataRateLimits	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_Depth	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_EnableLTR	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_EncoderID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_EstimatedAverageBytesPerFrame	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ExpectedDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ExpectedFrameRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_FieldCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_FieldDetail	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_GammaLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_H264EntropyMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_HDRMetadataInsertionMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_HasLeftStereoEyeView	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_HasRightStereoEyeView	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_HeroEye	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_HorizontalDisparityAdjustment	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_HorizontalFieldOfView	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ICCProfile	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MVHEVCLeftAndRightViewIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MVHEVCVideoLayerIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MVHEVCViewIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MasteringDisplayColorVolume	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaxAllowedFrameQP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaxFrameDelayCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaxH264SliceBytes	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaxKeyFrameInterval	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaximizePowerEfficiency	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MaximumRealTimeFrameRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MinAllowedFrameQP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MoreFramesAfterEnd	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MoreFramesBeforeStart	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_MultiPassStorage	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_NumberOfPendingFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_OutputBitDepth	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_PixelAspectRatio	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_PixelBufferPoolIsShared	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_PixelTransferProperties	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_PreserveAlphaChannel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_PreserveDynamicHDRMetadata	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ProfileLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ProgressiveScan	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ProjectionKind	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_Quality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_RealTime	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_RecommendedParallelizationLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_RecommendedParallelizedSubdivisionMinimumDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_RecommendedParallelizedSubdivisionMinimumFrameCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ReferenceBufferCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_SourceFrameCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_SpatialAdaptiveQPLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_StereoCameraBaseline	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_SuggestedLookAheadFrameCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_SupportedPresetDictionaries	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_SupportsBaseFrameQP	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_TargetQualityForAlpha	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_TransferFunction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_UsingGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_VBVBufferDuration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_VBVInitialDelayPercentage	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_VBVMaxBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_VariableBitRate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_VideoEncoderPixelBufferAttributes	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_ViewPackingKind	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionPropertyKey_YCbCrMatrix	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTCompressionSessionBeginFinalPass	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTCouldNotCreateColorCorrectionDataErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTCouldNotCreateInstanceErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTCouldNotFindExtensionErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTCouldNotFindTemporalFilterErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTCouldNotFindVideoDecoderErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTCouldNotFindVideoEncoderErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTCouldNotOutputTaggedBufferGroupErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTDecodeFrameOptionKey_ContentAnalyzerCropRectangle	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeFrameOptionKey_ContentAnalyzerRotation	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeFrame_1xRealTimePlayback	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeFrame_DoNotOutputFrame	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeFrame_EnableAsynchronousDecompression	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeFrame_EnableTemporalProcessing	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeInfo_Asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeInfo_FrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeInfo_FrameInterrupted	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeInfo_ImageBufferModifiable	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecodeInfo_SkippedLeadingFrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTDecompressionPropertyKey_AllowBitstreamToChangeFrameDimensions	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_ContentHasInterframeDependencies	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_DecoderProducesRAWOutput	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_DeinterlaceMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_FieldMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_GeneratePerFrameHDRDisplayMetadata	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_MaxOutputPresentationTimeStampOfFramesBeingDecoded	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_MaximizePowerEfficiency	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_MinOutputPresentationTimeStampOfFramesBeingDecoded	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_NumberOfFramesBeingDecoded	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_OnlyTheseFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_OutputPoolRequestedMinimumBufferCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_PixelBufferPool	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_PixelBufferPoolIsShared	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_PixelFormatsWithReducedResolutionSupport	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_PixelTransferProperties	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_RealTime	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_ReducedCoefficientDecode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_ReducedFrameDelivery	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_ReducedResolutionDecode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_RequestRAWOutput	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_RequestedMVHEVCVideoLayerIDs	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_SuggestedQualityOfServiceTiers	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_SupportedPixelFormatsOrderedByPerformance	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_SupportedPixelFormatsOrderedByQuality	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_ThreadCount	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_UsingGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_DeinterlaceMode_Temporal	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_DeinterlaceMode_VerticalFilter	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_FieldMode_BothFields	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_FieldMode_BottomFieldOnly	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_FieldMode_DeinterlaceFields	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_FieldMode_SingleField	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_FieldMode_TopFieldOnly	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_OnlyTheseFrames_AllFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_OnlyTheseFrames_IFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_OnlyTheseFrames_KeyFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_OnlyTheseFrames_NonDroppableFrames	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionProperty_TemporalLevelLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionResolutionKey_Height	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDecompressionResolutionKey_Width	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDownsamplingMode_Average	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTDownsamplingMode_Decimate	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTEncodeFrameOptionKey_AcknowledgedLTRTokens	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTEncodeFrameOptionKey_BaseFrameQP	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTEncodeFrameOptionKey_ForceKeyFrame	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTEncodeFrameOptionKey_ForceLTRRefresh	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTEncodeInfo_Asynchronous	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTEncodeInfo_FrameDropped	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-c:@kVTExtensionConflictErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTExtensionDisabledErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTExtensionProperties_CodecNameKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTExtensionProperties_ContainingBundleNameKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTExtensionProperties_ContainingBundleURLKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTExtensionProperties_ExtensionIdentifierKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTExtensionProperties_ExtensionNameKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTExtensionProperties_ExtensionURLKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTFormatDescriptionChangeNotSupportedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTFrameSiloInvalidTimeRangeErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTFrameSiloInvalidTimeStampErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTH264EntropyMode_CABAC	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTH264EntropyMode_CAVLC	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHDRMetadataInsertionMode_Auto	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHDRMetadataInsertionMode_None	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHDRMetadataInsertionMode_RequestSDRRangePreservation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHDRPerFrameMetadataGenerationHDRFormatType_DolbyVision	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHDRPerFrameMetadataGenerationOptionsKey_HDRFormats	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHeroEye_Left	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTHeroEye_Right	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTImageRotationNotSupportedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTInsufficientSourceColorDataErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTInvalidSessionErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTMotionEstimationSessionCreationOption_Label	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTMotionEstimationSessionCreationOption_MotionVectorSize	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTMotionEstimationSessionCreationOption_UseMultiPassSearch	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTMultiPassStorageCreationOption_DoNotDelete	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTMultiPassStorageIdentifierMismatchErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTMultiPassStorageInvalidErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTParameterErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTPixelRotationNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTPixelRotationPropertyKey_FlipHorizontalOrientation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelRotationPropertyKey_FlipVerticalOrientation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelRotationPropertyKey_Rotation	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferNotPermittedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTPixelTransferNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTPixelTransferPropertyKey_DestinationCleanAperture	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_DestinationColorPrimaries	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_DestinationICCProfile	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_DestinationPixelAspectRatio	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_DestinationTransferFunction	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_DestinationYCbCrMatrix	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_DownsamplingMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_RealTime	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPixelTransferPropertyKey_ScalingMode	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H263_Profile0_Level10	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H263_Profile0_Level45	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H263_Profile3_Level45	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_1_3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_3_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_3_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_3_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_4_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_4_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_4_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_5_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_5_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Baseline_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_ConstrainedBaseline_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_ConstrainedHigh_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Extended_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Extended_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_3_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_3_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_3_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_4_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_4_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_4_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_5_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_5_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_High_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_3_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_3_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_3_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_4_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_4_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_4_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_5_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_5_1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_5_2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_H264_Main_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_HEVC_Main10_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_HEVC_Main42210_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_HEVC_Main_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_HEVC_Monochrome10_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_HEVC_Monochrome_AutoLevel	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_AdvancedSimple_L0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_AdvancedSimple_L1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_AdvancedSimple_L2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_AdvancedSimple_L3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_AdvancedSimple_L4	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Main_L2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Main_L3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Main_L4	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Simple_L0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Simple_L1	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Simple_L2	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProfileLevel_MP4V_Simple_L3	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProjectionKind_Equirectangular	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProjectionKind_HalfEquirectangular	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProjectionKind_ParametricImmersive	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTProjectionKind_Rectilinear	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyDocumentationKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	macios VTDefs/VTErrors numeric mapping exercised by the runtime probe
-c:@kVTPropertyReadOnlyErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTPropertyReadWriteStatusKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyReadWriteStatus_ReadOnly	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyReadWriteStatus_ReadWrite	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyShouldBeSerializedKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertySupportedValueListKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertySupportedValueMaximumKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertySupportedValueMinimumKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyTypeKey	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyType_Boolean	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyType_Enumeration	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTPropertyType_Number	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterListElement_Description	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterListElement_Label	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterListElement_ListElementID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterValueType_Boolean	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterValueType_Float	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterValueType_Integer	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterValueType_List	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameterValueType_SubGroup	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_CameraValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_CurrentValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_Description	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_Enabled	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_InitialValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_Key	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_ListArray	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_MaximumValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_MinimumValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_Name	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_NeutralValue	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_SubGroup	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingParameter_ValueType	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingPropertyKey_MetadataForSidecarFile	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingPropertyKey_MetalDeviceRegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRAWProcessingPropertyKey_OutputColorAttachments	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRotation_0	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRotation_180	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRotation_CCW90	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTRotation_CW90	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTSampleAttachmentKey_QualityMetrics	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTSampleAttachmentKey_RequireLTRAcknowledgementToken	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTSampleAttachmentQualityMetricsKey_ChromaBlueMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
-c:@kVTSampleAttachmentQualityMetricsKey_ChromaRedMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
-c:@kVTSampleAttachmentQualityMetricsKey_LumaMeanSquaredError	declared	VideoToolbox.swift	declaration compiles; Darwin behavior unobserved
-c:@kVTScalingMode_CropSourceToCleanAperture	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTScalingMode_Letterbox	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTScalingMode_Normal	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTScalingMode_Trim	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTSessionMalfunctionErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderAuthorizationErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderBadDataErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderCallbackMessagingErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderMalfunctionErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderNeedsRosettaErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderNotAvailableNowErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderReferenceMissingErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderRemovedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoDecoderUnknownErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoDecoderUnsupportedDataFormatErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderAuthorizationErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderAutoWhiteBalanceNotLockedErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_CodecName	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_CodecType	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_DisplayName	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_EncoderID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_EncoderName	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_GPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_InstanceLimit	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_IsHardwareAccelerated	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_PerformanceRating	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_QualityRating	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_SupportedSelectionProperties	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderList_SupportsFrameReordering	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderMVHEVCVideoLayerIDsMismatchErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderMalfunctionErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderNeedsRosettaErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderNotAvailableNowErr	declared	VideoToolbox.swift	macios numeric mapping compiled; not asserted in the runtime probe
-c:@kVTVideoEncoderSpecification_EnableHardwareAcceleratedVideoEncoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderSpecification_EnableLowLatencyRateControl	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderSpecification_EncoderID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderSpecification_RequireHardwareAcceleratedVideoEncoder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTViewPackingKind_OverUnder	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-c:@kVTViewPackingKind_SideBySide	declared	VTKeys.swift	Linux String payload is the public C identifier; Darwin CFSTR unobserved
-s:12VideoToolbox12VTSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox14VTFrameSiloRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox21VTMultiPassStorageRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox23VTCompressionSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox25VTDecompressionSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox25VTPixelRotationSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox25VTPixelTransferSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox25VTRAWProcessingSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox28VTMotionEstimationSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox41VTHDRPerFrameMetadataGenerationSessionRefa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
-s:12VideoToolbox8OSStatusa	implemented	VideoToolbox.swift	type, flag, or numeric constant compiled into libVideoToolbox.dylib
+c:@F@VTCompressionSessionBeginPass	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionCompleteFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionEncodeFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionEncodeMultiImageFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionEncodeMultiImageFrameWithOutputHandler	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionEndPass	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionGetPixelBufferPool	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionGetTimeRangesForNextPass	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCompressionSessionPrepareToEncodeFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCopyRAWProcessorExtensionProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCopySupportedPropertyDictionaryForEncoder	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCopyVideoDecoderExtensionProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCopyVideoEncoderList	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTCreateCGImageFromCVPixelBuffer	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionCanAcceptFormatDescription	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionCopyBlackPixelBuffer	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrameWithOptions	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrameWithOptionsAndOutputHandler	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionDecodeFrameWithOutputHandler	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionFinishDelayedFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionSetMultiImageCallback	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTDecompressionSessionWaitForAsynchronousFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTFrameSiloAddSampleBuffer	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTFrameSiloCallFunctionForEachSampleBuffer	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTFrameSiloCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTFrameSiloGetProgressOfCurrentPass	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTFrameSiloSetTimeRangesForNextPass	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTHDRPerFrameMetadataGenerationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTHDRPerFrameMetadataGenerationSessionGetTypeID	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTHDRPerFrameMetadataGenerationSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTIsHardwareDecodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTIsStereoMVHEVCDecodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTIsStereoMVHEVCEncodeSupported	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTMotionEstimationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTMotionEstimationSessionGetTypeID	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTMotionEstimationSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTMultiPassStorageClose	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTMultiPassStorageCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelRotationSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelRotationSessionGetTypeID	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelRotationSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelRotationSessionRotateImage	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelTransferSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelTransferSessionGetTypeID	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelTransferSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTPixelTransferSessionTransferImage	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionCompleteFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionCopyProcessingParameters	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionCreate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionGetTypeID	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionInvalidate	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionProcessFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionSetParameterChangedHander	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionSetParameterChangedHandler	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRAWProcessingSessionSetProcessingParameters	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRegisterProfessionalVideoWorkflowVideoDecoders	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRegisterProfessionalVideoWorkflowVideoEncoders	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTRegisterSupplementalVideoDecoderIfAvailable	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTSessionCopyProperty	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTSessionCopySerializableProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTSessionCopySupportedPropertyDictionary	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTSessionSetProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@F@VTSessionSetProperty	implemented	tests/agent/VideoToolboxRuntime.swift	Session, property, pixel-transfer, or fail-closed entry exercised by the runtime probe
+c:@S@VTCompressionSessionOptionFlags	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTCompressionSessionOptionFlags@beginFinalPass	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTCompressionSessionOptionFlags@init	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTCompressionSessionOptionFlags@rawValue	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags@doNotOutputFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags@enableAsynchronousDecompression	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags@enableTemporalProcessing	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags@init	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags@oneXRealTimePlayback	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeFrameFlags@rawValue	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@asynchronous	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@frameDropped	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@frameInterrupted	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@imageBufferModifiable	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@init	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@rawValue	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTDecodeInfoFlags@skippedLeadingFrameDropped	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTEncodeInfoFlags	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTEncodeInfoFlags@asynchronous	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTEncodeInfoFlags@frameDropped	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTEncodeInfoFlags@init	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@S@VTEncodeInfoFlags@rawValue	implemented	tests/agent/VideoToolboxRuntime.swift	Flag/option-set member raw values asserted by the runtime probe
+c:@kVTAllocationFailedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTAlphaChannelMode_PremultipliedAlpha	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTAlphaChannelMode_StraightAlpha	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCameraCalibrationExtrinsicOriginSource_StereoCameraSystemBaseline	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCameraCalibrationLensAlgorithmKind_ParametricLens	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCameraCalibrationLensDomain_Color	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCameraCalibrationLensRole_Left	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCameraCalibrationLensRole_Mono	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCameraCalibrationLensRole_Right	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTColorCorrectionImageRotationFailedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTColorCorrectionPixelTransferFailedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTColorSyncTransformConvertFailedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCompressionPreset_Balanced	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPreset_HighQuality	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPreset_HighSpeed	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPreset_VideoConferencing	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_ExtrinsicOrientationQuaternion	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_ExtrinsicOriginSource	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrix	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrixProjectionOffset	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_IntrinsicMatrixReferenceDimensions	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensAlgorithmKind	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensDistortions	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensDomain	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensFrameAdjustmentsPolynomialX	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensFrameAdjustmentsPolynomialY	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensIdentifier	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_LensRole	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyCameraCalibrationKey_RadialAngleLimit	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_AllowFrameReordering	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_AllowOpenGOP	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_AllowTemporalCompression	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_AlphaChannelMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_AspectRatio16x9	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_AverageBitRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_BaseLayerBitRateFraction	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_BaseLayerFrameRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_BaseLayerFrameRateFraction	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_CalculateMeanSquaredError	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCompressionPropertyKey_CameraCalibrationDataLensCollection	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_CleanAperture	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ColorPrimaries	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ConstantBitRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ContentLightLevelInfo	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_DataRateLimits	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_Depth	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_EnableLTR	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_EncoderID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_EstimatedAverageBytesPerFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ExpectedDuration	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ExpectedFrameRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_FieldCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_FieldDetail	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_GammaLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_H264EntropyMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_HDRMetadataInsertionMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_HasLeftStereoEyeView	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_HasRightStereoEyeView	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_HeroEye	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_HorizontalDisparityAdjustment	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_HorizontalFieldOfView	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ICCProfile	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MVHEVCLeftAndRightViewIDs	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MVHEVCVideoLayerIDs	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MVHEVCViewIDs	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MasteringDisplayColorVolume	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaxAllowedFrameQP	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaxFrameDelayCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaxH264SliceBytes	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaxKeyFrameInterval	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaxKeyFrameIntervalDuration	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaximizePowerEfficiency	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MaximumRealTimeFrameRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MinAllowedFrameQP	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MoreFramesAfterEnd	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MoreFramesBeforeStart	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_MultiPassStorage	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_NumberOfPendingFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_OutputBitDepth	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_PixelAspectRatio	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_PixelBufferPoolIsShared	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_PixelTransferProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_PreserveAlphaChannel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_PreserveDynamicHDRMetadata	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ProfileLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ProgressiveScan	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ProjectionKind	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_Quality	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_RealTime	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_RecommendedParallelizationLimit	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_RecommendedParallelizedSubdivisionMinimumDuration	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_RecommendedParallelizedSubdivisionMinimumFrameCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ReferenceBufferCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_SourceFrameCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_SpatialAdaptiveQPLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_StereoCameraBaseline	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_SuggestedLookAheadFrameCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_SupportedPresetDictionaries	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_SupportsBaseFrameQP	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_TargetQualityForAlpha	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_TransferFunction	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_UsingGPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_VBVBufferDuration	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_VBVInitialDelayPercentage	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_VBVMaxBitRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_VariableBitRate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_VideoEncoderPixelBufferAttributes	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_ViewPackingKind	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionPropertyKey_YCbCrMatrix	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCompressionSessionBeginFinalPass	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTCouldNotCreateColorCorrectionDataErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCouldNotCreateInstanceErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCouldNotFindExtensionErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCouldNotFindTemporalFilterErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCouldNotFindVideoDecoderErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCouldNotFindVideoEncoderErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTCouldNotOutputTaggedBufferGroupErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTDecodeFrameOptionKey_ContentAnalyzerCropRectangle	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeFrameOptionKey_ContentAnalyzerRotation	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeFrame_1xRealTimePlayback	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeFrame_DoNotOutputFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeFrame_EnableAsynchronousDecompression	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeFrame_EnableTemporalProcessing	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeInfo_Asynchronous	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeInfo_FrameDropped	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeInfo_FrameInterrupted	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeInfo_ImageBufferModifiable	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecodeInfo_SkippedLeadingFrameDropped	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_AllowBitstreamToChangeFrameDimensions	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_ContentHasInterframeDependencies	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_DecoderProducesRAWOutput	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_DeinterlaceMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_FieldMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_GeneratePerFrameHDRDisplayMetadata	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_MaxOutputPresentationTimeStampOfFramesBeingDecoded	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_MaximizePowerEfficiency	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_MinOutputPresentationTimeStampOfFramesBeingDecoded	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_NumberOfFramesBeingDecoded	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_OnlyTheseFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_OutputPoolRequestedMinimumBufferCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_PixelBufferPool	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_PixelBufferPoolIsShared	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_PixelFormatsWithReducedResolutionSupport	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_PixelTransferProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_RealTime	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_ReducedCoefficientDecode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_ReducedFrameDelivery	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_ReducedResolutionDecode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_RequestRAWOutput	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_RequestedMVHEVCVideoLayerIDs	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_SuggestedQualityOfServiceTiers	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_SupportedPixelFormatsOrderedByPerformance	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_SupportedPixelFormatsOrderedByQuality	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_ThreadCount	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_UsingGPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_DeinterlaceMode_Temporal	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_DeinterlaceMode_VerticalFilter	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_FieldMode_BothFields	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_FieldMode_BottomFieldOnly	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_FieldMode_DeinterlaceFields	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_FieldMode_SingleField	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_FieldMode_TopFieldOnly	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_OnlyTheseFrames_AllFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_OnlyTheseFrames_IFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_OnlyTheseFrames_KeyFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_OnlyTheseFrames_NonDroppableFrames	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionProperty_TemporalLevelLimit	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionResolutionKey_Height	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDecompressionResolutionKey_Width	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDownsamplingMode_Average	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTDownsamplingMode_Decimate	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTEncodeFrameOptionKey_AcknowledgedLTRTokens	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTEncodeFrameOptionKey_BaseFrameQP	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTEncodeFrameOptionKey_ForceKeyFrame	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTEncodeFrameOptionKey_ForceLTRRefresh	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTEncodeInfo_Asynchronous	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTEncodeInfo_FrameDropped	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTExtensionConflictErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTExtensionDisabledErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTExtensionProperties_CodecNameKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTExtensionProperties_ContainingBundleNameKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTExtensionProperties_ContainingBundleURLKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTExtensionProperties_ExtensionIdentifierKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTExtensionProperties_ExtensionNameKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTExtensionProperties_ExtensionURLKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTFormatDescriptionChangeNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTFrameSiloInvalidTimeRangeErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTFrameSiloInvalidTimeStampErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTH264EntropyMode_CABAC	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTH264EntropyMode_CAVLC	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHDRMetadataInsertionMode_Auto	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHDRMetadataInsertionMode_None	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHDRMetadataInsertionMode_RequestSDRRangePreservation	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHDRPerFrameMetadataGenerationHDRFormatType_DolbyVision	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHDRPerFrameMetadataGenerationOptionsKey_HDRFormats	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHeroEye_Left	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTHeroEye_Right	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTImageRotationNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTInsufficientSourceColorDataErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTInvalidSessionErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTMotionEstimationSessionCreationOption_Label	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTMotionEstimationSessionCreationOption_MotionVectorSize	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTMotionEstimationSessionCreationOption_UseMultiPassSearch	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTMultiPassStorageCreationOption_DoNotDelete	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTMultiPassStorageIdentifierMismatchErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTMultiPassStorageInvalidErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTParameterErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTPixelRotationNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTPixelRotationPropertyKey_FlipHorizontalOrientation	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelRotationPropertyKey_FlipVerticalOrientation	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelRotationPropertyKey_Rotation	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferNotPermittedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTPixelTransferNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationCleanAperture	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationColorPrimaries	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationICCProfile	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationPixelAspectRatio	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationTransferFunction	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_DestinationYCbCrMatrix	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_DownsamplingMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_RealTime	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPixelTransferPropertyKey_ScalingMode	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H263_Profile0_Level10	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H263_Profile0_Level45	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H263_Profile3_Level45	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_1_3	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_3_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_3_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_3_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_4_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_4_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_4_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_5_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_5_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_5_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Baseline_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_ConstrainedBaseline_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_ConstrainedHigh_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Extended_5_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Extended_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_3_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_3_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_3_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_4_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_4_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_4_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_5_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_5_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_5_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_High_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_3_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_3_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_3_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_4_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_4_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_4_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_5_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_5_1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_5_2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_H264_Main_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_HEVC_Main10_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_HEVC_Main42210_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_HEVC_Main_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_HEVC_Monochrome10_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_HEVC_Monochrome_AutoLevel	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L3	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_AdvancedSimple_L4	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Main_L2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Main_L3	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Main_L4	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Simple_L0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Simple_L1	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Simple_L2	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProfileLevel_MP4V_Simple_L3	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProjectionKind_Equirectangular	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProjectionKind_HalfEquirectangular	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProjectionKind_ParametricImmersive	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTProjectionKind_Rectilinear	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyDocumentationKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyNotSupportedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTPropertyReadOnlyErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTPropertyReadWriteStatusKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyReadWriteStatus_ReadOnly	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyReadWriteStatus_ReadWrite	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyShouldBeSerializedKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertySupportedValueListKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertySupportedValueMaximumKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertySupportedValueMinimumKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyTypeKey	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyType_Boolean	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyType_Enumeration	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTPropertyType_Number	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterListElement_Description	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterListElement_Label	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterListElement_ListElementID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterValueType_Boolean	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterValueType_Float	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterValueType_Integer	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterValueType_List	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameterValueType_SubGroup	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_CameraValue	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_CurrentValue	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_Description	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_Enabled	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_InitialValue	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_Key	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_ListArray	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_MaximumValue	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_MinimumValue	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_Name	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_NeutralValue	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_SubGroup	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingParameter_ValueType	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingPropertyKey_MetadataForSidecarFile	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingPropertyKey_MetalDeviceRegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRAWProcessingPropertyKey_OutputColorAttachments	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRotation_0	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRotation_180	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRotation_CCW90	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTRotation_CW90	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTSampleAttachmentKey_QualityMetrics	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTSampleAttachmentKey_RequireLTRAcknowledgementToken	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTSampleAttachmentQualityMetricsKey_ChromaBlueMeanSquaredError	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTSampleAttachmentQualityMetricsKey_ChromaRedMeanSquaredError	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTSampleAttachmentQualityMetricsKey_LumaMeanSquaredError	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTScalingMode_CropSourceToCleanAperture	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTScalingMode_Letterbox	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTScalingMode_Normal	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTScalingMode_Trim	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTSessionMalfunctionErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderAuthorizationErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderBadDataErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderCallbackMessagingErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderMalfunctionErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderNeedsRosettaErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderNotAvailableNowErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderReferenceMissingErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderRemovedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoDecoderUnknownErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoDecoderUnsupportedDataFormatErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderAuthorizationErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderAutoWhiteBalanceNotLockedErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_CodecName	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_CodecType	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_DisplayName	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_EncoderID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_EncoderName	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_GPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_InstanceLimit	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_IsHardwareAccelerated	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_PerformanceRating	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_QualityRating	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_SupportedSelectionProperties	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderList_SupportsFrameReordering	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderMVHEVCVideoLayerIDsMismatchErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderMalfunctionErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderNeedsRosettaErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderNotAvailableNowErr	implemented	tests/agent/VideoToolboxRuntime.swift	OSStatus constant exact value asserted by the runtime probe
+c:@kVTVideoEncoderSpecification_EnableHardwareAcceleratedVideoEncoder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderSpecification_EnableLowLatencyRateControl	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderSpecification_EncoderID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderSpecification_RequireHardwareAcceleratedVideoEncoder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTViewPackingKind_OverUnder	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+c:@kVTViewPackingKind_SideBySide	implemented	tests/agent/VideoToolboxRuntime.swift	Public C-identifier String payload uniqueness/non-empty check in the runtime probe
+s:12VideoToolbox12VTSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox14VTFrameSiloRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox21VTMultiPassStorageRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox23VTCompressionSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox25VTDecompressionSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox25VTPixelRotationSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox25VTPixelTransferSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox25VTRAWProcessingSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox28VTMotionEstimationSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox41VTHDRPerFrameMetadataGenerationSessionRefa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
+s:12VideoToolbox8OSStatusa	implemented	tests/agent/VideoToolboxRuntime.swift	Typealias identity compiled and referenced by the runtime probe
