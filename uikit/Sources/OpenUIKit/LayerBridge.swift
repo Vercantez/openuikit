@@ -484,6 +484,9 @@ public enum LayerBridge {
             h.combine(pv.progress)
             combine(&h, (pv.progressTintColor ?? pv.tintColor).resolvedCGColor(with: traits))
             combine(&h, (pv.trackTintColor ?? UIColor.systemFill).resolvedCGColor(with: traits))
+        case let key as _UIKeyboardKey:
+            h.combine(key.kindFingerprint)
+            combine(&h, (key.backgroundColor ?? .white).resolvedCGColor(with: traits))
         default:
             break
         }
