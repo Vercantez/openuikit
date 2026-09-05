@@ -8,8 +8,14 @@ central-review step.
 
 Unchanged application source continues to import `PhotosUI`. Linux has no
 Photos library, no system picker UI, and no Live Photo playback engine.
-Picker configuration and filter values are real; presentation, playback,
-limited-library UI, and iCloud shared-album posting fail closed.
+Picker configuration, filters, results, and the picker-delegate hook are
+real; playback, limited-library UI, and iCloud shared-album posting fail
+closed.
+
+Coverage this round: **1026 implemented / 11 declared / 1037 total**
+(was 235 implemented / 802 declared). The PHPickerConfiguration,
+PHPickerFilter, PHPickerViewController, PHPickerResult, and
+PHPickerConfiguration.Update families are all nondeferred.
 
 ## What is real
 
@@ -19,13 +25,16 @@ limited-library UI, and iCloud shared-album posting fail closed.
   `livePhotos`, `bursts`, `panoramas`, `screenshots`, `depthEffectPhotos`,
   `spatialMedia`, `cinematicVideos`, `slomoVideos`, `timelapseVideos`,
   `screenRecordings`) plus `any` / `all` / `not` / `playbackStyle`.
+  Equality is structural (composed `any`/`all` arrays are order-sensitive).
   Host SPI `_matches` classifies portable `UTType` values; it is not
   Apple's Photos-library asset classifier.
-- `PHPickerConfiguration` keeps selection limit (portable default 1),
-  filter, preselected identifiers, mode, nested
-  `AssetRepresentationMode` / `Selection`, `disabledCapabilities`, and
-  `edgesWithoutContentMargins`. `Update` is a value snapshot for
-  `updatePicker(using:)`.
+  Docs: https://developer.apple.com/documentation/photosui/phpickerfilter-swift.struct
+- `PHPickerConfiguration` keeps selection limit (portable default 1,
+  matching Apple's documented default), filter, preselected identifiers,
+  mode, nested `AssetRepresentationMode` / `Selection`,
+  `disabledCapabilities`, and `edgesWithoutContentMargins`. `Update` is a
+  value snapshot for `updatePicker(using:)`.
+  Docs: https://developer.apple.com/documentation/photosui/phpickerconfiguration-swift.struct
 - ObjC overlay enums `PHPickerConfigurationAssetRepresentationMode`
   (`automatic=0`, `current=1`, `compatible=2`) and
   `PHPickerConfigurationSelection` (`default=0`, `ordered=1`,
@@ -33,8 +42,24 @@ limited-library UI, and iCloud shared-album posting fail closed.
 - `PHPickerCapabilities` and `PHLivePhotoBadgeOptions` are OptionSets
   with pinned macios bit values. `PHLivePhotoViewPlaybackStyle` is
   `undefined=0`, `full=1`, `hint=2`.
-- `PHPickerResult` holds an `NSItemProvider` lookalike and optional
-  asset identifier.
+- `PHPickerResult` holds an `NSItemProvider` and optional asset
+  identifier. `@_spi(OpenUIKitHost) _hostResult` registers a payload under a
+  portable UTType identifier (`public.jpeg` / `public.image` /
+  `public.movie`). Isolated-host `NSItemProvider` implements
+  `registeredTypeIdentifiers`, `hasItemConformingToTypeIdentifier`,
+  `registerDataRepresentation`, `loadDataRepresentation`,
+  `loadFileRepresentation`, and `loadObject(ofClass: Data.self)`.
+  Docs: https://developer.apple.com/documentation/photosui/phpickerresult-swift.struct
+  and https://developer.apple.com/documentation/foundation/nsitemprovider
+- `PHPickerViewController` stores configuration and a weak delegate.
+  `@_spi(OpenUIKitHost) _present()` simulates presentation: it returns
+  after delivering `picker(_:didFinishPicking:)` on the main thread with
+  an empty selection, or with results previously passed to
+  `_enqueueResults`. There is no picker chrome.
+  Docs: https://developer.apple.com/documentation/photosui/phpickerviewcontroller
+- `PHContentEditingController` is a real protocol; a host stub can be
+  messaged. There is no Photos extension session.
+  Docs: https://developer.apple.com/documentation/photosui/phcontenteditingcontroller
 - `PhotosPickerItem` stores an identifier and optional typed
   transferables installed through `@_spi(OpenUIKitHost)`. Completion
   `loadTransferable` finishes synchronously; the `async` overload is not
@@ -44,13 +69,15 @@ limited-library UI, and iCloud shared-album posting fail closed.
 
 ## Fail-closed boundaries
 
-- `PHPickerViewController` stores configuration and ignores
-  deselect/move/scroll/zoom/update. There is no picker chrome.
-- `PHLivePhotoView.startPlayback` / `stopPlayback` are no-ops.
-  `livePhotoBadgeImage` returns an empty `UIImage` lookalike, not Apple
-  badge artwork.
-- `PHPhotoLibrary.presentLimitedLibraryPicker` does not present UI and
-  reports an empty identifier list.
+- `PHPickerViewController` has no picker chrome. `deselect` / `move` /
+  `scroll` / `zoom` are no-ops. `updatePicker(using:)` stores the `Update`
+  for host observation only.
+- `PHLivePhotoView.startPlayback` / `stopPlayback` are no-ops and do not
+  invoke `PHLivePhotoViewDelegate`. `livePhotoBadgeImage` returns an empty
+  `UIImage` lookalike, not Apple badge artwork.
+  Docs: https://developer.apple.com/documentation/photosui/phlivephotoview
+- **Listed gap:** `PHPhotoLibrary.presentLimitedLibraryPicker` does not
+  present UI on Linux and reports an empty identifier list immediately.
 - `postToPhotosSharedAlbumSheet` dismisses immediately with
   `PhotosUIUnavailable.linuxHost`.
 - `View.photosPicker` modifiers are identity functions on Linux. The
@@ -58,18 +85,23 @@ limited-library UI, and iCloud shared-album posting fail closed.
   IceCubes presentation SPI; it is not part of the isolated guest
   manifest.
 - SwiftUI.View members synthesized onto `PhotosPicker` are identity
-  no-ops in `PhotosUIViewSurface.swift`. They compile; they do not
-  implement Apple layout, accessibility, or navigation.
+  no-ops in `PhotosUIViewSurface.swift`. They compile and return `Self`;
+  they do not implement Apple layout, accessibility, or navigation.
+- `PHLivePhoto` Transferable overlay methods stay **declared**: they
+  throw `PhotosUIUnavailable.linuxHost` and there is no Apple export
+  session to observe.
 
 ## Lookalikes
 
 Isolated host sources import Foundation only. Types owned by Photos,
 UIKit, UniformTypeIdentifiers, CoreTransferable, and SwiftUI are
 module-local stand-ins in `PhotosUILookalikes.swift`, compiled only when
-those modules are absent. `tests/agent/PhotosUIDependencyIdentity.swift`
-imports the real `PhotosUI` and `Foundation` modules for the later EC2
-build and must not be used to justify public substitutes for
-Foundation-owned types.
+those modules are absent. The Linux `NSItemProvider` lookalike exists
+because swift-corelibs-foundation does not vend the class; the later
+guest must use the port's Foundation type rather than this stand-in.
+`tests/agent/PhotosUIDependencyIdentity.swift` imports the real
+`PhotosUI` and `Foundation` modules for the later EC2 build and must not
+be used to justify public substitutes for Foundation-owned types.
 
 ## Existing Darwin host gate
 
