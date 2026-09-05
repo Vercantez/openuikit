@@ -133,18 +133,29 @@ private final class _Box<T>: @unchecked Sendable {
 }
 
 func testWidgetFamilyCanvasSizes() {
+    // Cited: Apple Human Interface Guidelines, Widgets
+    // https://developer.apple.com/design/human-interface-guidelines/widgets
+    // Home Screen logical-point table used here (iPhoneOS 26.1):
+    //   SE 375-pt class: small 155×155, medium 329×155, large 329×345
+    //   393-pt iPhone:   small 158×158, medium 338×158, large 338×354
+    //   430-pt iPhone:   small 170×170, medium 364×170, large 364×382
+    // Extra-large (iPad) and Lock Screen accessory families are not in that
+    // phone table; portableCanvasSize returns nil and the host must pass
+    // TimelineProviderContext.displaySize (oracle-questions.tsv).
     precondition(WidgetFamily.portableHomeScreenFamilies.map(\.rawValue) == [0, 1, 2, 3, 5, 6, 7])
     precondition(WidgetFamily.accessoryCorner.rawValue == 8)
     precondition(WidgetFamily.accessoryCorner.description == "accessoryCorner")
 
-    let seSmall = WidgetFamily.systemSmall.portableCanvasSize(for: .iPhoneSE375)
-    precondition(seSmall == CGSize(width: 155, height: 155))
-    let proMedium = WidgetFamily.systemMedium.portableCanvasSize(for: .iPhone393)
-    precondition(proMedium == CGSize(width: 338, height: 158))
-    let maxLarge = WidgetFamily.systemLarge.portableCanvasSize(for: .iPhone430)
-    precondition(maxLarge == CGSize(width: 364, height: 382))
-    let extra = WidgetFamily.systemExtraLarge.portableCanvasSize(for: .iPhone393)
-    precondition(extra == nil)
+    precondition(WidgetFamily.systemSmall.portableCanvasSize(for: .iPhoneSE375) == CGSize(width: 155, height: 155))
+    precondition(WidgetFamily.systemMedium.portableCanvasSize(for: .iPhoneSE375) == CGSize(width: 329, height: 155))
+    precondition(WidgetFamily.systemLarge.portableCanvasSize(for: .iPhoneSE375) == CGSize(width: 329, height: 345))
+    precondition(WidgetFamily.systemSmall.portableCanvasSize(for: .iPhone393) == CGSize(width: 158, height: 158))
+    precondition(WidgetFamily.systemMedium.portableCanvasSize(for: .iPhone393) == CGSize(width: 338, height: 158))
+    precondition(WidgetFamily.systemLarge.portableCanvasSize(for: .iPhone393) == CGSize(width: 338, height: 354))
+    precondition(WidgetFamily.systemSmall.portableCanvasSize(for: .iPhone430) == CGSize(width: 170, height: 170))
+    precondition(WidgetFamily.systemMedium.portableCanvasSize(for: .iPhone430) == CGSize(width: 364, height: 170))
+    precondition(WidgetFamily.systemLarge.portableCanvasSize(for: .iPhone430) == CGSize(width: 364, height: 382))
+    precondition(WidgetFamily.systemExtraLarge.portableCanvasSize(for: .iPhone393) == nil)
     precondition(WidgetFamily.accessoryCircular.portableCanvasSize(for: .iPhone393) == nil)
     precondition(WidgetFamily.accessoryRectangular.portableCanvasSize(for: .iPhone393) == nil)
     precondition(WidgetFamily.accessoryInline.portableCanvasSize(for: .iPhone393) == nil)
@@ -193,6 +204,7 @@ func testTimelineProviderCallbacks() {
     precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
     precondition(eval.failed == false)
     precondition(eval.value?.nextReload == Date(timeIntervalSinceReferenceDate: 40))
+    _assertTimelineRuntimeFailClosed()
 }
 
 func testIntentTimelineProviderCallbacks() {
@@ -311,7 +323,9 @@ func testTimelineEngineEntryAtTime() {
 }
 
 func testWidgetCenterCurrentPushInfo() {
-    let center = WidgetCenter()
+    // Cited: Apple WidgetCenter.currentPushInfo — nil until aps delivers a token.
+    let center = WidgetCenter.shared
+    center.resetProcessLocalState()
     let done = DispatchSemaphore(value: 0)
     let box = _Box<Bool>()
     Task {
@@ -322,6 +336,7 @@ func testWidgetCenterCurrentPushInfo() {
     }
     precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
     precondition(box.value == true)
+    center.resetProcessLocalState()
 }
 
 func testEnvironmentValuesRemaining() {
@@ -396,9 +411,43 @@ func testWidgetAndBundleMain() {
                 }
             }
         }
+        struct SecondWidget: Widget {
+            var body: some WidgetConfiguration {
+                StaticConfiguration(kind: "second", provider: _StaticProvider()) { _ in
+                    Text("2")
+                }
+            }
+        }
+        struct ThirdWidget: Widget {
+            var body: some WidgetConfiguration {
+                StaticConfiguration(kind: "third", provider: _StaticProvider()) { _ in
+                    Text("3")
+                }
+            }
+        }
+        struct FourthWidget: Widget {
+            var body: some WidgetConfiguration {
+                StaticConfiguration(kind: "fourth", provider: _StaticProvider()) { _ in
+                    Text("4")
+                }
+            }
+        }
+        struct FifthWidget: Widget {
+            var body: some WidgetConfiguration {
+                StaticConfiguration(kind: "fifth", provider: _StaticProvider()) { _ in
+                    Text("5")
+                }
+            }
+        }
+        // IceCubes' exact @main bundle is five widgets; WidgetBundleBuilder
+        // buildBlock overloads 1...5 must typecheck. Cited: Apple WidgetBundle.
         struct ProbeBundle: WidgetBundle {
             var body: some Widget {
                 ProbeWidget()
+                SecondWidget()
+                ThirdWidget()
+                FourthWidget()
+                FifthWidget()
             }
         }
         ProbeWidget.main()
@@ -409,95 +458,263 @@ func testWidgetAndBundleMain() {
     precondition(box.value == true)
 }
 
-func testConfigurationModifiers() {
+func testConfigurationTypes() {
     let box = _Box<Bool>()
     Task { @MainActor in
-        let staticConfig = StaticConfiguration(
+        let built = _makePortableConfigurations()
+        box.value =
+            built.staticDescriptor.kind == "static.kind"
+            && built.intentDescriptor.kind == "intent.kind"
+            && built.appDescriptor.kind == "app.kind"
+            && built.activityDescriptor.displayName != nil
+    }
+    _waitForBox(box)
+    precondition(box.value == true)
+}
+
+func testConfigurationDisplayNameAndDescription() {
+    // WidgetConfiguration modifiers are value stores: two independently
+    // built configs with the same display name / description compare equal.
+    // Cited: Apple WidgetConfiguration.configurationDisplayName / description.
+    let box = _Box<Bool>()
+    Task { @MainActor in
+        let first = _makePortableConfigurations()
+        let second = _makePortableConfigurations()
+        box.value =
+            first.staticDescriptor.displayName != nil
+            && first.staticDescriptor.description != nil
+            && first.staticDescriptor == second.staticDescriptor
+            && first.intentDescriptor.displayName != nil
+            && first.appDescriptor.description != nil
+            && first.activityDescriptor.displayName != nil
+            && first.activityDescriptor == second.activityDescriptor
+    }
+    _waitForBox(box)
+    precondition(box.value == true)
+}
+
+func testConfigurationFamiliesMarginsAndBackground() {
+    let box = _Box<Bool>()
+    Task { @MainActor in
+        let built = _makePortableConfigurations()
+        let other = StaticConfiguration(
             kind: "static.kind",
             provider: _StaticProvider()
         ) { entry in
             Text("\(entry.stamp)")
         }
-        .configurationDisplayName("Static")
-        .configurationDisplayName(LocalizedStringKey("Static"))
-        .configurationDisplayName(LocalizedStringResource("Static"))
-        .configurationDisplayName(Text("Static"))
-        .description("Static desc")
-        .description(LocalizedStringKey("Static desc"))
-        .description(LocalizedStringResource("Static desc"))
-        .description(Text("Static desc"))
-        .supportedFamilies([.systemSmall, .systemMedium])
-        .contentMarginsDisabled()
-        .containerBackgroundRemovable(false)
-        .promptsForUserConfiguration()
-        .pushHandler(_PushHandler.self)
-        .associatedKind("other")
-        .disfavoredLocations([.carPlay], for: [.systemSmall])
-        .supportedMountingStyles([.elevated])
-        .onBackgroundURLSessionEvents(matching: "id") { _, done in done() }
-        .onBackgroundURLSessionEvents(matching: { name in
-            name.hasPrefix("id")
-        }) { _, done in done() }
-        .supplementalActivityFamilies([.small])
-        .backgroundTask(BackgroundTask<Int, Int>()) { value in value }
-
-        let intentConfig = IntentConfiguration(
-            kind: "intent.kind",
-            intent: _LegacyIntent.self,
-            provider: _LegacyProvider()
-        ) { entry in
-            Text("\(entry.stamp)")
-        }
-        .configurationDisplayName("Intent")
-        .description("Intent desc")
         .supportedFamilies([.systemLarge])
-
-        let appConfig = AppIntentConfiguration(
-            kind: "app.kind",
-            intent: _AppIntent.self,
-            provider: _AppProvider()
-        ) { entry in
-            Text("\(entry.stamp)")
-        }
-        .configurationDisplayName("App")
-        .description("App desc")
-        .contentMarginsDisabled()
-
-        struct Attr: ActivityAttributes {
-            struct ContentState: Sendable {}
-        }
-        let activity = ActivityConfiguration(
-            for: Attr.self,
-            content: { _ in Text("a") },
-            dynamicIsland: { _ in
-                DynamicIsland(
-                    expanded: { DynamicIslandExpandedContent<Text>() },
-                    compactLeading: { Text("L") },
-                    compactTrailing: { Text("T") },
-                    minimal: { Text("M") }
-                )
-            }
-        )
-        .configurationDisplayName("Activity")
-        .description("Activity desc")
-
-        let staticDescriptor = WidgetKitPortable.descriptor(of: staticConfig)
-        let intentDescriptor = WidgetKitPortable.descriptor(of: intentConfig)
-        let appDescriptor = WidgetKitPortable.descriptor(of: appConfig)
-        let activityDescriptor = WidgetKitPortable.descriptor(of: activity)
+        let otherDescriptor = WidgetKitPortable.descriptor(of: other)
         box.value =
-            staticDescriptor.kind == "static.kind"
-            && staticDescriptor.displayName != nil
-            && staticDescriptor.contentMarginsDisabled
-            && !staticDescriptor.containerBackgroundRemovable
-            && staticDescriptor.supportedFamilies == [.systemSmall, .systemMedium]
-            && intentDescriptor.kind == "intent.kind"
-            && appDescriptor.kind == "app.kind"
-            && appDescriptor.contentMarginsDisabled
-            && activityDescriptor.displayName != nil
+            built.staticDescriptor.supportedFamilies == [.systemSmall, .systemMedium]
+            && built.staticDescriptor.contentMarginsDisabled
+            && !built.staticDescriptor.containerBackgroundRemovable
+            && built.intentDescriptor.supportedFamilies == [.systemLarge]
+            && built.appDescriptor.contentMarginsDisabled
+            && built.staticDescriptor != otherDescriptor
     }
     _waitForBox(box)
     precondition(box.value == true)
+}
+
+func testConfigurationPushAndSession() {
+    let box = _Box<Bool>()
+    Task { @MainActor in
+        let built = _makePortableConfigurations()
+        // promptsForUserConfiguration / pushHandler / associatedKind /
+        // onBackgroundURLSessionEvents / backgroundTask keep descriptor
+        // identity; they must not invent a chronod or URL-session success.
+        // Cited: Apple WidgetConfiguration.
+        box.value =
+            built.staticDescriptor.kind == "static.kind"
+            && built.staticDescriptor == built.staticDescriptor
+            && built.appDescriptor.kind == "app.kind"
+    }
+    _waitForBox(box)
+    precondition(box.value == true)
+}
+
+@MainActor
+private func _makePortableConfigurations() -> (
+    staticDescriptor: WidgetConfigurationDescriptor,
+    intentDescriptor: WidgetConfigurationDescriptor,
+    appDescriptor: WidgetConfigurationDescriptor,
+    activityDescriptor: WidgetConfigurationDescriptor
+) {
+    let staticConfig = StaticConfiguration(
+        kind: "static.kind",
+        provider: _StaticProvider()
+    ) { entry in
+        Text("\(entry.stamp)")
+    }
+    .configurationDisplayName("Static")
+    .configurationDisplayName(LocalizedStringKey("Static"))
+    .configurationDisplayName(LocalizedStringResource("Static"))
+    .configurationDisplayName(Text("Static"))
+    .description("Static desc")
+    .description(LocalizedStringKey("Static desc"))
+    .description(LocalizedStringResource("Static desc"))
+    .description(Text("Static desc"))
+    .supportedFamilies([.systemSmall, .systemMedium])
+    .contentMarginsDisabled()
+    .containerBackgroundRemovable(false)
+    .promptsForUserConfiguration()
+    .pushHandler(_PushHandler.self)
+    .associatedKind("other")
+    .disfavoredLocations([.carPlay], for: [.systemSmall])
+    .supportedMountingStyles([.elevated])
+    .onBackgroundURLSessionEvents(matching: "id") { _, done in done() }
+    .onBackgroundURLSessionEvents(matching: { name in
+        name.hasPrefix("id")
+    }) { _, done in done() }
+    .supplementalActivityFamilies([.small])
+    .backgroundTask(BackgroundTask<Int, Int>()) { value in value }
+
+    let intentConfig = IntentConfiguration(
+        kind: "intent.kind",
+        intent: _LegacyIntent.self,
+        provider: _LegacyProvider()
+    ) { entry in
+        Text("\(entry.stamp)")
+    }
+    .configurationDisplayName("Intent")
+    .description("Intent desc")
+    .supportedFamilies([.systemLarge])
+    .promptsForUserConfiguration()
+    .pushHandler(_PushHandler.self)
+    .associatedKind("legacy")
+    .disfavoredLocations([.lockScreen], for: [.systemLarge])
+    .supportedMountingStyles([.recessed])
+    .onBackgroundURLSessionEvents(matching: "intent") { _, done in done() }
+    .onBackgroundURLSessionEvents(matching: { name in
+        name.hasPrefix("in")
+    }) { _, done in done() }
+    .supplementalActivityFamilies([.medium])
+    .backgroundTask(BackgroundTask<Int, Int>()) { value in value }
+
+    let appConfig = AppIntentConfiguration(
+        kind: "app.kind",
+        intent: _AppIntent.self,
+        provider: _AppProvider()
+    ) { entry in
+        Text("\(entry.stamp)")
+    }
+    .configurationDisplayName("App")
+    .description("App desc")
+    .contentMarginsDisabled()
+    .promptsForUserConfiguration()
+    .pushHandler(_PushHandler.self)
+    .associatedKind("app")
+    .onBackgroundURLSessionEvents(matching: "app") { _, done in done() }
+    .onBackgroundURLSessionEvents(matching: { name in
+        name.hasPrefix("ap")
+    }) { _, done in done() }
+    .backgroundTask(BackgroundTask<Int, Int>()) { value in value }
+
+    struct Attr: ActivityAttributes {
+        struct ContentState: Sendable {}
+    }
+    let activity = ActivityConfiguration(
+        for: Attr.self,
+        content: { _ in Text("a") },
+        dynamicIsland: { _ in
+            DynamicIsland(
+                expanded: { DynamicIslandExpandedContent<Text>() },
+                compactLeading: { Text("L") },
+                compactTrailing: { Text("T") },
+                minimal: { Text("M") }
+            )
+        }
+    )
+    .configurationDisplayName("Activity")
+    .description("Activity desc")
+    .promptsForUserConfiguration()
+    .pushHandler(_PushHandler.self)
+    .associatedKind("activity")
+    .onBackgroundURLSessionEvents(matching: "act") { _, done in done() }
+    .onBackgroundURLSessionEvents(matching: { name in
+        name.hasPrefix("ac")
+    }) { _, done in done() }
+    .supplementalActivityFamilies([.small])
+    .backgroundTask(BackgroundTask<Int, Int>()) { value in value }
+
+    return (
+        WidgetKitPortable.descriptor(of: staticConfig),
+        WidgetKitPortable.descriptor(of: intentConfig),
+        WidgetKitPortable.descriptor(of: appConfig),
+        WidgetKitPortable.descriptor(of: activity)
+    )
+}
+
+private func _assertTimelineRuntimeFailClosed() {
+    struct Entry: TimelineEntry, Sendable {
+        var date: Date
+    }
+    struct Provider: TimelineProvider, Sendable {
+        var entries: [Entry]
+        var policy: TimelineReloadPolicy
+        func placeholder(in _: Context) -> Entry {
+            Entry(date: Date(timeIntervalSinceReferenceDate: 1))
+        }
+        func getSnapshot(
+            in _: Context,
+            completion: @escaping @Sendable (Entry) -> Void
+        ) {
+            completion(placeholder(in: TimelineProviderContext(
+                family: .systemSmall,
+                displaySize: CGSize(width: 1, height: 1)
+            )))
+        }
+        func getTimeline(
+            in _: Context,
+            completion: @escaping @Sendable (Timeline<Entry>) -> Void
+        ) {
+            completion(Timeline(entries: entries, policy: policy))
+        }
+    }
+    let context = TimelineProviderContext(
+        family: .systemSmall,
+        displaySize: CGSize(width: 1, height: 1)
+    )
+    let runtime = WidgetTimelineRuntime()
+    func expect(
+        _ entries: [Double],
+        _ policy: TimelineReloadPolicy,
+        as error: WidgetTimelineRuntimeError
+    ) {
+        let provider = Provider(
+            entries: entries.map { Entry(date: Date(timeIntervalSinceReferenceDate: $0)) },
+            policy: policy
+        )
+        let done = DispatchSemaphore(value: 0)
+        let box = _Box<WidgetTimelineRuntimeError>()
+        Task {
+            do {
+                _ = try await runtime.evaluate(provider, context: context)
+                box.failed = true
+            } catch let seen as WidgetTimelineRuntimeError {
+                box.value = seen
+            } catch {
+                box.failed = true
+            }
+            done.signal()
+        }
+        precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
+        precondition(box.failed == false)
+        precondition(box.value == error)
+    }
+    expect([], .atEnd, as: .emptyTimeline)
+    expect([20, 10], .atEnd, as: .entriesOutOfOrder)
+    expect(
+        [10, 10],
+        .atEnd,
+        as: .duplicateEntryDate(Date(timeIntervalSinceReferenceDate: 10))
+    )
+    expect(
+        [10, 20],
+        .after(Date(timeIntervalSinceReferenceDate: 5)),
+        as: .reloadDateBeforeLastEntry(Date(timeIntervalSinceReferenceDate: 5))
+    )
 }
 
 private func _waitForBox<T>(_ box: _Box<T>) {

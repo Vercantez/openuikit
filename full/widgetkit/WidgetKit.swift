@@ -490,6 +490,23 @@ private final class _WidgetCenterStorage: @unchecked Sendable {
     var configurations: [WidgetInfo] = []
     var requests: [WidgetReloadRequest] = []
     var nextSequence: UInt64 = 1
+    var recommendationInvalidations: UInt64 = 0
+
+    func reset() {
+        configurations = []
+        requests = []
+        nextSequence = 1
+        recommendationInvalidations = 0
+    }
+}
+
+/// Process-local registry. Linux has no `chronod`; every `WidgetCenter`
+/// instance, including `WidgetCenter.shared`, reads and writes this storage
+/// so a host (Focus widget guest included) can install configurations and
+/// drain reload work without claiming daemon acceptance.
+/// Cited: Apple WidgetKit `WidgetCenter` / `WidgetCenter.shared` documentation.
+private enum _WidgetCenterProcessLocal {
+    static let storage = _WidgetCenterStorage()
 }
 
 /// Linux has no `chronod`; reloads are retained as process-local host work.
@@ -507,10 +524,16 @@ public final class WidgetCenter: @unchecked Sendable {
     private let storage: _WidgetCenterStorage
 
     public init() {
-        storage = _WidgetCenterStorage()
+        storage = _WidgetCenterProcessLocal.storage
     }
 
-    public func invalidateConfigurationRecommendations() {}
+    /// Records a host-visible invalidation. Does not talk to `chronod`.
+    /// Cited: Apple `WidgetCenter.invalidateConfigurationRecommendations()`.
+    public func invalidateConfigurationRecommendations() {
+        storage.lock.lock()
+        storage.recommendationInvalidations &+= 1
+        storage.lock.unlock()
+    }
 
     public func invalidateRelevance(ofKind kind: String) {
         _ = kind
@@ -552,6 +575,24 @@ public final class WidgetCenter: @unchecked Sendable {
         storage.requests.removeAll(keepingCapacity: true)
         storage.lock.unlock()
         return requests
+    }
+
+    @_spi(OpenUIKitHost)
+    public func drainConfigurationRecommendationInvalidations() -> UInt64 {
+        storage.lock.lock()
+        let count = storage.recommendationInvalidations
+        storage.recommendationInvalidations = 0
+        storage.lock.unlock()
+        return count
+    }
+
+    /// Clears process-local configurations, reload requests, and invalidations.
+    /// Host tests call this between cases; it is not an Apple API.
+    @_spi(OpenUIKitHost)
+    public func resetProcessLocalState() {
+        storage.lock.lock()
+        storage.reset()
+        storage.lock.unlock()
     }
 
     private func currentConfigurationsSnapshot() -> [WidgetInfo] {
