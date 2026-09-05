@@ -14,6 +14,7 @@ extension ConformanceApps {
     public static let names: [String] = [
         "Feed",
         "Forms",
+        "Ledger",
         "Modal",
         "NavFlow",
         "Notes",
@@ -30,6 +31,7 @@ extension ConformanceApps {
     static func loadRegistry() {
         _ = _registerFeed
         _ = _registerForms
+        _ = _registerLedger
         _ = _registerModal
         _ = _registerNavFlow
         _ = _registerNotes

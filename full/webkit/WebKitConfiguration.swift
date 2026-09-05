@@ -165,11 +165,31 @@ open class WKWebsiteDataStore: NSObject {
         modifiedSince date: Date,
         completionHandler: @escaping () -> Void
     ) {
-        // No engine means this store has never persisted website data.  The
-        // requested postcondition is therefore already true; completing once
-        // is honest and prevents privacy/erase flows from hanging.
-        _ = (dataTypes, date)
+        _ = date
+        // Cookie bytes live in this process's WKHTTPCookieStore. Erasing
+        // WKWebsiteDataTypeCookies must touch that jar (Focus WebCacheUtils,
+        // 12 corpus apps). Other types have no engine-backed records.
+        if dataTypes.contains(WKWebsiteDataTypeCookies) {
+            httpCookieStore._portableRemoveAll()
+        }
         completionHandler()
+    }
+
+    open func fetchDataRecords(
+        ofTypes dataTypes: Set<String>,
+        completionHandler: @escaping ([WKWebsiteDataRecord]) -> Void
+    ) {
+        var records: [WKWebsiteDataRecord] = []
+        if dataTypes.contains(WKWebsiteDataTypeCookies),
+           !httpCookieStore._portableCookies.isEmpty {
+            records.append(
+                WKWebsiteDataRecord(
+                    displayName: "Cookies",
+                    dataTypes: [WKWebsiteDataTypeCookies]
+                )
+            )
+        }
+        completionHandler(records)
     }
 
     open func removeData(ofTypes dataTypes: Set<String>, modifiedSince date: Date) async {
@@ -184,12 +204,15 @@ open class WKWebsiteDataStore: NSObject {
         ofTypes dataTypes: Set<String>,
         for dataRecords: [WKWebsiteDataRecord]
     ) async {
-        _ = (dataTypes, dataRecords)
+        if dataTypes.contains(WKWebsiteDataTypeCookies), !dataRecords.isEmpty {
+            httpCookieStore._portableRemoveAll()
+        }
     }
 
     open func dataRecords(ofTypes dataTypes: Set<String>) async -> [WKWebsiteDataRecord] {
-        _ = dataTypes
-        return []
+        await withCheckedContinuation { continuation in
+            fetchDataRecords(ofTypes: dataTypes) { continuation.resume(returning: $0) }
+        }
     }
 
     open func fetchData(of dataTypes: Set<String>) async throws -> Data {

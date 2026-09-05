@@ -226,15 +226,141 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         )
         public static let linearPCM = MediaSubType(rawValue: cmFourCC("lpcm"))
         public static let mpeg4AAC = MediaSubType(rawValue: cmFourCC("aac "))
+        public static let mpeg4AAC_HE = MediaSubType(rawValue: cmFourCC("aach"))
+        public static let mpeg4AAC_LD = MediaSubType(rawValue: cmFourCC("aacl"))
+        public static let mpeg4AAC_ELD = MediaSubType(rawValue: cmFourCC("aace"))
+        public static let mpeg4AAC_ELD_SBR = MediaSubType(rawValue: cmFourCC("aacf"))
+        public static let mpeg4AAC_ELD_V2 = MediaSubType(rawValue: cmFourCC("aacg"))
+        public static let mpeg4AAC_HE_V2 = MediaSubType(rawValue: cmFourCC("aacp"))
+        public static let mpeg4AAC_Spatial = MediaSubType(rawValue: cmFourCC("aacs"))
+        public static let mpeg4CELP = MediaSubType(rawValue: cmFourCC("celp"))
+        public static let mpeg4HVXC = MediaSubType(rawValue: cmFourCC("hvxc"))
+        public static let mpeg4TwinVQ = MediaSubType(rawValue: cmFourCC("twvq"))
+        public static let mpegLayer1 = MediaSubType(rawValue: cmFourCC(".mp1"))
+        public static let mpegLayer2 = MediaSubType(rawValue: cmFourCC(".mp2"))
+        public static let mpegLayer3 = MediaSubType(rawValue: cmFourCC(".mp3"))
         public static let appleLossless = MediaSubType(rawValue: cmFourCC("alac"))
         public static let flac = MediaSubType(rawValue: cmFourCC("flac"))
         public static let opus = MediaSubType(rawValue: cmFourCC("opus"))
         public static let ac3 = MediaSubType(rawValue: cmFourCC("ac-3"))
         public static let enhancedAC3 = MediaSubType(rawValue: cmFourCC("ec-3"))
+        public static let iec60958AC3 = MediaSubType(rawValue: cmFourCC("cac3"))
+        public static let amr = MediaSubType(rawValue: cmFourCC("samr"))
+        public static let amr_WB = MediaSubType(rawValue: cmFourCC("sawb"))
+        public static let iLBC = MediaSubType(rawValue: cmFourCC("ilbc"))
+        public static let uLaw = MediaSubType(rawValue: cmFourCC("ulaw"))
+        public static let aLaw = MediaSubType(rawValue: cmFourCC("alaw"))
+        public static let appleIMA4 = MediaSubType(rawValue: cmFourCC("ima4"))
+        public static let dviIntelIMA = MediaSubType(rawValue: 0x6D730011)
+        public static let microsoftGSM = MediaSubType(rawValue: 0x6D730031)
+        public static let aes3 = MediaSubType(rawValue: cmFourCC("aes3"))
+        public static let midiStream = MediaSubType(rawValue: cmFourCC("midi"))
+        public static let parameterValueStream = MediaSubType(rawValue: cmFourCC("apvs"))
+        public static let mpegD_USAC = MediaSubType(rawValue: cmFourCC("usac"))
+        public static let mace3 = MediaSubType(rawValue: cmFourCC("MAC3"))
+        public static let mace6 = MediaSubType(rawValue: cmFourCC("MAC6"))
+        public static let qDesign = MediaSubType(rawValue: cmFourCC("QDMC"))
+        public static let qDesign2 = MediaSubType(rawValue: cmFourCC("QDM2"))
+        public static let qualcomm = MediaSubType(rawValue: cmFourCC("Qclp"))
+        public static let audible = MediaSubType(rawValue: cmFourCC("AUDB"))
+        public static let timeCode = MediaSubType(rawValue: kCMTimeCodeFormatType_TimeCode32)
     }
 
     public struct Extensions: Equatable {
+        public struct Key: RawRepresentable, Hashable, Sendable {
+            public typealias RawValue = String
+            public var rawValue: String
+            public init(rawValue: String) { self.rawValue = rawValue }
+
+            public static let formatName = Key(rawValue: "FormatName")
+            public static let depth = Key(rawValue: "Depth")
+            public static let vendor = Key(rawValue: "Vendor")
+            public static let version = Key(rawValue: "Version")
+            public static let revisionLevel = Key(rawValue: "RevisionLevel")
+            public static let spatialQuality = Key(rawValue: "SpatialQuality")
+            public static let temporalQuality = Key(rawValue: "TemporalQuality")
+            public static let fieldCount = Key(rawValue: "FieldCount")
+            public static let fieldDetail = Key(rawValue: "FieldDetail")
+            public static let pixelAspectRatio = Key(rawValue: "PixelAspectRatio")
+            public static let cleanAperture = Key(rawValue: "CleanAperture")
+            public static let colorPrimaries = Key(rawValue: "ColorPrimaries")
+            public static let transferFunction = Key(rawValue: "TransferFunction")
+            public static let yCbCrMatrix = Key(rawValue: "YCbCrMatrix")
+            public static let gammaLevel = Key(rawValue: "GammaLevel")
+            public static let iccProfile = Key(rawValue: "ICCProfile")
+            public static let bytesPerRow = Key(rawValue: "BytesPerRow")
+            public static let bitsPerComponent = Key(rawValue: "BitsPerComponent")
+            public static let fullRangeVideo = Key(rawValue: "FullRangeVideo")
+            public static let containsAlphaChannel = Key(rawValue: "ContainsAlphaChannel")
+            public static let alphaChannelMode = Key(rawValue: "AlphaChannelMode")
+            public static let sampleDescriptionExtensionAtoms = Key(rawValue: "SampleDescriptionExtensionAtoms")
+            public static let originalCompressionSettings = Key(rawValue: "OriginalCompressionSettings")
+            public static let verbatimSampleDescription = Key(rawValue: "VerbatimSampleDescription")
+            public static let verbatimImageDescription = Key(rawValue: "VerbatimImageDescription")
+            public static let verbatimISOSampleEntry = Key(rawValue: "VerbatimISOSampleEntry")
+            public static let metadataKeyTable = Key(rawValue: "MetadataKeyTable")
+            public static let defaultStyle = Key(rawValue: "DefaultStyle")
+            public static let displayFlags = Key(rawValue: "DisplayFlags")
+            public static let defaultTextBox = Key(rawValue: "DefaultTextBox")
+            public static let backgroundColor = Key(rawValue: "BackgroundColor")
+            public static let defaultFontName = Key(rawValue: "DefaultFontName")
+            public static let fontTable = Key(rawValue: "FontTable")
+            public static let horizontalJustification = Key(rawValue: "HorizontalJustification")
+            public static let verticalJustification = Key(rawValue: "VerticalJustification")
+            public static let textJustification = Key(rawValue: "TextJustification")
+            public static let projectionKind = Key(rawValue: "ProjectionKind")
+            public static let viewPackingKind = Key(rawValue: "ViewPackingKind")
+            public static let hasAdditionalViews = Key(rawValue: "HasAdditionalViews")
+            public static let hasLeftStereoEyeView = Key(rawValue: "HasLeftStereoEyeView")
+            public static let hasRightStereoEyeView = Key(rawValue: "HasRightStereoEyeView")
+            public static let heroEye = Key(rawValue: "HeroEye")
+            public static let stereoCameraBaseline = Key(rawValue: "StereoCameraBaseline")
+            public static let horizontalDisparityAdjustment = Key(rawValue: "HorizontalDisparityAdjustment")
+            public static let horizontalFieldOfView = Key(rawValue: "HorizontalFieldOfView")
+            public static let ambientViewingEnvironment = Key(rawValue: "AmbientViewingEnvironment")
+            public static let chromaLocationTopField = Key(rawValue: "ChromaLocationTopField")
+            public static let chromaLocationBottomField = Key(rawValue: "ChromaLocationBottomField")
+            public static let conformsToMPEG2VideoProfile = Key(rawValue: "ConformsToMPEG2VideoProfile")
+            public static let masteringDisplayColorVolume = Key(rawValue: "MasteringDisplayColorVolume")
+            public static let contentLightLevelInfo = Key(rawValue: "ContentLightLevelInfo")
+            public static let contentColorVolume = Key(rawValue: "ContentColorVolume")
+            public static let protectedContentOriginalFormat = Key(rawValue: "ProtectedContentOriginalFormat")
+            public static let alternativeTransferCharacteristics = Key(
+                rawValue: "AlternativeTransferCharacteristics"
+            )
+            public static let convertedFromExternalSphericalTags = Key(
+                rawValue: "ConvertedFromExternalSphericalTags"
+            )
+            public static let cameraCalibrationDataLensCollection = Key(
+                rawValue: "CameraCalibrationDataLensCollection"
+            )
+            public static let logTransferFunction = Key(rawValue: "LogTransferFunction")
+            public static let auxiliaryTypeInfo = Key(rawValue: "AuxiliaryTypeInfo")
+            public static let sourceReferenceName = Key(rawValue: "SourceReferenceName")
+        }
+
+        public struct Value: Hashable {
+            public var stored: CFTypeRef?
+            public var propertyListRepresentation: Any { stored as Any }
+            public init(_ stored: CFTypeRef? = nil) { self.stored = stored }
+            public static func == (lhs: Value, rhs: Value) -> Bool {
+                switch (lhs.stored, rhs.stored) {
+                case (nil, nil): return true
+                case let (a?, b?): return CFEqual(a, b)
+                default: return false
+                }
+            }
+            public func hash(into hasher: inout Hasher) {
+                if let stored {
+                    hasher.combine(ObjectIdentifier(stored as AnyObject))
+                } else {
+                    hasher.combine(0)
+                }
+            }
+        }
+
         public init() {}
+        public init(base: CMFormatDescription.Extensions) { self = base }
     }
 
     public typealias T = CMFormatDescription
@@ -254,6 +380,7 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
     public var extensions: Extensions
     public var attachments = CMAttachmentBearerAttachments()
     internal var extraIdentity: Any? = nil
+    fileprivate var extensionStore: [String: CFTypeRef] = [:]
 
     public init(
         mediaType: MediaType,
@@ -301,6 +428,8 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         self.dimensions = object.dimensions
         self.extensions = object.extensions
         self.attachments = object.attachments
+        self.extensionStore = object.extensionStore
+        self.extraIdentity = object.extraIdentity
     }
 
     public func equalTo(
@@ -324,6 +453,150 @@ extension CMFormatDescription: Equatable {
 extension CMFormatDescription: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+public func CMFormatDescriptionCreate(
+    allocator: CFAllocator?,
+    mediaType: CMMediaType,
+    mediaSubType: FourCharCode,
+    extensions: CFDictionary?,
+    formatDescriptionOut: UnsafeMutablePointer<CMFormatDescription?>
+) -> OSStatus {
+    _ = allocator
+    do {
+        let desc = try CMFormatDescription(
+            mediaType: CMFormatDescription.MediaType(rawValue: mediaType),
+            mediaSubType: CMFormatDescription.MediaSubType(rawValue: mediaSubType),
+            extensions: nil
+        )
+        if let extensions {
+            desc.installExtensions(extensions)
+        }
+        formatDescriptionOut.pointee = desc
+        return 0
+    } catch {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+}
+
+public func CMFormatDescriptionEqual(
+    _ formatDescription: CMFormatDescription?,
+    otherFormatDescription: CMFormatDescription?
+) -> Bool {
+    guard let formatDescription, let otherFormatDescription else {
+        return formatDescription == nil && otherFormatDescription == nil
+    }
+    return formatDescription.equalTo(otherFormatDescription)
+}
+
+public func CMFormatDescriptionEqualIgnoringExtensionKeys(
+    _ formatDescription: CMFormatDescription?,
+    otherFormatDescription: CMFormatDescription?,
+    extensionKeysToIgnore: CFArray?,
+    sampleDescriptionExtensionAtomKeysToIgnore: CFArray?
+) -> Bool {
+    _ = (extensionKeysToIgnore, sampleDescriptionExtensionAtomKeysToIgnore)
+    return CMFormatDescriptionEqual(formatDescription, otherFormatDescription: otherFormatDescription)
+}
+
+public func CMFormatDescriptionGetExtensions(_ desc: CMFormatDescription) -> CFDictionary? {
+    desc.copyExtensions()
+}
+
+public func CMFormatDescriptionGetExtension(
+    _ desc: CMFormatDescription,
+    extensionKey: CFString
+) -> CFPropertyList? {
+    desc.extension(for: extensionKey)
+}
+
+public func CMVideoFormatDescriptionGetDimensions(_ videoDesc: CMVideoFormatDescription) -> CMVideoDimensions {
+    videoDesc.dimensions
+}
+
+public func CMVideoFormatDescriptionCreate(
+    allocator: CFAllocator?,
+    codecType: CMVideoCodecType,
+    width: Int32,
+    height: Int32,
+    extensions: CFDictionary?,
+    formatDescriptionOut: UnsafeMutablePointer<CMVideoFormatDescription?>
+) -> OSStatus {
+    _ = allocator
+    do {
+        let desc = try CMFormatDescription(
+            videoCodecType: CMFormatDescription.MediaSubType(rawValue: codecType),
+            width: Int(width),
+            height: Int(height),
+            extensions: nil
+        )
+        if let extensions {
+            desc.installExtensions(extensions)
+        }
+        formatDescriptionOut.pointee = desc
+        return 0
+    } catch {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+}
+
+public func CMMuxedFormatDescriptionCreate(
+    allocator: CFAllocator?,
+    muxType: CMMuxedStreamType,
+    extensions: CFDictionary?,
+    formatDescriptionOut: UnsafeMutablePointer<CMMuxedFormatDescription?>
+) -> OSStatus {
+    _ = allocator
+    do {
+        let desc = try CMFormatDescription(
+            muxedStreamType: CMFormatDescription.MediaSubType(rawValue: muxType),
+            extensions: nil
+        )
+        if let extensions {
+            desc.installExtensions(extensions)
+        }
+        formatDescriptionOut.pointee = desc
+        return 0
+    } catch {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+}
+
+extension CMFormatDescription {
+    fileprivate func installExtensions(_ dictionary: CFDictionary) {
+        let count = Int(CFDictionaryGetCount(dictionary))
+        if count <= 0 { return }
+        var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+        var values = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+        keys.withUnsafeMutableBufferPointer { keyBuf in
+            values.withUnsafeMutableBufferPointer { valBuf in
+                CFDictionaryGetKeysAndValues(dictionary, keyBuf.baseAddress, valBuf.baseAddress)
+            }
+        }
+        for index in 0..<count {
+            guard let keyPtr = keys[index], let valPtr = values[index] else { continue }
+            let key = unsafeBitCast(keyPtr, to: CFString.self)
+            let name = unsafeBitCast(key, to: NSString.self) as String
+            extensionStore[name] = unsafeBitCast(valPtr, to: CFTypeRef.self)
+        }
+    }
+
+    fileprivate func copyExtensions() -> CFDictionary? {
+        if extensionStore.isEmpty { return nil }
+        var pairs: [(CFString, CFTypeRef)] = []
+        for (name, value) in extensionStore {
+            pairs.append((cmMakeCFString(name), value))
+        }
+        return cmCFDictionary(pairs)
+    }
+
+    fileprivate func `extension`(for key: CFString) -> CFPropertyList? {
+        let name = unsafeBitCast(key, to: NSString.self) as String
+        return extensionStore[name]
     }
 }
 

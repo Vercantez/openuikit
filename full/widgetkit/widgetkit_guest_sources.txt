@@ -3,4 +3,5 @@ full/widgetkit/WidgetKitActivities.swift
 full/widgetkit/WidgetKitControls.swift
 full/widgetkit/WidgetKitHostLookalikes.swift
 full/widgetkit/WidgetKitSurface.swift
+full/widgetkit/WidgetKitTimelineEngine.swift
 full/widgetkit/WidgetKitViewStubs.swift

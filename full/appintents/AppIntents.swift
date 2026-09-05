@@ -103,13 +103,49 @@ public struct IntentDialog: Sendable, Hashable,
     ExpressibleByStringLiteral, ExpressibleByStringInterpolation
 {
     public let text: String
+    public let supporting: String?
+    public let systemImageName: String?
 
-    public init(_ text: String) { self.text = text }
-    public init(_ resource: LocalizedStringResource) { self.text = resource.key }
+    public var full: String { text }
+
+    public init(_ text: String) {
+        self.text = text
+        self.supporting = nil
+        self.systemImageName = nil
+    }
+
+    public init(_ resource: LocalizedStringResource) { self.init(appIntentsString(resource)) }
+
+    public init(full: LocalizedStringResource, supporting: LocalizedStringResource) {
+        self.text = appIntentsString(full)
+        self.supporting = appIntentsString(supporting)
+        self.systemImageName = nil
+    }
+
+    public init(full: LocalizedStringResource, systemImageName: String) {
+        self.text = appIntentsString(full)
+        self.supporting = nil
+        self.systemImageName = systemImageName
+    }
+
+    public init(
+        full: LocalizedStringResource,
+        supporting: LocalizedStringResource,
+        systemImageName: String
+    ) {
+        self.text = appIntentsString(full)
+        self.supporting = appIntentsString(supporting)
+        self.systemImageName = systemImageName
+    }
+
     public init(stringLiteral value: String) { self.init(value) }
     public init(stringInterpolation: StringInterpolation) {
         self.init(stringInterpolation.value)
     }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
 
     public struct StringInterpolation: StringInterpolationProtocol {
         fileprivate var value: String
@@ -178,12 +214,48 @@ extension IntentResultContainer: OpensIntent {}
 extension IntentResultContainer: ReturnsValue {}
 
 public extension IntentResult where Self == IntentResultValue {
+    /// Portable empty / dialog-only factories stay on `IntentResultValue` so
+    /// `EchoIntent.perform()` still infers that type (testIntentPerformEcho,
+    /// testIntentDialogAndResultFactories). Apple's `IntentResultContainer`
+    /// overloads for the same spellings are not substituted in.
     static func result() -> Self {
         .init()
     }
 
     static func result(dialog: IntentDialog) -> Self {
         .init(dialog: dialog)
+    }
+}
+
+public extension IntentResult {
+    static func result<Value: _IntentValue>(
+        value: Value
+    ) -> IntentResultContainer<Value, Never, Never, Never>
+    where Self == IntentResultContainer<Value, Never, Never, Never> {
+        IntentResultContainer(value: value)
+    }
+
+    static func result<Value: _IntentValue>(
+        value: Value,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Value, Never, Never, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, Never, IntentDialog> {
+        IntentResultContainer(value: value, dialog: dialog)
+    }
+
+    static func result<OpensAppIntent: AppIntent>(
+        opensIntent: OpensAppIntent
+    ) -> IntentResultContainer<Never, OpensAppIntent, Never, Never>
+    where Self == IntentResultContainer<Never, OpensAppIntent, Never, Never> {
+        IntentResultContainer(opensIntent: opensIntent)
+    }
+
+    static func result<OpensAppIntent: AppIntent>(
+        opensIntent: OpensAppIntent,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Never, OpensAppIntent, Never, IntentDialog>
+    where Self == IntentResultContainer<Never, OpensAppIntent, Never, IntentDialog> {
+        IntentResultContainer(dialog: dialog, opensIntent: opensIntent)
     }
 }
 
@@ -209,6 +281,10 @@ public protocol AppIntent: PersistentlyIdentifiable, _SupportsAppDependencies, S
 }
 
 extension AppIntent {
+    public typealias Parameter = IntentParameter
+    public typealias Summary = IntentParameterSummary<Self>
+    public typealias Option = IntentChoiceOption
+
     public static var title: LocalizedStringResource {
         LocalizedStringResource(String(describing: Self.self))
     }
@@ -305,30 +381,110 @@ public actor AppIntentRuntime {
         executionCount &+= 1
         return try await intent.perform()
     }
+
+    @discardableResult
+    public func perform(_ intent: any AppIntent) async throws -> any IntentResult {
+        executionCount &+= 1
+        return try await intent.perform()
+    }
 }
 
 // MARK: - Descriptions
 
-public struct IntentDescription: Sendable, Hashable, ExpressibleByStringLiteral {
+public struct IntentDescription: Sendable, ExpressibleByStringLiteral {
     public let text: String
+    public let categoryName: LocalizedStringResource?
+    public let searchKeywords: [LocalizedStringResource]
+    public let resultValueName: LocalizedStringResource?
 
-    public init(_ text: String) { self.text = text }
-    public init(_ resource: LocalizedStringResource) { self.text = resource.key }
+    public var descriptionText: LocalizedStringResource {
+        LocalizedStringResource(text)
+    }
+
+    public init(_ text: String) {
+        self.text = text
+        self.categoryName = nil
+        self.searchKeywords = []
+        self.resultValueName = nil
+    }
+
+    public init(_ resource: LocalizedStringResource) {
+        self.init(appIntentsString(resource))
+    }
+
+    public init(
+        _ descriptionText: LocalizedStringResource,
+        categoryName: LocalizedStringResource? = nil,
+        searchKeywords: [LocalizedStringResource] = []
+    ) {
+        self.text = appIntentsString(descriptionText)
+        self.categoryName = categoryName
+        self.searchKeywords = searchKeywords
+        self.resultValueName = nil
+    }
+
+    public init(
+        _ descriptionText: LocalizedStringResource,
+        categoryName: LocalizedStringResource? = nil,
+        searchKeywords: [LocalizedStringResource] = [],
+        resultValueName: LocalizedStringResource?
+    ) {
+        self.text = appIntentsString(descriptionText)
+        self.categoryName = categoryName
+        self.searchKeywords = searchKeywords
+        self.resultValueName = resultValueName
+    }
+
     public init(stringLiteral value: String) { self.init(value) }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
 }
 
-public struct TypeDisplayRepresentation: Sendable, Hashable,
-    ExpressibleByStringLiteral
+public struct TypeDisplayRepresentation: Sendable, ExpressibleByStringLiteral
 {
     public let name: String
+    public let numericFormat: LocalizedStringResource?
+    public let synonyms: [LocalizedStringResource]
 
-    public init(name: String) { self.name = name }
-    public init(name: LocalizedStringResource) { self.name = name.key }
+    public init(name: String) {
+        self.name = name
+        self.numericFormat = nil
+        self.synonyms = []
+    }
+
+    public init(name: LocalizedStringResource) {
+        self.init(name: appIntentsString(name))
+    }
+
+    public init(
+        name: LocalizedStringResource,
+        numericFormat: LocalizedStringResource? = nil
+    ) {
+        self.name = appIntentsString(name)
+        self.numericFormat = numericFormat
+        self.synonyms = []
+    }
+
+    public init(
+        name: LocalizedStringResource,
+        numericFormat: LocalizedStringResource? = nil,
+        synonyms: [LocalizedStringResource] = []
+    ) {
+        self.name = appIntentsString(name)
+        self.numericFormat = numericFormat
+        self.synonyms = synonyms
+    }
+
     public init(stringLiteral value: String) { self.init(name: value) }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
 }
 
-public struct DisplayRepresentation: @unchecked Sendable, Hashable,
-    ExpressibleByStringLiteral
+public struct DisplayRepresentation: @unchecked Sendable, ExpressibleByStringLiteral
 {
     public struct Image: @unchecked Sendable, Hashable {
         public let systemName: String
@@ -484,6 +640,24 @@ public struct DisplayRepresentation: @unchecked Sendable, Hashable,
     public init(stringLiteral value: String) {
         self.init(title: value)
     }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+}
+
+extension DisplayRepresentation: Hashable {
+    public static func == (lhs: DisplayRepresentation, rhs: DisplayRepresentation) -> Bool {
+        String(describing: lhs.title) == String(describing: rhs.title)
+            && String(describing: lhs.subtitle) == String(describing: rhs.subtitle)
+            && lhs.image == rhs.image
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(String(describing: title))
+        hasher.combine(String(describing: subtitle))
+        hasher.combine(image)
+    }
 }
 
 // MARK: - Modes, errors, donation
@@ -610,7 +784,7 @@ public struct IntentSystemContext: Sendable {
     public init() {}
 }
 
-public struct IntentChoiceOption: Hashable, Sendable {
+public struct IntentChoiceOption: Sendable {
     public var title: LocalizedStringResource
     public struct Style: Hashable, Sendable {
         public static let `default` = Style()
@@ -619,6 +793,16 @@ public struct IntentChoiceOption: Hashable, Sendable {
     public init(title: LocalizedStringResource, style: Style = .default) {
         self.title = title
         _ = style
+    }
+}
+
+extension IntentChoiceOption: Hashable {
+    public static func == (lhs: IntentChoiceOption, rhs: IntentChoiceOption) -> Bool {
+        String(describing: lhs.title) == String(describing: rhs.title)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(String(describing: title))
     }
 }
 
@@ -691,8 +875,28 @@ public final class IntentParameter<Value>: @unchecked Sendable
         public let inputConnectionBehavior: InputConnectionBehavior?
     }
 
+    public enum IntControlStyle: Sendable, Hashable {
+        case field
+        case stepper
+    }
+
+    public enum DoubleControlStyle: Sendable, Hashable {
+        case field
+        case slider
+        case stepper
+    }
+
+    public typealias InclusiveRange<Bound: Comparable> = (lowerBound: Bound, upperBound: Bound)
+
     private let storage: _ParameterStorage<Value>
     public let metadata: Metadata
+    var defaultValue: Value?
+    var storedIntControlStyle: IntControlStyle?
+    var storedDoubleControlStyle: DoubleControlStyle?
+    var storedInclusiveRange: (lowerBound: String, upperBound: String)?
+    var storedDateKind: DateKind?
+
+    public var dateKind: DateKind? { storedDateKind }
 
     public var wrappedValue: Value {
         get {
@@ -700,6 +904,9 @@ public final class IntentParameter<Value>: @unchecked Sendable
             case let .value(value):
                 return value
             case .unset:
+                if let defaultValue {
+                    return defaultValue
+                }
                 if let optional = Value.self as? any _OptionalIntentValue.Type,
                    let value = optional._none as? Value {
                     return value
@@ -729,20 +936,23 @@ public final class IntentParameter<Value>: @unchecked Sendable
             supportedContentTypes: supportedContentTypes,
             inputConnectionBehavior: inputConnectionBehavior
         )
+        self.defaultValue = nil
     }
 
     public convenience init(
         title: LocalizedStringResource,
         description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
         requestValueDialog: IntentDialog? = nil,
         inputConnectionBehavior: InputConnectionBehavior? = nil
     ) {
         self.init(
-            title: title.key,
-            description: description?.key,
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
             requestValueDialog: requestValueDialog,
             inputConnectionBehavior: inputConnectionBehavior
         )
+        self.defaultValue = defaultValue
     }
 
     public func needsValueError(_ dialog: IntentDialog? = nil) -> AppIntentError {
@@ -758,6 +968,131 @@ public final class IntentParameter<Value>: @unchecked Sendable
         _ = dialog
         return .Unrecoverable.entityNotFound
     }
+
+    public enum ValueState: Sendable {
+        case set(Value)
+        case unset
+    }
+
+    public var valueState: ValueState {
+        switch storage.state {
+        case let .value(value):
+            return .set(value)
+        case .unset:
+            return .unset
+        }
+    }
+
+    public var isOptional: Bool {
+        Value.self is any _OptionalIntentValue.Type
+    }
+
+    /// Linux has no parameter prompt UI. Apple's async request throws after
+    /// a system dialog; this host returns unsupportedOnDevice.
+    public func requestValue(_ dialog: IntentDialog? = nil) async throws -> Value.ValueType {
+        _ = dialog
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public func requestValue(_ dialog: IntentDialog? = nil) -> any Error {
+        _ = dialog
+        return AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public func requestDisambiguation(
+        among itemsToDisambiguate: [Value.ValueType],
+        dialog: IntentDialog? = nil
+    ) async throws -> Value.ValueType {
+        _ = itemsToDisambiguate
+        _ = dialog
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public enum DateKind: Sendable, Hashable {
+        case date
+        case time
+        case dateTime
+    }
+
+    public enum PlacemarkDisplayStyle: Sendable, Hashable {
+        case city
+        case name
+        case address
+    }
+}
+
+extension IntentParameter where Value == Int {
+    public var controlStyle: IntControlStyle? { storedIntControlStyle }
+    public var inclusiveRange: InclusiveRange<Int>? {
+        guard let stored = storedInclusiveRange,
+              let lower = Int(stored.lowerBound),
+              let upper = Int(stored.upperBound) else {
+            return nil
+        }
+        return (lower, upper)
+    }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Int? = nil,
+        controlStyle: IntControlStyle = .stepper,
+        inclusiveRange: InclusiveRange<Int>? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedIntControlStyle = controlStyle
+        if let inclusiveRange {
+            storedInclusiveRange = (
+                String(inclusiveRange.lowerBound),
+                String(inclusiveRange.upperBound)
+            )
+        }
+    }
+}
+
+extension IntentParameter where Value == Double {
+    public var controlStyle: DoubleControlStyle? { storedDoubleControlStyle }
+    public var inclusiveRange: InclusiveRange<Double>? {
+        guard let stored = storedInclusiveRange,
+              let lower = Double(stored.lowerBound),
+              let upper = Double(stored.upperBound) else {
+            return nil
+        }
+        return (lower, upper)
+    }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Double? = nil,
+        controlStyle: DoubleControlStyle = .stepper,
+        inclusiveRange: InclusiveRange<Double>? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedDoubleControlStyle = controlStyle
+        if let inclusiveRange {
+            storedInclusiveRange = (
+                String(inclusiveRange.lowerBound),
+                String(inclusiveRange.upperBound)
+            )
+        }
+    }
 }
 
 public typealias Parameter = IntentParameter
@@ -765,14 +1100,18 @@ public typealias Parameter = IntentParameter
 @propertyWrapper
 public final class IntentParameterDependency<Intent: AppIntent>: @unchecked Sendable {
     private final class Storage: @unchecked Sendable {
-        var value: Intent?
+        var projection: IntentProjection<Intent>?
     }
 
     private let storage = Storage()
 
-    public var wrappedValue: Intent? {
-        get { storage.value }
-        set { storage.value = newValue }
+    public var wrappedValue: IntentProjection<Intent>? {
+        get { storage.projection }
+        set { storage.projection = newValue }
+    }
+
+    public var debugDescription: String {
+        String(describing: Intent.self)
     }
 
     public init<Value>(_ keyPath: KeyPath<Intent, IntentParameter<Value>>) {
@@ -785,10 +1124,30 @@ public struct IntentFile: @unchecked Sendable, Hashable {
     public let filename: String?
     public let fileURL: URL?
     public let type: IntentFileContentType?
+    public var removedOnCompletion: Bool = false
 
     public enum IntentFileError: Error, Hashable, Sendable {
         case unreadable
         case unsupportedType
+        case failedToLoadFile
+        case failedToLoadData
+
+        public static var errorDomain: String { "AppIntents.IntentFileError" }
+        public var errorCode: Int {
+            switch self {
+            case .unreadable: return 1
+            case .unsupportedType: return 2
+            case .failedToLoadFile: return 3
+            case .failedToLoadData: return 4
+            }
+        }
+        public var errorUserInfo: [String: Any] { ["errorCode": errorCode] }
+    }
+
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "File" }
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: filename ?? "file")
     }
 
     public init(
@@ -850,6 +1209,7 @@ extension DynamicOptionsProvider {
 public protocol EntityQuery: DynamicOptionsProvider, PersistentlyIdentifiable, Sendable {
     associatedtype Entity: AppEntity
     associatedtype Result = [Entity]
+    init()
     func entities(for identifiers: [Entity.ID]) async throws -> [Entity]
     func suggestedEntities() async throws -> [Entity]
     func defaultResult() async -> Entity?
@@ -874,6 +1234,26 @@ public protocol EntityStringQuery: EntityQuery {
 public protocol UniqueAppEntityQuery: EnumerableEntityQuery where Entity: UniqueAppEntity {
     associatedtype Unique where Entity == Unique
     func uniqueEntity() async throws -> Unique
+}
+
+extension UniqueAppEntityQuery {
+    public func allEntities() async throws -> [Entity] {
+        [try await uniqueEntity()]
+    }
+
+    public func suggestedEntities() async throws -> [Entity] {
+        try await allEntities()
+    }
+
+    public func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+        let entity = try await uniqueEntity()
+        for identifier in identifiers {
+            if identifier == entity.id {
+                return [entity]
+            }
+        }
+        return []
+    }
 }
 
 public protocol UniqueAppEntity: AppEntity where DefaultQuery: UniqueAppEntityQuery {}
@@ -926,6 +1306,10 @@ public struct AppShortcutPhrase<Intent: AppIntent>: Sendable, Hashable,
         template = stringInterpolation.value
     }
 
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
     public struct StringInterpolation: StringInterpolationProtocol {
         fileprivate var value = ""
 
@@ -936,6 +1320,9 @@ public struct AppShortcutPhrase<Intent: AppIntent>: Sendable, Hashable,
         public mutating func appendLiteral(_ literal: String) { value += literal }
 
         public mutating func appendInterpolation(_ token: AppShortcutPhraseToken) {
+            // Measured: "Add feed with \(.applicationName)" →
+            // "Add feed with ${applicationName}"
+            // (testAppShortcutBuilderUpdateAndApplicationNameToken, Linux swiftc).
             value += token == .applicationName ? "${applicationName}" : ""
         }
 
@@ -976,7 +1363,7 @@ public struct AppShortcut: @unchecked Sendable {
         self.init(
             intent: intent,
             phrases: phrases,
-            shortTitle: shortTitle.key,
+            shortTitle: appIntentsString(shortTitle),
             systemImageName: systemImageName
         )
     }
@@ -984,8 +1371,14 @@ public struct AppShortcut: @unchecked Sendable {
 
 @resultBuilder
 public enum AppShortcutsBuilder {
+    public static func buildBlock() -> [AppShortcut] { [] }
+
     public static func buildBlock(_ components: AppShortcut...) -> [AppShortcut] {
         components
+    }
+
+    public static func buildBlock(_ components: [AppShortcut]...) -> [AppShortcut] {
+        components.flatMap { $0 }
     }
 
     public static func buildArray(_ components: [[AppShortcut]]) -> [AppShortcut] {
@@ -1003,6 +1396,14 @@ public enum AppShortcutsBuilder {
     public static func buildEither(second component: [AppShortcut]) -> [AppShortcut] {
         component
     }
+
+    public static func buildExpression(_ component: AppShortcut) -> AppShortcut {
+        component
+    }
+
+    public static func buildLimitedAvailability(_ components: [AppShortcut]) -> [AppShortcut] {
+        components
+    }
 }
 
 public protocol AppShortcutsProvider: Sendable {
@@ -1012,6 +1413,11 @@ public protocol AppShortcutsProvider: Sendable {
 
 extension AppShortcutsProvider {
     public static var shortcutTileColor: ShortcutTileColor { .navy }
+    public static var negativePhrases: NegativeAppShortcutPhrases { NegativeAppShortcutPhrases() }
+
+    /// Linux has no Shortcuts daemon. Apple's call asks the system to
+    /// re-extract parameter options; this is a documented no-op.
+    public static func updateAppShortcutParameters() {}
 }
 
 public enum ShortcutTileColor: Sendable, Hashable {

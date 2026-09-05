@@ -98,16 +98,18 @@ open class WKHTTPCookieStore: NSObject {
         observers.removeValue(forKey: ObjectIdentifier(observer))
     }
 
+    open func setCookie(_ cookie: HTTPCookie, completionHandler: (() -> Void)? = nil) {
+        _portableSetCookie(cookie)
+        completionHandler?()
+    }
+
     open func setCookie(_ cookie: HTTPCookie) async {
-        guard cookiePolicy == .allow else { return }
-        cookies.removeAll { $0.name == cookie.name && $0.domain == cookie.domain && $0.path == cookie.path }
-        cookies.append(cookie)
-        notifyObservers()
+        _portableSetCookie(cookie)
     }
 
     open func setCookies(_ newCookies: [HTTPCookie]) async {
         for cookie in newCookies {
-            await setCookie(cookie)
+            _portableSetCookie(cookie)
         }
     }
 
@@ -115,6 +117,10 @@ open class WKHTTPCookieStore: NSObject {
         cookies.removeAll { $0.name == cookie.name && $0.domain == cookie.domain && $0.path == cookie.path }
         notifyObservers()
         completionHandler?()
+    }
+
+    open func getAllCookies(_ completionHandler: @escaping ([HTTPCookie]) -> Void) {
+        completionHandler(cookies)
     }
 
     open func allCookies() async -> [HTTPCookie] {
@@ -125,8 +131,28 @@ open class WKHTTPCookieStore: NSObject {
         completionHandler(cookiePolicy)
     }
 
+    open func setCookiePolicy(_ policy: CookiePolicy, completionHandler: (() -> Void)? = nil) {
+        cookiePolicy = policy
+        completionHandler?()
+    }
+
     open func setCookiePolicy(_ policy: CookiePolicy) async {
         cookiePolicy = policy
+    }
+
+    internal var _portableCookies: [HTTPCookie] { cookies }
+
+    internal func _portableRemoveAll() {
+        guard !cookies.isEmpty else { return }
+        cookies.removeAll(keepingCapacity: false)
+        notifyObservers()
+    }
+
+    private func _portableSetCookie(_ cookie: HTTPCookie) {
+        guard cookiePolicy == .allow else { return }
+        cookies.removeAll { $0.name == cookie.name && $0.domain == cookie.domain && $0.path == cookie.path }
+        cookies.append(cookie)
+        notifyObservers()
     }
 
     private func notifyObservers() {

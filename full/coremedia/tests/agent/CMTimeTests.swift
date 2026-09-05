@@ -35,6 +35,22 @@ func testCMTimeSpecialConstants() {
     precondition(CMTime.negativeInfinity.isNegativeInfinity)
     precondition(CMTime.indefinite.isIndefinite)
     precondition(!CMTime.indefinite.isNumeric)
+    precondition(kCMTimeZero == .zero)
+    precondition(kCMTimeInvalid == .invalid)
+    precondition(kCMTimeIndefinite == .indefinite)
+    precondition(kCMTimePositiveInfinity == .positiveInfinity)
+    precondition(kCMTimeNegativeInfinity == .negativeInfinity)
+}
+
+func testCMTimeFlagMacros() {
+    precondition(CMTIME_IS_VALID(CMTime.zero))
+    precondition(CMTIME_IS_INVALID(CMTime.invalid))
+    precondition(CMTIME_IS_NUMERIC(CMTime.zero))
+    precondition(CMTIME_IS_POSITIVEINFINITY(CMTime.positiveInfinity))
+    precondition(CMTIME_IS_NEGATIVEINFINITY(CMTime.negativeInfinity))
+    precondition(CMTIME_IS_INDEFINITE(CMTime.indefinite))
+    let rounded = CMTimeMakeWithSeconds(1.5, preferredTimescale: 1)
+    precondition(CMTIME_HAS_BEEN_ROUNDED(rounded) || rounded.value == 2 || rounded.value == 1)
 }
 
 func testCMTimeSecondsRoundTrip() {
@@ -105,20 +121,32 @@ func testCMTimeMultiplyAndRatio() {
 }
 
 func testCMTimeConvertScaleRounding() {
-    let t = CMTime(value: 1, timescale: 2)
-    let up = t.convertScale(1, method: .roundTowardPositiveInfinity)
-    precondition(up.value == 1)
-    let down = t.convertScale(1, method: .roundTowardZero)
-    precondition(down.value == 0)
-    precondition(down.hasBeenRounded)
-    let away = CMTimeConvertScale(t, timescale: 1, method: .roundAwayFromZero)
-    precondition(away.value == 1)
-    let half = CMTime(value: 1, timescale: 2).convertScale(1, method: .roundHalfAwayFromZero)
-    precondition(half.value == 1)
-    let neg = CMTime(value: -1, timescale: 2)
-    let negDown = CMTimeConvertScale(neg, timescale: 1, method: .roundTowardNegativeInfinity)
-    precondition(negDown.value == -1)
-    let zeroScale = CMTimeConvertScale(t, timescale: 0, method: .default)
+    // CMTime.h rounding methods (raw values 1...6; Default == RoundHalfAwayFromZero).
+    // Sample: value=1 timescale=2 → new timescale 1 is the 0.5 halfway case.
+    let half = CMTime(value: 1, timescale: 2)
+    let negHalf = CMTime(value: -1, timescale: 2)
+    func scaled(_ time: CMTime, _ method: CMTimeRoundingMethod) -> Int64 {
+        CMTimeConvertScale(time, timescale: 1, method: method).value
+    }
+    precondition(scaled(half, .roundHalfAwayFromZero) == 1)
+    precondition(scaled(negHalf, .roundHalfAwayFromZero) == -1)
+    precondition(scaled(half, .roundTowardZero) == 0)
+    precondition(scaled(negHalf, .roundTowardZero) == 0)
+    precondition(scaled(half, .roundAwayFromZero) == 1)
+    precondition(scaled(negHalf, .roundAwayFromZero) == -1)
+    precondition(scaled(half, .roundTowardPositiveInfinity) == 1)
+    precondition(scaled(negHalf, .roundTowardPositiveInfinity) == 0)
+    precondition(scaled(half, .roundTowardNegativeInfinity) == 0)
+    precondition(scaled(negHalf, .roundTowardNegativeInfinity) == -1)
+    // QuickTime: Linux stand-in is toward +infinity (oracle-questions.tsv).
+    precondition(scaled(half, .quickTime) == 1)
+    precondition(scaled(negHalf, .quickTime) == 0)
+    precondition(CMTimeRoundingMethod.default == .roundHalfAwayFromZero)
+    precondition(scaled(half, .default) == 1)
+    let viaMethod = half.convertScale(1, method: .roundTowardZero)
+    precondition(viaMethod.value == 0)
+    precondition(viaMethod.hasBeenRounded)
+    let zeroScale = CMTimeConvertScale(half, timescale: 0, method: .default)
     precondition(!zeroScale.isValid)
 }
 
@@ -163,8 +191,25 @@ func testCMTimeHashableEquatable() {
     let b = CMTime(value: 2, timescale: 4)
     precondition(a == b)
     precondition(a != .zero)
+    precondition(!(a != b))
     _ = a.hashValue
+    var hasher = Hasher()
+    a.hash(into: &hasher)
+    _ = hasher.finalize()
     _ = CMTimeRoundingMethod.roundTowardZero.hashValue
+}
+
+func testCMTimeComparableOperators() {
+    // CMTime.h: CMTimeCompare is the total order; Swift Comparable is that sign.
+    let a = CMTime(value: 1, timescale: 2)
+    let b = CMTime(value: 1, timescale: 1)
+    precondition(a < b)
+    precondition(b > a)
+    precondition(a <= a)
+    precondition(b >= a)
+    precondition(a <= b)
+    precondition(b >= b)
+    precondition(CMTimeCompare(a, b) < 0)
 }
 
 func testCMTimeDictionaryRoundTrip() {
