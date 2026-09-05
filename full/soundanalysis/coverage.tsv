@@ -1,0 +1,78 @@
+precise	status	evidence	notes
+c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	SNError.Code table-driven raw values 1...5 from macios SNErrorCode.
+c:@E@SNErrorCode@SNErrorCodeInvalidFile	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	invalidFile raw value 5
+c:@E@SNErrorCode@SNErrorCodeInvalidFormat	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	invalidFormat raw value 3
+c:@E@SNErrorCode@SNErrorCodeInvalidModel	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	invalidModel raw value 4
+c:@E@SNErrorCode@SNErrorCodeOperationFailed	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	operationFailed raw value 2
+c:@E@SNErrorCode@SNErrorCodeUnknownError	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	unknownError raw value 1
+c:@SNClassifierIdentifierVersion1	implemented	test:full/soundanalysis/tests/agent/SNClassifierIdentifierTests.swift#testClassifierIdentifierVersion1	version1 raw value is the exported C symbol name; CFString payload unobserved
+c:@SNErrorDomain	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorDomainConstant	Linux domain string is SNErrorDomain; Apple CFString payload unobserved
+c:@T@SNClassifierIdentifier	implemented	test:full/soundanalysis/tests/agent/SNClassifierIdentifierTests.swift#testClassifierIdentifierVersion1	RawRepresentable string newtype
+c:objc(cs)SNAudioFileAnalyzer	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerInitExistingFile	Constructs for an existing regular file
+c:objc(cs)SNAudioFileAnalyzer(im)addRequest:withObserver:error:	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerRequestRegistry	Duplicate add throws operationFailed
+c:objc(cs)SNAudioFileAnalyzer(im)analyze	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerAnalyzeFailsClosed	Synchronous invalidFile; no invented labels
+c:objc(cs)SNAudioFileAnalyzer(im)analyzeWithCompletionHandler:	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerCompletionHandler	Handler runs synchronously with false
+c:objc(cs)SNAudioFileAnalyzer(im)cancelAnalysis	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerCancel	Cancelled analyze reports operationFailed
+c:objc(cs)SNAudioFileAnalyzer(im)initWithURL:error:	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerInitExistingFile	init(url:) stores the URL after a regular-file check
+c:objc(cs)SNAudioFileAnalyzer(im)initWithURL:error:::SYNTHESIZED::c:objc(cs)SNAudioFileAnalyzer	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerInitURLAlias	init(URL:) alias
+c:objc(cs)SNAudioFileAnalyzer(im)removeAllRequests	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerRequestRegistry	Clears the request table
+c:objc(cs)SNAudioFileAnalyzer(im)removeRequest:	implemented	test:full/soundanalysis/tests/agent/SNAudioFileAnalyzerTests.swift#testAudioFileAnalyzerRequestRegistry	Removes one request by identity
+c:objc(cs)SNAudioStreamAnalyzer	implemented	test:full/soundanalysis/tests/agent/SNAudioStreamAnalyzerTests.swift#testAudioStreamAnalyzerHostRegistry	Host SPI construction; public format init is AVFAudio-gated
+c:objc(cs)SNAudioStreamAnalyzer(im)addRequest:withObserver:error:	implemented	test:full/soundanalysis/tests/agent/SNAudioStreamAnalyzerTests.swift#testAudioStreamAnalyzerHostRegistry	Duplicate add throws operationFailed
+c:objc(cs)SNAudioStreamAnalyzer(im)analyzeAudioBuffer:atAudioFramePosition:	deferred		Requires real AVFAudio.AVAudioBuffer; isolated host has no AVFAudio module and must not ship a lookalike.
+c:objc(cs)SNAudioStreamAnalyzer(im)completeAnalysis	implemented	test:full/soundanalysis/tests/agent/SNAudioStreamAnalyzerTests.swift#testAudioStreamAnalyzerCompleteAnalysis	Notifies requestDidComplete; produces no labels
+c:objc(cs)SNAudioStreamAnalyzer(im)initWithFormat:	deferred		Requires real AVFAudio.AVAudioFormat; isolated host has no AVFAudio module and must not ship a lookalike.
+c:objc(cs)SNAudioStreamAnalyzer(im)removeAllRequests	implemented	test:full/soundanalysis/tests/agent/SNAudioStreamAnalyzerTests.swift#testAudioStreamAnalyzerHostRegistry	Clears the request table
+c:objc(cs)SNAudioStreamAnalyzer(im)removeRequest:	implemented	test:full/soundanalysis/tests/agent/SNAudioStreamAnalyzerTests.swift#testAudioStreamAnalyzerHostRegistry	Removes one request by identity
+c:objc(cs)SNClassification	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationHostIdentity	Host SPI snapshot; Apple has no public initializer
+c:objc(cs)SNClassification(py)confidence	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationHostIdentity	Stored confidence
+c:objc(cs)SNClassification(py)identifier	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationHostIdentity	Stored identifier
+c:objc(cs)SNClassificationResult	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationResultLookup	Host SPI snapshot; analysis never invents one
+c:objc(cs)SNClassificationResult(im)classificationForIdentifier:	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationResultLookup	First matching identifier
+c:objc(cs)SNClassificationResult(py)classifications	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationResultLookup	Stored array
+c:objc(cs)SNClassificationResult(py)timeRange	implemented	test:full/soundanalysis/tests/agent/SNClassificationTests.swift#testClassificationResultTimeRange	Stored CMTimeRange stand-in
+c:objc(cs)SNClassifySoundRequest	implemented	test:full/soundanalysis/tests/agent/SNClassifySoundRequestTests.swift#testClassifySoundRequestVersion1Init	version1 constructs a configuration object
+c:objc(cs)SNClassifySoundRequest(im)initWithClassifierIdentifier:error:	implemented	test:full/soundanalysis/tests/agent/SNClassifySoundRequestTests.swift#testClassifySoundRequestVersion1Init	version1 succeeds; unknown identifiers throw invalidModel
+c:objc(cs)SNClassifySoundRequest(im)initWithMLModel:error:	deferred		Requires real CoreML.MLModel; CoreML is not a declared dependency and isolated Swift has no CoreML module.
+c:objc(cs)SNClassifySoundRequest(im)initWithMLModel:error:::SYNTHESIZED::c:objc(cs)SNClassifySoundRequest	deferred		Synthesized init(MLModel:) requires real CoreML.MLModel.
+c:objc(cs)SNClassifySoundRequest(py)knownClassifications	implemented	test:full/soundanalysis/tests/agent/SNClassifySoundRequestTests.swift#testClassifySoundRequestKnownClassificationsEmpty	Linux inventory is empty
+c:objc(cs)SNClassifySoundRequest(py)overlapFactor	implemented	test:full/soundanalysis/tests/agent/SNClassifySoundRequestTests.swift#testClassifySoundRequestOverlapFactorClamp	Clamped to the documented 0...1 range
+c:objc(cs)SNClassifySoundRequest(py)windowDuration	implemented	test:full/soundanalysis/tests/agent/SNClassifySoundRequestTests.swift#testClassifySoundRequestWindowDuration	Stores the set CMTime
+c:objc(pl)SNRequest	implemented	test:full/soundanalysis/tests/agent/SNResultsObservingTests.swift#testRequestResultProtocols	Empty NSObjectProtocol marker
+c:objc(pl)SNResult	implemented	test:full/soundanalysis/tests/agent/SNResultsObservingTests.swift#testRequestResultProtocols	Empty NSObjectProtocol marker
+c:objc(pl)SNResultsObserving	implemented	test:full/soundanalysis/tests/agent/SNResultsObservingTests.swift#testResultsObservingOptionalDefaults	Protocol with optional fail/complete defaults
+c:objc(pl)SNResultsObserving(im)request:didFailWithError:	implemented	test:full/soundanalysis/tests/agent/SNResultsObservingTests.swift#testResultsObservingOptionalDefaults	Optional default is a no-op
+c:objc(pl)SNResultsObserving(im)request:didProduceResult:	implemented	test:full/soundanalysis/tests/agent/SNResultsObservingTests.swift#testResultsObservingDidProduce	Required observer callback
+c:objc(pl)SNResultsObserving(im)requestDidComplete:	implemented	test:full/soundanalysis/tests/agent/SNResultsObservingTests.swift#testResultsObservingOptionalDefaults	Optional default is a no-op
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorDomainConstant	CustomNSError.errorDomain
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	CustomNSError.errorUserInfo
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	CustomNSError.errorCode
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorPatternMatch	Code ~= Error
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	Bridged errorUserInfo
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorHashableEquatable	Equality is by code
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	SNError.code
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorHashableEquatable	hash(into:) follows code
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	userInfo storage
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	Bridged errorCode
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorHashableEquatable	hashValue follows code
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	init(_:userInfo:)
+s:13SoundAnalysis24SNTimeDurationConstraintO	implemented	test:full/soundanalysis/tests/agent/SNTimeDurationConstraintTests.swift#testTimeDurationConstraintCases	Swift enum
+s:13SoundAnalysis24SNTimeDurationConstraintO13durationRangeyACSo06CMTimeG0acACmF	implemented	test:full/soundanalysis/tests/agent/SNTimeDurationConstraintTests.swift#testTimeDurationConstraintCases	durationRange associated value
+s:13SoundAnalysis24SNTimeDurationConstraintO19enumeratedDurationsyACSaySo6CMTimeaGcACmF	implemented	test:full/soundanalysis/tests/agent/SNTimeDurationConstraintTests.swift#testTimeDurationConstraintCases	enumeratedDurations associated value
+s:SC11SNErrorCodeLeV	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorUserInfo	SNError struct
+s:SC11SNErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorDomainConstant	static errorDomain
+s:SC11SNErrorCodeLeV11invalidFileSoAAVvpZ	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	static invalidFile Code
+s:SC11SNErrorCodeLeV12invalidModelSoAAVvpZ	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	static invalidModel Code
+s:SC11SNErrorCodeLeV12unknownErrorSoAAVvpZ	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	static unknownError Code
+s:SC11SNErrorCodeLeV13invalidFormatSoAAVvpZ	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	static invalidFormat Code
+s:SC11SNErrorCodeLeV15operationFailedSoAAVvpZ	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	static operationFailed Code
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorHashableEquatable	SNError !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SNClassifierIdentifier	implemented	test:full/soundanalysis/tests/agent/SNClassifierIdentifierTests.swift#testClassifierIdentifierHashable	identifier !=
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeHashable	Code.hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeHashable	Code.hash(into:)
+s:So11SNErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorCodeRawValues	failable init(rawValue:)
+s:So22SNClassifierIdentifiera8rawValueABSS_tcfc	implemented	test:full/soundanalysis/tests/agent/SNClassifierIdentifierTests.swift#testClassifierIdentifierVersion1	init(rawValue:)
+s:So22SNClassifySoundRequestC0B8AnalysisE24windowDurationConstraintAC06SNTimefG0Ovp	implemented	test:full/soundanalysis/tests/agent/SNClassifySoundRequestTests.swift#testClassifySoundRequestWindowDurationConstraint	Linux version1 constraint is empty enumeratedDurations
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SNClassifierIdentifier	implemented	test:full/soundanalysis/tests/agent/SNClassifierIdentifierTests.swift#testClassifierIdentifierHashable	hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SNClassifierIdentifier	implemented	test:full/soundanalysis/tests/agent/SNClassifierIdentifierTests.swift#testClassifierIdentifierHashable	hash(into:)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SNErrorCode	implemented	test:full/soundanalysis/tests/agent/SNErrorTests.swift#testErrorLocalizedDescription	localizedDescription from userInfo or fallback

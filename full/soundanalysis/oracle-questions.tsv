@@ -1,0 +1,8 @@
+precise	question	risk	reason
+c:@SNErrorDomain	What is the exact CFString payload of SNErrorDomain on iOS 26.1?	fail-closed	Linux uses the exported C symbol name as the String value; Apple's constant payload is not in the sealed graphs.
+c:@SNClassifierIdentifierVersion1	What is the exact CFString payload of SNClassifierIdentifierVersion1?	ml	The TBD export names the symbol but does not record the string bytes.
+c:objc(cs)SNClassifySoundRequest(py)overlapFactor	What is Apple's default overlapFactor for SNClassifierIdentifier.version1, and does out-of-range assignment clamp, ignore, or fail later at add(_:withObserver:)?	ml	The graph only records Double get/set. Linux clamps to the documented 0...1 range and defaults to 0.
+c:objc(cs)SNClassifySoundRequest(py)windowDuration	What is Apple's default windowDuration and windowDurationConstraint payload for the version1 classifier?	ml	Linux stores .invalid and an empty enumeratedDurations constraint because the built-in model is absent.
+c:objc(cs)SNAudioFileAnalyzer(im)analyze	Does a failed analyze() also call requestDidComplete(_:), and on which queue?	audio	Linux delivers didFailWithError synchronously on the caller and never invents a completion after failure.
+c:objc(cs)SNAudioStreamAnalyzer(im)analyzeAudioBuffer:atAudioFramePosition:	What format/channel/layout combinations does Apple reject with invalidFormat versus silently drop?	audio	Isolated Linux cannot import AVFAudio; the method is deferred rather than stubbed with a lookalike buffer type.
+module	Does SNClassifySoundRequest.init(classifierIdentifier: .version1) succeed on a Darwin host that has not yet downloaded the sound classifier asset?	ml	Linux constructs a configuration object for version1 but never loads Apple labels or runs inference.
