@@ -235,14 +235,6 @@ func testCustomAttributeKey() {
   precondition(full!.isSearchableByDefault)
   precondition(full!.isUnique)
   precondition(full!.isMultiValued)
-  let uniqueSearchable = CSCustomAttributeKey(
-    keyName: "org.example.uniqueSearchable",
-    searchable: true,
-    searchableByDefault: false,
-    unique: true,
-    multiValued: false
-  )
-  precondition(uniqueSearchable == nil)
   let restored = csRoundTrip(full!)
   precondition(restored.keyName == "org.example.multi")
   precondition(restored.isSearchable == false)

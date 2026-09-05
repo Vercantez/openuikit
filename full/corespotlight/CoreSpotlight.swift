@@ -167,9 +167,6 @@ public final class CSCustomAttributeKey: NSObject, NSSecureCoding, @unchecked Se
     multiValued: Bool
   ) {
     guard CSCustomAttributeKey.isValidKeyName(keyName) else { return nil }
-    // Apple documents unique keys as a storage-saving flag that is not
-    // independently searchable. The portable index fail-closes that pairing.
-    if unique && searchable { return nil }
     self.keyName = keyName
     self.isSearchable = searchable
     self.isSearchableByDefault = searchableByDefault
