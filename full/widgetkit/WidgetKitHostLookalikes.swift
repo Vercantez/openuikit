@@ -1,5 +1,19 @@
 import Foundation
 
+#if !canImport(CoreGraphics)
+public struct CGSize: Equatable, Sendable {
+    public var width: Double
+    public var height: Double
+
+    public init(width: Double, height: Double) {
+        self.width = width
+        self.height = height
+    }
+
+    public static let zero = CGSize(width: 0, height: 0)
+}
+#endif
+
 /// Always-present marker so this compilation unit is never empty on Apple SDKs
 /// where the lookalike blocks below are inactive.
 enum _WidgetKitHostLookalikesMarker {}
@@ -25,8 +39,10 @@ public protocol ControlConfigurationIntent: WidgetConfigurationIntent {}
 #endif
 
 // MARK: - ActivityKit lookalike used only in WidgetKit signatures
+// ActivityKit canImport is true on macOS but ActivityAttributes is
+// @available(macOS, unavailable). Keep a module-local protocol there.
 
-#if !canImport(ActivityKit)
+#if !canImport(ActivityKit) || os(macOS)
 public protocol ActivityAttributes {
     associatedtype ContentState: Sendable
 }

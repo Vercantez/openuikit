@@ -8,15 +8,24 @@ not an application-side source overlay.
 The portable runtime implements the parts that can be truthful without an
 Apple widget daemon:
 
-- legacy SiriKit and AppIntent timeline-provider protocols;
-- validated, executable AppIntent timeline and snapshot evaluation;
-- timeline ordering, duplicate-date, and reload-date fail-closed checks;
+- legacy SiriKit and AppIntent timeline-provider protocols (placeholder,
+  getSnapshot/getTimeline, and the async AppIntent variants);
+- a host-facing `WidgetTimelineEngine` registry that runs providers and
+  picks "the entry at time T" (last `date <= T`) against the port's clock;
+- validated timeline ordering, duplicate-date, and reload-policy checks
+  (`.atEnd` / `.after(date)` / `.never`);
 - process-local `WidgetCenter` configuration state and ordered reload requests;
-- static and AppIntent configuration metadata, families, descriptions, and
-  content-margin/background policy;
-- one- through five-widget bundle construction, covering IceCubes' exact bundle;
+- static, Intent, and AppIntent configuration metadata, families, descriptions,
+  and content-margin/background policy;
+- WidgetFamily Home Screen canvas sizes from Apple's HIG Widgets table
+  (SE 375 / 393-pt / 430-pt device classes);
 - WidgetKit SwiftUI environment values, widget URLs, accentability, accessory
   backgrounds, and widget container-background syntax.
+
+Coverage of the 2876 iPhoneOS 26.1 public identifiers: **2721 implemented**,
+129 declared, 26 deferred (preview / unobserved constant). The Widget,
+Timeline, WidgetCenter, and WidgetFamily families are nondeferred except
+the `#Preview` timeline builders, which AGENTS.md forbids prioritizing.
 
 Linux has no `chronod`, SpringBoard, extension host, or system widget gallery.
 Presentation is therefore explicitly host-driven. Reload requests are retained
