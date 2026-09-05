@@ -4542,7 +4542,8 @@ class ShellContractTests(unittest.TestCase):
         for token in (
             '"com.apple.ap.adservices.attributionError"',
             "case platformNotSupported = 3",
-            "throw AAAttributionError(.platformNotSupported)",
+            "throw AAAttributionError(",
+            ".platformNotSupported,",
         ):
             self.assertIn(token, adservices)
         self.assertNotIn("return UUID", adservices)
