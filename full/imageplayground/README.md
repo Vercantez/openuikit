@@ -88,6 +88,21 @@ EC2 guest run that builds real dependency modules first
 (`IMAGEPLAYGROUND_DEPENDENCY_IDENTITY_OK`). It is not compiled by the isolated
 host gate.
 
-See `oracle-questions.tsv` for Darwin probes. Run
-`bash tests/acceptance/test_host.sh` from this directory. Keep generated
-products out of the tree.
+See `oracle-questions.tsv` for Darwin probes. Keep generated products out
+of the tree.
+
+## Host gate (this pass)
+
+`bash full/imageplayground/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+IMAGEPLAYGROUND_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ImagePlayground dylib=libImagePlayground.dylib
+```
+
+`swiftc --version` reports Swift 6.2.4, Target: x86_64-unknown-linux-gnu.
+`.cursor/verify-cloud-environment.sh` did not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on
+this pod (missing scratch corpus/products relative to campaign build
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
