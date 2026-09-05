@@ -191,6 +191,12 @@ public enum UIRenderer {
         if view._openUIKitBrightness != 0 || view._openUIKitSaturation != 1 {
             return true
         }
+        // iOS 26 liquid glass samples the destination (`_UIGlassMaterial`).
+        // Equivalent of a QZLayerSetGlassModel node the retained compositor
+        // does not yet expose — same RenderPass fallback as backdrop filters.
+        if _UIGlassMaterial.shouldApply(view) {
+            return true
+        }
         return view.subviews.contains(where: containsRenderPassOnlyEffect)
     }
 
@@ -307,7 +313,19 @@ public enum UIRenderer {
         let shadowHere = grouped ? nil : shadow
 
         var backgroundDrawn = false
-        if let bg = v.backgroundColor {
+        if _UIGlassMaterial.shouldApply(v), !bounds.isEmpty {
+            let path = v._iosGlassPath(in: bounds)
+            // Shadow from the capsule / sheet silhouette, then glass. Filling
+            // the measured flat color first would be sampled as the backdrop.
+            if let sh = shadowHere {
+                c.save()
+                c.setShadow(color: sh.color, offset: sh.offset, blur: sh.blur)
+                c.drawShadow(of: path)
+                c.restore()
+            }
+            _UIGlassMaterial.apply(in: c, path: path, bounds: bounds)
+            backgroundDrawn = true
+        } else if let bg = v.backgroundColor {
             let color = bg.resolvedCGColor(with: v.traitCollection)
             if color.alpha > 0, !bounds.isEmpty {
                 if let sh = shadowHere {

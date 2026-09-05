@@ -531,6 +531,11 @@ final class AppDrawingTests: XCTestCase {
         OpenUIKitRuntime.systemFontCut = .iOS
         OpenUIKitRuntime.animationTime = 10
         XCTAssertEqual(large.currentStep, 0)
+        // MEASURED spinnerprobe act_n0..24: 16 frames / 0.8 s → 0.1 s
+        // per 45° spoke. Pager spinner-frame-9 is 0.15 s = step 1.
+        large.startAnimating()
+        OpenUIKitRuntime.animationTime = 10 + 0.15
+        XCTAssertEqual(large.currentStep, 1)
         large.stopAnimating()
         XCTAssertEqual(large.currentStep, 0)
     }

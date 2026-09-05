@@ -37,9 +37,15 @@
 // suite captures agree. The 12-bin ring is the 8-spoke ladder sampled
 // twice, not a 12-spoke spinner.
 //
-// NOT oracle-validated: the rotation TIMING. The animation implemented
-// here is UIKit's classic discrete one — the ladder advances one blade
-// (45 degrees, clockwise) every 1/8 s. See docs/KNOWN_GAPS.md.
+// iOS 26.1 TIMING (MEASURED spinnerprobe act_n0..24, iPhone SE 2x,
+// freeze at the contents CAKeyframeAnimation.beginTime + N/60):
+// a discrete 16-frame `contents` animation, duration 0.8 s, infinite
+// repeat. Medium artwork 40×40 px, large 74×74 px. Darkest spoke starts
+// at 9 o'clock and advances clockwise. 16 frames × 0.05 s = two artwork
+// frames per 45° spoke, so the 8-spoke ladder steps every 0.1 s under
+// the iOS cut (Pager t4650 frame 9 is still step 1, same as 1/8 s).
+// Catalyst keeps 1/8 s. Default-color core over white is (156,156,159)
+// — the same invert as the frozen control_activity measurement.
 
 public enum UIActivityIndicatorViewStyle: Sendable {
     case medium, large
@@ -65,8 +71,12 @@ open class UIActivityIndicatorView: UIView {
     static let bladeAlphas: [CGFloat] = [217, 180, 143, 106, 69, 69, 69, 69]
         .map { $0 / 255 }
     static let bladeCount = 8
-    /// Seconds per 45-degree step (see the header note: not oracle-timed).
-    static let stepDuration: Double = 1.0 / 8.0
+    /// Seconds per 45-degree step. Catalyst: 1/8 s. iOS 26.1: 0.1 s
+    /// (MEASURED spinnerprobe act_n0..24: 16 discrete contents frames
+    /// over 0.8 s, two frames per spoke).
+    static var stepDuration: Double {
+        OpenUIKitRuntime.systemFontCut == .iOS ? 0.1 : 1.0 / 8.0
+    }
 
     /// The measured default color (neutral dynamic gray).
     public static let defaultColor = UIColor(dynamicProvider: { traits in
