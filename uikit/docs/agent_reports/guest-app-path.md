@@ -114,6 +114,9 @@ Attempt 3: `6080bbc1c7d4c06ee460b645c700cebfbfd79ac6`.
 FI OK — likely `-load-plugin-library` of a toolchain plugin without its
 SwiftSyntax host libs. Log grep missed the swiftc line (`tail -8` of OK).
 
-Attempt 4: stage ObservationMacros next to SwiftSyntax host libs like the
-core guest package; `-plugin-path` + `-load-plugin-library`; print the last
-40 lines of `build_full.log`.
+Attempt 4: `d2efe432e962cebabf7d0084c02b0ad13548e6bd`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log tail was not in
+`ops_extract_result_lines` (only `^build_full:` / `build_full rc=`).
+
+Attempt 5: prefix `build_full.log` tail with `build_full:` so run_box
+extracts the swiftc/ld line.

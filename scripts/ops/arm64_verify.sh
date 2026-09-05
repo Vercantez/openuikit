@@ -37,9 +37,9 @@ echo "== build_full.sh (stage mrroot_full from this machorun; rebuild umbrellas)
 build_full_rc=0
 bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1 || build_full_rc=$?
 echo "build_full rc=$build_full_rc"
-grep -E "^build_full:|error:|FAIL|umbrella|OK$|ObservationMacros" "$W/build_full.log" | tail -12
-echo "== build_full.log tail"
-tail -40 "$W/build_full.log"
+grep -E "^build_full:|error:|FAIL|umbrella|OK$|ObservationMacros" "$W/build_full.log" | tail -12 | sed 's/^/build_full: /'
+echo "build_full: --- log tail ---"
+tail -40 "$W/build_full.log" | sed 's/^/build_full: /'
 cp machorun/sdk/usr/lib/libSystem.tbd scratch/sysroot_fe4/usr/lib/libSystem.tbd
 echo "== guest realapp (expect 12 screens)"
 if [ "$build_full_rc" -ne 0 ]; then
