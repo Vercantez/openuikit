@@ -69,6 +69,9 @@ let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewContro
         // docs/REAL_APP_TEST.md). Live so the sheet's present animation, the
         // row tap highlight and the switch can be driven by hand.
         "pocketcasts": (RealAppScreen.windowSize, RealAppScreen.makeRootViewController),
+        // Firefox Focus browser home — unmodified HomeViewController from
+        // mozilla-mobile/focus-ios a2832521 (docs/agent_reports/focus-e2e.md).
+        "focus": (RealAppScreen.windowSize, RealAppScreen.makeFocusHomeScreen),
     ]
     // CONFORMANCE APPS (docs/HILLCLIMB.md): the same source the iOS
     // simulator probe compiles against real UIKit. They boot through this
