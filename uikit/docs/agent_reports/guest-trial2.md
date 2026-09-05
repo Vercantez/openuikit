@@ -195,25 +195,50 @@ regular**; 13 pt regular had digits/euro/middot but no `$`. Guest drew
 ASCII 33–126 at 13 pt regular light+dark × 8 phases on SE 2x / iOS 26.1
 (943/943). Table **6590 → 7533**.
 
-Attempt 6: *(pending this push)*
+Attempt 6 (`99f1a1bf`): **`build_full rc=0`**, **`TBD_CHECK_OK`**,
+**`difftest rc=0`**, **`GATE_B_PASS`**, **`GUEST_REALAPP_RC=0`**,
+**`GUEST_REALAPP_SCREENS=13`**, `[render_full] realapp rendered=13 failed=0`
+including `realapp_ledger_light`. `OPENUIKIT_FONT_DIR=scratch/fonts` has
+**no SFNS*.ttf** — the 13th screen drew from harvested iOS masks only.
 
-## What ran on Apple Foundation (this Mac), still unproven on the guest
+Guest layout dumps do not carry label text (openrender dumpLayout), so
+exact formatter strings are not in the verify log. What the guest run
+does prove:
 
-Until attempt 4's layout/log, treat these as **Apple-side** facts:
+| API | Guest evidence (99f1a1bf verify) |
+|---|---|
+| `NumberFormatter` currency | Screen built; prior miss was `'$'` U+0024 at 13 pt (en_US currency path produced a dollar) |
+| `DateFormatter` `.medium` | `viewDidLoad` always calls `mediumDate`; no crash |
+| `ISO8601DateFormatter` | `exportStamp` / header path ran; no crash |
+| `DateComponentsFormatter` | Payroll/Bookshop seed always calls it; no crash |
+| `JSONSerialization` + `UserDefaults` | `persistRoundTrip` always runs before first layout; no crash |
+| `NSRegularExpression` | first screen does not search; not exercised this render |
+| `URLSession.data(for:)` | `loopbackItem` always calls it (listen or `:1` fallback); no crash |
+| `dlsym("socket")` | linked; whether listen succeeded is not in the log |
+| `_StringProcessing` | GATE_B_PASS — no extra dylib |
 
-| API | Apple Mac (openhost / openrender) | Guest (box) |
-|---|---|---|
-| `NumberFormatter` en_US / de_DE | `$4.50` / `4,50\u00a0€` | pending attempt 4 |
-| `DateFormatter` `.medium` | `Sep 4, 2026` | pending |
-| `ISO8601DateFormatter` | `2026-09-04T10:30:00Z` | pending |
-| `DateComponentsFormatter` | `2h 15m` | pending |
-| `JSONSerialization` + `UserDefaults` | header `json ok` | pending |
-| `NSRegularExpression` | t4000 `Coff` → 1 row | not in first-screen render |
-| `URLSession.data(for:)` loopback | `Loopback FX $12.50` · fx | `dlsym("socket")` may be nil; session still called on `:1` |
-| BSD `socket` by name | links on Apple | **undefined** on guest tbd (attempt 2) |
-| `dlsym("socket")` | finds Darwin | pending attempt 4 |
+Apple Mac strings (this worktree) remain the only named samples:
+`$4.50` / `4,50\u00a0€` / `Sep 4, 2026` / `2026-09-04T10:30:00Z` /
+`2h 15m` / `json ok` / Loopback FX `$12.50`.
 
 ## x86 cycle
 
-`queue_box.sh x86 cycle <sha>`, graded by `RUNG_SCOREBOARD a=PASS b=PASS
-c=PASS`. *(pending)*
+`queue_box.sh x86 cycle 99f1a1bf`, instance `i-0a2e25f3895c819b3`,
+exit 0. Graded only by the log line:
+
+```
+RUNG_SCOREBOARD a=PASS/smoke 14/14 (guest runner: pass 14  fail 0); persist GUEST SCOREBOARD port 579/579 · must-fail 68/322 failing (required) · refused 96 · denominator 675  b=PASS/widget+onboarding under X86_64 loader  c=PASS/windows=1 turns=3 paced=true
+```
+
+**`a=PASS` `b=PASS` `c=PASS`.** Persist guest scoreboard 579/579. No
+Foundation / StringProcessing pin bump requested. `full/` untouched.
+
+A `tr: extra operand '"'` warning printed after `phase2.sh` (residue
+`vendor-subtrees-clean`; `tree-sdk-copy` empty). Cycle still rc=0; this
+branch did not chase it (outside `uikit/`).
+
+## Operator notes
+
+Do not bump pins from this branch. If a later glob of
+`RealAppProbe/Ledger/` lands, it can drop the duplicate first-screen
+copies; until then keep the two `LedgerStore.swift` copies identical.
