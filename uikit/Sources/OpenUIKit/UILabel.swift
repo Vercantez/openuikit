@@ -485,7 +485,12 @@ open class UILabel: UIView {
             let adv = FontEngine.advance(of: ch, font: font)
                 + (ch.value == 0x2026 ? 0 : extraAdvance)
             defer { penX += adv }
-            if ch == " " { continue }
+            // MEASURED inkprobe SE 2x / iOS 26.1, guest-trial2: de_DE
+            // NumberFormatter currency is `4,50` + U+00A0 + `€`; harvest of
+            // `system-regular|13|light|F0.0|160` is "no ink". Same skip as
+            // SPACE so a guest without SFNS does not OPENUIKIT_IOS_INK_MISS
+            // on the Ledger subtitle NBSP.
+            if ch == " " || ch.value == 0x00A0 { continue }
             drawGlyph(ch, penX: penX, baselineY: origin.y, in: canvas, font: font,
                       dark: dark, color: color, glyphFont: glyphFont,
                       inkEligible: inkEligible, famKey: famKey, sizeKey: sizeKey,
