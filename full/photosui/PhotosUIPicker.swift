@@ -59,7 +59,8 @@ public protocol PHPickerViewControllerDelegate: AnyObject {
 
 /// Linux has no Photos picker chrome. `_present()` is the documented host
 /// seam: it returns after delivering `picker(_:didFinishPicking:)` on the
-/// main thread — empty selection unless `_enqueueResults` ran first.
+/// main thread — empty selection unless `_enqueueResults` ran first or a
+/// host library has a current selection.
 ///
 /// Apple: https://developer.apple.com/documentation/photosui/phpickerviewcontroller
 public final class PHPickerViewController: UIViewController, @unchecked Sendable {
@@ -68,49 +69,132 @@ public final class PHPickerViewController: UIViewController, @unchecked Sendable
 
     private var queuedResults: [PHPickerResult]?
     private var appliedUpdate: PHPickerConfiguration.Update?
+    private var hostLibrary: [PHPickerHostAsset] = []
+    private var selectedIdentifiers: [String]
+    private var liveSelectionLimit: Int
+    private var liveEdgesWithoutContentMargins: NSDirectionalRectEdge
+    private var didScrollToInitialPosition = false
+    private var zoomSteps = 0
 
     public init(configuration: PHPickerConfiguration) {
         self.configuration = configuration
+        selectedIdentifiers = configuration.preselectedAssetIdentifiers
+        liveSelectionLimit = configuration.selectionLimit
+        liveEdgesWithoutContentMargins = configuration.edgesWithoutContentMargins
         super.init()
     }
 
     public func deselectAssets(withIdentifiers identifiers: [String]) {
-        _ = identifiers
+        let removing = Set(identifiers)
+        selectedIdentifiers.removeAll { removing.contains($0) }
     }
 
     public func moveAsset(
         withIdentifier identifier: String,
         afterAssetWithIdentifier afterIdentifier: String?
     ) {
-        _ = identifier
-        _ = afterIdentifier
+        guard let from = selectedIdentifiers.firstIndex(of: identifier) else {
+            return
+        }
+        selectedIdentifiers.remove(at: from)
+        if let afterIdentifier, let after = selectedIdentifiers.firstIndex(of: afterIdentifier) {
+            selectedIdentifiers.insert(identifier, at: after + 1)
+        } else {
+            selectedIdentifiers.insert(identifier, at: 0)
+        }
     }
 
     public func updatePicker(using configuration: PHPickerConfiguration.Update) {
         appliedUpdate = configuration
+        if let selectionLimit = configuration.selectionLimit {
+            liveSelectionLimit = selectionLimit
+            capSelection()
+        }
+        if let edges = configuration.edgesWithoutContentMargins {
+            liveEdgesWithoutContentMargins = edges
+        }
     }
 
-    public func scrollToInitialPosition() {}
+    public func scrollToInitialPosition() {
+        didScrollToInitialPosition = true
+    }
 
-    public func zoomIn() {}
+    public func zoomIn() {
+        zoomSteps += 1
+    }
 
-    public func zoomOut() {}
+    public func zoomOut() {
+        zoomSteps -= 1
+    }
 
-    /// Queue results for the next `_present()`. Replaces any previous queue.
-    /// Not an Apple API; isolated-host / unit-test seam.
+    /// Queue results for the next `_present()`. Replaces any previous queue
+    /// and takes precedence over the host library. Not an Apple API.
     @_spi(OpenUIKitHost)
     public func _enqueueResults(_ results: [PHPickerResult]) {
         queuedResults = results
     }
 
+    /// Install a portable Photos-lane catalog. Preselected identifiers that
+    /// are absent from the catalog are dropped. Not an Apple API.
+    @_spi(OpenUIKitHost)
+    public func _installLibrary(_ assets: [PHPickerHostAsset]) {
+        hostLibrary = assets
+        let known = Set(assets.map(\.identifier))
+        selectedIdentifiers.removeAll { !known.contains($0) }
+        selectedIdentifiers.removeAll { identifier in
+            guard let asset = hostLibrary.first(where: { $0.identifier == identifier }) else {
+                return true
+            }
+            return !assetMatchesFilter(asset)
+        }
+        capSelection()
+    }
+
+    /// Append matching library identifiers to the current selection, honoring
+    /// `selectionLimit` (`0` means unlimited) and skipping duplicates.
+    /// Ordered / continuousAndOrdered keep insertion order. Not an Apple API.
+    @_spi(OpenUIKitHost)
+    public func _hostSelect(_ identifiers: [String]) {
+        for identifier in identifiers {
+            guard !selectedIdentifiers.contains(identifier) else { continue }
+            guard let asset = hostLibrary.first(where: { $0.identifier == identifier }) else {
+                continue
+            }
+            guard assetMatchesFilter(asset) else { continue }
+            if liveSelectionLimit > 0, selectedIdentifiers.count >= liveSelectionLimit {
+                continue
+            }
+            selectedIdentifiers.append(identifier)
+        }
+    }
+
     @_spi(OpenUIKitHost)
     public var _appliedUpdate: PHPickerConfiguration.Update? { appliedUpdate }
+
+    @_spi(OpenUIKitHost)
+    public var _selectedIdentifiers: [String] { selectedIdentifiers }
+
+    @_spi(OpenUIKitHost)
+    public var _effectiveSelectionLimit: Int { liveSelectionLimit }
+
+    @_spi(OpenUIKitHost)
+    public var _effectiveEdgesWithoutContentMargins: NSDirectionalRectEdge {
+        liveEdgesWithoutContentMargins
+    }
+
+    @_spi(OpenUIKitHost)
+    public var _didScrollToInitialPosition: Bool { didScrollToInitialPosition }
+
+    @_spi(OpenUIKitHost)
+    public var _zoomSteps: Int { zoomSteps }
 
     /// Simulate presentation. Linux shows no UI and returns immediately after
     /// delivering the delegate callback on the main thread.
     ///
     /// Default payload is `[]` (Apple's documented cancel / empty selection).
     /// If `_enqueueResults` ran, those results are delivered once and cleared.
+    /// Otherwise the current host selection is delivered as `PHPickerResult`
+    /// values whose item providers register the asset type identifiers.
     ///
     /// Delivery rule (Linux host, not measured on iOS): if already on the
     /// main thread, the delegate runs before `_present()` returns so a
@@ -118,9 +202,33 @@ public final class PHPickerViewController: UIViewController, @unchecked Sendable
     /// loop. Off the main thread, delivery uses `DispatchQueue.main.sync`.
     @_spi(OpenUIKitHost)
     public func _present() {
-        let results = queuedResults ?? []
-        queuedResults = nil
+        let results: [PHPickerResult]
+        if let queuedResults {
+            results = queuedResults
+            self.queuedResults = nil
+        } else {
+            results = selectedIdentifiers.compactMap { identifier in
+                hostLibrary.first(where: { $0.identifier == identifier }).map { asset in
+                    PHPickerResult._hostResult(
+                        assetIdentifier: asset.identifier,
+                        typeIdentifier: asset.typeIdentifier,
+                        payload: asset.payload
+                    )
+                }
+            }
+        }
         deliverOnMain(results)
+    }
+
+    private func assetMatchesFilter(_ asset: PHPickerHostAsset) -> Bool {
+        guard let filter = configuration.filter else { return true }
+        return filter._matches(asset)
+    }
+
+    private func capSelection() {
+        if liveSelectionLimit > 0, selectedIdentifiers.count > liveSelectionLimit {
+            selectedIdentifiers = Array(selectedIdentifiers.prefix(liveSelectionLimit))
+        }
     }
 
     private func deliverOnMain(_ results: [PHPickerResult]) {
