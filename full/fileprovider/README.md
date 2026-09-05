@@ -11,7 +11,27 @@ XPC types.
 
 This pass implements the app-side manager and a **process-local in-process
 provider host**. It is not `fileproviderd`, Files.app, or an NSExtension.
-Coverage is 568 `implemented` / 2 `deferred` of 570 exact IDs.
+
+Coverage ledger (merge-repair):
+
+- Before: 568 `implemented` / 2 `deferred`, but every implemented row cited
+  `tests/agent/FileProviderRuntime.swift` (file path, not
+  `test:full/fileprovider/tests/agent/<File>Tests.swift#testName`).
+- After: **568 `implemented` / 2 `deferred`** of 570 exact IDs. Every
+  implemented row cites a real top-level synchronous `func testName()` in a
+  focused `*Tests.swift` file. The two deferred IDs are unchanged
+  (`contentType`, `makeListenerEndpoint`).
+
+Top-5 implemented evidence distribution (568 rows):
+
+1. `FileProviderValueTests.swift#testEnumAndOptionSetValues` — 111 (19.5%),
+   table-driven enum / option-set members / C constants
+2. `FileProviderValueTests.swift#testHashableInequality` — 43 (7.6%)
+3. `FileProviderValueTests.swift#testIdentifierAndPageValues` — 37 (6.5%)
+4. `FileProviderTestingTests.swift#testTestingOperations` — 37 (6.5%)
+5. `FileProviderItemTests.swift#testItemProtocolProperties` — 36 (6.3%)
+
+No non-table-driven test exceeds 40% of the remaining implemented rows.
 
 What the local host does:
 
