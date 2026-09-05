@@ -66,10 +66,55 @@ See `oracle-questions.tsv` for OptionSet bits, contents-rect mapping, zoom
 hardware range, start-error precedence, and out-of-range `imageOfPage`.
 
 `tests/agent/VisionKitRuntime.swift` is the isolated host probe
-(`VISIONKIT_AGENT_RUNTIME_OK`). `tests/agent/VisionKitDependencyIdentity.swift`
+(`VISIONKIT_AGENT_RUNTIME_OK`). Focused `tests/agent/*Tests.swift` functions
+are the coverage evidence. `tests/agent/VisionKitDependencyIdentity.swift`
 is prepared for a future clean EC2 run that builds guest Foundation, UIKit, and
 Vision first. Compiling that file against toolchain Foundation is not
 guest-module success.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+## Depth pass 2026-09
+
+Coverage before this pass: **214 implemented / 19 declared / 23 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after: **233 implemented / 0 declared / 23 deferred / 0 unavailable /
+0 not-applicable**.
+
+Raised to `implemented` (documented Linux semantics, fail-closed where
+hardware or Apple services are required):
+
+- `ImageAnalyzer.AnalysisTypes` named flags, `rawValue`, and `init(rawValue:)`
+  (Linux-local bits `1<<0` / `1<<1` / `1<<2`; Darwin ABI still unobserved)
+- `ImageAnalysisInteraction.InteractionTypes` named flags, `rawValue`, and
+  `init(rawValue:)` (sequential Linux-local bits; Darwin ABI unobserved)
+- `preferredInteractionTypes` (Linux default empty; `activeInteractionTypes`
+  mirrors it only when `analysis` is set)
+- `contentsRect` / `setContentsRectNeedsUpdate` (delegate rect or `.zero`)
+- `minZoomFactor` / `maxZoomFactor` (Linux `[1, 1]` clamp; no zoom hardware)
+- Foundation `localizedDescription` on `ScanningUnavailable` and
+  `SubjectUnavailable`
+
+Left **deferred** (23): every identifier whose signature requires UIKit,
+Vision, CoreImage, CoreVideo, or ImageIO on the isolated host
+(`UIView` / `UIImage` / `UIFont` / `UIEdgeInsets` / `CGImage` /
+`CIImage` / `CVPixelBuffer` / `VNBarcodeSymbology` / Vision observations).
+No same-named substitutes.
+
+Corpus ranking (`reference/corpus-summary.json`): Telegram and Nextcloud
+exercise `VNDocumentCameraViewController` and Nextcloud also uses image
+analysis overlay paths. Those families are implemented and fail-closed;
+page images and Live Text analyze overloads stay deferred.
+
+Top-5 evidence distribution (233 implemented rows):
+
+1. `AnalysisTypesTests.swift#testAnalysisTypesAlgebra` — 22 (9.4%)
+2. `InteractionTypesTests.swift#testInteractionTypesAlgebra` — 22 (9.4%)
+3. `DataScannerTests.swift#testDataScannerDelegate` — 14 (6.0%)
+4. `DataScannerTests.swift#testDataScannerTextContentType` — 13 (5.6%)
+5. `InteractionTypesTests.swift#testInteractionTypesBits` — 12 (5.2%)
+
+No single non-enum/OptionSet test exceeds 40% of implemented rows. OptionSet
+members share table-driven bit tests as allowed.
