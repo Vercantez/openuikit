@@ -945,7 +945,8 @@ SWIFT_FOUNDATION_ICU=${SWIFT_FOUNDATION_ICU:-$W/scratch/swift-foundation-icu}
 FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/build_foundation_internationalization.sh
 FOUNDATION_GUEST_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 COREFOUNDATION_GUEST_MANIFEST=$W/full/foundation/corefoundation_guest_sources.txt
-EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
+# 18, like the onboarding guest: this app-path Foundation excludes URLSession (the core package, with it, is 19).
+EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=18
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
 mkdir -p "$APPMODS/include/CPortableIO" "$APPMODS/include/CSTBTrueType" \
