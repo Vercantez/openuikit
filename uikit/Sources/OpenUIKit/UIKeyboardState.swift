@@ -34,11 +34,23 @@ struct _UIKeyboardResolved {
     var searchReturnEnabled: Bool = true
     var overlap: CGFloat = 260
     var isPad: Bool = false
+    var isCompactHeight: Bool = false
     var signature: Int = 0
 
     static func isPadIdiom() -> Bool {
         UITraitCollection.current.userInterfaceIdiom == .pad
             || UIDevice.current.userInterfaceIdiom == .pad
+    }
+
+    /// Phone landscapeLeft (SE 667×375). Host sets compact-compact; a
+    /// wide screen with unspecified traits is the same sample.
+    /// MEASURED Forms t1200.landscape dump `verticalSizeClass=1`,
+    /// window 667×375, iPhone SE 2x / iOS 26.1.
+    static func isCompactHeightPhone() -> Bool {
+        if isPadIdiom() { return false }
+        if UITraitCollection.current.verticalSizeClass == .compact { return true }
+        let s = UIScreen.main.bounds.size
+        return s.width > s.height
     }
 
     static func resolve(from responder: UIResponder?) -> _UIKeyboardResolved {
@@ -71,12 +83,16 @@ struct _UIKeyboardResolved {
         }
 
         r.shifted = shouldShift(text: text, cursor: cursor, autocap: autocap)
+        r.isCompactHeight = isCompactHeightPhone()
         if keyboard == .numberPad, !r.isPad {
             r.layout = .numberPad
             r.overlap = _UIKeyboardChrome.numberPadOverlap
         } else if r.isPad {
             r.layout = .alphabetic
             r.overlap = 337
+        } else if r.isCompactHeight {
+            r.layout = .alphabetic
+            r.overlap = _UIKeyboardChrome.compactOverlap
         } else {
             r.layout = .alphabetic
             r.overlap = _UIKeyboardChrome.overlap
@@ -94,6 +110,7 @@ struct _UIKeyboardResolved {
         sig = sig &* 31 &+ r.returnStyleHash
         sig = sig &* 31 &+ (r.searchReturnEnabled ? 1 : 0)
         sig = sig &* 31 &+ (r.isPad ? 1 : 0)
+        sig = sig &* 31 &+ (r.isCompactHeight ? 1 : 0)
         r.signature = sig
         return r
     }
