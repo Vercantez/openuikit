@@ -102,6 +102,20 @@ for app in Sources/ConformanceApps/*(/:t); do
   for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skip=""; rm -rf /tmp/agent_merge_conf-$app/golden; echo "   $app: recapturing goldens with the merged probe"; }; done
   SKIP_CAPTURE=$skip zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
+  if [[ -d /tmp/hc-conformance-$app-ipad/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad /tmp/agent_merge_conf-$app-ipad
+    skip_ipad=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" || "$r" == "$app-ipad" ]] && { skip_ipad=""; rm -rf /tmp/agent_merge_conf-$app-ipad/golden; echo "   $app-ipad: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skip_ipad zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see /tmp/agent_merge_conf-$app-ipad.log)"; exit 9; }
+  fi
+  if [[ -d /tmp/hc-conformance-$app-dark/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
+    skipd=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skipd=""; rm -rf /tmp/agent_merge_conf-$app-dark/golden; echo "   $app-dark: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skipd zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
+  fi
 done
 python3 - <<'PY' || exit 9
 import json, os, glob
@@ -114,7 +128,11 @@ for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
         if row["status"] == "pass" and score < row["threshold"]: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
-        elif score < row["score"] - 0.5: bad.append(f"{name} {score:.3f} dropped from {row['score']:.3f}")
+        elif score < row["score"] - 0.5:
+            # ALLOW_DROP="Tabs:t6000 ..." names failing rows a merge may lower on purpose
+            # (a measured interaction another branch owns); it must be said in the merge.
+            if name in os.environ.get("ALLOW_DROP", "").split(): print(f"   {name}: {score:.3f} < {row['score']:.3f} ALLOWED (ALLOW_DROP)")
+            else: bad.append(f"{name} {score:.3f} dropped from {row['score']:.3f}")
         print(f"   {name}: {score:.3f} (board {row['score']:.3f})")
 if bad: raise SystemExit("CONFORMANCE DROPPED: " + "; ".join(bad))
 PY

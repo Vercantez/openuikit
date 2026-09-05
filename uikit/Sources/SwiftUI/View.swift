@@ -409,6 +409,7 @@ enum _OpenViewModification {
     case searchable(_OpenSearchConfiguration)
     case searchToolbarBehavior(SearchToolbarBehavior)
     case menuIndicator(Visibility)
+    case toolbarItem(ToolbarItemPlacement)
     case projection(@MainActor (CGSize) -> ProjectionTransform)
     case effect
 }
@@ -3980,6 +3981,10 @@ struct _OpenNavigationConfiguration {
     var backButtonHidden = false
     var titleDisplayMode: NavigationBarTitleDisplayMode = .automatic
     var toolbar: _OpenViewNode?
+    /// True when `.searchable(..., placement: .toolbar)` is on the tree.
+    /// Stored as a Bool (not the closure-bearing search config) so
+    /// `evaluateRoot` does not trip a SIL ownership crash on the optional.
+    var searchIsToolbar = false
     var destinations: [_OpenNavigationDestinationRegistration] = []
 }
 
@@ -4003,6 +4008,13 @@ func _openExtractNavigationConfiguration(
             configuration.destinations.append(registration)
         case .toolbar(let toolbar):
             configuration.toolbar = toolbar
+        case .searchable(let search):
+            // Copy the placement into chrome so UIHostingController /
+            // NavigationStack can install the 44×44 nav platter; keep the
+            // modifier on the node so SwiftUIDesignSystemTests still find
+            // `SwiftUI.Searchable`.
+            configuration.searchIsToolbar = search.placement == .toolbar
+            unwrapped = _OpenViewNode(.modified(unwrapped, modification))
         default:
             unwrapped = _OpenViewNode(.modified(unwrapped, modification))
         }
@@ -4077,6 +4089,8 @@ private func _extractNavigationChildren(
             configuration.titleDisplayMode = childConfiguration.titleDisplayMode
         }
         if let toolbar = childConfiguration.toolbar { configuration.toolbar = toolbar }
+        configuration.searchIsToolbar = configuration.searchIsToolbar
+            || childConfiguration.searchIsToolbar
         configuration.destinations.append(contentsOf: childConfiguration.destinations)
         return node
     }

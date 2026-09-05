@@ -411,6 +411,31 @@ private struct FeedSurfaceFixture: View {
     }
 }
 
+private struct NavChromeFixture: View {
+    let searchText: Binding<String>
+
+    var body: some View {
+        Text("Feed")
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Top")
+                        .padding(.horizontal, 20)
+                        .frame(height: 44)
+                        .glassEffect()
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {} label: {
+                        Label("Settings", systemImage: "gearshape")
+                            .labelStyle(.iconOnly)
+                    }
+                }
+            }
+            .searchable(text: searchText, placement: .toolbar)
+    }
+}
+
 @MainActor
 final class SwiftUIDesignSystemTests: XCTestCase {
     private var savedResourceRoot = ""
@@ -1012,6 +1037,49 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         )
         XCTAssertEqual(circle.layer.cornerRadius, 9, accuracy: 0.001)
         XCTAssertNotNil(descendant(host, identifier: "SwiftUI.Material.bar") as? UIVisualEffectView)
+    }
+
+    func testIOSNavChromeInstallsPrincipalGlassAndIsolatedTrailingPlatters() throws {
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x: principal host
+        // 36 pt, two isolated 44×44 trailing platters (search trailing-most).
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        var search = ""
+        let controller = UIHostingController(
+            rootView: NavChromeFixture(
+                searchText: Binding(get: { search }, set: { search = $0 })
+            )
+        )
+        let nav = UINavigationController(rootViewController: controller)
+        nav.view.frame = CGRect(x: 0, y: 0, width: 393, height: 852)
+        nav.view.layoutIfNeeded()
+
+        let titleView = try XCTUnwrap(controller.navigationItem.titleView)
+        XCTAssertEqual(titleView.bounds.height, 36, accuracy: 0.001)
+        XCTAssertNotNil(descendant(titleView, identifier: "SwiftUI.GlassEffect"))
+        XCTAssertGreaterThan(titleView.bounds.width, 40)
+
+        let trailing = try XCTUnwrap(controller.navigationItem.rightBarButtonItems)
+        XCTAssertEqual(trailing.count, 2)
+        XCTAssertEqual(trailing[0].systemItem, .search)
+        XCTAssertTrue(trailing[0]._isolatesPlatter)
+        XCTAssertNotNil(trailing[1].customView)
+        XCTAssertTrue(trailing[1]._showsPlatterWithCustomView)
+
+        nav.navigationBar.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.rightItemViews.count, 2)
+        XCTAssertEqual(nav.navigationBar.rightItemViews[0].frame.width, 44, accuracy: 0.001)
+        XCTAssertEqual(
+            nav.navigationBar.rightItemViews[0].frame.maxX,
+            393 - 16,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            nav.navigationBar.rightItemViews[1].frame.maxX,
+            nav.navigationBar.rightItemViews[0].frame.minX - 12,
+            accuracy: 0.001
+        )
     }
 
     private func descendant(_ root: UIView, identifier: String) -> UIView? {

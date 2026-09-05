@@ -323,13 +323,23 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// transitioning delegate supplies one. Overridden by UIAlertController.
     func _makeDefaultPresentationController(presenting: UIViewController)
         -> UIPresentationController {
+        // Pad regular-width `.popover` stays a popover (Modal-ipad t9200).
+        // Compact width still goes through the sheet (adaptedStyle).
+        if _resolvedPresentationStyle == .popover {
+            let p = _popoverController
+                ?? UIPopoverPresentationController(presentedViewController: self,
+                                                   presenting: presenting)
+            _popoverController = p
+            return p
+        }
         let c = _sheetController
             ?? UISheetPresentationController(presentedViewController: self, presenting: nil)
         _sheetController = c
         c.sheetStyle = _resolvedPresentationStyle
-        // A `.popover` presentation adapts to this sheet (see
-        // UIAdaptivePresentation.swift); forward the popover controller's
-        // delegate so the adaptive/dismissal callbacks still reach the app.
+        // A `.popover` presentation adapts to this sheet on compact width
+        // (see UIAdaptivePresentation.swift); forward the popover
+        // controller's delegate so the adaptive/dismissal callbacks still
+        // reach the app.
         if c.delegate == nil, let p = _popoverController { c.delegate = p.delegate }
         return c
     }

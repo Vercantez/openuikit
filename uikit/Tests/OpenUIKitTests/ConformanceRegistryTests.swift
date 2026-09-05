@@ -124,6 +124,22 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.frameIndex(for: 2.35), 141)
     }
 
+    /// Dark captures append `.dark` so light goldens keep `t200` and the
+    /// scoreboard can hold both timelines (`NavFlow:t200` vs
+    /// `NavFlow:t200.dark`). Env wins over the script field so
+    /// `conformance_flow.sh --dark` can drive a light script.json.
+    func testDarkCaptureSuffixAndStyleResolution() {
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20), "t200")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "light"), "t200")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "dark"), "t200.dark")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.08, style: "dark"), "t080.dark")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 1.0, style: "dark"), "t1000.dark")
+        XCTAssertEqual(ConformanceClock.resolvedStyle(script: "light", environment: nil), "light")
+        XCTAssertEqual(ConformanceClock.resolvedStyle(script: "dark", environment: nil), "dark")
+        XCTAssertEqual(ConformanceClock.resolvedStyle(script: "light", environment: "dark"), "dark")
+        XCTAssertEqual(ConformanceClock.resolvedStyle(script: "dark", environment: "light"), "dark")
+    }
+
     @MainActor
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()
