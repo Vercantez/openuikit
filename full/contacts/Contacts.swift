@@ -2,11 +2,14 @@ import Foundation
 
 /// Linux starting implementation of Apple's public `Contacts` module.
 ///
-/// This port provides a process-local in-memory contact graph, formatters, vCard
-/// 3.0 subset coding, and the public type surface used by the 20-app corpus.
-/// It does **not** connect to Apple AddressBook, iCloud, CardDAV, Exchange, or
-/// TCC. Authorization succeeds only for that in-memory sandbox after
-/// `requestAccess`; host address books stay fail-closed.
+/// This port provides a documented **local directory** contact store, formatters,
+/// vCard 3.0 (RFC 2426) coding, and the public type surface used by the 20-app
+/// corpus. It does **not** connect to Apple AddressBook, iCloud, CardDAV,
+/// Exchange, or TCC. Authorization succeeds only for that local directory
+/// sandbox after `requestAccess`; host address books stay fail-closed.
+///
+/// Store directory: `$HOME/.local/share/openuikit/contacts/` or
+/// `OPENUIKIT_CONTACTS_DIRECTORY`.
 ///
 /// Apple's `CNKeyDescriptor` inherits `NSCopying`, `NSSecureCoding`, and
 /// `NSObjectProtocol`. Darwin `String` keys bridge to `NSString`. Linux
@@ -198,4 +201,20 @@ func CNAllContactPropertyKeys() -> [String] {
         CNContactSocialProfilesKey,
         CNContactInstantMessageAddressesKey,
     ]
+}
+
+/// Fail-closed ContactsUI picker stand-in. `CNContactPickerViewController` lives
+/// in ContactsUI and requires UIKit. This module does not present a picker and
+/// does not fabricate a successful Apple UI session.
+open class CNContactPickerViewController: NSObject {
+    public override init() {
+        super.init()
+    }
+
+    open func presentPicker() throws {
+        throw CNError(
+            .featureNotAvailable,
+            userInfo: [CNErrorUserInfoKeyPathsKey: ["CNContactPickerViewController"]]
+        )
+    }
 }

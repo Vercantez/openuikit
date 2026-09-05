@@ -83,7 +83,7 @@ extension CNContact {
     }
 }
 
-private enum CNMemoryStore {
+enum CNMemoryStore {
     static let lock = NSLock()
     static let defaultContainer = CNContainer(
         identifier: "local-default-container",
@@ -93,6 +93,7 @@ private enum CNMemoryStore {
 
     struct Snapshot {
         var authorization: CNAuthorizationStatus = .notDetermined
+        var requestDecision: CNAuthorizationStatus = .authorized
         var contacts: [String: CNContactStorage] = [:]
         var groups: [String: (identifier: String, name: String)] = [:]
         var groupMembers: [String: Set<String>] = [:]
@@ -103,6 +104,7 @@ private enum CNMemoryStore {
     }
 
     nonisolated(unsafe) static var state = Snapshot()
+    nonisolated(unsafe) static var loaded = false
 
     static var authorization: CNAuthorizationStatus {
         get { state.authorization }
@@ -121,16 +123,39 @@ private enum CNMemoryStore {
         set { state.historyCounter = newValue }
     }
 
-    static func capture() -> Snapshot { state }
+    static func ensureLoaded() {
+        if loaded { return }
+        loaded = true
+        let url = CNPortableStoreDirectory.storeFile()
+        guard let data = try? Data(contentsOf: url),
+              let decoded = try? CNPersistentCodec.decode(data)
+        else { return }
+        state = decoded
+    }
+
+    static func persistLocked() {
+        let directory = CNPortableStoreDirectory.url()
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        guard let data = try? CNPersistentCodec.encode(state) else { return }
+        try? data.write(to: CNPortableStoreDirectory.storeFile(), options: .atomic)
+    }
+
+    static func capture() -> Snapshot {
+        ensureLoaded()
+        return state
+    }
 
     static func install(_ snapshot: Snapshot) {
         state = snapshot
+        persistLocked()
     }
 
     static func reset() {
         lock.lock()
         defer { lock.unlock() }
         state = Snapshot()
+        loaded = true
+        persistLocked()
     }
 
     static func tokenData(_ value: UInt64) -> Data {
@@ -244,11 +269,17 @@ open class CNContactStore: NSObject {
         _ = entityType
         CNMemoryStore.lock.lock()
         defer { CNMemoryStore.lock.unlock() }
+        CNMemoryStore.ensureLoaded()
         return CNMemoryStore.authorization
     }
 
-    /// Grants access to the process-local in-memory store only. This is not an
-    /// Apple TCC prompt and does not unlock a host AddressBook.
+    /// Grants access to the documented local directory store only. This is not
+    /// an Apple TCC prompt and does not unlock a host AddressBook.
+    ///
+    /// Status starts `.notDetermined`. `requestAccess(for:)` moves it to
+    /// `.authorized` unless the documented test hook
+    /// `_setPortableAuthorizationDecision(.denied)` (or a persisted denied
+    /// status) selected `.denied`.
     ///
     /// The completion handler is invoked on a detached thread after this
     /// method returns, matching Darwin's non-reentrant "arbitrary queue"
@@ -294,8 +325,18 @@ open class CNContactStore: NSObject {
             throw CNError(.featureNotAvailable)
         }
         CNMemoryStore.lock.lock()
+        CNMemoryStore.ensureLoaded()
         if CNMemoryStore.authorization == .notDetermined {
-            CNMemoryStore.authorization = .authorized
+            let decision = CNMemoryStore.state.requestDecision
+            switch decision {
+            case .denied, .restricted:
+                CNMemoryStore.authorization = .denied
+            case .limited:
+                CNMemoryStore.authorization = .limited
+            case .authorized, .notDetermined:
+                CNMemoryStore.authorization = .authorized
+            }
+            CNMemoryStore.persistLocked()
         }
         let authorized = CNMemoryStore.authorization == .authorized
             || CNMemoryStore.authorization == .limited
@@ -306,6 +347,7 @@ open class CNContactStore: NSObject {
     public var currentHistoryToken: Data? {
         CNMemoryStore.lock.lock()
         defer { CNMemoryStore.lock.unlock() }
+        CNMemoryStore.ensureLoaded()
         guard CNMemoryStore.historyCounter > 0 else { return nil }
         return CNMemoryStore.tokenData(CNMemoryStore.historyCounter)
     }
@@ -335,7 +377,7 @@ open class CNContactStore: NSObject {
         keysToFetch keys: [any CNKeyDescriptor]
     ) throws -> [CNContact] {
         try requireAccess()
-        return try contacts(matching: predicate, keys: keys, mutable: false, sort: .none)
+        return try contacts(matching: predicate, keys: keys, mutable: false, sort: .none, unifyResults: true)
     }
 
     open func enumerateContacts(
@@ -347,7 +389,8 @@ open class CNContactStore: NSObject {
             matching: fetchRequest.predicate,
             keys: fetchRequest.keysToFetch,
             mutable: fetchRequest.mutableObjects,
-            sort: fetchRequest.sortOrder
+            sort: fetchRequest.sortOrder,
+            unifyResults: fetchRequest.unifyResults
         )
         var stop = ObjCBool(false)
         withUnsafeMutablePointer(to: &stop) { pointer in
@@ -412,9 +455,37 @@ open class CNContactStore: NSObject {
     }
 
     @_spi(OpenUIKitHost)
+    public static func _portableStoreDirectory() -> URL {
+        CNPortableStoreDirectory.url()
+    }
+
+    @_spi(OpenUIKitHost)
+    public static func _reloadPortableStoreFromDisk() {
+        CNMemoryStore.lock.lock()
+        CNMemoryStore.loaded = false
+        CNMemoryStore.state = CNMemoryStore.Snapshot()
+        CNMemoryStore.ensureLoaded()
+        CNMemoryStore.lock.unlock()
+    }
+
+    /// Documented test hook: when status is `.notDetermined`, the next
+    /// `requestAccess(for:)` call records this decision (`.authorized` or
+    /// `.denied`). It never claims an Apple TCC prompt.
+    @_spi(OpenUIKitHost)
+    public static func _setPortableAuthorizationDecision(_ status: CNAuthorizationStatus) {
+        CNMemoryStore.lock.lock()
+        CNMemoryStore.ensureLoaded()
+        CNMemoryStore.state.requestDecision = status
+        CNMemoryStore.persistLocked()
+        CNMemoryStore.lock.unlock()
+    }
+
+    @_spi(OpenUIKitHost)
     public static func _setPortableAuthorization(_ status: CNAuthorizationStatus) {
         CNMemoryStore.lock.lock()
+        CNMemoryStore.ensureLoaded()
         CNMemoryStore.authorization = status
+        CNMemoryStore.persistLocked()
         CNMemoryStore.lock.unlock()
     }
 
@@ -427,6 +498,7 @@ open class CNContactStore: NSObject {
 
     private func requireAccess() throws {
         CNMemoryStore.lock.lock()
+        CNMemoryStore.ensureLoaded()
         let status = CNMemoryStore.authorization
         CNMemoryStore.lock.unlock()
         switch status {
@@ -441,7 +513,8 @@ open class CNContactStore: NSObject {
         matching predicate: NSPredicate?,
         keys: [any CNKeyDescriptor],
         mutable: Bool,
-        sort: CNContactSortOrder
+        sort: CNContactSortOrder,
+        unifyResults: Bool
     ) throws -> [CNContact] {
         CNMemoryStore.lock.lock()
         let snapshot = CNMemoryStore.capture()
@@ -460,6 +533,9 @@ open class CNContactStore: NSObject {
         var result: [CNContact] = projected.map { storage in
             mutable ? CNMutableContact(storage: storage) : CNContact(storage: storage)
         }
+        // unifyResults is honored as identity: this port has a single local
+        // container and does not fabricate CardDAV/iCloud linked-contact graphs.
+        _ = unifyResults
         if sort != .none {
             let comparator = CNContact.comparator(forNameSortOrder: sort)
             result.sort { comparator($0, $1) == .orderedAscending }
@@ -535,23 +611,24 @@ open class CNContactStore: NSObject {
         _ operation: CNSaveOperation,
         to working: inout CNMemoryStore.Snapshot
     ) throws {
-        let containerID = CNMemoryStore.defaultContainer.identifier
         switch operation {
         case .addContact(let contact, let container):
             var storage = contact.storage
+            let resolvedContainer = try writableContainer(container)
             if working.contacts[storage.identifier] != nil {
                 throw CNError(
                     .insertedRecordAlreadyExists,
                     userInfo: [CNErrorUserInfoAffectedRecordIdentifiersKey: [storage.identifier]]
                 )
             }
+            try validate(storage)
             storage.availableKeys = Set(CNAllContactPropertyKeys())
             working.contacts[storage.identifier] = storage
-            working.contactContainers[storage.identifier] = container ?? containerID
+            working.contactContainers[storage.identifier] = resolvedContainer
             appendHistory(
                 CNChangeHistoryAddContactEvent(
                     contact: CNContact(storage: storage),
-                    containerIdentifier: container ?? containerID
+                    containerIdentifier: resolvedContainer
                 ),
                 to: &working
             )
@@ -563,6 +640,7 @@ open class CNContactStore: NSObject {
                 )
             }
             var storage = contact.storage
+            try validate(storage)
             storage.availableKeys = Set(CNAllContactPropertyKeys())
             working.contacts[contact.identifier] = storage
             appendHistory(
@@ -585,16 +663,17 @@ open class CNContactStore: NSObject {
                 to: &working
             )
         case .addGroup(let group, let container):
+            let resolvedContainer = try writableContainer(container)
             if working.groups[group.identifier] != nil {
                 throw CNError(.insertedRecordAlreadyExists)
             }
             working.groups[group.identifier] = (group.identifier, group.name)
-            working.groupContainers[group.identifier] = container ?? containerID
+            working.groupContainers[group.identifier] = resolvedContainer
             working.groupMembers[group.identifier] = []
             appendHistory(
                 CNChangeHistoryAddGroupEvent(
                     group: CNGroup(identifier: group.identifier, name: group.name),
-                    containerIdentifier: container ?? containerID
+                    containerIdentifier: resolvedContainer
                 ),
                 to: &working
             )
@@ -646,6 +725,56 @@ open class CNContactStore: NSObject {
                     to: &working
                 )
             }
+        }
+    }
+
+    private func writableContainer(_ identifier: String?) throws -> String {
+        let defaultID = CNMemoryStore.defaultContainer.identifier
+        let resolved = identifier ?? defaultID
+        if resolved != defaultID {
+            throw CNError(
+                .parentContainerNotWritable,
+                userInfo: [CNErrorUserInfoAffectedRecordIdentifiersKey: [resolved]]
+            )
+        }
+        return resolved
+    }
+
+    private func validate(_ storage: CNContactStorage) throws {
+        var errors: [CNError] = []
+        var keyPaths: [String] = []
+        if let birthday = storage.birthday {
+            if let month = birthday.month, !(1...12).contains(month) {
+                errors.append(
+                    CNError(.validationTypeMismatch, userInfo: [CNErrorUserInfoKeyPathsKey: [CNContactBirthdayKey]])
+                )
+                keyPaths.append(CNContactBirthdayKey)
+            }
+            if let day = birthday.day, !(1...31).contains(day) {
+                errors.append(
+                    CNError(.validationTypeMismatch, userInfo: [CNErrorUserInfoKeyPathsKey: [CNContactBirthdayKey]])
+                )
+                keyPaths.append(CNContactBirthdayKey)
+            }
+        }
+        if storage.identifier.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            errors.append(
+                CNError(.recordIdentifierInvalid, userInfo: [CNErrorUserInfoKeyPathsKey: [CNContactIdentifierKey]])
+            )
+            keyPaths.append(CNContactIdentifierKey)
+        }
+        if errors.count == 1 {
+            throw errors[0]
+        }
+        if errors.count > 1 {
+            throw CNError(
+                .validationMultipleErrors,
+                userInfo: [
+                    CNErrorUserInfoValidationErrorsKey: errors,
+                    CNErrorUserInfoAffectedRecordIdentifiersKey: [storage.identifier],
+                    CNErrorUserInfoKeyPathsKey: keyPaths,
+                ]
+            )
         }
     }
 

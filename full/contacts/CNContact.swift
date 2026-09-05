@@ -22,6 +22,8 @@ struct CNContactStorage {
     var nonGregorianBirthday: DateComponents?
     var note = ""
     var imageData: Data?
+    var thumbnailImageData: Data?
+    var imagePresent = false
     var phoneNumbers: [CNLabeledValue<CNPhoneNumber>] = []
     var emailAddresses: [CNLabeledValue<NSString>] = []
     var postalAddresses: [CNLabeledValue<CNPostalAddress>] = []
@@ -38,11 +40,42 @@ struct CNContactStorage {
         return CNContactStorage(identifier: uuid.uuidString, uuid: uuid)
     }
 
+    mutating func setImageData(_ data: Data?) {
+        imageData = data
+        imagePresent = data != nil
+        // Documented Linux thumbnail rule: thumbnail bytes equal imageData.
+        // There is no Apple ImageIO downsample pipeline on this host.
+        thumbnailImageData = data
+    }
+
     func projected(keys: [String]?) -> CNContactStorage {
         guard let keys else { return self }
         var copy = self
         copy.availableKeys = Set(keys).union([CNContactIdentifierKey])
+        if !copy.availableKeys.contains(CNContactImageDataKey) {
+            copy.imageData = nil
+        }
+        if !copy.availableKeys.contains(CNContactThumbnailImageDataKey) {
+            copy.thumbnailImageData = nil
+        } else if copy.thumbnailImageData == nil {
+            copy.thumbnailImageData = self.imageData
+        }
         return copy
+    }
+}
+
+enum CNUnfetchedKeyAccess {
+    static let tlsKey = "OpenUIKit.CNUnfetchedKeyError"
+
+    static func record(_ key: String) {
+        let error = CNError(.unauthorizedKeys, userInfo: [CNErrorUserInfoKeyPathsKey: [key]])
+        Thread.current.threadDictionary[tlsKey] = error
+    }
+
+    static func consume() -> CNError? {
+        let error = Thread.current.threadDictionary[tlsKey] as? CNError
+        Thread.current.threadDictionary.removeObject(forKey: tlsKey)
+        return error
     }
 }
 
@@ -59,35 +92,64 @@ open class CNContact: NSObject, NSCopying, NSSecureCoding, NSMutableCopying, Ide
     }
 
     public var identifier: String { storage.identifier }
-    public var contactType: CNContactType { storage.contactType }
-    public var namePrefix: String { storage.namePrefix }
-    public var givenName: String { storage.givenName }
-    public var middleName: String { storage.middleName }
-    public var familyName: String { storage.familyName }
-    public var previousFamilyName: String { storage.previousFamilyName }
-    public var nameSuffix: String { storage.nameSuffix }
-    public var nickname: String { storage.nickname }
-    public var organizationName: String { storage.organizationName }
-    public var departmentName: String { storage.departmentName }
-    public var jobTitle: String { storage.jobTitle }
-    public var phoneticGivenName: String { storage.phoneticGivenName }
-    public var phoneticMiddleName: String { storage.phoneticMiddleName }
-    public var phoneticFamilyName: String { storage.phoneticFamilyName }
-    public var phoneticOrganizationName: String { storage.phoneticOrganizationName }
-    public var birthday: DateComponents? { storage.birthday }
-    public var nonGregorianBirthday: DateComponents? { storage.nonGregorianBirthday }
-    public var note: String { storage.note }
-    public var imageData: Data? { storage.imageData }
-    public var imageDataAvailable: Bool { storage.imageData != nil }
-    public var thumbnailImageData: Data? { storage.imageData }
-    public var phoneNumbers: [CNLabeledValue<CNPhoneNumber>] { storage.phoneNumbers }
-    public var emailAddresses: [CNLabeledValue<NSString>] { storage.emailAddresses }
-    public var postalAddresses: [CNLabeledValue<CNPostalAddress>] { storage.postalAddresses }
-    public var dates: [CNLabeledValue<NSDateComponents>] { storage.dates }
-    public var urlAddresses: [CNLabeledValue<NSString>] { storage.urlAddresses }
-    public var contactRelations: [CNLabeledValue<CNContactRelation>] { storage.contactRelations }
-    public var socialProfiles: [CNLabeledValue<CNSocialProfile>] { storage.socialProfiles }
-    public var instantMessageAddresses: [CNLabeledValue<CNInstantMessageAddress>] { storage.instantMessageAddresses }
+    public var contactType: CNContactType { accessed(CNContactTypeKey, storage.contactType, empty: .person) }
+    public var namePrefix: String { accessed(CNContactNamePrefixKey, storage.namePrefix, empty: "") }
+    public var givenName: String { accessed(CNContactGivenNameKey, storage.givenName, empty: "") }
+    public var middleName: String { accessed(CNContactMiddleNameKey, storage.middleName, empty: "") }
+    public var familyName: String { accessed(CNContactFamilyNameKey, storage.familyName, empty: "") }
+    public var previousFamilyName: String { accessed(CNContactPreviousFamilyNameKey, storage.previousFamilyName, empty: "") }
+    public var nameSuffix: String { accessed(CNContactNameSuffixKey, storage.nameSuffix, empty: "") }
+    public var nickname: String { accessed(CNContactNicknameKey, storage.nickname, empty: "") }
+    public var organizationName: String { accessed(CNContactOrganizationNameKey, storage.organizationName, empty: "") }
+    public var departmentName: String { accessed(CNContactDepartmentNameKey, storage.departmentName, empty: "") }
+    public var jobTitle: String { accessed(CNContactJobTitleKey, storage.jobTitle, empty: "") }
+    public var phoneticGivenName: String { accessed(CNContactPhoneticGivenNameKey, storage.phoneticGivenName, empty: "") }
+    public var phoneticMiddleName: String { accessed(CNContactPhoneticMiddleNameKey, storage.phoneticMiddleName, empty: "") }
+    public var phoneticFamilyName: String { accessed(CNContactPhoneticFamilyNameKey, storage.phoneticFamilyName, empty: "") }
+    public var phoneticOrganizationName: String { accessed(CNContactPhoneticOrganizationNameKey, storage.phoneticOrganizationName, empty: "") }
+    public var birthday: DateComponents? { accessed(CNContactBirthdayKey, storage.birthday, empty: nil) }
+    public var nonGregorianBirthday: DateComponents? { accessed(CNContactNonGregorianBirthdayKey, storage.nonGregorianBirthday, empty: nil) }
+    public var note: String { accessed(CNContactNoteKey, storage.note, empty: "") }
+    public var imageData: Data? { accessed(CNContactImageDataKey, storage.imageData, empty: nil) }
+    public var imageDataAvailable: Bool {
+        accessed(CNContactImageDataAvailableKey, storage.imagePresent || storage.imageData != nil, empty: false)
+    }
+    public var thumbnailImageData: Data? {
+        accessed(CNContactThumbnailImageDataKey, storage.thumbnailImageData ?? storage.imageData, empty: nil)
+    }
+    public var phoneNumbers: [CNLabeledValue<CNPhoneNumber>] { accessed(CNContactPhoneNumbersKey, storage.phoneNumbers, empty: []) }
+    public var emailAddresses: [CNLabeledValue<NSString>] { accessed(CNContactEmailAddressesKey, storage.emailAddresses, empty: []) }
+    public var postalAddresses: [CNLabeledValue<CNPostalAddress>] { accessed(CNContactPostalAddressesKey, storage.postalAddresses, empty: []) }
+    public var dates: [CNLabeledValue<NSDateComponents>] { accessed(CNContactDatesKey, storage.dates, empty: []) }
+    public var urlAddresses: [CNLabeledValue<NSString>] { accessed(CNContactUrlAddressesKey, storage.urlAddresses, empty: []) }
+    public var contactRelations: [CNLabeledValue<CNContactRelation>] { accessed(CNContactRelationsKey, storage.contactRelations, empty: []) }
+    public var socialProfiles: [CNLabeledValue<CNSocialProfile>] { accessed(CNContactSocialProfilesKey, storage.socialProfiles, empty: []) }
+    public var instantMessageAddresses: [CNLabeledValue<CNInstantMessageAddress>] {
+        accessed(CNContactInstantMessageAddressesKey, storage.instantMessageAddresses, empty: [])
+    }
+
+    private func accessed<T>(_ key: String, _ value: T, empty: T) -> T {
+        if storage.availableKeys.contains(key) { return value }
+        CNUnfetchedKeyAccess.record(key)
+        return empty
+    }
+
+    /// Throws `CNError.unauthorizedKeys` when `key` was not included in `keysToFetch`.
+    /// Darwin raises `CNContactPropertyNotFetchedExceptionName`; Linux uses this
+    /// throwing boundary because `NSException` is not a recoverable control path.
+    open func requireKeyAvailable(_ key: String) throws {
+        guard isKeyAvailable(key) else {
+            throw CNError(.unauthorizedKeys, userInfo: [CNErrorUserInfoKeyPathsKey: [key]])
+        }
+    }
+
+    open func requireKeysAvailable(_ keyDescriptors: [any CNKeyDescriptor]) throws {
+        let keys = CNFlattenKeyDescriptors(keyDescriptors)
+        let missing = keys.filter { !storage.availableKeys.contains($0) }
+        if !missing.isEmpty {
+            throw CNError(.unauthorizedKeys, userInfo: [CNErrorUserInfoKeyPathsKey: missing])
+        }
+    }
 
     open class func localizedString(forKey key: String) -> String {
         CNLocalizedContactKey(key)
@@ -150,6 +212,11 @@ open class CNContact: NSObject, NSCopying, NSSecureCoding, NSMutableCopying, Ide
         return keys.allSatisfy { storage.availableKeys.contains($0) }
     }
 
+    @_spi(OpenUIKitHost)
+    public static func _consumeUnfetchedKeyError() -> CNError? {
+        CNUnfetchedKeyAccess.consume()
+    }
+
     open func isUnifiedWithContact(withIdentifier contactIdentifier: String) -> Bool {
         storage.unifiedIdentifiers.contains(contactIdentifier) || storage.identifier == contactIdentifier
     }
@@ -171,13 +238,6 @@ open class CNContact: NSObject, NSCopying, NSSecureCoding, NSMutableCopying, Ide
             return "\(familyName) \(givenName)".trimmingCharacters(in: .whitespaces).lowercased()
         }
         return "\(givenName) \(familyName)".trimmingCharacters(in: .whitespaces).lowercased()
-    }
-
-    func displayNameParts(phonetic: Bool) -> (first: String, last: String, organization: String) {
-        if phonetic {
-            return (phoneticGivenName, phoneticFamilyName, phoneticOrganizationName)
-        }
-        return (givenName, familyName, organizationName)
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
@@ -212,6 +272,16 @@ open class CNContact: NSObject, NSCopying, NSSecureCoding, NSMutableCopying, Ide
         storage.phoneticOrganizationName = coder.decodeObject(of: NSString.self, forKey: "phoneticOrganizationName") as String? ?? ""
         storage.note = coder.decodeObject(of: NSString.self, forKey: "note") as String? ?? ""
         storage.imageData = coder.decodeObject(of: NSData.self, forKey: "imageData") as Data?
+        storage.thumbnailImageData = coder.decodeObject(of: NSData.self, forKey: "thumbnailImageData") as Data?
+        storage.imagePresent = coder.decodeBool(forKey: "imagePresent") || storage.imageData != nil
+        if let year = coder.decodeObject(of: NSNumber.self, forKey: "birthdayYear") {
+            var birthday = DateComponents()
+            birthday.calendar = Calendar(identifier: .gregorian)
+            birthday.year = year.intValue
+            birthday.month = (coder.decodeObject(of: NSNumber.self, forKey: "birthdayMonth") as NSNumber?)?.intValue
+            birthday.day = (coder.decodeObject(of: NSNumber.self, forKey: "birthdayDay") as NSNumber?)?.intValue
+            storage.birthday = birthday
+        }
         self.storage = storage
         super.init()
     }
@@ -235,6 +305,13 @@ open class CNContact: NSObject, NSCopying, NSSecureCoding, NSMutableCopying, Ide
         coder.encode(phoneticOrganizationName as NSString, forKey: "phoneticOrganizationName")
         coder.encode(note as NSString, forKey: "note")
         coder.encode(imageData as NSData?, forKey: "imageData")
+        coder.encode(thumbnailImageData as NSData?, forKey: "thumbnailImageData")
+        coder.encode(storage.imagePresent, forKey: "imagePresent")
+        if let birthday {
+            if let year = birthday.year { coder.encode(NSNumber(value: year), forKey: "birthdayYear") }
+            if let month = birthday.month { coder.encode(NSNumber(value: month), forKey: "birthdayMonth") }
+            if let day = birthday.day { coder.encode(NSNumber(value: day), forKey: "birthdayDay") }
+        }
     }
 }
 
@@ -252,111 +329,111 @@ open class CNMutableContact: CNContact {
     }
 
     public override var contactType: CNContactType {
-        get { storage.contactType }
+        get { super.contactType }
         set { storage.contactType = newValue }
     }
     public override var namePrefix: String {
-        get { storage.namePrefix }
+        get { super.namePrefix }
         set { storage.namePrefix = newValue }
     }
     public override var givenName: String {
-        get { storage.givenName }
+        get { super.givenName }
         set { storage.givenName = newValue }
     }
     public override var middleName: String {
-        get { storage.middleName }
+        get { super.middleName }
         set { storage.middleName = newValue }
     }
     public override var familyName: String {
-        get { storage.familyName }
+        get { super.familyName }
         set { storage.familyName = newValue }
     }
     public override var previousFamilyName: String {
-        get { storage.previousFamilyName }
+        get { super.previousFamilyName }
         set { storage.previousFamilyName = newValue }
     }
     public override var nameSuffix: String {
-        get { storage.nameSuffix }
+        get { super.nameSuffix }
         set { storage.nameSuffix = newValue }
     }
     public override var nickname: String {
-        get { storage.nickname }
+        get { super.nickname }
         set { storage.nickname = newValue }
     }
     public override var organizationName: String {
-        get { storage.organizationName }
+        get { super.organizationName }
         set { storage.organizationName = newValue }
     }
     public override var departmentName: String {
-        get { storage.departmentName }
+        get { super.departmentName }
         set { storage.departmentName = newValue }
     }
     public override var jobTitle: String {
-        get { storage.jobTitle }
+        get { super.jobTitle }
         set { storage.jobTitle = newValue }
     }
     public override var phoneticGivenName: String {
-        get { storage.phoneticGivenName }
+        get { super.phoneticGivenName }
         set { storage.phoneticGivenName = newValue }
     }
     public override var phoneticMiddleName: String {
-        get { storage.phoneticMiddleName }
+        get { super.phoneticMiddleName }
         set { storage.phoneticMiddleName = newValue }
     }
     public override var phoneticFamilyName: String {
-        get { storage.phoneticFamilyName }
+        get { super.phoneticFamilyName }
         set { storage.phoneticFamilyName = newValue }
     }
     public override var phoneticOrganizationName: String {
-        get { storage.phoneticOrganizationName }
+        get { super.phoneticOrganizationName }
         set { storage.phoneticOrganizationName = newValue }
     }
     public override var birthday: DateComponents? {
-        get { storage.birthday }
+        get { super.birthday }
         set { storage.birthday = newValue }
     }
     public override var nonGregorianBirthday: DateComponents? {
-        get { storage.nonGregorianBirthday }
+        get { super.nonGregorianBirthday }
         set { storage.nonGregorianBirthday = newValue }
     }
     public override var note: String {
-        get { storage.note }
+        get { super.note }
         set { storage.note = newValue }
     }
     public override var imageData: Data? {
-        get { storage.imageData }
-        set { storage.imageData = newValue }
+        get { super.imageData }
+        set { storage.setImageData(newValue) }
     }
     public override var phoneNumbers: [CNLabeledValue<CNPhoneNumber>] {
-        get { storage.phoneNumbers }
+        get { super.phoneNumbers }
         set { storage.phoneNumbers = newValue }
     }
     public override var emailAddresses: [CNLabeledValue<NSString>] {
-        get { storage.emailAddresses }
+        get { super.emailAddresses }
         set { storage.emailAddresses = newValue }
     }
     public override var postalAddresses: [CNLabeledValue<CNPostalAddress>] {
-        get { storage.postalAddresses }
+        get { super.postalAddresses }
         set { storage.postalAddresses = newValue }
     }
     public override var dates: [CNLabeledValue<NSDateComponents>] {
-        get { storage.dates }
+        get { super.dates }
         set { storage.dates = newValue }
     }
     public override var urlAddresses: [CNLabeledValue<NSString>] {
-        get { storage.urlAddresses }
+        get { super.urlAddresses }
         set { storage.urlAddresses = newValue }
     }
     public override var contactRelations: [CNLabeledValue<CNContactRelation>] {
-        get { storage.contactRelations }
+        get { super.contactRelations }
         set { storage.contactRelations = newValue }
     }
     public override var socialProfiles: [CNLabeledValue<CNSocialProfile>] {
-        get { storage.socialProfiles }
+        get { super.socialProfiles }
         set { storage.socialProfiles = newValue }
     }
     public override var instantMessageAddresses: [CNLabeledValue<CNInstantMessageAddress>] {
-        get { storage.instantMessageAddresses }
+        get { super.instantMessageAddresses }
         set { storage.instantMessageAddresses = newValue }
     }
 }

@@ -4,5 +4,6 @@ full/contacts/CNContact.swift
 full/contacts/CNContactStore.swift
 full/contacts/CNError.swift
 full/contacts/CNFormatters.swift
+full/contacts/CNPersistentStore.swift
 full/contacts/CNTypes.swift
 full/contacts/Contacts.swift

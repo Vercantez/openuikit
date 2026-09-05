@@ -15,10 +15,15 @@ first, build this module with those `-I/-L` paths, and execute
 - Public types used by the 20-app corpus: `CNContact` / `CNMutableContact`,
   `CNContactStore`, `CNSaveRequest`, `CNContactFetchRequest`, labeled values,
   phone/postal/social/IM/relation values, groups, containers, formatters,
-  vCard 3.0 subset coding, change-history event types, and `CNError`.
-- Process-local **in-memory** contact graph. After `requestAccess(for:)`,
-  save/fetch/enumerate/predicates/groups behave deterministically inside this
-  process.
+  vCard 3.0 (RFC 2426) coding, change-history event types, and `CNError`.
+- Documented **local directory** store at
+  `$HOME/.local/share/openuikit/contacts/` (override with
+  `OPENUIKIT_CONTACTS_DIRECTORY`). The file is `store.json`. This is not a
+  system address book.
+- After `requestAccess(for:)`, save/fetch/enumerate/predicates/groups behave
+  deterministically against that directory. Status starts `.notDetermined`
+  and becomes `.authorized` or `.denied` (documented
+  `_setPortableAuthorizationDecision` test hook).
 - `CNSaveRequest.execute` is transactional: every operation is validated
   against a snapshot, then all mutations and history events are installed
   together or the complete prior state is restored.
@@ -31,30 +36,51 @@ first, build this module with those `-I/-L` paths, and execute
   Linux `String` cannot satisfy those class bounds, so `NSString` conforms
   and callers pass `CNContactGivenNameKey as NSString`.
 - Property keys, standard labels (`_$!<Home>!$_`, `iPhone`, …), and IM/social
-  service names follow the documented Apple string contract.
-- Name and mailing-address formatting are portable joins, not Apple locale
-  tables.
-- `requestAccess` grants this process-local sandbox only. The completion
+  service names follow the documented Apple string contract. Phone/email
+  labels use the exact public payloads (`iPhone`, `_$!<Mobile>!$_`, `iCloud`).
+- Name formatting joins prefix/given/middle/family/suffix (family-name-first
+  reverses given/family), then nickname, then organization.
+- Mailing-address formatting uses `isoCountryCode` layouts the host Locale
+  can express (US `city, ST ZIP`, GB street/city/postcode, JP country-first).
+- `requestAccess` grants this local-directory sandbox only. The completion
   runs off the calling stack (non-reentrant).
 
 ## Fail-closed boundaries
 
 - **privacy:** There is no TCC prompt. Status starts `.notDetermined`. Fetch
   and save throw `CNError.authorizationDenied` until `requestAccess`. Granting
-  access authorizes only this process-local sandbox; it is not an Apple
-  privacy decision.
+  access authorizes only this process's documented directory; it is not an
+  Apple privacy decision. The test hook can force `.denied`.
 - **host-store:** No AddressBook, iCloud, CardDAV, or Exchange database is
-  attached. The only container is a local in-memory container. Unify is
-  identity. Limited/restricted Apple entitlement states are not fabricated as
-  successful host grants.
-- **in-memory:** Data does not persist across process restart. Thumbnail data
-  is the original image bytes (no Apple image pipeline). Unfetched keys do
-  not raise `NSException` (unavailable on Linux).
+  attached. The only writable container is the local directory container.
+  Unknown container identifiers throw `parentContainerNotWritable`. Unify is
+  identity. `CNContactPickerViewController` throws `featureNotAvailable`
+  (ContactsUI/UIKit is not present).
+- **in-memory:** Thumbnail data equals `imageData` bytes (no Apple image
+  pipeline). Unfetched keys report `isKeyAvailable == false` and throw
+  `CNError.unauthorizedKeys` from `requireKeyAvailable` (Linux has no
+  recoverable `NSException`). Property getters also record that error.
 
-## Still deferred / oracle
+## Depth pass 2026-09
 
-See `oracle-questions.tsv` for Darwin probes: TCC prompt timing, completion
-queue, unified linked-contact identity, exact extended kinship label
-payloads, unattested `CNError` raw values (`parentContainerNotWritable`,
-client-identifier, change-history, vCard), locale name/address formatting,
-and Apple-identical vCard bytes.
+Wave-1 left 532 implemented / 12 declared / 169 deferred. This depth pass
+finishes the public overlay against the pinned 714-ID corpus:
+
+- Implemented **713** / declared **0** / deferred **0** / not-applicable **1**
+  (`CNContact.id` Identifiable overlay is UUID, not ObjectIdentifier).
+- Local directory store with `store.json`, reload SPI, and transactional
+  `execute`.
+- Authorization `.notDetermined` → `.authorized` / `.denied`.
+- `enumerateContacts` honors predicate, `sortOrder`, `unifyResults`
+  (identity), and `mutableObjects`.
+- `CNError.recordDoesNotExist`, `validationMultipleErrors` (with
+  `CNErrorUserInfoValidationErrorsKey` / affected ids / keyPaths), and
+  `unauthorizedKeys` on unfetched key access.
+- vCard 3.0 round trip: N/FN/TEL;TYPE=/EMAIL;TYPE=/ADR;TYPE=/ORG/BDAY/PHOTO/NOTE/URL.
+- Gate: `bash full/contacts/tests/acceptance/test_host.sh` (Linux host, no docker).
+
+Still not claimed: Apple TCC UI, iCloud/CardDAV unify identity, Apple
+locale name tables, Apple-identical vCard bytes, Darwin raw values for
+newer `CNError` cases, ImageIO thumbnail downsampling.
+
+See `oracle-questions.tsv`.

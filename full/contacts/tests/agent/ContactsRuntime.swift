@@ -1,6 +1,11 @@
 import Contacts
 import Foundation
 @_spi(OpenUIKitHost) import Contacts
+#if canImport(Glibc)
+import Glibc
+#elseif canImport(Darwin)
+import Darwin
+#endif
 
 func expect(_ condition: Bool, _ message: String) {
     if !condition {
@@ -32,6 +37,45 @@ final class RecordingVisitor: NSObject, CNChangeHistoryEventVisitor {
     func visit(_ event: CNChangeHistoryDropEverythingEvent) {}
     func visit(_ event: CNChangeHistoryUpdateContactEvent) {}
     func visitAddSubgroup(_ event: CNChangeHistoryAddSubgroupToGroupEvent) { subgroups += 1 }
+}
+
+let storeRoot = FileManager.default.temporaryDirectory
+    .appendingPathComponent("openuikit-contacts-\(ProcessInfo.processInfo.processIdentifier)", isDirectory: true)
+try! FileManager.default.createDirectory(at: storeRoot, withIntermediateDirectories: true)
+_ = storeRoot.path.withCString { path in
+    "OPENUIKIT_CONTACTS_DIRECTORY".withCString { key in
+        setenv(key, path, 1)
+    }
+}
+CNContactStore._resetPortableStore()
+expect(
+    CNContactStore._portableStoreDirectory().path == storeRoot.path,
+    "documented store directory override"
+)
+
+CNContactStore._setPortableAuthorizationDecision(.denied)
+expect(CNContactStore.authorizationStatus(for: .contacts) == .notDetermined, "denied-hook starts notDetermined")
+let deniedStore = CNContactStore()
+let deniedSem = DispatchSemaphore(value: 0)
+var deniedGranted = true
+deniedStore.requestAccess(for: .contacts) { granted, error in
+    deniedGranted = granted
+    expect(error == nil, "denied requestAccess has no fabricated TCC error")
+    deniedSem.signal()
+}
+wait(deniedSem, "denied requestAccess deadlock")
+expect(!deniedGranted, "documented denied decision")
+expect(CNContactStore.authorizationStatus(for: .contacts) == .denied, "status denied after hook")
+do {
+    _ = try deniedStore.unifiedContacts(
+        matching: CNContact.predicateForContacts(matchingName: "Nobody"),
+        keysToFetch: keys(CNContactGivenNameKey)
+    )
+    fail("denied fetch must stay fail-closed")
+} catch let error as CNError {
+    expect(error.code == .authorizationDenied, "denied fetch code")
+} catch {
+    fail("unexpected denied fetch \(error)")
 }
 
 CNContactStore._resetPortableStore()
@@ -261,19 +305,19 @@ expect(boxedDescriptor is NSObjectProtocol, "descriptor NSObjectProtocol")
 _ = (givenDescriptor as NSCopying).copy(with: nil)
 
 let formatted = CNContactFormatter.string(from: contact, style: .fullName)
-expect(formatted == "Ada Lovelace", "full name \(String(describing: formatted))")
+expect(formatted == "Ms Ada Byron Lovelace Countess", "full name \(String(describing: formatted))")
 let phonetic = CNContactFormatter.string(from: contact, style: .phoneticFullName)
-expect(phonetic == "Ay-duh Love-lace", "phonetic \(String(describing: phonetic))")
+expect(phonetic == "Ay-duh By-ron Love-lace", "phonetic \(String(describing: phonetic))")
 expect(CNContactFormatter.nameOrder(for: contact) == .givenNameFirst, "name order")
 expect(CNContactFormatter.delimiter(for: contact) == " ", "delimiter")
 expect(
-    CNContactFormatter.attributedString(from: contact, style: .fullName)?.string == "Ada Lovelace",
+    CNContactFormatter.attributedString(from: contact, style: .fullName)?.string == "Ms Ada Byron Lovelace Countess",
     "attributed name"
 )
 let formatter = CNContactFormatter()
 formatter.style = .fullName
-expect(formatter.string(from: contact) == "Ada Lovelace", "instance formatter")
-expect(formatter.attributedString(from: contact)?.string == "Ada Lovelace", "instance attributed")
+expect(formatter.string(from: contact) == "Ms Ada Byron Lovelace Countess", "instance formatter")
+expect(formatter.attributedString(from: contact)?.string == "Ms Ada Byron Lovelace Countess", "instance attributed")
 
 let mailing = CNPostalAddressFormatter.string(from: postal, style: .mailingAddress)
 expect(mailing.contains("12 Great Street"), "street in mailing")
@@ -302,6 +346,7 @@ expect((relabeled.settingValue("other@example.com" as NSString).value as String)
 
 let emptyPhone = CNPhoneNumber.new()
 expect(emptyPhone.stringValue == "", "empty phone")
+expect(!emptyPhone.initialCountryCode.isEmpty, "phone initialCountryCode")
 
 var observerQueries = 0
 let observer = NotificationCenter.default.addObserver(
@@ -414,12 +459,38 @@ let rejected = try! store.unifiedContacts(
 expect(rejected.isEmpty, "untagged custom predicate is not misclassified")
 
 let vCard = try! CNContactVCardSerialization.data(with: [contact])
+let vCardText = String(data: vCard, encoding: .utf8) ?? ""
+expect(vCardText.contains("BEGIN:VCARD"), "vcard begin")
+expect(vCardText.contains("VERSION:3.0"), "vcard version")
+expect(vCardText.contains("TEL;TYPE=CELL:"), "vcard tel type")
+expect(vCardText.contains("EMAIL;TYPE=HOME:"), "vcard email type")
+expect(vCardText.contains("BDAY:1815-12-10"), "vcard bday")
+expect(vCardText.contains("PHOTO;ENCODING=b;TYPE="), "vcard photo")
+expect(vCardText.contains("NOTE:"), "vcard note")
+expect(vCardText.contains("URL:"), "vcard url")
+expect(vCardText.contains("ADR;TYPE=HOME:"), "vcard adr type")
 let decoded = try! CNContactVCardSerialization.contacts(with: vCard)
 expect(decoded.count == 1, "vcard count")
 expect(decoded[0].givenName == "Ada", "vcard given")
 expect(decoded[0].familyName == "Lovelace", "vcard family")
+expect(decoded[0].namePrefix == "Ms", "vcard prefix")
+expect(decoded[0].middleName == "Byron", "vcard middle")
+expect(decoded[0].nameSuffix == "Countess", "vcard suffix")
 expect(decoded[0].phoneNumbers.count == 1, "vcard phone")
+expect(decoded[0].phoneNumbers[0].label == CNLabelPhoneNumberMobile, "vcard phone label")
+expect(decoded[0].emailAddresses[0].value as String == "ada@example.com", "vcard email")
+expect(decoded[0].birthday?.year == 1815, "vcard birthday year")
+expect(decoded[0].imageData == Data([0x00, 0x01, 0x02]), "vcard photo round trip")
+expect(decoded[0].note == "First programmer", "vcard note round trip")
 _ = CNContactVCardSerialization.descriptorForRequiredKeys()
+do {
+    _ = try CNContactVCardSerialization.contacts(with: Data("BEGIN:VCARD\nVERSION:3.0\nN:Foo\n".utf8))
+    fail("unterminated vcard must throw")
+} catch let error as CNError {
+    expect(error.code == .vCardMalformed, "malformed vcard")
+} catch {
+    fail("expected vCardMalformed")
+}
 
 let defaults = CNContactsUserDefaults.shared()
 expect(!defaults.countryCode.isEmpty, "country code")
@@ -529,6 +600,225 @@ postalMutable.city = "Bath"
 expect(postalCopy.city == "London", "postal copy independence")
 expect(CNContactRelation(name: "X").name == "X", "relation name")
 expect(!contact.isUnifiedWithContact(withIdentifier: "missing"), "not unified")
+
+expect(contact.thumbnailImageData == contact.imageData, "thumbnail equals imageData")
+let nicknameOnly = CNMutableContact()
+nicknameOnly.nickname = "OnlyNick"
+expect(CNContactFormatter.string(from: nicknameOnly, style: .fullName) == "OnlyNick", "nickname fallback")
+let orgOnly = CNMutableContact()
+orgOnly.contactType = .organization
+orgOnly.organizationName = "Analytical Co"
+expect(CNContactFormatter.string(from: orgOnly, style: .fullName) == "Analytical Co", "organization fallback")
+
+let usAddress = CNMutablePostalAddress()
+usAddress.street = "1 Market St"
+usAddress.city = "San Francisco"
+usAddress.state = "CA"
+usAddress.postalCode = "94105"
+usAddress.country = "United States"
+usAddress.isoCountryCode = "US"
+let usMailing = CNPostalAddressFormatter.string(from: usAddress, style: .mailingAddress)
+expect(usMailing.contains("San Francisco, CA 94105"), "US city/state/ZIP layout \(usMailing)")
+
+let partial = try! store.unifiedContact(
+    withIdentifier: contact.identifier,
+    keysToFetch: keys(CNContactGivenNameKey)
+)
+expect(partial.isKeyAvailable(CNContactGivenNameKey), "fetched given available")
+expect(!partial.isKeyAvailable(CNContactEmailAddressesKey), "unfetched email")
+do {
+    try partial.requireKeyAvailable(CNContactEmailAddressesKey)
+    fail("unfetched key must throw")
+} catch let error as CNError {
+    expect(error.code == .unauthorizedKeys, "unauthorizedKeys on unfetched access")
+    expect(error.keyPaths == [CNContactEmailAddressesKey], "unauthorized key path")
+} catch {
+    fail("unexpected unfetched error \(error)")
+}
+do {
+    try partial.requireKeysAvailable(keys(CNContactEmailAddressesKey, CNContactPhoneNumbersKey))
+    fail("areKeysAvailable-style require must throw")
+} catch let error as CNError {
+    expect(error.code == .unauthorizedKeys, "unauthorizedKeys for missing descriptors")
+} catch {
+    fail("unexpected requireKeys \(error)")
+}
+_ = partial.emailAddresses
+let unfetched = CNContact._consumeUnfetchedKeyError()
+expect(unfetched?.code == .unauthorizedKeys, "getter records unauthorizedKeys")
+
+CNContactStore._reloadPortableStoreFromDisk()
+let reloaded = try! CNContactStore().unifiedContact(
+    withIdentifier: contact.identifier,
+    keysToFetch: keys(CNContactFamilyNameKey, CNContactGivenNameKey, CNContactImageDataKey, CNContactThumbnailImageDataKey)
+)
+expect(reloaded.familyName == "King", "directory store survived reload")
+expect(reloaded.givenName == "Ada", "directory store given name")
+expect(reloaded.thumbnailImageData == Data([0x00, 0x01, 0x02]), "persisted thumbnail")
+expect(
+    FileManager.default.fileExists(
+        atPath: CNContactStore._portableStoreDirectory().appendingPathComponent("store.json").path
+    ),
+    "store.json exists"
+)
+
+let invalid = CNMutableContact()
+invalid.givenName = "BadDate"
+invalid.birthday = DateComponents(calendar: Calendar(identifier: .gregorian), year: 2000, month: 99, day: 99)
+let invalidSave = CNSaveRequest()
+invalidSave.add(invalid, toContainerWithIdentifier: nil)
+do {
+    try store.execute(invalidSave)
+    fail("invalid birthday must fail validation")
+} catch let error as CNError {
+    expect(error.code == .validationMultipleErrors, "validationMultipleErrors \(error.code)")
+    expect(error.userInfo[CNErrorUserInfoValidationErrorsKey] != nil, "validation errors userInfo")
+    expect(error.affectedRecordIdentifiers == [invalid.identifier], "validation affected ids")
+    expect(error.keyPaths?.contains(CNContactBirthdayKey) == true, "validation keyPaths")
+} catch {
+    fail("unexpected validation error \(error)")
+}
+
+let foreign = CNMutableContact()
+foreign.givenName = "CardDAV"
+let foreignSave = CNSaveRequest()
+foreignSave.add(foreign, toContainerWithIdentifier: "icloud-not-attached")
+do {
+    try store.execute(foreignSave)
+    fail("non-local container must fail closed")
+} catch let error as CNError {
+    expect(error.code == .parentContainerNotWritable, "parentContainerNotWritable")
+} catch {
+    fail("unexpected container error \(error)")
+}
+
+do {
+    _ = try store.unifiedContact(withIdentifier: "no-such-record", keysToFetch: keys(CNContactIdentifierKey))
+    fail("missing unifiedContact must throw")
+} catch let error as CNError {
+    expect(error.code == .recordDoesNotExist, "recordDoesNotExist")
+    expect(error.affectedRecordIdentifiers == ["no-such-record"], "missing id userInfo")
+} catch {
+    fail("unexpected missing contact \(error)")
+}
+
+let archivedContact = try! NSKeyedArchiver.archivedData(withRootObject: contact, requiringSecureCoding: true)
+let unarchivedContact = try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNContact.self, from: archivedContact)
+expect(unarchivedContact?.givenName == "Ada", "CNContact nscoding")
+expect(unarchivedContact?.birthday?.year == 1815, "CNContact birthday nscoding")
+
+let archivedGroup = try! NSKeyedArchiver.archivedData(withRootObject: group, requiringSecureCoding: true)
+let unarchivedGroup = try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNGroup.self, from: archivedGroup)
+expect(unarchivedGroup?.name == "Scientists", "CNGroup nscoding")
+
+let archivedContainer = try! NSKeyedArchiver.archivedData(
+    withRootObject: CNContainer(identifier: "c", name: "n", type: .local),
+    requiringSecureCoding: true
+)
+let unarchivedContainer = try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNContainer.self, from: archivedContainer)
+expect(unarchivedContainer?.type == .local, "CNContainer nscoding")
+
+let archivedRelation = try! NSKeyedArchiver.archivedData(
+    withRootObject: CNContactRelation(name: "Ada"),
+    requiringSecureCoding: true
+)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNContactRelation.self, from: archivedRelation)?.name == "Ada",
+    "CNContactRelation nscoding"
+)
+
+let archivedIM = try! NSKeyedArchiver.archivedData(
+    withRootObject: CNInstantMessageAddress(username: "ada", service: CNInstantMessageServiceJabber),
+    requiringSecureCoding: true
+)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNInstantMessageAddress.self, from: archivedIM)?.username == "ada",
+    "CNInstantMessageAddress nscoding"
+)
+
+let archivedSocial = try! NSKeyedArchiver.archivedData(
+    withRootObject: CNSocialProfile(urlString: "u", username: "n", userIdentifier: "i", service: "s"),
+    requiringSecureCoding: true
+)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNSocialProfile.self, from: archivedSocial)?.username == "n",
+    "CNSocialProfile nscoding"
+)
+
+let archivedPostal = try! NSKeyedArchiver.archivedData(withRootObject: postal, requiringSecureCoding: true)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNPostalAddress.self, from: archivedPostal)?.city == "London",
+    "CNPostalAddress nscoding"
+)
+
+let archivedLabeled = try! NSKeyedArchiver.archivedData(
+    withRootObject: CNLabeledValue(label: CNLabelHome, value: "a@b.c" as NSString),
+    requiringSecureCoding: true
+)
+let unarchivedLabeled = try! NSKeyedUnarchiver.unarchivedObject(
+    ofClass: CNLabeledValue<NSString>.self,
+    from: archivedLabeled
+)
+expect(unarchivedLabeled?.value as String? == "a@b.c", "CNLabeledValue nscoding")
+
+let fetchRequestArchive = try! NSKeyedArchiver.archivedData(withRootObject: request, requiringSecureCoding: true)
+let unarchivedFetch = try! NSKeyedUnarchiver.unarchivedObject(
+    ofClass: CNContactFetchRequest.self,
+    from: fetchRequestArchive
+)
+expect(unarchivedFetch?.sortOrder == .familyName, "CNContactFetchRequest nscoding")
+
+let historyArchive = try! NSKeyedArchiver.archivedData(
+    withRootObject: CNChangeHistoryDropEverythingEvent(),
+    requiringSecureCoding: true
+)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNChangeHistoryDropEverythingEvent.self, from: historyArchive) != nil,
+    "CNChangeHistoryEvent nscoding"
+)
+
+let historyRequestArchive = try! NSKeyedArchiver.archivedData(withRootObject: historyRequest, requiringSecureCoding: true)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(
+        ofClass: CNChangeHistoryFetchRequest.self,
+        from: historyRequestArchive
+    )?.includeGroupChanges == true,
+    "CNChangeHistoryFetchRequest nscoding"
+)
+
+let propertyArchive = try! NSKeyedArchiver.archivedData(withRootObject: property, requiringSecureCoding: true)
+expect(
+    try! NSKeyedUnarchiver.unarchivedObject(ofClass: CNContactProperty.self, from: propertyArchive)?.key
+        == CNContactGivenNameKey,
+    "CNContactProperty nscoding"
+)
+
+do {
+    try CNContactPickerViewController().presentPicker()
+    fail("picker must fail closed")
+} catch let error as CNError {
+    expect(error.code == .featureNotAvailable, "picker requires UIKit/ContactsUI")
+} catch {
+    fail("unexpected picker error \(error)")
+}
+
+expect(CNError.vCardMalformed != CNError.vCardSummarizationError, "vcard error inequality")
+expect(CNError.changeHistoryExpired != CNError.changeHistoryInvalidAnchor, "history error inequality")
+expect(CNError.clientIdentifierInvalid != CNError.clientIdentifierCollision, "client id error inequality")
+expect(CNError.parentContainerNotWritable.rawValue == 207, "parentContainerNotWritable alias")
+_ = CNError.changeHistoryInvalidFetchRequest
+_ = CNError.clientIdentifierDoesNotExist
+
+let mutableEnumerate = CNContactFetchRequest(keysToFetch: keys(CNContactGivenNameKey, CNContactFamilyNameKey))
+mutableEnumerate.mutableObjects = true
+mutableEnumerate.unifyResults = false
+mutableEnumerate.sortOrder = .givenName
+var mutableCount = 0
+try! store.enumerateContacts(with: mutableEnumerate) { item, _ in
+    expect(item is CNMutableContact, "mutableObjects honored")
+    mutableCount += 1
+}
+expect(mutableCount >= 1, "mutable enumerate")
 
 let rolledInsert = CNMutableContact()
 rolledInsert.givenName = "RollbackA"
