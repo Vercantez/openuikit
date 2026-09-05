@@ -35,6 +35,9 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
     echo "==> conformance $app"
     zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app $app > /tmp/hc-conformance-$app.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app rc=$? (see /tmp/hc-conformance-$app.flow.log)"
+    echo "==> conformance $app --ipad"
+    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-ipad $app --ipad > /tmp/hc-conformance-$app-ipad.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --ipad rc=$? (see /tmp/hc-conformance-$app-ipad.flow.log)"
   done
 else
   SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
@@ -49,7 +52,10 @@ OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender real
 conf=()
 # The round captures into its OWN dirs: /tmp/conformance-<App> belongs to the
 # agents (their flows overwrite it mid-round).
-for app in Sources/ConformanceApps/*(/:t); do [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app); done
+for app in Sources/ConformanceApps/*(/:t); do
+  [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app)
+  [[ -d /tmp/hc-conformance-$app-ipad ]] && conf+=(/tmp/hc-conformance-$app-ipad)
+done
 confargs=()
 (( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")
 python3 scripts/scoreboard.py --suite /tmp/ios_suite --realapp-out /tmp/hc_app --gate-out /tmp/hc_gate \

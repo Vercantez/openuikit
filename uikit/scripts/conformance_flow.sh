@@ -16,37 +16,55 @@
 #      which scripts/scoreboard.py reads with --conformance <workdir>.
 #
 #   scripts/conformance_flow.sh /tmp/conf NavFlow
+#   scripts/conformance_flow.sh /tmp/conf NavFlow --ipad
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
 #
+# --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
+# openhost renders with idiom .pad, that window size, and the measured
+# pad safe area `[32, 0, 25, 0]` (same plumbing as realapp *_ipad).
 # SIM_DEVICE_SUFFIX gives the run its own simulator devices.
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-OUT=${1:?usage: conformance_flow.sh <workdir> <app>}
-APPNAME=${2:?usage: conformance_flow.sh <workdir> <app>}
+OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad]}
+APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad]}
+IPAD=0
+if [[ "${3:-}" == "--ipad" ]]; then IPAD=1; fi
 SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
 [[ -f "$SCRIPT" ]] || { echo "no such conformance app: $SCRIPT" >&2; exit 2 }
 mkdir -p "$OUT/golden" "$OUT/ours" "$OUT/report"
 
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   echo "==> real iOS replay ($OUT/golden)"
-  zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
+  if [[ $IPAD -eq 1 ]]; then
+    zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" --ipad | tail -1
+  else
+    zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
+  fi
 fi
 
 echo "==> OpenUIKit replay, iOS cut ($OUT/ours)"
 swift build -c release --product openhost >/dev/null
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
-./.build/release/openhost --app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours" \
+typeset -a HOST_ARGS
+HOST_ARGS=(--app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours")
+if [[ $IPAD -eq 1 ]]; then HOST_ARGS+=(--ipad); fi
+./.build/release/openhost "${HOST_ARGS[@]}" \
   | tail -1
 
 echo "==> compare"
-python3 - "$OUT" "$APPNAME" "$SCRIPT" <<'PY'
+# File names stay <App>.t<ms>.png (confprobe / openhost). The summary's
+# "app" field is <App>-ipad so the scoreboard can register both rounds.
+SUMMARY_APP="$APPNAME"
+if [[ $IPAD -eq 1 ]]; then SUMMARY_APP="${APPNAME}-ipad"; fi
+python3 - "$OUT" "$APPNAME" "$SCRIPT" "$SUMMARY_APP" <<'PY'
 import json, os, shutil, sys
 sys.path.insert(0, os.path.join(os.getcwd(), "Tools/compare"))
 import compare                                   # the suite's own pixel gate
 from PIL import Image, ImageChops
 
 out, app, script_path = sys.argv[1], sys.argv[2], sys.argv[3]
+summary_app = sys.argv[4] if len(sys.argv) > 4 else app
 script = json.load(open(script_path))
 scale = None
 
@@ -156,10 +174,10 @@ for t in script["captures"]:
     captures.append(entry)
     print(lines[0])
 
-summary = {"app": app, "captures": captures}
+summary = {"app": summary_app, "captures": captures}
 json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
-print(f"\n{app}: {len(captures)} capture(s), worst {min(scores):.3f}, "
+print(f"\n{summary_app}: {len(captures)} capture(s), worst {min(scores):.3f}, "
       f"mean {sum(scores) / len(scores):.3f}")
 PY
 echo "reports: $OUT/report/<t>/{sheet,diff,golden,ours}.png + report.txt; $OUT/summary.json"
