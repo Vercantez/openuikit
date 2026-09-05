@@ -34,9 +34,15 @@ echo "== stage_swiftcore (libswiftcompat + libswiftCore from swiftcore-macho/art
 bash scripts/stage_swiftcore.sh "$TREE/swiftcore-macho/artifacts" > "$W/verify-stage.log" 2>&1; echo "stage_swiftcore rc=$?"; tail -4 "$W/verify-stage.log"
 cd "$TREE"
 echo "== build_full.sh (stage mrroot_full from this machorun; rebuild umbrellas)"
-bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1; echo "build_full rc=$?"; grep -E "^build_full:|error:|FAIL|umbrella|OK$" "$W/build_full.log" | tail -8
+build_full_rc=0
+bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1 || build_full_rc=$?
+echo "build_full rc=$build_full_rc"; grep -E "^build_full:|error:|FAIL|umbrella|OK$" "$W/build_full.log" | tail -8
 cp machorun/sdk/usr/lib/libSystem.tbd scratch/sysroot_fe4/usr/lib/libSystem.tbd
 echo "== guest realapp (expect 12 screens)"
+if [ "$build_full_rc" -ne 0 ]; then
+  echo "guest_realapp skipped (build_full rc=$build_full_rc)"
+  echo "GUEST_REALAPP_SCREENS=0"
+else
 mkdir -p "$W/guest-realapp"
 HOST_SO="$TREE/scratch/mrroot_full/host"
 # Preload stays inside this subshell so GATE_B's widget guest is not
@@ -57,6 +63,7 @@ HOST_SO="$TREE/scratch/mrroot_full/host"
 echo "guest_realapp rc=$?"
 grep -E '^rendered realapp_|^\[render_full\] realapp' "$W/guest-realapp.log" | tail -20
 echo "GUEST_REALAPP_SCREENS=$(ls "$W/guest-realapp"/*.png 2>/dev/null | wc -l | tr -d ' ')"
+fi
 P=$(ls -d /tmp/focus-widget-res.* 2>/dev/null | head -1); B="$P/output/bundles/Focus_Widget.bundle"
 [ -d "$B" ] || { echo "GATE_B_FAIL rc=2 (no staged Focus_Widget.bundle under /tmp/focus-widget-res.*)"; exit 2; }
 echo "== GATE B (widget guest) on $H"

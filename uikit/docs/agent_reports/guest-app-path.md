@@ -95,5 +95,12 @@ script's own lines (`build_full rc=0`, `TBD_CHECK_OK`, `difftest rc=0`,
 `GATE_B_PASS`, plus `GUEST_REALAPP_SCREENS=12`), then the x86 cycle
 (`RUNG_SCOREBOARD a=PASS b=PASS c=PASS`).
 
-Attempt 1: first push of `agent/guest-app-path`. Verdict lines to be
-appended after the arm64 verify log is graded.
+Attempt 1: `13db41e08f27875872e84e204a32772872a295c1`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=2`:
+`OpenUIKit in-repo tree cb130cad… expected f2b69151… (git rev-parse HEAD:uikit)` —
+agent uikit/ edits (RealAppProbe Focus/Hackers) change HEAD:uikit; the pin
+advances after merge. `GATE_B_FAIL rc=2` (widget guest asserts the same pin).
+`guest_realapp` SIGTRAP on a stale `render_full`.
+
+Attempt 2: attest in-repo HEAD:uikit in `build_full.sh` and
+`build_focus_widget_guest.sh`; skip realapp when build_full fails.

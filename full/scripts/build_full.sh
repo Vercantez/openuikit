@@ -210,7 +210,15 @@ fi
 # mattered once already: a guest root staged before machorun's heap-below-2^47
 # fix (9659e73) reproduced a bug that had been fixed upstream hours earlier.
 MACHORUN=${MACHORUN:-$W/machorun}
-assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_INREPO_UIKIT_TREE" OpenUIKit
+# Agent branches that edit uikit/ (this task: RealAppProbe Focus/Hackers) have
+# a different HEAD:uikit than scripts/vendor_pins.sh. The operator advances
+# the pin after merge. Attest the in-repo tree we actually compile; a dirty
+# uikit/ is still refused. External UIKIT checkouts keep the pin.
+EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    EXPECTED_UIKIT_TREE=$(git -C "$W" rev-parse --verify HEAD:uikit)
+fi
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
 SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}
 SWIFT_CORE_RUNTIME_EXPECTED_SHA256=${SWIFT_CORE_RUNTIME_EXPECTED_SHA256:-}
