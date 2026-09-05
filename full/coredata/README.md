@@ -155,7 +155,6 @@ fail-closed tests remain and are cited only by the identifiers they call.
 Isolated-gate markers from this host:
 
 ```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_REFERENCE_OK
 COREDATA_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
