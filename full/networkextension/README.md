@@ -131,7 +131,18 @@ App-side NetworkExtension surface for Linux, no extension host.
   legacy `NWTCPConnection` / `NWUDPSession` fail-closed,
   `NEFilterManagerError` / `NEVPNError` raw values.
 
-**Coverage:** 1192 IDs; 1162 `implemented`, 30 `unavailable`, 0 deferred.
+**Coverage:** 1192 IDs.
+
+- Before this evidence repair: 1162 `implemented` / 0 `declared` / 0 deferred / 30 `unavailable`, but every implemented row cited `tests/agent/NetworkExtensionRuntime.swift` (refused by FW_MERGE).
+- After: 1162 `implemented` / 0 `declared` / 0 deferred / 30 `unavailable`. Every implemented row cites `test:full/networkextension/tests/agent/<File>Tests.swift#testName` for a real top-level `func testName()`. Enum/option-set members and C k…/err… constants share `testEnumRawValues` / `testConstantsAndNotifications`. No other test exceeds 40% of the remaining implemented rows (largest remaining family: 72 / 657).
+
+Top-5 implemented evidence distribution:
+
+1. `NetworkExtensionEnumTests.swift#testEnumRawValues` — 460
+2. `NetworkExtensionErrorTests.swift#testErrorBridging` — 100
+3. `NetworkExtensionVPNTests.swift#testVPNProtocolAndOnDemand` — 61
+4. `NetworkExtensionTunnelTests.swift#testLegacyNetworkAndPackets` — 55
+5. `NetworkExtensionTunnelTests.swift#testPacketTunnelNetworkSettings` — 50
 
 **Fail-closed boundaries:** no packet-tunnel provider runtime, no filter/
 DNS-proxy/relay/hotspot activation, no Apple entitlements, simulated VPN
