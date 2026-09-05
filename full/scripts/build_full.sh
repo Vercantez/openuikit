@@ -1088,6 +1088,38 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
     -o "$ROOTDIR/darwin/usr/lib/libOpenRelativeTime.dylib" \
     "$OUT/open-relative-time-bridge.o"
 
+# The Darwin OpenDispatchBridge imports _glibc_openui_dispatch_host_v1_create_queue
+# (attempt 10, c8faae90: GUEST_REALAPP_SCREENS=3 then undefined symbol). The
+# staged scratch/mrroot_full/host copy is older and lacks that export. Rebuild
+# into $OUT/host the same way build_focus_widget_guest.sh does, and keep the
+# other staged host helpers beside it so one LD_PRELOAD directory covers the
+# app-path Darwin bridges. Do not overwrite ROOTDIR/host (manifest hashes the
+# staged BASE copy).
+echo "== build Linux Dispatch host bridge (app-path realapp)"
+HOST_BRIDGE_DIR=$OUT/host
+mkdir -p "$HOST_BRIDGE_DIR" "$OUT/host-work"
+host_bridge_args=(
+    --repo "$W"
+    --host-dir "$HOST_BRIDGE_DIR"
+    --work-dir "$OUT/host-work"
+    --ledger-style core
+    --refuse-prefix 'build_full: '
+)
+if [ "$(uname -m)" = aarch64 ] || [ "$(uname -m)" = arm64 ]; then
+    host_bridge_args+=(--host-abi ELF64-AArch64)
+else
+    host_bridge_args+=(--skip-runtime-pin --host-abi "ELF64-$(uname -m)")
+fi
+bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
+[ -f "$HOST_BRIDGE_DIR/libOpenDispatchHost.so" ] \
+    || die "Linux Dispatch host helper missing: $HOST_BRIDGE_DIR/libOpenDispatchHost.so"
+for host_helper in libOpenFoundationInternationalizationHost.so \
+    libOpenURLTransportHost.so libOpenRelativeTimeHost.so; do
+    [ -f "$ROOTDIR/host/$host_helper" ] \
+        || die "staged host helper missing: $ROOTDIR/host/$host_helper"
+    cp "$ROOTDIR/host/$host_helper" "$HOST_BRIDGE_DIR/$host_helper"
+done
+
 echo "== compile the project Dispatch module before the Foundation umbrella"
 "${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" \
     -I "$APPMODS" \

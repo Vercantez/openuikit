@@ -152,3 +152,11 @@ Guest realapp: `machorun: cannot find dylib '@rpath/libFoundationEssentials.dyli
 required by `./libFoundationInternationalization.dylib`. The FE dylib is
 built into APPMODS for the FI builder but was not copied to `$OUT`
 (build/full, the machorun cwd).
+
+Attempt 10: `c8faae90b56fc179c44aa7876c4565f41a301714`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+`GUEST_REALAPP_RC=73` `GUEST_REALAPP_SCREENS=3`. Then
+`undefined symbol '_glibc_openui_dispatch_host_v1_create_queue'` wanted by
+`libOpenDispatch.dylib`. Staged `scratch/mrroot_full/host` helper is older
+than `OpenDispatchBridge.c`. Rebuild via `build_host_bridge.sh` into
+`$OUT/host` (widget-guest recipe); do not overwrite ROOTDIR/host.

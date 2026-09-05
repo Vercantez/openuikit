@@ -44,10 +44,17 @@ cp machorun/sdk/usr/lib/libSystem.tbd scratch/sysroot_fe4/usr/lib/libSystem.tbd
 echo "== guest realapp (expect 12 screens)"
 if [ "$build_full_rc" -ne 0 ]; then
   echo "guest_realapp skipped (build_full rc=$build_full_rc)"
-  echo "GUEST_REALAPP_SCREENS=0"
+  echo "build_full: GUEST_REALAPP_SCREENS=0"
 else
 mkdir -p "$W/guest-realapp"
-HOST_SO="$TREE/scratch/mrroot_full/host"
+# Prefer the rebuilt $OUT/host helper (has create_queue). The staged
+# scratch/mrroot_full/host copy is what build_full copies from BASE and
+# lacks that export (attempt 10, c8faae90, GUEST_REALAPP_SCREENS=3).
+HOST_SO="$TREE/build/full/host"
+if [ ! -f "$HOST_SO/libOpenDispatchHost.so" ]; then
+  HOST_SO="$TREE/scratch/mrroot_full/host"
+fi
+echo "build_full: GUEST_REALAPP_HOST_SO=$HOST_SO"
 # Preload stays inside this subshell so GATE_B's widget guest is not
 # affected (widget guest sets its own LD_PRELOAD).
 (
