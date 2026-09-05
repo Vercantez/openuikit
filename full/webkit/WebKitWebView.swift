@@ -271,16 +271,65 @@ open class WKWebView: UIView {
         _ javaScriptString: String,
         completionHandler: ((Any?, Error?) -> Void)? = nil
     ) {
+        if let post = WKPortableParsePostMessage(javaScriptString) {
+            let delivered = configuration.userContentController._portableDeliver(
+                name: post.name,
+                body: post.body,
+                webView: self,
+                world: .page
+            )
+            if delivered {
+                completionHandler?(nil, nil)
+            } else {
+                completionHandler?(
+                    nil,
+                    WKPortableJavaScriptUnavailable("evaluateJavaScript(_:)")
+                )
+            }
+            return
+        }
+        if let dialog = WKPortableParseJSDialog(javaScriptString) {
+            let frame = WKFrameInfo(isMainFrame: true, request: URLRequest(url: url ?? URL(string: "about:blank")!), webView: self)
+            switch dialog {
+            case .alert(let message):
+                var finished = false
+                uiDelegate?.webView(
+                    self,
+                    runJavaScriptAlertPanelWithMessage: message,
+                    initiatedByFrame: frame
+                ) {
+                    finished = true
+                }
+                completionHandler?(finished ? NSNull() : NSNull(), nil)
+                return
+            case .confirm(let message):
+                var allowed = false
+                uiDelegate?.webView(
+                    self,
+                    runJavaScriptConfirmPanelWithMessage: message,
+                    initiatedByFrame: frame
+                ) { allowed = $0 }
+                completionHandler?(allowed, nil)
+                return
+            case .prompt(let prompt, let defaultText):
+                var text: String?
+                uiDelegate?.webView(
+                    self,
+                    runJavaScriptTextInputPanelWithPrompt: prompt,
+                    defaultText: defaultText,
+                    initiatedByFrame: frame
+                ) { text = $0 }
+                completionHandler?(text ?? NSNull(), nil)
+                return
+            }
+        }
         switch WKPortableJavaScriptLiteral(javaScriptString) {
         case .value(let value):
             completionHandler?(value, nil)
         case .notLiteral:
             completionHandler?(
                 nil,
-                WKError(
-                    code: .javaScriptExceptionOccurred,
-                    operation: "evaluateJavaScript(_:)"
-                )
+                WKPortableJavaScriptUnavailable("evaluateJavaScript(_:)")
             )
         }
     }
@@ -334,8 +383,24 @@ open class WKWebView: UIView {
         in contentWorld: WKContentWorld,
         completionHandler: ((Any?, Error?) -> Void)? = nil
     ) {
-        _ = (functionBody, arguments, frame, contentWorld)
-        completionHandler?(nil, WKPortableUnknown("callAsyncJavaScript"))
+        _ = (arguments, frame, contentWorld)
+        var body = functionBody.trimmingCharacters(in: .whitespacesAndNewlines)
+        if body.hasPrefix("return ") {
+            body = String(body.dropFirst(7))
+        }
+        if body.hasSuffix(";") {
+            body.removeLast()
+        }
+        body = body.trimmingCharacters(in: .whitespacesAndNewlines)
+        switch WKPortableJavaScriptLiteral(body) {
+        case .value(let value):
+            completionHandler?(value, nil)
+        case .notLiteral:
+            completionHandler?(
+                nil,
+                WKPortableJavaScriptUnavailable("callAsyncJavaScript")
+            )
+        }
     }
 
     open func callAsyncJavaScript(
@@ -514,9 +579,26 @@ open class WKWebView: UIView {
         }
     }
 
-    open func takeSnapshot(configuration snapshotConfiguration: WKSnapshotConfiguration?) async throws -> UIImage {
+    open func takeSnapshot(
+        configuration snapshotConfiguration: WKSnapshotConfiguration?,
+        completionHandler: @escaping (UIImage?, Error?) -> Void
+    ) {
         _ = snapshotConfiguration
-        throw WKPortableUnknown("takeSnapshot")
+        completionHandler(nil, WKPortableUnknown("takeSnapshot"))
+    }
+
+    open func takeSnapshot(configuration snapshotConfiguration: WKSnapshotConfiguration?) async throws -> UIImage {
+        try await withCheckedThrowingContinuation { continuation in
+            takeSnapshot(configuration: snapshotConfiguration) { image, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else if let image {
+                    continuation.resume(returning: image)
+                } else {
+                    continuation.resume(throwing: WKPortableUnknown("takeSnapshot"))
+                }
+            }
+        }
     }
 
     open func createPDF(
@@ -732,6 +814,26 @@ open class WKWebView: UIView {
             decided = true
             guard self.navigationGeneration == generation else { return }
             guard policy == .allow else {
+                if policy == .download {
+                    let download = WKDownload(
+                        request: request,
+                        webView: self,
+                        userInitiated: false
+                    )
+                    self.navigationDelegate?.webView(
+                        self,
+                        navigationAction: action,
+                        didBecome: download
+                    )
+                    download.delegate?.download(
+                        download,
+                        didFailWithError: WKPortableUnknown(
+                            "WKNavigationActionPolicy.download",
+                            url: request.url
+                        ),
+                        resumeData: nil
+                    )
+                }
                 self._setObservedIfChanged(
                     \WKWebView.isLoading,
                     stringKey: "isLoading",
@@ -831,6 +933,33 @@ open class WKWebView: UIView {
                 responseDecided = true
                 guard self.navigationGeneration == generation else { return }
                 guard policy == .allow else {
+                    if policy == .download {
+                        let download = WKDownload(
+                            request: request,
+                            webView: self,
+                            userInitiated: false
+                        )
+                        self.navigationDelegate?.webView(
+                            self,
+                            navigationResponse: navigationResponse,
+                            didBecome: download
+                        )
+                        download.delegate?.download(
+                            download,
+                            didFailWithError: WKPortableUnknown(
+                                "WKNavigationResponsePolicy.download",
+                                url: request.url
+                            ),
+                            resumeData: nil
+                        )
+                        self._setObservedIfChanged(
+                            \WKWebView.isLoading,
+                            stringKey: "isLoading",
+                            storage: &self.isLoading,
+                            to: false
+                        )
+                        return
+                    }
                     self._failProvisional(
                         navigation: navigation,
                         error: WKError(
