@@ -44,7 +44,8 @@ extension Tip {
         TipsStore.shared.shouldDisplay(
             id: id,
             typeKey: String(describing: Self.self),
-            rules: rules
+            rules: rules,
+            options: options
         )
     }
 

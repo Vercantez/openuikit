@@ -68,7 +68,7 @@ extension Tips {
             _ donation: DonationInfo,
             _ completion: (() -> Void)? = nil
         ) {
-            sendDonation(donation, date: Date(), completion)
+            sendDonation(donation, date: TipsTime.now, completion)
         }
 
         @_spi(OpenUIKitHost)
@@ -127,7 +127,7 @@ extension Sequence {
         DonationInfo: Sendable,
         Self.Element == Tips.Event<DonationInfo>.Donation
     {
-        let cutoff = Date().addingTimeInterval(-timeRange.hostSeconds)
+        let cutoff = TipsTime.now.addingTimeInterval(-timeRange.hostSeconds)
         return filter { $0.date >= cutoff }
     }
 
