@@ -1,0 +1,91 @@
+{
+  "name" : "label_multiline",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        185.5,
+        61
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        20,
+        185.5,
+        61
+      ],
+      "intrinsic" : [
+        486,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        185.5,
+        61
+      ],
+      "text" : "The quick brown fox jumps over the lazy dog near the river bank"
+    },
+    {
+      "absFrame" : [
+        20,
+        140,
+        180,
+        60
+      ],
+      "bg" : [
+        0.94499999999999995,
+        0.95299999999999996,
+        0.96099999999999997,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        140,
+        180,
+        60
+      ],
+      "intrinsic" : [
+        485.5,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        196,
+        41
+      ],
+      "text" : "Two line maximum label that should truncate the rest of this text"
+    }
+  ]
+}

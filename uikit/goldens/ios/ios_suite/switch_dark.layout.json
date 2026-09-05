@@ -1,0 +1,1117 @@
+{
+  "name" : "switch_dark",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        120
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        120
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "bg" : [
+        0.20399999999999999,
+        0.78000000000000003,
+        0.34899999999999998,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1.1"
+    },
+    {
+      "absFrame" : [
+        68,
+        34,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        35,
+        34,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        44,
+        22,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "1.0.2"
+    },
+    {
+      "absFrame" : [
+        44,
+        22,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.2.0"
+    },
+    {
+      "absFrame" : [
+        44,
+        22,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        20,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        100,
+        20,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        100,
+        20,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        20,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        20,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "absFrame" : [
+        -467,
+        20,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        -567,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "2.0.1.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        20,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0.1.1"
+    },
+    {
+      "absFrame" : [
+        148,
+        34,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        115,
+        34,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        102,
+        22,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        2,
+        2,
+        37,
+        24
+      ],
+      "path" : "2.0.2"
+    },
+    {
+      "absFrame" : [
+        102,
+        22,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "2.0.2.0"
+    },
+    {
+      "absFrame" : [
+        102,
+        22,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "2.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        180,
+        20,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        180,
+        20,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "3"
+    },
+    {
+      "absFrame" : [
+        180,
+        20,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0"
+    },
+    {
+      "absFrame" : [
+        180,
+        20,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.0"
+    },
+    {
+      "absFrame" : [
+        180,
+        20,
+        63,
+        28
+      ],
+      "bg" : [
+        0.85899999999999999,
+        0.20399999999999999,
+        0.94899999999999995,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.1"
+    },
+    {
+      "absFrame" : [
+        180,
+        20,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "3.0.1.0"
+    },
+    {
+      "absFrame" : [
+        180,
+        20,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.1.1"
+    },
+    {
+      "absFrame" : [
+        228,
+        34,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "3.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        195,
+        34,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "3.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        204,
+        22,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "3.0.2"
+    },
+    {
+      "absFrame" : [
+        204,
+        22,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "3.0.2.0"
+    },
+    {
+      "absFrame" : [
+        204,
+        22,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "3.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "4"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "4.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "4.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "bg" : [
+        0.97999999999999998,
+        0.32200000000000001,
+        0.32200000000000001,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "4.0.1"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "4.0.1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "4.0.1.1"
+    },
+    {
+      "absFrame" : [
+        68,
+        84,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "4.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        35,
+        84,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "4.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        44,
+        72,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "4.0.2"
+    },
+    {
+      "absFrame" : [
+        44,
+        72,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "4.0.2.0"
+    },
+    {
+      "absFrame" : [
+        44,
+        72,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "4.0.2.0.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        70,
+        63,
+        28
+      ],
+      "class" : "UISwitch",
+      "frame" : [
+        100,
+        70,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "5"
+    },
+    {
+      "absFrame" : [
+        100,
+        70,
+        63,
+        28
+      ],
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "5.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        70,
+        63,
+        28
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.29799999999999999
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "5.0.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        70,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 14,
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "5.0.1"
+    },
+    {
+      "absFrame" : [
+        -467,
+        70,
+        630,
+        31
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        -567,
+        0,
+        630,
+        31
+      ],
+      "hidden" : true,
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "5.0.1.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        70,
+        63,
+        28
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "5.0.1.1"
+    },
+    {
+      "absFrame" : [
+        148,
+        84,
+        0,
+        0
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "5.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        115,
+        84,
+        0,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "5.0.1.1.1"
+    },
+    {
+      "absFrame" : [
+        102,
+        72,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        2,
+        2,
+        37,
+        24
+      ],
+      "path" : "5.0.2"
+    },
+    {
+      "absFrame" : [
+        102,
+        72,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "5.0.2.0"
+    },
+    {
+      "absFrame" : [
+        102,
+        72,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "5.0.2.0.0"
+    }
+  ]
+}

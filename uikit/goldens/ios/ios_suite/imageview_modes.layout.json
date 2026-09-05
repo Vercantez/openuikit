@@ -1,0 +1,127 @@
+{
+  "name" : "imageview_modes",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        100,
+        60
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        20,
+        20,
+        100,
+        60
+      ],
+      "intrinsic" : [
+        40,
+        40
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        140,
+        20,
+        100,
+        60
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        140,
+        20,
+        100,
+        60
+      ],
+      "intrinsic" : [
+        40,
+        40
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        100,
+        100,
+        60
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        20,
+        100,
+        100,
+        60
+      ],
+      "intrinsic" : [
+        80,
+        80
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        140,
+        100,
+        100,
+        60
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        140,
+        100,
+        100,
+        60
+      ],
+      "intrinsic" : [
+        40,
+        80
+      ],
+      "path" : "3"
+    },
+    {
+      "absFrame" : [
+        20,
+        180,
+        60,
+        60
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        20,
+        180,
+        60,
+        60
+      ],
+      "intrinsic" : [
+        30,
+        30
+      ],
+      "path" : "4"
+    }
+  ]
+}

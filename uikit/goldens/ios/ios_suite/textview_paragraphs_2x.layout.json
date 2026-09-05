@@ -1,0 +1,181 @@
+{
+  "name" : "textview_paragraphs_2x",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        16,
+        24,
+        288,
+        172
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UITextView",
+      "frame" : [
+        16,
+        24,
+        288,
+        172
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        16,
+        24,
+        0,
+        0
+      ],
+      "class" : "_UITextLayoutView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "0.0"
+    },
+    {
+      "absFrame" : [
+        16,
+        24,
+        288,
+        138
+      ],
+      "class" : "_UITextContainerView",
+      "frame" : [
+        0,
+        0,
+        288,
+        138
+      ],
+      "path" : "0.1"
+    },
+    {
+      "absFrame" : [
+        16,
+        24,
+        288,
+        138
+      ],
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        0,
+        0,
+        288,
+        138
+      ],
+      "path" : "0.1.0"
+    },
+    {
+      "absFrame" : [
+        16,
+        24,
+        288,
+        138
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        288,
+        138
+      ],
+      "path" : "0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        13,
+        91.5,
+        306,
+        63
+      ],
+      "boundsOrigin" : [
+        -8,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -3,
+        67.5,
+        306,
+        63
+      ],
+      "layerBoundsOrigin" : [
+        -8,
+        -1
+      ],
+      "path" : "0.1.0.1"
+    },
+    {
+      "absFrame" : [
+        21,
+        72.5,
+        0,
+        21
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        5,
+        48.5,
+        0,
+        21
+      ],
+      "path" : "0.1.0.2"
+    },
+    {
+      "absFrame" : [
+        13,
+        31,
+        325,
+        43
+      ],
+      "boundsOrigin" : [
+        -8,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -3,
+        7,
+        325,
+        43
+      ],
+      "layerBoundsOrigin" : [
+        -8,
+        -1
+      ],
+      "path" : "0.1.0.3"
+    }
+  ]
+}

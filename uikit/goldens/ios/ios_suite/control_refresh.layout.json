@@ -1,0 +1,175 @@
+{
+  "name" : "control_refresh",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        140
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        140
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        0,
+        10,
+        320,
+        120
+      ],
+      "class" : "UIScrollView",
+      "frame" : [
+        0,
+        10,
+        320,
+        120
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        0,
+        10,
+        320,
+        60
+      ],
+      "class" : "UIRefreshControl",
+      "frame" : [
+        0,
+        0,
+        320,
+        60
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        0,
+        10,
+        320,
+        60
+      ],
+      "class" : "_UIRefreshControlModernContentView",
+      "frame" : [
+        0,
+        0,
+        320,
+        60
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        110,
+        -10,
+        100,
+        100
+      ],
+      "class" : "UIView",
+      "frame" : [
+        110,
+        -20,
+        100,
+        100
+      ],
+      "path" : "1.0.0.0"
+    },
+    {
+      "absFrame" : [
+        110,
+        -10,
+        100,
+        100
+      ],
+      "class" : "_UIRefreshControlModernReplicatorView",
+      "frame" : [
+        0,
+        0,
+        100,
+        100
+      ],
+      "path" : "1.0.0.0.0"
+    },
+    {
+      "absFrame" : [
+        158.5,
+        25,
+        3.5,
+        10
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "_UIRefreshControlSeedView",
+      "cornerRadius" : 1.75,
+      "frame" : [
+        48.5,
+        35,
+        3.5,
+        10
+      ],
+      "path" : "1.0.0.0.0.0"
+    },
+    {
+      "absFrame" : [
+        10,
+        58.5,
+        300,
+        0
+      ],
+      "alpha" : 0,
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        12
+      ],
+      "frame" : [
+        10,
+        48.5,
+        300,
+        0
+      ],
+      "intrinsic" : [
+        0,
+        0
+      ],
+      "path" : "1.0.0.1",
+      "sizeThatFits200" : [
+        0,
+        0
+      ]
+    }
+  ]
+}
