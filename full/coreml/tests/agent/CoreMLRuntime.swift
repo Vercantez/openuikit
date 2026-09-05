@@ -43,6 +43,11 @@ enum CoreMLRuntime {
         testSequence()
         testSendable()
         testUpdateFailsClosed()
+        testDescriptions()
+        testShapedArrayCollection()
+        testModelIOAndPrediction()
+        testCustomLayerFailsClosed()
+        testStructureSurface()
         print("COREML_AGENT_RUNTIME_OK")
     }
 
@@ -327,6 +332,8 @@ enum CoreMLRuntime {
         configuration.parameters = [MLParameterKey.learningRate: 0.01]
         configuration.optimizationHints.reshapeFrequency = .infrequent
         configuration.optimizationHints.specializationStrategy = .fastPrediction
+        precondition(configuration.preferredMetalDevice == nil)
+        configuration.preferredMetalDevice = nil
         let copyingWitness: any Foundation.NSCopying = configuration
         _ = copyingWitness
         let copy = configuration.copy() as! MLModelConfiguration
@@ -607,9 +614,29 @@ enum CoreMLRuntime {
         precondition(MLParameterKey.learningRate.name == "learningRate")
         let scoped = MLParameterKey.weights.scoped(to: "conv1")
         precondition(scoped.scope == "conv1")
+        precondition(MLParameterKey.beta1.name == "beta1")
+        precondition(MLParameterKey.beta2.name == "beta2")
+        precondition(MLParameterKey.biases.name == "biases")
+        precondition(MLParameterKey.epochs.name == "epochs")
+        precondition(MLParameterKey.eps.name == "eps")
+        precondition(MLParameterKey.linkedModelFileName.name == "linkedModelFileName")
+        precondition(MLParameterKey.linkedModelSearchPath.name == "linkedModelSearchPath")
+        precondition(MLParameterKey.miniBatchSize.name == "miniBatchSize")
+        precondition(MLParameterKey.momentum.name == "momentum")
+        precondition(MLParameterKey.numberOfNeighbors.name == "numberOfNeighbors")
+        precondition(MLParameterKey.seed.name == "seed")
+        precondition(MLParameterKey.shuffle.name == "shuffle")
         precondition(MLMetricKey.lossValue.name == "lossValue")
+        precondition(MLMetricKey.epochIndex.name == "epochIndex")
+        precondition(MLMetricKey.miniBatchIndex.name == "miniBatchIndex")
         precondition(MLModelMetadataKey.author.rawValue.contains("author"))
+        precondition(MLModelMetadataKey.description.rawValue.contains("description"))
+        precondition(MLModelMetadataKey.versionString.rawValue.contains("versionstring"))
+        precondition(MLModelMetadataKey.license.rawValue.contains("license"))
+        precondition(MLModelMetadataKey.creatorDefinedKey.rawValue.contains("creatordefined"))
         precondition(MLFeatureValue.ImageOption.cropRect.rawValue.contains("CropRect"))
+        precondition(MLFeatureValue.ImageOption.cropAndScale.rawValue.contains("CropAndScale"))
+        _ = MLFeatureValue.ImageOption("custom")
     }
 
     static func testSequence() {
@@ -620,6 +647,11 @@ enum CoreMLRuntime {
         precondition(strings.stringValues == ["one", "two"])
         let ints = MLSequence(int64Array: [NSNumber(value: 1), NSNumber(value: 2)])
         precondition(ints.int64Values.map(\.intValue) == [1, 2])
+        let alt = MLSequence(int64s: [NSNumber(value: 1), NSNumber(value: 2)])
+        precondition(alt.type == .int64)
+        let altStrings = MLSequence(strings: ["z"])
+        precondition(altStrings.stringValues == ["z"])
+        precondition(MLSequence(coder: NSCoder()) == nil)
     }
 
     static func testSendable() {
@@ -655,6 +687,9 @@ enum CoreMLRuntime {
                 progressHandlers: handlers
             )
         }
+        requireThrows(.customLayer) {
+            _ = try MLFailClosedCustomLayer(parameters: [:])
+        }
         let task = MLTask()
         task.resume()
         precondition(task.state == .failed)
@@ -667,6 +702,432 @@ enum CoreMLRuntime {
         } catch {
             requireError(error, .generic)
         }
+    }
+
+    static func testDescriptions() {
+        let multiConstraint = MLMultiArrayConstraint(
+            shape: [NSNumber(value: 2), NSNumber(value: 3)],
+            dataType: .float32,
+            shapeConstraint: MLMultiArrayShapeConstraint(
+                type: .enumerated,
+                enumeratedShapes: [[NSNumber(value: 2), NSNumber(value: 3)]]
+            )
+        )
+        precondition(multiConstraint.dataType == .float32)
+        precondition(multiConstraint.shape.map(\.intValue) == [2, 3])
+        precondition(multiConstraint.shapeConstraint.type == .enumerated)
+        precondition(multiConstraint.shapeConstraint.enumeratedShapes.count == 1)
+        precondition(multiConstraint.shapeConstraint.sizeRangeForDimension.isEmpty)
+
+        let imageSize = MLImageSize(pixelsWide: 224, pixelsHigh: 224)
+        precondition(imageSize.pixelsWide == 224)
+        precondition(imageSize.pixelsHigh == 224)
+        let sizeConstraint = MLImageSizeConstraint(
+            type: .range,
+            enumeratedImageSizes: [imageSize],
+            pixelsWideRange: NSRange(location: 32, length: 480),
+            pixelsHighRange: NSRange(location: 32, length: 480)
+        )
+        precondition(sizeConstraint.type == .range)
+        precondition(sizeConstraint.enumeratedImageSizes.count == 1)
+        precondition(sizeConstraint.pixelsWideRange.location == 32)
+        precondition(sizeConstraint.pixelsHighRange.location == 32)
+        let imageConstraint = MLImageConstraint(
+            pixelsWide: 224,
+            pixelsHigh: 224,
+            pixelFormatType: 0x42475241,
+            sizeConstraint: sizeConstraint
+        )
+        precondition(imageConstraint.pixelsWide == 224)
+        precondition(imageConstraint.pixelsHigh == 224)
+        precondition(imageConstraint.pixelFormatType == 0x42475241)
+        precondition(imageConstraint.sizeConstraint.type == .range)
+
+        let dictionaryConstraint = MLDictionaryConstraint(keyType: .string)
+        precondition(dictionaryConstraint.keyType == .string)
+        let sequenceConstraint = MLSequenceConstraint(
+            valueDescription: MLFeatureDescription(name: "token", type: .string),
+            countRange: NSRange(location: 1, length: 8)
+        )
+        precondition(sequenceConstraint.valueDescription.type == .string)
+        precondition(sequenceConstraint.countRange.location == 1)
+        let stateConstraint = MLStateConstraint(dataType: .float16, bufferShape: [4])
+        precondition(stateConstraint.dataType == .float16)
+        precondition(stateConstraint.bufferShape == [4])
+        let numeric = MLNumericConstraint(
+            minNumber: 0,
+            maxNumber: 1,
+            enumeratedNumbers: [0.5]
+        )
+        precondition(numeric.minNumber.doubleValue == 0)
+        precondition(numeric.maxNumber.doubleValue == 1)
+        precondition(numeric.enumeratedNumbers?.contains(0.5) == true)
+        let parameter = MLParameterDescription(
+            key: .learningRate,
+            defaultValue: 0.01,
+            numericConstraint: numeric
+        )
+        precondition(parameter.key.name == "learningRate")
+        precondition((parameter.defaultValue as? Double) == 0.01)
+        precondition(parameter.numericConstraint?.maxNumber.doubleValue == 1)
+
+        let feature = MLFeatureDescription(
+            name: "x",
+            type: .multiArray,
+            isOptional: false,
+            multiArrayConstraint: multiConstraint
+        )
+        precondition(feature.name == "x")
+        precondition(feature.type == .multiArray)
+        precondition(!feature.isOptional)
+        precondition(feature.multiArrayConstraint?.dataType == .float32)
+        precondition(feature.dictionaryConstraint == nil)
+        precondition(feature.imageConstraint == nil)
+        precondition(feature.sequenceConstraint == nil)
+        precondition(feature.stateConstraint == nil)
+        let allowed = try! MLMultiArray(shape: [2, 3], dataType: .float32)
+        precondition(feature.isAllowedValue(MLFeatureValue(multiArray: allowed)))
+        precondition(!feature.isAllowedValue(MLFeatureValue(int64: 1)))
+        let optional = MLFeatureDescription(name: "y", type: .string, isOptional: true)
+        precondition(optional.isAllowedValue(MLFeatureValue(undefined: .string)))
+
+        let description = MLModelDescription(
+            inputDescriptionsByName: ["x": feature],
+            outputDescriptionsByName: ["y": optional],
+            stateDescriptionsByName: ["h": MLFeatureDescription(name: "h", type: .state, stateConstraint: stateConstraint)],
+            trainingInputDescriptionsByName: [:],
+            predictedFeatureName: "y",
+            predictedProbabilitiesName: "probs",
+            metadata: [
+                .author: "OpenUIKit",
+                .description: "probe",
+                .versionString: "1.0",
+                .license: "BSD"
+            ],
+            classLabels: ["cat", "dog"],
+            isUpdatable: false,
+            parameterDescriptionsByKey: [.learningRate: parameter]
+        )
+        precondition(description.inputDescriptionsByName["x"]?.name == "x")
+        precondition(description.outputDescriptionsByName["y"]?.type == .string)
+        precondition(description.stateDescriptionsByName["h"]?.stateConstraint?.bufferShape == [4])
+        precondition(description.trainingInputDescriptionsByName.isEmpty)
+        precondition(description.predictedFeatureName == "y")
+        precondition(description.predictedProbabilitiesName == "probs")
+        precondition(description.metadata[.author] as? String == "OpenUIKit")
+        precondition((description.classLabels as? [String]) == ["cat", "dog"])
+        precondition(!description.isUpdatable)
+        precondition(description.parameterDescriptionsByKey[.learningRate]?.key.name == "learningRate")
+        precondition(MLModelDescription(coder: NSCoder()) == nil)
+        precondition(MLFeatureDescription(coder: NSCoder()) == nil)
+        precondition(MLDictionaryConstraint(coder: NSCoder()) == nil)
+        precondition(MLImageSize(coder: NSCoder()) == nil)
+        precondition(MLImageSizeConstraint(coder: NSCoder()) == nil)
+        precondition(MLImageConstraint(coder: NSCoder()) == nil)
+        precondition(MLMultiArrayConstraint(coder: NSCoder()) == nil)
+        precondition(MLMultiArrayShapeConstraint(coder: NSCoder()) == nil)
+        precondition(MLSequenceConstraint(coder: NSCoder()) == nil)
+        precondition(MLStateConstraint(coder: NSCoder()) == nil)
+        precondition(MLNumericConstraint(coder: NSCoder()) == nil)
+        precondition(MLParameterDescription(coder: NSCoder()) == nil)
+        precondition(MLKey(coder: NSCoder()) == nil)
+        requireThrows(.featureType) {
+            _ = try MLFeatureValue(
+                imageAtURL: URL(fileURLWithPath: "/tmp/missing.png"),
+                constraint: imageConstraint
+            )
+        }
+        requireThrows(.featureType) {
+            _ = try MLFeatureValue(
+                imageAtURL: URL(fileURLWithPath: "/tmp/missing.png"),
+                pixelsWide: 2,
+                pixelsHigh: 2,
+                pixelFormatType: 0
+            )
+        }
+    }
+
+    static func testShapedArrayCollection() {
+        let array = MLShapedArray<Float>(scalars: [1, 2, 3, 4, 5, 6], shape: [2, 3])
+        precondition(array.count == 2)
+        precondition(!array.isEmpty)
+        precondition(array.startIndex == 0)
+        precondition(array.endIndex == 2)
+        precondition(array.indices == 0..<2)
+        precondition(array.strides == [3, 1])
+        precondition(array.first?.scalars == [1, 2, 3])
+        precondition(array.last?.scalars == [4, 5, 6])
+        var iterator = array.makeIterator()
+        precondition(iterator.next()?.scalars.first == 1)
+        let mapped = array.map { $0.scalars.first ?? 0 }
+        precondition(mapped == [1, 4])
+        precondition(array.dropFirst().count == 1)
+        precondition(array.prefix(1).count == 1)
+        precondition(Array(array.reversed()).first?.scalars == [4, 5, 6])
+        var index = array.startIndex
+        array.formIndex(after: &index)
+        precondition(index == 1)
+        array.formIndex(before: &index)
+        precondition(index == 0)
+        let concat = MLShapedArray<Float>(concatenating: [array, array], alongAxis: 0)
+        precondition(concat.shape == [4, 3])
+        let sliceConcat = MLShapedArraySlice<Float>(concatenating: [array[0], array[1]], alongAxis: 0)
+        precondition(sliceConcat.scalars == array.scalars)
+        var slice = array[0]
+        precondition(slice.count == 3)
+        slice.fill(with: 9)
+        precondition(slice.scalars.allSatisfy { $0 == 9 })
+        slice.fill(with: [7, 8, 9])
+        precondition(slice.scalars == [7, 8, 9])
+        let floats = array.scalars
+        let fromData = MLShapedArray<Float>(
+            data: floats.withUnsafeBytes { Data($0) },
+            shape: [2, 3]
+        )
+        precondition(fromData.scalarCount == 6)
+        let scalar = MLShapedArray<Float>(scalar: 3)
+        precondition(scalar.isScalar)
+        precondition(scalar.scalar == 3)
+        let converted = MLShapedArray<Float>(converting: array)
+        precondition(converted == array)
+        let fromMulti = MLShapedArray<Float>(try! MLMultiArray(shape: [2], dataType: .float32))
+        precondition(fromMulti.shape == [2])
+        let random = MLShapedArray<Int32>(randomScalarsIn: 0..<4, shape: [2])
+        precondition(random.scalarCount == 2)
+        let bytes = UnsafeMutablePointer<Float>.allocate(capacity: 2)
+        bytes.initialize(repeating: 1.5, count: 2)
+        let copied = MLShapedArray<Float>(
+            bytesNoCopy: UnsafeRawPointer(bytes),
+            shape: [2],
+            strides: [1],
+            deallocator: .none
+        )
+        precondition(copied.scalars == [1.5, 1.5])
+        bytes.deinitialize(count: 2)
+        bytes.deallocate()
+        var uninit = MLShapedArray<Float>(
+            unsafeUninitializedShape: [2],
+            initializingWith: { buffer, strides in
+                precondition(strides == [1])
+                buffer[0] = 1
+                buffer[1] = 2
+            }
+        )
+        precondition(uninit.scalars == [1, 2])
+        uninit.withUnsafeMutableShapedBufferPointer { buffer, _, _ in
+            buffer[0] = 8
+        }
+        precondition(uninit.scalars.first == 8)
+        let layout = uninit.changingLayout(to: .lastMajorContiguous)
+        precondition(layout.scalars.first == 8)
+        let permuted = MLShapedArray<Float>(scalars: [1, 2, 3, 4], shape: [2, 2]).transposed(permutation: [1, 0])
+        precondition(permuted.scalars == [1, 3, 2, 4])
+        let tensor = MLTensor(concatenating: [MLTensor(repeating: 1, shape: [2]), MLTensor(repeating: 2, shape: [2])])
+        precondition(tensor.shape == [4])
+        let range = array[0..<1]
+        precondition(range.count == 1)
+        _ = array.description
+        _ = slice.description
+        precondition(MLShapedArraySlice<Float>(converting: array).shape == array.shape)
+        var replaceable = MLShapedArraySlice<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+        replaceable.replaceSubrange(1..<2, with: [MLShapedArraySlice<Float>(scalars: [9, 8], shape: [2])])
+        precondition(replaceable.shape[0] == 2)
+        let emptySlice = MLShapedArraySlice<Float>()
+        precondition(emptySlice.count == 0)
+    }
+
+    static func testModelIOAndPrediction() {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let identityURL = directory.appendingPathComponent("identity.mlmodel")
+        try! CoreMLSpecification.identityModel(
+            inputName: "x",
+            outputName: "y",
+            shape: [2],
+            dataType: .float32,
+            author: "depth-pass"
+        ).write(to: identityURL)
+
+        let compiled = try! MLModel.compileModel(at: identityURL)
+        precondition(compiled.pathExtension == "mlmodelc")
+        let metadataURL = compiled.appendingPathComponent("metadata.json")
+        precondition(FileManager.default.fileExists(atPath: metadataURL.path))
+
+        let model = try! MLModel(contentsOf: compiled, configuration: MLModelConfiguration())
+        precondition(model.modelDescription.inputDescriptionsByName["x"]?.type == .multiArray)
+        precondition(model.modelDescription.outputDescriptionsByName["y"]?.type == .multiArray)
+        precondition(model.modelDescription.metadata[.author] as? String == "depth-pass")
+        precondition(model.configuration.computeUnits == .all)
+        let inputArray = try! MLMultiArray(shape: [2], dataType: .float32)
+        inputArray[0] = 1.25
+        inputArray[1] = 4.5
+        let input = try! MLDictionaryFeatureProvider(dictionary: ["x": MLFeatureValue(multiArray: inputArray)])
+        let output = try! model.prediction(from: input)
+        precondition(output.featureValue(for: "y")?.multiArrayValue?[0].floatValue == 1.25)
+        precondition(output.featureValue(for: "y")?.multiArrayValue?[1].floatValue == 4.5)
+        let fromOptions = try! model.prediction(from: input, options: MLPredictionOptions())
+        precondition(fromOptions.featureNames.contains("y"))
+        let batch = try! model.predictions(from: MLArrayBatchProvider(array: [input]), options: MLPredictionOptions())
+        precondition(batch.count == 1)
+        let fromBatch = try! model.predictions(fromBatch: MLArrayBatchProvider(array: [input]))
+        precondition(fromBatch.count == 1)
+        requireThrows(.parameters) {
+            _ = try model.parameterValue(for: .learningRate)
+        }
+        let configured = MLModelConfiguration()
+        configured.parameters = [.learningRate: 0.2]
+        let withParams = try! MLModel(contentsOf: compiled, configuration: configured)
+        precondition((try! withParams.parameterValue(for: .learningRate) as? Double) == 0.2)
+
+        let vectorURL = directory.appendingPathComponent("vectorizer.mlmodel")
+        try! CoreMLSpecification.dictVectorizerModel(
+            vocabulary: ["a", "c", "b", "z"]
+        ).write(to: vectorURL)
+        let vectorModel = try! MLModel(contentsOf: vectorURL)
+        let dictIn = try! MLDictionaryFeatureProvider(dictionary: [
+            "input": try! MLFeatureValue(dictionary: ["a": 4, "c": 8])
+        ])
+        let vectorOut = try! vectorModel.prediction(from: dictIn)
+        let vector = vectorOut.featureValue(for: "output")?.multiArrayValue
+        precondition(vector?[0].doubleValue == 4)
+        precondition(vector?[1].doubleValue == 8)
+        precondition(vector?[2].doubleValue == 0)
+        precondition(vector?[3].doubleValue == 0)
+
+        let pipelineURL = directory.appendingPathComponent("pipeline.mlmodel")
+        try! CoreMLSpecification.pipelineModel(
+            models: [
+                CoreMLSpecification.identityModel(inputName: "x", outputName: "x", shape: [2]),
+                CoreMLSpecification.identityModel(inputName: "x", outputName: "y", shape: [2])
+            ]
+        ).write(to: pipelineURL)
+        let pipeline = try! MLModel(contentsOf: pipelineURL)
+        let pipelineOut = try! pipeline.prediction(from: input)
+        precondition(pipelineOut.featureValue(for: "y")?.multiArrayValue?[0].floatValue == 1.25)
+
+        let neuralURL = directory.appendingPathComponent("neural.mlmodel")
+        try! CoreMLSpecification.neuralNetworkStub().write(to: neuralURL)
+        let neural = try! MLModel(contentsOf: neuralURL)
+        precondition(neural.modelDescription.predictedFeatureName == "classLabel")
+        precondition((neural.modelDescription.classLabels as? [String]) == ["cat", "dog"])
+        do {
+            _ = try neural.prediction(from: input)
+            fatalError("neural network must fail closed")
+        } catch {
+            requireError(error, .generic)
+            let message = (error as? MLModelError)?.userInfo[NSLocalizedDescriptionKey] as? String ?? ""
+            precondition(message.contains("neural network layers not implemented"))
+        }
+
+        let loaded = try! MLModel(contentsOfURL: identityURL)
+        precondition(loaded.modelDescription.inputDescriptionsByName["x"] != nil)
+
+        let group = DispatchGroup()
+        var compiledAsync: URL?
+        group.enter()
+        MLModel.compileModel(at: identityURL) { result in
+            compiledAsync = try? result.get()
+            group.leave()
+        }
+        precondition(group.wait(timeout: .now() + 5) == .success)
+        precondition(compiledAsync != nil)
+    }
+
+    static func testCustomLayerFailsClosed() {
+        requireThrows(.customLayer) {
+            _ = try MLFailClosedCustomLayer(parameterDictionary: ["k": 1])
+        }
+        do {
+            _ = try MLFailClosedCustomLayer(parameters: [:])
+            fatalError("expected custom layer throw")
+        } catch {
+            requireError(error, .customLayer)
+        }
+    }
+
+    static func testStructureSurface() {
+        let layer = MLModelStructure.NeuralNetwork.Layer(
+            name: "relu",
+            type: "activation",
+            inputNames: ["in"],
+            outputNames: ["out"]
+        )
+        precondition(layer.name == "relu")
+        precondition(layer.type == "activation")
+        precondition(layer.inputNames == ["in"])
+        precondition(layer.outputNames == ["out"])
+        let network = MLModelStructure.NeuralNetwork(layers: [layer])
+        precondition(network.layers.count == 1)
+        let valueType = MLModelStructure.Program.ValueType()
+        let named = MLModelStructure.Program.NamedValueType(name: "x", type: valueType)
+        precondition(named.name == "x")
+        let bindingName = MLModelStructure.Program.Binding.name("x")
+        let bindingValue = MLModelStructure.Program.Binding.value(MLModelStructure.Program.Value())
+        _ = (bindingName, bindingValue)
+        let argument = MLModelStructure.Program.Argument(bindings: [bindingName])
+        precondition(argument.bindings.count == 1)
+        let block = MLModelStructure.Program.Block(inputs: [named], outputs: ["y"], operations: [])
+        precondition(block.outputNames == ["y"])
+        let function = MLModelStructure.Program.Function(inputs: [named], block: block)
+        precondition(function.inputs.count == 1)
+        let program = MLModelStructure.Program(functions: ["main": function])
+        precondition(program.functions["main"] != nil)
+        let pipeline = MLModelStructure.Pipeline(subModelNames: ["a"], subModels: [.unsupported])
+        precondition(pipeline.subModelNames == ["a"])
+        precondition(pipeline.subModels.count == 1)
+        let neuralCase = MLModelStructure.neuralNetwork(network)
+        let programCase = MLModelStructure.program(program)
+        let pipelineCase = MLModelStructure.pipeline(pipeline)
+        let unsupported = MLModelStructure.unsupported
+        _ = (neuralCase, programCase, pipelineCase, unsupported)
+        let usage = MLComputePlan.DeviceUsage(
+            preferred: .cpu(MLCPUComputeDevice()),
+            supported: MLComputeDevice.allComputeDevices
+        )
+        precondition(usage.supported.count == 1)
+        let cost = MLComputePlan.Cost(weight: 1.25)
+        precondition(cost.weight == 1.25)
+        let plan = MLComputePlan(modelStructure: .unsupported)
+        precondition(plan.deviceUsage(for: layer) == nil)
+        let operation = MLModelStructure.Program.Operation(
+            operatorName: "identity",
+            inputs: ["x": argument],
+            outputs: [named],
+            blocks: [block]
+        )
+        precondition(operation.operatorName == "identity")
+        precondition(plan.deviceUsage(for: operation) == nil)
+        precondition(plan.estimatedCost(of: operation) == nil)
+        if case .unsupported = plan.modelStructure { } else {
+            fatalError("expected unsupported structure")
+        }
+        let dictionary = try! MLDictionaryFeatureProvider(dictionary: ["age": 21])
+        precondition(dictionary.dictionary["age"]?.int64Value == 21)
+        let batch = MLArrayBatchProvider(array: [dictionary])
+        precondition(batch.array.count == 1)
+        let provider: any MLFeatureProvider = dictionary
+        precondition(provider.featureNames.contains("age"))
+        let batchProvider: any MLBatchProvider = batch
+        precondition(batchProvider.count == 1)
+        let featureType: MLFeatureType = .int64
+        _ = featureType
+        let copyConfig = MLModelConfiguration()
+        copyConfig.encode(with: NSCoder())
+        _ = MLModelConfiguration.supportsSecureCoding
+        _ = MLFeatureValue.supportsSecureCoding
+        _ = MLMultiArray.supportsSecureCoding
+        _ = MLSequence.supportsSecureCoding
+        _ = MLModelDescription.supportsSecureCoding
+        _ = MLFeatureDescription.supportsSecureCoding
+        _ = MLKey.supportsSecureCoding
+        let hints = MLOptimizationHints()
+        _ = hints.reshapeFrequency
+        _ = hints.specializationStrategy
+        let reshape = MLOptimizationHints.ReshapeFrequency.frequent
+        let strategy = MLOptimizationHints.SpecializationStrategy.default
+        _ = (reshape, strategy)
     }
 }
 
