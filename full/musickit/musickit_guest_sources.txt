@@ -1,0 +1,11 @@
+full/musickit/MusicKit.swift
+full/musickit/MusicKitCatalog.swift
+full/musickit/MusicKitCollections.swift
+full/musickit/MusicKitIDs.swift
+full/musickit/MusicKitItems.swift
+full/musickit/MusicKitLibrary.swift
+full/musickit/MusicKitLookalikes.swift
+full/musickit/MusicKitMedia.swift
+full/musickit/MusicKitPlayer.swift
+full/musickit/MusicKitProtocols.swift
+full/musickit/MusicKitSubscription.swift
