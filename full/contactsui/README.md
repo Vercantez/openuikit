@@ -11,9 +11,27 @@ SDK depth for `ContactsUI` in `full/contactsui/` (847 IDs). Wave-1 started at
 view-controller families nondeferred and a useful Linux starting point that
 paints a grouped contact table from the port's Contacts-shaped API.
 
-Coverage this pass: **592 implemented / 234 declared / 21 deferred / 847 total**.
-Picker and view-controller families are nondeferred. ContactAccessButton (iOS 18)
-is fail-closed. 21 TipKit/AppIntents synthesized members stay deferred.
+The first depth commit marked **592 implemented / 234 declared / 21 deferred**,
+but every implemented row cited product files plus `ContactsUIRuntime.swift`
+instead of `test:full/contactsui/tests/agent/<File>Tests.swift#testName`.
+Identity `View` modifiers were also bulk-labeled implemented from a no-op
+walk. This repair keeps picker / editor / access-button / overlay behavior
+as `implemented` only where a focused test exercises that identifier, and
+reclassifies the rest to `declared`.
+
+Coverage after the ledger repair: **58 implemented / 768 declared / 21 deferred / 847 total**
+(826 nondeferred, floor 85). 21 TipKit/AppIntents synthesized members stay
+deferred. No non-enum test is cited by more than 2 implemented rows (3.4%).
+
+Top-5 implemented evidence:
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 10 | 17.2% | `ContactsUICaptionTests.swift#testCaptionCases` (table-driven Caption enum / raw values / Equatable / Hashable) |
+| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
+| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
+| 2 | 3.4% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
+| 1 | 1.7% | 44 other focused tests, one identifier each (e.g. `ContactsUIOverlayTests.swift#testMutableContactId`) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -59,7 +77,9 @@ from the Cursor-created work branch.
 - `UIApplicationShortcutIcon(contact:)` on the UIKit lookalike stores the
   contact identifier. It does not produce Apple shortcut artwork.
 - Linux identity `View` modifiers on `ContactAccessButton` compile as `Self`
-  no-ops (`ContactsUIViewSurface.swift`). They are not Apple layout.
+  no-ops (`ContactsUIViewSurface.swift`). They are **declared**, not
+  implemented: a no-op is not Apple layout and is not a focused behavioral
+  test.
 
 ### Fail-closed boundaries
 
@@ -93,7 +113,9 @@ section model is the portable substitute; pixel chrome is listed as a gap.
 
 ### Tests
 
-`tests/agent/ContactsUIRuntime.swift` prints `CONTACTSUI_AGENT_RUNTIME_OK`.
+Focused checks live in `tests/agent/*Tests.swift` as top-level `func test*()`.
+The schema-v1 host gate compiles only `tests/agent/ContactsUIRuntime.swift`,
+which inlines those same functions and prints `CONTACTSUI_AGENT_RUNTIME_OK`.
 
 ```
 CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
