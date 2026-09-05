@@ -54,6 +54,16 @@ let platformCombineTargets: [Target] = [
                 package: "OpenCombine",
                 condition: .when(platforms: [.linux])
             ),
+            .product(
+                name: "OpenCombineDispatch",
+                package: "OpenCombine",
+                condition: .when(platforms: [.linux])
+            ),
+            .product(
+                name: "OpenCombineFoundation",
+                package: "OpenCombine",
+                condition: .when(platforms: [.linux])
+            ),
         ]
     ),
 ]
@@ -245,18 +255,44 @@ let package = Package(
         .target(name: "Licenses",
                 dependencies: ["SwiftUI"],
                 path: "Sources/RealAppProbe/FocusModules/Licenses"),
+        // Focus Settings still `import DesignSystem`; SettingsViewController
+        // names no DesignSystem types, so the Hackers stub (which re-exports
+        // FocusDesignSystemStub) satisfies both screens. The empty Focus
+        // DesignSystem.swift stays on disk unused.
+        .target(name: "Domain",
+                path: "Sources/RealAppProbe/HackersModules/Domain"),
+        .target(name: "Shared",
+                dependencies: [
+                    "Domain", "OpenUIKit", "UIKit", "SwiftUI",
+                    .target(name: "Combine", condition: .when(platforms: [.linux])),
+                ],
+                path: "Sources/RealAppProbe/HackersModules/Shared",
+                // Package platforms is macOS 11; @Observable is 14+. The
+                // Darwin probe compiles these against the iOS 26 SDK.
+                swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]),
         .target(name: "DesignSystem",
-                path: "Sources/RealAppProbe/FocusModules/DesignSystem"),
+                dependencies: [
+                    "Domain", "Shared", "SwiftUI", "OpenUIKit", "UIKit",
+                ],
+                path: "Sources/RealAppProbe/HackersModules/DesignSystem",
+                swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]),
         .target(name: "RealAppProbe",
                 dependencies: [
                     "OpenUIKit", "UIKit",
                     "Glean", "Intents", "IntentsUI",
                     "Onboarding", "Licenses", "DesignSystem",
+                    "Domain", "Shared",
                     "SwiftUI",
                     .target(name: "Combine", condition: .when(platforms: [.linux])),
                 ],
-                exclude: ["FocusModules"],
-                swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
+                exclude: ["FocusModules", "HackersModules"],
+                swiftSettings: [
+                    .enableUpcomingFeature("IsolatedDefaultValues"),
+                    .unsafeFlags([
+                        "-default-isolation", "MainActor",
+                        "-disable-availability-checking",
+                    ]),
+                ]),
         // CONFORMANCE APPS (docs/HILLCLIMB.md): small UIKit apps written the
         // way real apps are, whose source is compiled BOTH against OpenUIKit
         // (here, hosted by `openhost --app <name>`) and against real UIKit in

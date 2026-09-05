@@ -100,6 +100,12 @@ VARIANTS = {
     # Same ThemeableView root as the phone storage screen; the iPad row
     # wraps it in a large-title nav, which sits outside this subtree.
     "realapp_storage_light_ipad": "ThemeableView",
+    # Hackers feed (weiran/Hackers FeedView). SwiftUI List on real iOS 26
+    # is UpdateCoalescingCollectionView; OpenUIKit List is UIScrollView.
+    # Class-for-class subtree compare is not 1:1; the pixel score is the
+    # gate. Anchor ours at the list scroll view so a missing PNG still
+    # prints the layout note.
+    "realapp_hackers_feed_light": "UIScrollView",
 }
 
 
