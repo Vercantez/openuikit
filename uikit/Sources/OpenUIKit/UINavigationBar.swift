@@ -194,8 +194,17 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     // (not half the zone). Content that slides under the collapsed bar
     // gets the scroll-edge-effect "pocket" (see updatePocket).
 
-    /// Expanded adjusted content inset (the rest offset is -116).
-    public static let largeTitleExpandedInset: CGFloat = 116
+    /// Expanded adjusted content inset (the rest offset is −this).
+    /// Phone iOS: **116** = 10 + 54 + 52 (SE / zero-SA floor).
+    /// Pad iOS: **138** = 32 + 54 + 52.
+    /// MEASURED NavFlow-ipad t200 / TableEditor-ipad t200, iPad (A16)
+    /// 820×1180 @2x / iOS 26.1: window SA `[32, 0, 25, 0]`, bar
+    /// `[0, 32, 820, 106]`, table `safeAreaInsets.top` **138**, large-title
+    /// label abs y **89.5** (= 32 + 54 + 3.5). The phone 116 rest offset
+    /// on this window yields collapseDistance −22 and label y 111.5
+    /// (TableEditor blob 561.8 at `[22, 98, 19, 46]`; NavFlow t4800
+    /// contentOffset −116 vs −138). Phone SE stays 116.
+    public static var largeTitleExpandedInset: CGFloat { isPad ? 138 : 116 }
     static let largeInlineZoneTop: CGFloat = 10
     static let largeInlineZoneHeight: CGFloat = 54
     static let largeTitleZoneHeight: CGFloat = 52

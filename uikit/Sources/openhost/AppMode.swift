@@ -39,6 +39,11 @@ var _appDelegate: HostAppDelegate?
 /// Default backing scale for `--app` mode (see header).
 let appModeDefaultScale: CGFloat = 2
 
+/// openhost `--ipad` / `OPENUIKIT_CONFORMANCE_IPAD=1`: pad idiom, 820×1180
+/// window, and the measured iPad (A16) safe area. Phone `--app` stays
+/// 375×667 / idiom .phone. Set from main.swift before `buildAppScene`.
+nonisolated(unsafe) var conformancePadIdiom = false
+
 /// The apps `--app <name>` can boot: window size + root factory. The root is
 /// a plain UIViewController: most apps hand back a UINavigationController,
 /// `showcase` hands back a UITabBarController wrapping three of them.
@@ -81,6 +86,10 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
     }
     var window: UIWindow?
     var root: UIViewController?
+    /// Applied to the window BEFORE `makeRoot()` so semantic colours
+    /// resolve against the style the first capture sees. Default light
+    /// matches the previous conformance pin.
+    var style: UIUserInterfaceStyle = .light
 
     /// openhost owns this concrete delegate instance and supplies it directly
     /// to `UIApplicationMain(delegate:)`; no class-name construction is
@@ -95,6 +104,7 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let w = UIWindow(frame: UIScreen.main.bounds)
+        w.overrideUserInterfaceStyle = style
         let vc = makeRoot()
         w.rootViewController = vc
         w.makeKeyAndVisible()
@@ -134,23 +144,44 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
         let names = appRegistry.keys.sorted().joined(separator: ", ")
         fatalError("unknown app \"\(appName)\" (available: \(names))")
     }
+    let pad = conformancePadIdiom
     let scale = scaleOverride ?? appModeDefaultScale
-    let size = app.size
+    // `--ipad`: same 820×1180 @2x surface as realapp *_ipad / ipadprobe
+    // (RealAppScreen.windowSizePad). Phone registry sizes stay 375×667.
+    let size = pad ? RealAppScreen.windowSizePad : app.size
     GlyphInkTable.windowCompositing = false
-    UITraitCollection.current = UITraitCollection(userInterfaceStyle: style,
-                                                  displayScale: scale)
+    if pad {
+        UIDevice.current.userInterfaceIdiom = .pad
+        OpenUIKitRuntime.assetCatalogIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: style,
+            displayScale: scale,
+            horizontalSizeClass: .regular,
+            verticalSizeClass: .regular,
+            userInterfaceIdiom: .pad)
+    } else {
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: style,
+                                                      displayScale: scale)
+    }
     // The screen an app reads (UIWindow(frame: UIScreen.main.bounds)) is the
     // surface this host is really going to open — see UIScreen.swift.
     UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size),
                                  scale: scale)
 
     let delegate = HostAppDelegate(name: appName, makeRoot: app.makeRoot)
+    delegate.style = style
     _appDelegate = delegate
     UIApplicationMain(delegate: delegate)
 
     guard let window = delegate.window, let root = delegate.root else {
         fatalError("app \"\(appName)\" did not create a window in didFinishLaunching")
     }
+    if pad {
+        // MEASURED realapp_settings_light_ipad / ipadprobe, iPad (A16)
+        // 820×1180 @2x / iOS 26.1: window `safeAreaInsets` `[32, 0, 25, 0]`.
+        window._setSafeAreaInsets(RealAppScreen.padSafeArea)
+    }
+    window.overrideUserInterfaceStyle = style
     window.setNeedsLayout()
     window.layoutIfNeeded()
     // M14 real-app screen: OpenUIKit's UIWindow does not run an appearance

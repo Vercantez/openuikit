@@ -89,9 +89,11 @@ final class ModalRootViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
-    /// Four actions plus cancel. The popover controller is never touched:
-    /// on iPhone that flips an action sheet into a popover and drops cancel
-    /// (docs/ORACLE_FLOW.md).
+    /// Four actions plus cancel. The popover controller is never touched
+    /// on the phone: that flips an action sheet into a popover and drops
+    /// cancel (docs/ORACLE_FLOW.md). On the pad idiom an action sheet IS
+    /// a popover and UIKit refuses to present without a source; the phone
+    /// path is unchanged.
     func presentActionSheet() {
         let sheet = UIAlertController(title: nil, message: nil,
                                       preferredStyle: .actionSheet)
@@ -100,6 +102,13 @@ final class ModalRootViewController: UIViewController {
         sheet.addAction(UIAlertAction(title: "Favorite", style: .default))
         sheet.addAction(UIAlertAction(title: "Delete", style: .destructive))
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        if UIDevice.current.userInterfaceIdiom == .pad,
+           let popover = sheet.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY,
+                                        width: 1, height: 1)
+            popover.permittedArrowDirections = []
+        }
         present(sheet, animated: true, completion: nil)
     }
 

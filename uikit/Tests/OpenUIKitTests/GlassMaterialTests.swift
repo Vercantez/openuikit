@@ -49,6 +49,31 @@ final class GlassMaterialTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(p.b - 220), 2, "\(p)")
     }
 
+    func testDarkFloatingGlassMixOverBlackIs57() {
+        // MEASURED /tmp/sheetfill_dark medium_black, SE 2x / iOS 26.1:
+        // α=203/255, T=57/203 over black → 57.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+        root.overrideUserInterfaceStyle = .dark
+        root.backgroundColor = .black
+        let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+        glass.isOpaque = false
+        glass._usesIOSGlass = true
+        glass._usesIOSDarkGlass = true
+        glass.layer.cornerRadius = 24
+        root.addSubview(glass)
+        let bmp = UIRenderer.render(root, scale: 2)
+        let p = px(bmp, 100, 80)
+        XCTAssertEqual(p.a, 255)
+        XCTAssertLessThanOrEqual(abs(p.r - 57), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.g - 57), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.b - 57), 2, "\(p)")
+    }
+
     func testCatalystKeepsTheFlatFill() {
         let bmp = renderGlass(over: .black, cut: .macOS)
         let p = px(bmp, 100, 80)

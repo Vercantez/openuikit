@@ -511,9 +511,19 @@ final class AdaptivePresentationDelegateTests: XCTestCase {
         XCTAssertTrue(d.log.isEmpty)
     }
 
-    /// A `.popover` presentation adapts to the sheet on this device class and
-    /// forwards its delegate.
+    /// A `.popover` presentation adapts to the sheet on compact width
+    /// (phone) and forwards its delegate. Pad regular width does not adapt
+    /// (Modal-ipad t9200); that path is in IOSDevicePixelMetricsTests.
     func testPopoverAdaptsToASheet() {
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        defer {
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+        }
+        UIDevice.current.userInterfaceIdiom = .phone
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .phone)
         let vc = UIViewController()
         vc.modalPresentationStyle = .popover
         let popover = try! XCTUnwrap(vc.popoverPresentationController)
