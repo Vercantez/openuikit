@@ -1,0 +1,38 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave3-repair-7",
+    "maxActive": 16,
+    "maxRuns": 2
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "coredata": {
+      "agentId": "bc-e86f4081-f1d5-56c2-bc4f-19801f391a2d",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/80",
+      "expectedPriorHead": "2279eeda9b1a36d6b0e1c3f391489e8bbc5c1e2f",
+      "idempotencyKey": "15523d07-87d9-5757-8b34-309ad4006ca9",
+      "launchStatus": "PENDING",
+      "module": "CoreData",
+      "promptBytes": 1526,
+      "promptSha256": "a9fac31f630548d16271c5b8367a4453efc5708527f1aa413f607c8cc7e693a4",
+      "slug": "coredata"
+    },
+    "speech": {
+      "agentId": "bc-12204320-2cc8-50bc-b38f-e16e3d90d6d1",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/105",
+      "expectedPriorHead": "c80188dcbc74ba317e0c2ba97426d0330785fd42",
+      "idempotencyKey": "ee012b07-42da-5f75-8a14-48880f7542c9",
+      "launchStatus": "PENDING",
+      "module": "Speech",
+      "promptBytes": 1514,
+      "promptSha256": "20ac3496b5914f715beeb38321ea589d491fcbe154f6ce881599dd7c15ca4ce5",
+      "slug": "speech"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

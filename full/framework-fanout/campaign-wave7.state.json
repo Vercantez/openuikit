@@ -229,8 +229,8 @@
       "priority": 100,
       "runCreatedAt": "2026-09-05T21:53:44.711Z",
       "runId": "run-2ec88a1b-68cc-4390-b407-bec8d7a34f05",
-      "runStatus": "CREATING",
-      "runUpdatedAt": "2026-09-05T21:53:44.711Z"
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-05T21:54:25.868Z"
     },
     "shazamkit": {
       "agentId": "bc-9a101a26-b170-5969-9e0d-55184ffd16fc",
@@ -369,5 +369,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T21:54:25Z"
+  "updatedAt": "2026-09-05T21:55:25Z"
 }
