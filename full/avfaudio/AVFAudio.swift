@@ -132,7 +132,7 @@ public let AVAudioUnitTypeOfflineEffect = "AVAudioUnitTypeOfflineEffect"
 public let AVAudioUnitTypeMIDIProcessor = "AVAudioUnitTypeMIDIProcessor"
 public let AVAudioUnitManufacturerNameApple = "AVAudioUnitManufacturerNameApple"
 
-public var AVMusicTimeStampEndOfTrack: Double { Double.greatestFiniteMagnitude }
+public var AVMusicTimeStampEndOfTrack: Double { Double(Int64.max) }
 
 public struct AVAudioBeatRange: Equatable, Sendable {
     public var start: AVMusicTimeStamp
@@ -154,6 +154,12 @@ func avfaudioLock<T>(_ lock: NSLock, _ body: () -> T) -> T {
     lock.lock()
     defer { lock.unlock() }
     return body()
+}
+
+func avfaudioLock<T>(_ lock: NSLock, _ body: () throws -> T) throws -> T {
+    lock.lock()
+    defer { lock.unlock() }
+    return try body()
 }
 
 func avfaudioHostUnavailableError(

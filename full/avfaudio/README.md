@@ -16,7 +16,7 @@ The current isolated host gate compiles AVFAudio without those modules on the se
   only valid frames, and expose the first `AudioBuffer` byte capacity as
   `frameCapacity`; compressed-buffer copies have the base `AVAudioBuffer`
   dynamic type. These observable details are checked against iOS 26.1.
-- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `connect` replaces the existing edge for `(destination, inputBus)`. `start()`, manual rendering, and offline render **throw** and do not set `isRunning` or produce buffers.
+- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `connect` replaces the existing edge for `(destination, inputBus)`. Hardware `start()` throws and leaves `isRunning` false. Manual rendering (`enableManualRenderingMode` + `start` + `renderOffline`) mixes scheduled PCM offline.
 - **Session preferences.** `setCategory` stores category/mode/options. Activation, port override, and hardware configuration **throw**. Record permission is delivered **asynchronously**, exactly once, on `AVFAudio.callback`.
 - **Player / recorder / converter / sequencer.** `AVAudioPlayer` throwing URL initializers use throwing I/O. Empty or garbage payloads throw; only a narrowly validated 16-bit linear PCM WAVE construct. Play, record, convert, and sequencer start stay fail-closed.
 - **Speech.** Utterance text is stored. `speak` does not set `isSpeaking`. Personal-voice authorization is `.unsupported`, delivered asynchronously on the callback queue.
@@ -26,7 +26,7 @@ The current isolated host gate compiles AVFAudio without those modules on the se
 | Surface | Linux behavior |
 | --- | --- |
 | Hardware playback / capture | `play()` / `record()` return false |
-| Engine I/O and render | `start` / manual render throw; `isRunning` stays false |
+| Hardware engine I/O | `start()` without manual mode throws; `isRunning` stays false |
 | Session activation / hardware | `setActive` and preferred hardware APIs throw |
 | Apple speech voices | Empty catalog; no PCM is synthesized |
 | Personal Voice | `.unsupported`, async callback |
@@ -65,3 +65,48 @@ Run the immutable host gate:
 ```sh
 bash tests/acceptance/test_host.sh
 ```
+
+## Depth pass 2026-09
+
+Campaign `ios26.1-fwdepth-r3`, framework `AVFAudio`, lane `large-partitioned`. This pass implements the value/state-machine core **without audio hardware**. Coverage: **1558 implemented / 0 declared / 79 deferred / 1 unavailable** of 1638 IDs (gate floor is 150 nondeferred). Families `AVAudioFormat`, `AVAudioPCMBuffer`, `AVAudioTime`, `AVAudioFile`, `AVAudioEngine` (manual rendering), and `AVAudioConverter` are nondeferred except C-ABI `canImport` APIs (`AudioStreamBasicDescription`, `AudioBufferList`, `AudioTimeStamp`, `AVAudioSourceNode`/`SinkNode`, `manualRenderingBlock`, MIDI event-list connect, `AUAudioUnit` wrappers).
+
+### Public surface (Linux-backed)
+
+- **AVAudioFormat.** `init(standardFormatWithSampleRate:channels:)`, `init(commonFormat:sampleRate:channels:interleaved:)`, `init(settings:)`. Settings keys: `AVFormatIDKey` (`1819304813` / `'lpcm'`), `AVSampleRateKey`, `AVNumberOfChannelsKey`, `AVLinearPCMBitDepthKey`, `AVLinearPCMIsBigEndianKey` (`false`), `AVLinearPCMIsFloatKey`, `AVLinearPCMIsNonInterleaved`, optional `AVChannelLayoutKey`. `isStandard` is non-interleaved float32. `init(streamDescription:)` remains `canImport(CoreAudioTypes)`.
+- **AVAudioPCMBuffer.** `frameCapacity`/`frameLength`, planar and interleaved `floatChannelData`/`int16ChannelData`/`int32ChannelData` (interleaved channel `n` is offset by `n * bytesPerSample`, matching Apple), `stride`. Copy retains Apple's first-`AudioBuffer` **byte** `frameCapacity` quirk.
+- **AVAudioTime.** Host/sample validity, `extrapolateTime(fromAnchor:)`, `hostTime(forSeconds:)` / `seconds(forHostTime:)` via `clock_gettime(CLOCK_MONOTONIC)` nanoseconds (`1e9` ticks/s). Mach-absolute-time numer/denom is not claimed.
+- **AVAudioFile.** WAV (RIFF PCM 16/32 and IEEE float) read/write; CAF PCM (`desc` 36-byte little-endian, `lpcm`, channels at +28, bits at +32) read/write; AIFF PCM **read** (IEEE80 sample rate). `length` / `framePosition` / `fileFormat` / `processingFormat`. `framePosition` clamps to `length`; writers update `length` before `framePosition`.
+- **AVAudioEngine graph.** Attach/connect/disconnect/start/stop/reset. Hardware `start()` stays fail-closed. `enableManualRenderingMode` succeeds; `start()` in manual mode sets `isRunning`; `renderOffline` walks player → EQ `globalGain` → mixer, mixes scheduled PCM, applies mixer `outputVolume`, posts `.AVAudioEngineConfigurationChange`. `disableManualRenderingMode` is nonthrowing and stops the engine (Apple's method does not throw).
+- **AVAudioConverter.** PCM int/float, channel map, stereo downmix, linear sample-rate interpolation (documented gap vs Apple's resampler). Compressed formats throw.
+- **AVAudioMixerNode / AVAudioPlayerNode / AVAudioUnitEQ.** Software mix/gain/pan on PCM in manual rendering. Constant-gain pan: `pan == 0` leaves both channels at 1.0; `pan == -1` left=1 right=0.
+
+### Fail-closed boundaries
+
+| Surface | Linux behavior |
+| --- | --- |
+| Hardware engine I/O | `start()` without manual mode throws `AVAudioEngineManualRenderingError.hostUnavailable`; `isRunning` stays false |
+| Compressed converters / files | `AVAudioConverter` and `AVAudioFile` throw `AVFAudioError.hostUnavailable` |
+| `AVAudioUnitSampler` | `loadSoundBankInstrument` / `loadAudioFiles` throw; `startNote` is a no-op |
+| `AVSpeechSynthesizer` | Empty voice catalog; `speak` does not set `isSpeaking` |
+| `AVAudioSession` activation / hardware | `setActive` and preferred hardware APIs throw (session types remain in this module; not duplicated into AVFoundation) |
+| `AVAudioEngine.manualRenderingBlock` | Compiled only with CoreAudioTypes |
+| ASBD / AudioBufferList / AudioTimeStamp | Compiled only with CoreAudioTypes; isolated host does not claim the round trip |
+
+### Tests and markers
+
+`bash full/avfaudio/tests/acceptance/test_host.sh` (Linux host, no docker). Agent runtime covers format/settings, PCM layout, time extrapolation, WAV/CAF/AIFF, converter PCM/SRC/channelMap, mixer pan/gain, engine manual render mix, speech/sampler fail-closed, and a depth catalog of ≥900 symbols.
+
+Expected markers:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFAUDIO_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFAudio dylib=libAVFAudio.dylib
+```
+
+The environment attestation script may fail in this snapshot (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build id differs from the campaign seed). The sealed host gate itself does not print the environment line; do not weaken or skip it.
+
+### Unresolved behavioral questions (central review)
+
+See `oracle-questions.tsv`: linear SRC vs Apple resampler; CAF `desc` 36 vs 32; constant-gain pan vs constant-power; sampler `loadSoundBankInstrument` host-unavailable vs empty bank; ASBD round-trip only when CoreAudioTypes is imported; AVAudioSession ownership vs AVFoundation.

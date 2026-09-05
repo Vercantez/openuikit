@@ -286,6 +286,7 @@ public final class AVAUPresetEvent: AVMusicEvent {
 }
 
 public final class AVExtendedNoteOnEvent: AVMusicEvent {
+    public class var defaultInstrument: UInt32 { 0xFFFF_FFFF }
     public var midiNote: Float
     public var velocity: Float
     public var instrumentID: UInt32

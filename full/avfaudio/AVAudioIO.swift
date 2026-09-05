@@ -32,33 +32,51 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
     public let url: URL
     public let fileFormat: AVAudioFormat
     public let processingFormat: AVAudioFormat
-    public var framePosition: AVAudioFramePosition = 0
+    public var framePosition: AVAudioFramePosition = 0 {
+        didSet {
+            if framePosition < 0 { framePosition = 0 }
+            if framePosition > length { framePosition = length }
+        }
+    }
     public private(set) var length: AVAudioFramePosition = 0
     public private(set) var isOpen = true
     private let writable: Bool
+    private let kind: AVAudioContainerKind
+    private var interleaved: Data
+    private var flushed = false
 
     public override init() {
         self.url = URL(fileURLWithPath: "/dev/null")
         self.fileFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
         self.processingFormat = self.fileFormat
         self.writable = false
+        self.kind = .wav
+        self.interleaved = Data()
         super.init()
         self.isOpen = false
     }
 
     public init(forReading fileURL: URL) throws {
-        self.url = fileURL
-        self.fileFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
-        self.processingFormat = self.fileFormat
-        self.writable = false
-        super.init()
-        if !FileManager.default.fileExists(atPath: fileURL.path) {
+        let data = try Data(contentsOf: fileURL)
+        let parsed: AVAudioContainerPCM
+        do {
+            parsed = try avfaudioParseContainer(data)
+        } catch {
             throw avfaudioHostUnavailableError(
-                "Audio file is missing and no Apple decoder is available."
+                "Audio file is not a supported WAV, CAF, or AIFF PCM container."
             )
         }
-        // Presence is recorded; compressed bytes are not decoded.
-        length = 0
+        self.url = fileURL
+        self.fileFormat = parsed.format
+        self.processingFormat = AVAudioFormat(
+            standardFormatWithSampleRate: parsed.format.sampleRate,
+            channels: parsed.format.channelCount
+        ) ?? parsed.format
+        self.writable = false
+        self.kind = avfaudioContainerKind(url: fileURL, settings: [:])
+        self.interleaved = parsed.interleaved
+        super.init()
+        self.length = parsed.frames
     }
 
     public init(
@@ -66,12 +84,20 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
         commonFormat format: AVAudioCommonFormat,
         interleaved: Bool
     ) throws {
-        self.url = fileURL
+        let data = try Data(contentsOf: fileURL)
+        let parsed: AVAudioContainerPCM
+        do {
+            parsed = try avfaudioParseContainer(data)
+        } catch {
+            throw avfaudioHostUnavailableError(
+                "Audio file is not a supported WAV, CAF, or AIFF PCM container."
+            )
+        }
         guard
             let processing = AVAudioFormat(
                 commonFormat: format,
-                sampleRate: 44100,
-                channels: 2,
+                sampleRate: parsed.format.sampleRate,
+                channels: parsed.format.channelCount,
                 interleaved: interleaved
             )
         else {
@@ -79,29 +105,36 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
                 "No Apple audio codec is installed; compressed encode/decode is fail-closed."
             )
         }
-        self.fileFormat = processing
+        self.url = fileURL
+        self.fileFormat = parsed.format
         self.processingFormat = processing
         self.writable = false
+        self.kind = avfaudioContainerKind(url: fileURL, settings: [:])
+        self.interleaved = parsed.interleaved
         super.init()
-        if !FileManager.default.fileExists(atPath: fileURL.path) {
-            throw avfaudioHostUnavailableError(
-                "Audio file is missing and no Apple decoder is available."
-            )
-        }
-        length = 0
+        self.length = parsed.frames
     }
 
     public init(forWriting fileURL: URL, settings: [String: Any]) throws {
-        self.url = fileURL
-        guard let format = AVAudioFormat(settings: settings) else {
+        guard let format = AVAudioFormat(settings: settings), format.commonFormat != .otherFormat else {
             throw avfaudioHostUnavailableError(
                 "No Apple audio codec is installed; compressed encode/decode is fail-closed."
             )
         }
+        self.url = fileURL
         self.fileFormat = format
-        self.processingFormat = format
+        self.processingFormat = AVAudioFormat(
+            standardFormatWithSampleRate: format.sampleRate,
+            channels: format.channelCount
+        ) ?? format
         self.writable = true
+        self.kind = avfaudioContainerKind(url: fileURL, settings: settings)
+        self.interleaved = Data()
         super.init()
+        try avfaudioEncodeContainer(
+            AVAudioContainerPCM(format: format, interleaved: Data(), frames: 0),
+            kind: kind
+        ).write(to: fileURL)
     }
 
     public init(
@@ -110,10 +143,14 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
         commonFormat format: AVAudioCommonFormat,
         interleaved: Bool
     ) throws {
-        self.url = fileURL
-        let channels = (settings[AVNumberOfChannelsKey] as? NSNumber)?.uint32Value ?? 2
-        let rate = (settings[AVSampleRateKey] as? NSNumber)?.doubleValue ?? 44100
+        let channels = (settings[AVNumberOfChannelsKey] as? NSNumber)?.uint32Value
+            ?? (settings[AVNumberOfChannelsKey] as? AVAudioChannelCount)
+            ?? 2
+        let rate = (settings[AVSampleRateKey] as? NSNumber)?.doubleValue
+            ?? (settings[AVSampleRateKey] as? Double)
+            ?? 44100
         guard
+            let file = AVAudioFormat(settings: settings), file.commonFormat != .otherFormat,
             let processing = AVAudioFormat(
                 commonFormat: format,
                 sampleRate: rate,
@@ -125,13 +162,29 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
                 "No Apple audio codec is installed; compressed encode/decode is fail-closed."
             )
         }
-        self.fileFormat = processing
+        self.url = fileURL
+        self.fileFormat = file
         self.processingFormat = processing
         self.writable = true
+        self.kind = avfaudioContainerKind(url: fileURL, settings: settings)
+        self.interleaved = Data()
         super.init()
+        try avfaudioEncodeContainer(
+            AVAudioContainerPCM(format: file, interleaved: Data(), frames: 0),
+            kind: kind
+        ).write(to: fileURL)
+    }
+
+    deinit {
+        if writable, isOpen, !flushed {
+            try? flush()
+        }
     }
 
     public func close() {
+        if writable, isOpen {
+            try? flush()
+        }
         isOpen = false
     }
 
@@ -141,19 +194,82 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
 
     public func read(into buffer: AVAudioPCMBuffer, frameCount frames: AVAudioFrameCount) throws {
         guard isOpen, !writable else {
-            throw avfaudioHostUnavailableError("No Apple audio decoder is available.")
+            throw avfaudioHostUnavailableError("AVAudioFile is not open for reading.")
         }
-        buffer.frameLength = 0
-        _ = frames
-        throw avfaudioHostUnavailableError("No Apple audio decoder is available.")
+        let remaining = max(length - framePosition, 0)
+        let want = min(Int(frames), Int(remaining), Int(buffer.frameCapacity))
+        guard
+            let fileBuffer = AVAudioPCMBuffer(
+                pcmFormat: fileFormat,
+                frameCapacity: AVAudioFrameCount(max(want, 1))
+            )
+        else {
+            throw avfaudioHostUnavailableError("Unable to allocate a file-format PCM buffer.")
+        }
+        let copied = avfaudioFillPCMBuffer(
+            fileBuffer,
+            fromInterleaved: interleaved,
+            format: fileFormat,
+            startFrame: Int(framePosition),
+            frameCount: want
+        )
+        fileBuffer.frameLength = copied
+        if copied == 0 {
+            buffer.frameLength = 0
+            return
+        }
+        if buffer.format.commonFormat == fileBuffer.format.commonFormat
+            && buffer.format.sampleRate == fileBuffer.format.sampleRate
+            && buffer.format.channelCount == fileBuffer.format.channelCount
+        {
+            _ = avfaudioConvertPCM(from: fileBuffer, to: buffer, channelMap: [], downmix: false)
+        } else {
+            _ = avfaudioConvertPCM(from: fileBuffer, to: buffer, channelMap: [], downmix: false)
+        }
+        framePosition += AVAudioFramePosition(copied)
     }
 
     public func write(from buffer: AVAudioPCMBuffer) throws {
         guard isOpen, writable else {
-            throw avfaudioHostUnavailableError("No Apple audio encoder is available.")
+            throw avfaudioHostUnavailableError("AVAudioFile is not open for writing.")
         }
-        _ = buffer
-        throw avfaudioHostUnavailableError("No Apple audio encoder is available.")
+        guard
+            let fileBuffer = AVAudioPCMBuffer(
+                pcmFormat: fileFormat,
+                frameCapacity: max(buffer.frameLength, 1)
+            )
+        else {
+            throw avfaudioHostUnavailableError("Unable to allocate a file-format PCM buffer.")
+        }
+        _ = avfaudioConvertPCM(from: buffer, to: fileBuffer, channelMap: [], downmix: false)
+        let chunk = avfaudioPCMBufferToInterleaved(fileBuffer)
+        let frameSize = max(fileFormat.bytesPerSample * Int(fileFormat.channelCount), 1)
+        let start = Int(framePosition) * frameSize
+        if start > interleaved.count {
+            interleaved.append(Data(count: start - interleaved.count))
+        }
+        if start == interleaved.count {
+            interleaved.append(chunk)
+        } else {
+            let end = start + chunk.count
+            if end > interleaved.count {
+                interleaved.append(Data(count: end - interleaved.count))
+            }
+            interleaved.replaceSubrange(start..<end, with: chunk)
+        }
+        let next = framePosition + AVAudioFramePosition(fileBuffer.frameLength)
+        length = max(length, next)
+        framePosition = next
+        try flush()
+    }
+
+    private func flush() throws {
+        let encoded = try avfaudioEncodeContainer(
+            AVAudioContainerPCM(format: fileFormat, interleaved: interleaved, frames: length),
+            kind: kind
+        )
+        try encoded.write(to: url)
+        flushed = true
     }
 }
 
@@ -381,10 +497,26 @@ public final class AVAudioConverter: NSObject, @unchecked Sendable {
     public func reset() {}
 
     public func convert(to outputBuffer: AVAudioPCMBuffer, from inputBuffer: AVAudioPCMBuffer) throws {
-        _ = outputBuffer
-        _ = inputBuffer
-        throw avfaudioHostUnavailableError(
-            "AVAudioConverter requires an AudioToolbox codec host."
+        guard inputFormat.commonFormat != .otherFormat,
+              outputFormat.commonFormat != .otherFormat
+        else {
+            throw avfaudioHostUnavailableError(
+                "AVAudioConverter refuses compressed codecs without an AudioToolbox host."
+            )
+        }
+        guard inputBuffer.format.commonFormat == inputFormat.commonFormat,
+              outputBuffer.format.commonFormat == outputFormat.commonFormat
+        else {
+            throw avfaudioHostUnavailableError(
+                "AVAudioConverter buffer formats must match the converter formats."
+            )
+        }
+        let map = channelMap.map { $0.intValue }
+        _ = avfaudioConvertPCM(
+            from: inputBuffer,
+            to: outputBuffer,
+            channelMap: map,
+            downmix: downmix
         )
     }
 
@@ -393,13 +525,44 @@ public final class AVAudioConverter: NSObject, @unchecked Sendable {
         error outError: UnsafeMutablePointer<NSError?>?,
         withInputFrom inputBlock: @escaping AVAudioConverterInputBlock
     ) -> AVAudioConverterOutputStatus {
-        var status = AVAudioConverterInputStatus.noDataNow
-        _ = inputBlock(0, &status)
-        _ = outputBuffer
-        outError?.pointee = avfaudioHostUnavailableError(
-            "AVAudioConverter requires an AudioToolbox codec host."
-        )
-        return .error
+        guard let pcmOut = outputBuffer as? AVAudioPCMBuffer else {
+            outError?.pointee = avfaudioHostUnavailableError(
+                "AVAudioConverter requires an AudioToolbox codec host for compressed buffers."
+            )
+            return .error
+        }
+        guard inputFormat.commonFormat != .otherFormat,
+              outputFormat.commonFormat != .otherFormat
+        else {
+            outError?.pointee = avfaudioHostUnavailableError(
+                "AVAudioConverter refuses compressed codecs without an AudioToolbox host."
+            )
+            return .error
+        }
+        var status = AVAudioConverterInputStatus.haveData
+        guard let supplied = inputBlock(AVAudioPacketCount(pcmOut.frameCapacity), &status) else {
+            pcmOut.frameLength = 0
+            if status == .endOfStream {
+                return .endOfStream
+            }
+            return .inputRanDry
+        }
+        guard let pcmIn = supplied as? AVAudioPCMBuffer else {
+            outError?.pointee = avfaudioHostUnavailableError(
+                "AVAudioConverter requires an AudioToolbox codec host for compressed buffers."
+            )
+            return .error
+        }
+        do {
+            try convert(to: pcmOut, from: pcmIn)
+            if status == .endOfStream {
+                return .endOfStream
+            }
+            return .haveData
+        } catch {
+            outError?.pointee = error as NSError
+            return .error
+        }
     }
 }
 
