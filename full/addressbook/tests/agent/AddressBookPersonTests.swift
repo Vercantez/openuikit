@@ -11,17 +11,14 @@ func testPersonImageAndSource() {
     abRequire(copiedSource === source, "same source")
     abRequire(!ABPersonHasImageData(person), "no image")
     let payload = Data([0x00, 0x01, 0x02, 0xFF])
-    abRequire(
-        ABPersonSetImageData(person, unsafeBitCast(payload as NSData, to: CFData.self), nil),
-        "set image"
-    )
+    abRequire(ABPersonSetImageData(person, abCFData(payload), nil), "set image")
     abRequire(ABPersonHasImageData(person), "has image")
     let copied = abTake(ABPersonCopyImageData(person))
-    abRequire((copied as Data) == payload, "image bytes")
+    abRequire(abNSData(copied) == payload, "image bytes")
     let thumb = abTake(ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail))
-    abRequire((thumb as Data) == payload, "thumb same bytes")
+    abRequire(abNSData(thumb) == payload, "thumb same bytes")
     let original = abTake(ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatOriginalSize))
-    abRequire((original as Data) == payload, "original same bytes")
+    abRequire(abNSData(original) == payload, "original same bytes")
     abRequire(ABPersonRemoveImageData(person, nil), "remove image")
     abRequire(!ABPersonHasImageData(person), "image gone")
     abRequire(ABPersonCreateInSource(person) == nil, "person is not a source")
@@ -58,21 +55,23 @@ func testPersonCompareAndSort() {
     abRequire(ABAddressBookAddRecord(book, ada, nil), "add ada")
     abRequire(ABAddressBookAddRecord(book, grace, nil), "add grace")
     let source = abPeek(ABAddressBookCopyDefaultSource(book))
-    let sorted = abTake(
-        ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(
-            book,
-            source,
-            ABPersonSortOrdering(kABPersonSortByLastName)
+    let sorted = abNSArray(
+        abTake(
+            ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(
+                book,
+                source,
+                ABPersonSortOrdering(kABPersonSortByLastName)
+            )
         )
-    ) as NSArray
+    )
     abRequire(sorted.count == 2, "sorted count")
     let first = sorted[0] as AnyObject
-    abRequire(abText(abTake(ABRecordCopyValue(first, kABPersonLastNameProperty)) as! CFString) == "Hopper", "hopper first")
+    abRequire(abAsString(abTake(ABRecordCopyValue(first, kABPersonLastNameProperty))) == "Hopper", "hopper first")
 }
 
 func testLinkedPeopleAndPropertyMetadata() {
     let person = abFreshPerson()
-    let linked = abTake(ABPersonCopyArrayOfAllLinkedPeople(person)) as NSArray
+    let linked = abNSArray(abTake(ABPersonCopyArrayOfAllLinkedPeople(person)))
     abRequire(linked.count == 1, "self linked")
     abRequire(linked[0] as AnyObject === person, "self identity")
     abRequire(ABPersonGetTypeOfProperty(kABPersonFirstNameProperty) == ABPropertyType(kABStringPropertyType), "fn type")
@@ -113,17 +112,17 @@ func testGroupMembership() {
     _ = ABRecordSetValue(grace, kABPersonLastNameProperty, abCF("Hopper"), nil)
     abRequire(ABGroupAddMember(group, ada, nil), "add ada")
     abRequire(ABGroupAddMember(group, grace, nil), "add grace")
-    let members = abTake(ABGroupCopyArrayOfAllMembers(group)) as NSArray
+    let members = abNSArray(abTake(ABGroupCopyArrayOfAllMembers(group)))
     abRequire(members.count == 2, "members")
-    let sorted = abTake(
-        ABGroupCopyArrayOfAllMembersWithSortOrdering(group, ABPersonSortOrdering(kABPersonSortByLastName))
-    ) as NSArray
+    let sorted = abNSArray(
+        abTake(ABGroupCopyArrayOfAllMembersWithSortOrdering(group, ABPersonSortOrdering(kABPersonSortByLastName)))
+    )
     abRequire(
-        abText(abTake(ABRecordCopyValue(sorted[0] as AnyObject, kABPersonLastNameProperty)) as! CFString) == "Hopper",
+        abAsString(abTake(ABRecordCopyValue(sorted[0] as AnyObject, kABPersonLastNameProperty))) == "Hopper",
         "sorted hopper"
     )
     abRequire(ABGroupRemoveMember(group, ada, nil), "remove ada")
-    abRequire((abTake(ABGroupCopyArrayOfAllMembers(group)) as NSArray).count == 1, "one left")
+    abRequire(abNSArray(abTake(ABGroupCopyArrayOfAllMembers(group))).count == 1, "one left")
     abRequire(!ABGroupRemoveMember(group, ada, nil), "remove missing")
     let standalone = abTake(ABGroupCreate())
     abRequire(ABRecordGetRecordType(standalone) == ABRecordType(kABGroupType), "standalone group")

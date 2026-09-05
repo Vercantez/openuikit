@@ -95,3 +95,16 @@ Public surface implemented for real on Linux:
   above.
 
 Unresolved behavioral questions: see `oracle-questions.tsv`.
+
+Environment note: `.cursor/verify-cloud-environment.sh` did not print
+`CURSOR_SWIFT_ENVIRONMENT_OK` in this VM because `scratch/ladder-corpus/focus-ios`
+is missing. `swiftc` is Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The sealed
+gate ran directly on this Linux host. Host gate output:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AddressBook lane=legacy-adapter symbols=225
+FRAMEWORK_FANOUT_REFERENCE_OK
+ADDRESSBOOK_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AddressBook dylib=libAddressBook.dylib
+```
+

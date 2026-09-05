@@ -6,14 +6,12 @@ public func ABPersonCreateVCardRepresentationWithPeople(_ people: CFArray!) -> U
     let array = unsafeBitCast(people, to: NSArray.self)
     var chunks: [String] = []
     for object in array {
-        guard let person = object as? ABRecordBox else { continue }
-        chunks.append(abEncodeVCard(person))
+        if let person = abRecord(object as AnyObject) {
+            chunks.append(abEncodeVCard(person))
+        }
     }
-    if chunks.isEmpty {
-        return nil
-    }
-    let joined = chunks.joined()
-    return abPassRetainedData(Data(joined.utf8))
+    guard !chunks.isEmpty else { return nil }
+    return abPassRetainedData(Data(chunks.joined().utf8))
 }
 
 public func ABPersonCreatePeopleInSourceWithVCardRepresentation(
@@ -154,10 +152,12 @@ func abUnescape(_ value: String) -> String {
 
 func abParseVCards(_ text: String) -> [[String: [String]]] {
     let unfolded = abUnfold(text)
+        .replacingOccurrences(of: "\r\n", with: "\n")
+        .replacingOccurrences(of: "\r", with: "\n")
     var cards: [[String: [String]]] = []
     var current: [String: [String]] = [:]
     var inside = false
-    for rawLine in unfolded.split(whereSeparator: { $0 == "\n" || $0 == "\r" }) {
+    for rawLine in unfolded.split(separator: "\n", omittingEmptySubsequences: false) {
         let line = String(rawLine).trimmingCharacters(in: .whitespaces)
         if line.isEmpty { continue }
         let upper = line.uppercased()
@@ -177,8 +177,10 @@ func abParseVCards(_ text: String) -> [[String: [String]]] {
         guard inside, let colon = line.firstIndex(of: ":") else { continue }
         let name = String(line[..<colon]).uppercased()
         let value = String(line[line.index(after: colon)...])
-        let key = name.split(separator: ";", maxSplits: 1, omittingEmptySubsequences: false)[0]
-        current[String(key), default: []].append(contentsOf: [name + ":" + value])
+        let key = String(name.split(separator: ";", maxSplits: 1, omittingEmptySubsequences: false)[0])
+        var values = current[key, default: []]
+        values.append(name + ":" + value)
+        current[key] = values
     }
     return cards
 }

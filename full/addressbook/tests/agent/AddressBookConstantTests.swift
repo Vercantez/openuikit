@@ -23,6 +23,30 @@ func abCF(_ value: String) -> CFString {
     unsafeBitCast(value as NSString, to: CFString.self)
 }
 
+func abNSArray(_ value: CFArray) -> NSArray {
+    unsafeBitCast(value, to: NSArray.self)
+}
+
+func abNSData(_ value: CFData) -> Data {
+    unsafeBitCast(value, to: NSData.self) as Data
+}
+
+func abCFData(_ value: Data) -> CFData {
+    unsafeBitCast(value as NSData, to: CFData.self)
+}
+
+func abCFArray(_ value: NSArray) -> CFArray {
+    unsafeBitCast(value, to: CFArray.self)
+}
+
+func abAsString(_ value: CFTypeRef) -> String {
+    unsafeBitCast(value, to: NSString.self) as String
+}
+
+func abNSError(_ value: CFError) -> NSError {
+    unsafeBitCast(value, to: NSError.self)
+}
+
 func abFreshBook() -> ABAddressBook {
     abTake(ABAddressBookCreate())
 }
@@ -173,8 +197,8 @@ func testConstantCatalog() {
         abRequire(abText(constant) == expected, expected)
     }
 
-    abRequire((kABPersonKindPerson as NSNumber).intValue == 0, "kind person")
-    abRequire((kABPersonKindOrganization as NSNumber).intValue == 1, "kind org")
+    abRequire(unsafeBitCast(kABPersonKindPerson, to: NSNumber.self).intValue == 0, "kind person")
+    abRequire(unsafeBitCast(kABPersonKindOrganization, to: NSNumber.self).intValue == 1, "kind org")
 }
 
 func testHashableAndEquatable() {

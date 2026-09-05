@@ -8,7 +8,7 @@ func testAddressBookStore() {
     abRequire(ABAddressBookGetPersonCount(book) == 0, "no people")
     abRequire(ABAddressBookGetGroupCount(book) == 0, "no groups")
 
-    let sources = abTake(ABAddressBookCopyArrayOfAllSources(book)) as NSArray
+    let sources = abNSArray(abTake(ABAddressBookCopyArrayOfAllSources(book)))
     abRequire(sources.count == 1, "one source")
     let source = abPeek(ABAddressBookCopyDefaultSource(book))
     abRequire(ABRecordGetRecordType(source) == ABRecordType(kABSourceType), "source type")
@@ -34,13 +34,13 @@ func testAddressBookStore() {
     let groupByID = abPeek(ABAddressBookGetGroupWithRecordID(book, ABRecordGetRecordID(group)))
     abRequire(groupByID === group, "get group")
 
-    let people = abTake(ABAddressBookCopyArrayOfAllPeople(book)) as NSArray
+    let people = abNSArray(abTake(ABAddressBookCopyArrayOfAllPeople(book)))
     abRequire(people.count == 1, "copy people")
-    let groups = abTake(ABAddressBookCopyArrayOfAllGroups(book)) as NSArray
+    let groups = abNSArray(abTake(ABAddressBookCopyArrayOfAllGroups(book)))
     abRequire(groups.count == 1, "copy groups")
-    let inSource = abTake(ABAddressBookCopyArrayOfAllPeopleInSource(book, source)) as NSArray
+    let inSource = abNSArray(abTake(ABAddressBookCopyArrayOfAllPeopleInSource(book, source)))
     abRequire(inSource.count == 1, "people in source")
-    let groupsInSource = abTake(ABAddressBookCopyArrayOfAllGroupsInSource(book, source)) as NSArray
+    let groupsInSource = abNSArray(abTake(ABAddressBookCopyArrayOfAllGroupsInSource(book, source)))
     abRequire(groupsInSource.count == 1, "groups in source")
 
     abRequire(ABAddressBookSave(book, nil), "save")
@@ -66,13 +66,13 @@ func testPeopleSearch() {
     _ = ABRecordSetValue(grace, kABPersonLastNameProperty, abCF("Hopper"), nil)
     abRequire(ABAddressBookAddRecord(book, ada, nil), "add ada")
     abRequire(ABAddressBookAddRecord(book, grace, nil), "add grace")
-    let found = abTake(ABAddressBookCopyPeopleWithName(book, abCF("love"))) as NSArray
+    let found = abNSArray(abTake(ABAddressBookCopyPeopleWithName(book, abCF("love"))))
     abRequire(found.count == 1, "one match")
     abRequire(
-        abText(abTake(ABRecordCopyValue(found[0] as AnyObject, kABPersonFirstNameProperty)) as! CFString) == "Ada",
+        abAsString(abTake(ABRecordCopyValue(found[0] as AnyObject, kABPersonFirstNameProperty))) == "Ada",
         "matched ada"
     )
-    let none = abTake(ABAddressBookCopyPeopleWithName(book, abCF("xyz"))) as NSArray
+    let none = abNSArray(abTake(ABAddressBookCopyPeopleWithName(book, abCF("xyz"))))
     abRequire(none.count == 0, "no match")
 }
 
@@ -96,7 +96,7 @@ func testAuthorizationFailClosed() {
     ABAddressBookRequestAccessWithCompletion(book) { success, error in
         granted = success
         if let error {
-            let ns = error as NSError
+            let ns = abNSError(error)
             code = ns.code
             domain = ns.domain
         }
@@ -121,7 +121,7 @@ func testExternalChangeCallback() {
 func testStoreErrors() {
     var error: Unmanaged<CFError>? = nil
     abRequire(!ABAddressBookAddRecord(nil, nil, &error), "nil add")
-    let ns = error!.takeRetainedValue() as NSError
+    let ns = abNSError(error!.takeRetainedValue())
     abRequire(ns.code == kABOperationNotPermittedByStoreError, "store error")
     abRequire(ns.domain == "ABAddressBookErrorDomain", "domain")
     abRequire(!ABAddressBookSave(nil, nil), "nil save")
@@ -173,11 +173,15 @@ func testVCardRoundTrip() {
     var addressID = kABMultiValueInvalidIdentifier
     _ = ABMultiValueAddValueAndLabel(addresses, address as NSDictionary, kABHomeLabel, &addressID)
     _ = ABRecordSetValue(ada, kABPersonAddressProperty, addresses, nil)
-    _ = ABPersonSetImageData(ada, unsafeBitCast(Data([0x00, 0x01, 0x02]) as NSData, to: CFData.self), nil)
+    _ = ABPersonSetImageData(ada, abCFData(Data([0x00, 0x01, 0x02])), nil)
 
-    let people = [ada] as NSArray
-    let data = abTake(ABPersonCreateVCardRepresentationWithPeople(unsafeBitCast(people, to: CFArray.self)))
-    let text = String(data: data as Data, encoding: .utf8) ?? ""
+    let staging = abFreshBook()
+    abRequire(ABAddressBookAddRecord(staging, ada, nil), "stage ada")
+    let people = abTake(ABAddressBookCopyArrayOfAllPeople(staging))
+    let dataUnmanaged = ABPersonCreateVCardRepresentationWithPeople(people)
+    abRequire(dataUnmanaged != nil, "vcard representation")
+    let data = dataUnmanaged!.takeRetainedValue()
+    let text = String(data: abNSData(data), encoding: .utf8) ?? ""
     abRequire(text.contains("BEGIN:VCARD"), "begin")
     abRequire(text.contains("VERSION:3.0"), "version")
     abRequire(text.contains("N:Lovelace;Ada;Byron;Ms;Countess"), "N")
@@ -188,21 +192,21 @@ func testVCardRoundTrip() {
 
     let book = abFreshBook()
     let source = abPeek(ABAddressBookCopyDefaultSource(book))
-    let decoded = abTake(ABPersonCreatePeopleInSourceWithVCardRepresentation(source, data)) as NSArray
+    let decoded = abNSArray(abTake(ABPersonCreatePeopleInSourceWithVCardRepresentation(source, data)))
     abRequire(decoded.count == 1, "one card")
     let roundTrip = decoded[0] as AnyObject
     abRequire(
-        abText(abTake(ABRecordCopyValue(roundTrip, kABPersonFirstNameProperty)) as! CFString) == "Ada",
+        abAsString(abTake(ABRecordCopyValue(roundTrip, kABPersonFirstNameProperty))) == "Ada",
         "decoded first"
     )
     abRequire(
-        abText(abTake(ABRecordCopyValue(roundTrip, kABPersonLastNameProperty)) as! CFString) == "Lovelace",
+        abAsString(abTake(ABRecordCopyValue(roundTrip, kABPersonLastNameProperty))) == "Lovelace",
         "decoded last"
     )
     abRequire(
-        abText(abTake(ABRecordCopyValue(roundTrip, kABPersonNoteProperty)) as! CFString) == "First programmer",
+        abAsString(abTake(ABRecordCopyValue(roundTrip, kABPersonNoteProperty))) == "First programmer",
         "decoded note"
     )
-    abRequire(ABPersonCreateVCardRepresentationWithPeople(unsafeBitCast(NSArray() as NSArray, to: CFArray.self)) == nil, "empty people")
+    abRequire(ABPersonCreateVCardRepresentationWithPeople(abCFArray(NSArray())) == nil, "empty people")
     abRequire(ABPersonCreatePeopleInSourceWithVCardRepresentation(source, nil) == nil, "nil data")
 }

@@ -24,11 +24,11 @@ func testMultiValueLifecycle() {
     abRequire(ABMultiValueGetIndexForIdentifier(multi, 99) == -1, "missing identifier")
 
     let homeValue = abTake(ABMultiValueCopyValueAtIndex(multi, 0))
-    abRequire(abText(homeValue as! CFString) == "ada@example.com", "value 0")
+    abRequire(abAsString(homeValue) == "ada@example.com", "value 0")
     let homeLabel = abTake(ABMultiValueCopyLabelAtIndex(multi, 0))
     abRequire(abText(homeLabel) == "_$!<Home>!$_", "label 0")
 
-    let values = abTake(ABMultiValueCopyArrayOfAllValues(multi)) as NSArray
+    let values = abNSArray(abTake(ABMultiValueCopyArrayOfAllValues(multi)))
     abRequire(values.count == 2, "all values")
 
     abRequire(ABMultiValueGetFirstIndexOfValue(multi, abCF("ada@work.example")) == 1, "first index")
@@ -78,7 +78,7 @@ func testRecordSetCopyRemove() {
         "set nick"
     )
     let copied = abTake(ABRecordCopyValue(person, kABPersonFirstNameProperty))
-    abRequire(abText(copied as! CFString) == "Ada", "copy first")
+    abRequire(abAsString(copied) == "Ada", "copy first")
     abRequire(ABRecordCopyValue(person, kABPersonNoteProperty) == nil, "missing note")
     abRequire(ABRecordRemoveValue(person, kABPersonNicknameProperty, nil), "remove nick")
     abRequire(ABRecordCopyValue(person, kABPersonNicknameProperty) == nil, "nick gone")
