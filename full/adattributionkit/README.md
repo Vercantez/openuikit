@@ -88,5 +88,6 @@ Top-5 evidence distribution among 55 implemented rows:
 | 3 | `AdAttributionKitConversionTests.swift#testConversionTypeCases` | enum members (allowed table-driven) |
 
 Tied at 3 citations: `testConversionTypeRawValue` and `testCoarseConversionValueRawValue`. No non-enum test cites more than 5 of 55 implemented rows (40% cap is 22).
+
 Focused tests live under `tests/agent/*Tests.swift`. The sealed v1 host gate
 still runs `AdAttributionKitRuntime.swift` for `ADATTRIBUTIONKIT_AGENT_RUNTIME_OK`.
