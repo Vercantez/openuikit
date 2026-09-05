@@ -32,16 +32,32 @@ listed dependency: this seed lists Foundation only.
   composes an overlay with `ZStack`, and exposes Linux-host caption text
   (`openUIKitHostCaption`) derived from the selected item URL and `rate`.
   It does not decode frames.
-- `AVPlaybackSpeed` stores `rate` and `localizedName`; `systemDefaultSpeeds`
-  is a fixed 0.5× / 1× / 1.5× / 2× list used as a host placeholder, not an
-  Apple-measured default.
-- `AVPlayerViewController.selectSpeed` stores `selectedSpeed`.
-  `isReadyForDisplay` stays `false`.
-- `AVInterstitialTimeRange` stores a `CMTimeRange` and round-trips a keyed
-  overlay archive. Playback gap insertion is not performed.
-- SwiftUI `View` members synthesized onto `VideoPlayer` are declared as
-  no-op modifiers that return `self`, so the overlay typechecks. Only
-  `opacity`, `padding(CGFloat)`, and `disabled` are exercised by tests.
+- `AVPlaybackSpeed` stores `rate` and `localizedName`. `localizedNumericName`
+  formats the rate with U+00D7 and drops a trailing `.0` on whole numbers
+  (MEASURED iPhone 16 / iOS 26.1). `systemDefaultSpeeds` is one stable array
+  of five entries (en_US): 2.0 Double / 1.5 Faster / 1.25 Fast / 1.0 Normal /
+  0.5 Half. `AVPlayerView` is macOS-only and is not in this iPhoneOS seed.
+- `AVPlayerViewController` uses the measured iPhone 16 / iOS 26.1 defaults
+  (`showsPlaybackControls` true, `showsTimecodes` false, `videoGravity`
+  `.resizeAspect`, `isReadyForDisplay` false, `videoBounds` zero,
+  `contentOverlayView` non-nil, `allowsPictureInPicturePlayback` true,
+  `allowsVideoFrameAnalysis` true, `videoFrameAnalysisTypes` `.default`,
+  `canStartPictureInPictureAutomaticallyFromInline` false,
+  `updatesNowPlayingInfoCenter` true, `entersFullScreenWhenPlaybackBegins`
+  false, `exitsFullScreenWhenPlaybackEnds` false, `requiresLinearPlayback`
+  false, `preferredDisplayDynamicRange` `.automatic`). `speeds` is
+  `=== AVPlaybackSpeed.systemDefaultSpeeds`; a fresh controller's
+  `selectedSpeed` is `=== systemDefaultSpeeds[3]`. `selectSpeed` is object
+  identity: outsiders are ignored, a list member writes `player.defaultRate`.
+  Assigning a player with a matching `defaultRate` selects that list entry.
+  Isolated-host `AVPlayer` lookalike exposes `defaultRate` (Apple default 1.0).
+- `AVInterstitialTimeRange` is `NSCopying` + `NSSecureCoding`, copies by
+  value, and round-trips a keyed overlay archive. Apple's archive keys are
+  unobserved. Playback gap insertion is not performed. `init(timeRange:)`
+  is tvOS-designated / `API_UNAVAILABLE(ios)` on Apple; Linux keeps it.
+- SwiftUI `View` members synthesized onto `VideoPlayer` are identity
+  no-ops that return `self`. Focused tests cover `opacity` / `padding` /
+  `disabled`; the rest are exercised by `testVideoPlayerViewSurfaceNoops`.
 
 `CGSize` / `CGRect` / `CGFloat` values are Foundation's Linux geometry types.
 
@@ -52,9 +68,10 @@ or AVKitCore runtime. The implementation never fabricates playback, PiP
 windows, route sheets, or capture-button events.
 
 - `AVPictureInPictureController.isPictureInPictureSupported()` is `false`.
-  `startPictureInPicture()` leaves `isPictureInPictureActive` false and does
-  not invent a `pictureInPictureStartFailed` delegate callback (timing
-  unobserved).
+  `init?(playerLayer:)` returns nil (header: when unsupported, initializers
+  return nil). `init(contentSource:)` still constructs (MEASURED iPhone 16 /
+  iOS 26.1). `startPictureInPicture()` / `stopPictureInPicture()` leave the
+  session inactive and do not call the delegate (no `failedToStart`).
 - `AVCaptureEvent.play(_:)` returns `false`. Custom
   `AVCaptureEventSound(url:)` throws `AVKitError.unknown`. Interaction
   handlers are stored and never invoked.

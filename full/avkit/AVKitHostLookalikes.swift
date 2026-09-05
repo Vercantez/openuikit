@@ -10,6 +10,9 @@ import Foundation
 
 open class AVPlayer: NSObject {
     public var rate: Float = 0
+    /// Isolated-host stand-in for AVFoundation.AVPlayer.defaultRate.
+    /// Apple iPhone 16 / iOS 26.1 default is 1.0 (OpenUIKit-Chrome-fw-avkit).
+    public var defaultRate: Float = 1
     public var currentItem: AVPlayerItem?
 
     public override init() {

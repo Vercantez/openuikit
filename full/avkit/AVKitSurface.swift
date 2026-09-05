@@ -237,7 +237,12 @@ extension AVInputPickerInteraction.Delegate {
 
 /// Interstitial range attached to an `AVPlayerItem`. Time-range identity is
 /// stored; playback gap insertion is not performed.
-open class AVInterstitialTimeRange: NSObject, NSCoding {
+///
+/// The iPhoneOS 26.1 header declares `NSCopying` and `NSSecureCoding`.
+/// `init(timeRange:)` is tvOS-designated and `API_UNAVAILABLE(ios)` there;
+/// Linux keeps it so tests can construct values. Apple's archive keys are
+/// unobserved (oracle-questions.tsv).
+open class AVInterstitialTimeRange: NSObject, NSCopying, NSSecureCoding {
     public let timeRange: CMTimeRange
 
     public init(timeRange: CMTimeRange) {
@@ -258,11 +263,35 @@ open class AVInterstitialTimeRange: NSObject, NSCoding {
         super.init()
     }
 
+    public static var supportsSecureCoding: Bool { true }
+
     open func encode(with coder: NSCoder) {
         coder.encode(timeRange.start.value, forKey: "start.value")
         coder.encode(Int64(timeRange.start.timescale), forKey: "start.timescale")
         coder.encode(timeRange.duration.value, forKey: "duration.value")
         coder.encode(Int64(timeRange.duration.timescale), forKey: "duration.timescale")
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return AVInterstitialTimeRange(timeRange: timeRange)
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? AVInterstitialTimeRange else { return false }
+        return timeRange.start.value == other.timeRange.start.value
+            && timeRange.start.timescale == other.timeRange.start.timescale
+            && timeRange.duration.value == other.timeRange.duration.value
+            && timeRange.duration.timescale == other.timeRange.duration.timescale
+    }
+
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(timeRange.start.value)
+        hasher.combine(timeRange.start.timescale)
+        hasher.combine(timeRange.duration.value)
+        hasher.combine(timeRange.duration.timescale)
+        return hasher.finalize()
     }
 }
 
@@ -278,23 +307,50 @@ open class AVPlaybackSpeed: NSObject {
         super.init()
     }
 
+    /// MEASURED OpenUIKit-Chrome-fw-avkit, iPhone 16, iOS 26.1, locale=en_US:
+    /// 0.5→"0.5×", 0.75→"0.75×", 1.0→"1×", 1.25→"1.25×", 1.5→"1.5×",
+    /// 2.0→"2×", 2.5→"2.5×", 3.0→"3×". The suffix is U+00D7; whole-number
+    /// rates drop the trailing `.0`.
     public var localizedNumericName: String {
-        String(rate)
+        let mark = "\u{00D7}"
+        let whole = Float(Int(rate))
+        if rate == whole {
+            return "\(Int(rate))" + mark
+        }
+        return String(rate) + mark
     }
 
-    public static var systemDefaultSpeeds: [AVPlaybackSpeed] {
-        [
-            AVPlaybackSpeed(rate: 0.5, localizedName: "0.5×"),
-            AVPlaybackSpeed(rate: 1.0, localizedName: "1×"),
-            AVPlaybackSpeed(rate: 1.5, localizedName: "1.5×"),
-            AVPlaybackSpeed(rate: 2.0, localizedName: "2×"),
-        ]
+    /// One array instance so `AVPlayerViewController.speeds` can be `===`
+    /// this list (MEASURED iPhone 16 / iOS 26.1) and so `selectedSpeed` can
+    /// be `=== systemDefaultSpeeds[3]` (the 1.0 "Normal" entry).
+    private static let storedSystemDefaultSpeeds: [AVPlaybackSpeed] = [
+        AVPlaybackSpeed(rate: 2.0, localizedName: "Double"),
+        AVPlaybackSpeed(rate: 1.5, localizedName: "Faster"),
+        AVPlaybackSpeed(rate: 1.25, localizedName: "Fast"),
+        AVPlaybackSpeed(rate: 1.0, localizedName: "Normal"),
+        AVPlaybackSpeed(rate: 0.5, localizedName: "Half"),
+    ]
+
+    /// MEASURED OpenUIKit-Chrome-fw-avkit, iPhone 16, iOS 26.1, locale=en_US:
+    /// count=5, rates 2.0 / 1.5 / 1.25 / 1.0 / 0.5, names Double / Faster /
+    /// Fast / Normal / Half. iPhoneOS 26.1 header only says "a list of
+    /// playback speeds to be used by default across the system."
+    public class var systemDefaultSpeeds: [AVPlaybackSpeed] {
+        storedSystemDefaultSpeeds
     }
 }
 
 /// Picture in Picture controller. Isolated host reports unsupported and keeps
-/// every session inactive. `startPictureInPicture()` does not become active
-/// and does not invent a start-failed delegate callback (timing unobserved).
+/// every session inactive.
+///
+/// MEASURED OpenUIKit-Chrome-fw-avkit, iPhone 16, iOS 26.1:
+/// `isPictureInPictureSupported() == false`; `init(playerLayer:)` returns
+/// nil (matching the iPhoneOS 26.1 header: "When NO, all initializers will
+/// return nil"); `init(contentSource:)` still constructs; `startPictureInPicture()`
+/// / `stopPictureInPicture()` leave `isPictureInPictureActive` false and do
+/// not invoke the delegate (no `failedToStart` / will / did). Linux matches
+/// that fail-closed path. `canStartPictureInPictureAutomaticallyFromInline`
+/// default is NO (header + same probe).
 open class AVPictureInPictureController: NSObject {
     public weak var delegate: (any AVPictureInPictureControllerDelegate)?
     public var canStartPictureInPictureAutomaticallyFromInline = false
@@ -330,14 +386,20 @@ open class AVPictureInPictureController: NSObject {
         super.init()
     }
 
-    public convenience init?(playerLayer: AVPlayerLayer) {
-        self.init(contentSource: ContentSource(playerLayer: playerLayer))
+    /// MEASURED iPhone 16 / iOS 26.1: `isPictureInPictureSupported()` is false
+    /// and this designated initializer returns nil (header: "When NO, all
+    /// initializers will return nil"). A convenience `init` cannot `return nil`
+    /// without calling `self.init`.
+    public init?(playerLayer: AVPlayerLayer) {
+        _ = playerLayer
+        return nil
     }
 
     public func invalidatePlaybackState() {}
 
     public func startPictureInPicture() {
-        // Hardware / system PiP is unavailable. Stay inactive.
+        // MEASURED iPhone 16 / iOS 26.1 with isPictureInPictureSupported false:
+        // stays inactive and the delegate receives no callbacks.
         isPictureInPictureActive = false
         isPictureInPicturePossible = false
     }
@@ -491,6 +553,23 @@ extension AVPictureInPictureSampleBufferPlaybackDelegate {
 
 /// Player view controller. Stores overlay state; does not decode or present
 /// full-screen video on the isolated host.
+///
+/// Defaults MEASURED OpenUIKit-Chrome-fw-avkit, iPhone 16, iOS 26.1, and
+/// matching the iPhoneOS 26.1 header where it names a default:
+/// `showsPlaybackControls` YES, `showsTimecodes` NO, `videoGravity`
+/// `AVLayerVideoGravityResizeAspect`, `isReadyForDisplay` false,
+/// `videoBounds` zero, `contentOverlayView` non-nil,
+/// `allowsPictureInPicturePlayback` YES, `allowsVideoFrameAnalysis` YES,
+/// `videoFrameAnalysisTypes` `.default` (raw 1),
+/// `canStartPictureInPictureAutomaticallyFromInline` NO,
+/// `updatesNowPlayingInfoCenter` YES, `entersFullScreenWhenPlaybackBegins`
+/// NO, `exitsFullScreenWhenPlaybackEnds` NO, `requiresLinearPlayback` false
+/// (header does not name this default; measured false),
+/// `preferredDisplayDynamicRange` `.automatic` (raw 0),
+/// `speeds === AVPlaybackSpeed.systemDefaultSpeeds`,
+/// `selectedSpeed === systemDefaultSpeeds` entry with rate 1.0 ("Normal").
+/// `selectSpeed` ignores a speed that is not `===` a member of `speeds`
+/// (header + measured outsider 9.5 and same-rate twin).
 @MainActor
 open class AVPlayerViewController: UIViewController {
     public static var mediaCharacteristicsForSupportedCustomMediaSelectionSchemes:
@@ -500,9 +579,17 @@ open class AVPlayerViewController: UIViewController {
     }
 
     public weak var delegate: (any AVPlayerViewControllerDelegate)?
-    public var player: AVPlayer?
-    public var allowsPictureInPicturePlayback = false
-    public var allowsVideoFrameAnalysis = false
+    public var player: AVPlayer? {
+        didSet {
+            // MEASURED: assigning a player with defaultRate 1.5 selects the
+            // 1.5 list entry. Header: defaultRate and selectedSpeed reflect
+            // each other.
+            guard let player else { return }
+            selectedSpeed = speeds.first(where: { $0.rate == player.defaultRate })
+        }
+    }
+    public var allowsPictureInPicturePlayback = true
+    public var allowsVideoFrameAnalysis = true
     public var canStartPictureInPictureAutomaticallyFromInline = false
     public var entersFullScreenWhenPlaybackBegins = false
     public var exitsFullScreenWhenPlaybackEnds = false
@@ -512,10 +599,11 @@ open class AVPlayerViewController: UIViewController {
     public var showsPlaybackControls = true
     public var showsTimecodes = false
     public var speeds: [AVPlaybackSpeed] = AVPlaybackSpeed.systemDefaultSpeeds
-    public var updatesNowPlayingInfoCenter = false
+    public var updatesNowPlayingInfoCenter = true
     public var videoFrameAnalysisTypes: AVVideoFrameAnalysisType = .default
     public var videoGravity: AVLayerVideoGravity = .resizeAspect
-    public private(set) var selectedSpeed: AVPlaybackSpeed?
+    public private(set) var selectedSpeed: AVPlaybackSpeed? =
+        AVPlaybackSpeed.systemDefaultSpeeds.first(where: { $0.rate == 1.0 })
     public private(set) var isReadyForDisplay = false
     public private(set) var contentOverlayView: UIView? = UIView(frame: .zero)
     public private(set) var videoBounds: CGRect = .zero
@@ -530,7 +618,20 @@ open class AVPlayerViewController: UIViewController {
     }
 
     public func selectSpeed(_ speed: AVPlaybackSpeed) {
+        // MEASURED iPhone 16 / iOS 26.1: membership is object identity.
+        // Header: "Calls to selectSpeed with AVPlaybackSpeeds not contained
+        // within the speeds property array will be ignored." Selecting a
+        // list member also writes player.defaultRate (measured 2.0).
+        var found = false
+        for candidate in speeds {
+            if candidate === speed {
+                found = true
+                break
+            }
+        }
+        guard found else { return }
         selectedSpeed = speed
+        player?.defaultRate = speed.rate
     }
 }
 
@@ -665,6 +766,9 @@ extension AVPlayerViewControllerDelegate {
 }
 
 /// Route picker view. Isolated host does not present AirPlay / route sheets.
+/// MEASURED iPhone 16 / iOS 26.1: `prioritizesVideoDevices` default false,
+/// `activeTintColor` non-nil. Delegate willBegin/didEnd are not invoked
+/// because no route sheet is presented.
 @MainActor
 open class AVRoutePickerView: UIView {
     public var activeTintColor: UIColor! = .white
