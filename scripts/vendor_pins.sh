@@ -5,5 +5,5 @@
 # Current OpenUIKit subtree is 06aaf82bc64672d269064507533e75a86e5a1da3
 # ("Drive SwiftUI apps from the paced host loop"), 30 commits after the old
 # external pin 62dea0d97a3b9074e5c016820492bd0656b9a35a.
-EXPECTED_INREPO_UIKIT_TREE=56b21c877e87e2fa1a2603f22c4674f9b5047a13
+EXPECTED_INREPO_UIKIT_TREE=0f9ed7ffde5bef8c9a6cdb66cf90ac8f9d5212ff
 EXPECTED_INREPO_MACHORUN_TREE=76885295ff2f4590038a497e2963edaa18185e6f
