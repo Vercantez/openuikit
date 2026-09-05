@@ -105,6 +105,21 @@ let swiftUITestTarget: Target = .testTarget(
 )
 #endif
 
+// Literal Apple framework names on Linux so ladder apps keep `import ImageIO`
+// / `import CoreImage` / `import StoreKit`. The same target names on Darwin
+// shadow the SDK modules and break XCTest (XCUIAutomation then fails looking
+// up CQuartz through our ImageIO). Darwin builds the port under OpenUIKit*
+// names; tests import those.
+#if os(Linux)
+let imageIOModule = "ImageIO"
+let coreImageModule = "CoreImage"
+let storeKitModule = "StoreKit"
+#else
+let imageIOModule = "OpenUIKitImageIO"
+let coreImageModule = "OpenUIKitCoreImage"
+let storeKitModule = "OpenUIKitStoreKit"
+#endif
+
 // Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
 // here -- no swiftSettings, no linkerSettings, no `.when(platforms:)`:
 //
@@ -144,6 +159,9 @@ let package = Package(
         // source can continue to `import Symbols`.
         .library(name: "Symbols", targets: ["Symbols"]),
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
+        .library(name: storeKitModule, targets: [storeKitModule]),
+        .library(name: imageIOModule, targets: [imageIOModule]),
+        .library(name: coreImageModule, targets: [coreImageModule]),
         .executable(name: "openrender", targets: ["openrender"]),
         .executable(name: "openhost", targets: ["openhost"]),
         // The C ABI an Objective-C app links against (docs/OBJC_FACADE.md).
@@ -186,6 +204,26 @@ let package = Package(
         // Tests/OpenUIKitTests/FoundationCoexistenceTests.swift. No other
         // Apple framework is imported for its types.
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
+        // Fail-closed StoreKit, portable ImageIO (PNG/JPEG via CQuartz), and
+        // CoreImage (CIGaussianBlur on the quartz 3-box Gaussian). Linux apps
+        // `import StoreKit` / `import ImageIO` / `import CoreImage` against
+        // these products; Darwin tests that do not depend on them still see
+        // the SDK modules.
+        .target(
+            name: imageIOModule,
+            dependencies: ["OpenCoreGraphics", "CQuartz"],
+            path: "Sources/ImageIO"
+        ),
+        .target(
+            name: coreImageModule,
+            dependencies: ["OpenCoreGraphics", .target(name: imageIOModule), "CQuartz"],
+            path: "Sources/CoreImage"
+        ),
+        .target(
+            name: storeKitModule,
+            dependencies: ["OpenUIKit"],
+            path: "Sources/StoreKit"
+        ),
         // The UIKit reimplementation. Same rule as above.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
         // The declaration macro executes on the build host even when UIKit is
@@ -411,6 +449,43 @@ let package = Package(
         .testTarget(
             name: "OpenUIKitCTests",
             dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-swift-version", "5",
+                    "-Xfrontend", "-strict-concurrency=minimal",
+                    "-Xfrontend", "-warn-concurrency",
+                ], .when(platforms: [.linux])),
+            ]
+        ),
+        .testTarget(
+            name: "StoreKitTests",
+            dependencies: [.target(name: storeKitModule), "OpenUIKit"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-swift-version", "5",
+                    "-Xfrontend", "-strict-concurrency=minimal",
+                    "-Xfrontend", "-warn-concurrency",
+                ], .when(platforms: [.linux])),
+            ]
+        ),
+        .testTarget(
+            name: "ImageIOTests",
+            dependencies: [.target(name: imageIOModule), "OpenCoreGraphics"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-swift-version", "5",
+                    "-Xfrontend", "-strict-concurrency=minimal",
+                    "-Xfrontend", "-warn-concurrency",
+                ], .when(platforms: [.linux])),
+            ]
+        ),
+        .testTarget(
+            name: "CoreImageTests",
+            dependencies: [
+                .target(name: coreImageModule),
+                .target(name: imageIOModule),
+                "OpenCoreGraphics",
+            ],
             swiftSettings: [
                 .unsafeFlags([
                     "-swift-version", "5",
