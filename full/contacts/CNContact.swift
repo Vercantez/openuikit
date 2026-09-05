@@ -330,110 +330,193 @@ open class CNMutableContact: CNContact {
 
     public override var contactType: CNContactType {
         get { super.contactType }
-        set { storage.contactType = newValue }
+        set {
+            storage.contactType = newValue
+            storage.availableKeys.insert(CNContactTypeKey)
+        }
     }
     public override var namePrefix: String {
         get { super.namePrefix }
-        set { storage.namePrefix = newValue }
+        set {
+            storage.namePrefix = newValue
+            storage.availableKeys.insert(CNContactNamePrefixKey)
+        }
     }
     public override var givenName: String {
         get { super.givenName }
-        set { storage.givenName = newValue }
+        set {
+            storage.givenName = newValue
+            storage.availableKeys.insert(CNContactGivenNameKey)
+        }
     }
     public override var middleName: String {
         get { super.middleName }
-        set { storage.middleName = newValue }
+        set {
+            storage.middleName = newValue
+            storage.availableKeys.insert(CNContactMiddleNameKey)
+        }
     }
     public override var familyName: String {
         get { super.familyName }
-        set { storage.familyName = newValue }
+        set {
+            storage.familyName = newValue
+            storage.availableKeys.insert(CNContactFamilyNameKey)
+        }
     }
     public override var previousFamilyName: String {
         get { super.previousFamilyName }
-        set { storage.previousFamilyName = newValue }
+        set {
+            storage.previousFamilyName = newValue
+            storage.availableKeys.insert(CNContactPreviousFamilyNameKey)
+        }
     }
     public override var nameSuffix: String {
         get { super.nameSuffix }
-        set { storage.nameSuffix = newValue }
+        set {
+            storage.nameSuffix = newValue
+            storage.availableKeys.insert(CNContactNameSuffixKey)
+        }
     }
     public override var nickname: String {
         get { super.nickname }
-        set { storage.nickname = newValue }
+        set {
+            storage.nickname = newValue
+            storage.availableKeys.insert(CNContactNicknameKey)
+        }
     }
     public override var organizationName: String {
         get { super.organizationName }
-        set { storage.organizationName = newValue }
+        set {
+            storage.organizationName = newValue
+            storage.availableKeys.insert(CNContactOrganizationNameKey)
+        }
     }
     public override var departmentName: String {
         get { super.departmentName }
-        set { storage.departmentName = newValue }
+        set {
+            storage.departmentName = newValue
+            storage.availableKeys.insert(CNContactDepartmentNameKey)
+        }
     }
     public override var jobTitle: String {
         get { super.jobTitle }
-        set { storage.jobTitle = newValue }
+        set {
+            storage.jobTitle = newValue
+            storage.availableKeys.insert(CNContactJobTitleKey)
+        }
     }
     public override var phoneticGivenName: String {
         get { super.phoneticGivenName }
-        set { storage.phoneticGivenName = newValue }
+        set {
+            storage.phoneticGivenName = newValue
+            storage.availableKeys.insert(CNContactPhoneticGivenNameKey)
+        }
     }
     public override var phoneticMiddleName: String {
         get { super.phoneticMiddleName }
-        set { storage.phoneticMiddleName = newValue }
+        set {
+            storage.phoneticMiddleName = newValue
+            storage.availableKeys.insert(CNContactPhoneticMiddleNameKey)
+        }
     }
     public override var phoneticFamilyName: String {
         get { super.phoneticFamilyName }
-        set { storage.phoneticFamilyName = newValue }
+        set {
+            storage.phoneticFamilyName = newValue
+            storage.availableKeys.insert(CNContactPhoneticFamilyNameKey)
+        }
     }
     public override var phoneticOrganizationName: String {
         get { super.phoneticOrganizationName }
-        set { storage.phoneticOrganizationName = newValue }
+        set {
+            storage.phoneticOrganizationName = newValue
+            storage.availableKeys.insert(CNContactPhoneticOrganizationNameKey)
+        }
     }
     public override var birthday: DateComponents? {
         get { super.birthday }
-        set { storage.birthday = newValue }
+        set {
+            storage.birthday = newValue
+            storage.availableKeys.insert(CNContactBirthdayKey)
+        }
     }
     public override var nonGregorianBirthday: DateComponents? {
         get { super.nonGregorianBirthday }
-        set { storage.nonGregorianBirthday = newValue }
+        set {
+            storage.nonGregorianBirthday = newValue
+            storage.availableKeys.insert(CNContactNonGregorianBirthdayKey)
+        }
     }
     public override var note: String {
         get { super.note }
-        set { storage.note = newValue }
+        set {
+            storage.note = newValue
+            storage.availableKeys.insert(CNContactNoteKey)
+        }
     }
     public override var imageData: Data? {
         get { super.imageData }
-        set { storage.setImageData(newValue) }
+        set {
+            storage.setImageData(newValue)
+            storage.availableKeys.insert(CNContactImageDataKey)
+            storage.availableKeys.insert(CNContactThumbnailImageDataKey)
+            storage.availableKeys.insert(CNContactImageDataAvailableKey)
+        }
     }
     public override var phoneNumbers: [CNLabeledValue<CNPhoneNumber>] {
         get { super.phoneNumbers }
-        set { storage.phoneNumbers = newValue }
+        set {
+            storage.phoneNumbers = newValue
+            storage.availableKeys.insert(CNContactPhoneNumbersKey)
+        }
     }
     public override var emailAddresses: [CNLabeledValue<NSString>] {
         get { super.emailAddresses }
-        set { storage.emailAddresses = newValue }
+        set {
+            storage.emailAddresses = newValue
+            storage.availableKeys.insert(CNContactEmailAddressesKey)
+        }
     }
     public override var postalAddresses: [CNLabeledValue<CNPostalAddress>] {
         get { super.postalAddresses }
-        set { storage.postalAddresses = newValue }
+        set {
+            storage.postalAddresses = newValue
+            storage.availableKeys.insert(CNContactPostalAddressesKey)
+        }
     }
     public override var dates: [CNLabeledValue<NSDateComponents>] {
         get { super.dates }
-        set { storage.dates = newValue }
+        set {
+            storage.dates = newValue
+            storage.availableKeys.insert(CNContactDatesKey)
+        }
     }
     public override var urlAddresses: [CNLabeledValue<NSString>] {
         get { super.urlAddresses }
-        set { storage.urlAddresses = newValue }
+        set {
+            storage.urlAddresses = newValue
+            storage.availableKeys.insert(CNContactUrlAddressesKey)
+        }
     }
     public override var contactRelations: [CNLabeledValue<CNContactRelation>] {
         get { super.contactRelations }
-        set { storage.contactRelations = newValue }
+        set {
+            storage.contactRelations = newValue
+            storage.availableKeys.insert(CNContactRelationsKey)
+        }
     }
     public override var socialProfiles: [CNLabeledValue<CNSocialProfile>] {
         get { super.socialProfiles }
-        set { storage.socialProfiles = newValue }
+        set {
+            storage.socialProfiles = newValue
+            storage.availableKeys.insert(CNContactSocialProfilesKey)
+        }
     }
     public override var instantMessageAddresses: [CNLabeledValue<CNInstantMessageAddress>] {
         get { super.instantMessageAddresses }
-        set { storage.instantMessageAddresses = newValue }
+        set {
+            storage.instantMessageAddresses = newValue
+            storage.availableKeys.insert(CNContactInstantMessageAddressesKey)
+        }
     }
 }

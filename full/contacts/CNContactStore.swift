@@ -633,13 +633,13 @@ open class CNContactStore: NSObject {
                 to: &working
             )
         case .updateContact(let contact):
-            guard working.contacts[contact.identifier] != nil else {
+            guard let existing = working.contacts[contact.identifier] else {
                 throw CNError(
                     .recordDoesNotExist,
                     userInfo: [CNErrorUserInfoAffectedRecordIdentifiersKey: [contact.identifier]]
                 )
             }
-            var storage = contact.storage
+            var storage = mergeUnfetched(existing: existing, incoming: contact.storage)
             try validate(storage)
             storage.availableKeys = Set(CNAllContactPropertyKeys())
             working.contacts[contact.identifier] = storage
@@ -726,6 +726,46 @@ open class CNContactStore: NSObject {
                 )
             }
         }
+    }
+
+    private func mergeUnfetched(existing: CNContactStorage, incoming: CNContactStorage) -> CNContactStorage {
+        var merged = incoming
+        func keep(_ key: String) -> Bool { !incoming.availableKeys.contains(key) }
+        if keep(CNContactTypeKey) { merged.contactType = existing.contactType }
+        if keep(CNContactNamePrefixKey) { merged.namePrefix = existing.namePrefix }
+        if keep(CNContactGivenNameKey) { merged.givenName = existing.givenName }
+        if keep(CNContactMiddleNameKey) { merged.middleName = existing.middleName }
+        if keep(CNContactFamilyNameKey) { merged.familyName = existing.familyName }
+        if keep(CNContactPreviousFamilyNameKey) { merged.previousFamilyName = existing.previousFamilyName }
+        if keep(CNContactNameSuffixKey) { merged.nameSuffix = existing.nameSuffix }
+        if keep(CNContactNicknameKey) { merged.nickname = existing.nickname }
+        if keep(CNContactOrganizationNameKey) { merged.organizationName = existing.organizationName }
+        if keep(CNContactDepartmentNameKey) { merged.departmentName = existing.departmentName }
+        if keep(CNContactJobTitleKey) { merged.jobTitle = existing.jobTitle }
+        if keep(CNContactPhoneticGivenNameKey) { merged.phoneticGivenName = existing.phoneticGivenName }
+        if keep(CNContactPhoneticMiddleNameKey) { merged.phoneticMiddleName = existing.phoneticMiddleName }
+        if keep(CNContactPhoneticFamilyNameKey) { merged.phoneticFamilyName = existing.phoneticFamilyName }
+        if keep(CNContactPhoneticOrganizationNameKey) { merged.phoneticOrganizationName = existing.phoneticOrganizationName }
+        if keep(CNContactBirthdayKey) { merged.birthday = existing.birthday }
+        if keep(CNContactNonGregorianBirthdayKey) { merged.nonGregorianBirthday = existing.nonGregorianBirthday }
+        if keep(CNContactNoteKey) { merged.note = existing.note }
+        if keep(CNContactImageDataKey) { merged.imageData = existing.imageData }
+        if keep(CNContactThumbnailImageDataKey) { merged.thumbnailImageData = existing.thumbnailImageData }
+        if keep(CNContactImageDataAvailableKey) { merged.imagePresent = existing.imagePresent }
+        if keep(CNContactPhoneNumbersKey) { merged.phoneNumbers = existing.phoneNumbers }
+        if keep(CNContactEmailAddressesKey) { merged.emailAddresses = existing.emailAddresses }
+        if keep(CNContactPostalAddressesKey) { merged.postalAddresses = existing.postalAddresses }
+        if keep(CNContactDatesKey) { merged.dates = existing.dates }
+        if keep(CNContactUrlAddressesKey) { merged.urlAddresses = existing.urlAddresses }
+        if keep(CNContactRelationsKey) { merged.contactRelations = existing.contactRelations }
+        if keep(CNContactSocialProfilesKey) { merged.socialProfiles = existing.socialProfiles }
+        if keep(CNContactInstantMessageAddressesKey) {
+            merged.instantMessageAddresses = existing.instantMessageAddresses
+        }
+        merged.unifiedIdentifiers = existing.unifiedIdentifiers.union(incoming.unifiedIdentifiers)
+        if merged.imageData != nil { merged.imagePresent = true }
+        if merged.thumbnailImageData == nil { merged.thumbnailImageData = merged.imageData }
+        return merged
     }
 
     private func writableContainer(_ identifier: String?) throws -> String {

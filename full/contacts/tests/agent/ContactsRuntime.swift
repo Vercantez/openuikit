@@ -751,16 +751,6 @@ expect(
     "CNPostalAddress nscoding"
 )
 
-let archivedLabeled = try! NSKeyedArchiver.archivedData(
-    withRootObject: CNLabeledValue(label: CNLabelHome, value: "a@b.c" as NSString),
-    requiringSecureCoding: true
-)
-let unarchivedLabeled = try! NSKeyedUnarchiver.unarchivedObject(
-    ofClass: CNLabeledValue<NSString>.self,
-    from: archivedLabeled
-)
-expect(unarchivedLabeled?.value as String? == "a@b.c", "CNLabeledValue nscoding")
-
 let fetchRequestArchive = try! NSKeyedArchiver.archivedData(withRootObject: request, requiringSecureCoding: true)
 let unarchivedFetch = try! NSKeyedUnarchiver.unarchivedObject(
     ofClass: CNContactFetchRequest.self,

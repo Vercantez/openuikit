@@ -66,8 +66,10 @@ first, build this module with those `-I/-L` paths, and execute
 Wave-1 left 532 implemented / 12 declared / 169 deferred. This depth pass
 finishes the public overlay against the pinned 714-ID corpus:
 
-- Implemented **713** / declared **0** / deferred **0** / not-applicable **1**
-  (`CNContact.id` Identifiable overlay is UUID, not ObjectIdentifier).
+- Implemented **712** / declared **1** / deferred **0** / not-applicable **1**
+  (`CNContact.id` Identifiable overlay is UUID, not ObjectIdentifier;
+  generic `CNLabeledValue` `init(coder:)` compiles but Linux cannot archive
+  that generic class).
 - Local directory store with `store.json`, reload SPI, and transactional
   `execute`.
 - Authorization `.notDetermined` → `.authorized` / `.denied`.
