@@ -74,4 +74,69 @@ final class UISearchControllerTests: XCTestCase {
         sc.isActive = false
         XCTAssertEqual(bar.searchOverlayHeight, 0)
     }
+
+    /// MEASURED /tmp/tabs-t2000-probe, iPhone SE 2x / iOS 26.1: assigning
+    /// `title` overwrites `tabBarItem.title` (plain VC "Search" → "Library").
+    func testTitleOverwritesTabBarItemTitle() {
+        let vc = UIViewController()
+        vc.tabBarItem = UITabBarItem(title: "Search", image: nil, tag: 0)
+        XCTAssertEqual(vc.tabBarItem?.title, "Search")
+        vc.title = "Library"
+        XCTAssertEqual(vc.title, "Library")
+        XCTAssertEqual(vc.tabBarItem?.title, "Library")
+        XCTAssertEqual(vc.navigationItem.title, "Library")
+    }
+
+    /// MEASURED same probe: `nav.tabBarItem = "Search"` then `child.title =
+    /// "Library"` copies onto the nav item even though the two items are
+    /// different objects. `navigationItem.title` alone does not.
+    func testNavChildTitleCopiesOntoNavTabBarItem() {
+        let child = UIViewController()
+        let nav = UINavigationController(rootViewController: child)
+        let img = UIImage(systemName: "calendar")
+        nav.tabBarItem = UITabBarItem(title: "Search", image: img, tag: 0)
+        XCTAssertFalse(nav.tabBarItem === child.tabBarItem)
+        XCTAssertEqual(nav.tabBarItem?.title, "Search")
+        child.title = "Library"
+        XCTAssertEqual(nav.tabBarItem?.title, "Library")
+        XCTAssertEqual(child.tabBarItem?.title, "Library")
+        XCTAssertFalse(nav.tabBarItem === child.tabBarItem)
+        XCTAssertTrue(nav.tabBarItem?.image === img)
+
+        let other = UIViewController()
+        let nav2 = UINavigationController(rootViewController: other)
+        nav2.tabBarItem = UITabBarItem(title: "Search", image: nil, tag: 0)
+        other.navigationItem.title = "Library"
+        XCTAssertEqual(nav2.tabBarItem?.title, "Search")
+        XCTAssertEqual(other.title, nil)
+    }
+
+    /// Tabs t200/t2000: after the child's viewDidLoad sets title, the bar
+    /// label is "Library" `[84, 623, 36, 12]`, not the "Search" assigned on
+    /// the nav item before the child loaded.
+    func testTabBarLabelRereadsItemTitle() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        final class Host: UIViewController {
+            override func viewDidLoad() {
+                super.viewDidLoad()
+                title = "Library"
+            }
+        }
+        let child = Host()
+        let nav = UINavigationController(rootViewController: child)
+        nav.tabBarItem = UITabBarItem(title: "Search", image: nil, tag: 0)
+        XCTAssertEqual(nav.tabBarItem?.title, "Search")
+        let tab = UITabBarController()
+        tab.viewControllers = [nav]
+        tab.view.frame = CGRect(x: 0, y: 0, width: 375, height: 667)
+        tab.view.layoutIfNeeded()
+        XCTAssertNotNil(child.navigationController)
+        XCTAssertEqual(child.title, "Library")
+        XCTAssertEqual(nav.tabBarItem?.title, "Library")
+        tab.tabBar.layoutIfNeeded()
+        XCTAssertEqual(tab.tabBar.itemViews.first?.titleLabel.text, "Library")
+    }
 }
