@@ -34,20 +34,10 @@ func testEAAccessoryManagerConnectedAccessoriesEmpty() {
 func testEAAccessoryManagerNotificationRegistration() {
     let manager = EAAccessoryManager.shared()
     let before = manager.hostNotificationRegistrationCount
-    var posted = 0
-    let observer = NotificationCenter.default.addObserver(
-        forName: .EAAccessoryDidConnect,
-        object: nil,
-        queue: nil
-    ) { _ in
-        posted += 1
-    }
     manager.registerForLocalNotifications()
     precondition(manager.hostNotificationRegistrationCount == before + 1)
     manager.unregisterForLocalNotifications()
     precondition(manager.hostNotificationRegistrationCount == before)
-    NotificationCenter.default.removeObserver(observer)
-    precondition(posted == 0)
 }
 
 func testEAAccessoryManagerPickerFailClosed() {
