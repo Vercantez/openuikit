@@ -117,10 +117,23 @@ open class WKBackForwardListItem: NSObject {
     public let title: String?
     public let initialURL: URL
 
-    internal init(url: URL, title: String?, initialURL: URL) {
+    /// Local document captured at commit. Host-only recorded items leave this
+    /// nil so `goBack` to a network URL stays fail-closed without an engine.
+    internal let portableHTML: String?
+    internal let portableMIME: String
+
+    internal init(
+        url: URL,
+        title: String?,
+        initialURL: URL,
+        portableHTML: String? = nil,
+        portableMIME: String = "text/html"
+    ) {
         self.url = url
         self.title = title
         self.initialURL = initialURL
+        self.portableHTML = portableHTML
+        self.portableMIME = portableMIME
         super.init()
     }
 }
@@ -174,11 +187,24 @@ open class WKBackForwardList: NSObject {
 
     /// Truncates the forward list and appends a committed item. History never
     /// grows from a fail-closed `load`; only a recorded commit mutates it.
-    internal func _portableRecordCommitted(url: URL, title: String?) {
+    internal func _portableRecordCommitted(
+        url: URL,
+        title: String?,
+        html: String? = nil,
+        mimeType: String = "text/html"
+    ) {
         if let index {
             items.removeSubrange((index + 1)...)
         }
-        items.append(WKBackForwardListItem(url: url, title: title, initialURL: url))
+        items.append(
+            WKBackForwardListItem(
+                url: url,
+                title: title,
+                initialURL: url,
+                portableHTML: html,
+                portableMIME: mimeType
+            )
+        )
         index = items.count - 1
     }
 

@@ -744,13 +744,14 @@ open class WKWebView: UIView {
             willUseInstantBack: false
         ) { allowed = $0 }
         guard allowed else { return nil }
+        let hasLocalDocument = item.portableHTML != nil
         return _beginNavigation(
             request: URLRequest(url: item.url),
             navigationType: .backForward,
             operation: operation,
-            html: nil,
-            mimeType: "text/html",
-            networkUnavailable: false,
+            html: item.portableHTML,
+            mimeType: item.portableMIME,
+            networkUnavailable: !hasLocalDocument && WKPortableIsNetworkURL(item.url),
             historyItem: item
         )
     }
@@ -782,12 +783,17 @@ open class WKWebView: UIView {
                 webView: self
             )
         )
-        if isDeliveringFailure && networkUnavailable {
+        if isDeliveringFailure {
+            // A nested load from `didFailProvisionalNavigation` installs a
+            // local error document without a second provisional cycle. The
+            // first-pass host runtime requires starts==1, failures==1, and
+            // no back-forward item for `about:portable-error`.
             _setObservedIfChanged(
                 \WKWebView.url, stringKey: "url", storage: &url, to: request.url
             )
+            let nestedTitle = html.flatMap(WKPortableHTMLTitle) ?? ""
             _setObservedIfChanged(
-                \WKWebView.title, stringKey: "title", storage: &title, to: ""
+                \WKWebView.title, stringKey: "title", storage: &title, to: nestedTitle
             )
             _setObservedIfChanged(
                 \WKWebView.estimatedProgress,
@@ -796,14 +802,18 @@ open class WKWebView: UIView {
                 to: 0
             )
             hasOnlySecureContent = false
+            portableDocumentHTML = html
+            portableDocumentMIME = mimeType
             _setObservedIfChanged(
                 \WKWebView.isLoading, stringKey: "isLoading", storage: &isLoading, to: false
             )
-            _portableLastError = WKError(
-                code: .unknown,
-                operation: operation,
-                requestedURL: request.url
-            )
+            if networkUnavailable {
+                _portableLastError = WKError(
+                    code: .unknown,
+                    operation: operation,
+                    requestedURL: request.url
+                )
+            }
             return navigation
         }
         var decided = false
@@ -1061,7 +1071,9 @@ open class WKWebView: UIView {
         } else {
             backForwardList._portableRecordCommitted(
                 url: committedURL,
-                title: parsedTitle
+                title: parsedTitle,
+                html: html,
+                mimeType: mimeType
             )
             _setObservedIfChanged(
                 \WKWebView.url, stringKey: "url", storage: &url, to: Optional(committedURL)

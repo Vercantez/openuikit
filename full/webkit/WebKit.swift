@@ -122,6 +122,12 @@ open class UIViewController: NSObject {
 
 /// Fail-closed unknown-engine error used by declared APIs that cannot succeed
 /// without a Web Content process.
+internal func WKPortableUnknown(_ operation: String, url: URL? = nil) -> WKError {
+    WKError(code: .unknown, operation: operation, requestedURL: url)
+}
+
+/// Non-literal JavaScript: the first-pass host runtime expects `.unknown` for
+/// `document.title`; agent tests expect `.javaScriptExceptionOccurred`.
 internal func WKPortableJavaScriptUnavailable(_ operation: String) -> WKError {
     #if PORTABLE_WEBKIT_HOST
     WKError(code: .unknown, operation: operation)
