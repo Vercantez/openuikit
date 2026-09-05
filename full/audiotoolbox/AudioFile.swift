@@ -634,6 +634,8 @@ public func AudioFileGetPropertyInfo(
         outDataSize?.pointee = 4
     case kAudioFilePropertyIsOptimized:
         outDataSize?.pointee = 4
+    case kAudioFilePropertyChannelLayout:
+        outDataSize?.pointee = 12
     default:
         return kAudioFileUnsupportedPropertyError
     }
@@ -691,6 +693,11 @@ public func AudioFileGetProperty(
     case kAudioFilePropertyIsOptimized:
         if let err = need(4) { return err }
         outPropertyData?.storeBytes(of: UInt32(1), as: UInt32.self)
+    case kAudioFilePropertyChannelLayout:
+        if let err = need(12) { return err }
+        if let outPropertyData {
+            atStoreChannelLayout(channels: file.format.mChannelsPerFrame, to: outPropertyData)
+        }
     default:
         return kAudioFileUnsupportedPropertyError
     }

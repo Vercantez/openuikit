@@ -98,16 +98,31 @@ public struct CAFFileHeader: Equatable, Hashable, Sendable {
 @frozen
 public struct CAFChunkHeader: Equatable, Hashable, Sendable {
     public var mChunkType: UInt32
-    public var mChunkSize: Int64
+    private var chunkSizeLo: UInt32
+    private var chunkSizeHi: UInt32
+
+    public var mChunkSize: Int64 {
+        get {
+            Int64(bitPattern: UInt64(chunkSizeLo) | (UInt64(chunkSizeHi) << 32))
+        }
+        set {
+            let bits = UInt64(bitPattern: newValue)
+            chunkSizeLo = UInt32(truncatingIfNeeded: bits)
+            chunkSizeHi = UInt32(truncatingIfNeeded: bits >> 32)
+        }
+    }
 
     public init() {
         mChunkType = 0
-        mChunkSize = 0
+        chunkSizeLo = 0
+        chunkSizeHi = 0
     }
 
     public init(mChunkType: UInt32, mChunkSize: Int64) {
         self.mChunkType = mChunkType
-        self.mChunkSize = mChunkSize
+        let bits = UInt64(bitPattern: mChunkSize)
+        chunkSizeLo = UInt32(truncatingIfNeeded: bits)
+        chunkSizeHi = UInt32(truncatingIfNeeded: bits >> 32)
     }
 }
 
@@ -221,6 +236,20 @@ public struct CAF_SMPTE_Time: Equatable, Hashable, Sendable {
         mSeconds = 0
         mFrames = 0
         mSubFrameSampleOffset = 0
+    }
+
+    public init(
+        mHours: Int8,
+        mMinutes: UInt8,
+        mSeconds: UInt8,
+        mFrames: UInt8,
+        mSubFrameSampleOffset: UInt32
+    ) {
+        self.mHours = mHours
+        self.mMinutes = mMinutes
+        self.mSeconds = mSeconds
+        self.mFrames = mFrames
+        self.mSubFrameSampleOffset = mSubFrameSampleOffset
     }
 }
 

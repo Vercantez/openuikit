@@ -23,9 +23,9 @@ c:@E@AUAudioMixRenderingStyle@kAudioMixRenderingStyle_Standard	deferred		Outside
 c:@E@AUAudioMixRenderingStyle@kAudioMixRenderingStyle_Studio	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@E@AUAudioMixRenderingStyle@kAudioMixRenderingStyle_StudioBackgroundStem	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@E@AUAudioMixRenderingStyle@kAudioMixRenderingStyle_StudioForegroundStem	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@E@AUAudioUnitBusType	declared	source:full/audiotoolbox/AudioUnitConstants.swift#AUAudioUnitBusType	Source signature present; behavior not independently asserted
-c:@E@AUAudioUnitBusType@AUAudioUnitBusTypeInput	declared	source:full/audiotoolbox/AudioUnitConstants.swift#input	Source signature present; behavior not independently asserted
-c:@E@AUAudioUnitBusType@AUAudioUnitBusTypeOutput	declared	source:full/audiotoolbox/AudioUnitConstants.swift#output	Source signature present; behavior not independently asserted
+c:@E@AUAudioUnitBusType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Exact constant payload asserted on Linux
+c:@E@AUAudioUnitBusType@AUAudioUnitBusTypeInput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Exact constant payload asserted on Linux
+c:@E@AUAudioUnitBusType@AUAudioUnitBusTypeOutput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Exact constant payload asserted on Linux
 c:@E@AUHostTransportStateFlags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@E@AUHostTransportStateFlags@AUHostTransportStateChanged	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@E@AUHostTransportStateFlags@AUHostTransportStateCycling	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -140,13 +140,13 @@ c:@E@AudioFileRegionFlags	declared	source:full/audiotoolbox/AudioFileProperties.
 c:@E@AudioFileRegionFlags@kAudioFileRegionFlag_LoopEnable	declared	source:full/audiotoolbox/CAFConstants.swift#loopEnable	Source signature present; behavior not independently asserted
 c:@E@AudioFileRegionFlags@kAudioFileRegionFlag_PlayBackward	declared	source:full/audiotoolbox/CAFConstants.swift#playBackward	Source signature present; behavior not independently asserted
 c:@E@AudioFileRegionFlags@kAudioFileRegionFlag_PlayForward	declared	source:full/audiotoolbox/CAFConstants.swift#playForward	Source signature present; behavior not independently asserted
-c:@E@AudioFileStreamParseFlags	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@E@AudioFileStreamParseFlags@kAudioFileStreamParseFlag_Discontinuity	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@E@AudioFileStreamPropertyFlags	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@E@AudioFileStreamPropertyFlags@kAudioFileStreamPropertyFlag_CacheProperty	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@E@AudioFileStreamPropertyFlags@kAudioFileStreamPropertyFlag_PropertyIsCached	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@E@AudioFileStreamSeekFlags	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@E@AudioFileStreamSeekFlags@kAudioFileStreamSeekFlag_OffsetIsEstimated	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@E@AudioFileStreamParseFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@E@AudioFileStreamParseFlags@kAudioFileStreamParseFlag_Discontinuity	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@E@AudioFileStreamPropertyFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@E@AudioFileStreamPropertyFlags@kAudioFileStreamPropertyFlag_CacheProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@E@AudioFileStreamPropertyFlags@kAudioFileStreamPropertyFlag_PropertyIsCached	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@E@AudioFileStreamSeekFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@E@AudioFileStreamSeekFlags@kAudioFileStreamSeekFlag_OffsetIsEstimated	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
 c:@E@AudioPanningMode	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@E@AudioPanningMode@kPanningMode_SoundField	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@E@AudioPanningMode@kPanningMode_VectorBasedPanning	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -231,9 +231,9 @@ c:@E@AudioUnitRenderActionFlags@kAudioUnitRenderAction_OutputIsSilence	declared	
 c:@E@AudioUnitRenderActionFlags@kAudioUnitRenderAction_PostRender	declared	source:full/audiotoolbox/AudioUnitProperties.swift#unitRenderAction_PostRender	Source signature present; behavior not independently asserted
 c:@E@AudioUnitRenderActionFlags@kAudioUnitRenderAction_PostRenderError	declared	source:full/audiotoolbox/AudioUnitProperties.swift#unitRenderAction_PostRenderError	Source signature present; behavior not independently asserted
 c:@E@AudioUnitRenderActionFlags@kAudioUnitRenderAction_PreRender	declared	source:full/audiotoolbox/AudioUnitProperties.swift#unitRenderAction_PreRender	Source signature present; behavior not independently asserted
-c:@E@CAFFormatFlags	declared	source:full/audiotoolbox/CAFConstants.swift#CAFFormatFlags	Source signature present; behavior not independently asserted
+c:@E@CAFFormatFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact constant payload asserted on Linux
 c:@E@CAFFormatFlags@kCAFLinearPCMFormatFlagIsFloat	declared	source:full/audiotoolbox/CAFConstants.swift#linearPCMFormatFlagIsFloat	Source signature present; behavior not independently asserted
-c:@E@CAFFormatFlags@kCAFLinearPCMFormatFlagIsLittleEndian	declared	source:full/audiotoolbox/CAFConstants.swift#linearPCMFormatFlagIsLittleEndian	Source signature present; behavior not independently asserted
+c:@E@CAFFormatFlags@kCAFLinearPCMFormatFlagIsLittleEndian	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact constant payload asserted on Linux
 c:@E@CAFRegionFlags	declared	source:full/audiotoolbox/CAFConstants.swift#CAFRegionFlags	Source signature present; behavior not independently asserted
 c:@E@CAFRegionFlags@kCAFRegionFlag_LoopEnable	declared	source:full/audiotoolbox/CAFConstants.swift#loopEnable	Source signature present; behavior not independently asserted
 c:@E@CAFRegionFlags@kCAFRegionFlag_PlayBackward	declared	source:full/audiotoolbox/CAFConstants.swift#playBackward	Source signature present; behavior not independently asserted
@@ -330,8 +330,8 @@ c:@Ea@kAUNBandEQParam_GlobalGain@kAUNBandEQParam_GlobalGain	deferred		Outside th
 c:@Ea@kAUNBandEQProperty_NumberOfBands@kAUNBandEQProperty_BiquadCoefficients	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@Ea@kAUNBandEQProperty_NumberOfBands@kAUNBandEQProperty_MaxNumberOfBands	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@Ea@kAUNBandEQProperty_NumberOfBands@kAUNBandEQProperty_NumberOfBands	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kAUNodeInteraction_Connection@kAUNodeInteraction_Connection	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kAUNodeInteraction_Connection@kAUNodeInteraction_InputCallback	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@kAUNodeInteraction_Connection@kAUNodeInteraction_Connection	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAUNodeInteraction_Connection@kAUNodeInteraction_InputCallback	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
 c:@Ea@kAUParameterListener_AnyParameter@kAUParameterListener_AnyParameter	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@Ea@kAUSamplerParam_Gain@kAUSamplerParam_CoarseTuning	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@Ea@kAUSamplerParam_Gain@kAUSamplerParam_FineTuning	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -648,42 +648,42 @@ c:@Ea@kAudioFilePropertyFileFormat@kAudioFilePropertyReserveDuration	implemented
 c:@Ea@kAudioFilePropertyFileFormat@kAudioFilePropertyRestrictsRandomAccess	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioFilePropertyIDsExact	Exact constant payload asserted on Linux
 c:@Ea@kAudioFilePropertyFileFormat@kAudioFilePropertySourceBitDepth	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioFilePropertyIDsExact	Exact constant payload asserted on Linux
 c:@Ea@kAudioFilePropertyFileFormat@kAudioFilePropertyUseAudioTrack	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioFilePropertyIDsExact	Exact constant payload asserted on Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_BadPropertySize	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_DataUnavailable	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_DiscontinuityCantRecover	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_IllegalOperation	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_InvalidFile	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_InvalidPacketOffset	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_NotOptimized	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnspecifiedError	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnsupportedDataFormat	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnsupportedFileType	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnsupportedProperty	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_ValueUnknown	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_AudioDataByteCount	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_AudioDataPacketCount	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_AverageBytesPerPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_BitRate	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_ByteToPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_ChannelLayout	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_DataFormat	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_DataOffset	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_FileFormat	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_FormatList	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_FrameToPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_InfoDictionary	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_MagicCookieData	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_MaximumPacketSize	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_NextIndependentPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketSizeUpperBound	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketTableInfo	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToByte	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToDependencyInfo	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToFrame	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToRollDistance	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PreviousIndependentPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_ReadyToProducePackets	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_RestrictsRandomAccess	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_BadPropertySize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_DataUnavailable	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_DiscontinuityCantRecover	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_IllegalOperation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_InvalidFile	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_InvalidPacketOffset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_NotOptimized	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnspecifiedError	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnsupportedDataFormat	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnsupportedFileType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_UnsupportedProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamError_UnsupportedFileType@kAudioFileStreamError_ValueUnknown	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_AudioDataByteCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_AudioDataPacketCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_AverageBytesPerPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_BitRate	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_ByteToPacket	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_ChannelLayout	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_DataFormat	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_DataOffset	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_FileFormat	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileAIFFAndCAFRoundTrip	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_FormatList	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_FrameToPacket	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_InfoDictionary	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_MagicCookieData	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_MaximumPacketSize	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_NextIndependentPacket	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketSizeUpperBound	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketTableInfo	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToByte	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToDependencyInfo	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToFrame	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PacketToRollDistance	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_PreviousIndependentPacket	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_ReadyToProducePackets	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@Ea@kAudioFileStreamProperty_ReadyToProducePackets@kAudioFileStreamProperty_RestrictsRandomAccess	unavailable		PCM AudioFileStream host does not parse packet-table, cookie, or random-access dependency properties
 c:@Ea@kAudioFileUnspecifiedError@kAudioFileBadPropertySizeError	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog	Exact constant payload asserted on Linux
 c:@Ea@kAudioFileUnspecifiedError@kAudioFileDoesNotAllow64BitDataSizeError	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog	Exact constant payload asserted on Linux
 c:@Ea@kAudioFileUnspecifiedError@kAudioFileEndOfFileError	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog	Exact constant payload asserted on Linux
@@ -1373,33 +1373,33 @@ c:@F@AUEventListenerCreate	deferred		Outside the sealed canonical core; no hones
 c:@F@AUEventListenerCreateWithDispatchQueue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AUEventListenerNotify	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AUEventListenerRemoveEventType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@F@AUGraphAddNode	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphAddRenderNotify	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphClearConnections	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphClose	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphConnectNodeInput	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphCountNodeInteractions	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphDisconnectNodeInput	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetCPULoad	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetIndNode	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetInteractionInfo	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetMaxCPULoad	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetNodeCount	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetNodeInteractions	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphGetNumberOfInteractions	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphInitialize	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphIsInitialized	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphIsOpen	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphIsRunning	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphNodeInfo	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphOpen	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphRemoveNode	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphRemoveRenderNotify	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphSetNodeInputCallback	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphStart	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphStop	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphUninitialize	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AUGraphUpdate	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@F@AUGraphAddNode	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphAddRenderNotify	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphAddRenderNotifyInert	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphClearConnections	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphClose	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphConnectNodeInput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphCountNodeInteractions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphDisconnectNodeInput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetCPULoad	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetIndNode	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetInteractionInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetMaxCPULoad	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetNodeCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetNodeInteractions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphGetNumberOfInteractions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphInitialize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphIsInitialized	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphIsOpen	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphIsRunning	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphNodeInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphOpen	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphRemoveNode	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphRemoveRenderNotify	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphAddRenderNotifyInert	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphSetNodeInputCallback	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphStart	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphStop	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphUninitialize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
+c:@F@AUGraphUpdate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
 c:@F@AUListenerAddParameter	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AUListenerCreate	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AUListenerCreateWithDispatchQueue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1438,9 +1438,9 @@ c:@F@AudioComponentRegister	declared	source:full/audiotoolbox/AudioComponent.swi
 c:@F@AudioComponentValidate	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentValidate	Source signature present; behavior not independently asserted
 c:@F@AudioComponentValidateWithResults	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioConverterConvertBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
-c:@F@AudioConverterConvertComplexBuffer	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioConverterConvertComplexBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioConverterConvertComplexBuffer	Linux runtime asserted in wave-2 depth tests
 c:@F@AudioConverterDispose	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
-c:@F@AudioConverterFillComplexBuffer	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioConverterFillComplexBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioConverterFillComplexBuffer	Linux runtime asserted in wave-2 depth tests
 c:@F@AudioConverterFillComplexBufferRealtimeSafe	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioConverterFillComplexBufferWithPacketDependencies	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioConverterGetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
@@ -1472,13 +1472,13 @@ c:@F@AudioFileReadPackets	implemented	test:full/audiotoolbox/tests/agent/AudioTo
 c:@F@AudioFileRemoveUserData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioFileSetProperty	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioFileSetUserData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@F@AudioFileStreamClose	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AudioFileStreamGetProperty	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AudioFileStreamGetPropertyInfo	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AudioFileStreamOpen	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AudioFileStreamParseBytes	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AudioFileStreamSeek	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@F@AudioFileStreamSetProperty	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@F@AudioFileStreamClose	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@F@AudioFileStreamGetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@F@AudioFileStreamGetPropertyInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@F@AudioFileStreamOpen	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@F@AudioFileStreamParseBytes	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@F@AudioFileStreamSeek	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@F@AudioFileStreamSetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
 c:@F@AudioFileWriteBytes	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioFileWAVRoundTrip	Linux runtime asserted in depth/core tests
 c:@F@AudioFileWritePackets	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioFileWAVRoundTrip	Linux runtime asserted in depth/core tests
 c:@F@AudioFileWritePacketsWithDependencies	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1488,7 +1488,7 @@ c:@F@AudioOutputUnitGetHostIcon	deferred		Outside the sealed canonical core; no 
 c:@F@AudioOutputUnitPublish	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioOutputUnitStart	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioUnitHardwareStartFailClosed	Linux runtime asserted in depth/core tests
 c:@F@AudioOutputUnitStop	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioUnitHardwareStartFailClosed	Linux runtime asserted in depth/core tests
-c:@F@AudioQueueAddPropertyListener	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@F@AudioQueueAddPropertyListener	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioQueuePropertyListenerAndSink	Linux runtime asserted in wave-2 depth tests
 c:@F@AudioQueueAllocateBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueAllocateBufferWithPacketDescriptions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueConcurrentAllocate	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueCreateTimeline	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1516,7 +1516,7 @@ c:@F@AudioQueueProcessingTapDispose	deferred		Outside the sealed canonical core;
 c:@F@AudioQueueProcessingTapGetQueueTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioQueueProcessingTapGetSourceAudio	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioQueueProcessingTapNew	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@F@AudioQueueRemovePropertyListener	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@F@AudioQueueRemovePropertyListener	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioQueuePropertyListenerAndSink	Linux runtime asserted in wave-2 depth tests
 c:@F@AudioQueueReset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueSetOfflineRenderFormat	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioQueueSetParameter	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1556,7 +1556,7 @@ c:@F@CAShow	deferred		Outside the sealed canonical core; no honest runtime or so
 c:@F@CAShowFile	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@CopyInstrumentInfoFromSoundBank	declared	source:full/audiotoolbox/AudioServices.swift#CopyInstrumentInfoFromSoundBank	Source signature present; behavior not independently asserted
 c:@F@CopyNameFromSoundBank	declared	source:full/audiotoolbox/AudioServices.swift#CopyNameFromSoundBank	Source signature present; behavior not independently asserted
-c:@F@DisposeAUGraph	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@F@DisposeAUGraph	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
 c:@F@DisposeMusicEventIterator	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testMusicEventIteratorOrderAndSeek	Linux runtime asserted in depth/core tests
 c:@F@DisposeMusicPlayer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
 c:@F@DisposeMusicSequence	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
@@ -1645,7 +1645,7 @@ c:@F@MusicTrackNewUserEvent	deferred		Outside the sealed canonical core; no hone
 c:@F@MusicTrackSetDestMIDIEndpoint	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@MusicTrackSetDestNode	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@MusicTrackSetProperty	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@F@NewAUGraph	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@F@NewAUGraph	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
 c:@F@NewMusicEventIterator	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testMusicEventIteratorOrderAndSeek	Linux runtime asserted in depth/core tests
 c:@F@NewMusicPlayer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
 c:@F@NewMusicSequence	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
@@ -1680,9 +1680,9 @@ c:@S@AUMIDIEventList@FI@reserved	deferred		Outside the sealed canonical core; no
 c:@S@AUMIDIOutputCallbackStruct	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AUMIDIOutputCallbackStruct@FI@midiOutputCallback	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AUMIDIOutputCallbackStruct@FI@userData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUNodeInteraction	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AUNodeInteraction	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 c:@S@AUNodeInteraction@FI@nodeInteraction	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUNodeInteraction@FI@nodeInteractionType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AUNodeInteraction@FI@nodeInteractionType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 c:@S@AUNodeRenderCallback	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AUNodeRenderCallback@FI@cback	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AUNodeRenderCallback@FI@destInputNumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1712,9 +1712,9 @@ c:@S@AURecordedParameterEvent	deferred		Outside the sealed canonical core; no ho
 c:@S@AURecordedParameterEvent@FI@address	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AURecordedParameterEvent@FI@hostTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AURecordedParameterEvent@FI@value	declared	source:full/audiotoolbox/AudioUnitConstants.swift#value	Source signature present; behavior not independently asserted
-c:@S@AURenderCallbackStruct	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AURenderCallbackStruct@FI@inputProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AURenderCallbackStruct@FI@inputProcRefCon	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AURenderCallbackStruct	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
+c:@S@AURenderCallbackStruct@FI@inputProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
+c:@S@AURenderCallbackStruct@FI@inputProcRefCon	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 c:@S@AURenderEventHeader	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AURenderEventHeader@FI@eventSampleTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AURenderEventHeader@FI@eventType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1921,27 +1921,27 @@ c:@S@CABarBeatTime@FI@beat	declared	source:full/audiotoolbox/MusicSequence.swift
 c:@S@CABarBeatTime@FI@reserved	declared	source:full/audiotoolbox/MusicSequence.swift#reserved	Source signature present; behavior not independently asserted
 c:@S@CABarBeatTime@FI@subbeat	declared	source:full/audiotoolbox/MusicSequence.swift#subbeat	Source signature present; behavior not independently asserted
 c:@S@CABarBeatTime@FI@subbeatDivisor	declared	source:full/audiotoolbox/MusicSequence.swift#subbeatDivisor	Source signature present; behavior not independently asserted
-c:@S@CAFAudioDescription	declared	source:full/audiotoolbox/CAFConstants.swift#CAFAudioDescription	Source signature present; behavior not independently asserted
-c:@S@CAFAudioDescription@FI@mBitsPerChannel	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFAudioDescription@FI@mBytesPerPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFAudioDescription@FI@mChannelsPerFrame	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFAudioDescription@FI@mFormatFlags	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFAudioDescription@FI@mFormatID	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFAudioDescription@FI@mFramesPerPacket	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFAudioDescription@FI@mSampleRate	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@S@CAFAudioDescription	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mBitsPerChannel	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mBytesPerPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mChannelsPerFrame	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mFormatFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mFormatID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mFramesPerPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFAudioDescription@FI@mSampleRate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 c:@S@CAFAudioFormatListItem	declared	source:full/audiotoolbox/CAFConstants.swift#CAFAudioFormatListItem	Source signature present; behavior not independently asserted
 c:@S@CAFAudioFormatListItem@FI@mChannelLayoutTag	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 c:@S@CAFAudioFormatListItem@FI@mFormat	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFChunkHeader	declared	source:full/audiotoolbox/CAFConstants.swift#CAFChunkHeader	Source signature present; behavior not independently asserted
-c:@S@CAFChunkHeader@FI@mChunkSize	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFChunkHeader@FI@mChunkType	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@S@CAFChunkHeader	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFChunkHeader@FI@mChunkSize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFChunkHeader@FI@mChunkType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 c:@S@CAFDataChunk	declared	source:full/audiotoolbox/CAFConstants.swift#CAFDataChunk	Source signature present; behavior not independently asserted
 c:@S@CAFDataChunk@FI@mData	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 c:@S@CAFDataChunk@FI@mEditCount	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFFileHeader	declared	source:full/audiotoolbox/CAFConstants.swift#CAFFileHeader	Source signature present; behavior not independently asserted
-c:@S@CAFFileHeader@FI@mFileFlags	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFFileHeader@FI@mFileType	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAFFileHeader@FI@mFileVersion	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@S@CAFFileHeader	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFFileHeader@FI@mFileFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFFileHeader@FI@mFileType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAFFileHeader@FI@mFileVersion	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 c:@S@CAFInfoStrings	declared	source:full/audiotoolbox/CAFConstants.swift#CAFInfoStrings	Source signature present; behavior not independently asserted
 c:@S@CAFInfoStrings@FI@mNumEntries	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 c:@S@CAFInstrumentChunk	declared	source:full/audiotoolbox/CAFConstants.swift#CAFInstrumentChunk	Source signature present; behavior not independently asserted
@@ -2001,12 +2001,12 @@ c:@S@CAFStrings@FI@mNumEntries	unavailable		Hardware, codec, AUGraph, MusicDevic
 c:@S@CAFStrings@FI@mStringsIDs	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 c:@S@CAFUMIDChunk	declared	source:full/audiotoolbox/CAFConstants.swift#CAFUMIDChunk	Source signature present; behavior not independently asserted
 c:@S@CAFUMIDChunk@FI@mBytes	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAF_SMPTE_Time	declared	source:full/audiotoolbox/CAFConstants.swift#CAF_SMPTE_Time	Source signature present; behavior not independently asserted
-c:@S@CAF_SMPTE_Time@FI@mFrames	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAF_SMPTE_Time@FI@mHours	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAF_SMPTE_Time@FI@mMinutes	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAF_SMPTE_Time@FI@mSeconds	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@S@CAF_SMPTE_Time@FI@mSubFrameSampleOffset	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@S@CAF_SMPTE_Time	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAF_SMPTE_Time@FI@mFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAF_SMPTE_Time@FI@mHours	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAF_SMPTE_Time@FI@mMinutes	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAF_SMPTE_Time@FI@mSeconds	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+c:@S@CAF_SMPTE_Time@FI@mSubFrameSampleOffset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 c:@S@CAF_UUID_ChunkHeader	declared	source:full/audiotoolbox/CAFConstants.swift#CAF_UUID_ChunkHeader	Source signature present; behavior not independently asserted
 c:@S@CAF_UUID_ChunkHeader@FI@mHeader	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 c:@S@CAF_UUID_ChunkHeader@FI@mUUID	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
@@ -2126,7 +2126,7 @@ c:@T@AUParameterObserver	deferred		Outside the sealed canonical core; no honest 
 c:@T@AUParameterObserverToken	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AUParameterRecordingObserver	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AURenderBlock	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@T@AURenderCallback	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@T@AURenderCallback	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
 c:@T@AURenderObserver	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AURenderPullInputBlock	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AUScheduleMIDIEventBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2149,7 +2149,7 @@ c:@T@AudioComponent	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioCo
 c:@T@AudioComponentFactoryFunction	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentFactoryFunction	Source signature present; behavior not independently asserted
 c:@T@AudioComponentInstance	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioComponentInstance	Source signature present; behavior not independently asserted
 c:@T@AudioComponentMethod	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioComponentMethod	Source signature present; behavior not independently asserted
-c:@T@AudioConverterComplexInputDataProc	declared	source:full/audiotoolbox/AudioConverterProperties.swift#AudioConverterComplexInputDataProc	Source signature present; behavior not independently asserted
+c:@T@AudioConverterComplexInputDataProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioConverterFillComplexBuffer	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioConverterComplexInputDataProcRealtimeSafe	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AudioConverterInputDataProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioConverterPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioConverterPropertyID	Source signature present; behavior not independently asserted
@@ -2158,8 +2158,8 @@ c:@T@AudioFileID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFileI
 c:@T@AudioFilePropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFilePropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioFileStreamID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFileStreamID	Source signature present; behavior not independently asserted
 c:@T@AudioFileStreamPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFileStreamPropertyID	Source signature present; behavior not independently asserted
-c:@T@AudioFileStream_PacketsProc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-c:@T@AudioFileStream_PropertyListenerProc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+c:@T@AudioFileStream_PacketsProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
+c:@T@AudioFileStream_PropertyListenerProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioFileTypeID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFileTypeID	Source signature present; behavior not independently asserted
 c:@T@AudioFile_GetSizeProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_GetSizeProc	Source signature present; behavior not independently asserted
 c:@T@AudioFile_ReadProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_ReadProc	Source signature present; behavior not independently asserted
@@ -2178,7 +2178,7 @@ c:@T@AudioQueueParameterValue	declared	source:full/audiotoolbox/AudioToolbox.swi
 c:@T@AudioQueueProcessingTapCallback	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AudioQueueProcessingTapRef	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioQueueProcessingTapRef	Source signature present; behavior not independently asserted
 c:@T@AudioQueuePropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioQueuePropertyID	Source signature present; behavior not independently asserted
-c:@T@AudioQueuePropertyListenerProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioQueuePropertyListenerProc	Source signature present; behavior not independently asserted
+c:@T@AudioQueuePropertyListenerProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioQueuePropertyListenerAndSink	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioQueueRef	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioQueueRef	Source signature present; behavior not independently asserted
 c:@T@AudioQueueTimelineRef	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioQueueTimelineRef	Source signature present; behavior not independently asserted
 c:@T@AudioServicesPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioServicesPropertyID	Source signature present; behavior not independently asserted
@@ -2321,8 +2321,8 @@ c:@macro@kMusicTimeStamp_EndOfTrack	deferred		Outside the sealed canonical core;
 c:objc(cs)AUAudioUnit	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(cm)instantiateWithComponentDescription:options:completionHandler:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(cm)registerSubclass:asComponentDescription:name:version:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)allocateRenderResourcesAndReturnError:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)deallocateRenderResources	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(im)allocateRenderResourcesAndReturnError:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(im)deallocateRenderResources	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)deleteUserPreset:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)disableProfile:cable:onChannel:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)enableProfile:cable:onChannel:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2333,12 +2333,12 @@ c:objc(cs)AUAudioUnit(im)parametersForOverviewWithCount:	deferred		Outside the s
 c:objc(cs)AUAudioUnit(im)presetStateFor:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)profileStateForCable:channel:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)removeRenderObserver:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)reset	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(im)reset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)saveUserPreset:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)setRenderResourcesAllocated:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)shouldChangeToFormat:forBus:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)startHardwareAndReturnError:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)stopHardware	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(im)startHardwareAndReturnError:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(im)stopHardware	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)tokenByAddingRenderObserver:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)AudioUnitMIDIProtocol	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)MIDIOutputBufferSizeHint	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2346,51 +2346,51 @@ c:objc(cs)AUAudioUnit(py)MIDIOutputEventBlock	deferred		Outside the sealed canon
 c:objc(cs)AUAudioUnit(py)MIDIOutputEventListBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)MIDIOutputNames	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)allParameterValues	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)audioUnitName	declared	source:full/audiotoolbox/AUAudioUnit.swift#audioUnitName	Source signature present; behavior not independently asserted
-c:objc(cs)AUAudioUnit(py)audioUnitShortName	declared	source:full/audiotoolbox/AUAudioUnit.swift#audioUnitShortName	Source signature present; behavior not independently asserted
-c:objc(cs)AUAudioUnit(py)canPerformInput	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)canPerformOutput	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)audioUnitName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)audioUnitShortName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)canPerformInput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)canPerformOutput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)canProcessInPlace	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)channelCapabilities	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)channelMap	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)component	declared	source:full/audiotoolbox/AUAudioUnit.swift#component	Source signature present; behavior not independently asserted
-c:objc(cs)AUAudioUnit(py)componentDescription	declared	source:full/audiotoolbox/AUAudioUnit.swift#componentDescription	Source signature present; behavior not independently asserted
+c:objc(cs)AUAudioUnit(py)componentDescription	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)componentName	declared	source:full/audiotoolbox/AUAudioUnit.swift#componentName	Source signature present; behavior not independently asserted
-c:objc(cs)AUAudioUnit(py)componentVersion	declared	source:full/audiotoolbox/AUAudioUnit.swift#componentVersion	Source signature present; behavior not independently asserted
+c:objc(cs)AUAudioUnit(py)componentVersion	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)contextName	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)currentPreset	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)factoryPresets	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)fullState	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)fullStateForDocument	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)hostMIDIProtocol	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)inputBusses	declared	source:full/audiotoolbox/AUAudioUnit.swift#inputBusses	Source signature present; behavior not independently asserted
+c:objc(cs)AUAudioUnit(py)inputBusses	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)inputEnabled	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)inputHandler	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)internalRenderBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)latency	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)manufacturerName	declared	source:full/audiotoolbox/AUAudioUnit.swift#manufacturerName	Source signature present; behavior not independently asserted
-c:objc(cs)AUAudioUnit(py)maximumFramesToRender	declared	source:full/audiotoolbox/AUAudioUnit.swift#maximumFramesToRender	Source signature present; behavior not independently asserted
+c:objc(cs)AUAudioUnit(py)latency	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)manufacturerName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)maximumFramesToRender	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)migrateFromPlugin	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)musicDeviceOrEffect	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 c:objc(cs)AUAudioUnit(py)musicalContextBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)outputBusses	declared	source:full/audiotoolbox/AUAudioUnit.swift#outputBusses	Source signature present; behavior not independently asserted
-c:objc(cs)AUAudioUnit(py)outputEnabled	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)outputBusses	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)outputEnabled	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)outputProvider	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)parameterTree	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)parameterTree	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)profileChangedBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)providesUserInterface	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)renderBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)renderQuality	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)renderResourcesAllocated	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)renderingOffline	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)running	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)renderResourcesAllocated	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)renderingOffline	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
+c:objc(cs)AUAudioUnit(py)running	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)scheduleMIDIEventBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)scheduleMIDIEventListBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)scheduleParameterBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)shouldBypassEffect	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)supportsMPE	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)supportsUserPresets	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)tailTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)tailTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)transportStateBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)userPresets	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)virtualMIDICableCount	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2440,9 +2440,9 @@ c:objc(cs)AUParameter(py)unit	deferred		Outside the sealed canonical core; no ho
 c:objc(cs)AUParameter(py)unitName	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUParameter(py)value	declared	source:full/audiotoolbox/AudioUnitConstants.swift#value	Source signature present; behavior not independently asserted
 c:objc(cs)AUParameter(py)valueStrings	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUParameterGroup	declared	source:full/audiotoolbox/AUAudioUnit.swift#AUParameterGroup	Source signature present; behavior not independently asserted
+c:objc(cs)AUParameterGroup	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUParameterGroup(py)allParameters	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUParameterGroup(py)children	declared	source:full/audiotoolbox/AUAudioUnit.swift#children	Source signature present; behavior not independently asserted
+c:objc(cs)AUParameterGroup(py)children	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUParameterNode	declared	source:full/audiotoolbox/AUAudioUnit.swift#AUParameterNode	Source signature present; behavior not independently asserted
 c:objc(cs)AUParameterNode(im)displayNameWithLength:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUParameterNode(im)removeParameterObserver:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2457,7 +2457,7 @@ c:objc(cs)AUParameterNode(py)implementorValueFromStringCallback	deferred		Outsid
 c:objc(cs)AUParameterNode(py)implementorValueObserver	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUParameterNode(py)implementorValueProvider	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUParameterNode(py)keyPath	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUParameterTree	declared	source:full/audiotoolbox/AUAudioUnit.swift#AUParameterTree	Source signature present; behavior not independently asserted
+c:objc(cs)AUParameterTree	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUParameterTree(cm)createGroupFromTemplate:identifier:name:addressOffset:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUParameterTree(cm)createGroupTemplate:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUParameterTree(cm)createGroupWithIdentifier:name:children:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2591,15 +2591,15 @@ s:So13AURenderEventV9parameterABSo011AUParameterB0V_tcfc	deferred		Outside the s
 s:So13AURenderEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So13CABarBeatTimeV3bar4beat7subbeat0F7Divisor8reservedABs5Int32V_s6UInt16VA3Ktcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So13CABarBeatTimeVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So13CAFFileHeaderV9mFileType01mC7Version01mC5FlagsABs6UInt32V_s6UInt16VAItcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-s:So13CAFFileHeaderVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So13CAFFileHeaderV9mFileType01mC7Version01mC5FlagsABs6UInt32V_s6UInt16VAItcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+s:So13CAFFileHeaderVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 s:So13MIDIMetaEventV04metaB4Type7unused17unused27unused310dataLength0H0ABs5UInt8V_A3Js6UInt32VAJtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So13MIDIMetaEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So14AudioFileFlagsV8rawValueABs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So14AudioUnitEventV01mC4Type9mArgumentABSo0abcD0V_AB017__Unnamed_union_mE0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So14AudioUnitEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So14CAFChunkHeaderV10mChunkType01mC4SizeABs6UInt32V_s5Int64Vtcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-s:So14CAFChunkHeaderVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So14CAFChunkHeaderV10mChunkType01mC4SizeABs6UInt32V_s5Int64Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+s:So14CAFChunkHeaderVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 s:So14CAFFormatFlagsV8rawValueABs6UInt32V_tcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 s:So14CAFInfoStringsV11mNumEntriesABs6UInt32V_tcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 s:So14CAFInfoStringsVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
@@ -2608,8 +2608,8 @@ s:So14CAFMarkerChunkVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, 
 s:So14CAFRegionChunkV15mSMPTE_TimeType14mNumberRegions01mG0ABs6UInt32V_AGSo0A0Vtcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 s:So14CAFRegionChunkVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 s:So14CAFRegionFlagsV8rawValueABs6UInt32V_tcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-s:So14CAF_SMPTE_TimeV6mHours8mMinutes8mSeconds7mFrames21mSubFrameSampleOffsetABs4Int8V_A3Is6UInt32Vtcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-s:So14CAF_SMPTE_TimeVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So14CAF_SMPTE_TimeV6mHours8mMinutes8mSeconds7mFrames21mSubFrameSampleOffsetABs4Int8V_A3Is6UInt32Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+s:So14CAF_SMPTE_TimeVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 s:So14ParameterEventV11parameterID5scope7element5valueABs6UInt32V_A2HSftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So14ParameterEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So15AUMIDIEventListV4next15eventSampleTime0D4Type8reserved5cable0dB0ABSpySo13AURenderEventVGSg_s5Int64VSo0jkG0Vs5UInt8VARSo09MIDIEventB0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2634,7 +2634,7 @@ s:So16CAFOverviewChunkVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice
 s:So16HostCallbackInfoV12hostUserData16beatAndTempoProc019musicalTimeLocationJ0014transportStateJ00nO5Proc2ABSvSg_s5Int32VAH_SpySdGSgALtXCSgAjH_Spys6UInt32VGSgSpySfGSgAqLtXCSgAjH_Spy6Darwin0S7BooleanVGSgAyly2LtXCSgAjH_A3yly2LtXCSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So16HostCallbackInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So17AUNodeInteractionV04nodeB4Type0cB0ABs6UInt32V_AB016__Unnamed_union_cB0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So17AUNodeInteractionVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So17AUNodeInteractionVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 s:So17AURenderEventTypeV8rawValueABSgs5UInt8V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So17AudioUnitPropertyV01maB001mC2ID6mScope8mElementABs13OpaquePointerV_s6UInt32VA2Jtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So17CAFOverviewSampleV9mMinValue04mMaxD0ABs5Int16V_AFtcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
@@ -2665,8 +2665,8 @@ s:So19AudioFileRegionListV15mSMPTE_TimeType14mNumberRegions01mI0ABs6UInt32V_AGSo
 s:So19AudioFileRegionListVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19AudioUnitConnectionV06sourceaB00D12OutputNumber09destInputF0ABs13OpaquePointerVSg_s6UInt32VAJtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19AudioUnitConnectionVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19CAFAudioDescriptionV11mSampleRate9mFormatID01mE5Flags15mBytesPerPacket07mFramesiJ009mChannelsI5Frame05mBitsI7ChannelABSd_s6UInt32VSo09CAFFormatG0VA4Ktcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-s:So19CAFAudioDescriptionVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So19CAFAudioDescriptionV11mSampleRate9mFormatID01mE5Flags15mBytesPerPacket07mFramesiJ009mChannelsI5Frame05mBitsI7ChannelABSd_s6UInt32VSo09CAFFormatG0VA4Ktcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
+s:So19CAFAudioDescriptionVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 s:So19ExtendedNoteOnEventV12instrumentID05groupF08duration14extendedParamsABs6UInt32V_AHSfSo011MusicDevicebJ0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19ExtendedNoteOnEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19MixerDistanceParamsV010mReferenceB004mMaxB001mE11AttenuationABSf_S2ftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2689,7 +2689,7 @@ s:So20CAF_UUID_ChunkHeaderVABycfc	unavailable		Hardware, codec, AUGraph, MusicDe
 s:So21AudioConverterOptionsV8rawValueABs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So21MusicDeviceNoteParamsV8argCount6mPitch9mVelocity9mControlsABs6UInt32V_S2fSo0cD12ControlValueVtcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 s:So21MusicDeviceNoteParamsVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
-s:So22AURenderCallbackStructV9inputProc0dE6RefConABs5Int32VSv_SpySo26AudioUnitRenderActionFlagsVGSPySo0I9TimeStampVGs6UInt32VANSpySo0I10BufferListVGSgtXCSg_SvSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So22AURenderCallbackStructV9inputProc0dE6RefConABs5Int32VSv_SpySo26AudioUnitRenderActionFlagsVGSPySo0I9TimeStampVGs6UInt32VANSpySo0I10BufferListVGSgtXCSg_SvSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 s:So22AURenderCallbackStructVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So22AudioUnitMeterClippingV22peakValueSinceLastCall11sawInfinity0J10NotANumberABSf_6Darwin0N7BooleanVAHtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So22AudioUnitMeterClippingVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2721,7 +2721,7 @@ s:So24AUSpatialMixerOutputTypeV8rawValueABSgs6UInt32V_tcfc	deferred		Outside the
 s:So24AUSpatialMixerSourceModeV8rawValueABSgs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So24AudioFilePacketTableInfoV18mNumberValidFrames08mPrimingH0010mRemainderH0ABs5Int64V_s5Int32VAItcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So24AudioFilePacketTableInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So24AudioFileStreamSeekFlagsV8rawValueABs6UInt32V_tcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So24AudioFileStreamSeekFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
 s:So24AudioFileTypeAndFormatIDV01mbC001meF0ABs6UInt32V_AFtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So24AudioFileTypeAndFormatIDVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So24AudioQueueParameterEventV3mID6mValueABs6UInt32V_Sftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2736,7 +2736,7 @@ s:So25AudioCodecMagicCookieInfoV01mcD4Size01mcD0ABs6UInt32V_SVSgtcfc	unavailable
 s:So25AudioCodecMagicCookieInfoVABycfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
 s:So25AudioComponentDescriptionV13componentType0d3SubE00D12Manufacturer0D5Flags0dH4MaskABs6UInt32V_A4Itcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So25AudioComponentDescriptionVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So25AudioFileStreamParseFlagsV8rawValueABs6UInt32V_tcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So25AudioFileStreamParseFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
 s:So25AudioQueueLevelMeterStateV13mAveragePower05mPeakG0ABSf_Sftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So25AudioQueueLevelMeterStateVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So25AudioUnitParameterOptionsV8rawValueABs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2755,7 +2755,7 @@ s:So27AudioQueueChannelAssignmentV10mDeviceUID01mC6NumberABs9UnmanagedVySo11CFSt
 s:So27AudioUnitRemoteControlEventV8rawValueABSgs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So28AUSpatialMixerRenderingFlagsV8rawValueABs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So28AUVoiceIOSpeechActivityEventV8rawValueABSgs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So28AudioFileStreamPropertyFlagsV8rawValueABs6UInt32V_tcfc	unavailable		Hardware, codec, AUGraph, MusicDevice, or MIDI CI host surface is unavailable on isolated Linux
+s:So28AudioFileStreamPropertyFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
 s:So28AudioOutputUnitMIDICallbacksV8userData13MIDIEventProc09MIDISysExH0ABSvSg_yAF_s6UInt32VA3HtXCyAF_SPys5UInt8VGAHtXCtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So28AudioQueueProcessingTapFlagsV8rawValueABs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So29AudioComponentPlugInInterfaceV4Open5Close6Lookup8reservedABs5Int32VSv_s13OpaquePointerVtXC_AHSvXCAJSgs5Int16VXCSvSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence

@@ -1,9 +1,11 @@
 full/audiotoolbox/AUAudioUnit.swift
+full/audiotoolbox/AUGraph.swift
 full/audiotoolbox/AudioComponent.swift
 full/audiotoolbox/AudioConverter.swift
 full/audiotoolbox/AudioConverterProperties.swift
 full/audiotoolbox/AudioFile.swift
 full/audiotoolbox/AudioFileProperties.swift
+full/audiotoolbox/AudioFileStream.swift
 full/audiotoolbox/AudioFormatIDs.swift
 full/audiotoolbox/AudioQueue.swift
 full/audiotoolbox/AudioQueueProperties.swift
