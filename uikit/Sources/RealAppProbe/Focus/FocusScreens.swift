@@ -1,7 +1,6 @@
 // Harness, not app source: the Firefox Focus row(s) of RealAppScreen's
-// table and their builder. Lives under Focus/ so the guest builder's
-// top-level glob (full/scripts/build_full.sh) does not compile it — see
-// RealAppScreen.focusScreens.
+// table and their builder. Compiled into RealAppProbe on every route
+// (SwiftPM and the guest builder's Focus/ glob).
 
 import OpenUIKit
 import Foundation

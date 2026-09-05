@@ -50,9 +50,11 @@ rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks 
 # port's own Foundation (no DateFormatter / NumberFormatter / NSAttributedString
 # ...); the Docker check below uses corelibs and cannot see that. Refuse the
 # common traps in changed sources; the arm64/x86 authorities are the real check.
-# Only what the guest compiles: OpenUIKit, CQuartz, and the TOP-LEVEL harness
-# files (Sources/RealAppProbe/*.swift, Vendored/*.swift); app subdirectories
-# (Focus/, Hackers/, *Modules/, Vendored/<App>/) are SwiftPM-only. Comment
+# Only what the guest compiles into the library: OpenUIKit, CQuartz, and
+# the TOP-LEVEL harness files (Sources/RealAppProbe/*.swift, Vendored/*.swift).
+# App subdirectories (Focus/, Hackers/, *Modules/, Vendored/<App>/) now also
+# compile on the guest against the core-guest Foundation facade; the DateFormatter
+# grep below still applies to the library + top-level harness. Comment
 # lines do not count (a stub once said "not DateFormatter" and was refused).
 if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQuartz/*' \
      $(git diff --name-only main..."$BR" | grep -E '^uikit/Sources/RealAppProbe/[^/]+\.swift$|^uikit/Sources/RealAppProbe/Vendored/[^/]+\.swift$') \

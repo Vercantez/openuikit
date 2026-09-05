@@ -1,7 +1,6 @@
 // Harness, not app source: the Hackers row of RealAppScreen's table and
-// its builder. Lives under Hackers/ so the guest builder's top-level glob
-// (full/scripts/build_full.sh) does not compile it — see
-// RealAppScreen.hackersScreens.
+// its builder. Compiled into RealAppProbe on every route (SwiftPM and
+// the guest builder's Hackers/ glob).
 
 import OpenUIKit
 import Shared

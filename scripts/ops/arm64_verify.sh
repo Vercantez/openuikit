@@ -36,6 +36,27 @@ cd "$TREE"
 echo "== build_full.sh (stage mrroot_full from this machorun; rebuild umbrellas)"
 bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1; echo "build_full rc=$?"; grep -E "^build_full:|error:|FAIL|umbrella|OK$" "$W/build_full.log" | tail -8
 cp machorun/sdk/usr/lib/libSystem.tbd scratch/sysroot_fe4/usr/lib/libSystem.tbd
+echo "== guest realapp (expect 12 screens)"
+mkdir -p "$W/guest-realapp"
+HOST_SO="$TREE/scratch/mrroot_full/host"
+# Preload stays inside this subshell so GATE_B's widget guest is not
+# affected (widget guest sets its own LD_PRELOAD).
+(
+  cd "$TREE/build/full"
+  export MACHORUN_ROOT="$TREE/scratch/mrroot_full"
+  if [ -f "$HOST_SO/libOpenDispatchHost.so" ]; then
+    export LD_LIBRARY_PATH="$HOST_SO${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export LD_PRELOAD="$HOST_SO/libOpenDispatchHost.so:$HOST_SO/libOpenFoundationInternationalizationHost.so:$HOST_SO/libOpenURLTransportHost.so:$HOST_SO/libOpenRelativeTimeHost.so"
+  fi
+  OPENUIKIT_RESOURCE_ROOT="$TREE/uikit/Sources/OpenUIKit/Resources" \
+  OPENUIKIT_FONT_DIR="$TREE/scratch/fonts" \
+  OPENUIKIT_BACKEND=quartz OPENUIKIT_FORCE_IOS=1 \
+  "$TREE/scratch/mrroot_full/machorun" ./render_full realapp "$W/guest-realapp" \
+    "$TREE/uikit/fixtures/realapp/assets"
+) > "$W/guest-realapp.log" 2>&1
+echo "guest_realapp rc=$?"
+grep -E '^rendered realapp_|^\[render_full\] realapp' "$W/guest-realapp.log" | tail -20
+echo "GUEST_REALAPP_SCREENS=$(ls "$W/guest-realapp"/*.png 2>/dev/null | wc -l | tr -d ' ')"
 P=$(ls -d /tmp/focus-widget-res.* 2>/dev/null | head -1); B="$P/output/bundles/Focus_Widget.bundle"
 [ -d "$B" ] || { echo "GATE_B_FAIL rc=2 (no staged Focus_Widget.bundle under /tmp/focus-widget-res.*)"; exit 2; }
 echo "== GATE B (widget guest) on $H"
