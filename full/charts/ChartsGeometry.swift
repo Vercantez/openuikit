@@ -114,6 +114,14 @@ public struct ChartPlotRecord: Equatable, Sendable {
     public var series: String?
     public var stacking: MarkStackingMethod
     public var angle: Double?
+    public var interpolation: InterpolationMethod?
+    public var lineWidth: CGFloat?
+    public var lineDash: [CGFloat]
+    public var symbolName: String?
+    public var foregroundStyleName: String?
+    public var annotationPosition: String?
+    public var annotationAlignment: String?
+    public var opacity: Double?
 
     public init(
         kind: Kind,
@@ -126,7 +134,15 @@ public struct ChartPlotRecord: Equatable, Sendable {
         category: String? = nil,
         series: String? = nil,
         stacking: MarkStackingMethod = .standard,
-        angle: Double? = nil
+        angle: Double? = nil,
+        interpolation: InterpolationMethod? = nil,
+        lineWidth: CGFloat? = nil,
+        lineDash: [CGFloat] = [],
+        symbolName: String? = nil,
+        foregroundStyleName: String? = nil,
+        annotationPosition: String? = nil,
+        annotationAlignment: String? = nil,
+        opacity: Double? = nil
     ) {
         self.kind = kind
         self.x = x
@@ -139,6 +155,14 @@ public struct ChartPlotRecord: Equatable, Sendable {
         self.series = series
         self.stacking = stacking
         self.angle = angle
+        self.interpolation = interpolation
+        self.lineWidth = lineWidth
+        self.lineDash = lineDash
+        self.symbolName = symbolName
+        self.foregroundStyleName = foregroundStyleName
+        self.annotationPosition = annotationPosition
+        self.annotationAlignment = annotationAlignment
+        self.opacity = opacity
     }
 }
 
@@ -234,6 +258,24 @@ public struct ChartScale: Hashable, Sendable {
         )
     }
 
+    /// Log mapping used for symbol-size scales. Domain must be positive.
+    /// For domain `1...1000` and range `0...90`, value `10` maps to `30`
+    /// (log10 ticks at 1, 10, 100, 1000 → 0, 30, 60, 90).
+    public static func symbolLog(
+        domain: ClosedRange<Double>,
+        range: ClosedRange<Double>,
+        inverted: Bool = false
+    ) -> ChartScale {
+        ChartScale(
+            type: .symbolLog,
+            domainMin: domain.lowerBound,
+            domainMax: domain.upperBound,
+            rangeStart: range.lowerBound,
+            rangeEnd: range.upperBound,
+            inverted: inverted
+        )
+    }
+
     public var rangeLength: Double { rangeEnd - rangeStart }
 
     public var bandWidth: Double {
@@ -243,7 +285,7 @@ public struct ChartScale: Hashable, Sendable {
 
     public func position(forNumeric value: Double) -> Double {
         let unit: Double
-        if type == .log {
+        if type == .log || type == .symbolLog {
             let lo = log10(max(domainMin, .leastNonzeroMagnitude))
             let hi = log10(max(domainMax, domainMin * 10))
             let span = hi - lo
@@ -283,7 +325,7 @@ public struct ChartScale: Hashable, Sendable {
         guard span != 0 else { return domainMin }
         var unit = (position - rangeStart) / span
         if inverted { unit = 1 - unit }
-        if type == .log {
+        if type == .log || type == .symbolLog {
             let lo = log10(max(domainMin, .leastNonzeroMagnitude))
             let hi = log10(max(domainMax, domainMin * 10))
             return pow(10, lo + unit * (hi - lo))
@@ -302,7 +344,7 @@ public struct ChartScale: Hashable, Sendable {
         if type == .category {
             return (0, Double(max(categories.count, 1)))
         }
-        if type == .log {
+        if type == .log || type == .symbolLog {
             let lo = pow(10, floor(log10(max(domainMin, .leastNonzeroMagnitude))))
             let hi = pow(10, ceil(log10(max(domainMax, domainMin * 10))))
             return (lo, hi)
@@ -322,7 +364,7 @@ public struct ChartScale: Hashable, Sendable {
         if type == .category {
             return categories.indices.map { Double($0) + 0.5 }
         }
-        if type == .log {
+        if type == .log || type == .symbolLog {
             var ticks: [Double] = []
             let (lo, hi) = niceDomain()
             var value = lo

@@ -136,6 +136,7 @@ public struct ScaleType: Hashable, Sendable, CustomStringConvertible {
     public static let date = ScaleType("date")
     public static let squareRoot = ScaleType("squareRoot")
     public static let symmetricLog = ScaleType("symmetricLog")
+    public static let symbolLog = ScaleType("symbolLog")
     public static func symmetricLog(slopeAtZero: Double) -> ScaleType {
         _ = slopeAtZero
         return .symmetricLog
@@ -178,11 +179,130 @@ public struct AxisMarkPreset: Hashable, Sendable {
 }
 
 public struct AxisMarkValues: Hashable, Sendable {
-    public static let automatic = AxisMarkValues()
-    public init() {}
-    public static func stride<T>(by value: T) -> AxisMarkValues {
-        _ = value
-        return AxisMarkValues()
+    public var description: String
+    public var strideStep: Double?
+    public var explicitValues: [Double]
+    public var desiredCount: Int?
+    public var calendarComponent: Calendar.Component?
+
+    public static let automatic = AxisMarkValues(
+        description: "automatic",
+        strideStep: nil,
+        explicitValues: [],
+        desiredCount: 5
+    )
+
+    public init() {
+        description = "automatic"
+        strideStep = nil
+        explicitValues = []
+        desiredCount = 5
+        calendarComponent = nil
+    }
+
+    init(
+        description: String,
+        strideStep: Double?,
+        explicitValues: [Double],
+        desiredCount: Int? = nil,
+        calendarComponent: Calendar.Component? = nil
+    ) {
+        self.description = description
+        self.strideStep = strideStep
+        self.explicitValues = explicitValues
+        self.desiredCount = desiredCount
+        self.calendarComponent = calendarComponent
+    }
+
+    public static func stride<P: Plottable>(
+        by stepSize: P,
+        roundLowerBound: Bool? = nil,
+        roundUpperBound: Bool? = nil
+    ) -> AxisMarkValues {
+        _ = roundLowerBound
+        _ = roundUpperBound
+        return AxisMarkValues(
+            description: "stride",
+            strideStep: chartNumericScalar(stepSize),
+            explicitValues: []
+        )
+    }
+
+    public static func stride(
+        by component: Calendar.Component,
+        count: Int = 1,
+        roundLowerBound: Bool? = nil,
+        roundUpperBound: Bool? = nil,
+        calendar: Calendar? = nil
+    ) -> AxisMarkValues {
+        _ = roundLowerBound
+        _ = roundUpperBound
+        _ = calendar
+        return AxisMarkValues(
+            description: "stride-calendar",
+            strideStep: Double(count),
+            explicitValues: [],
+            calendarComponent: component
+        )
+    }
+
+    public static func automatic(
+        desiredCount: Int? = nil,
+        roundLowerBound: Bool? = nil,
+        roundUpperBound: Bool? = nil
+    ) -> AxisMarkValues {
+        _ = roundLowerBound
+        _ = roundUpperBound
+        return AxisMarkValues(
+            description: "automatic",
+            strideStep: nil,
+            explicitValues: [],
+            desiredCount: desiredCount
+        )
+    }
+
+    public static func automatic<P: Plottable>(
+        minimumStride: P,
+        desiredCount: Int? = nil,
+        roundLowerBound: Bool? = nil,
+        roundUpperBound: Bool? = nil
+    ) -> AxisMarkValues {
+        _ = roundLowerBound
+        _ = roundUpperBound
+        return AxisMarkValues(
+            description: "automatic",
+            strideStep: chartNumericScalar(minimumStride),
+            explicitValues: [],
+            desiredCount: desiredCount
+        )
+    }
+
+    public static func values(_ values: [Double]) -> AxisMarkValues {
+        AxisMarkValues(
+            description: "values",
+            strideStep: nil,
+            explicitValues: values
+        )
+    }
+
+    public func resolvedTicks(domainMin: Double, domainMax: Double) -> [Double] {
+        if !explicitValues.isEmpty {
+            return explicitValues
+        }
+        if let step = strideStep, step > 0 {
+            var ticks: [Double] = []
+            var value = domainMin
+            while value <= domainMax + step * 0.0001 {
+                ticks.append(value)
+                value += step
+            }
+            return ticks
+        }
+        return ChartNiceNumbers.ticks(
+            min: domainMin,
+            max: domainMax,
+            desired: desiredCount ?? 5
+        )
     }
 }
 
@@ -328,22 +448,213 @@ public struct DateBins: Hashable, Sendable {
 
 public struct PlottableProjection<DataElement, DataValue: Plottable> {
     public let label: String
-    public init(label: String = "") { self.label = label }
-    public static func value(_ label: some StringProtocol, _ value: DataValue) -> Self {
-        Self(label: String(label))
+    let extract: (DataElement) -> DataValue?
+
+    public init(label: String = "") {
+        self.label = label
+        extract = { _ in nil }
     }
-    public static func value(_ label: some StringProtocol, _ value: KeyPath<DataElement, DataValue>) -> Self {
-        _ = value
-        return Self(label: String(label))
+
+    init(label: String, extract: @escaping (DataElement) -> DataValue?) {
+        self.label = label
+        self.extract = extract
     }
-    public static func value(_ label: some StringProtocol, _ start: DataValue, _ end: DataValue) -> Self {
-        _ = start
+
+    public func value(from element: DataElement) -> DataValue? {
+        extract(element)
+    }
+
+    public static func value(_ labelResource: LocalizedStringResource, _ value: DataValue) -> Self {
+        Self(label: labelResource.key, extract: { _ in value })
+    }
+
+    public static func value(_ labelResource: LocalizedStringResource, _ value: KeyPath<DataElement, DataValue>) -> Self {
+        Self(label: labelResource.key, extract: { $0[keyPath: value] })
+    }
+
+    public static func value(
+        _ labelResource: LocalizedStringResource,
+        _ start: DataValue,
+        _ end: DataValue
+    ) -> Self where DataValue: Comparable {
         _ = end
-        return Self(label: String(label))
+        return Self(label: labelResource.key, extract: { _ in start })
     }
-    public static func value(_ label: Text, _ value: DataValue) -> Self { Self(label: "\(label)") }
-    public static func value(_ labelKey: LocalizedStringKey, _ value: DataValue) -> Self { Self(label: "\(labelKey)") }
-    public static func value(_ labelResource: LocalizedStringResource, _ value: DataValue) -> Self { Self(label: "\(labelResource)") }
+
+    public static func value(
+        _ labelResource: LocalizedStringResource,
+        _ start: KeyPath<DataElement, DataValue>,
+        _ end: KeyPath<DataElement, DataValue>
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: labelResource.key, extract: { $0[keyPath: start] })
+    }
+
+    public static func value(_ labelKey: LocalizedStringKey, _ value: DataValue) -> Self {
+        Self(label: labelKey.key, extract: { _ in value })
+    }
+
+    public static func value(_ labelKey: LocalizedStringKey, _ value: KeyPath<DataElement, DataValue>) -> Self {
+        Self(label: labelKey.key, extract: { $0[keyPath: value] })
+    }
+
+    public static func value(
+        _ labelKey: LocalizedStringKey,
+        _ start: DataValue,
+        _ end: DataValue
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: labelKey.key, extract: { _ in start })
+    }
+
+    public static func value(
+        _ labelKey: LocalizedStringKey,
+        _ start: KeyPath<DataElement, DataValue>,
+        _ end: KeyPath<DataElement, DataValue>
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: labelKey.key, extract: { $0[keyPath: start] })
+    }
+
+    public static func value(_ label: Text, _ value: DataValue) -> Self {
+        Self(label: label.content, extract: { _ in value })
+    }
+
+    public static func value(_ label: Text, _ value: KeyPath<DataElement, DataValue>) -> Self {
+        Self(label: label.content, extract: { $0[keyPath: value] })
+    }
+
+    public static func value(
+        _ label: Text,
+        _ start: DataValue,
+        _ end: DataValue
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: label.content, extract: { _ in start })
+    }
+
+    public static func value(
+        _ label: Text,
+        _ start: KeyPath<DataElement, DataValue>,
+        _ end: KeyPath<DataElement, DataValue>
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: label.content, extract: { $0[keyPath: start] })
+    }
+
+    public static func value(_ label: some StringProtocol, _ value: DataValue) -> Self {
+        Self(label: String(label), extract: { _ in value })
+    }
+
+    public static func value(_ label: some StringProtocol, _ value: KeyPath<DataElement, DataValue>) -> Self {
+        Self(label: String(label), extract: { $0[keyPath: value] })
+    }
+
+    public static func value(
+        _ label: some StringProtocol,
+        _ start: DataValue,
+        _ end: DataValue
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: String(label), extract: { _ in start })
+    }
+
+    public static func value(
+        _ label: some StringProtocol,
+        _ start: KeyPath<DataElement, DataValue>,
+        _ end: KeyPath<DataElement, DataValue>
+    ) -> Self where DataValue: Comparable {
+        _ = end
+        return Self(label: String(label), extract: { $0[keyPath: start] })
+    }
+
+    public static func value(
+        _ labelKey: LocalizedStringKey,
+        _ date: KeyPath<DataElement, DataValue>,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: labelKey.key, extract: { $0[keyPath: date] })
+    }
+
+    public static func value(
+        _ label: Text,
+        _ date: KeyPath<DataElement, DataValue>,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: label.content, extract: { $0[keyPath: date] })
+    }
+
+    public static func value(
+        _ labelResource: LocalizedStringResource,
+        _ date: KeyPath<DataElement, DataValue>,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: labelResource.key, extract: { $0[keyPath: date] })
+    }
+
+    public static func value(
+        _ label: some StringProtocol,
+        _ date: KeyPath<DataElement, DataValue>,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: String(label), extract: { $0[keyPath: date] })
+    }
+
+    public static func value(
+        _ labelKey: LocalizedStringKey,
+        _ date: DataValue,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: labelKey.key, extract: { _ in date })
+    }
+
+    public static func value(
+        _ label: Text,
+        _ date: DataValue,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: label.content, extract: { _ in date })
+    }
+
+    public static func value(
+        _ labelResource: LocalizedStringResource,
+        _ date: DataValue,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: labelResource.key, extract: { _ in date })
+    }
+
+    public static func value(
+        _ label: some StringProtocol,
+        _ date: DataValue,
+        unit: Calendar.Component,
+        calendar: Calendar? = nil
+    ) -> Self {
+        _ = unit
+        _ = calendar
+        return Self(label: String(label), extract: { _ in date })
+    }
 }
 
 public struct MajorValueAlignment<Value: Plottable>: Hashable {
@@ -433,6 +744,107 @@ public struct BarMark: ChartContent {
         self.series = nil
         self.stacking = .unstacked
         self.width = width
+        self.height = .automatic
+    }
+
+    public init<X: Plottable & Sendable>(
+        x: PlottableValue<X>,
+        yStart: CGFloat? = nil,
+        yEnd: CGFloat? = nil,
+        width: MarkDimension = .automatic,
+        stacking: MarkStackingMethod = .unstacked
+    ) {
+        self.x = chartNumericScalar(x.value)
+        self.yStart = yStart.map(Double.init)
+        self.yEnd = yEnd.map(Double.init)
+        self.y = self.yEnd
+        self.xStart = nil
+        self.xEnd = nil
+        self.category = x.value as? String
+        self.series = nil
+        self.stacking = stacking
+        self.width = width
+        self.height = .automatic
+    }
+
+    public init<Y: Plottable & Sendable>(
+        xStart: CGFloat? = nil,
+        xEnd: CGFloat? = nil,
+        yStart: PlottableValue<Y>,
+        yEnd: PlottableValue<Y>
+    ) {
+        self.xStart = xStart.map(Double.init)
+        self.xEnd = xEnd.map(Double.init)
+        self.x = nil
+        self.yStart = chartNumericScalar(yStart.value)
+        self.yEnd = chartNumericScalar(yEnd.value)
+        self.y = self.yEnd
+        self.category = nil
+        self.series = nil
+        self.stacking = .unstacked
+        self.width = .automatic
+        self.height = .automatic
+    }
+
+    public init<X: Plottable & Sendable>(
+        xStart: PlottableValue<X>,
+        xEnd: PlottableValue<X>,
+        yStart: CGFloat? = nil,
+        yEnd: CGFloat? = nil
+    ) {
+        self.xStart = chartNumericScalar(xStart.value)
+        self.xEnd = chartNumericScalar(xEnd.value)
+        self.x = self.xStart
+        self.yStart = yStart.map(Double.init)
+        self.yEnd = yEnd.map(Double.init)
+        self.y = self.yEnd
+        self.category = xStart.value as? String
+        self.series = nil
+        self.stacking = .unstacked
+        self.width = .automatic
+        self.height = .automatic
+    }
+
+    public init<X: Plottable & Sendable, Y: Plottable & Sendable>(
+        xStart: PlottableValue<X>,
+        xEnd: PlottableValue<X>,
+        y: PlottableValue<Y>,
+        height: MarkDimension = .automatic,
+        stacking: MarkStackingMethod = .standard
+    ) {
+        self.xStart = chartNumericScalar(xStart.value)
+        self.xEnd = chartNumericScalar(xEnd.value)
+        self.x = self.xStart
+        self.y = chartNumericScalar(y.value)
+        self.yStart = nil
+        self.yEnd = self.y
+        self.category = xStart.value as? String
+        self.series = nil
+        self.stacking = stacking
+        self.width = .automatic
+        self.height = height
+    }
+
+    public init<X: Plottable & Sendable, Y: Plottable & Sendable, S: Plottable & Sendable>(
+        x: PlottableValue<X>,
+        y: PlottableValue<Y>,
+        series: PlottableValue<S>,
+        stacking: MarkStackingMethod = .standard
+    ) {
+        self.x = chartNumericScalar(x.value)
+        self.y = chartNumericScalar(y.value)
+        self.xStart = nil
+        self.xEnd = nil
+        self.yStart = nil
+        self.yEnd = self.y
+        self.category = x.value as? String
+        if let name = series.value as? String {
+            self.series = name
+        } else {
+            self.series = series.label
+        }
+        self.stacking = stacking
+        self.width = .automatic
         self.height = .automatic
     }
 
@@ -559,78 +971,141 @@ public struct SurfacePlot: Chart3DContent {
     public var body: some View { EmptyView() }
 }
 
+/// Fail-closed 3D surface mark. Linux has no RealityKit/Chart3D renderer.
+public struct SurfaceMark: Chart3DContent {
+    public init() {}
+    public var body: some View { EmptyView() }
+}
+
 public struct Plot<Content: ChartContent>: ChartContent {
     public init(@ChartContentBuilder content: () -> Content) { _ = content }
     public var body: some View { EmptyView() }
 }
 
-public struct AreaPlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedBarPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct BarPlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedAreaPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct LinePlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedLinePlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct PointPlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedRulePlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct RectanglePlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedPointPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct RulePlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedSectorPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct SectorPlot<Content>: ChartContent {
-    public init() {}
+public struct VectorizedRectanglePlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
+    public typealias DataElement = Data.Element
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedBarPlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct BarPlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedBarPlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(_ content: Content) { chartPlotRecords = content.chartPlotRecords }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedAreaPlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct AreaPlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedAreaPlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedLinePlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct LinePlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedLinePlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedRulePlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct PointPlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedPointPlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedPointPlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct RectanglePlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedRectanglePlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedSectorPlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct RulePlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedRulePlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct VectorizedRectanglePlotContent<Data: RandomAccessCollection>: ChartContent {
-    public init() {}
+public struct SectorPlot<Content: VectorizedChartContent>: VectorizedChartContent {
+    public typealias DataElement = Content.DataElement
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() where Content == VectorizedSectorPlotContent<[Int]> {
+        chartPlotRecords = []
+    }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
