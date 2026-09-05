@@ -70,10 +70,31 @@ QuartzCore, Metal, shared simd, and unmangled `SCN*` exports.
 ## Depth pass 2026-09
 
 SDK depth for `SceneKit` in `full/scenekit/` (2611 IDs). Wave-1 starting point
-was 329 implemented / 1329 declared / 953 deferred. This pass implements the
-scene graph and math exactly on the CPU and a software rasterizer for basic
-materials. Coverage after the pass: **1687 implemented / 32 declared / 892
-deferred**.
+was 329 implemented / 1329 declared / 953 deferred. The CPU scene-graph pass
+then marked **1687 implemented / 32 declared / 892 deferred**, but every
+implemented row cited the file path `full/scenekit/tests/agent/SceneKitRuntime.swift`
+(not `test:full/scenekit/tests/agent/<File>Tests.swift#testName`). Central
+`FW_MERGE` refused that ledger.
+
+This repair splits the runtime into focused `*Tests.swift` functions and
+rewrites the ledger. Coverage after the evidence pass: **1369 implemented /
+350 declared / 892 deferred**. Rows without a real focused test were
+reclassified to `declared` with `source:full/scenekit/<file>.swift#Symbol`.
+Deferred stays 892.
+
+**Top-5 implemented evidence (of 1369):**
+
+| citations | evidence |
+| ---: | --- |
+| 565 | `test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues` |
+| 101 | `test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath` |
+| 67 | `test:full/scenekit/tests/agent/SceneKitPhysicsTests.swift#testPhysicsBookkeeping` |
+| 62 | `test:full/scenekit/tests/agent/SceneKitGeometryTests.swift#testPrimitiveLayouts` |
+| 56 | `test:full/scenekit/tests/agent/SceneKitNodeTests.swift#testNodeTransforms` |
+
+The enum/option-set/C-constant table is the allowed shared value test (565).
+Of the remaining 804 implemented rows, the largest non-enum citation is
+`testVectorMath` at 101 (12.6%, under the 40% bulk-relabel ceiling).
 
 **Public surface implemented (Linux CPU):**
 
@@ -106,9 +127,9 @@ deferred**.
 implicit animation, physics contacts, audio playback, text/shape tessellation.
 
 **Tests:** `bash full/scenekit/tests/acceptance/test_host.sh` (this Linux host,
-no docker). Runtime pixel-tests a constant-red lit cube against the CPU
-rasterizer and exercises math, node coupling, geometry layouts, camera
-projection, easing, SCNView stores, and hit tests.
+no docker). Focused `func test*()` checks live in `tests/agent/*Tests.swift`;
+`SceneKitRuntime.swift` concatenates them so the v1 gate still compiles one
+file, pixel-tests a constant-red cube, and prints `SCENEKIT_AGENT_RUNTIME_OK`.
 
 **Environment:** Swift 6.2.4, `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` failed in this snapshot (missing

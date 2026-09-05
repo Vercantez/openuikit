@@ -41,6 +41,7 @@ public let SCN_ENABLE_METAL: Int32 = 0
 public let SCN_ENABLE_OPENGL: Int32 = 0
 
 public typealias SCNActionTimingFunction = (Float) -> Float
+public typealias SCNFloat = Float
 public typealias SCNQuaternion = SCNVector4
 public typealias SCNAnimationDidStartBlock = (SCNAnimation, any SCNAnimatable) -> Void
 public typealias SCNAnimationDidStopBlock = (SCNAnimation, any SCNAnimatable, Bool) -> Void
