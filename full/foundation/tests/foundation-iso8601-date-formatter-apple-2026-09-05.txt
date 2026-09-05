@@ -1,0 +1,33 @@
+opt.year	1
+opt.month	2
+opt.week	4
+opt.day	16
+opt.time	32
+opt.zone	64
+opt.space	128
+opt.dash	256
+opt.colonTime	512
+opt.colonZone	1024
+opt.frac	2048
+opt.fullDate	275
+opt.fullTime	1632
+opt.internet	1907
+fmt.default	
+fmt.internet	2024-02-29T17:25:09Z
+fmt.internet.frac	2024-02-29T17:25:09.125Z
+fmt.internet.whole	2024-02-29T17:25:09Z
+fmt.fulldate	2024-02-29
+fmt.fulltime	17:25:09Z
+fmt.ymd	2024-02-29
+fmt.ymdtz	20240229T172509Z
+fmt.space	2024-02-29 17:25:09Z
+fmt.minus6	2024-02-29T11:25:09-06:00
+fmt.plus1.frac	2024-02-29T18:25:09.125+01:00
+fmt.week	2024-W09
+fmt.week.nodash	2024W09
+class.internet	2024-02-29T18:25:09+01:00
+parse.frac	1709227509.125
+parse.z	1709227509.0
+parse.offset	1709227509.0
+parse.date	1709164800.0
+parse.bad	true
