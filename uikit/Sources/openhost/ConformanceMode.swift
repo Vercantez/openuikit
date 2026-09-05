@@ -167,7 +167,8 @@ func rectJSON(_ r: CGRect) -> JSONValue {
 @MainActor
 func runConformanceScripted(_ scene: HostScene, app: String,
                             steps: [ConformanceStep], captures: [Double],
-                            style: String, direction: String, outdir: String) throws -> [String] {
+                            style: String, direction: String, contentSize: String,
+                            outdir: String) throws -> [String] {
     guard let perform = ConformanceApps.registry[app]?.perform else {
         fatalError("no conformance action table for app \"\(app)\"")
     }
@@ -195,6 +196,7 @@ func runConformanceScripted(_ scene: HostScene, app: String,
             written.append(try captureConformance(scene, app: app, t: ct,
                                                   frame: frame, style: style,
                                                   direction: direction,
+                                                  contentSize: contentSize,
                                                   outdir: outdir))
             nextCapture += 1
         }
@@ -213,11 +215,13 @@ func runConformanceScripted(_ scene: HostScene, app: String,
 @MainActor
 func captureConformance(_ scene: HostScene, app: String, t: Double,
                         frame: Int, style: String, direction: String,
+                        contentSize: String,
                         outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
     let bmp = UIRenderer.render(scene.window, scale: scene.scale)
     let suffix = ConformanceClock.captureSuffix(for: t, style: style,
-                                               direction: direction)
+                                               direction: direction,
+                                               contentSize: contentSize)
     let png = "\(app).\(suffix).png"
     try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(png)")
 
@@ -228,6 +232,7 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
         "t": .number(round3(CGFloat(t))),
         "style": .string(style),
         "direction": .string(direction),
+        "contentSize": .string(contentSize),
         "clock": .object([
             "frame": .number(Double(frame)),
             "hz": .number(Double(ConformanceClock.hz)),

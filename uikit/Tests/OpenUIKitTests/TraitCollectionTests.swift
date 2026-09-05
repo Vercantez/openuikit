@@ -197,6 +197,26 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(window.traitCollection.verticalSizeClass, .regular)
     }
 
+    /// MEASURED confprobe --ax1, iPhone SE 2x / iOS 26.1: the window's
+    /// `traitOverrides.preferredContentSizeCategory` is the environment
+    /// descendants see, even when `UITraitCollection.current` is still
+    /// `.large`. Same setter realappprobe uses.
+    func testWindowTraitOverridesPreferredContentSizeCategory() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        XCTAssertEqual(window.traitCollection.preferredContentSizeCategory,
+                       .accessibilityLarge)
+        let child = UIView()
+        window.addSubview(child)
+        XCTAssertEqual(child.traitCollection.preferredContentSizeCategory,
+                       .accessibilityLarge)
+    }
+
     func testDetachedViewsUseScreenAxesButWindowUsesItsOwnBounds() {
         let screen = UIScreen.main
         let savedBounds = screen.bounds

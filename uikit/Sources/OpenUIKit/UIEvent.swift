@@ -84,6 +84,9 @@ open class UIWindow: UIView {
         if overrideUserInterfaceStyle != .unspecified {
             traits.userInterfaceStyle = overrideUserInterfaceStyle
         }
+        if traitOverrides.preferredContentSizeCategory != .unspecified {
+            traits.preferredContentSizeCategory = traitOverrides.preferredContentSizeCategory
+        }
         traits._resolveUnspecifiedSizeClasses(for: bounds.size)
         return traits
     }

@@ -50,8 +50,13 @@ the reason). The climb only assigns `fail` rows.
    the window before the first capture (window-only does not propagate;
    appearance stamps the tree — /tmp/rtlprobe, iPhone SE 2x / iOS 26.1)
    and suffixes capture names `.rtl`. A `"direction"` field in script.json
-   is honoured the same way. The round scores `/tmp/hc-conformance-<App>`,
-   `/tmp/hc-conformance-<App>-dark` and `/tmp/hc-conformance-<App>-rtl`.
+   is honoured the same way. `--ax1` / `--xxxl` pin
+   `window.traitOverrides.preferredContentSizeCategory` to
+   `.accessibilityLarge` / `.extraExtraExtraLarge` and suffix `.ax1` /
+   `.xxxl`. Combined suffixes: `.dark` then `.rtl` then `.ax1` / `.xxxl`.
+   The round scores `/tmp/hc-conformance-<App>`,
+   `/tmp/hc-conformance-<App>-dark`, `/tmp/hc-conformance-<App>-rtl`,
+   `/tmp/hc-conformance-<App>-ax1` and `/tmp/hc-conformance-<App>-xxxl`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -85,8 +90,9 @@ is always measured against the iOS simulator.
 
 - `scripts/hillclimb.sh N` recaptures the iOS suite AND every app under
   `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light),
-  `/tmp/hc-conformance-<App>-dark` (window style dark), and
-  `/tmp/hc-conformance-<App>-rtl` (appearance + window forceRightToLeft) —
+  `/tmp/hc-conformance-<App>-dark` (window style dark),
+  `/tmp/hc-conformance-<App>-rtl` (appearance + window forceRightToLeft),
+  and `/tmp/hc-conformance-<App>-ax1` / `-xxxl` (window content-size override) —
   its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time
