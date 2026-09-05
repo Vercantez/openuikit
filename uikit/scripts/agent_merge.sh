@@ -71,6 +71,10 @@ fi
 # each; 25 of them once filled the disk. Reap any not attached to a live run.
 for stale in /tmp/agent_merge.*/; do
   [ -d "$stale" ] || continue
+  # the glob also matches the lock directory: the reaper deleted every run's own
+  # lock a second after it was taken, so the lock never held (measured: a merge
+  # running with /tmp/agent_merge.lock absent).
+  [ "${stale%/}" = "$MERGE_LOCK" ] && continue
   pgrep -f "agent_merge.*$stale" >/dev/null 2>&1 && continue
   git worktree remove --force "$stale" 2>/dev/null || rm -rf "$stale"
 done
