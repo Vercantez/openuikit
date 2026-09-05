@@ -151,6 +151,16 @@ public enum RealAppScreen {
         Screen(name: "realapp_settings_light_ipad", variant: .settings,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: true, idiom: .pad),
+        // Same History picker (Listening History "...") on the iPad (A16).
+        Screen(name: "realapp_history_light_ipad", variant: .listeningHistory,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: true, idiom: .pad),
+        // Same xib-driven Storage & Data Use screen on the iPad (A16).
+        // The app pushes this onto a large-title settings stack; the phone
+        // golden stays a bare root so it does not move.
+        Screen(name: "realapp_storage_light_ipad", variant: .storage,
+               theme: .light, style: .light, contentSizeCategory: .large,
+               presentsSheet: false, idiom: .pad),
     ]
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
@@ -210,9 +220,17 @@ public enum RealAppScreen {
     /// `StorageAndDataUseViewController()`, whose view, table and both cell
     /// prototypes all come from nibs. Nothing here configures the screen —
     /// that is the point of the variant.
+    ///
+    /// On the pad idiom the real app's settings stack is a large-title
+    /// `UINavigationController`. Phone goldens stay a bare root.
     static func makeStorageScreen(theme: Theme.ThemeType) -> UIViewController {
         Theme.sharedTheme.activeTheme = theme
-        return StorageAndDataUseViewController()
+        let vc = StorageAndDataUseViewController()
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return vc }
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.prefersLargeTitles = true
+        vc.navigationItem.largeTitleDisplayMode = .always
+        return nav
     }
 
     public static func makeRoot(variant: Variant,

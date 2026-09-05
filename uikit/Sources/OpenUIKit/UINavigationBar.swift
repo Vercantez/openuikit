@@ -207,7 +207,12 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// 10 pt floor, so the label's bar-local y is 54 + 3.5 = 57.5 (abs 67.5
     /// when pad is 10). Catalyst's bar still includes the padding (y 0,
     /// height 116) so the label stays at 67.
-    static var largeTitleX: CGFloat { isIOS ? 16 : 20 }
+    /// Phone iOS: 16 (navbar_large / navprobe). Pad iOS: 20.
+    /// MEASURED realapp_storage_light_ipad, iPad (A16) 820×1180 @2x /
+    /// iOS 26.1: the large-title UILabel is `[20, 3.5, 306.5, 41]` inside
+    /// `NavigationBarLargeTitleView` (abs `[20, 89.5]`); the bar's own
+    /// `layoutMargins.left` is 20. Catalyst stays 20.
+    static var largeTitleX: CGFloat { isIOS && !isPad ? 16 : 20 }
     static var largeTitleLabelY: CGFloat { isIOS ? 57.5 : 67 }
     static var largeTitleLabelHeight: CGFloat { isIOS ? 41 : 40.5 }
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }

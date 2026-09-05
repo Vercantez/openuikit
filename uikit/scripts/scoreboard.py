@@ -39,6 +39,11 @@ REALAPP_FLOOR = {
     # iPad (A16) 820×1180 @2x portrait of Settings. MEASURED 2026-09-04
     # after the pad formSheet card rule: 99.511.
     "realapp_settings_light_ipad": 99.4,   # 99.511
+    # iPad (A16) History picker + Storage screen. MEASURED 2026-09-04:
+    # history formSheet [120, 753, 580, 157] 99.760; storage large-title
+    # x 20 and grouped cell margin 16 → 99.689.
+    "realapp_history_light_ipad": 99.6,   # 99.760
+    "realapp_storage_light_ipad": 99.5,   # 99.689
 }
 
 def parse_compare(path):
