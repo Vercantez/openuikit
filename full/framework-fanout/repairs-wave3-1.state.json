@@ -13,8 +13,15 @@
   "repairs": {
     "activitykit": {
       "agentId": "bc-bdc72171-5985-5d2c-b81d-52b84135f4c7",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:04:22Z",
+      "branches": [
+        {
+          "branch": "cursor/port-activitykit-to-linux-ef33",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/92",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/92",
       "expectedPriorHead": "fe1738b572ddc8677dbb2c0d9ae9d14e26a9787e",
       "idempotencyKey": "c8b99974-181b-5885-b63a-edad647b55e2",
@@ -22,14 +29,23 @@
       "module": "ActivityKit",
       "promptBytes": 1369,
       "promptSha256": "c400d7a4d4715d756ecdcde75a838aa24d8f42b914662f9149e249adcf9a14c4",
+      "resultBytes": 1102,
+      "resultSha256": "503213795ca673b3c9b648778ae96c1e881177a585ef42378e27d8ad49e893d8",
       "runId": "run-80ac852b-242f-4039-a05b-1d3294382798",
-      "runStatus": "error",
+      "runStatus": "FINISHED",
       "slug": "activitykit"
     },
     "arkit": {
       "agentId": "bc-ecbbace9-f5cf-53e5-9120-95df18f727ba",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:04:30Z",
+      "branches": [
+        {
+          "branch": "cursor/port-arkit-to-linux-76fd",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/91",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/91",
       "expectedPriorHead": "814bb21e0d947a1f5b01ba972e09b6f5d32b0fda",
       "idempotencyKey": "e5732318-602b-5d7e-8736-9a2b094ac344",
@@ -37,25 +53,38 @@
       "module": "ARKit",
       "promptBytes": 1333,
       "promptSha256": "174bb25a8c8c4afffed66c3cc5a04c66b3f5691e73506408138f839d8bee2390",
+      "resultBytes": 1090,
+      "resultSha256": "0f26be96a3750f0224a4612b636c80a4680fb0dc4c89c6f3ef9d3cc9c9cee392",
       "runId": "run-056428cd-e9f5-4a08-a31b-427e74af276a",
-      "runStatus": "running",
+      "runStatus": "FINISHED",
       "slug": "arkit"
     },
     "avfaudio": {
       "agentId": "bc-2fa99e17-1788-547d-b568-d2e2662515cd",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T22:17:27Z",
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/93",
       "expectedPriorHead": "c620a7c9d21ab34deaf88a85ea3478c561b80eed",
       "idempotencyKey": "ce7a16e7-b93b-599c-89f7-bf455264a1a0",
-      "launchStatus": "PENDING",
+      "launchStatus": "SENT",
       "module": "AVFAudio",
       "promptBytes": 1352,
       "promptSha256": "f1a7ef1b46a0581f10553a89cbdce5bbc40daea0d5aad76cdc4b63a3504104f7",
+      "runId": "run-655efc9c-a081-4e11-9d86-5e0ea73c8349",
+      "runStatus": "running",
       "slug": "avfaudio"
     },
     "carplay": {
       "agentId": "bc-11212748-23b8-581d-a533-8fc8fd2de32c",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:03:51Z",
+      "branches": [
+        {
+          "branch": "cursor/port-carplay-to-linux-bd0e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/88",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/88",
       "expectedPriorHead": "448e66face0b12b76ec8291b8a51285a2406c70d",
       "idempotencyKey": "eb60ee1d-47dc-500d-8bec-91b718183453",
@@ -63,14 +92,23 @@
       "module": "CarPlay",
       "promptBytes": 1345,
       "promptSha256": "3687a5079fb94df9af06c60e30aba61c3535d42c4b6b82c978a32a4935df665e",
+      "resultBytes": 1015,
+      "resultSha256": "c6a60ce8c7708e038c2d3e334d90ddc71d4270170ed8f622e0ad918e8c6d5716",
       "runId": "run-8d90d212-5169-49fa-b441-ed5e76e65728",
-      "runStatus": "running",
+      "runStatus": "FINISHED",
       "slug": "carplay"
     },
     "cfnetwork": {
       "agentId": "bc-15d4f6c1-ddb9-5207-8633-0c61f248b3a8",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:04:02Z",
+      "branches": [
+        {
+          "branch": "cursor/port-cfnetwork-to-linux-7311",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/84",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/84",
       "expectedPriorHead": "f7fb4b02fe1378579b4198d0d020c5a479997acc",
       "idempotencyKey": "ca928d41-57d2-504c-b851-6091f6f8aceb",
@@ -78,14 +116,23 @@
       "module": "CFNetwork",
       "promptBytes": 1357,
       "promptSha256": "33333cef8a1611e49369666a357c7556e8ba21fe7d848042f4f9e76dab463c10",
+      "resultBytes": 1054,
+      "resultSha256": "e4f0785a23ce9c160fbb4c55d7115fe9b2554503b4fa913af2211dc2db252c26",
       "runId": "run-e6646e73-84b1-4667-836e-8d38957f58cb",
-      "runStatus": "error",
+      "runStatus": "FINISHED",
       "slug": "cfnetwork"
     },
     "contacts": {
       "agentId": "bc-d96fdcb1-2395-50dd-8f40-ebf35d897593",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:04:08Z",
+      "branches": [
+        {
+          "branch": "cursor/port-contacts-to-linux-1f00",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/86",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/86",
       "expectedPriorHead": "fd739cddb32fce19d79f70f814d79067bb5736c5",
       "idempotencyKey": "ecf69563-306c-5e20-b2e0-df88cfbf7357",
@@ -93,14 +140,23 @@
       "module": "Contacts",
       "promptBytes": 1395,
       "promptSha256": "a76521881df20a51884f1fed88078bc755ea2751626b4893d4b001b0e75d6890",
+      "resultBytes": 1252,
+      "resultSha256": "b4525c7f896e3f569a919e48fa04fe3f63057919d947d45816e7d15c94b14f47",
       "runId": "run-881dbd17-b885-40ae-8955-41ef28c88251",
-      "runStatus": "running",
+      "runStatus": "FINISHED",
       "slug": "contacts"
     },
     "contactsui": {
       "agentId": "bc-8d2149f8-76fa-58bb-bef4-4b150927ee12",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:04:12Z",
+      "branches": [
+        {
+          "branch": "cursor/port-contactsui-to-linux-7b26",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/87",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/87",
       "expectedPriorHead": "1a44131136e4f3c45836661f4e99e5d0f0f1c736",
       "idempotencyKey": "73fa48b7-c6ae-5c1d-b7ce-57b60e69f7e9",
@@ -108,14 +164,23 @@
       "module": "ContactsUI",
       "promptBytes": 1403,
       "promptSha256": "2a38d858b1ad758f7cc59d23753417f096c80bb27a41aa727ca38d07c2a16592",
+      "resultBytes": 783,
+      "resultSha256": "249c879ec2f36fd7137f8f284c947b98cfb4f3b00ce81ddcbdd1043397b9f9bd",
       "runId": "run-5d8ae4d7-66c4-4c49-92fc-11304651cc59",
-      "runStatus": "running",
+      "runStatus": "FINISHED",
       "slug": "contactsui"
     },
     "corebluetooth": {
       "agentId": "bc-1f592f1b-8e73-5f4e-b996-e65953f46ea3",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "attemptedAt": "2026-09-05T20:04:17Z",
+      "branches": [
+        {
+          "branch": "cursor/port-corebluetooth-to-linux-0754",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/83",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/83",
       "expectedPriorHead": "841090f48976a8bf2b7ba2020e1043f4744a10ab",
       "idempotencyKey": "23b0f19e-8d86-57e0-bfcb-b193aed0e4eb",
@@ -123,8 +188,10 @@
       "module": "CoreBluetooth",
       "promptBytes": 1381,
       "promptSha256": "2f024692921c820d869c53e9ef7d8f89770a7d521cf54cdd58f1617fab57ea34",
+      "resultBytes": 884,
+      "resultSha256": "06d24a34334f8b07d2594b398950f56f2545d32204627cecf6cf02d44c70556a",
       "runId": "run-97de50f2-3495-4102-9565-e5fd388068fd",
-      "runStatus": "running",
+      "runStatus": "FINISHED",
       "slug": "corebluetooth"
     }
   },

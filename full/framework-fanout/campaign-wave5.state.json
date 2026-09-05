@@ -75,7 +75,7 @@
     "coreaudio": {
       "agentId": "bc-42abfeb7-56e4-5654-be8f-6104121b29c2",
       "agentName": "Port CoreAudio to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-42abfeb7-56e4-5654-be8f-6104121b29c2",
       "branches": [
         {
@@ -89,10 +89,13 @@
       "launchStatus": "CREATED",
       "module": "CoreAudio",
       "priority": 100,
+      "resultBytes": 1496,
+      "resultSha256": "42f08e9c8a8b1a4e1e15998ec14dccf7f92df31912b88bdeb19c0bb028e8b3b8",
       "runCreatedAt": "2026-09-05T20:53:59.179Z",
+      "runDurationMs": 1110731,
       "runId": "run-dd928b1e-c3fd-4b19-804c-2e74ffa396ba",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T20:53:59.934Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T21:12:30.440Z"
     },
     "corenfc": {
       "agentId": "bc-db5a21e9-c9ce-5822-a242-abd091e4b160",
@@ -147,11 +150,12 @@
     "gameplaykit": {
       "agentId": "bc-e5b228bb-94ac-558f-99f1-6584e3d4a38b",
       "agentName": "Port GameplayKit to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-e5b228bb-94ac-558f-99f1-6584e3d4a38b",
       "branches": [
         {
           "branch": "cursor/port-gameplaykit-to-linux-9eee",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/126",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -160,15 +164,18 @@
       "launchStatus": "CREATED",
       "module": "GameplayKit",
       "priority": 100,
+      "resultBytes": 1771,
+      "resultSha256": "69e5f99c1af68b49d3c4fbb004f746cd08c14053dfdff7c150d2a0ad3e0f8798",
       "runCreatedAt": "2026-09-05T20:54:11.964Z",
+      "runDurationMs": 1262930,
       "runId": "run-f9310635-a2c0-4e34-b0cd-f6969483f2d7",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T20:54:12.826Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T21:15:15.572Z"
     },
     "glkit": {
       "agentId": "bc-fc6c2b50-e679-51df-843f-1b163056bbbb",
       "agentName": "Port GLKit to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-fc6c2b50-e679-51df-843f-1b163056bbbb",
       "branches": [
         {
@@ -182,10 +189,13 @@
       "launchStatus": "CREATED",
       "module": "GLKit",
       "priority": 100,
+      "resultBytes": 1244,
+      "resultSha256": "ad02340c245456dbff0e19de1f4b071516430377a25671a31e27309ddbd6c241",
       "runCreatedAt": "2026-09-05T20:54:15.161Z",
+      "runDurationMs": 1052791,
       "runId": "run-22ee8270-6ba8-495a-833a-101887cf7f35",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T20:54:15.908Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T21:11:48.466Z"
     },
     "imageplayground": {
       "agentId": "bc-7597e92a-352f-5706-ae6b-67be2f9a7872",
@@ -290,11 +300,12 @@
     "metalperformanceshaders": {
       "agentId": "bc-8dbb2cca-fc5d-5403-a6fd-99de0dd8fb68",
       "agentName": "Port MetalPerformanceShaders to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-8dbb2cca-fc5d-5403-a6fd-99de0dd8fb68",
       "branches": [
         {
           "branch": "cursor/port-metalperformanceshaders-to-linux-b447",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/125",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -303,15 +314,18 @@
       "launchStatus": "CREATED",
       "module": "MetalPerformanceShaders",
       "priority": 100,
+      "resultBytes": 1173,
+      "resultSha256": "f5952be7cf9c27fd69245127dd9a8bef2ec7f9c0a495118dda51ab6d45dcd01c",
       "runCreatedAt": "2026-09-05T20:54:30.063Z",
+      "runDurationMs": 1226502,
       "runId": "run-945a023e-9b09-4847-910d-e942563e45d1",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T20:54:30.877Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T21:14:57.201Z"
     },
     "quicklookthumbnailing": {
       "agentId": "bc-1b1e4905-6c16-5e9b-b21b-c295e6acad93",
       "agentName": "Port QuickLookThumbnailing to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-1b1e4905-6c16-5e9b-b21b-c295e6acad93",
       "branches": [
         {
@@ -325,15 +339,18 @@
       "launchStatus": "CREATED",
       "module": "QuickLookThumbnailing",
       "priority": 100,
+      "resultBytes": 185,
+      "resultSha256": "678e36765581265bb48ec1827a24085629bc47f948f5dec55be36fc5565eed25",
       "runCreatedAt": "2026-09-05T21:11:18.451Z",
+      "runDurationMs": 8440,
       "runId": "run-76449b43-83bf-4879-9fce-2ec237fab94f",
-      "runStatus": "CREATING",
-      "runUpdatedAt": "2026-09-05T21:11:18.451Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T21:11:57.717Z"
     },
     "tipkit": {
       "agentId": "bc-13e60bb2-4104-506d-b148-319dbc9f6bd6",
       "agentName": "Port TipKit to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-13e60bb2-4104-506d-b148-319dbc9f6bd6",
       "branches": [
         {
@@ -347,10 +364,13 @@
       "launchStatus": "CREATED",
       "module": "TipKit",
       "priority": 100,
+      "resultBytes": 191,
+      "resultSha256": "5bef7cb27a94f42ac40ad4f495356db990a820ea9ca4a1693e6733ec06252ce8",
       "runCreatedAt": "2026-09-05T21:11:40.969Z",
+      "runDurationMs": 9361,
       "runId": "run-eeb1048e-d912-4669-8e3b-1781109e5594",
-      "runStatus": "CREATING",
-      "runUpdatedAt": "2026-09-05T21:11:40.969Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T21:12:20.996Z"
     },
     "translation": {
       "agentId": "bc-55579fa4-458f-5d8b-b159-3ec9d1273d50",
@@ -413,5 +433,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T21:11:50Z"
+  "updatedAt": "2026-09-05T22:17:15Z"
 }
