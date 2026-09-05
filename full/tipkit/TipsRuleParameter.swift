@@ -20,8 +20,13 @@ extension Tips {
             self.operation = operation
             self.predicate = predicate
         }
+
+        func evaluate() -> Bool {
+            predicate()
+        }
     }
 
+    @propertyWrapper
     public struct Parameter<Value: Decodable & Encodable & Sendable>: Sendable {
         public typealias ID = String
         public typealias Value = Value
@@ -29,6 +34,8 @@ extension Tips {
         public let id: String
         public var wrappedValue: Value
         let options: [Tips.ParameterOption]
+
+        public var projectedValue: Tips.Parameter<Value> { self }
 
         public init(
             wrappedValue: Value,

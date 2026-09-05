@@ -9,8 +9,33 @@ The legacy fan-out PR
 not readable from this agent's GitHub token (private repo, installation scoped
 to `Vercantez/openuikit`). This tree keeps the monorepo `reference/` seed
 (newer generator provenance on main) and implements the Foundation-only engine
-described by that seed and the PR #14 repair notes: no `TipKit.Text` /
-`Image` / `Edge` / `Binding` stand-ins, no claimed persistence.
+described by that seed: no `TipKit.Text` / `Image` / `Edge` / `Binding`
+stand-ins, no claimed persistence.
+
+## Depth pass 2026-09
+
+Coverage of the 1035 exact public identifiers:
+
+- **before:** 136 implemented / 1 declared / 47 deferred / 851 unavailable
+- **after:** 178 implemented / 1 declared / 5 deferred / 851 unavailable
+
+The 20-app corpus (WordPress-iOS, duckduckgo-ios, firefox-ios, wikipedia-ios)
+exercises `Tips.configure`, `Tip` conformances, `invalidate(reason:)`,
+`Tips.resetDatastore`, `MaxDisplayCount`, and SwiftUI `popoverTip` /
+`TipView`. This pass implemented the Foundation eligibility engine those apps
+need (`Tip` / `AnyTip` / `TipGroup.currentTip` / testing overrides) and left
+SwiftUI `Text` / `Image` / `TipView` / UIKit `TipUI*` unavailable.
+
+Top-5 evidence distribution (share of the 178 implemented rows):
+
+1. `testAnyTipErasure` — 17 (9.6%)
+2. `testConfigurationCloudKitAndFrequency` — 16 (9.0%)
+3. `testTipKitErrorIdentities` — 15 (8.4%)
+4. `testDonationTimeRangeValues` — 15 (8.4%, table-driven named ranges)
+5. `testEventDonateAndQuery` — 14 (7.9%)
+
+No non-enum test is cited by more than 40% of implemented rows. Enum and
+named-range catalogs share table-driven value tests.
 
 ## What is real
 
@@ -18,6 +43,18 @@ The public Foundation engine compiles to `libTipKit.dylib`.
 
 - `Tips.configure` is once-per-process and in-memory. A second call throws
   `TipKitError.tipsDatastoreAlreadyConfigured`.
+- `Tip` (without SwiftUI `title` / `message` / `image`), `AnyTip`,
+  `invalidate(reason:)`, `resetEligibility()`, `status`, `shouldDisplay`,
+  `statusUpdates`, and `shouldDisplayUpdates` are an in-memory state machine.
+  Rules that fail keep a tip `.pending`. `invalidate` stores a reason.
+  `Tips.resetDatastore()` clears donations and invalidations.
+- `Tips.showAllTipsForTesting` / `hideAllTipsForTesting` and the typed
+  `showTipsForTesting` / `hideTipsForTesting` overrides force or suppress
+  `shouldDisplay`. `showAll` also reports `.available` so tests can present
+  invalidated tips; Darwin's status split is queued in `oracle-questions.tsv`.
+- `TipGroup.currentTip` is the first grouped tip with `shouldDisplay == true`.
+  `.firstAvailable` and `.ordered` share that scan until a display-history
+  oracle exists.
 - `Tips.Event` donate / `sendDonation` / `donations` / `deleteDonations` and
   `DonationLimit` trimming are a process-local store.
 - `Sequence.donatedWithin`, `largestSubset(groupedBy:)`, and
@@ -28,6 +65,10 @@ The public Foundation engine compiles to `libTipKit.dylib`.
   `Tips.Action` `StringProtocol` titles, `TipOption` values
   (`MaxDisplayCount`, `MaxDisplayDuration`, `IgnoresDisplayFrequency`),
   `Tips.Parameter`, and `TipGroup.Priority` are constructible.
+- Host-driven `@_spi(OpenUIKitHost) recordDisplayForHost()` increments a
+  display count and invalidates with `.displayCountExceeded` when
+  `MaxDisplayCount` is present. There is no TipView, so the framework never
+  invents a display.
 - `DatastoreLocation.groupContainer(identifier:)` throws
   `TipKitError.missingGroupContainerEntitlements`.
 - `sendDonation` completions hop once onto serial queue
@@ -44,14 +85,19 @@ The public Foundation engine compiles to `libTipKit.dylib`.
   store. Remembering those options is not persistence.
 - Apple's `#Rule` macro is unobserved. `Tips.Rule` has no public constructor;
   host tests use `@_spi(OpenUIKitHost)`.
+- `MaxDisplayDuration` is stored as an option value and does not expire a tip
+  without a real displayed-duration clock.
 
 ## Still open
 
 See `oracle-questions.tsv` for Darwin datastore bytes, CloudKit, `#Rule`
-expansion, and `DonationTimeRange` calendar versus elapsed-seconds mapping.
+expansion, default `Tip.id` bytes, `showAllTipsForTesting` versus invalidated
+status, `TipGroup.Priority.firstAvailable` ranking, and `DonationTimeRange`
+calendar versus elapsed-seconds mapping.
 
 `tests/agent/TipKitRuntime.swift` is the isolated host probe
-(`TIPKIT_AGENT_RUNTIME_OK`). `tests/agent/TipKitDependencyIdentity.swift` is
+(`TIPKIT_AGENT_RUNTIME_OK`). Focused checks live in
+`tests/agent/*Tests.swift`. `tests/agent/TipKitDependencyIdentity.swift` is
 prepared for a future clean EC2 run that builds guest Foundation and SwiftUI
 first and prints `TIPKIT_DEPENDENCY_IDENTITY_OK` only after proving
 `SwiftUI.Text` / `Image` / `Edge` / `Binding` identities. Compiling that file

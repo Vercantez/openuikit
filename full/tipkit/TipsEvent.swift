@@ -68,12 +68,21 @@ extension Tips {
             _ donation: DonationInfo,
             _ completion: (() -> Void)? = nil
         ) {
+            sendDonation(donation, date: Date(), completion)
+        }
+
+        @_spi(OpenUIKitHost)
+        public func sendDonation(
+            _ donation: DonationInfo,
+            date: Date,
+            _ completion: (() -> Void)? = nil
+        ) {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .secondsSince1970
             let payload = (try? encoder.encode(donation)) ?? Data()
             TipsStore.shared.appendDonation(
                 eventID: id,
-                date: Date(),
+                date: date,
                 payload: payload,
                 limit: donationLimit
             )

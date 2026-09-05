@@ -20,7 +20,12 @@ enum TipsStore {
         private var requestedCloudKit: Tips.ConfigurationOption.CloudKitContainer??
         private var hideAllForTesting = false
         private var showAllForTesting = false
+        private var hiddenTypeKeys: Set<String> = []
+        private var shownTypeKeys: Set<String> = []
         private var donations: [String: [StoredDonation]] = [:]
+        private var invalidations: [String: Tips.InvalidationReason] = [:]
+        private var displayCounts: [String: Int] = [:]
+        private var statusListeners: [UUID: () -> Void] = [:]
 
         struct StoredDonation: Sendable {
             var date: Date
@@ -47,35 +52,72 @@ enum TipsStore {
         }
 
         func resetDatastore() throws {
+            let listeners: [() -> Void]
             lock.lock()
-            defer { lock.unlock() }
             donations.removeAll()
+            invalidations.removeAll()
+            displayCounts.removeAll()
+            listeners = Array(statusListeners.values)
+            lock.unlock()
+            listeners.forEach { $0() }
         }
 
         func resetEverythingForHost() {
             lock.lock()
-            defer { lock.unlock() }
             configured = false
             displayFrequency = nil
             requestedDatastore = nil
             requestedCloudKit = nil
             hideAllForTesting = false
             showAllForTesting = false
+            hiddenTypeKeys.removeAll()
+            shownTypeKeys.removeAll()
             donations.removeAll()
+            invalidations.removeAll()
+            displayCounts.removeAll()
+            let listeners = Array(statusListeners.values)
+            lock.unlock()
+            listeners.forEach { $0() }
         }
 
         func setHideAllForTesting() {
             lock.lock()
             hideAllForTesting = true
             showAllForTesting = false
+            let listeners = Array(statusListeners.values)
             lock.unlock()
+            listeners.forEach { $0() }
         }
 
         func setShowAllForTesting() {
             lock.lock()
             showAllForTesting = true
             hideAllForTesting = false
+            let listeners = Array(statusListeners.values)
             lock.unlock()
+            listeners.forEach { $0() }
+        }
+
+        func hideTipsForTesting(_ typeKeys: [String]) {
+            lock.lock()
+            for key in typeKeys {
+                hiddenTypeKeys.insert(key)
+                shownTypeKeys.remove(key)
+            }
+            let listeners = Array(statusListeners.values)
+            lock.unlock()
+            listeners.forEach { $0() }
+        }
+
+        func showTipsForTesting(_ typeKeys: [String]) {
+            lock.lock()
+            for key in typeKeys {
+                shownTypeKeys.insert(key)
+                hiddenTypeKeys.remove(key)
+            }
+            let listeners = Array(statusListeners.values)
+            lock.unlock()
+            listeners.forEach { $0() }
         }
 
         func testingFlags() -> (hideAll: Bool, showAll: Bool) {
@@ -126,6 +168,97 @@ enum TipsStore {
             donations[eventID] = []
             lock.unlock()
         }
+
+        func invalidate(id: String, reason: Tips.InvalidationReason) {
+            lock.lock()
+            invalidations[id] = reason
+            let listeners = Array(statusListeners.values)
+            lock.unlock()
+            listeners.forEach { $0() }
+        }
+
+        func resetEligibility(id: String) {
+            lock.lock()
+            invalidations[id] = nil
+            displayCounts[id] = 0
+            let listeners = Array(statusListeners.values)
+            lock.unlock()
+            listeners.forEach { $0() }
+        }
+
+        func recordDisplay(id: String, maxDisplayCount: Int?) {
+            lock.lock()
+            let next = displayCounts[id, default: 0] + 1
+            displayCounts[id] = next
+            var didInvalidate = false
+            if let maxDisplayCount, next >= maxDisplayCount {
+                invalidations[id] = .displayCountExceeded
+                didInvalidate = true
+            }
+            let listeners = Array(statusListeners.values)
+            lock.unlock()
+            if didInvalidate || !listeners.isEmpty {
+                listeners.forEach { $0() }
+            }
+        }
+
+        func status(
+            id: String,
+            typeKey: String,
+            rules: [Tips.Rule]
+        ) -> Tips.Status {
+            lock.lock()
+            defer { lock.unlock() }
+            if let reason = invalidations[id] {
+                if showAllForTesting || shownTypeKeys.contains(typeKey) {
+                    return .available
+                }
+                return .invalidated(reason)
+            }
+            if showAllForTesting || shownTypeKeys.contains(typeKey) {
+                return .available
+            }
+            let rulesPass = rules.allSatisfy { $0.evaluate() }
+            return rulesPass ? .available : .pending
+        }
+
+        func shouldDisplay(
+            id: String,
+            typeKey: String,
+            rules: [Tips.Rule]
+        ) -> Bool {
+            lock.lock()
+            let hideAll = hideAllForTesting
+            let hidden = hiddenTypeKeys.contains(typeKey)
+            let showAll = showAllForTesting
+            let shown = shownTypeKeys.contains(typeKey)
+            lock.unlock()
+            if hideAll || hidden {
+                return false
+            }
+            if showAll || shown {
+                return true
+            }
+            let resolved = status(id: id, typeKey: typeKey, rules: rules)
+            if case .available = resolved {
+                return true
+            }
+            return false
+        }
+
+        func addStatusListener(_ body: @escaping () -> Void) -> UUID {
+            let token = UUID()
+            lock.lock()
+            statusListeners[token] = body
+            lock.unlock()
+            return token
+        }
+
+        func removeStatusListener(_ token: UUID) {
+            lock.lock()
+            statusListeners[token] = nil
+            lock.unlock()
+        }
     }
 }
 
@@ -152,6 +285,14 @@ extension Tips {
 
     public static func showAllTipsForTesting() {
         TipsStore.shared.setShowAllForTesting()
+    }
+
+    public static func hideTipsForTesting(_ tips: [any Tip.Type]) {
+        TipsStore.shared.hideTipsForTesting(tips.map { String(describing: $0) })
+    }
+
+    public static func showTipsForTesting(_ tips: [any Tip.Type]) {
+        TipsStore.shared.showTipsForTesting(tips.map { String(describing: $0) })
     }
 }
 
