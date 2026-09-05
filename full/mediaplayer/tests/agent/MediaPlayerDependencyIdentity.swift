@@ -1,10 +1,10 @@
 import Foundation
 import MediaPlayer
 
-/// Future EC2 identity probe. Isolated host gate does not compile this file.
-/// A cold guest build should import real Foundation (and CoreGraphics for artwork
-/// once that surface exists), pass IndexPath/Date/URL/Error values through
-/// MediaPlayer APIs, and load libMediaPlayer.dylib.
+    /// Future EC2 identity probe. Isolated host gate does not compile this file.
+    /// A cold guest build should import real Foundation, CoreGraphics, and
+    /// OpenUIKit, pass IndexPath/Date/URL/UIImage values through MediaPlayer
+    /// APIs, and load libMediaPlayer.dylib.
 
 @_spi(OpenUIKitHost) import MediaPlayer
 

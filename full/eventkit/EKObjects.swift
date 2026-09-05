@@ -1,4 +1,13 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+#if canImport(MapKit)
+import MapKit
+#endif
 
 /// Shared dirty-state base for EventKit model objects.
 open class EKObject: NSObject {
@@ -64,11 +73,28 @@ open class EKStructuredLocation: EKObject, NSCopying {
             markChanged()
         }
     }
+    #if canImport(CoreLocation)
+    public var geoLocation: CLLocation? {
+        get {
+            guard let latitude = _latitude, let longitude = _longitude else { return nil }
+            return CLLocation(latitude: latitude, longitude: longitude)
+        }
+        set {
+            _latitude = newValue?.coordinate.latitude
+            _longitude = newValue?.coordinate.longitude
+            markChanged()
+        }
+    }
+    #endif
 
     private var _title: String?
     private var _radius: Double = 0
+    var _latitude: Double?
+    var _longitude: Double?
     private var _committedTitle: String?
     private var _committedRadius: Double = 0
+    private var _committedLatitude: Double?
+    private var _committedLongitude: Double?
 
     internal override init() {
         super.init()
@@ -81,10 +107,20 @@ open class EKStructuredLocation: EKObject, NSCopying {
         finishInitialization()
     }
 
+    #if canImport(MapKit) && canImport(CoreLocation)
+    public convenience init(mapItem: MKMapItem) {
+        self.init(title: mapItem.name ?? "")
+        geoLocation = mapItem.location
+        finishInitialization()
+    }
+    #endif
+
     open func copy(with zone: NSZone? = nil) -> Any {
         let copy = EKStructuredLocation()
         copy._title = _title
         copy._radius = _radius
+        copy._latitude = _latitude
+        copy._longitude = _longitude
         copy.captureCommittedState()
         return copy
     }
@@ -92,11 +128,15 @@ open class EKStructuredLocation: EKObject, NSCopying {
     override func captureCommittedState() {
         _committedTitle = _title
         _committedRadius = _radius
+        _committedLatitude = _latitude
+        _committedLongitude = _longitude
     }
 
     override func restoreCommittedState() {
         _title = _committedTitle
         _radius = _committedRadius
+        _latitude = _committedLatitude
+        _longitude = _committedLongitude
     }
 }
 
@@ -184,6 +224,37 @@ open class EKAlarm: EKObject, NSCopying {
         _proximity = _committedProximity
         _structuredLocation = _committedStructuredLocation.flatMap { $0.copy() as? EKStructuredLocation }
     }
+
+    func persistRecord() -> EKAlarmRecord {
+        EKAlarmRecord(
+            relativeOffset: relativeOffset,
+            absoluteDate: absoluteDate?.timeIntervalSince1970,
+            proximity: proximity.rawValue,
+            locationTitle: structuredLocation?.title,
+            locationRadius: structuredLocation?.radius ?? 0,
+            latitude: structuredLocation?._latitude,
+            longitude: structuredLocation?._longitude
+        )
+    }
+
+    static func fromRecord(_ record: EKAlarmRecord) -> EKAlarm {
+        let alarm: EKAlarm
+        if let absolute = record.absoluteDate {
+            alarm = EKAlarm(absoluteDate: Date(timeIntervalSince1970: absolute))
+        } else {
+            alarm = EKAlarm(relativeOffset: record.relativeOffset)
+        }
+        alarm.proximity = EKAlarmProximity(rawValue: record.proximity) ?? .none
+        if let title = record.locationTitle {
+            let location = EKStructuredLocation(title: title)
+            location.radius = record.locationRadius
+            location._latitude = record.latitude
+            location._longitude = record.longitude
+            alarm.structuredLocation = location
+        }
+        alarm.finishInitialization()
+        return alarm
+    }
 }
 
 /// Calendar account/source. Linux has no host CalDAV/Exchange/iCloud accounts.
@@ -202,6 +273,23 @@ open class EKSource: EKObject {
         isDelegate = false
         super.init()
         finishInitialization()
+    }
+
+    func applyRecord(_ record: EKSourceRecord) {
+        sourceIdentifier = record.identifier
+        sourceType = EKSourceType(rawValue: record.sourceType) ?? .local
+        title = record.title
+        isDelegate = record.isDelegate
+        finishInitialization()
+    }
+
+    func persistRecord() -> EKSourceRecord {
+        EKSourceRecord(
+            identifier: sourceIdentifier,
+            sourceType: sourceType.rawValue,
+            title: title,
+            isDelegate: isDelegate
+        )
     }
 
     func bind(to store: EKEventStore) {
@@ -239,6 +327,31 @@ open class EKCalendar: EKObject {
     public private(set) var isImmutable: Bool
     public private(set) var isSubscribed: Bool
     public private(set) var supportedEventAvailabilities: EKCalendarEventAvailabilityMask
+    var colorRed: Double = EKLocalStoreIO.defaultRed
+    var colorGreen: Double = EKLocalStoreIO.defaultGreen
+    var colorBlue: Double = EKLocalStoreIO.defaultBlue
+    var colorAlpha: Double = EKLocalStoreIO.defaultAlpha
+    #if canImport(CoreGraphics)
+    public var cgColor: CGColor! {
+        get {
+            CGColor(
+                red: CGFloat(colorRed),
+                green: CGFloat(colorGreen),
+                blue: CGFloat(colorBlue),
+                alpha: CGFloat(colorAlpha)
+            )
+        }
+        set {
+            if let components = newValue?.components, components.count >= 3 {
+                colorRed = Double(components[0])
+                colorGreen = Double(components[1])
+                colorBlue = Double(components[2])
+                colorAlpha = components.count > 3 ? Double(components[3]) : 1
+            }
+            markChanged()
+        }
+    }
+    #endif
 
     private var _title: String = ""
     private var _source: EKSource?
@@ -302,6 +415,44 @@ open class EKCalendar: EKObject {
     override func restoreCommittedState() {
         _title = _committedTitle
         _source = _committedSource
+    }
+
+    func applyRecord(_ record: EKCalendarRecord, source: EKSource?, store: EKEventStore) {
+        calendarIdentifier = record.identifier
+        _title = record.title
+        _source = source
+        type = EKCalendarType(rawValue: record.type) ?? .local
+        allowedEntityTypes = EKEntityMask(rawValue: record.allowedEntityTypes)
+        allowsContentModifications = record.allowsContentModifications
+        isImmutable = record.isImmutable
+        isSubscribed = record.isSubscribed
+        supportedEventAvailabilities = EKCalendarEventAvailabilityMask(
+            rawValue: record.supportedEventAvailabilities
+        )
+        colorRed = record.colorRed
+        colorGreen = record.colorGreen
+        colorBlue = record.colorBlue
+        colorAlpha = record.colorAlpha
+        eventStore = store
+        finishInitialization()
+    }
+
+    func persistRecord() -> EKCalendarRecord {
+        EKCalendarRecord(
+            identifier: calendarIdentifier,
+            title: title,
+            sourceIdentifier: source?.sourceIdentifier ?? EKLocalStoreIO.localSourceIdentifier,
+            type: type.rawValue,
+            allowedEntityTypes: allowedEntityTypes.rawValue,
+            allowsContentModifications: allowsContentModifications,
+            isImmutable: isImmutable,
+            isSubscribed: isSubscribed,
+            supportedEventAvailabilities: supportedEventAvailabilities.rawValue,
+            colorRed: colorRed,
+            colorGreen: colorGreen,
+            colorBlue: colorBlue,
+            colorAlpha: colorAlpha
+        )
     }
 }
 
@@ -443,6 +594,42 @@ open class EKCalendarItem: EKObject {
         _alarms = _committedAlarms
         _recurrenceRules = _committedRecurrenceRules
     }
+
+    func applyItemIdentity(
+        identifier: String,
+        externalIdentifier: String,
+        creationDate: Date?,
+        lastModifiedDate: Date?
+    ) {
+        calendarItemIdentifier = identifier
+        calendarItemExternalIdentifier = externalIdentifier
+        self.creationDate = creationDate
+        self.lastModifiedDate = lastModifiedDate
+    }
+
+    func setExternalIdentifier(_ identifier: String) {
+        calendarItemExternalIdentifier = identifier
+    }
+
+    func persistAlarms() -> [EKAlarmRecord] {
+        _alarms.map { $0.persistRecord() }
+    }
+
+    func persistRecurrence() -> [EKRecurrenceRecord] {
+        _recurrenceRules.map { $0.persistRecord() }
+    }
+
+    func installAlarms(_ records: [EKAlarmRecord]) {
+        _alarms = records.map { EKAlarm.fromRecord($0) }
+    }
+
+    func installRecurrence(_ records: [EKRecurrenceRecord]) {
+        _recurrenceRules = records.map { EKRecurrenceRule.fromRecord($0) }
+    }
+
+    func stampModification() {
+        lastModifiedDate = Date()
+    }
 }
 
 /// Calendar event. Persistence is fail-closed until a host store exists.
@@ -535,7 +722,141 @@ open class EKEvent: EKCalendarItem {
     }
 
     open override func refresh() -> Bool {
-        false
+        guard let store = owningStore else { return false }
+        return store.refreshEvent(self)
+    }
+
+    func applyRecord(_ record: EKEventRecord, calendar: EKCalendar?, store: EKEventStore) {
+        applyItemIdentity(
+            identifier: record.calendarItemIdentifier,
+            externalIdentifier: record.calendarItemExternalIdentifier,
+            creationDate: record.creationDate.map { Date(timeIntervalSince1970: $0) },
+            lastModifiedDate: record.lastModifiedDate.map { Date(timeIntervalSince1970: $0) }
+        )
+        eventIdentifier = record.eventIdentifier
+        _calendar = calendar
+        _title = record.title
+        _location = record.location
+        _notes = record.notes
+        _url = record.url.flatMap { URL(string: $0) }
+        _timeZone = record.timeZone.flatMap { TimeZone(identifier: $0) }
+        _startDate = Date(timeIntervalSince1970: record.start)
+        _endDate = Date(timeIntervalSince1970: record.end)
+        _isAllDay = record.isAllDay
+        _availability = EKEventAvailability(rawValue: record.availability) ?? .busy
+        status = EKEventStatus(rawValue: record.status) ?? .none
+        isDetached = record.isDetached
+        occurrenceDate = record.occurrenceDate.map { Date(timeIntervalSince1970: $0) } ?? _startDate
+        birthdayContactIdentifier = record.birthdayContactIdentifier
+        birthdayPersonID = record.birthdayPersonID
+        installAlarms(record.alarms)
+        installRecurrence(record.recurrence)
+        if let title = record.structuredTitle {
+            let location = EKStructuredLocation(title: title)
+            location.radius = record.structuredRadius
+            location._latitude = record.structuredLatitude
+            location._longitude = record.structuredLongitude
+            _structuredLocation = location
+        } else {
+            _structuredLocation = nil
+        }
+        owningStore = store
+        finishInitialization()
+    }
+
+    func persistRecord() -> EKEventRecord? {
+        guard let start = startDate, let end = endDate else { return nil }
+        return EKEventRecord(
+            calendarItemIdentifier: calendarItemIdentifier,
+            calendarItemExternalIdentifier: calendarItemExternalIdentifier ?? calendarItemIdentifier,
+            eventIdentifier: eventIdentifier ?? calendarItemIdentifier,
+            calendarIdentifier: calendar?.calendarIdentifier ?? "",
+            title: title,
+            location: location,
+            notes: notes,
+            url: url?.absoluteString,
+            timeZone: timeZone?.identifier,
+            start: start.timeIntervalSince1970,
+            end: end.timeIntervalSince1970,
+            isAllDay: isAllDay,
+            availability: availability.rawValue,
+            status: status.rawValue,
+            isDetached: isDetached,
+            occurrenceDate: occurrenceDate?.timeIntervalSince1970,
+            birthdayContactIdentifier: birthdayContactIdentifier,
+            birthdayPersonID: birthdayPersonID,
+            creationDate: creationDate?.timeIntervalSince1970,
+            lastModifiedDate: lastModifiedDate?.timeIntervalSince1970,
+            alarms: persistAlarms(),
+            recurrence: persistRecurrence(),
+            structuredTitle: structuredLocation?.title,
+            structuredRadius: structuredLocation?.radius ?? 0,
+            structuredLatitude: structuredLocation?._latitude,
+            structuredLongitude: structuredLocation?._longitude
+        )
+    }
+
+    func occurrenceCopy(at date: Date, duration: TimeInterval, store: EKEventStore) -> EKEvent {
+        let copy = EKEvent(eventStore: store)
+        copy.applyRecord(
+            persistRecord() ?? EKEventRecord(
+                calendarItemIdentifier: calendarItemIdentifier,
+                calendarItemExternalIdentifier: calendarItemExternalIdentifier ?? calendarItemIdentifier,
+                eventIdentifier: eventIdentifier ?? calendarItemIdentifier,
+                calendarIdentifier: calendar?.calendarIdentifier ?? "",
+                title: title,
+                location: location,
+                notes: notes,
+                url: url?.absoluteString,
+                timeZone: timeZone?.identifier,
+                start: date.timeIntervalSince1970,
+                end: (date + duration).timeIntervalSince1970,
+                isAllDay: isAllDay,
+                availability: availability.rawValue,
+                status: status.rawValue,
+                isDetached: false,
+                occurrenceDate: date.timeIntervalSince1970,
+                birthdayContactIdentifier: birthdayContactIdentifier,
+                birthdayPersonID: birthdayPersonID,
+                creationDate: creationDate?.timeIntervalSince1970,
+                lastModifiedDate: lastModifiedDate?.timeIntervalSince1970,
+                alarms: persistAlarms(),
+                recurrence: persistRecurrence(),
+                structuredTitle: structuredLocation?.title,
+                structuredRadius: structuredLocation?.radius ?? 0,
+                structuredLatitude: structuredLocation?._latitude,
+                structuredLongitude: structuredLocation?._longitude
+            ),
+            calendar: calendar,
+            store: store
+        )
+        copy._startDate = date
+        copy._endDate = date.addingTimeInterval(duration)
+        copy.occurrenceDate = date
+        copy.isDetached = false
+        copy.finishInitialization()
+        return copy
+    }
+
+    func detachOccurrence(at date: Date) {
+        isDetached = true
+        occurrenceDate = date
+        eventIdentifier = UUID().uuidString
+        _recurrenceRules = []
+    }
+
+    func reidentify(eventIdentifier: String, calendarItemIdentifier: String) {
+        self.eventIdentifier = eventIdentifier
+        applyItemIdentity(
+            identifier: calendarItemIdentifier,
+            externalIdentifier: calendarItemExternalIdentifier ?? calendarItemIdentifier,
+            creationDate: creationDate,
+            lastModifiedDate: lastModifiedDate
+        )
+    }
+
+    func setOccurrenceDate(_ date: Date) {
+        occurrenceDate = date
     }
 
     override func captureCommittedState() {
@@ -582,6 +903,19 @@ open class EKReminder: EKCalendarItem {
             markChanged()
         }
     }
+
+    /// RFC 5545 bands used by Reminders: 0 none, 1–4 high, 5 medium, 6–9 low.
+    var priorityBand: EKReminderPriority {
+        switch _priority {
+        case 0: return .none
+        case 1...4: return .high
+        case 5: return .medium
+        case 6...9: return .low
+        default: return .none
+        }
+    }
+
+    var isPriorityValid: Bool { (0...9).contains(_priority) }
     public var isCompleted: Bool {
         get { _completionDate != nil }
         set {
@@ -638,6 +972,53 @@ open class EKReminder: EKCalendarItem {
         _dueDateComponents = _committedDueDateComponents
         _priority = _committedPriority
         _completionDate = _committedCompletionDate
+    }
+
+    open override func refresh() -> Bool {
+        guard let store = owningStore else { return false }
+        return store.refreshReminder(self)
+    }
+
+    func applyRecord(_ record: EKReminderRecord, calendar: EKCalendar?, store: EKEventStore) {
+        applyItemIdentity(
+            identifier: record.calendarItemIdentifier,
+            externalIdentifier: record.calendarItemExternalIdentifier,
+            creationDate: record.creationDate.map { Date(timeIntervalSince1970: $0) },
+            lastModifiedDate: record.lastModifiedDate.map { Date(timeIntervalSince1970: $0) }
+        )
+        _calendar = calendar
+        _title = record.title
+        _notes = record.notes
+        _url = record.url.flatMap { URL(string: $0) }
+        _timeZone = record.timeZone.flatMap { TimeZone(identifier: $0) }
+        _priority = record.priority
+        _completionDate = record.completionDate.map { Date(timeIntervalSince1970: $0) }
+        _startDateComponents = EKDecodeDateComponents(record.startComponents)
+        _dueDateComponents = EKDecodeDateComponents(record.dueComponents)
+        installAlarms(record.alarms)
+        installRecurrence(record.recurrence)
+        owningStore = store
+        finishInitialization()
+    }
+
+    func persistRecord() -> EKReminderRecord {
+        EKReminderRecord(
+            calendarItemIdentifier: calendarItemIdentifier,
+            calendarItemExternalIdentifier: calendarItemExternalIdentifier ?? calendarItemIdentifier,
+            calendarIdentifier: calendar?.calendarIdentifier ?? "",
+            title: title,
+            notes: notes,
+            url: url?.absoluteString,
+            timeZone: timeZone?.identifier,
+            priority: priority,
+            completionDate: completionDate?.timeIntervalSince1970,
+            startComponents: EKEncodeDateComponents(startDateComponents),
+            dueComponents: EKEncodeDateComponents(dueDateComponents),
+            creationDate: creationDate?.timeIntervalSince1970,
+            lastModifiedDate: lastModifiedDate?.timeIntervalSince1970,
+            alarms: persistAlarms(),
+            recurrence: persistRecurrence()
+        )
     }
 }
 
