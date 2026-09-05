@@ -365,6 +365,11 @@ open class UIScrollView: UIView {
             if cur === self { return UIScrollView.iOSKeyboardOverlap }
             node = cur.superview
         }
+        // A UISearchTextField lives in the navigation bar, not inside the
+        // table. MEASURED Tabs t4000, iPhone SE 2x / iOS 26.1: focusing
+        // the search controller leaves `adjustedContentInset.bottom` **83**
+        // (the tab bar), not the 260 keyboard overlap — the keyboard is a
+        // separate window (docs/ORACLE_FLOW.md). Do not apply 260 here.
         return 0
     }
     public var verticalScrollIndicatorInsets: UIEdgeInsets = .zero {
