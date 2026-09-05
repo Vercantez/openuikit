@@ -699,11 +699,13 @@ open class EKEventStore: NSObject {
         var results: [EKEvent] = []
         for occ in starts {
             let key = occ.timeIntervalSince1970
-            if exceptions.contains(key) { continue }
-            if let detachedRecord = detached.first(where: { $0.occurrenceDate == key }) {
+            if let detachedRecord = detached.first(where: {
+                abs(($0.occurrenceDate ?? $0.start) - key) < 0.5
+            }) {
                 results.append(materializeEvent(detachedRecord))
                 continue
             }
+            if exceptions.contains(where: { abs($0 - key) < 0.5 }) { continue }
             results.append(master.occurrenceCopy(at: occ, duration: duration, store: self))
         }
         return results
