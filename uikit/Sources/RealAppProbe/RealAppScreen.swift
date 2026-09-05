@@ -85,6 +85,9 @@ public enum RealAppScreen {
         /// wrapped in a UINavigationController as BrowserViewController
         /// `showSettings` does.
         case focusSettings
+        /// mozilla-mobile/focus-ios Blockzilla/HomeViewController.swift at
+        /// a2832521 — the browser-home overlay (wordmark + tips).
+        case focusHome
         /// weiran/Hackers Features/Feed FeedView.swift at 83016de — the
         /// main post list, wrapped in a UINavigationController as the app's
         /// NavigationStack chrome.
@@ -263,6 +266,8 @@ public enum RealAppScreen {
         case .storage:          return makeStorageScreen(theme: theme)
         case .focusSettings:
             return makeFocusSettingsScreen()
+        case .focusHome:
+            return makeFocusHomeScreen()
         case .hackersFeed:
             return makeHackersFeedScreen()
         }

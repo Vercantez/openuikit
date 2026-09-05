@@ -144,6 +144,26 @@ let package = Package(
         // source can continue to `import Symbols`.
         .library(name: "Symbols", targets: ["Symbols"]),
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
+        // Combine is a product so an ingested SwiftPM package can
+        // `import Combine` on Linux. MEASURED ingest of focus-ios a2832521
+        // Blockzilla: 15 files import Combine (AppDelegate.swift:8 is the
+        // first after Glean/Sentry); dep-trial 17/20 ladder apps. Darwin
+        // dependents keep the SDK module via
+        // `.product(..., condition: .when(platforms: [.linux]))`.
+        .library(name: "Combine", targets: ["Combine"]),
+        // Harness stubs RealAppProbe already compiles (Focus Settings).
+        // Publishing them lets an ingested Blockzilla `import Glean` on
+        // Linux without a second target of the same name (SwiftPM refuses
+        // Glean/Intents/Onboarding/Licenses/DesignSystem in both packages;
+        // MEASURED focus-e2e wave1). Darwin dependents keep linux-only
+        // `.product(..., condition: .when(platforms: [.linux]))`. These
+        // are not Mozilla Glean / the SDK Intents framework.
+        .library(name: "Glean", targets: ["Glean"]),
+        .library(name: "Intents", targets: ["Intents"]),
+        .library(name: "IntentsUI", targets: ["IntentsUI"]),
+        .library(name: "Onboarding", targets: ["Onboarding"]),
+        .library(name: "Licenses", targets: ["Licenses"]),
+        .library(name: "DesignSystem", targets: ["DesignSystem"]),
         .executable(name: "openrender", targets: ["openrender"]),
         .executable(name: "openhost", targets: ["openhost"]),
         // The C ABI an Objective-C app links against (docs/OBJC_FACADE.md).
@@ -319,7 +339,7 @@ let package = Package(
                     "SwiftUI",
                     .target(name: "Combine", condition: .when(platforms: [.linux])),
                 ],
-                exclude: ["FocusModules", "HackersModules"],
+                exclude: ["FocusModules", "HackersModules", "Focus/script.json"],
                 swiftSettings: [
                     .enableUpcomingFeature("IsolatedDefaultValues"),
                     .unsafeFlags([

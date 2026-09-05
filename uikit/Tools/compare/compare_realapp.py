@@ -96,6 +96,9 @@ VARIANTS = {
     "realapp_settings_light_ipad": "UIScrollView",
     # Firefox Focus Settings: inset-grouped UITableView under a nav bar.
     "realapp_focus_settings_light": "UITableView",
+    # Firefox Focus browser home (HomeViewController). Pixel score is the
+    # gate once the operator captures the iOS golden; no 1:1 class subtree.
+    "realapp_focus_home_light": "UIImageView",
     "realapp_history_light_ipad": "UIScrollView",
     # Same ThemeableView root as the phone storage screen; the iPad row
     # wraps it in a large-title nav, which sits outside this subtree.
