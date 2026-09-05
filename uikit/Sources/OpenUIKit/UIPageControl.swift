@@ -127,9 +127,17 @@ open class UIPageControl: UIControl {
             .rounded(.toNearestOrAwayFromZero)
         return CGPoint(
             x: x + UIPageControl.contentSidePadding + UIPageControl.slotSize / 2
-               + CGFloat(index) * UIPageControl.slotPitch
+               + CGFloat(visualIndex(index)) * UIPageControl.slotPitch
                + UIPageControl.dotCenterOffset.width,
             y: y + UIPageControl.contentHeight / 2 + UIPageControl.dotCenterOffset.height)
+    }
+
+    /// MEASURED Pager t200.rtl / t2000.rtl, iPhone SE 2x / iOS 26.1: page 0
+    /// ("One") paints the RIGHTMOST dot current (centre 51) and the leftmost
+    /// inactive (191); t1200 page 1 stays the middle dot. Visual index =
+    /// n − 1 − index. LTR t200 current is the leftmost (99.863, blob 0).
+    func visualIndex(_ index: Int) -> Int {
+        _layoutIsRTL ? numberOfPages - 1 - index : index
     }
 
     // MARK: Tracking (UIKit advances one page per tap on the leading /
@@ -139,7 +147,10 @@ open class UIPageControl: UIControl {
         super.endTracking(touch, with: event)
         guard isTouchInside, let touch, numberOfPages > 1 else { return }
         let p = touch.location(in: self)
-        let next = p.x < bounds.midX ? currentPage - 1 : currentPage + 1
+        // Leading half steps toward page 0. MEASURED Pager t200.rtl: page 0
+        // is the trailing-most (right) dot, so the leading half is the right.
+        let towardZero = _layoutIsRTL ? p.x > bounds.midX : p.x < bounds.midX
+        let next = towardZero ? currentPage - 1 : currentPage + 1
         let clamped = Swift.max(0, Swift.min(numberOfPages - 1, next))
         guard clamped != currentPage else { return }
         currentPage = clamped

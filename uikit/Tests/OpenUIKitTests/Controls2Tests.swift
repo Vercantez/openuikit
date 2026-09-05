@@ -439,6 +439,21 @@ final class UISearchBarIOSCutTests: XCTestCase {
         XCTAssertEqual(sb.searchTextField.layer.shadowRadius, 16, accuracy: 1e-9)
         XCTAssertEqual(sb.searchTextField.layer.shadowOffset.height, 7.5, accuracy: 1e-9)
     }
+
+    /// MEASURED Tabs t4000.rtl, iPhone SE 2x / iOS 26.1: dismiss is on the
+    /// trailing (left) edge — field abs [71, 18, 288, 44] = 16 + 44 + 11.
+    func testNavInlineRTLPutsDismissOnTheTrailingEdge() {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 375, height: 80))
+        sb.semanticContentAttribute = .forceRightToLeft
+        sb._navInlineActive = true
+        sb.layoutIfNeeded()
+        XCTAssertEqual(sb.searchTextField.frame,
+                       CGRect(x: 71, y: UISearchBar.navInlineFieldY, width: 288,
+                              height: UISearchBar.fieldHeight))
+        let dismiss = sb.subviews.compactMap { $0 as? UIButton }.first
+        XCTAssertEqual(dismiss?.frame,
+                       CGRect(x: 16, y: UISearchBar.navInlineFieldY, width: 44, height: 44))
+    }
 }
 
 #if !os(Linux)
