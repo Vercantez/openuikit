@@ -1,148 +1,147 @@
 import Foundation
 
-// Linux Int enums. Case identity is tested; Darwin numeric ABI is unobserved.
-// Option-set bits below match Apple public documentation and are Linux-local.
+// Raw values MEASURED /tmp/mp_oracle.json, iPhone SE 3rd gen 2x / iOS 26.1
+// (com.openuikit.mporacle, OpenUIKit-2x-fw-mediaplayer).
 
 public enum MPChangeLanguageOptionSetting: Int, Sendable, Hashable {
-    case none
-    case nowPlayingItemOnly
-    case permanent
+    case none = 0
+    case nowPlayingItemOnly = 1
+    case permanent = 2
 }
 
 public enum MPMediaGrouping: Int, Sendable, Hashable {
-    case album
-    case albumArtist
-    case artist
-    case composer
-    case genre
-    case playlist
-    case podcastTitle
-    case title
+    case title = 0
+    case album = 1
+    case artist = 2
+    case albumArtist = 3
+    case composer = 4
+    case genre = 5
+    case playlist = 6
+    case podcastTitle = 7
 }
 
 public enum MPMediaLibraryAuthorizationStatus: Int, Sendable, Hashable {
-    case authorized
-    case denied
-    case notDetermined
-    case restricted
+    case notDetermined = 0
+    case denied = 1
+    case restricted = 2
+    case authorized = 3
 }
 
 public enum MPMediaPredicateComparison: Int, Sendable, Hashable {
-    case contains
-    case equalTo
+    case equalTo = 0
+    case contains = 1
 }
 
 public enum MPMovieControlStyle: Int, Sendable, Hashable {
-    case embedded
-    case fullscreen
-    case none
+    case none = 0
+    case embedded = 1
+    case fullscreen = 2
 }
 
 public enum MPMovieFinishReason: Int, Sendable, Hashable {
-    case playbackEnded
-    case playbackError
-    case userExited
+    case playbackEnded = 0
+    case playbackError = 1
+    case userExited = 2
 }
 
 public enum MPMoviePlaybackState: Int, Sendable, Hashable {
-    case interrupted
-    case paused
-    case playing
-    case seekingBackward
-    case seekingForward
-    case stopped
+    case stopped = 0
+    case playing = 1
+    case paused = 2
+    case interrupted = 3
+    case seekingForward = 4
+    case seekingBackward = 5
 }
 
 public enum MPMovieRepeatMode: Int, Sendable, Hashable {
-    case none
-    case one
+    case none = 0
+    case one = 1
 }
 
 public enum MPMovieScalingMode: Int, Sendable, Hashable {
-    case aspectFill
-    case aspectFit
-    case fill
-    case none
+    case none = 0
+    case aspectFit = 1
+    case aspectFill = 2
+    case fill = 3
 }
 
 public enum MPMovieSourceType: Int, Sendable, Hashable {
-    case file
-    case streaming
-    case unknown
+    case unknown = 0
+    case file = 1
+    case streaming = 2
 }
 
 public enum MPMovieTimeOption: Int, Sendable, Hashable {
-    case exact
-    case nearestKeyFrame
+    case nearestKeyFrame = 0
+    case exact = 1
 }
 
 public enum MPMusicPlaybackState: Int, Sendable, Hashable {
-    case interrupted
-    case paused
-    case playing
-    case seekingBackward
-    case seekingForward
-    case stopped
+    case stopped = 0
+    case playing = 1
+    case paused = 2
+    case interrupted = 3
+    case seekingForward = 4
+    case seekingBackward = 5
 }
 
 public enum MPMusicRepeatMode: Int, Sendable, Hashable {
-    case all
-    case `default`
-    case none
-    case one
+    case `default` = 0
+    case none = 1
+    case one = 2
+    case all = 3
 }
 
 public enum MPMusicShuffleMode: Int, Sendable, Hashable {
-    case albums
-    case `default`
-    case off
-    case songs
+    case `default` = 0
+    case off = 1
+    case songs = 2
+    case albums = 3
 }
 
-public enum MPNowPlayingInfoLanguageOptionType: Int, Sendable, Hashable {
-    case audible
-    case legible
+public enum MPNowPlayingInfoLanguageOptionType: UInt, Sendable, Hashable {
+    case audible = 0
+    case legible = 1
 }
 
-public enum MPNowPlayingInfoMediaType: Int, Sendable, Hashable {
-    case audio
-    case none
-    case video
+public enum MPNowPlayingInfoMediaType: UInt, Sendable, Hashable {
+    case none = 0
+    case audio = 1
+    case video = 2
 }
 
-public enum MPNowPlayingPlaybackState: Int, Sendable, Hashable {
-    case interrupted
-    case paused
-    case playing
-    case stopped
-    case unknown
+public enum MPNowPlayingPlaybackState: UInt, Sendable, Hashable {
+    case unknown = 0
+    case playing = 1
+    case paused = 2
+    case stopped = 3
+    case interrupted = 4
 }
 
 public enum MPRemoteCommandHandlerStatus: Int, Sendable, Hashable {
-    case commandFailed
-    case deviceNotFound
-    case noActionableNowPlayingItem
-    case noSuchContent
-    case success
+    case success = 0
+    case noSuchContent = 100
+    case noActionableNowPlayingItem = 110
+    case deviceNotFound = 120
+    case commandFailed = 200
 }
 
 public enum MPRepeatType: Int, Sendable, Hashable {
-    case all
-    case off
-    case one
+    case off = 0
+    case one = 1
+    case all = 2
 }
 
-public enum MPSeekCommandEventType: Int, Sendable, Hashable {
-    case beginSeeking
-    case endSeeking
+public enum MPSeekCommandEventType: UInt, Sendable, Hashable {
+    case beginSeeking = 0
+    case endSeeking = 1
 }
 
 public enum MPShuffleType: Int, Sendable, Hashable {
-    case collections
-    case items
-    case off
+    case off = 0
+    case items = 1
+    case collections = 2
 }
-
 
 public struct MPMediaType: OptionSet, Sendable, Hashable {
     public let rawValue: UInt
@@ -181,26 +180,25 @@ public struct MPMovieLoadState: OptionSet, Sendable, Hashable {
 public struct MPMovieMediaTypeMask: OptionSet, Sendable, Hashable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
-    public static let audio = MPMovieMediaTypeMask(rawValue: 1 << 0)
-    public static let video = MPMovieMediaTypeMask(rawValue: 1 << 1)
+    // MEASURED /tmp/mp_oracle.json iOS 26.1: video=1, audio=2.
+    public static let video = MPMovieMediaTypeMask(rawValue: 1 << 0)
+    public static let audio = MPMovieMediaTypeMask(rawValue: 1 << 1)
 }
 
-public struct MPError: Error, Hashable {
+public struct MPError: Error, Hashable, CustomNSError {
     public enum Code: Int, Sendable, Hashable {
-
-        case cancelled
-        case cloudServiceCapabilityMissing
-        case networkConnectionFailed
-        case notFound
-        case notSupported
-        case permissionDenied
-        case requestTimedOut
-        case unknown
-
+        case unknown = 0
+        case permissionDenied = 1
+        case cloudServiceCapabilityMissing = 2
+        case networkConnectionFailed = 3
+        case notFound = 4
+        case notSupported = 5
+        case cancelled = 6
+        case requestTimedOut = 7
     }
 
-    /// Linux-local domain string; Darwin `MPErrorDomain` bytes are unobserved.
-    public static var errorDomain: String { "MPErrorDomain" }
+    /// MEASURED /tmp/mp_oracle.json iOS 26.1: domain bytes `MPErrorDomain`.
+    public static var errorDomain: String { MPErrorDomain }
 
     public var code: Code
     public var userInfo: [String: Any]
@@ -236,4 +234,3 @@ public func ~= (match: MPError.Code, error: any Error) -> Bool {
 }
 
 public typealias MPMediaEntityPersistentID = UInt64
-

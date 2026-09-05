@@ -128,93 +128,194 @@ open class MPMusicPlayerController: NSObject, MPMediaPlayback, MPSystemMusicPlay
     public class var systemMusicPlayer: any MPMusicPlayerController & MPSystemMusicPlayerController { system }
     public class var applicationQueuePlayer: MPMusicPlayerApplicationController { applicationQueue }
 
-    public var currentPlaybackRate: Float = 1
+    /// MEASURED /tmp/mp_oracle.json iOS 26.1: rate 0 at rest.
+    public var currentPlaybackRate: Float = 0
     public var currentPlaybackTime: TimeInterval = 0
     public private(set) var isPreparedToPlay: Bool = false
     public private(set) var playbackState: MPMusicPlaybackState = .stopped
-    public var repeatMode: MPMusicRepeatMode = .default
-    public var shuffleMode: MPMusicShuffleMode = .default
-    public var nowPlayingItem: MPMediaItem?
+    /// MEASURED: application/system/queue players start at `.none` / `.off`, not `.default`.
+    public var repeatMode: MPMusicRepeatMode = .none
+    public var shuffleMode: MPMusicShuffleMode = .off
+    public var nowPlayingItem: MPMediaItem? {
+        didSet {
+            postIfNeeded(.MPMusicPlayerControllerNowPlayingItemDidChange)
+        }
+    }
+    /// MEASURED: 0 when no item (not NSNotFound).
     public private(set) var indexOfNowPlayingItem: Int = 0
     private var queueItems: [MPMediaItem] = []
+    private var generatingNotifications = 0
 
-    public func beginSeekingBackward() {}
-    public func beginSeekingForward() {}
-    public func endSeeking() {}
+    public func beginSeekingBackward() {
+        if playbackState == .playing { playbackState = .seekingBackward }
+        postIfNeeded(.MPMusicPlayerControllerPlaybackStateDidChange)
+    }
 
-    public func pause() {
-        if playbackState == .playing {
-            playbackState = .paused
+    public func beginSeekingForward() {
+        if playbackState == .playing { playbackState = .seekingForward }
+        postIfNeeded(.MPMusicPlayerControllerPlaybackStateDidChange)
+    }
+
+    public func endSeeking() {
+        if playbackState == .seekingForward || playbackState == .seekingBackward {
+            playbackState = queueItems.isEmpty ? .stopped : .playing
+            postIfNeeded(.MPMusicPlayerControllerPlaybackStateDidChange)
         }
     }
 
-    /// Linux has no playback engine. `play` does not invent a playing session.
-    public func play() {
-        if !isPreparedToPlay {
-            playbackState = .stopped
+    public func pause() {
+        if playbackState == .playing || playbackState == .seekingForward || playbackState == .seekingBackward {
+            playbackState = .paused
+            currentPlaybackRate = 0
+            postIfNeeded(.MPMusicPlayerControllerPlaybackStateDidChange)
         }
+    }
+
+    /// MEASURED: `play()` with an empty queue stays `.stopped`. With in-process
+    /// queue items (setQueue / fixture), this is a local state machine — not
+    /// Apple Music playback.
+    public func play() {
+        guard !queueItems.isEmpty, nowPlayingItem != nil else {
+            playbackState = .stopped
+            currentPlaybackRate = 0
+            return
+        }
+        isPreparedToPlay = true
+        playbackState = .playing
+        currentPlaybackRate = 1
+        postIfNeeded(.MPMusicPlayerControllerPlaybackStateDidChange)
     }
 
     public func prepareToPlay() {
-        isPreparedToPlay = false
+        isPreparedToPlay = !queueItems.isEmpty
     }
 
     public func stop() {
         playbackState = .stopped
         isPreparedToPlay = false
         currentPlaybackTime = 0
+        currentPlaybackRate = 0
+        postIfNeeded(.MPMusicPlayerControllerPlaybackStateDidChange)
     }
 
     public func prepareToPlay(completionHandler: @escaping ((any Error)?) -> Void) {
+        if !queueItems.isEmpty {
+            isPreparedToPlay = true
+            DispatchQueue.global(qos: .utility).async {
+                completionHandler(nil)
+            }
+            return
+        }
         isPreparedToPlay = false
         DispatchQueue.global(qos: .utility).async {
             completionHandler(MPError(.notSupported))
         }
     }
 
-    public func beginGeneratingPlaybackNotifications() {}
-    public func endGeneratingPlaybackNotifications() {}
+    public func beginGeneratingPlaybackNotifications() {
+        generatingNotifications += 1
+    }
+
+    public func endGeneratingPlaybackNotifications() {
+        if generatingNotifications > 0 {
+            generatingNotifications -= 1
+        }
+    }
 
     public func skipToBeginning() {
         currentPlaybackTime = 0
     }
 
-    public func skipToNextItem() {}
-    public func skipToPreviousItem() {}
+    public func skipToNextItem() {
+        guard !queueItems.isEmpty else { return }
+        let next = min(indexOfNowPlayingItem + 1, queueItems.count - 1)
+        if next != indexOfNowPlayingItem {
+            indexOfNowPlayingItem = next
+            nowPlayingItem = queueItems[next]
+        } else if repeatMode == .all, let first = queueItems.first {
+            indexOfNowPlayingItem = 0
+            nowPlayingItem = first
+        }
+        currentPlaybackTime = 0
+    }
+
+    public func skipToPreviousItem() {
+        guard !queueItems.isEmpty else { return }
+        let prev = max(indexOfNowPlayingItem - 1, 0)
+        if prev != indexOfNowPlayingItem {
+            indexOfNowPlayingItem = prev
+            nowPlayingItem = queueItems[prev]
+        }
+        currentPlaybackTime = 0
+    }
 
     public func append(_ descriptor: MPMusicPlayerQueueDescriptor) {
-        _ = descriptor
+        let extra = items(from: descriptor)
+        queueItems.append(contentsOf: extra)
+        if nowPlayingItem == nil {
+            nowPlayingItem = queueItems.first
+            indexOfNowPlayingItem = 0
+        }
+        postIfNeeded(.MPMusicPlayerControllerQueueDidChange)
     }
 
     public func prepend(_ descriptor: MPMusicPlayerQueueDescriptor) {
-        _ = descriptor
+        let extra = items(from: descriptor)
+        queueItems.insert(contentsOf: extra, at: 0)
+        if let current = nowPlayingItem, let idx = queueItems.firstIndex(where: { $0 === current }) {
+            indexOfNowPlayingItem = idx
+        } else {
+            nowPlayingItem = queueItems.first
+            indexOfNowPlayingItem = 0
+        }
+        postIfNeeded(.MPMusicPlayerControllerQueueDidChange)
     }
 
     public func setQueue(with descriptor: MPMusicPlayerQueueDescriptor) {
-        _ = descriptor
-        nowPlayingItem = nil
-        indexOfNowPlayingItem = 0
+        applyQueue(items(from: descriptor))
     }
 
     public func setQueue(with itemCollection: MPMediaItemCollection) {
-        queueItems = itemCollection.items
-        nowPlayingItem = queueItems.first
-        indexOfNowPlayingItem = nowPlayingItem == nil ? 0 : 0
+        applyQueue(itemCollection.items)
     }
 
     public func setQueue(with query: MPMediaQuery) {
-        queueItems = query.items ?? []
-        nowPlayingItem = queueItems.first
+        applyQueue(query.items ?? [])
     }
 
     public func setQueue(with storeIDs: [String]) {
         _ = storeIDs
-        nowPlayingItem = nil
+        applyQueue([])
     }
 
     public func openToPlay(_ queueDescriptor: MPMusicPlayerQueueDescriptor) {
         setQueue(with: queueDescriptor)
         play()
+    }
+
+    private func applyQueue(_ items: [MPMediaItem]) {
+        queueItems = items
+        nowPlayingItem = queueItems.first
+        indexOfNowPlayingItem = 0
+        playbackState = .stopped
+        currentPlaybackTime = 0
+        currentPlaybackRate = 0
+        postIfNeeded(.MPMusicPlayerControllerQueueDidChange)
+    }
+
+    private func items(from descriptor: MPMusicPlayerQueueDescriptor) -> [MPMediaItem] {
+        if let media = descriptor as? MPMusicPlayerMediaItemQueueDescriptor {
+            if !media.itemCollection.items.isEmpty {
+                return media.itemCollection.items
+            }
+            return media.query.items ?? []
+        }
+        return []
+    }
+
+    private func postIfNeeded(_ name: NSNotification.Name) {
+        guard generatingNotifications > 0 else { return }
+        NotificationCenter.default.post(name: name, object: self)
     }
 }
 
@@ -223,6 +324,7 @@ open class MPMusicPlayerApplicationController: MPMusicPlayerController {
         queueTransaction: @escaping (MPMusicPlayerControllerMutableQueue) -> Void
     ) async throws -> MPMusicPlayerControllerQueue {
         let queue = MPMusicPlayerControllerMutableQueue()
+        queue.items = []
         queueTransaction(queue)
         throw MPError(.notSupported)
     }
@@ -231,12 +333,14 @@ open class MPMusicPlayerApplicationController: MPMusicPlayerController {
 open class MPNowPlayingInfoCenter: NSObject {
     private static let sharedCenter = MPNowPlayingInfoCenter()
     public var nowPlayingInfo: [String: Any]?
-    public var playbackState: MPNowPlayingPlaybackState = .stopped
+    public var playbackState: MPNowPlayingPlaybackState = .unknown
 
     public class func `default`() -> MPNowPlayingInfoCenter { sharedCenter }
 
-    /// Animated artwork keys stay empty until UIKit artwork types exist.
-    public class var supportedAnimatedArtworkKeys: [String] { [] }
+    /// MEASURED /tmp/mp_oracle.json iOS 26.1: only the 3×4 animated-artwork key.
+    public class var supportedAnimatedArtworkKeys: [String] {
+        [MPNowPlayingInfoProperty3x4AnimatedArtwork]
+    }
 }
 
 open class MPNowPlayingInfoLanguageOption: NSObject {
