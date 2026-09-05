@@ -8,7 +8,7 @@
 #      Sources/RealAppProbe, which is UNMODIFIED source from
 #      Automattic/pocket-casts-ios. A build failure here would mean the app
 #      source only compiles on Darwin;
-#   2. renders the thirteen headless screens (`openrender realapp`);
+#   2. renders the fourteen headless screens (`openrender realapp`);
 #   3. replays scripts/realapp_interaction.json against the live screen
 #      (`openhost --app pocketcasts --script`, SDL dummy driver);
 #   4. diffs both sets against this machine's macOS run, byte for byte.
@@ -25,10 +25,10 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 rm -rf "$WORK"
 mkdir -p "$WORK"/{fonts,linux_out,mac_out,linux_host,mac_host}
 
-# Apple's fonts are not redistributable. The macOS reference render can use
-# the host's SFNS. The inner Linux iOS-cut half draws harvested 2x masks
-# with no FONT_DIR, then uses /out/fonts for unharvested 3x realapp glyphs
-# when the Mac host copied SFNS (glyph_ink_ios_3x.json is 848 keys).
+# Apple's fonts are not redistributable. Headless realapp on Linux is the
+# guest path: iOS cut, scale 2, harvested glyph_ink_ios.json, no FONT_DIR
+# (MEASURED Mac OPENUIKIT_INK_LOG of all 14 screens: empty). openhost replay
+# still uses /out/fonts when the Mac host copied SFNS.
 for f in SFNS.ttf SFNSMono.ttf SFNSItalic.ttf; do
   [ -f "/System/Library/Fonts/$f" ] && cp -f "/System/Library/Fonts/$f" "$WORK/fonts/$f"
 done
@@ -37,7 +37,8 @@ echo "==> macOS reference render of the real-app screen"
 if [ "$(uname -s)" = Darwin ]; then
 swift build -c release --product openrender >/dev/null
 swift build -c release --product openhost >/dev/null
-OPENUIKIT_BACKEND=quartz ./.build/release/openrender realapp "$WORK/mac_out" >/dev/null
+OPENUIKIT_BACKEND=quartz OPENUIKIT_FORCE_IOS=1 OPENUIKIT_REALAPP_SCALE=2 \
+  ./.build/release/openrender realapp "$WORK/mac_out" >/dev/null
 OPENUIKIT_BACKEND=quartz ./.build/release/openhost --app pocketcasts \
     --script scripts/realapp_interaction.json --record "$WORK/mac_host" >/dev/null
 else
@@ -97,7 +98,7 @@ run_suites ink \
 echo "    unit tests passed"
 
 echo "==> no-font iOS cut (2x harvested masks; Linux trial had blank labels)"
-# glyph_ink_ios.json 8786 keys (2026-09-05, +12pt regular ASCII). "Hello" at 17 pt regular F0.0 is
+# glyph_ink_ios.json 8799 keys (2026-09-05, +13pt regular euro F0.25). "Hello" at 17 pt regular F0.0 is
 # a HIT for H/e/l/o (383 opaque pixels measured). "Q" (U+0051) has metrics
 # but is not in that table — U+2603 sizeToFits to width 0 and never draws.
 # No OPENUIKIT_FONT_DIR on this path.
@@ -137,21 +138,24 @@ fi
 grep -F "OPENUIKIT_IOS_INK_MISS:" /tmp/inkprobe/miss.log | head -1
 grep -F "OPENUIKIT_IOS_INK_MISS: I|system-regular|17|light|F0.0|81" /tmp/inkprobe/miss.log
 
-echo "==> headless render (iOS cut; 3x realapp)"
-# 3x table is 848 keys — unharvested glyphs still need a font file
-# (docs/PORTABILITY.md). Use /out/fonts when the Mac host copied SFNS.
-if [ -f "$OUT/fonts/SFNS.ttf" ]; then
-  export OPENUIKIT_FONT_DIR="$OUT/fonts"
-  echo "    OPENUIKIT_FONT_DIR=$OPENUIKIT_FONT_DIR (unharvested 3x fallback)"
-else
-  unset OPENUIKIT_FONT_DIR
-  echo "    no SFNS; unharvested 3x keys abort with OPENUIKIT_IOS_INK_MISS"
-fi
-OPENUIKIT_BACKEND=quartz \
+echo "==> headless render (iOS cut; 2x harvested masks; 14 screens)"
+# MEASURED Mac OPENUIKIT_INK_LOG scale 2 of all 14 screens: empty
+# (focus-home-ink + this branch). Guest/corelibs realapp is scale 2.
+# The 3x table is 848 keys and is not a full alphabet — do not render
+# realapp at 3x without SFNS. A miss here must be OPENUIKIT_IOS_INK_MISS.
+unset OPENUIKIT_FONT_DIR
+OPENUIKIT_FORCE_IOS=1 OPENUIKIT_REALAPP_SCALE=2 OPENUIKIT_BACKEND=quartz \
   ./.build/release/openrender realapp "$OUT/linux_out"
 n=$(ls "$OUT/linux_out"/*.png | wc -l | tr -d ' ')
-[ "$n" -eq 13 ] || { echo "expected 13 realapp screens, got $n"; ls "$OUT/linux_out"; exit 1; }
+[ "$n" -eq 14 ] || { echo "expected 14 realapp screens, got $n"; ls "$OUT/linux_out"; exit 1; }
+echo "    rendered $n screens from harvested 2x masks (no SFNS)"
 echo "==> scripted live replay"
+if [ -f "$OUT/fonts/SFNS.ttf" ]; then
+  export OPENUIKIT_FONT_DIR="$OUT/fonts"
+  echo "    OPENUIKIT_FONT_DIR=$OPENUIKIT_FONT_DIR (openhost replay fallback)"
+else
+  unset OPENUIKIT_FONT_DIR
+fi
 replay=0
 for attempt in 1 2 3 4; do
   if SDL_VIDEODRIVER=dummy OPENUIKIT_BACKEND=quartz \
@@ -200,7 +204,7 @@ for mac, lin, label in [("mac_out", "linux_out", "headless"),
         # Ledger pixels are Foundation formatter output (Apple on Darwin,
         # corelibs on Linux). They are not a raster identity; skip the
         # sha256 compare. Count still requires the PNG to exist.
-        if f == "realapp_ledger_light.png":
+        if f in ("realapp_ledger_light.png",):
             b = f"{w}/{lin}/{f}"
             if not os.path.exists(b):
                 diff.append(f + " (missing)")
