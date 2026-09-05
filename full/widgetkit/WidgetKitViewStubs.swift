@@ -19,8 +19,7 @@ extension View {
     public func accessibilityAction<T0, T1>(_ p0: T0, intent: T1) -> Self { self }
     public func controlWidgetActionHint<T0>(_ p0: T0) -> Self { self }
     public func controlWidgetStatus<T0>(_ p0: T0) -> Self { self }
-    public func widgetLabel<T0>(label: T0) -> Self { self }
-    public func widgetLabel<T0>(_ p0: T0) -> Self { self }
+    public func widgetLabel<T0: StringProtocol>(label: T0) -> Self { self }
     public func dynamicIsland<T0>(verticalPlacement: T0) -> Self { self }
     public func widgetAccentable<T0>(_ p0: T0) -> Self { self }
     public func widgetCurvesContent<T0>(_ p0: T0) -> Self { self }
