@@ -23,6 +23,7 @@ public protocol MTLBuffer: MTLResource {
     var gpuAddress: MTLGPUAddress { get }
     var sparseBufferTier: MTLBufferSparseTier { get }
     func contents() -> UnsafeMutableRawPointer
+    func didModifyRange(_ range: Range<Int>)
     func addDebugMarker(_ marker: String, range: Range<Int>)
     func removeAllDebugMarkers()
     func makeTexture(descriptor: MTLTextureDescriptor, offset: Int, bytesPerRow: Int) -> (any MTLTexture)?
@@ -81,9 +82,18 @@ public protocol MTLHeap: MTLAllocation {
     var label: String? { get set }
     var size: Int { get }
     var usedSize: Int { get }
+    var currentAllocatedSize: Int { get }
     var storageMode: MTLStorageMode { get }
     var cpuCacheMode: MTLCPUCacheMode { get }
+    var hazardTrackingMode: MTLHazardTrackingMode { get }
+    var resourceOptions: MTLResourceOptions { get }
     var type: MTLHeapType { get }
+    func maxAvailableSize(alignment: Int) -> Int
+    func setPurgeableState(_ state: MTLPurgeableState) -> MTLPurgeableState
+    func makeBuffer(length: Int, options: MTLResourceOptions) -> (any MTLBuffer)?
+    func makeBuffer(length: Int, options: MTLResourceOptions, offset: Int) -> (any MTLBuffer)?
+    func makeTexture(descriptor: MTLTextureDescriptor) -> (any MTLTexture)?
+    func makeTexture(descriptor: MTLTextureDescriptor, offset: Int) -> (any MTLTexture)?
 }
 
 public protocol MTLCommandEncoder: NSObjectProtocol {
@@ -93,6 +103,7 @@ public protocol MTLCommandEncoder: NSObjectProtocol {
     func insertDebugSignpost(_ string: String)
     func pushDebugGroup(_ string: String)
     func popDebugGroup()
+    func barrier(afterQueueStages: MTLStages, beforeStages: MTLStages)
 }
 
 public protocol MTLBlitCommandEncoder: MTLCommandEncoder {
@@ -104,9 +115,196 @@ public protocol MTLBlitCommandEncoder: MTLCommandEncoder {
         destinationOffset: Int,
         size: Int
     )
+    func copy(
+        from sourceBuffer: any MTLBuffer,
+        sourceOffset: Int,
+        sourceBytesPerRow: Int,
+        sourceBytesPerImage: Int,
+        sourceSize: MTLSize,
+        to destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin
+    )
+    func copy(
+        from sourceBuffer: any MTLBuffer,
+        sourceOffset: Int,
+        sourceBytesPerRow: Int,
+        sourceBytesPerImage: Int,
+        sourceSize: MTLSize,
+        to destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin,
+        options: MTLBlitOption
+    )
+    func copy(
+        from sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        to destinationBuffer: any MTLBuffer,
+        destinationOffset: Int,
+        destinationBytesPerRow: Int,
+        destinationBytesPerImage: Int
+    )
+    func copy(
+        from sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        to destinationBuffer: any MTLBuffer,
+        destinationOffset: Int,
+        destinationBytesPerRow: Int,
+        destinationBytesPerImage: Int,
+        options: MTLBlitOption
+    )
+    func copy(
+        from sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        to destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin
+    )
+    func copy(
+        from sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        to destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        sliceCount: Int,
+        levelCount: Int
+    )
+    func copy(from sourceTexture: any MTLTexture, to destinationTexture: any MTLTexture)
     func generateMipmaps(for texture: any MTLTexture)
     func optimizeContentsForCPUAccess(texture: any MTLTexture)
+    func optimizeContentsForCPUAccess(texture: any MTLTexture, slice: Int, level: Int)
     func optimizeContentsForGPUAccess(texture: any MTLTexture)
+    func optimizeContentsForGPUAccess(texture: any MTLTexture, slice: Int, level: Int)
+    func updateFence(_ fence: any MTLFence)
+    func waitForFence(_ fence: any MTLFence)
+}
+
+public protocol MTLComputeCommandEncoder: MTLCommandEncoder {
+    var dispatchType: MTLDispatchType { get }
+    func setComputePipelineState(_ state: any MTLComputePipelineState)
+    func setBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setBuffer(_ buffer: any MTLBuffer, offset: Int, attributeStride stride: Int, index: Int)
+    func setBufferOffset(_ offset: Int, index: Int)
+    func setBufferOffset(offset: Int, attributeStride stride: Int, index: Int)
+    func setBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int)
+    func setBytes(_ bytes: UnsafeRawPointer, length: Int, attributeStride stride: Int, index: Int)
+    func setTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setThreadgroupMemoryLength(_ length: Int, index: Int)
+    func setImageblockWidth(_ width: Int, height: Int)
+    func setStageInRegion(_ region: MTLRegion)
+    func setStageInRegionWithIndirectBuffer(_ indirectBuffer: any MTLBuffer, indirectBufferOffset: Int)
+    func dispatchThreadgroups(_ threadgroupsPerGrid: MTLSize, threadsPerThreadgroup: MTLSize)
+    func dispatchThreadgroups(indirectBuffer: any MTLBuffer, indirectBufferOffset: Int, threadsPerThreadgroup: MTLSize)
+    func dispatchThreads(_ threadsPerGrid: MTLSize, threadsPerThreadgroup: MTLSize)
+    func memoryBarrier(scope: MTLBarrierScope)
+    func useResource(_ resource: any MTLResource, usage: MTLResourceUsage)
+    func useHeap(_ heap: any MTLHeap)
+    func updateFence(_ fence: any MTLFence)
+    func waitForFence(_ fence: any MTLFence)
+}
+
+public protocol MTLRenderCommandEncoder: MTLCommandEncoder {
+    var tileWidth: Int { get }
+    var tileHeight: Int { get }
+    func setRenderPipelineState(_ pipelineState: any MTLRenderPipelineState)
+    func setVertexBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setVertexBuffer(_ buffer: (any MTLBuffer)?, offset: Int, attributeStride stride: Int, index: Int)
+    func setVertexBufferOffset(_ offset: Int, index: Int)
+    func setVertexBufferOffset(offset: Int, attributeStride stride: Int, index: Int)
+    func setVertexBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int)
+    func setVertexBytes(_ bytes: UnsafeRawPointer, length: Int, attributeStride stride: Int, index: Int)
+    func setVertexTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setVertexSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setVertexSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setFragmentBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setFragmentBufferOffset(_ offset: Int, index: Int)
+    func setFragmentBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int)
+    func setFragmentTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setFragmentSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setFragmentSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setViewport(_ viewport: MTLViewport)
+    func setScissorRect(_ rect: MTLScissorRect)
+    func setCullMode(_ cullMode: MTLCullMode)
+    func setFrontFacing(_ frontFacingWinding: MTLWinding)
+    func setDepthClipMode(_ depthClipMode: MTLDepthClipMode)
+    func setDepthBias(_ depthBias: Float, slopeScale: Float, clamp: Float)
+    func setDepthStencilState(_ depthStencilState: (any MTLDepthStencilState)?)
+    func setTriangleFillMode(_ fillMode: MTLTriangleFillMode)
+    func setBlendColor(red: Float, green: Float, blue: Float, alpha: Float)
+    func setStencilReferenceValue(_ referenceValue: UInt32)
+    func setStencilReferenceValues(front frontReferenceValue: UInt32, back backReferenceValue: UInt32)
+    func setVisibilityResultMode(_ mode: MTLVisibilityResultMode, offset: Int)
+    func setColorStoreAction(_ storeAction: MTLStoreAction, index colorAttachmentIndex: Int)
+    func setColorStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions, index colorAttachmentIndex: Int)
+    func setDepthStoreAction(_ storeAction: MTLStoreAction)
+    func setDepthStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions)
+    func setStencilStoreAction(_ storeAction: MTLStoreAction)
+    func setStencilStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions)
+    func drawPrimitives(type primitiveType: MTLPrimitiveType, vertexStart: Int, vertexCount: Int)
+    func drawPrimitives(type primitiveType: MTLPrimitiveType, vertexStart: Int, vertexCount: Int, instanceCount: Int)
+    func drawPrimitives(
+        type primitiveType: MTLPrimitiveType,
+        vertexStart: Int,
+        vertexCount: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    )
+    func drawPrimitives(type primitiveType: MTLPrimitiveType, indirectBuffer: any MTLBuffer, indirectBufferOffset: Int)
+    func drawIndexedPrimitives(
+        type primitiveType: MTLPrimitiveType,
+        indexCount: Int,
+        indexType: MTLIndexType,
+        indexBuffer: any MTLBuffer,
+        indexBufferOffset: Int
+    )
+    func drawIndexedPrimitives(
+        type primitiveType: MTLPrimitiveType,
+        indexCount: Int,
+        indexType: MTLIndexType,
+        indexBuffer: any MTLBuffer,
+        indexBufferOffset: Int,
+        instanceCount: Int
+    )
+    func drawIndexedPrimitives(
+        type primitiveType: MTLPrimitiveType,
+        indexCount: Int,
+        indexType: MTLIndexType,
+        indexBuffer: any MTLBuffer,
+        indexBufferOffset: Int,
+        instanceCount: Int,
+        baseVertex: Int,
+        baseInstance: Int
+    )
+    func drawIndexedPrimitives(
+        type primitiveType: MTLPrimitiveType,
+        indexType: MTLIndexType,
+        indexBuffer: any MTLBuffer,
+        indexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    )
+    func useResource(_ resource: any MTLResource, usage: MTLResourceUsage)
+    func useResource(_ resource: any MTLResource, usage: MTLResourceUsage, stages: MTLRenderStages)
+    func useHeap(_ heap: any MTLHeap)
+    func useHeap(_ heap: any MTLHeap, stages: MTLRenderStages)
+    func updateFence(_ fence: any MTLFence, after stages: MTLRenderStages)
+    func waitForFence(_ fence: any MTLFence, before stages: MTLRenderStages)
+    func memoryBarrier(scope: MTLBarrierScope, after: MTLRenderStages, before: MTLRenderStages)
 }
 
 public protocol MTLCommandQueue: NSObjectProtocol, Sendable {
@@ -140,7 +338,18 @@ public protocol MTLCommandBuffer: NSObjectProtocol {
     func pushDebugGroup(_ string: String)
     func popDebugGroup()
     func present(_ drawable: any MTLDrawable)
+    func present(_ drawable: any MTLDrawable, atTime presentationTime: CFTimeInterval)
+    func present(_ drawable: any MTLDrawable, afterMinimumDuration duration: CFTimeInterval)
+    func encodeSignalEvent(_ event: any MTLEvent, value: UInt64)
+    func encodeWaitForEvent(_ event: any MTLEvent, value: UInt64)
     func makeBlitCommandEncoder() -> (any MTLBlitCommandEncoder)?
+    func makeBlitCommandEncoder(descriptor blitPassDescriptor: MTLBlitPassDescriptor) -> (any MTLBlitCommandEncoder)?
+    func makeComputeCommandEncoder() -> (any MTLComputeCommandEncoder)?
+    func makeComputeCommandEncoder(dispatchType: MTLDispatchType) -> (any MTLComputeCommandEncoder)?
+    func makeComputeCommandEncoder(descriptor computePassDescriptor: MTLComputePassDescriptor) -> (any MTLComputeCommandEncoder)?
+    func makeRenderCommandEncoder(descriptor renderPassDescriptor: MTLRenderPassDescriptor) -> (any MTLRenderCommandEncoder)?
+    func makeParallelRenderCommandEncoder(descriptor renderPassDescriptor: MTLRenderPassDescriptor) -> (any MTLParallelRenderCommandEncoder)?
+    func makeResourceStateCommandEncoder() -> (any MTLResourceStateCommandEncoder)?
 }
 
 public protocol MTLDevice: NSObjectProtocol, Sendable {
@@ -189,14 +398,32 @@ public protocol MTLDevice: NSObjectProtocol, Sendable {
     func makeCommandQueue(descriptor: MTLCommandQueueDescriptor) -> (any MTLCommandQueue)?
     func makeBuffer(length: Int, options: MTLResourceOptions) -> (any MTLBuffer)?
     func makeBuffer(bytes pointer: UnsafeRawPointer, length: Int, options: MTLResourceOptions) -> (any MTLBuffer)?
+    func makeBuffer(
+        bytesNoCopy pointer: UnsafeMutableRawPointer,
+        length: Int,
+        options: MTLResourceOptions,
+        deallocator: ((UnsafeMutableRawPointer, Int) -> Void)?
+    ) -> (any MTLBuffer)?
     func makeTexture(descriptor: MTLTextureDescriptor) -> (any MTLTexture)?
     func makeSamplerState(descriptor: MTLSamplerDescriptor) -> (any MTLSamplerState)?
     func makeDepthStencilState(descriptor: MTLDepthStencilDescriptor) -> (any MTLDepthStencilState)?
+    func makeHeap(descriptor: MTLHeapDescriptor) -> (any MTLHeap)?
     func makeDefaultLibrary() -> (any MTLLibrary)?
+    func makeDefaultLibrary(bundle: Bundle) throws -> any MTLLibrary
     func makeLibrary(source: String, options: MTLCompileOptions?) throws -> any MTLLibrary
     func makeLibrary(URL url: URL) throws -> any MTLLibrary
+    func makeLibrary(filepath: String) throws -> any MTLLibrary
+    func makeComputePipelineState(function computeFunction: any MTLFunction) throws -> any MTLComputePipelineState
+    func makeComputePipelineState(descriptor: MTLComputePipelineDescriptor) throws -> any MTLComputePipelineState
+    func makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor) throws -> any MTLRenderPipelineState
     func makeEvent() -> (any MTLEvent)?
     func makeFence() -> (any MTLFence)?
+    func makeArgumentEncoder(arguments: [MTLArgumentDescriptor]) -> (any MTLArgumentEncoder)?
+    func makeIndirectCommandBuffer(
+        descriptor: MTLIndirectCommandBufferDescriptor,
+        maxCommandCount maxCount: Int,
+        options: MTLResourceOptions
+    ) -> (any MTLIndirectCommandBuffer)?
     func getDefaultSamplePositions(sampleCount: Int) -> [MTLSamplePosition]
 }
 
@@ -207,6 +434,9 @@ public protocol MTLLibrary: NSObjectProtocol, Sendable {
     var type: MTLLibraryType { get }
     var installName: String? { get }
     func makeFunction(name functionName: String) -> (any MTLFunction)?
+    func makeFunction(descriptor: MTLFunctionDescriptor) throws -> any MTLFunction
+    func makeFunction(name: String, constantValues: MTLFunctionConstantValues) throws -> any MTLFunction
+    func reflection(functionName: String) -> MTLFunctionReflection?
 }
 
 public protocol MTLFunction: NSObjectProtocol, Sendable {
@@ -214,6 +444,13 @@ public protocol MTLFunction: NSObjectProtocol, Sendable {
     var functionType: MTLFunctionType { get }
     var name: String { get }
     var label: String? { get set }
+    var options: MTLFunctionOptions { get }
+    var patchType: MTLPatchType { get }
+    var patchControlPointCount: Int { get }
+    var vertexAttributes: [MTLVertexAttribute]? { get }
+    var stageInputAttributes: [MTLAttribute]? { get }
+    var functionConstantsDictionary: [String: MTLFunctionConstant] { get }
+    func makeArgumentEncoder(bufferIndex: Int) -> any MTLArgumentEncoder
 }
 
 public protocol MTLSamplerState: NSObjectProtocol, Sendable {
@@ -231,16 +468,35 @@ public protocol MTLDepthStencilState: NSObjectProtocol, Sendable {
 public protocol MTLRenderPipelineState: MTLAllocation, Sendable {
     var device: any MTLDevice { get }
     var label: String? { get }
+    var gpuResourceID: MTLResourceID { get }
+    var maxTotalThreadsPerThreadgroup: Int { get }
+    var threadExecutionWidth: Int { get }
+    var imageblockSampleLength: Int { get }
+    var supportIndirectCommandBuffers: Bool { get }
+    var shaderValidation: MTLShaderValidation { get }
+    func imageblockMemoryLength(forDimensions imageblockDimensions: MTLSize) -> Int
 }
 
 public protocol MTLComputePipelineState: MTLAllocation, Sendable {
     var device: any MTLDevice { get }
+    var label: String? { get }
+    var gpuResourceID: MTLResourceID { get }
     var maxTotalThreadsPerThreadgroup: Int { get }
+    var threadExecutionWidth: Int { get }
+    var staticThreadgroupMemoryLength: Int { get }
+    var supportIndirectCommandBuffers: Bool { get }
+    var shaderValidation: MTLShaderValidation { get }
+    var requiredThreadsPerThreadgroup: MTLSize { get }
+    func imageblockMemoryLength(forDimensions imageblockDimensions: MTLSize) -> Int
 }
 
 public protocol MTLDrawable: NSObjectProtocol {
     var drawableID: Int { get }
+    var presentedTime: CFTimeInterval { get }
     func present()
+    func present(at presentationTime: CFTimeInterval)
+    func present(afterMinimumDuration duration: CFTimeInterval)
+    func addPresentedHandler(_ block: @escaping MTLDrawablePresentedHandler)
 }
 
 public protocol MTLFence: NSObjectProtocol, Sendable {
@@ -273,6 +529,31 @@ public protocol MTLFunctionLog: NSObjectProtocol {}
 
 public protocol MTLCounterSet: NSObjectProtocol {
     var name: String { get }
+}
+
+public protocol MTLArgumentEncoder: NSObjectProtocol {
+    var device: any MTLDevice { get }
+    var label: String? { get set }
+    var encodedLength: Int { get }
+    var alignment: Int { get }
+    func setArgumentBuffer(_ argumentBuffer: (any MTLBuffer)?, offset: Int)
+    func setArgumentBuffer(_ argumentBuffer: (any MTLBuffer)?, startOffset: Int, arrayElement: Int)
+    func setBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setRenderPipelineState(_ pipeline: (any MTLRenderPipelineState)?, index: Int)
+    func setComputePipelineState(_ pipeline: (any MTLComputePipelineState)?, index: Int)
+    func setIndirectCommandBuffer(_ indirectCommandBuffer: (any MTLIndirectCommandBuffer)?, index: Int)
+    func setDepthStencilState(_ depthStencilState: (any MTLDepthStencilState)?, index: Int)
+    func constantData(at index: Int) -> UnsafeMutableRawPointer
+    func makeArgumentEncoderForBuffer(atIndex index: Int) -> (any MTLArgumentEncoder)?
+}
+
+public protocol MTLIndirectCommandBuffer: MTLResource {
+    var size: Int { get }
+    var gpuResourceID: MTLResourceID { get }
+    func indirectComputeCommandAt(_ commandIndex: Int) -> any MTLIndirectComputeCommand
+    func indirectRenderCommandAt(_ commandIndex: Int) -> any MTLIndirectRenderCommand
 }
 
 public enum MTLCounterSamplingPoint: UInt, Equatable, Hashable, Sendable {

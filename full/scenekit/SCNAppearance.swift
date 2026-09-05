@@ -225,6 +225,11 @@ open class SCNLight: NSObject, NSCopying, NSSecureCoding, SCNAnimatable {
     public var probeEnvironment: SCNMaterialProperty?
     public var areaPolygonVertices: [NSValue]?
     public var sphericalHarmonicsCoefficients: Data
+    public var areaExtents: SIMD3<Float> = SIMD3<Float>(1, 1, 0)
+    public var parallaxCenterOffset: SIMD3<Float> = SIMD3<Float>()
+    public var parallaxExtentsFactor: SIMD3<Float> = SIMD3<Float>(1, 1, 1)
+    public var probeExtents: SIMD3<Float> = SIMD3<Float>()
+    public var probeOffset: SIMD3<Float> = SIMD3<Float>()
     var _animationPlayers: [String: SCNAnimationPlayer] = [:]
 
     public override init() {
@@ -308,7 +313,20 @@ open class SCNCamera: NSObject, NSCopying, NSSecureCoding, SCNAnimatable, SCNTec
     public var usesOrthographicProjection: Bool
     public var orthographicScale: Double
     public var projectionDirection: SCNCameraProjectionDirection
-    public var projectionTransform: SCNMatrix4
+    var _customProjection = false
+    var _projectionTransform = SCNMatrix4Identity
+    public var projectionTransform: SCNMatrix4 {
+        get {
+            if _customProjection {
+                return _projectionTransform
+            }
+            return projectionTransform(withViewportSize: CGSize(width: 1, height: 1))
+        }
+        set {
+            _projectionTransform = newValue
+            _customProjection = true
+        }
+    }
     public var categoryBitMask: Int
     public var wantsHDR: Bool
     public var wantsExposureAdaptation: Bool
@@ -366,7 +384,8 @@ open class SCNCamera: NSObject, NSCopying, NSSecureCoding, SCNAnimatable, SCNTec
         usesOrthographicProjection = false
         orthographicScale = 1
         projectionDirection = .vertical
-        projectionTransform = SCNMatrix4Identity
+        _projectionTransform = SCNMatrix4Identity
+        _customProjection = false
         categoryBitMask = 1
         wantsHDR = false
         wantsExposureAdaptation = false
@@ -414,27 +433,29 @@ open class SCNCamera: NSObject, NSCopying, NSSecureCoding, SCNAnimatable, SCNTec
         super.init()
     }
 
-    /// Linux CPU helper. Convention (OpenGL-style, vertical FOV) is unoracle'd;
-    /// coverage marks projection-matrix rows declared, not Apple-identical.
+    /// Linux OpenGL-style projection. Vertical FOV in degrees unless
+    /// `projectionDirection == .horizontal`. Not claimed Apple-identical.
     public func projectionTransform(withViewportSize viewportSize: CGSize) -> SCNMatrix4 {
-        if usesOrthographicProjection {
-            let w = Float(orthographicScale)
-            let h: Float
-            if viewportSize.width > 0 {
-                h = w * Float(viewportSize.height / viewportSize.width)
-            } else {
-                h = w
-            }
-            var m = SCNMatrix4Identity
-            m.m11 = w == 0 ? 1 : 1 / w
-            m.m22 = h == 0 ? 1 : 1 / h
-            let zn = Float(zNear)
-            let zf = Float(zFar)
-            m.m33 = (zf - zn) == 0 ? 1 : -2 / (zf - zn)
-            m.m43 = -((zf + zn) / max(zf - zn, 0.0001))
-            return m
+        if _customProjection {
+            return _projectionTransform
         }
-        return projectionTransform
+        let aspect: Float
+        if viewportSize.height == 0 {
+            aspect = 1
+        } else {
+            aspect = Float(viewportSize.width / viewportSize.height)
+        }
+        if usesOrthographicProjection {
+            return _scnOrthographicProjection(halfHeight: Float(orthographicScale), aspect: aspect, zNear: Float(zNear), zFar: Float(zFar))
+        }
+        var fov = Float(fieldOfView) * Float.pi / 180
+        if yFov > 0 {
+            fov = Float(yFov) * Float.pi / 180
+        }
+        if projectionDirection == .horizontal && aspect > 0 {
+            fov = 2 * atan(tan(fov * 0.5) / aspect)
+        }
+        return _scnPerspectiveProjection(fovYRadians: fov, aspect: aspect, zNear: Float(zNear), zFar: Float(zFar))
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {

@@ -118,6 +118,50 @@ open class HKWorkout: HKSample, @unchecked Sendable {
     public let workoutEvents: [HKWorkoutEvent]
     public let workoutActivities: [HKWorkoutActivity]
 
+    public convenience init(activityType workoutActivityType: HKWorkoutActivityType, startDate: Date, endDate: Date) {
+        self.init(activityType: workoutActivityType, start: startDate, end: endDate)
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        startDate: Date,
+        endDate: Date,
+        duration: TimeInterval,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            duration: duration,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        startDate: Date,
+        endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            metadata: metadata
+        )
+    }
+
     public convenience init(activityType: HKWorkoutActivityType, start startDate: Date, end endDate: Date) {
         self.init(
             activityType: activityType,

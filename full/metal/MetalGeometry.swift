@@ -277,3 +277,33 @@ public struct MTLTextureSwizzleChannels: Equatable, Hashable, Sendable {
         self.alpha = alpha
     }
 }
+
+public struct MTLVertexAmplificationViewMapping: Equatable, Hashable, Sendable {
+    public var viewportArrayIndexOffset: UInt32
+    public var renderTargetArrayIndexOffset: UInt32
+
+    public init() {
+        self.viewportArrayIndexOffset = 0
+        self.renderTargetArrayIndexOffset = 0
+    }
+
+    public init(viewportArrayIndexOffset: UInt32, renderTargetArrayIndexOffset: UInt32) {
+        self.viewportArrayIndexOffset = viewportArrayIndexOffset
+        self.renderTargetArrayIndexOffset = renderTargetArrayIndexOffset
+    }
+}
+
+public struct MTLTensorExtents: Equatable, Hashable, Sendable {
+    public var rank: Int
+    public var extents: [Int]
+
+    public init() {
+        self.rank = 0
+        self.extents = []
+    }
+
+    public init(rank: Int, extents: [Int]) {
+        self.rank = rank
+        self.extents = extents
+    }
+}

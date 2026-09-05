@@ -140,6 +140,25 @@ public struct SCNMatrix4: Equatable, Sendable {
 #endif
 }
 
+#if canImport(simd)
+extension simd_float4x4 {
+    public init(_ m: SCNMatrix4) {
+        self.init(columns: (
+            SIMD4(m.m11, m.m12, m.m13, m.m14),
+            SIMD4(m.m21, m.m22, m.m23, m.m24),
+            SIMD4(m.m31, m.m32, m.m33, m.m34),
+            SIMD4(m.m41, m.m42, m.m43, m.m44)
+        ))
+    }
+}
+
+extension simd_double4x4 {
+    public init(_ m: SCNMatrix4) {
+        self.init(simd_float4x4(m))
+    }
+}
+#endif
+
 public let SCNVector3Zero = SCNVector3()
 public let SCNVector4Zero = SCNVector4()
 public let SCNMatrix4Identity = SCNMatrix4()
@@ -203,8 +222,8 @@ public func SCNMatrix4MakeRotation(_ angle: Float, _ x: Float, _ y: Float, _ z: 
     )
 }
 
-/// Product A * B (column vector: apply B, then A). Linux CPU math; Apple multiply
-/// associativity is treated as this GL-style convention.
+/// Product C = A * B. With this port's row-vector transform
+/// `p' = p * M`, `SCNMatrix4Mult(A, B)` applies A then B.
 public func SCNMatrix4Mult(_ a: SCNMatrix4, _ b: SCNMatrix4) -> SCNMatrix4 {
     func dot(_ aRow: (Float, Float, Float, Float), _ col: (Float, Float, Float, Float)) -> Float {
         aRow.0 * col.0 + aRow.1 * col.1 + aRow.2 * col.2 + aRow.3 * col.3
@@ -357,7 +376,9 @@ func _scnCompose(_ position: SCNVector3, _ rotation: SCNVector4, _ scale: SCNVec
     let s = SCNMatrix4MakeScale(scale.x, scale.y, scale.z)
     let t = SCNMatrix4MakeTranslation(position.x, position.y, position.z)
     let pivotInverse = SCNMatrix4Invert(pivot)
-    return SCNMatrix4Mult(t, SCNMatrix4Mult(r, SCNMatrix4Mult(s, pivotInverse)))
+    // Mult(A,B) applies A then B with this port's _transform. SceneKit TRS is
+    // pivot^-1, then scale, then rotate, then translate.
+    return SCNMatrix4Mult(pivotInverse, SCNMatrix4Mult(s, SCNMatrix4Mult(r, t)))
 }
 
 func _scnDecomposeTranslation(_ m: SCNMatrix4) -> SCNVector3 {
@@ -369,6 +390,194 @@ func _scnDecomposeScale(_ m: SCNMatrix4) -> SCNVector3 {
     let sy = _scnLength(SCNVector3(x: m.m21, y: m.m22, z: m.m23))
     let sz = _scnLength(SCNVector3(x: m.m31, y: m.m32, z: m.m33))
     return SCNVector3(x: sx, y: sy, z: sz)
+}
+
+extension SIMD3 where Scalar == Float {
+    public init(_ v: SCNVector3) {
+        self.init(v.x, v.y, v.z)
+    }
+}
+
+extension SIMD3 where Scalar == Double {
+    public init(_ v: SCNVector3) {
+        self.init(Double(v.x), Double(v.y), Double(v.z))
+    }
+}
+
+extension SIMD4 where Scalar == Float {
+    public init(_ v: SCNVector4) {
+        self.init(v.x, v.y, v.z, v.w)
+    }
+}
+
+extension SIMD4 where Scalar == Double {
+    public init(_ v: SCNVector4) {
+        self.init(Double(v.x), Double(v.y), Double(v.z), Double(v.w))
+    }
+}
+
+extension NSValue {
+    public convenience init(scnVector3 v: SCNVector3) {
+        var copy = v
+        self.init(bytes: &copy, objCType: "SCNVector3")
+    }
+
+    public convenience init(SCNVector3 v: SCNVector3) {
+        self.init(scnVector3: v)
+    }
+
+    public convenience init(scnVector4 v: SCNVector4) {
+        var copy = v
+        self.init(bytes: &copy, objCType: "SCNVector4")
+    }
+
+    public convenience init(SCNVector4 v: SCNVector4) {
+        self.init(scnVector4: v)
+    }
+
+    public convenience init(scnMatrix4 v: SCNMatrix4) {
+        var copy = v
+        self.init(bytes: &copy, objCType: "SCNMatrix4")
+    }
+
+    public convenience init(SCNMatrix4 v: SCNMatrix4) {
+        self.init(scnMatrix4: v)
+    }
+
+    public var scnVector3Value: SCNVector3 {
+        var value = SCNVector3Zero
+        getValue(&value)
+        return value
+    }
+
+    public var scnVector4Value: SCNVector4 {
+        var value = SCNVector4Zero
+        getValue(&value)
+        return value
+    }
+
+    public var scnMatrix4Value: SCNMatrix4 {
+        var value = SCNMatrix4Identity
+        getValue(&value)
+        return value
+    }
+}
+
+func _scnQuatNormalize(_ q: SCNQuaternion) -> SCNQuaternion {
+    let len = (q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w).squareRoot()
+    if len == 0 {
+        return SCNQuaternion(x: 0, y: 0, z: 0, w: 1)
+    }
+    return SCNQuaternion(x: q.x / len, y: q.y / len, z: q.z / len, w: q.w / len)
+}
+
+func _scnQuatFromAxisAngle(_ aa: SCNVector4) -> SCNQuaternion {
+    let axis = _scnNormalize(SCNVector3(x: aa.x, y: aa.y, z: aa.z))
+    let half = aa.w * 0.5
+    let s = sin(half)
+    return _scnQuatNormalize(SCNQuaternion(x: axis.x * s, y: axis.y * s, z: axis.z * s, w: cos(half)))
+}
+
+func _scnAxisAngleFromQuat(_ qIn: SCNQuaternion) -> SCNVector4 {
+    let q = _scnQuatNormalize(qIn)
+    let w = max(-1, min(1, q.w))
+    let angle = 2 * acos(w)
+    let s = (1 - w * w).squareRoot()
+    if s < 1e-6 {
+        return SCNVector4(x: 0, y: 1, z: 0, w: angle)
+    }
+    return SCNVector4(x: q.x / s, y: q.y / s, z: q.z / s, w: angle)
+}
+
+/// Linux Y-up right-handed Tait-Bryan XYZ (pitch, yaw, roll).
+func _scnQuatFromEuler(_ e: SCNVector3) -> SCNQuaternion {
+    let hx = e.x * 0.5
+    let hy = e.y * 0.5
+    let hz = e.z * 0.5
+    let cx = cos(hx), sx = sin(hx)
+    let cy = cos(hy), sy = sin(hy)
+    let cz = cos(hz), sz = sin(hz)
+    return _scnQuatNormalize(SCNQuaternion(
+        x: sx * cy * cz - cx * sy * sz,
+        y: cx * sy * cz + sx * cy * sz,
+        z: cx * cy * sz - sx * sy * cz,
+        w: cx * cy * cz + sx * sy * sz
+    ))
+}
+
+func _scnEulerFromQuat(_ qIn: SCNQuaternion) -> SCNVector3 {
+    let q = _scnQuatNormalize(qIn)
+    let sinp = 2 * (q.w * q.y - q.z * q.x)
+    let yaw: Float
+    if abs(sinp) >= 1 {
+        yaw = copysign(.pi / 2, sinp)
+    } else {
+        yaw = asin(sinp)
+    }
+    let pitch = atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y))
+    let roll = atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
+    return SCNVector3(x: pitch, y: yaw, z: roll)
+}
+
+func _scnMatrixFromQuat(_ qIn: SCNQuaternion) -> SCNMatrix4 {
+    let q = _scnQuatNormalize(qIn)
+    let xx = q.x * q.x, yy = q.y * q.y, zz = q.z * q.z
+    let xy = q.x * q.y, xz = q.x * q.z, yz = q.y * q.z
+    let wx = q.w * q.x, wy = q.w * q.y, wz = q.w * q.z
+    return SCNMatrix4(
+        m11: 1 - 2 * (yy + zz), m12: 2 * (xy + wz),     m13: 2 * (xz - wy),     m14: 0,
+        m21: 2 * (xy - wz),     m22: 1 - 2 * (xx + zz), m23: 2 * (yz + wx),     m24: 0,
+        m31: 2 * (xz + wy),     m32: 2 * (yz - wx),     m33: 1 - 2 * (xx + yy), m34: 0,
+        m41: 0, m42: 0, m43: 0, m44: 1
+    )
+}
+
+func _scnLookAtMatrix(from: SCNVector3, to: SCNVector3, up: SCNVector3, localFront: SCNVector3) -> SCNMatrix4 {
+    let dir = _scnNormalize(_scnSub(to, from))
+    if _scnLength(dir) == 0 {
+        return SCNMatrix4Identity
+    }
+    let front = _scnNormalize(localFront)
+    let angle = acos(max(-1, min(1, _scnDot(front, dir))))
+    var axis = _scnCross(front, dir)
+    if _scnLength(axis) < 1e-6 {
+        if _scnDot(front, dir) > 0 {
+            return SCNMatrix4Identity
+        }
+        axis = _scnLength(_scnCross(front, up)) > 1e-6 ? _scnCross(front, up) : SCNNode.localRight
+    }
+    axis = _scnNormalize(axis)
+    _ = up
+    return SCNMatrix4MakeRotation(angle, axis.x, axis.y, axis.z)
+}
+
+func _scnPerspectiveProjection(fovYRadians: Float, aspect: Float, zNear: Float, zFar: Float) -> SCNMatrix4 {
+    let f = 1 / tan(fovYRadians * 0.5)
+    let a = aspect == 0 ? 1 : aspect
+    let zn = zNear
+    let zf = zFar
+    let dz = zn - zf
+    let m33: Float = dz == 0 ? -1 : (zf + zn) / dz
+    let m43: Float = dz == 0 ? 0 : (2 * zf * zn) / dz
+    return SCNMatrix4(
+        m11: f / a, m12: 0, m13: 0, m14: 0,
+        m21: 0, m22: f, m23: 0, m24: 0,
+        m31: 0, m32: 0, m33: m33, m34: -1,
+        m41: 0, m42: 0, m43: m43, m44: 0
+    )
+}
+
+func _scnOrthographicProjection(halfHeight: Float, aspect: Float, zNear: Float, zFar: Float) -> SCNMatrix4 {
+    let h = halfHeight == 0 ? 1 : halfHeight
+    let a = aspect == 0 ? 1 : aspect
+    let w = h * a
+    let dz = zFar - zNear
+    return SCNMatrix4(
+        m11: w == 0 ? 1 : 1 / w, m12: 0, m13: 0, m14: 0,
+        m21: 0, m22: 1 / h, m23: 0, m24: 0,
+        m31: 0, m32: 0, m33: dz == 0 ? -1 : -2 / dz, m34: 0,
+        m41: 0, m42: 0, m43: dz == 0 ? 0 : -((zFar + zNear) / dz), m44: 1
+    )
 }
 
 /// Axis-angle from the 3x3 of `m`. Linux extraction, not claimed Apple-identical.
