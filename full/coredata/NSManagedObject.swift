@@ -144,7 +144,7 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         set { setValue(newValue, forKey: key) }
     }
 
-    open override func value(forKey key: String) -> Any? {
+    open func value(forKey key: String) -> Any? {
         willAccessValue(forKey: key)
         defer { didAccessValue(forKey: key) }
         if let fetched = entity.propertiesByName[key] as? NSFetchedPropertyDescription,
@@ -155,7 +155,7 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         return primitiveValue(forKey: key)
     }
 
-    open override func setValue(_ value: Any?, forKey key: String) {
+    open func setValue(_ value: Any?, forKey key: String) {
         willChangeValue(forKey: key)
         let old = primitiveValue(forKey: key)
         setPrimitiveValue(value, forKey: key)
@@ -207,10 +207,10 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     }
 
     open func didAccessValue(forKey key: String?) { _ = key }
-    open override func willChangeValue(forKey key: String) { _ = key }
-    open override func didChangeValue(forKey key: String) { _ = key }
+    open func willChangeValue(forKey key: String) { _ = key }
+    open func didChangeValue(forKey key: String) { _ = key }
 
-    open override func willChangeValue(
+    open func willChangeValue(
         forKey inKey: String,
         withSetMutation inMutationKind: NSKeyValueSetMutationKind,
         using inObjects: Set<AnyHashable>
@@ -219,7 +219,7 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         willChangeValue(forKey: inKey)
     }
 
-    open override func didChangeValue(
+    open func didChangeValue(
         forKey inKey: String,
         withSetMutation inMutationKind: NSKeyValueSetMutationKind,
         using inObjects: Set<AnyHashable>
@@ -228,11 +228,13 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         didChangeValue(forKey: inKey)
     }
 
-    open override func validateValue(
-        _ value: AutoreleasingUnsafeMutablePointer<AnyObject?>,
+    /// Linux Foundation has no `AutoreleasingUnsafeMutablePointer`. Validation
+    /// still throws the documented missing-mandatory / count error codes.
+    open func validateValue(
+        _ value: Any?,
         forKey key: String
     ) throws {
-        let current = value.pointee
+        let current = value
         if let attribute = entity.attributesByName[key] {
             if current == nil && !attribute.isOptional && attribute.defaultValue == nil {
                 throw _CDMakeError(

@@ -366,8 +366,24 @@ public var NSCoreDataVersionNumber_iPhoneOS_9_2: Double { 641.2 }
 public var NSCoreDataVersionNumber_iPhoneOS_9_3: Double { 641.6 }
 
 /// Measured against Apple CoreData on macOS (host swift -e),
-/// `NSFetchRequestExpressionType.rawValue == 50`.
-public let NSFetchRequestExpressionType: NSExpression.ExpressionType = NSExpression.ExpressionType(rawValue: 50)!
+/// `NSFetchRequestExpressionType.rawValue == 50`. Linux Foundation has no
+/// `NSExpression.ExpressionType`, so this is a numeric stand-in with that
+/// observed raw value.
+public struct NSFetchRequestExpressionTypeCode: RawRepresentable, Equatable, Sendable {
+    public let rawValue: UInt
+    public init(rawValue: UInt) { self.rawValue = rawValue }
+}
+
+public let NSFetchRequestExpressionType = NSFetchRequestExpressionTypeCode(rawValue: 50)
+
+/// Linux Foundation has no `NSKeyValueSetMutationKind`. Local cases for
+/// to-many mutation notifications; Apple raw integers are not claimed.
+public enum NSKeyValueSetMutationKind: Sendable {
+    case union
+    case minus
+    case intersect
+    case set
+}
 
 // MARK: - Enumerations
 

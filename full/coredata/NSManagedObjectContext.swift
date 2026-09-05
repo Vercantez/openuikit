@@ -45,10 +45,9 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
     public var mergePolicy: Any = NSMergePolicy.error
     public let userInfo = NSMutableDictionary()
     public private(set) var queryGenerationToken: NSQueryGenerationToken?
-    /// Undo is disabled on this Linux in-memory port. The setter is ignored so
-    /// `undo()` / `redo()` stay no-ops (measured: Apple still posts undo
-    /// registrations when an UndoManager is attached; we do not invent that).
-    public var undoManager: UndoManager? {
+    /// Undo is disabled on this Linux in-memory port. Linux Foundation has no
+    /// `UndoManager`; `undo()` / `redo()` stay no-ops.
+    public var undoManager: AnyObject? {
         get { nil }
         set { _ = newValue }
     }

@@ -33,11 +33,13 @@ build real guest Foundation and Dispatch, compile this module against those
 - `NSPersistentStoreCoordinator` + `NSPersistentContainer` against
   `NSInMemoryStoreType`. `registerStoreClass` / `registeredStoreTypes` are
   wired into `addPersistentStore`. `loadPersistentStores` callbacks run.
-- `NSFetchRequest` with `NSPredicate` evaluation (comparison, compound, IN,
-  CONTAINS, BEGINSWITH, relationship key paths on the host Foundation
-  parser), `NSSortDescriptor(key:)`, fetchLimit/offset, propertiesToFetch,
-  and result types `.managedObjectResultType` / `.countResultType` /
-  `.dictionaryResultType` / `.managedObjectIDResultType`.
+- `NSFetchRequest` with **block** `NSPredicate` evaluation (comparison,
+  compound, IN, CONTAINS, BEGINSWITH, ENDSWITH, relationship key paths).
+  String `NSPredicate(format:)` and `NSSortDescriptor(key:)` are unavailable
+  on swift-corelibs-foundation; tests use block predicates and comparator
+  sort descriptors. Result types `.managedObjectResultType` /
+  `.countResultType` / `.dictionaryResultType` / `.managedObjectIDResultType`
+  and fetchLimit/offset still run.
 - `NSFetchedResultsController`: sections, indexPath lookups, and delegate
   callbacks in willChange → section/object edits → didChange order.
 - In-memory `NSBatchInsertRequest` / `NSBatchUpdateRequest` /
@@ -51,11 +53,13 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → this branch): **88 → 1215 implemented** / 88 declared /
-6 deferred / 10 unavailable of 1319 public IDs. The model, coordinator,
-context, managed-object, fetch-request, and FRC families are nondeferred
-except Combine `objectWillChange` on `NSManagedObject` and the FRC
-`NSDiffableDataSourceSnapshot` callback (UIKit type).
+Coverage (wave-1 → depth pass): **88 → 1206 implemented** / 88 declared /
+15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` /
+`UndoManager` rows are deferred so warnings-as-errors builds on Linux
+Foundation. The model, coordinator, context, managed-object, fetch-request,
+and FRC families are nondeferred except Combine `objectWillChange` on
+`NSManagedObject` and the FRC `NSDiffableDataSourceSnapshot` callback
+(UIKit type).
 
 ## Fail-closed boundaries
 
@@ -91,6 +95,12 @@ except Combine `objectWillChange` on `NSManagedObject` and the FRC
 - `CKDatabase.Scope` on `NSPersistentCloudKitContainerOptions`.
 - The class-var spelling of `defaultDirectoryURL` (Swift cannot declare it
   alongside the implemented class function).
+- `NSExpression`-typed members (`derivationExpression`, mapping
+  `sourceExpression` / `valueExpression`, `NSFetchRequestExpression`
+  fetch/context expressions, entity spotlight display-name expression).
+  swift-corelibs-foundation deprecates `NSExpression` under warnings-as-errors.
+- `NSManagedObjectContext.undoManager` as Foundation `UndoManager` (the type
+  is missing; undo stays disabled and `undo()` / `redo()` are no-ops).
 
 See `oracle-questions.tsv` for Apple-oracle probes that must land before any
 of those paths can claim success.
@@ -98,10 +108,12 @@ of those paths can claim success.
 ## Depth pass 2026-09
 
 Second-pass work on `origin/agent/fw-coredata`. The in-memory store, fail-closed
-SQLite/CloudKit/history/momd/migration boundaries, and 1215/88/6/10 coverage
-mix are unchanged. What changed is the **ledger citation rule**: every
-`implemented` row now points at the focused runtime test that exercises that
-family, instead of one file-level blob.
+SQLite/CloudKit/history/momd/migration boundaries, and 1206 implemented /
+88 declared / 15 deferred / 10 unavailable coverage mix are unchanged except
+nine `NSExpression`/`UndoManager` rows moved to `deferred` so the module
+builds with warnings-as-errors on this Linux Foundation. What changed is the
+**ledger citation rule**: every `implemented` row now points at the focused
+runtime test that exercises that family, instead of one file-level blob.
 
 Focused tests in `tests/agent/CoreDataRuntime.swift`:
 

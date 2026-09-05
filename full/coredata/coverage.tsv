@@ -380,7 +380,7 @@ c:objc(cs)NSCustomMigrationStage	implemented	tests/agent/CoreDataRuntime.swift:t
 c:objc(cs)NSCustomMigrationStage(py)currentModel	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSCustomMigrationStage(py)nextModel	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSDerivedAttributeDescription	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
-c:objc(cs)NSDerivedAttributeDescription(py)derivationExpression	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
+c:objc(cs)NSDerivedAttributeDescription(py)derivationExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSEntityDescription	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
 c:objc(cs)NSEntityDescription(cm)entityForName:inManagedObjectContext:	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
 c:objc(cs)NSEntityDescription(cm)insertNewObjectForEntityForName:inManagedObjectContext:	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
@@ -389,7 +389,7 @@ c:objc(cs)NSEntityDescription(im)relationshipsWithDestinationEntity:	implemented
 c:objc(cs)NSEntityDescription(py)abstract	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
 c:objc(cs)NSEntityDescription(py)attributesByName	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
 c:objc(cs)NSEntityDescription(py)compoundIndexes	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
-c:objc(cs)NSEntityDescription(py)coreSpotlightDisplayNameExpression	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
+c:objc(cs)NSEntityDescription(py)coreSpotlightDisplayNameExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSEntityDescription(py)indexes	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
 c:objc(cs)NSEntityDescription(py)managedObjectClassName	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
 c:objc(cs)NSEntityDescription(py)managedObjectModel	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction
@@ -415,7 +415,7 @@ c:objc(cs)NSEntityMapping(py)name	implemented	tests/agent/CoreDataRuntime.swift:
 c:objc(cs)NSEntityMapping(py)relationshipMappings	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSEntityMapping(py)sourceEntityName	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSEntityMapping(py)sourceEntityVersionHash	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
-c:objc(cs)NSEntityMapping(py)sourceExpression	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
+c:objc(cs)NSEntityMapping(py)sourceExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSEntityMapping(py)userInfo	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSEntityMigrationPolicy	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSEntityMigrationPolicy(im)beginEntityMapping:manager:error:	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
@@ -426,7 +426,7 @@ c:objc(cs)NSEntityMigrationPolicy(im)endInstanceCreationForEntityMapping:manager
 c:objc(cs)NSEntityMigrationPolicy(im)endRelationshipCreationForEntityMapping:manager:error:	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSEntityMigrationPolicy(im)performCustomValidationForEntityMapping:manager:error:	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSExpressionDescription	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
-c:objc(cs)NSExpressionDescription(py)expression	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
+c:objc(cs)NSExpressionDescription(py)expression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSExpressionDescription(py)expressionResultType	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
 c:objc(cs)NSFetchIndexDescription	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
 c:objc(cs)NSFetchIndexDescription(im)initWithName:elements:	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
@@ -465,10 +465,10 @@ c:objc(cs)NSFetchRequest(py)returnsObjectsAsFaults	implemented	tests/agent/CoreD
 c:objc(cs)NSFetchRequest(py)shouldRefreshRefetchedObjects	implemented	tests/agent/CoreDataRuntime.swift:testContextInsertSaveFetch	in-memory insert/save/fetch/delete/count
 c:objc(cs)NSFetchRequest(py)sortDescriptors	implemented	tests/agent/CoreDataRuntime.swift:testSortLimitResultTypes	sort, offset/limit, and fetch result types
 c:objc(cs)NSFetchRequestExpression	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
-c:objc(cs)NSFetchRequestExpression(cm)expressionForFetch:context:countOnly:	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
-c:objc(cs)NSFetchRequestExpression(py)contextExpression	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
+c:objc(cs)NSFetchRequestExpression(cm)expressionForFetch:context:countOnly:	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
+c:objc(cs)NSFetchRequestExpression(py)contextExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSFetchRequestExpression(py)countOnlyRequest	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
-c:objc(cs)NSFetchRequestExpression(py)requestExpression	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
+c:objc(cs)NSFetchRequestExpression(py)requestExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSFetchedPropertyDescription	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
 c:objc(cs)NSFetchedPropertyDescription(py)fetchRequest	implemented	tests/agent/CoreDataRuntime.swift:testModelMetadataAndStoreCoordinator	model indexes/templates and in-memory coordinator
 c:objc(cs)NSFetchedResultsController	implemented	tests/agent/CoreDataRuntime.swift:testFRCSectionsAndChangeNotifications	FRC sections and will/insert/delete/did notifications
@@ -597,7 +597,7 @@ c:objc(cs)NSManagedObjectContext(py)retainsRegisteredObjects	implemented	tests/a
 c:objc(cs)NSManagedObjectContext(py)shouldDeleteInaccessibleFaults	implemented	tests/agent/CoreDataRuntime.swift:testContextInsertSaveFetch	in-memory insert/save/fetch/delete/count
 c:objc(cs)NSManagedObjectContext(py)stalenessInterval	implemented	tests/agent/CoreDataRuntime.swift:testContextInsertSaveFetch	in-memory insert/save/fetch/delete/count
 c:objc(cs)NSManagedObjectContext(py)transactionAuthor	implemented	tests/agent/CoreDataRuntime.swift:testContextInsertSaveFetch	in-memory insert/save/fetch/delete/count
-c:objc(cs)NSManagedObjectContext(py)undoManager	implemented	tests/agent/CoreDataRuntime.swift:testValidationAndUndoDisabled	validation errors and disabled undo
+c:objc(cs)NSManagedObjectContext(py)undoManager	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSManagedObjectContext(py)updatedObjects	implemented	tests/agent/CoreDataRuntime.swift:testContextInsertSaveFetch	in-memory insert/save/fetch/delete/count
 c:objc(cs)NSManagedObjectContext(py)userInfo	implemented	tests/agent/CoreDataRuntime.swift:testContextInsertSaveFetch	in-memory insert/save/fetch/delete/count
 c:objc(cs)NSManagedObjectID	implemented	tests/agent/CoreDataRuntime.swift:testRelationshipsFaultingAndInverses	relationship inverses and objectID identity
@@ -858,7 +858,7 @@ c:objc(cs)NSPropertyDescription(py)versionHashModifier	implemented	tests/agent/C
 c:objc(cs)NSPropertyMapping	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSPropertyMapping(py)name	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSPropertyMapping(py)userInfo	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
-c:objc(cs)NSPropertyMapping(py)valueExpression	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
+c:objc(cs)NSPropertyMapping(py)valueExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSQueryGenerationToken	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSQueryGenerationToken(cpy)currentQueryGenerationToken	implemented	tests/agent/CoreDataRuntime.swift:testFailClosedSurfaces	fail-closed SQLite/CloudKit/history/momd/migration/spotlight surface
 c:objc(cs)NSRelationshipDescription	implemented	tests/agent/CoreDataRuntime.swift:testEntityAttributeRelationshipDescriptions	entity/attribute/relationship description construction

@@ -68,6 +68,23 @@ func _CDCompareAny(_ lhs: Any?, _ rhs: Any?) -> ComparisonResult {
     return .orderedSame
 }
 
+/// Linux Foundation has no KVC `NSSortDescriptor.key`. This host type carries
+/// an attribute name for in-memory sorts. It is not an Apple public symbol.
+public final class _CDAttributeSortDescriptor: NSSortDescriptor {
+    public let attributeKey: String
+    public let attributeAscending: Bool
+
+    public init(attributeKey: String, ascending: Bool) {
+        self.attributeKey = attributeKey
+        self.attributeAscending = ascending
+        super.init(keyPath: \NSObject.hash, ascending: true)
+    }
+
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+}
+
 func _CDSort(
     _ lhs: NSManagedObject,
     _ rhs: NSManagedObject,
@@ -75,15 +92,18 @@ func _CDSort(
 ) -> Bool {
     for descriptor in descriptors {
         let order: ComparisonResult
-        if let key = descriptor.key, !key.isEmpty {
-            order = _CDCompareAny(lhs.value(forKey: key), rhs.value(forKey: key))
+        let ascending: Bool
+        if let keyed = descriptor as? _CDAttributeSortDescriptor {
+            order = _CDCompareAny(lhs.value(forKey: keyed.attributeKey), rhs.value(forKey: keyed.attributeKey))
+            ascending = keyed.attributeAscending
         } else {
             order = descriptor.compare(lhs, to: rhs)
+            ascending = true
         }
         if order == .orderedSame {
             continue
         }
-        if descriptor.ascending {
+        if ascending {
             return order == .orderedAscending
         }
         return order == .orderedDescending

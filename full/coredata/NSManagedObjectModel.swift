@@ -89,7 +89,7 @@ open class NSCompositeAttributeDescription: NSAttributeDescription {
 }
 
 open class NSDerivedAttributeDescription: NSAttributeDescription {
-    public var derivationExpression: NSExpression?
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
 }
 
 open class NSRelationshipDescription: NSPropertyDescription {
@@ -128,7 +128,7 @@ open class NSFetchedPropertyDescription: NSPropertyDescription {
 }
 
 open class NSExpressionDescription: NSPropertyDescription {
-    public var expression: NSExpression?
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
     public var expressionResultType: NSAttributeType = .undefinedAttributeType
     public var resultType: NSAttributeDescription.AttributeType {
         get { NSAttributeDescription.AttributeType(rawValue: expressionResultType) }
@@ -185,7 +185,6 @@ open class NSEntityDescription: NSObject {
     public var userInfo: [AnyHashable: Any]?
     public var versionHashModifier: String?
     public var uniquenessConstraints: [[Any]] = []
-    public var coreSpotlightDisplayNameExpression: NSExpression = NSExpression(forConstantValue: "")
     public var compoundIndexes: [[Any]] = []
     public var indexes: [NSFetchIndexDescription] = []
     public var properties: [NSPropertyDescription] = [] {

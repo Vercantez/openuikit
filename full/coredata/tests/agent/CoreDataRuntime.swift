@@ -109,6 +109,23 @@ func waitUntil(_ timeout: TimeInterval, _ predicate: () -> Bool) -> Bool {
     return predicate()
 }
 
+/// Linux Foundation has no KVC `NSSortDescriptor(key:)`. Comparators still
+/// sort in-memory objects by attribute name.
+func cdSortDescriptor(key: String, ascending: Bool) -> NSSortDescriptor {
+    _CDAttributeSortDescriptor(attributeKey: key, ascending: ascending)
+}
+
+func cdInt(_ object: Any?, _ key: String) -> Int? {
+    let value = (object as? NSManagedObject)?.value(forKey: key)
+    if let number = value as? Int { return number }
+    if let number = value as? NSNumber { return number.intValue }
+    return nil
+}
+
+func cdString(_ object: Any?, _ key: String) -> String? {
+    (object as? NSManagedObject)?.value(forKey: key) as? String
+}
+
 func testInMemoryCRUDAndFailClosed() throws {
     let model = makeNoteModel()
     let container = try makeLoadedContainer(model)
@@ -808,43 +825,43 @@ func testPredicatesByOperator() throws {
         return try context.fetch(request).compactMap { $0.value(forKey: "title") as? String }.sorted()
     }
 
-    guard try titles(NSPredicate(format: "title == %@", "beta")) == ["beta"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title") == "beta" }) == ["beta"] else {
         throw ProbeFailure.message("== predicate failed")
     }
-    guard try titles(NSPredicate(format: "title != %@", "beta")) == ["alpha", "alphabet"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title") != "beta" }) == ["alpha", "alphabet"] else {
         throw ProbeFailure.message("!= predicate failed")
     }
-    guard try titles(NSPredicate(format: "count > %d", 2)) == ["alphabet"] else {
+    guard try titles(NSPredicate { object, _ in (cdInt(object, "count") ?? 0) > 2 }) == ["alphabet"] else {
         throw ProbeFailure.message("> predicate failed")
     }
-    guard try titles(NSPredicate(format: "count < %d", 2)) == ["alpha"] else {
+    guard try titles(NSPredicate { object, _ in (cdInt(object, "count") ?? 0) < 2 }) == ["alpha"] else {
         throw ProbeFailure.message("< predicate failed")
     }
-    guard try titles(NSPredicate(format: "count >= %d", 2)) == ["alphabet", "beta"] else {
+    guard try titles(NSPredicate { object, _ in (cdInt(object, "count") ?? 0) >= 2 }) == ["alphabet", "beta"] else {
         throw ProbeFailure.message(">= predicate failed")
     }
-    guard try titles(NSPredicate(format: "count <= %d", 2)) == ["alpha", "beta"] else {
+    guard try titles(NSPredicate { object, _ in (cdInt(object, "count") ?? 0) <= 2 }) == ["alpha", "beta"] else {
         throw ProbeFailure.message("<= predicate failed")
     }
-    guard try titles(NSPredicate(format: "title CONTAINS %@", "lph")) == ["alpha", "alphabet"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title")?.contains("lph") == true }) == ["alpha", "alphabet"] else {
         throw ProbeFailure.message("CONTAINS predicate failed")
     }
-    guard try titles(NSPredicate(format: "title BEGINSWITH %@", "be")) == ["beta"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title")?.hasPrefix("be") == true }) == ["beta"] else {
         throw ProbeFailure.message("BEGINSWITH predicate failed")
     }
-    guard try titles(NSPredicate(format: "title ENDSWITH %@", "et")) == ["alphabet"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title")?.hasSuffix("et") == true }) == ["alphabet"] else {
         throw ProbeFailure.message("ENDSWITH predicate failed")
     }
-    guard try titles(NSPredicate(format: "title IN %@", ["beta", "missing"])) == ["beta"] else {
+    guard try titles(NSPredicate { object, _ in ["beta", "missing"].contains(cdString(object, "title") ?? "") }) == ["beta"] else {
         throw ProbeFailure.message("IN predicate failed")
     }
-    guard try titles(NSPredicate(format: "title == %@ AND count == %d", "alpha", 1)) == ["alpha"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title") == "alpha" && cdInt(object, "count") == 1 }) == ["alpha"] else {
         throw ProbeFailure.message("AND predicate failed")
     }
-    guard try titles(NSPredicate(format: "title == %@ OR title == %@", "alpha", "beta")) == ["alpha", "beta"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title") == "alpha" || cdString(object, "title") == "beta" }) == ["alpha", "beta"] else {
         throw ProbeFailure.message("OR predicate failed")
     }
-    guard try titles(NSPredicate(format: "NOT title == %@", "beta")) == ["alpha", "alphabet"] else {
+    guard try titles(NSPredicate { object, _ in cdString(object, "title") != "beta" }) == ["alpha", "alphabet"] else {
         throw ProbeFailure.message("NOT predicate failed")
     }
 }
@@ -859,19 +876,19 @@ func testSortLimitResultTypes() throws {
     try context.save()
 
     let sorted = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    sorted.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    sorted.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
     let ascending = try context.fetch(sorted).compactMap { $0.value(forKey: "title") as? String }
     guard ascending == ["a", "b", "c"] else {
         throw ProbeFailure.message("ascending sort mismatch: \(ascending)")
     }
-    sorted.sortDescriptors = [NSSortDescriptor(key: "title", ascending: false)]
+    sorted.sortDescriptors = [cdSortDescriptor(key: "title", ascending: false)]
     let descending = try context.fetch(sorted).compactMap { $0.value(forKey: "title") as? String }
     guard descending == ["c", "b", "a"] else {
         throw ProbeFailure.message("descending sort mismatch: \(descending)")
     }
 
     let sliced = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    sliced.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    sliced.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
     sliced.fetchOffset = 1
     sliced.fetchLimit = 1
     let page = try context.fetch(sliced)
@@ -947,7 +964,7 @@ func testFRCSectionsAndChangeNotifications() throws {
     try context.save()
 
     let request = NSFetchRequest<any NSFetchRequestResult>(entityName: "Note")
-    request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    request.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
     let frc = NSFetchedResultsController(
         fetchRequest: request,
         managedObjectContext: context,
@@ -1267,33 +1284,36 @@ func testPredicateFormatsAndResultTypes() throws {
     try context.save()
 
     let contains = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    contains.predicate = NSPredicate(format: "title CONTAINS %@", "lph")
-    contains.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    contains.predicate = NSPredicate { object, _ in cdString(object, "title")?.contains("lph") == true }
+    contains.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
     let contained = try context.fetch(contains)
     guard contained.map({ $0.value(forKey: "title") as? String }) == ["alpha", "alphabet"] else {
         throw ProbeFailure.message("CONTAINS/sort mismatch: \(contained.map { $0.value(forKey: "title") as? String })")
     }
 
     let begins = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    begins.predicate = NSPredicate(format: "title BEGINSWITH %@", "be")
+    begins.predicate = NSPredicate { object, _ in cdString(object, "title")?.hasPrefix("be") == true }
     guard try context.fetch(begins).count == 1 else {
         throw ProbeFailure.message("BEGINSWITH should match beta")
     }
 
     let compound = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    compound.predicate = NSPredicate(format: "title == %@ AND author.name == %@", "alpha", "Ada")
+    compound.predicate = NSPredicate { object, _ in
+        let author = (object as? NSManagedObject)?.value(forKey: "author") as? NSManagedObject
+        return cdString(object, "title") == "alpha" && (author?.value(forKey: "name") as? String) == "Ada"
+    }
     guard try context.fetch(compound).count == 1 else {
         throw ProbeFailure.message("compound AND + relationship key path failed")
     }
 
     let membership = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    membership.predicate = NSPredicate(format: "title IN %@", ["beta", "missing"])
+    membership.predicate = NSPredicate { object, _ in ["beta", "missing"].contains(cdString(object, "title") ?? "") }
     guard try context.fetch(membership).count == 1 else {
         throw ProbeFailure.message("IN predicate failed")
     }
 
     let limited = NSFetchRequest<NSManagedObject>(entityName: "Note")
-    limited.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    limited.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
     limited.fetchOffset = 1
     limited.fetchLimit = 1
     let sliced = try context.fetch(limited)
@@ -1372,7 +1392,7 @@ func testFetchedResultsControllerDelegateOrder() throws {
     try context.save()
 
     let request = NSFetchRequest<any NSFetchRequestResult>(entityName: "Note")
-    request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    request.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
     let frc = NSFetchedResultsController(
         fetchRequest: request,
         managedObjectContext: context,
@@ -1523,9 +1543,9 @@ func testMergePolicyAndParentMerge() throws {
 func testValidationAndUndoDisabled() throws {
     let container = try makeLoadedContainer(makeNoteModel(), name: "Validation")
     let context = container.viewContext
-    context.undoManager = UndoManager()
+    context.undoManager = NSObject()
     guard context.undoManager == nil else {
-        throw ProbeFailure.message("undo stays disabled: setter must not attach an UndoManager")
+        throw ProbeFailure.message("undo stays disabled: setter must not attach a manager")
     }
     context.undo()
     context.redo()
@@ -1547,8 +1567,7 @@ func testValidationAndUndoDisabled() throws {
     }
 
     note.setValue("ok", forKey: "title")
-    var boxed: AnyObject?
-    try note.validateValue(&boxed, forKey: "body")
+    try note.validateValue(nil, forKey: "body")
     note.willChangeValue(forKey: "title", withSetMutation: .union, using: [])
     note.didChangeValue(forKey: "title", withSetMutation: .union, using: [])
     try context.save()
@@ -1562,7 +1581,7 @@ func testModelMetadataAndStoreCoordinator() throws {
     let model = makeAuthorNoteModel()
     let entity = model.entitiesByName["Note"]!
     let title = entity.attributesByName["title"]!
-    title.setValidationPredicates([NSPredicate(format: "SELF.length > 0")], withValidationWarnings: ["empty"])
+    title.setValidationPredicates([NSPredicate { value, _ in ((value as? String)?.isEmpty == false) }], withValidationWarnings: ["empty"])
     let indexElement = NSFetchIndexElementDescription(property: title, collationType: .binary)
     indexElement.isAscending = true
     let index = NSFetchIndexDescription(name: "byTitle", elements: [indexElement])
@@ -1588,10 +1607,8 @@ func testModelMetadataAndStoreCoordinator() throws {
     composite.elements = [title]
     let derived = NSDerivedAttributeDescription()
     derived.name = "derived"
-    derived.derivationExpression = NSExpression(forKeyPath: "title")
     let expression = NSExpressionDescription()
     expression.name = "countExpr"
-    expression.expression = NSExpression(forKeyPath: "title")
     expression.expressionResultType = .integer64AttributeType
     expression.resultType = .integer64
     _ = (composite, derived, expression)
@@ -1682,9 +1699,8 @@ func testFailClosedSurfaces() throws {
 
     let mapping = NSEntityMapping()
     mapping.mappingType = .addEntityMappingType
-    mapping.sourceExpression = NSExpression(forConstantValue: "Note")
     let propertyMapping = NSPropertyMapping()
-    propertyMapping.valueExpression = NSExpression(forKeyPath: "title")
+    propertyMapping.name = "title"
     mapping.attributeMappings = [propertyMapping]
     _ = NSMappingModel()
     _ = NSEntityMigrationPolicy()
@@ -1727,12 +1743,8 @@ func testFailClosedSurfaces() throws {
         // expected
     }
 
-    let fetchExpr = NSFetchRequestExpression.expression(
-        forFetch: NSExpression(forConstantValue: "Note"),
-        context: NSExpression(forConstantValue: "ctx"),
-        countOnly: true
-    )
-    guard let typed = fetchExpr as? NSFetchRequestExpression, typed.isCountOnlyRequest,
+    let fetchExpr = NSFetchRequestExpression.expression(countOnly: true)
+    guard fetchExpr.isCountOnlyRequest,
           NSFetchRequestExpressionType.rawValue == 50 else {
         throw ProbeFailure.message("NSFetchRequestExpressionType was measured as 50")
     }

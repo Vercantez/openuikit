@@ -237,13 +237,13 @@ open class NSEntityMapping: NSObject {
     public var relationshipMappings: [NSPropertyMapping]?
     public var entityMigrationPolicyClassName: String?
     public var userInfo: [AnyHashable: Any]?
-    public var sourceExpression: NSExpression?
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
 }
 
 open class NSPropertyMapping: NSObject {
     public var name: String?
     public var userInfo: [AnyHashable: Any]?
-    public var valueExpression: NSExpression?
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
 }
 
 open class NSMappingModel: NSObject {
@@ -490,8 +490,8 @@ open class NSAtomicStoreCacheNode: NSObject {
         super.init()
     }
 
-    open override func value(forKey key: String) -> Any? { propertyCache?[key] }
-    open override func setValue(_ value: Any?, forKey key: String) {
+    open func value(forKey key: String) -> Any? { propertyCache?[key] }
+    open func setValue(_ value: Any?, forKey key: String) {
         if let value {
             propertyCache?[key] = value
         } else {
@@ -623,30 +623,23 @@ open class NSIncrementalStore: NSPersistentStore {
     open func referenceObject(for objectID: NSManagedObjectID) -> Any { objectID.reference }
 }
 
-open class NSFetchRequestExpression: NSExpression {
-    public let requestExpression: NSExpression
-    public let contextExpression: NSExpression
+open class NSFetchRequestExpression: NSObject {
     public let isCountOnlyRequest: Bool
 
-    public init(request: NSExpression, context: NSExpression, countOnly: Bool) {
-        self.requestExpression = request
-        self.contextExpression = context
+    public init(countOnly: Bool) {
         self.isCountOnlyRequest = countOnly
-        super.init(expressionType: NSFetchRequestExpressionType)
+        super.init()
     }
 
-    public required init?(coder: NSCoder) {
-        self.requestExpression = NSExpression(forConstantValue: nil)
-        self.contextExpression = NSExpression(forConstantValue: nil)
+    public init?(coder: NSCoder) {
         self.isCountOnlyRequest = false
-        super.init(coder: coder)
+        super.init()
+        _ = coder
     }
 
-    open class func expression(
-        forFetch fetch: NSExpression,
-        context: NSExpression,
-        countOnly countFlag: Bool
-    ) -> NSExpression {
-        NSFetchRequestExpression(request: fetch, context: context, countOnly: countFlag)
+    /// Linux stand-in: Foundation has no `NSExpression`, so this does not
+    /// claim Apple's `expression(forFetch:context:countOnly:)` signature.
+    open class func expression(countOnly countFlag: Bool) -> NSFetchRequestExpression {
+        NSFetchRequestExpression(countOnly: countFlag)
     }
 }
