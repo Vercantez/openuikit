@@ -78,6 +78,33 @@ the model plane is honest.
   families have no `deferred` rows. Pixel-buffer / `CGImage` members are
   `unavailable` because CoreVideo/CoreGraphics are not importable here.
 
+### Evidence repair (merge refusal at `b9242bf8`)
+
+The depth-pass ledger marked **758** rows `implemented`, but every citation was
+`tests/agent/CoreMLRuntime.swift` or `tests/agent/CoreMLRuntime.swift:testName`
+(not `test:full/coreml/tests/agent/<File>Tests.swift#testName`). The host gate
+still compiles `CoreMLRuntime.swift`; focused evidence now lives in
+top-level synchronous `func test*()` functions under `tests/agent/*Tests.swift`.
+
+| | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Before (`b9242bf8`) | 758 | 185 | 149 | 16 | 578 | 943 |
+| After evidence repair | 633 | 311 | 148 | 16 | 578 | 944 |
+
+Rows without a focused test were reclassified to `declared` with
+`source:full/coreml/<file>.swift#Symbol` (or left `deferred` when there is no
+source anchor, e.g. `MLTensor.PaddingMode`). Enum / option-set / error-code
+raw values share `testEnumAndConstantRawValues`. No other test is cited by more
+than 40% of implemented rows.
+
+Top-5 implemented evidence distribution (633 implemented):
+
+1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (20.2%)
+2. `MLShapedArrayTests.swift#testShapedArrayConcatConvertAndSlice` — 69 (10.9%)
+3. `MLDescriptionTests.swift#testConstraintsAndFeatureDescription` — 47 (7.4%)
+4. `MLConfigurationTests.swift#testParameterMetricAndMetadataKeys` — 34 (5.4%)
+5. `MLModelStructureTests.swift#testModelStructureConstruction` — 31 (4.9%)
+
 Gate markers from `bash full/coreml/tests/acceptance/test_host.sh` (Linux host,
 no docker):
 
