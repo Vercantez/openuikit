@@ -1093,6 +1093,16 @@ private final class SubtitleListSource: UITableViewDataSource, UITableViewDelega
 }
 
 @MainActor
+private final class DefaultListSource: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.textLabel.text = "Row \(indexPath.row + 1)"
+        return cell
+    }
+}
+
+@MainActor
 final class TableViewIOSEditChromeTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     override func setUp() {
@@ -1127,6 +1137,27 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
         XCTAssertEqual(cell.textLabel.frame.origin.y, 9, accuracy: 0.001)
         XCTAssertEqual(cell.detailTextLabel!.frame.origin.y, 32.5, accuracy: 0.001)
+    }
+
+    /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: classic `textLabel`
+    /// fills the content view (`[16, 0, 343, h]`, intrinsic 20.5). Row
+    /// height stays `defaultRowHeight` (53 — tableview_grouped / plain
+    /// content-configuration cells; Tabs itself dumps 52).
+    func testPlainDefaultLabelFillsContentViewOnIOS() {
+        let source = DefaultListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.frame.height, 53, accuracy: 0.001)
+        XCTAssertEqual(cell.contentView.frame.height, 53, accuracy: 0.001)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
+                       53, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame, CGRect(x: 16, y: 0, width: 343, height: 53))
+        XCTAssertEqual(cell.textLabel.intrinsicContentSize.height, 20.5, accuracy: 0.001)
     }
 
     /// MEASURED TableEditor t900, iPhone SE 2x: content view at x 40 width

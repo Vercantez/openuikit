@@ -84,6 +84,15 @@ extension UIImage {
         case heavy = 8
         case black = 9
     }
+
+    /// Raw values match UIImageSymbolScale in the iOS 26.1 SDK
+    /// (UIImageSymbolConfiguration.h: Unspecified=0, Small=1, Medium=2, Large=3).
+    public enum SymbolScale: Int, Sendable {
+        case unspecified = 0
+        case small = 1
+        case medium = 2
+        case large = 3
+    }
 }
 
 #if canImport(Foundation)
@@ -101,10 +110,13 @@ extension UIImage {
 private final class _UIImageSymbolConfigurationSeedCoder: NSCoder {
     let pointSize: Double
     let weight: Int
+    let scale: Int
 
-    init(pointSize: CGFloat, weight: UIImage.SymbolWeight) {
+    init(pointSize: CGFloat, weight: UIImage.SymbolWeight,
+         scale: UIImage.SymbolScale = .unspecified) {
         self.pointSize = Double(pointSize)
         self.weight = weight.rawValue
+        self.scale = scale.rawValue
         super.init()
     }
 
@@ -112,6 +124,7 @@ private final class _UIImageSymbolConfigurationSeedCoder: NSCoder {
 
     override func containsValue(forKey key: String) -> Bool {
         key == "OpenUIKit.pointSize" || key == "OpenUIKit.weight"
+            || key == "OpenUIKit.scale"
     }
 
     override func decodeDouble(forKey key: String) -> Double {
@@ -119,7 +132,9 @@ private final class _UIImageSymbolConfigurationSeedCoder: NSCoder {
     }
 
     override func decodeInteger(forKey key: String) -> Int {
-        key == "OpenUIKit.weight" ? weight : 0
+        if key == "OpenUIKit.weight" { return weight }
+        if key == "OpenUIKit.scale" { return scale }
+        return 0
     }
 
     override func decodeBool(forKey key: String) -> Bool {
@@ -152,12 +167,23 @@ private final class _UIImageSymbolConfigurationSeedCoder: NSCoder {
 open class _UIImageSymbolConfiguration: _UIImageConfiguration, @unchecked Sendable {
     let _pointSize: CGFloat
     let _weight: UIImage.SymbolWeight
+    let _scale: UIImage.SymbolScale
 
     public convenience init(pointSize: CGFloat,
                             weight: UIImage.SymbolWeight) {
         self.init(coder: _UIImageSymbolConfigurationSeedCoder(
             pointSize: pointSize,
             weight: weight
+        ))!
+    }
+
+    public convenience init(pointSize: CGFloat,
+                            weight: UIImage.SymbolWeight,
+                            scale: UIImage.SymbolScale) {
+        self.init(coder: _UIImageSymbolConfigurationSeedCoder(
+            pointSize: pointSize,
+            weight: weight,
+            scale: scale
         ))!
     }
 
@@ -171,7 +197,8 @@ open class _UIImageSymbolConfiguration: _UIImageConfiguration, @unchecked Sendab
         // divergence from Objective-C's class factory.
         return type(of: self).init(coder: _UIImageSymbolConfigurationSeedCoder(
             pointSize: _pointSize,
-            weight: _weight
+            weight: _weight,
+            scale: _scale
         ))!
     }
 
@@ -181,14 +208,18 @@ open class _UIImageSymbolConfiguration: _UIImageConfiguration, @unchecked Sendab
         guard let weight = UIImage.SymbolWeight(rawValue: rawWeight) else {
             return nil
         }
+        let rawScale = coder.decodeInteger(forKey: "OpenUIKit.scale")
+        let scale = UIImage.SymbolScale(rawValue: rawScale) ?? .unspecified
         _pointSize = pointSize
         _weight = weight
+        _scale = scale
         super.init(coder: coder)
     }
 
     open override func encode(with coder: NSCoder) {
         coder.encode(Double(_pointSize), forKey: "OpenUIKit.pointSize")
         coder.encode(_weight.rawValue, forKey: "OpenUIKit.weight")
+        coder.encode(_scale.rawValue, forKey: "OpenUIKit.scale")
         super.encode(with: coder)
     }
 
@@ -196,13 +227,16 @@ open class _UIImageSymbolConfiguration: _UIImageConfiguration, @unchecked Sendab
         guard let other = object as? _UIImageSymbolConfiguration else {
             return false
         }
-        return _pointSize == other._pointSize && _weight == other._weight
+        return _pointSize == other._pointSize
+            && _weight == other._weight
+            && _scale == other._scale
     }
 
     open override var hash: Int {
         var hasher = Hasher()
         hasher.combine(_pointSize)
         hasher.combine(_weight.rawValue)
+        hasher.combine(_scale.rawValue)
         return hasher.finalize()
     }
 }
@@ -211,17 +245,27 @@ open class _UIImageSymbolConfiguration: _UIImageConfiguration, @unchecked Sendab
 open class _UIImageSymbolConfiguration: _UIImageConfiguration, @unchecked Sendable {
     let _pointSize: CGFloat
     let _weight: UIImage.SymbolWeight
+    let _scale: UIImage.SymbolScale
 
     internal init(_systemPointSize pointSize: CGFloat,
-                  weight: UIImage.SymbolWeight) {
+                  weight: UIImage.SymbolWeight,
+                  scale: UIImage.SymbolScale) {
         _pointSize = pointSize
         _weight = weight
+        _scale = scale
         super.init(_systemImageConfiguration: ())
     }
 
     public convenience init(pointSize: CGFloat,
                             weight: UIImage.SymbolWeight) {
-        self.init(_systemPointSize: pointSize, weight: weight)
+        self.init(_systemPointSize: pointSize, weight: weight,
+                  scale: .unspecified)
+    }
+
+    public convenience init(pointSize: CGFloat,
+                            weight: UIImage.SymbolWeight,
+                            scale: UIImage.SymbolScale) {
+        self.init(_systemPointSize: pointSize, weight: weight, scale: scale)
     }
 }
 #endif
@@ -237,7 +281,7 @@ extension UIImage {
                                                             configuration: nil)
         else { return nil }
         self.init(bitmap: rendered.bitmap, scale: rendered.scale)
-        _markAsSystemSymbol()
+        _markAsSystemSymbol(name)
     }
 
     /// Configured system image.  The Reminder path exercises a 56-point,
@@ -250,7 +294,7 @@ extension UIImage {
             configuration: configuration
         ) else { return nil }
         self.init(bitmap: rendered.bitmap, scale: rendered.scale)
-        _markAsSystemSymbol()
+        _markAsSystemSymbol(name)
     }
 }
 
@@ -268,6 +312,8 @@ private enum _UISystemImageRenderer {
                             twoX: CGSize(width: 21, height: 17.5)),
         "clock": Metrics(oneX: CGSize(width: 19, height: 19),
                          twoX: CGSize(width: 20, height: 19)),
+        "clock.fill": Metrics(oneX: CGSize(width: 19, height: 19),
+                              twoX: CGSize(width: 20, height: 19)),
         "multiply": Metrics(oneX: CGSize(width: 16, height: 14),
                             twoX: CGSize(width: 15.5, height: 13.5)),
         "plus.circle.fill": Metrics(oneX: CGSize(width: 19, height: 19),
@@ -341,6 +387,24 @@ private enum _UISystemImageRenderer {
             return CGSize(width: 66, height: 64)
         }
 
+        // MEASURED Tabs probe, iPhone SE 2x / iOS 26.1: every tab-bar
+        // UIImageView.preferredSymbolConfiguration dumps
+        // "pointSize=18, weight=Medium, scale=Large". withConfiguration at
+        // that triple: calendar 29×25 (46×42 px), clock / clock.fill /
+        // plus.circle.fill 27.5×27.5 (47×47 px). The live selected
+        // calendar view is `[33, 7.5, 29, 25]` in the 94×54 button.
+        if configuration._pointSize == 18,
+           configuration._weight == .medium,
+           configuration._scale == .large {
+            if name == "calendar" {
+                return CGSize(width: 29, height: 25)
+            }
+            if name == "clock" || name == "clock.fill"
+                || name == "plus.circle.fill" {
+                return CGSize(width: 27.5, height: 27.5)
+            }
+        }
+
         let ratio = configuration._pointSize / 17
         return CGSize(width: metrics.twoX.width * ratio,
                       height: metrics.twoX.height * ratio)
@@ -355,27 +419,49 @@ private enum _UISystemImageRenderer {
 
         switch name {
         case "calendar":
+            // MEASURED Tabs probe calendar at 18pt medium large, SE 2x:
+            // a filled header (~0.26 of the 42 px glyph) continuous with
+            // the rounded-rect ring, then a cut-out page with three rows
+            // of day-dots. The default outline stand-in (stroke + two
+            // rings) did not match that ink. Same silhouette at every
+            // size: fill the rounded body, even-odd cut the page below
+            // the header, fill the dots into the hole.
             let body = bounds.insetBy(dx: size.width * 0.12,
                                       dy: size.height * 0.12)
-            canvas.stroke(.roundedRect(body, cornerRadius: minSide * 0.12),
-                          color: black, lineWidth: stroke,
-                          cap: .round, join: .round)
-            var separator = Path()
-            separator.move(to: CGPoint(x: body.minX,
-                                       y: body.minY + body.height * 0.31))
-            separator.addLine(to: CGPoint(x: body.maxX,
-                                          y: body.minY + body.height * 0.31))
-            canvas.stroke(separator, color: black, lineWidth: stroke * 0.82,
-                          cap: .round, join: .round)
-            for x in [body.minX + body.width * 0.28,
-                      body.minX + body.width * 0.72] {
-                var binding = Path()
-                binding.move(to: CGPoint(x: x, y: body.minY - stroke * 0.35))
-                binding.addLine(to: CGPoint(x: x,
-                                             y: body.minY + body.height * 0.16))
-                canvas.stroke(binding, color: black, lineWidth: stroke,
-                              cap: .round, join: .round)
+            let radius = minSide * 0.12
+            var silhouette = Path.roundedRect(body, cornerRadius: radius)
+            let headerH = body.height * 0.26
+            let ring = Swift.max(stroke, minSide * 0.08)
+            let hole = CGRect(x: body.minX + ring,
+                              y: body.minY + headerH,
+                              width: body.width - 2 * ring,
+                              height: Swift.max(0, body.height - headerH - ring))
+            silhouette.elements.append(contentsOf: Path.rect(hole).elements)
+            let cols = 5
+            let rows = 3
+            let insetX = hole.width * 0.12
+            let insetY = hole.height * 0.14
+            let dot = Swift.min(hole.width, hole.height) * 0.10
+            let spanX = hole.width - 2 * insetX - dot
+            let spanY = hole.height - 2 * insetY - dot
+            var r = 0
+            while r < rows {
+                var c = 0
+                let colsThisRow = r == 2 ? 3 : cols
+                while c < colsThisRow {
+                    let dx = colsThisRow == 1 ? 0
+                        : spanX * CGFloat(c) / CGFloat(cols - 1)
+                    let dy = spanY * CGFloat(r) / CGFloat(rows - 1)
+                    let d = CGRect(x: hole.minX + insetX + dx,
+                                   y: hole.minY + insetY + dy,
+                                   width: dot, height: dot)
+                    silhouette.elements.append(contentsOf:
+                        Path.roundedRect(d, cornerRadius: dot / 2).elements)
+                    c += 1
+                }
+                r += 1
             }
+            canvas.fill(silhouette, color: black, evenOdd: true)
 
         case "clock":
             let circle = bounds.insetBy(dx: size.width * 0.10,
@@ -392,6 +478,30 @@ private enum _UISystemImageRenderer {
                                       y: circle.minY + circle.height * 0.61))
             canvas.stroke(hands, color: black, lineWidth: stroke,
                           cap: .round, join: .round)
+
+        case "clock.fill":
+            // MEASURED Tabs probe clock.fill at 18pt medium large, SE 2x:
+            // 27.5×27.5 filled disc with cut-out hands (ink 1696 px vs
+            // outline clock's 777). Selected tab items whose name has a
+            // `.fill` sibling use it; calendar.fill does not exist.
+            let circle = bounds.insetBy(dx: size.width * 0.10,
+                                          dy: size.height * 0.08)
+            var silhouette = ellipse(in: circle)
+            let center = CGPoint(x: circle.midX, y: circle.midY)
+            let t = stroke * 1.15
+            appendThickSegment(
+                to: &silhouette,
+                from: center,
+                to: CGPoint(x: center.x,
+                             y: circle.minY + circle.height * 0.25),
+                thickness: t)
+            appendThickSegment(
+                to: &silhouette,
+                from: center,
+                to: CGPoint(x: circle.minX + circle.width * 0.70,
+                            y: circle.minY + circle.height * 0.61),
+                thickness: t)
+            canvas.fill(silhouette, color: black, evenOdd: true)
 
         case "multiply":
             let insetX = size.width * 0.20
@@ -534,5 +644,16 @@ private enum _UISystemImageRenderer {
                        amount: CGFloat) -> CGPoint {
         CGPoint(x: point.x + normal.x * amount,
                 y: point.y + normal.y * amount)
+    }
+
+    static func appendThickSegment(to path: inout Path, from a: CGPoint,
+                                   to b: CGPoint, thickness: CGFloat) {
+        let n = unitNormal(from: a, to: b)
+        let t = thickness / 2
+        path.move(to: offset(a, by: n, amount: t))
+        path.addLine(to: offset(b, by: n, amount: t))
+        path.addLine(to: offset(b, by: n, amount: -t))
+        path.addLine(to: offset(a, by: n, amount: -t))
+        path.close()
     }
 }

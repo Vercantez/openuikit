@@ -327,6 +327,13 @@ open class UITableViewCell: UIView, ReusableView {
     // MEASURED 2026-09-04 on the iPhone 16 simulator (see UITableView.swift,
     // "iOS 26.1 chrome").
     static var isIOSChrome: Bool { UITableView.isIOSChrome }
+    /// iOS default / value1 row height. MEASURED `tableview_grouped` /
+    /// `tableview_plain` on iPhone SE 2x / iOS 26.1 (fresh ios_suite
+    /// capture): stock cells that go through
+    /// `defaultContentConfiguration()` are **53**. Tabs' classic
+    /// `textLabel` table is 52 (`contentSize` 1560 / 30 rows) — that 1 pt
+    /// is left OPEN; changing this constant to 52 drops
+    /// `tableview_grouped` (blob 94 > 80). Catalyst stays 51.5.
     public static var defaultRowHeight: CGFloat { isIOSChrome ? 53 : 51.5 }
     /// iOS: 49 above the 17 pt primary label's device-pixel height
     /// (69.333 at 3x, 69.5 at 2x — both measured).
@@ -853,8 +860,15 @@ open class UITableViewCell: UIView, ReusableView {
             CGSize(width: CGFloat.greatestFiniteMagnitude, height: h))
         // iOS: a single-line primary is centred and its top rounded UP to
         // the device pixel ((53 - 20.333) / 2 = 16.333 at 3x; (53 - 20.5) / 2
-        // = 16.25 -> 16.5 at 2x, both measured); a subtitle cell's primary
+        // = 16.5 at 2x, both measured); a subtitle cell's primary
         // sits at subtitlePrimaryY.
+        //
+        // Default-style iOS exception: the label FILLS the content view.
+        // MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: `UITableViewLabel`
+        // `[16, 0, 343, 52]` — width = contentWidth − 16 − 16, height =
+        // contentView.height, while intrinsic stays 20.5. UILabel then
+        // centres the 17 pt line in that box (`drawContent` iOS y0).
+        // Catalyst and subtitle / value1 keep the intrinsic box.
         let primaryY: CGFloat
         if UITableViewCell.isIOSChrome, style == .subtitle {
             primaryY = tableView?.style == .plain
@@ -865,10 +879,17 @@ open class UITableViewCell: UIView, ReusableView {
         } else {
             primaryY = UITableViewCell.primaryLabelY
         }
-        textLabel.frame = CGRect(x: labelX,
-                                 y: primaryY,
-                                 width: min(primary.width, max(0, maxTextW)),
-                                 height: primary.height)
+        if UITableViewCell.isIOSChrome, style == .default {
+            textLabel.frame = CGRect(x: labelX,
+                                     y: 0,
+                                     width: max(0, maxTextW),
+                                     height: h)
+        } else {
+            textLabel.frame = CGRect(x: labelX,
+                                     y: primaryY,
+                                     width: min(primary.width, max(0, maxTextW)),
+                                     height: primary.height)
+        }
         if let d = detailTextLabel {
             let s = d.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude,
                                           height: h))
