@@ -1,0 +1,420 @@
+{
+  "name" : "label_stack_mix",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        300
+      ],
+      "bg" : [
+        0.94899999999999995,
+        0.94899999999999995,
+        0.96899999999999997,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        300
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        15,
+        15,
+        290,
+        120
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        15,
+        15,
+        290,
+        120
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        27,
+        27,
+        266,
+        96
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        12,
+        12,
+        266,
+        96
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        27,
+        27,
+        68.5,
+        29.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        68.5,
+        29.5
+      ],
+      "intrinsic" : [
+        68.5,
+        20.5
+      ],
+      "path" : "1.0.0",
+      "sizeThatFits200" : [
+        68.5,
+        20.5
+      ],
+      "text" : "Title row"
+    },
+    {
+      "absFrame" : [
+        27,
+        60.5,
+        160.5,
+        29
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        14
+      ],
+      "frame" : [
+        0,
+        33.5,
+        160.5,
+        29
+      ],
+      "intrinsic" : [
+        160.5,
+        17
+      ],
+      "path" : "1.0.1",
+      "sizeThatFits200" : [
+        160.5,
+        17
+      ],
+      "text" : "Subtitle with more words"
+    },
+    {
+      "absFrame" : [
+        27,
+        93.5,
+        93.5,
+        29.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        11
+      ],
+      "frame" : [
+        0,
+        66.5,
+        93.5,
+        29.5
+      ],
+      "intrinsic" : [
+        93.5,
+        13.5
+      ],
+      "path" : "1.0.2",
+      "sizeThatFits200" : [
+        93.5,
+        13.5
+      ],
+      "text" : "TERTIARY DETAIL"
+    },
+    {
+      "absFrame" : [
+        15,
+        150,
+        290,
+        135
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        15,
+        150,
+        290,
+        135
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        27,
+        162,
+        266,
+        111
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        12,
+        12,
+        266,
+        111
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        27,
+        162,
+        128,
+        56
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        0,
+        0,
+        128,
+        56
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "absFrame" : [
+        27,
+        162,
+        37.5,
+        18
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Medium",
+        15
+      ],
+      "frame" : [
+        0,
+        0,
+        37.5,
+        18
+      ],
+      "intrinsic" : [
+        37.5,
+        18
+      ],
+      "path" : "2.0.0.0",
+      "sizeThatFits200" : [
+        37.5,
+        18
+      ],
+      "text" : "Col A"
+    },
+    {
+      "absFrame" : [
+        27,
+        183,
+        33,
+        16
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        13
+      ],
+      "frame" : [
+        0,
+        21,
+        33,
+        16
+      ],
+      "intrinsic" : [
+        33,
+        16
+      ],
+      "path" : "2.0.0.1",
+      "sizeThatFits200" : [
+        33,
+        16
+      ],
+      "text" : "alpha"
+    },
+    {
+      "absFrame" : [
+        27,
+        202,
+        27.5,
+        16
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        13
+      ],
+      "frame" : [
+        0,
+        40,
+        27.5,
+        16
+      ],
+      "intrinsic" : [
+        27.5,
+        16
+      ],
+      "path" : "2.0.0.2",
+      "sizeThatFits200" : [
+        27.5,
+        16
+      ],
+      "text" : "beta"
+    },
+    {
+      "absFrame" : [
+        165,
+        162,
+        128,
+        56
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        138,
+        0,
+        128,
+        56
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "absFrame" : [
+        256,
+        162,
+        37,
+        18
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Medium",
+        15
+      ],
+      "frame" : [
+        91,
+        0,
+        37,
+        18
+      ],
+      "intrinsic" : [
+        37,
+        18
+      ],
+      "path" : "2.0.1.0",
+      "sizeThatFits200" : [
+        37,
+        18
+      ],
+      "text" : "Col B"
+    },
+    {
+      "absFrame" : [
+        248,
+        183,
+        45,
+        16
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        13
+      ],
+      "frame" : [
+        83,
+        21,
+        45,
+        16
+      ],
+      "intrinsic" : [
+        45,
+        16
+      ],
+      "path" : "2.0.1.1",
+      "sizeThatFits200" : [
+        45,
+        16
+      ],
+      "text" : "gamma"
+    },
+    {
+      "absFrame" : [
+        215.5,
+        202,
+        77.5,
+        16
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        13
+      ],
+      "frame" : [
+        50.5,
+        40,
+        77.5,
+        16
+      ],
+      "intrinsic" : [
+        77.5,
+        16
+      ],
+      "path" : "2.0.1.2",
+      "sizeThatFits200" : [
+        77.5,
+        16
+      ],
+      "text" : "delta epsilon"
+    }
+  ]
+}

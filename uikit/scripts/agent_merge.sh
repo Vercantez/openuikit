@@ -72,6 +72,12 @@ git worktree add -q --detach "$WT" main
 trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 cd "$WT/uikit"
+# When /tmp has no simulator goldens (Linux merge box, or a wiped Mac),
+# fall back to the committed snapshot. restore.sh leaves live /tmp captures
+# alone and prints which source it used.
+if [[ -d goldens/ios && -f goldens/ios/manifest.json ]]; then
+  zsh scripts/goldens_restore.sh
+fi
 echo "==> macOS build + Catalyst gate"
 swift build -c release --product openrender 2>&1 | grep -E 'error|Build of' | tail -3
 rm -rf /tmp/agent_merge_gate; ./.build/release/openrender render /tmp/agent_merge_gate fixtures/scenes/*.json >/dev/null

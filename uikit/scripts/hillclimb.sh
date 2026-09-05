@@ -22,6 +22,11 @@
 #   scripts/hillclimb.sh 3
 #   SKIP_CAPTURE=1 scripts/hillclimb.sh 3     # reuse the last suite goldens
 #   PICK_ONLY=1 scripts/hillclimb.sh          # score + write tasks, no launch
+#
+# When /tmp has no goldens (Linux, or a wiped Mac), the committed snapshot
+# at goldens/ios/ is restored first (scripts/goldens_restore.sh) and the
+# restore line is printed so a SKIP_CAPTURE round is visibly off the pin,
+# not a silent empty compare.
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
@@ -29,6 +34,9 @@ MAXA=${1:-3}
 MODELS=(cursor-grok-4.6-high)   # every local agent: Grok 4.6 High (not fast)
 
 echo "==> score"
+if [[ -d goldens/ios && -f goldens/ios/manifest.json ]]; then
+  zsh scripts/goldens_restore.sh
+fi
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   zsh scripts/ios_suite.sh /tmp/ios_suite > /tmp/ios_suite.flow.log 2>&1 || echo "WARNING: ios_suite.sh rc=$? (see /tmp/ios_suite.flow.log)"
   # Every conformance app is recaptured in THIS run: the board once scored
