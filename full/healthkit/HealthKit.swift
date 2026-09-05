@@ -1,7 +1,7 @@
 @_exported import Foundation
 
 /// Linux HealthKit starting point. Isolated host compilation produces
-/// `libHealthKit.dylib`. There is no Apple Health store on this host.
+/// `libHealthKit.dylib`. Persistence is a local on-disk store, not Apple Health.
 
 public struct HKError: Error, Hashable, Sendable, CustomNSError {
     public var code: Code
