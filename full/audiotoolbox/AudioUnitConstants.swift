@@ -108,7 +108,7 @@ public func AudioUnitUninitialize(_ inUnit: AudioUnit?) -> Int32 {
 @_cdecl("AudioOutputUnitStart")
 public func AudioOutputUnitStart(_ ci: AudioUnit?) -> Int32 {
     guard let unit = ATRegistry.shared.lookup(ci, as: ATAudioUnitObject.self) else {
-        return kAudioUnitErr_InvalidElement
+        return kAudioUnitErr_FailedInitialization
     }
     if unit.isRemoteIO {
         return kAudioUnitErr_FailedInitialization
