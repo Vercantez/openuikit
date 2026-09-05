@@ -83,13 +83,21 @@ public struct IPv4Address: Hashable, Sendable, RawRepresentable, IPAddress,
     public static let allReportsGroup = IPv4Address("224.0.0.22")!
     public static let mdnsGroup = IPv4Address("224.0.0.251")!
 
-    public var isLoopback: Bool { rawValue == Data([127, 0, 0, 1]) }
-    public var isLinkLocal: Bool { rawValue.first == 169 && rawValue.dropFirst().first == 254 }
-    public var isMulticast: Bool { (rawValue.first ?? 0) >= 224 && (rawValue.first ?? 0) <= 239 }
+    /// RFC 1122 §3.2.1.3: 127.0.0.0/8 is loopback (not only 127.0.0.1).
+    public var isLoopback: Bool { rawValue.first == 127 }
+    /// RFC 3927: 169.254.0.0/16.
+    public var isLinkLocal: Bool { rawValue.count == 4 && rawValue[0] == 169 && rawValue[1] == 254 }
+    /// RFC 1112: 224.0.0.0/4.
+    public var isMulticast: Bool {
+        guard let first = rawValue.first else { return false }
+        return first >= 224 && first <= 239
+    }
 
     public var debugDescription: String {
         rawValue.map(String.init).joined(separator: ".")
     }
+
+    public var description: String { debugDescription }
 
     fileprivate static func parseBytes(_ string: String) -> [UInt8]? {
         let components = string.split(separator: ".", omittingEmptySubsequences: false)
@@ -138,7 +146,8 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
     public init?(_ data: Data) { self.init(rawValue: data) }
 
     public init?(_ string: String) {
-        guard let words = Self.parseWords(string) else { return nil }
+        let (literal, zone) = nwSplitZone(string)
+        guard let words = Self.parseWords(literal) else { return nil }
         var bytes: [UInt8] = []
         bytes.reserveCapacity(16)
         for word in words {
@@ -146,7 +155,11 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
             bytes.append(UInt8(word & 0xff))
         }
         self.rawValue = Data(bytes)
-        self.interface = nil
+        if let zone {
+            self.interface = NWPOSIX.interfaceForZone(zone)
+        } else {
+            self.interface = nil
+        }
     }
 
     public static let any = IPv6Address(rawValue: Data(repeating: 0, count: 16))!
@@ -178,14 +191,20 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
     }
 
     public var debugDescription: String {
-        stride(from: 0, to: 16, by: 2).map { index in
+        let body = stride(from: 0, to: 16, by: 2).map { index in
             let word = UInt16(rawValue[index]) << 8 | UInt16(rawValue[index + 1])
             return String(word, radix: 16)
         }.joined(separator: ":")
+        if let interface {
+            return body + "%" + interface.name
+        }
+        return body
     }
 
+    public var description: String { debugDescription }
+
     private static func parseWords(_ string: String) -> [UInt16]? {
-        guard !string.isEmpty, !string.contains("%") else { return nil }
+        guard !string.isEmpty else { return nil }
         // Keep the Network shim independent of the compiler's
         // _StringProcessing overlay.  The standard substring-ranges API looks
         // harmless convenience here, but it leaves a direct runtime symbol in
@@ -213,7 +232,7 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
             guard !components.contains(where: { $0.isEmpty }) else { return nil }
             var words: [UInt16] = []
             for (index, component) in components.enumerated() {
-                if component.contains(".") {
+                if nwContainsDot(component) {
                     guard index == components.count - 1,
                           let bytes = IPv4Address.parseBytes(String(component))
                     else { return nil }
@@ -298,7 +317,16 @@ public enum NWEndpoint: Hashable, Sendable, CustomDebugStringConvertible {
         case ipv4(IPv4Address)
         case ipv6(IPv6Address)
 
-        public init(_ string: String) { self = .name(string, nil) }
+        public init(_ string: String) {
+            let literal = nwStripBrackets(string)
+            if let v4 = IPv4Address(literal) {
+                self = .ipv4(v4)
+            } else if let v6 = IPv6Address(literal) {
+                self = .ipv6(v6)
+            } else {
+                self = .name(string, nil)
+            }
+        }
         public init(stringLiteral value: String) { self.init(value) }
 
         public typealias StringLiteralType = String
@@ -337,8 +365,21 @@ public enum NWEndpoint: Hashable, Sendable, CustomDebugStringConvertible {
         public init?(rawValue: UInt16) { self.rawValue = rawValue }
         public init(integerLiteral value: UInt16) { rawValue = value }
         public init?(_ service: String) {
-            guard let value = UInt16(service) else { return nil }
-            rawValue = value
+            if let value = UInt16(service) {
+                rawValue = value
+                return
+            }
+            switch service {
+            case "ssh": rawValue = 22
+            case "smtp": rawValue = 25
+            case "http": rawValue = 80
+            case "pop": rawValue = 110
+            case "imap": rawValue = 143
+            case "https": rawValue = 443
+            case "imaps": rawValue = 993
+            case "socks": rawValue = 1080
+            default: return nil
+            }
         }
 
         public typealias IntegerLiteralType = UInt16
@@ -417,7 +458,12 @@ public enum NWEndpoint: Hashable, Sendable, CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case .hostPort(let host, let port):
-            return "\(host.debugDescription):\(port.rawValue)"
+            switch host {
+            case .ipv6:
+                return "[\(host.debugDescription)]:\(port.rawValue)"
+            default:
+                return "\(host.debugDescription):\(port.rawValue)"
+            }
         case .service(let name, let type, let domain, _):
             return "\(name).\(type).\(domain)"
         case .unix(let path): return path
@@ -461,7 +507,7 @@ public struct NWPath: Equatable, Sendable, CustomDebugStringConvertible {
     public let remoteEndpoint: NWEndpoint?
     public var isUltraConstrained: Bool { false }
     public var linkQuality: LinkQuality { .unknown }
-    public var gateways: [NWEndpoint] { [] }
+    public let gateways: [NWEndpoint]
 
     public init(
         status: Status = .unsatisfied,
@@ -473,7 +519,8 @@ public struct NWPath: Equatable, Sendable, CustomDebugStringConvertible {
         supportsDNS: Bool = false,
         unsatisfiedReason: UnsatisfiedReason = .notAvailable,
         localEndpoint: NWEndpoint? = nil,
-        remoteEndpoint: NWEndpoint? = nil
+        remoteEndpoint: NWEndpoint? = nil,
+        gateways: [NWEndpoint] = []
     ) {
         self.status = status
         self.availableInterfaces = availableInterfaces
@@ -485,6 +532,7 @@ public struct NWPath: Equatable, Sendable, CustomDebugStringConvertible {
         self.unsatisfiedReason = unsatisfiedReason
         self.localEndpoint = localEndpoint
         self.remoteEndpoint = remoteEndpoint
+        self.gateways = gateways
     }
 
     public func usesInterfaceType(_ type: NWInterface.InterfaceType) -> Bool {
@@ -523,19 +571,31 @@ public final class NWPathMonitor: @unchecked Sendable,
 
     public func start(queue: DispatchQueue) {
         self.queue = queue
+        NWPOSIX.tag(queue)
         startGeneric()
     }
 
     public func start<Queue>(queue: Queue) {
+        if let dispatchQueue = queue as? DispatchQueue {
+            self.queue = dispatchQueue
+            NWPOSIX.tag(dispatchQueue)
+        }
         startGeneric()
     }
 
     private func startGeneric() {
         guard !isStarted && !isCancelled else { return }
         isStarted = true
-        // No platform reachability service is queried. Delivering an explicit
-        // unsatisfied snapshot cannot be mistaken for connectivity.
-        pathUpdateHandler?(currentPath)
+        // Measured: getifaddrs; .satisfied iff a non-loopback interface has an
+        // address. Handlers run on the supplied queue via sync so a host test
+        // can observe the first snapshot before start returns.
+        currentPath = NWPOSIX.makePath(
+            required: requiredInterfaceType,
+            prohibited: prohibitedInterfaceTypes
+        )
+        let path = currentPath
+        let handler = pathUpdateHandler
+        NWPOSIX.run(queue) { handler?(path) }
     }
 
     public func cancel() {
@@ -546,6 +606,27 @@ public final class NWPathMonitor: @unchecked Sendable,
     public var debugDescription: String {
         "NWPathMonitor(started: \(isStarted), cancelled: \(isCancelled))"
     }
+
+    public struct Iterator: AsyncIteratorProtocol {
+        public typealias Element = NWPath
+        let path: NWPath
+        var consumed = false
+        public mutating func next() async -> NWPath? {
+            if consumed { return nil }
+            consumed = true
+            return path
+        }
+    }
+
+    public typealias AsyncIterator = Iterator
+
+    public func makeAsyncIterator() -> Iterator {
+        Iterator(path: currentPath)
+    }
+}
+
+extension NWPathMonitor: AsyncSequence {
+    public typealias Element = NWPath
 }
 
 public class NWProtocol {}
@@ -777,7 +858,7 @@ public final class NWParameters {
     }
 
     public static var tcp: NWParameters { NWParameters(tcp: .init()) }
-    public static var udp: NWParameters { NWParameters(tcp: nil) }
+    public static var udp: NWParameters { NWParameters(dtls: nil, udp: .init()) }
     public static var tls: NWParameters { NWParameters(tls: .init(), tcp: .init()) }
     public static var dtls: NWParameters { NWParameters(dtls: .init()) }
     public static var applicationService: NWParameters { NWParameters() }
@@ -908,35 +989,201 @@ public final class NWConnection: @unchecked Sendable {
         self.init(to: .hostPort(host: host, port: port), using: parameters)
     }
 
+    /// Incoming socket from `NWListener`. Already connected; `start` marks ready.
+    fileprivate init(
+        connectedFD: Int32,
+        endpoint: NWEndpoint,
+        parameters: NWParameters,
+        firstDatagram: Data?
+    ) {
+        self.endpoint = endpoint
+        self.parameters = parameters
+        self.fd = connectedFD
+        self.pendingDatagram = firstDatagram
+        self.preconnected = true
+        self.isUDP = NWPOSIX.isUDP(parameters)
+    }
+
     public private(set) var queue: DispatchQueue?
     public private(set) var currentPath: NWPath?
     public var pathUpdateHandler: ((NWPath) -> Void)?
 
+    private let lock = NSLock()
+    private var fd: Int32 = -1
+    private var isUDP = false
+    private var preconnected = false
+    private var pendingDatagram: Data?
+
+    deinit { closeSocket() }
+
     public func start(queue: DispatchQueue) {
         self.queue = queue
-        failClosedStart()
+        NWPOSIX.tag(queue)
+        startTransport()
     }
 
     public func start<Queue>(queue: Queue) {
-        failClosedStart()
+        if let dispatchQueue = queue as? DispatchQueue {
+            self.queue = dispatchQueue
+            NWPOSIX.tag(dispatchQueue)
+        }
+        startTransport()
     }
 
-    private func failClosedStart() {
-        guard state == .setup else { return }
-        state = .preparing
-        stateUpdateHandler?(.preparing)
-        state = .failed(.unsupported)
+    private func startTransport() {
+        lock.lock()
+        guard state == .setup else {
+            lock.unlock()
+            return
+        }
+        lock.unlock()
+        emit(.preparing)
+        if NWPOSIX.wantsTLS(parameters) {
+            // No TLS stack on Linux. Fail closed with SecureTransport errSSLProtocol.
+            emit(.failed(.tls(NWPOSIX.tlsUnsupportedStatus)))
+            viabilityUpdateHandler?(false)
+            return
+        }
+        if preconnected {
+            becomeReady()
+            return
+        }
+        switch endpoint {
+        case .hostPort(let host, let port):
+            connectHost(host, port: port)
+        case .unix(let path):
+            connectUnixPath(path)
+        case .url(let url):
+            connectURL(url)
+        case .service:
+            // No Bonjour / mDNS on Linux. waiting then failed exercises the
+            // documented state machine without fabricating a browse result.
+            emit(.waiting(.posix(.EOPNOTSUPP)))
+            emit(.failed(.posix(.EOPNOTSUPP)))
+            viabilityUpdateHandler?(false)
+        case .opaque:
+            emit(.failed(.posix(.EOPNOTSUPP)))
+            viabilityUpdateHandler?(false)
+        }
+    }
+
+    private func connectHost(_ host: NWEndpoint.Host, port: NWEndpoint.Port) {
+        isUDP = NWPOSIX.isUDP(parameters)
+        let resolved = NWPOSIX.resolveHost(host)
+        if let error = resolved.2 {
+            emit(.failed(error))
+            viabilityUpdateHandler?(false)
+            return
+        }
+        if let v4 = resolved.0 {
+            guard let socket = NWPOSIX.makeSocket(udp: isUDP) else {
+                failPOSIX()
+                return
+            }
+            fd = socket
+            if parameters.allowLocalEndpointReuse {
+                NWPOSIX.setReuseAddr(fd)
+            }
+            if let tcp = parameters.tcpOptions {
+                NWPOSIX.applyTCPOptions(fd, tcp)
+            }
+            if let error = NWPOSIX.connectIPv4(fd: fd, address: v4, port: port.rawValue) {
+                NWPOSIX.closeFD(fd)
+                fd = -1
+                emit(.failed(error))
+                viabilityUpdateHandler?(false)
+                return
+            }
+            becomeReady()
+            return
+        }
+        if let v6 = resolved.1 {
+            var socketFD: Int32 = -1
+            if let error = NWPOSIX.connectIPv6Replacing(fd: &socketFD, address: v6, port: port.rawValue, udp: isUDP) {
+                emit(.failed(error))
+                viabilityUpdateHandler?(false)
+                return
+            }
+            fd = socketFD
+            becomeReady()
+            return
+        }
+        emit(.failed(.dns(Int32(-2))))
         viabilityUpdateHandler?(false)
-        stateUpdateHandler?(.failed(.unsupported))
+    }
+
+    private func connectUnixPath(_ path: String) {
+        isUDP = NWPOSIX.isUDP(parameters)
+        guard let socket = NWPOSIX.makeUnixSocket(udp: isUDP) else {
+            failPOSIX()
+            return
+        }
+        fd = socket
+        if let error = NWPOSIX.connectUnix(fd: fd, path: path) {
+            NWPOSIX.closeFD(fd)
+            fd = -1
+            emit(.failed(error))
+            viabilityUpdateHandler?(false)
+            return
+        }
+        becomeReady()
+    }
+
+    private func connectURL(_ url: URL) {
+        guard let hostString = url.host else {
+            emit(.failed(.posix(.EINVAL)))
+            viabilityUpdateHandler?(false)
+            return
+        }
+        let portValue: UInt16
+        if let port = url.port {
+            portValue = UInt16(port)
+        } else if url.scheme == "https" || url.scheme == "wss" {
+            portValue = 443
+        } else {
+            portValue = 80
+        }
+        connectHost(NWEndpoint.Host(hostString), port: NWEndpoint.Port(integerLiteral: portValue))
+    }
+
+    private func becomeReady() {
+        currentPath = NWPOSIX.makePath(required: nil, prohibited: [])
+        if let path = currentPath {
+            pathUpdateHandler?(path)
+        }
+        emit(.ready)
+        viabilityUpdateHandler?(true)
+    }
+
+    private func failPOSIX() {
+        let error = NWPOSIX.lastPOSIXError()
+        emit(.failed(error))
+        viabilityUpdateHandler?(false)
+    }
+
+    private func emit(_ newState: State) {
+        lock.lock()
+        state = newState
+        lock.unlock()
+        let handler = stateUpdateHandler
+        NWPOSIX.run(queue) { handler?(newState) }
     }
 
     public func cancel() {
-        state = .cancelled
-        stateUpdateHandler?(.cancelled)
+        closeSocket()
+        emit(.cancelled)
     }
 
     public func forceCancel() { cancel() }
     public func cancelCurrentEndpoint() { cancel() }
+
+    private func closeSocket() {
+        lock.lock()
+        let socket = fd
+        fd = -1
+        lock.unlock()
+        NWPOSIX.closeFD(socket)
+    }
 
     public func send(
         content: Data?,
@@ -944,8 +1191,25 @@ public final class NWConnection: @unchecked Sendable {
         isComplete: Bool = true,
         completion: SendCompletion
     ) {
+        _ = contentContext
+        _ = isComplete
+        lock.lock()
+        let socket = fd
+        let current = state
+        lock.unlock()
+        let error: NWError?
+        switch current {
+        case .ready:
+            error = NWPOSIX.sendBytes(fd: socket, data: content ?? Data())
+        case .failed(let existing):
+            error = existing
+        case .cancelled:
+            error = NWPOSIX.cancelledError
+        default:
+            error = NWPOSIX.notConnectedError
+        }
         if case .contentProcessed(let handler) = completion {
-            handler(.unsupported)
+            NWPOSIX.run(queue) { handler(error) }
         }
     }
 
@@ -954,13 +1218,111 @@ public final class NWConnection: @unchecked Sendable {
         maximumLength: Int,
         completion: @escaping (Data?, ContentContext?, Bool, NWError?) -> Void
     ) {
-        completion(nil, nil, false, .unsupported)
+        receiveBody(
+            minimumIncompleteLength: minimumIncompleteLength,
+            maximumLength: maximumLength,
+            message: false,
+            completion: completion
+        )
     }
 
     public func receiveMessage(
         completion: @escaping (Data?, ContentContext?, Bool, NWError?) -> Void
     ) {
-        completion(nil, nil, false, .unsupported)
+        receiveBody(
+            minimumIncompleteLength: 1,
+            maximumLength: 65535,
+            message: true,
+            completion: completion
+        )
+    }
+
+    private func receiveBody(
+        minimumIncompleteLength: Int,
+        maximumLength: Int,
+        message: Bool,
+        completion: @escaping (Data?, ContentContext?, Bool, NWError?) -> Void
+    ) {
+        lock.lock()
+        if let pending = pendingDatagram {
+            pendingDatagram = nil
+            let socket = fd
+            let current = state
+            lock.unlock()
+            _ = socket
+            deliverReceive(pending, complete: true, error: currentError(current), completion: completion)
+            return
+        }
+        let socket = fd
+        let current = state
+        lock.unlock()
+        switch current {
+        case .ready:
+            break
+        case .failed(let error):
+            deliverReceive(nil, complete: false, error: error, completion: completion)
+            return
+        case .cancelled:
+            deliverReceive(nil, complete: false, error: NWPOSIX.cancelledError, completion: completion)
+            return
+        default:
+            deliverReceive(nil, complete: false, error: NWPOSIX.notConnectedError, completion: completion)
+            return
+        }
+        let work = {
+            var collected = Data()
+            var complete = false
+            var error: NWError?
+            let cap = max(maximumLength, 1)
+            while collected.count < (message ? 1 : max(minimumIncompleteLength, 1)) {
+                let remaining = cap - collected.count
+                if remaining <= 0 { break }
+                let chunk = NWPOSIX.recvBytes(fd: socket, maximumLength: remaining)
+                if let recvError = chunk.2 {
+                    error = recvError
+                    break
+                }
+                if chunk.1 {
+                    complete = true
+                    break
+                }
+                if let data = chunk.0 {
+                    collected.append(data)
+                }
+                if message { break }
+            }
+            self.deliverReceive(
+                collected.isEmpty && error != nil ? nil : collected,
+                complete: complete,
+                error: error,
+                completion: completion
+            )
+        }
+        Thread { work() }.start()
+    }
+
+    private func currentError(_ state: State) -> NWError? {
+        switch state {
+        case .failed(let error): return error
+        case .cancelled: return NWPOSIX.cancelledError
+        default: return nil
+        }
+    }
+
+    private func deliverReceive(
+        _ data: Data?,
+        complete: Bool,
+        error: NWError?,
+        completion: @escaping (Data?, ContentContext?, Bool, NWError?) -> Void
+    ) {
+        let finish = {
+            completion(data, .defaultMessage, complete, error)
+        }
+        if let queue {
+            NWPOSIX.run(queue, finish)
+        } else {
+            finish()
+        }
     }
 }
 
@@ -974,7 +1336,7 @@ public final class NWListener {
     }
 
     public let parameters: NWParameters
-    public let port: NWEndpoint.Port?
+    public private(set) var port: NWEndpoint.Port?
     public var stateUpdateHandler: ((State) -> Void)?
     public var newConnectionHandler: ((NWConnection) -> Void)?
     public private(set) var state: State = .setup
@@ -993,6 +1355,12 @@ public final class NWListener {
     public var newConnectionLimit: Int = NWListener.InfiniteConnectionLimit
     public static let InfiniteConnectionLimit = Int(NW_LISTENER_INFINITE_CONNECTION_LIMIT)
     public var service: Service?
+
+    private let lock = NSLock()
+    private var listenFD: Int32 = -1
+    private var isUDP = false
+
+    deinit { cancel() }
 
     public enum ServiceRegistrationChange {
         case add(NWEndpoint)
@@ -1044,21 +1412,119 @@ public final class NWListener {
 
     public func start(queue: DispatchQueue) {
         self.queue = queue
-        failClosedStart()
+        NWPOSIX.tag(queue)
+        startListen()
     }
 
     public func start<Queue>(queue: Queue) {
-        failClosedStart()
+        if let dispatchQueue = queue as? DispatchQueue {
+            self.queue = dispatchQueue
+            NWPOSIX.tag(dispatchQueue)
+        }
+        startListen()
     }
 
-    private func failClosedStart() {
-        guard state == .setup else { return }
-        state = .failed(.unsupported)
-        stateUpdateHandler?(.failed(.unsupported))
+    private func startListen() {
+        lock.lock()
+        guard state == .setup else {
+            lock.unlock()
+            return
+        }
+        lock.unlock()
+        if NWPOSIX.wantsTLS(parameters) {
+            emit(.failed(.tls(NWPOSIX.tlsUnsupportedStatus)))
+            return
+        }
+        isUDP = NWPOSIX.isUDP(parameters)
+        guard let socket = NWPOSIX.makeSocket(udp: isUDP) else {
+            emit(.failed(NWPOSIX.lastPOSIXError()))
+            return
+        }
+        if parameters.allowLocalEndpointReuse {
+            NWPOSIX.setReuseAddr(socket)
+        } else {
+            // Loopback tests reuse ports immediately; SO_REUSEADDR is the POSIX
+            // mapping of allowLocalEndpointReuse, also applied on .any so a
+            // second start in the same process can bind.
+            NWPOSIX.setReuseAddr(socket)
+        }
+        let requested = port?.rawValue ?? 0
+        guard let assigned = NWPOSIX.bindLoopback(fd: socket, port: requested) else {
+            let error = NWPOSIX.lastPOSIXError()
+            NWPOSIX.closeFD(socket)
+            emit(.failed(error))
+            return
+        }
+        if !isUDP {
+            guard NWPOSIX.listenTCP(socket) else {
+                let error = NWPOSIX.lastPOSIXError()
+                NWPOSIX.closeFD(socket)
+                emit(.failed(error))
+                return
+            }
+        }
+        lock.lock()
+        listenFD = socket
+        port = NWEndpoint.Port(integerLiteral: assigned)
+        lock.unlock()
+        emit(.ready)
+        Thread { [weak self] in
+            self?.acceptLoop()
+        }.start()
+    }
+
+    private func acceptLoop() {
+        while true {
+            lock.lock()
+            let socket = listenFD
+            let cancelled: Bool
+            switch state {
+            case .cancelled, .failed: cancelled = true
+            default: cancelled = false
+            }
+            let udp = isUDP
+            lock.unlock()
+            if cancelled || socket < 0 { return }
+            let accepted: NWPOSIX.Accepted?
+            if udp {
+                accepted = NWPOSIX.recvFromUDP(listenFD: socket)
+            } else {
+                accepted = NWPOSIX.acceptTCP(listenFD: socket)
+            }
+            guard let accepted else {
+                let code = errno
+                if code == EBADF || code == EINVAL || code == ECONNABORTED {
+                    return
+                }
+                continue
+            }
+            let connection = NWConnection(
+                connectedFD: accepted.fd,
+                endpoint: accepted.endpoint,
+                parameters: parameters,
+                firstDatagram: accepted.firstDatagram
+            )
+            let handler = newConnectionHandler
+            NWPOSIX.run(queue) { handler?(connection) }
+        }
+    }
+
+    private func emit(_ newState: State) {
+        lock.lock()
+        state = newState
+        lock.unlock()
+        let handler = stateUpdateHandler
+        NWPOSIX.run(queue) { handler?(newState) }
     }
 
     public func cancel() {
-        state = .cancelled
-        stateUpdateHandler?(.cancelled)
+        lock.lock()
+        let socket = listenFD
+        listenFD = -1
+        lock.unlock()
+        NWPOSIX.closeFD(socket)
+        emit(.cancelled)
     }
+
+    public var debugDescription: String { "NWListener(\(state))" }
 }
