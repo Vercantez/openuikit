@@ -161,14 +161,17 @@ let coreProducts: [Product] = [
     .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
     // Combine is a product so an ingested SwiftPM package can
     // `import Combine` on Linux (17/20 ladder apps; 357 files under
-    // local Package.swift trees, scratch/ladder-corpus 2026-09-05).
-    // Darwin dependents keep the SDK module via
+    // local Package.swift trees, scratch/ladder-corpus 2026-09-05,
+    // docs/agent_reports/combine-product.md; MEASURED focus-ios
+    // a2832521 Blockzilla: 15 files, AppDelegate.swift:8,
+    // docs/agent_reports/focus-e2e.md). Darwin dependents keep the
+    // SDK module via
     // `.product(..., condition: .when(platforms: [.linux]))`.
     .library(name: "Combine", targets: ["Combine"]),
     // Logger / OSLog / os_log / OSAllocatedUnfairLock / os_signpost.
     // 13/20 ladder apps `import os` (202 files); call shapes in
     // Sources/os/*.swift. Darwin dependents keep the SDK `os` the
-    // same way Combine does.
+    // same way Combine does (docs/agent_reports/combine-product.md).
     .library(name: "os", targets: ["os"]),
     .executable(name: "openrender", targets: ["openrender"]),
     .executable(name: "openhost", targets: ["openhost"]),
@@ -188,6 +191,19 @@ let frameworkProducts: [Product] = [
     .library(name: "SafariServices", targets: ["SafariServices"]),
     .library(name: "MessageUI", targets: ["MessageUI"]),
     .library(name: "LinkPresentation", targets: ["LinkPresentation"]),
+    // Harness stubs RealAppProbe already compiles (Focus Settings).
+    // Publishing them lets an ingested Blockzilla `import Glean` on
+    // Linux without a second target of the same name (SwiftPM refuses
+    // Glean/Intents/Onboarding/Licenses/DesignSystem in both packages;
+    // MEASURED focus-e2e wave1). Darwin dependents keep linux-only
+    // `.product(..., condition: .when(platforms: [.linux]))`. These
+    // are not Mozilla Glean / the SDK Intents framework.
+    .library(name: "Glean", targets: ["Glean"]),
+    .library(name: "Intents", targets: ["Intents"]),
+    .library(name: "IntentsUI", targets: ["IntentsUI"]),
+    .library(name: "Onboarding", targets: ["Onboarding"]),
+    .library(name: "Licenses", targets: ["Licenses"]),
+    .library(name: "DesignSystem", targets: ["DesignSystem"]),
 ]
 
 let coreTargets: [Target] = [
@@ -357,7 +373,7 @@ let coreTargets: [Target] = [
                 "SwiftUI",
                 .target(name: "Combine", condition: .when(platforms: [.linux])),
             ],
-            exclude: ["FocusModules", "HackersModules"],
+            exclude: ["FocusModules", "HackersModules", "Focus/script.json"],
             swiftSettings: [
                 .enableUpcomingFeature("IsolatedDefaultValues"),
                 .unsafeFlags([
