@@ -8,7 +8,9 @@ import UIKit
 /// Compile-only identity surface shared by every capability branch. Keeping
 /// this outside the Objective-C guard makes the ordinary Linux test build
 /// prove that a UIKit-only file resolves all four names unqualified too.
+#if !os(Linux)
 @MainActor
+#endif
 func makeNotificationUIKitOnlySurfaceProbe() -> NotificationCenter {
     _ = Notification.self
     _ = NSNotification.self
@@ -27,7 +29,9 @@ func makeNotificationUIKitOnlySurfaceProbe() -> NotificationCenter {
 
 #if canImport(ObjectiveC)
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NotificationUIKitOnlyConsumerProbe: UIViewController {
     let center: NotificationCenter
     var runtimeNotifications: [Notification] = []

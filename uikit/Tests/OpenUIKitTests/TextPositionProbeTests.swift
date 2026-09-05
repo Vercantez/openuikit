@@ -4,7 +4,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextPositionProbeTests: XCTestCase {
     struct Glyph: Decodable { let char: String; let x: Double; let advance: Double }
     struct Case: Decodable { let text: String; let family: String; let size: Double; let glyphs: [Glyph]; let lineWidth: Double; let labelWidth: Double }

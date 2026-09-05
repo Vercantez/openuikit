@@ -2,7 +2,9 @@ import XCTest
 import Foundation
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class DatePickerTests: XCTestCase {
     private var savedBackend: RenderBackend = .quartz
     private var savedCompositor: RenderCompositor = .layers

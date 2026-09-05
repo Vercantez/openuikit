@@ -29,7 +29,9 @@ final class IsolatedAction {
     let label: String
     let action: @MainActor () -> Void
 
+    #if !os(Linux)
     @MainActor
+    #endif
     init(label: String, action: @escaping @MainActor () -> Void) {
         self.label = label
         self.action = action
@@ -38,12 +40,16 @@ final class IsolatedAction {
 
 // MARK: - App-shaped view code
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ProbeView: UIView {
     var taps = 0
 
     /// A `@MainActor` method on a UIView subclass -- what apps write.
+    #if !os(Linux)
     @MainActor
+    #endif
     func handleTap() { taps += 1 }
 
     /// A `nonisolated` override on a `@MainActor` class. Apps use this for
@@ -52,7 +58,9 @@ final class ProbeView: UIView {
     nonisolated var probeDescription: String { "ProbeView" }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ActorIsolationTests: XCTestCase {
 
     /// The headline: a `@MainActor` closure stored on a nonisolated model and
@@ -161,5 +169,7 @@ final class ActorIsolationTests: XCTestCase {
 /// A delegate conformer does not require NSObject. This portable empty base
 /// keeps the nested declaration shaped like app source without making that
 /// unrelated test depend on Foundation/ObjectiveC availability.
+#if !os(Linux)
 @MainActor
+#endif
 class NSObjectLike {}

@@ -2,7 +2,9 @@
 // reexports cannot mask an ambiguity at the unchanged application boundary.
 import UIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 func makeFocusUIKitOnlyDiffableTypes(
     tableView: UITableView
 ) -> (NSDiffableDataSourceSnapshot<String, Int>,

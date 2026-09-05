@@ -2,7 +2,9 @@ import XCTest
 import Foundation
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TextInputTraitsTests: XCTestCase {
     private func offsets(_ field: UITextField) -> [Int] {
         guard let range = field.selectedTextRange else { return [] }

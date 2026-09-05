@@ -4,7 +4,9 @@
 import XCTest
 import UIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ModalTransitionOverrideProbe: UIViewController {
     var setCount = 0
 
@@ -17,7 +19,9 @@ private final class ModalTransitionOverrideProbe: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TableMoveOverrideProbe: UITableView {
     var observedMove: (source: IndexPath, destination: IndexPath)?
 
@@ -26,7 +30,9 @@ private final class TableMoveOverrideProbe: UITableView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PopoverBackgroundOverrideProbe: UIPopoverPresentationController {
     var setCount = 0
 
@@ -39,7 +45,9 @@ private final class PopoverBackgroundOverrideProbe: UIPopoverPresentationControl
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PopoverAccessorOverrideProbe: UIViewController {
     lazy var replacement = PopoverBackgroundOverrideProbe(
         presentedViewController: self,
@@ -51,7 +59,9 @@ private final class PopoverAccessorOverrideProbe: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class PresentationTableSourceCompatibilityTests: XCTestCase {
     func testModalTransitionStyleIsExternallyOverridableThroughLiteralUIKit() {
         let controller = ModalTransitionOverrideProbe()

@@ -9,8 +9,16 @@
 
 import XCTest
 import Combine
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
 
 private struct InteractionFixture: View {
     let appeared: @MainActor () -> Void
@@ -111,7 +119,9 @@ private struct NavigationFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RepresentedController: UIViewController {
     var loads = 0
     var updateValues: [Int] = []
@@ -171,7 +181,9 @@ private final class RuntimeModel: Combine.ObservableObject {
     @Combine.Published var showsController = true
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TaskLifecycleState {
     var started: [Int] = []
     var cancelled: [Int] = []
@@ -222,7 +234,9 @@ private struct RepresentableLifecycleFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RepresentedControllerCoordinatorState {
     var makeCoordinatorCount = 0
     var makeControllerCount = 0
@@ -231,7 +245,9 @@ private final class RepresentedControllerCoordinatorState {
     weak var controller: RepresentedController?
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RepresentedControllerCoordinator {
     let state: RepresentedControllerCoordinatorState
 
@@ -288,7 +304,9 @@ private struct CoordinatedControllerLifecycleFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RepresentedViewCoordinator {
     let state: RepresentedViewState
 
@@ -297,7 +315,9 @@ private final class RepresentedViewCoordinator {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RepresentedViewState {
     var makeCoordinatorCount = 0
     var makeViewCount = 0
@@ -305,7 +325,9 @@ private final class RepresentedViewState {
     weak var view: RepresentedView?
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RepresentedView: UIView {
     var updateValues: [Int] = []
     var windowEvents: [Bool] = []
@@ -405,7 +427,9 @@ private struct EffectsFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUIOnboardingTests: XCTestCase {
     func testInteractionLifecycleFontInsetsAndFlexibleButtonExecute() throws {
         var appearanceCount = 0

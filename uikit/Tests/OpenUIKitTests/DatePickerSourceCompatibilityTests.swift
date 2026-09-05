@@ -5,7 +5,9 @@ import XCTest
 import UIKit
 import Foundation
 
+#if !os(Linux)
 @MainActor
+#endif
 private class DatePickerOverrideProbe: UIDatePicker {
     override var datePickerMode: Mode {
         get { super.datePickerMode }
@@ -71,7 +73,9 @@ private class DatePickerOverrideProbe: UIDatePicker {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private class DatePickerFrameProbe: UIDatePicker {
     static var frameInitializations = 0
 
@@ -88,10 +92,14 @@ private class DatePickerFrameProbe: UIDatePicker {
 /// Native UIKit inherits `init()` when a subclass supplies both designated
 /// initializer paths. This catches an accidental `required` frame initializer
 /// or an inaccessible convenience initializer in the portable surface.
+#if !os(Linux)
 @MainActor
+#endif
 private final class DatePickerInheritedInitProbe: DatePickerFrameProbe {}
 
+#if !os(Linux)
 @MainActor
+#endif
 final class DatePickerSourceCompatibilityTests: XCTestCase {
     private static let availabilityCounts = [
         "@available(iOS 2.0, *)": 1,

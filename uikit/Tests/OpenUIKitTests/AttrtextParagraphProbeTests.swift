@@ -6,7 +6,9 @@ private typealias NSAttributedString = OpenUIKit.NSAttributedString
 private typealias NSMutableParagraphStyle = OpenUIKit.NSMutableParagraphStyle
 private typealias NSTextAlignment = OpenUIKit.NSTextAlignment
 
+#if !os(Linux)
 @MainActor
+#endif
 final class AttrtextParagraphProbeTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     private var savedBounds: CGRect!

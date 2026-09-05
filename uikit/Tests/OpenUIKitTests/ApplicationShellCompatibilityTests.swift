@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class AdjustedInsetRecorder: UIScrollViewDelegate {
     var values: [UIEdgeInsets] = []
 
@@ -10,7 +12,9 @@ private final class AdjustedInsetRecorder: UIScrollViewDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ApplicationShellCompatibilityTests: XCTestCase {
     private final class ActivityRestorer: UIUserActivityRestoring {
         var restoredType: String?

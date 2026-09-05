@@ -8,8 +8,16 @@
 // the companion proof script compiles the byte-exact upstream sources.
 
 import XCTest
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
 
 private struct LicensesFixture: View {
     let libraries: [String]
@@ -46,7 +54,9 @@ private struct NavigationMetadataOwnershipFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUILicensesTests: XCTestCase {
     override func setUp() {
         super.setUp()

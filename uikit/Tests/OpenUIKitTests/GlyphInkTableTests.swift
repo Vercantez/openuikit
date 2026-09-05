@@ -3,7 +3,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class GlyphInkTableTests: XCTestCase {
 
     // MARK: Phase quantization model (measured against oracle probes)
@@ -255,5 +257,29 @@ final class GlyphInkTableTests: XCTestCase {
         try XCTSkipUnless(GlyphInkTable.isAvailable, "glyph_ink.json not present")
         assertCoverage("system-regular", 15, "Plain DarkDisabled DarkOrange Title", dark: true)
         assertCoverage("system-semibold", 17, "Semibold Dark", dark: true)
+    }
+
+    /// Linux trial 2026-09-05: iOS-cut masks are keyed so a VM without
+    /// SFNS.ttf can draw harvested glyphs and fail with this exact string
+    /// when a cell is missing.
+    func testIOSMaskKeyFormatAndHarvestedHit() throws {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        try XCTSkipUnless(GlyphInkTable.hasIOSTable(scale: 2),
+                          "glyph_ink_ios.json not present")
+        let a = Unicode.Scalar(UInt32(65))!
+        let key = GlyphInkTable.iosMaskKey(familyKey: "system-regular", sizeKey: 17,
+                                           dark: false, tag: "F0.0", scalar: a,
+                                           scale: 2)
+        XCTAssertTrue(key.hasPrefix("I|system-regular|17|light|F0.0|"))
+        XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-regular", sizeKey: 17,
+                                              dark: false, tag: "F0.0", scalar: a,
+                                              scale: 2))
+        XCTAssertNil(GlyphInkTable.maskIOS(familyKey: "system-regular", sizeKey: 17,
+                                           dark: false, tag: "F0.0",
+                                           scalar: Unicode.Scalar(UInt32(81))!,
+                                           scale: 2),
+                     "unharvested Q (U+0051) must miss so OPENUIKIT_IOS_INK_MISS can name it")
     }
 }

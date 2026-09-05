@@ -21,19 +21,27 @@ private func compareVibrancyOutsideMainActor(
     lhs.isEqual(rhs) && lhs.hash == rhs.hash
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceEffect: UIVisualEffect {}
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceBlurEffect: UIBlurEffect {}
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceVibrancyEffect: UIVibrancyEffect {}
 
 #if canImport(ObjectiveC)
 @objc(OpenUIKitSourceCopyingEffect)
 #endif
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceCopyingEffect: UIVisualEffect {
     static var copyCallCount = 0
     override class var supportsSecureCoding: Bool { true }
@@ -64,7 +72,9 @@ private final class SourceCopyingEffect: UIVisualEffect {
 #if canImport(ObjectiveC)
 @objc(OpenUIKitSourceCopyingBlurEffect)
 #endif
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceCopyingBlurEffect: UIBlurEffect {
     static var copyCallCount = 0
     override class var supportsSecureCoding: Bool { true }
@@ -92,7 +102,9 @@ private final class SourceCopyingBlurEffect: UIBlurEffect {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceEffectView: UIVisualEffectView {
     override var contentView: UIView { super.contentView }
     override var effect: UIVisualEffect? {
@@ -112,7 +124,9 @@ private final class SourceEffectView: UIVisualEffectView {
 /// UIView now inherits NSObject, whose keyed-archiver replacement hook routes
 /// through OpenUIKit's internal base-view snapshot. This external subclass
 /// deliberately proves what that snapshot does not claim to preserve.
+#if !os(Linux)
 @MainActor
+#endif
 private final class SourceArchivedEffectView: UIVisualEffectView {
     static var encodeCallCount = 0
     let token: Int
@@ -187,7 +201,9 @@ final class VisualEffectSourceCompatibilityTests: XCTestCase {
         _ = view
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testExternalEnumSwitchesSeeOnlyPublicUIKitCases() throws {
         XCTAssertEqual(publicBlurCase(.systemChromeMaterialDark), 20)
         XCTAssertEqual(UIBlurEffect.Style(rawValue: 20)?.rawValue, 20)
@@ -207,7 +223,9 @@ final class VisualEffectSourceCompatibilityTests: XCTestCase {
         XCTAssertEqual(UIVibrancyEffectStyle(rawValue: 7)?.rawValue, 7)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testExternalNSObjectSemanticsRemainCallableOutsideMainActor() {
         XCTAssertTrue(compareBlurOutsideMainActor(
             UIBlurEffect(style: .light),
@@ -216,7 +234,9 @@ final class VisualEffectSourceCompatibilityTests: XCTestCase {
             UIVibrancyEffect(), UIVibrancyEffect()))
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testExternalHostileCopyContractsMatchIOS26() throws {
         SourceCopyingEffect.copyCallCount = 0
         let source = SourceCopyingEffect(token: 30)
@@ -257,7 +277,9 @@ final class VisualEffectSourceCompatibilityTests: XCTestCase {
         XCTAssertEqual(SourceCopyingBlurEffect.copyCallCount, 0)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testExternalDetachedAndHostedGeometryAccessOrderMatrix() {
         let initialFrame = CGRect(x: 10, y: 20, width: 120, height: 80)
         let shiftedBounds = CGRect(x: 7, y: 9, width: 200, height: 110)
@@ -345,7 +367,9 @@ final class VisualEffectSourceCompatibilityTests: XCTestCase {
         }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testExternalInitializersInheritanceAndOpenSurfaceCompile() {
         let base = UIVisualEffect()
         let sourceBase = SourceEffect()
@@ -391,7 +415,9 @@ final class VisualEffectSourceCompatibilityTests: XCTestCase {
     }
 
 #if canImport(Foundation) && canImport(ObjectiveC)
+    #if !os(Linux)
     @MainActor
+    #endif
     func testExternalViewArchiveIsExplicitlyABaseSnapshot() throws {
         SourceArchivedEffectView.encodeCallCount = 0
         let source = SourceArchivedEffectView(

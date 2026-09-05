@@ -8,7 +8,9 @@ import UIKit
 import struct Foundation.Data
 #endif
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ReminderTraitRegistrationProbe: UIViewController {
     var observedPrevious: UITraitCollection?
 
@@ -21,7 +23,9 @@ private final class ReminderTraitRegistrationProbe: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ReminderTextViewOverrideProbe: UITextView {
     var assignmentCount = 0
 
@@ -30,7 +34,9 @@ private final class ReminderTextViewOverrideProbe: UITextView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ReminderOptionalTextViewOverrideProbe: UITextView {
     override var text: String? {
         get { super.text }
@@ -38,7 +44,9 @@ private final class ReminderOptionalTextViewOverrideProbe: UITextView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ReminderTailSourceCompatibilityTests: XCTestCase {
     private func nonemptyReminderText(from textView: UITextView) -> String? {
         // Exact optional-binding shape that a native null-resettable

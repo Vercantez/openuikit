@@ -1,8 +1,16 @@
 import XCTest
 import OpenCoreGraphics
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
 @_spi(OpenUIKitPreview) import DeveloperToolsSupport
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
 
 private extension EnvironmentValues {
     @Entry var buttonKitCompatibilityValue: Int = 17
@@ -54,7 +62,9 @@ private struct ConditionalDisappearFixture: View {
 
 final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
     @available(macOS 14.0, *)
+    #if !os(Linux)
     @MainActor
+    #endif
     func testSwiftUIPreviewMetadataRetainsConcreteBodyWithoutHosting() {
         let preview = DeveloperToolsSupport.Preview(body: {
             Text("compile-only-preview")
@@ -286,7 +296,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(opacity.alpha, 0.5, accuracy: 0.001)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testTrimmedCircleStrokeRetainsDirectionCapsAndDashPolicy() throws {
         let doubleStart: Double = 0
         let doubleEnd: Double = 0.25
@@ -348,7 +360,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertLessThan(dashedPixels, solidPixels * 4)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testRotationEffectUsesAuthoredAngleAndKeepsAnchorFixed() throws {
         let root = try hosted(
             Circle()
@@ -383,7 +397,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         )
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testFormatStyleTextAndMonospacedDigitsRenderConcreteValue() throws {
         let value: Double = 0.437
         let text = Text(value, format: .percent.rounded(increment: 1))
@@ -398,7 +414,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(label.font.design, UIFont.Design.monospaced)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testBrightnessAndSaturationFilterCompletedSubtreeOnBothBackends() throws {
         let savedBackend = OpenUIKitRuntime.renderBackend
         let savedCompositor = OpenUIKitRuntime.compositor
@@ -459,7 +477,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(duration, 1.25)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testOnDisappearPairsEachVisibleHostAppearanceExactlyOnce() throws {
         var events: [String] = []
         let controller = UIHostingController(
@@ -490,7 +510,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(events, ["appear", "disappear", "appear", "disappear"])
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testOnDisappearFiresWhenVisibleConditionalLeavesRetainedGraph() throws {
         var disappearances = 0
         let action: @MainActor () -> Void = { disappearances += 1 }
