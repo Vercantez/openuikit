@@ -55,12 +55,11 @@ open class MCNearbyServiceAdvertiser: NSObject {
         super.init()
     }
 
+    /// Linux has no Bonjour/AWDL advertiser. The optional start-failure
+    /// callback is delivered on the caller thread with `MCError.unavailable`.
+    /// Invitation handlers are never invoked.
     open func startAdvertisingPeer() {
-        let captured = delegate
-        mcDeliver { [weak self] in
-            guard let self else { return }
-            captured?.advertiser(self, didNotStartAdvertisingPeer: MCError(.unavailable))
-        }
+        delegate?.advertiser(self, didNotStartAdvertisingPeer: MCError(.unavailable))
     }
 
     open func stopAdvertisingPeer() {}
@@ -118,12 +117,11 @@ open class MCNearbyServiceBrowser: NSObject {
         super.init()
     }
 
+    /// Linux has no Bonjour/AWDL browser. The optional start-failure callback
+    /// is delivered on the caller thread with `MCError.unavailable`. Peers are
+    /// never found or lost.
     open func startBrowsingForPeers() {
-        let captured = delegate
-        mcDeliver { [weak self] in
-            guard let self else { return }
-            captured?.browser(self, didNotStartBrowsingForPeers: MCError(.unavailable))
-        }
+        delegate?.browser(self, didNotStartBrowsingForPeers: MCError(.unavailable))
     }
 
     open func stopBrowsingForPeers() {}

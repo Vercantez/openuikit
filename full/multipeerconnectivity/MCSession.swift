@@ -31,6 +31,8 @@ public protocol MCSessionDelegate: NSObjectProtocol {
 }
 
 extension MCSessionDelegate {
+    /// Linux never presents a peer certificate. The documented handler must still
+    /// be invoked; the fail-closed default refuses the peer.
     public func session(
         _ session: MCSession,
         didReceiveCertificate certificate: [Any]?,
@@ -52,6 +54,8 @@ open class MCSession: NSObject {
     public var myPeerID: MCPeerID { _myPeerID }
     public var securityIdentity: [Any]? { _securityIdentity }
     public var encryptionPreference: MCEncryptionPreference { _encryptionPreference }
+    /// Linux never fabricates a connected peer. Darwin's array is empty when no
+    /// peers are connected; this port stays empty.
     public var connectedPeers: [MCPeerID] { [] }
 
     public weak var delegate: (any MCSessionDelegate)? {
@@ -88,7 +92,10 @@ open class MCSession: NSObject {
     }
 
     open func send(_ data: Data, toPeers peerIDs: [MCPeerID], with mode: MCSessionSendDataMode) throws {
-        _ = (data, peerIDs, mode)
+        _ = (data, mode)
+        if peerIDs.isEmpty {
+            throw MCError(.invalidParameter)
+        }
         throw MCError(.notConnected)
     }
 
@@ -100,11 +107,7 @@ open class MCSession: NSObject {
         withCompletionHandler completionHandler: (((any Error)?) -> Void)? = nil
     ) -> Progress? {
         _ = (resourceURL, resourceName, peerID)
-        if let completionHandler {
-            mcDeliver {
-                completionHandler(MCError(.notConnected))
-            }
-        }
+        completionHandler?(MCError(.notConnected))
         return nil
     }
 
@@ -115,11 +118,26 @@ open class MCSession: NSObject {
 
     open func disconnect() {}
 
-    open func nearbyConnectionData(forPeer peerID: MCPeerID) async throws -> Data {
+    /// ObjC `nearbyConnectionDataForPeer:withCompletionHandler:`. Linux has no
+    /// nearby infrastructure; the handler runs on the caller thread.
+    open func nearbyConnectionData(
+        forPeer peerID: MCPeerID,
+        withCompletionHandler completionHandler: @escaping (Data?, (any Error)?) -> Void
+    ) {
         _ = peerID
-        return try await withCheckedThrowingContinuation { continuation in
-            mcDeliver {
-                continuation.resume(throwing: MCError(.unavailable))
+        completionHandler(nil, MCError(.unavailable))
+    }
+
+    open func nearbyConnectionData(forPeer peerID: MCPeerID) async throws -> Data {
+        try await withCheckedThrowingContinuation { continuation in
+            nearbyConnectionData(forPeer: peerID) { data, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else if let data {
+                    continuation.resume(returning: data)
+                } else {
+                    continuation.resume(throwing: MCError(.unavailable))
+                }
             }
         }
     }
