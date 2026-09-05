@@ -70,7 +70,9 @@ extension VNDocumentCameraScan {
 
 /// Document camera UI. Linux has no device camera; `isSupported` is false and
 /// no scan, cancel, or fail delegate callback is invented on appear.
-@MainActor
+///
+/// Apple annotates this type `@MainActor`. The isolated Linux host has no
+/// UIKit run loop, so the Linux type is usable from synchronous tests.
 public class VNDocumentCameraViewController: NSObject {
     public class var isSupported: Bool { false }
 

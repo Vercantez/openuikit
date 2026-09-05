@@ -1,0 +1,9 @@
+full/soundanalysis/SNAudioFileAnalyzer.swift
+full/soundanalysis/SNAudioStreamAnalyzer.swift
+full/soundanalysis/SNClassification.swift
+full/soundanalysis/SNClassifierIdentifier.swift
+full/soundanalysis/SNClassifySoundRequest.swift
+full/soundanalysis/SNError.swift
+full/soundanalysis/SNProtocols.swift
+full/soundanalysis/SNTimeDurationConstraint.swift
+full/soundanalysis/SoundAnalysis.swift

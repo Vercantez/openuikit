@@ -1,0 +1,4 @@
+full/nearbyinteraction/NIConfiguration.swift
+full/nearbyinteraction/NINearbyObject.swift
+full/nearbyinteraction/NISession.swift
+full/nearbyinteraction/NearbyInteraction.swift

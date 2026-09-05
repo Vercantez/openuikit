@@ -4,7 +4,6 @@ import Foundation
 import UIKit
 #endif
 
-@MainActor
 public protocol ImageAnalysisInteractionDelegate: AnyObject {
 #if canImport(UIKit)
     func contentView(for interaction: ImageAnalysisInteraction) -> UIView?
@@ -81,7 +80,9 @@ extension ImageAnalysisInteractionDelegate {
 
 /// Live Text interaction overlay. Linux never surfaces Live Text UI, subjects,
 /// or data detectors. Query methods are fail-closed (`false` / empty).
-@MainActor
+///
+/// Apple annotates this type `@MainActor`. The isolated Linux host has no
+/// UIKit run loop, so the Linux type is usable from synchronous tests.
 public final class ImageAnalysisInteraction: NSObject {
     public struct InteractionTypes: OptionSet, Hashable, Sendable {
         public let rawValue: UInt
@@ -120,7 +121,6 @@ public final class ImageAnalysisInteraction: NSObject {
             hasher.combine(identity)
         }
 
-        @MainActor
         public var bounds: CGRect { storedBounds }
 
 #if canImport(UIKit)
@@ -245,12 +245,25 @@ public final class ImageAnalysisInteraction: NSObject {
     }
 
     public func subject(at point: CGPoint) async -> Subject? {
+        _hostSubject(at: point)
+    }
+
+    public var subjects: Set<Subject> {
+        get async { _hostSubjects() }
+    }
+
+    /// Synchronous peek of `subject(at:)`. The async API never suspends on
+    /// Linux (no Vision subject pipeline); this SPI exists so sealed-host
+    /// tests can observe the fail-closed result without a run loop.
+    @_spi(OpenUIKitHost)
+    public func _hostSubject(at point: CGPoint) -> Subject? {
         _ = point
         return nil
     }
 
-    public var subjects: Set<Subject> {
-        get async { [] }
+    @_spi(OpenUIKitHost)
+    public func _hostSubjects() -> Set<Subject> {
+        []
     }
 }
 

@@ -7,7 +7,6 @@ import UIKit
 import Vision
 #endif
 
-@MainActor
 public protocol DataScannerViewControllerDelegate: AnyObject {
     func dataScanner(
         _ dataScanner: DataScannerViewController,
@@ -90,7 +89,9 @@ extension DataScannerViewControllerDelegate {
 /// Camera data scanner. Linux has no A12 Neural Engine camera pipeline, so
 /// `isSupported` and `isAvailable` are false and `startScanning` throws
 /// `.unsupported`. No recognized items are ever produced.
-@MainActor
+///
+/// Apple annotates this type `@MainActor`. The isolated Linux host has no
+/// UIKit run loop, so the Linux type is usable from synchronous tests.
 public class DataScannerViewController: NSObject {
     public struct RecognizedDataType: Hashable, Sendable {
         private enum Kind: Hashable, Sendable {

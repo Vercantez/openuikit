@@ -19,7 +19,8 @@ queue, matching the public WCSession header contract. Callbacks are not
 inline on the caller, are never the main queue, keep FIFO order, and never
 overlap. `sessionDidBecomeInactive` and `sessionDidDeactivate` are never
 invoked. Incoming message, user-info, file, and application-context
-delegate callbacks never fire: there is no counterpart device.
+delegate callbacks never fire: there is no counterpart device. Optional
+delegate defaults are no-ops and never invent a reply.
 
 `sendMessage` and `sendMessageData` never invoke a reply handler. Error
 handlers run on the same serial delegate queue with `sessionNotSupported`,
@@ -35,12 +36,39 @@ URLs fail with `invalidParameter`. `cancel()` is inert because a transfer
 never starts. `WCSessionUserInfoTransfer.init(coder:)` returns `nil`
 because Apple's archive keys are not in the public graph.
 
-`WCErrorDomain` is `WCErrorDomain`. Numeric `WCError.Code` values follow the
-public `WCErrorCode` enumeration (`7001...7019`). Equality uses Foundation
-dictionary value equality. Hashing uses only the error code.
+`WCError` equality compares Foundation dictionary values by wrapping both
+`userInfo` dictionaries as `NSDictionary`, so integer and other bridged
+plist values compare equal to themselves. Hashing still uses only the error
+code.
 
 Private TBD types (`WCXPCManager`, `WCQueueManager`, payload size-limit
 symbols, and sandbox helpers) are explicit exclusions.
 
 Apple localized strings, payload size limits, activate-with-nil-delegate
 behavior, and the exact Apple queue QoS/label remain oracle questions.
+
+## Depth pass 2026-09
+
+Coverage before: **108 implemented / 11 declared / 0 deferred / 0 unavailable / 0 not-applicable**
+
+Coverage after: **119 implemented / 0 declared / 0 deferred / 0 unavailable / 0 not-applicable**
+
+The remaining 11 `declared` identifiers were incoming or lifecycle
+`WCSessionDelegate` callbacks used by the corpus apps (home-assistant-ios,
+pocket-casts-ios, vlc-ios, Telegram-iOS). They are now `implemented` as
+fail-closed defaults: Linux never delivers counterpart payloads, never
+replies, and never transitions activation, pairing, or reachability.
+Hardware, daemon, and Apple-service success is not invented.
+
+Every `implemented` row cites a top-level synchronous `func test*()` under
+`tests/agent/*Tests.swift`. Enum `WCError.Code` members share one
+table-driven raw-value test. No other test is cited by more than 40% of
+implemented rows.
+
+Top-5 evidence distribution (119 implemented rows):
+
+1. `WCErrorTests.swift#testWCErrorCodeRawValues` — 21 (17.6%, enum/raw-value table)
+2. `WCErrorTests.swift#testWCErrorStaticCodeAliases` — 19 (16.0%)
+3. `WCSessionActivationStateTests.swift#testWCSessionActivationStateRawValues` — 8 (6.7%)
+4. `WCErrorTests.swift#testWCErrorInitUserInfoAndCustomNSError` — 8 (6.7%)
+5. `WCSessionTransferTests.swift#testWCSessionFileTransferCancel` — 5 (4.2%)
